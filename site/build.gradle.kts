@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import java.io.ByteArrayOutputStream
 import java.nio.file.Files
@@ -34,6 +35,8 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
     rootProject.the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().lockFileName = "skip-yarn-lock"
 }
 
+val mainClassName = "MainKt"
+
 kotlin {
     sourceSets.all {
         languageSettings {
@@ -43,7 +46,13 @@ kotlin {
 
     jvmToolchain(11)
 
-    jvm()
+    jvm {
+        withJava()
+        @OptIn(ExperimentalKotlinGradlePluginApi::class)
+        mainRun {
+            mainClass = mainClassName
+        }
+    }
 
     js(IR) {
         browser()
@@ -59,8 +68,10 @@ kotlin {
                 implementation(libs.adaptive.lib.email)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)
-                implementation(libs.adaptive.lib.auto)
+                implementation(libs.adaptive.lib.document)
                 implementation(libs.adaptive.lib.graphics)
+                implementation(libs.adaptive.lib.value)
+                implementation(libs.adaptive.lib.util)
                 implementation(libs.adaptive.lib.ui)
                 implementation(libs.adaptive.grove)
                 implementation(libs.adaptive.lib.app.basic)

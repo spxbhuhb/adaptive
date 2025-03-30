@@ -1,6 +1,7 @@
-package `fun`.adaptive.iot
+package `fun`.adaptive.iot.app
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.iot.IotFragmentFactory
 import `fun`.adaptive.iot.alarm.ui.wsAlarmToolDef
 import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorContentDef

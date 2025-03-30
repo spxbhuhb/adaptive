@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot
+package `fun`.adaptive.iot.app
 
 import `fun`.adaptive.iot.device.virtual.AioVirtualDeviceSpec
 import `fun`.adaptive.iot.generated.resources.commonMainStringsStringStore0

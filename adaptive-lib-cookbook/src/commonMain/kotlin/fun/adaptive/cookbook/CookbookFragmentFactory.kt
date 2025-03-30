@@ -9,6 +9,7 @@ import `fun`.adaptive.cookbook.recipe.ui.codefence.codeFenceRecipe
 import `fun`.adaptive.cookbook.recipe.ui.dialog.dialogRecipe
 import `fun`.adaptive.cookbook.recipe.ui.editor.editorRecipe
 import `fun`.adaptive.cookbook.recipe.ui.event.eventRecipe
+import `fun`.adaptive.cookbook.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.cookbook.recipe.ui.form.formRecipe
 import `fun`.adaptive.cookbook.recipe.ui.icon.iconRecipe
 import `fun`.adaptive.cookbook.recipe.ui.input.datetime.dateInputRecipe
@@ -66,6 +67,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
 
         add("cookbook:recipe:input:date", ::dateInputRecipe)
         add("cookbook:recipe:input:double", ::doubleInputRecipe)
+        add("cookbook:recipe:input:quick-filter", ::quickFilterRecipe)
         add("cookbook:recipe:input:text", ::textInputRecipe)
         add("cookbook:recipe:input:text-area", ::textInputAreaRecipe)
     }

@@ -65,6 +65,7 @@ shorthand("adaptive-grove", "processAdaptiveResourcesCommonMain", "grove-resourc
 shorthand("sandbox", "jsBrowserDevelopmentRun", "sandbox-js")
 shorthand("sandbox", "jvmRun", "sandbox-jvm")
 shorthand("site", "jsBrowserDevelopmentRun", "site-js")
+shorthand("site", "jvmRun", "site-jvm")
 shorthand("adaptive-iot-app", "jsBrowserDevelopmentRun", "iot-js")
 shorthand("adaptive-iot-app", "jvmRun", "iot-jvm")
 

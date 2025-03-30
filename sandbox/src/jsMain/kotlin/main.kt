@@ -21,7 +21,7 @@ import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.grove.groveRuntimeCommon
-import `fun`.adaptive.iot.IotWsModule
+import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.iot.iotCommon
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0

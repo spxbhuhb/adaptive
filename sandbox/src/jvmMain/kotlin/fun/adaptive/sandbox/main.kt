@@ -5,7 +5,7 @@ import `fun`.adaptive.app.server.BasicAppServerModule
 import `fun`.adaptive.auth.app.AuthServerModule
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
-import `fun`.adaptive.iot.IotServerModule
+import `fun`.adaptive.iot.app.IotServerModule
 import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.lib.util.app.UtilServerModule
 import `fun`.adaptive.utility.ensure

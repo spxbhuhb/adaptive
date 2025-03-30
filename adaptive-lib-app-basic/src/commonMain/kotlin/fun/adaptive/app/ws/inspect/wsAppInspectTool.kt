@@ -7,15 +7,11 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.verticalScroll
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
+import `fun`.adaptive.wireformat.WireFormatRegistry
 
 @Adaptive
 fun wsAppInspectTool(pane: WsPane<*, *>): AdaptiveFragment {
@@ -28,6 +24,7 @@ fun wsAppInspectTool(pane: WsPane<*, *>): AdaptiveFragment {
             gap { 16.dp}
             modules(app)
             session(app)
+            wireFormats()
         }
     }
 
@@ -54,5 +51,16 @@ private fun session(app : ClientApplication<*>) {
         text("Session Id: ${session?.uuid ?: "<no-session>"}")
         text("Principal ID: ${session?.principalOrNull}")
         text("Roles: ${session?.roles?.joinToString()}")
+    }
+}
+
+@Adaptive
+private fun wireFormats() {
+
+    column {
+        h2("Wireformat Registry")
+        for (entry in WireFormatRegistry.entries()) {
+            text("${entry.key} : ${entry.value::class.simpleName}")
+        }
     }
 }

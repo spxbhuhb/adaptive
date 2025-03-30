@@ -11,7 +11,7 @@ import `fun`.adaptive.auth.app.AuthClientModule
 import `fun`.adaptive.chart.ChartWsModule
 import `fun`.adaptive.document.DocWsModule
 import `fun`.adaptive.grove.GroveRuntimeModule
-import `fun`.adaptive.iot.IotWsModule
+import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.iot.lib.zigbee.ZigbeeModule
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.value.app.ValueClientModule

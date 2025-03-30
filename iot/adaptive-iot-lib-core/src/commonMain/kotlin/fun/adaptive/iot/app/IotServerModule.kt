@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot
+package `fun`.adaptive.iot.app
 
 import `fun`.adaptive.iot.alarm.AioAlarmService
 import `fun`.adaptive.iot.device.AioDeviceService

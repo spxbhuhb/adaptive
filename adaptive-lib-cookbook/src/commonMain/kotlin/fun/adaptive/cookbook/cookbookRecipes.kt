@@ -4,8 +4,6 @@ import `fun`.adaptive.cookbook.model.CbWsRecipeItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
@@ -78,6 +76,7 @@ val recipes =
             CbWsRecipeItem("Checkbox", key = "cookbook:recipe:checkbox"),
             CbWsRecipeItem("Date", key = "cookbook:recipe:input:date"),
             CbWsRecipeItem("Double", key = "cookbook:recipe:input:double"),
+            CbWsRecipeItem("Quick Filter", key = "cookbook:recipe:input:quick-filter"),
             CbWsRecipeItem("Select", key = "cookbook:recipe:select"),
             CbWsRecipeItem("Text input", key = "cookbook:recipe:input:text"),
             CbWsRecipeItem("Text input area", key = "cookbook:recipe:input:text-area")

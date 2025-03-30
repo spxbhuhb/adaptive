@@ -4,6 +4,8 @@
 
 package `fun`.adaptive.registry
 
+import kotlin.js.JsName
+
 open class Registry<T> {
 
     protected val entries = mutableMapOf<String, T>()
@@ -27,4 +29,7 @@ open class Registry<T> {
     override fun toString(): String {
         return entries.toString()
     }
+
+    @JsName("entriesFun")
+    fun entries() : Set<Map.Entry<String, T>> = entries.entries
 }

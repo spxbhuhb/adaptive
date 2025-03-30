@@ -76,8 +76,7 @@ class InputTheme : AbstractTheme() {
 
     val unitText = instructionsOf(
         alignSelf.bottom,
-        paddingLeft { 8.dp },
-        paddingBottom { 5.dp },
+        paddingLeft { 8.dp }
     )
 
     companion object {

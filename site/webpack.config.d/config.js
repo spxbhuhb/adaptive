@@ -16,8 +16,20 @@ if (config.devServer) {
         proxy: [
             {
                 context: ['/adaptive/service'],
-                target: 'ws://127.0.0.1:8080',
+                target: 'ws://127.0.0.1:7890',
                 ws: true,
+                secure: false
+            },
+            {
+                context: ['/adaptive/client-id'],
+                target: 'http://127.0.0.1:7890',
+                ws: false,
+                secure: false
+            },
+            {
+                context: ['/adaptive/download'],
+                target: 'http://127.0.0.1:7890',
+                ws: false,
                 secure: false
             }
         ],
