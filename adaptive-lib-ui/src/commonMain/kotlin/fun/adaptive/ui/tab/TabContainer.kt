@@ -1,7 +1,6 @@
 package `fun`.adaptive.ui.tab
 
 import `fun`.adaptive.ui.menu.MenuItem
-import kotlin.math.max
 
 class TabContainer(
     val tabs: List<TabPane>,
@@ -35,17 +34,26 @@ class TabContainer(
 
     fun removeTab(pane: TabPane): TabContainer {
 
-        val activeIndex = if (pane.active) {
-            max(0, tabs.indexOfFirst { it.uuid == pane.uuid } - 1)
-        } else {
-            - 1
+        val index = tabs.indexOfFirst { it.uuid == pane.uuid }
+
+        val activePane = when {
+            ! pane.active -> {
+                tabs.firstOrNull { it.active }
+            }
+            pane.active && index > 0 -> {
+                tabs[index - 1]
+            }
+            tabs.size > 1 -> {
+                tabs[1]
+            }
+            else -> null
         }
 
-        val newTabList = tabs.mapIndexedNotNull { index, it ->
+        val newTabList = tabs.filter { it.uuid != pane.uuid }.map {
             when {
-                it.uuid == pane.uuid -> null
-                index != activeIndex -> it
-                else -> it.copy(active = true)
+                it.uuid == activePane?.uuid -> it.copy(active = true)
+                it.active -> it.copy(active = false)
+                else -> it
             }
         }
 
