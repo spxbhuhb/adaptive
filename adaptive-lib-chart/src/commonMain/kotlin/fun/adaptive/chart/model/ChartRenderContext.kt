@@ -24,6 +24,7 @@ data class ChartRenderContext<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
            range = range.update(chartItem.sourceData)
         }
 
+        println(range)
         return range
     }
 

@@ -17,7 +17,9 @@ import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 
 fun main() {
-    SimHistory().main(arrayOf("./iot/adaptive-iot-cli/var/sim-history", "0195e531-f30e-769f-8000-00007581b29e"))
+    // 0195e531-f30e-769f-8000-00007581b29e  -- hom
+    // 0195e531-f375-70b4-bfff-ffffcde14582  -- para
+    SimHistory().main(arrayOf("./iot/adaptive-iot-cli/var/sim-history", "0195e531-f375-70b4-bfff-ffffcde14582"))
 }
 
 class SimHistory : CliktCommand(name = "sim-history") {
@@ -42,7 +44,7 @@ class SimHistory : CliktCommand(name = "sim-history") {
         curValQueue.start()
 
         val end = Clock.System.now()
-        val start = end.minus(30.days)
+        val start = end.minus(1.days)
 
         generateTemperatureHistory(start, end)
 
@@ -61,19 +63,19 @@ class SimHistory : CliktCommand(name = "sim-history") {
         start: Instant,
         end: Instant,
         averageInterval: Duration = 5.minutes,
-        minTemp: Double = 15.0,
-        maxTemp: Double = 25.0,
+        min: Double = 80.0,
+        max: Double = 95.0,
         noiseFactor: Double = 0.5
     ) {
         val random = Random.Default
         var current = start
-        var currentTemp = (minTemp + maxTemp) / 2.0
+        var currentTemp = (min + max) / 2.0
 
         while (current < end) {
             // Simulate daily variation (sine wave approximation)
             val hour = current.toLocalDateTime(TimeZone.UTC).hour
             val dailyOffset = kotlin.math.sin((hour / 24.0) * 2 * Math.PI)
-            val baseTemp = minTemp + (maxTemp - minTemp) * (0.5 + 0.5 * dailyOffset)
+            val baseTemp = min + (max - min) * (0.5 + 0.5 * dailyOffset)
 
             // Add small random noise for realism
             currentTemp = baseTemp + random.nextDouble(- noiseFactor, noiseFactor)

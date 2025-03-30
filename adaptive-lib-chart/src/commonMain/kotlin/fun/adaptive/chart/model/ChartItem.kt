@@ -20,8 +20,11 @@ data class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
 
     var lastWidth = 0.0
     var lastHeight = 0.0
-    var lastStart : XT? = null
-    var lastEnd : XT? = null
+
+    var lastXStart : XT? = null
+    var lastXEnd : XT? = null
+
+    var lastNormalizer : ChartNormalizer<XT, YT>? = null
 
     val normalizedData = mutableListOf<CartesianPoint<Double, Double>>()
 
@@ -32,6 +35,14 @@ data class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     fun normalize(normalizer: ChartNormalizer<XT, YT>): ChartItem<XT, YT, AT> {
 
         val out = normalizedData
+
+        if (normalizer != lastNormalizer) {
+            out.clear()
+            lastNormalizer = normalizer
+            lastWidth = Double.NaN
+            lastHeight = Double.NaN
+        }
+
         if (out.isNotEmpty()) return this
 
         for (point in sourceData) {
@@ -70,10 +81,10 @@ data class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
 
         val out = cells
 
-        if (config.start != lastStart || config.end != lastEnd) {
+        if (config.start != lastXStart || config.end != lastXEnd) {
             out.clear()
-            lastStart = config.start
-            lastEnd = config.end
+            lastXStart = config.start
+            lastXEnd = config.end
         }
 
         if (out.isNotEmpty()) return this
