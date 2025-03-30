@@ -5,18 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.dropShadow
-import `fun`.adaptive.ui.api.focus
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.popupAlign
-import `fun`.adaptive.ui.api.primaryPopup
-import `fun`.adaptive.ui.api.tabIndex
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.api.zIndex
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.datetime.datePicker
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.InputTheme
@@ -45,7 +34,7 @@ fun dateInput(
     box(themeInstructions, theme.singleLine, instructions()) {
         tabIndex { 0 }
 
-        text(value.toString()) .. alignSelf.startCenter
+        text(value.toString()) .. alignSelf.startCenter .. theme.inputFont
 
         if (! observed.disabled) {
 

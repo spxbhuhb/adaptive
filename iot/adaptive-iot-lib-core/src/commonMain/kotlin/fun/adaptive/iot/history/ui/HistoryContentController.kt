@@ -115,6 +115,7 @@ class HistoryContentController(
             listOf(xAxis, yAxis),
             50.0,
             50.0,
+            AioDoubleHistoryRecord.ZERO,
             { DoubleHistoryValueNormalizer(it) }
         )
 

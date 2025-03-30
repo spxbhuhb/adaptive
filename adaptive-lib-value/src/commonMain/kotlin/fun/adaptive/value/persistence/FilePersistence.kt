@@ -13,21 +13,27 @@ import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
 import kotlinx.io.files.Path
 
 class FilePersistence(
-    root : Path,
-    levels : Int,
+    root: Path,
+    levels: Int,
 ) : AbstractValuePersistence() {
 
     val store = object : UuidFileStore<MutableMap<AvValueId, AvValue>>(root, levels) {
 
         override fun loadPath(path: Path, map: MutableMap<AvValueId, AvValue>) {
-            if (!path.name.endsWith(".json")) return
+            if (! path.name.endsWith(".json")) return
 
-            val bytes = path.read()
-            val decoder = JsonWireFormatDecoder(bytes)
-            val value = PolymorphicWireFormat.wireFormatDecode(decoder.root, decoder)
-            check(value is AvValue)
+            try {
+                val bytes = path.read()
+                val decoder = JsonWireFormatDecoder(bytes)
+                val value = PolymorphicWireFormat.wireFormatDecode(decoder.root, decoder)
+                check(value is AvValue) { "Value is not an AvValue" }
 
-            map[value.uuid] = value
+                map[value.uuid] = value
+
+            } catch (ex: Exception) {
+                throw RuntimeException("error while loading value from $path", ex)
+            }
+
         }
 
     }

@@ -15,14 +15,14 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
 fun temporalHorizontalAxisMarkers(
-    context : ChartRenderContext<Instant, *, *>,
-    @Suppress("unused") axis : ChartAxis<Instant, *, *>,
-    canvasSize : RawSize
-) : List<ChartMarker> {
+    context: ChartRenderContext<Instant, *, *>,
+    @Suppress("unused") axis: ChartAxis<Instant, *, *>,
+    canvasSize: RawSize
+): List<ChartMarker> {
     val range = context.range ?: return emptyList()
 
     val itemsWidth = canvasSize.width - context.itemOffsetX
-    val count = (itemsWidth / 50).toInt()
+    val count = (itemsWidth / 100).toInt()
     val step = 1.0 / count
 
     val normalizer = context.normalizer
@@ -46,16 +46,16 @@ fun temporalHorizontalAxisMarkers(
     return out
 }
 
-fun instantLabelText(value: Instant?, tickRange: Duration) : String {
+fun instantLabelText(value: Instant?, tickRange: Duration): String {
     if (value == null) return ""
 
     val localDateTime = value.toLocalDateTime(TimeZone.currentSystemDefault())
 
     return when {
         tickRange < 1.seconds -> value.toString()
-        tickRange < 1.minutes-> "${localDateTime.minute.p02}:${localDateTime.second.p02}"
-        tickRange < 1.hours -> "${localDateTime.hour}:${localDateTime.minute.p02}" // Show hour and minute
-        tickRange < 1.days -> "${localDateTime.month}-${localDateTime.dayOfMonth} ${localDateTime.hour.p02}" // Include date and hour
-        else -> "${localDateTime.month} ${localDateTime.dayOfMonth}" // Display only the date
+        tickRange < 1.minutes -> "${localDateTime.minute.p02}:${localDateTime.second.p02}"
+        tickRange < 1.hours -> "${localDateTime.hour.p02}:${localDateTime.minute.p02}" // Show hour and minute
+        tickRange < 1.days -> "${(localDateTime.month.ordinal + 1).p02}.${localDateTime.dayOfMonth.p02}. ${localDateTime.hour.p02}:${localDateTime.minute.p02}" // Include date and hour
+        else -> "${(localDateTime.month.ordinal + 1).p02}.${localDateTime.dayOfMonth.p02}." // Display only the date
     }
 }

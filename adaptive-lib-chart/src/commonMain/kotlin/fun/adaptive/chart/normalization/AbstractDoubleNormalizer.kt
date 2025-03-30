@@ -7,9 +7,12 @@ abstract class AbstractDoubleNormalizer<XT,YT>(
 ) : ChartNormalizer<XT, YT>() {
 
     val xStart = range.xStart.asXDouble
+    val xEnd = range.xEnd.asXDouble
+    val xRange = xEnd - xStart
+
     val yStart = range.yStart.asYDouble
-    val xRange = range.xEnd.asXDouble - xStart
-    val yRange = range.yEnd.asYDouble - yStart
+    val yEnd = range.yEnd.asYDouble
+    val yRange = yEnd - yStart
 
     override fun normalizeX(x: XT): Double =
         (x.asXDouble - xStart) / xRange

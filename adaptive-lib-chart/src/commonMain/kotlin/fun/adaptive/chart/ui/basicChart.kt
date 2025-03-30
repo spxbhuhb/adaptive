@@ -87,6 +87,7 @@ val context = ChartRenderContext<Instant, Double, Unit>(
     listOf(xAxis, yAxis),
     50.0,
     50.0,
+    0.0,
     { InstantDoubleNormalizer(it) }
 )
 

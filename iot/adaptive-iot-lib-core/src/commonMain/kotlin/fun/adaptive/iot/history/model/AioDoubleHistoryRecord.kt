@@ -20,5 +20,8 @@ class AioDoubleHistoryRecord(
 
     override fun compareTo(other: AioDoubleHistoryRecord): Int =
         value.compareTo(other.value)
-    
+
+    companion object {
+        val ZERO = AioDoubleHistoryRecord(Instant.DISTANT_PAST, 0.0, 0.0, 0)
+    }
 }

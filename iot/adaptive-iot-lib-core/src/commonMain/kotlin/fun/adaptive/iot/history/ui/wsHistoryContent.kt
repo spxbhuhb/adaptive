@@ -62,31 +62,32 @@ fun title(
     var end = localDate()
 
     column {
-        gap { 24.dp } .. paddingBottom { 16.dp } .. height { 144.dp }
+        paddingBottom { 24.dp }
 
         grid {
-            maxWidth .. colTemplate(1.fr, 1.fr)
-            paddingBottom { 32.dp } .. height { 56.dp }
+            maxWidth .. colTemplate(1.fr, 1.fr) .. height { 32.dp }
 
             h2(name)
 
-            button(Strings.downloadReport) .. alignSelf.end .. onClick {
-                downloadReport(controller)
-            }
-        }
-
-        row {
-            gap { 16.dp } .. alignItems.startCenter
-
             row {
-                modeIcon(controller, Mode.CHART)
-                modeIcon(controller, Mode.TABLE)
+                alignSelf.endCenter .. alignItems.center .. gap { 24.dp } .. backgrounds.surfaceVariant
+
+                row {
+                    modeIcon(controller, Mode.SETTINGS)
+                    modeIcon(controller, Mode.CHART)
+                    modeIcon(controller, Mode.TABLE)
+                }
+
+                row {
+                    gap { 8.dp } .. paddingRight { 8.dp }
+                    dateInput(start) { v -> start = v } .. width { 112.dp } .. alignItems.center
+                    dateInput(end) { v -> end = v } .. width { 112.dp } .. alignItems.center
+                }
+
+                button(Strings.downloadReport) .. onClick {
+                    downloadReport(controller)
+                }
             }
-
-            dateInput(start) { v -> start = v } .. width { 112.dp } .. alignItems.center
-            dateInput(end) { v -> end = v } .. width { 112.dp } .. alignItems.center
-
-            modeIcon(controller, Mode.SETTINGS)
         }
     }
 }
