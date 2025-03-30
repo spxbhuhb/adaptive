@@ -14,6 +14,7 @@ import `fun`.adaptive.graphics.canvas.api.stroke
 import `fun`.adaptive.iot.common.AioTheme
 import `fun`.adaptive.iot.generated.resources.chart
 import `fun`.adaptive.iot.generated.resources.monitoring
+import `fun`.adaptive.iot.generated.resources.settings
 import `fun`.adaptive.iot.generated.resources.table
 import `fun`.adaptive.iot.history.AioHistoryApi
 import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
@@ -22,8 +23,10 @@ import `fun`.adaptive.iot.history.ui.chart.DoubleHistoryValueNormalizer
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
+import `fun`.adaptive.ui.builtin.settings
 import `fun`.adaptive.ui.filter.QuickFilterModel
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.WithWorkspace
@@ -42,20 +45,28 @@ class HistoryContentController(
     override val workspace: Workspace
 ) : WsPaneController<HistoryBrowserWsItem>(), WithWorkspace {
 
-    enum class Mode(val label: () -> String) {
-        TABLE(label = { Strings.table }),
-        CHART(label = { Strings.chart })
+    enum class Mode(val labelFun: () -> String, val icon : GraphicsResourceSet) {
+        TABLE({ Strings.table }, Graphics.table),
+        CHART({ Strings.chart }, Graphics.monitoring),
+        SETTINGS({ Strings.settings }, Graphics.settings);
+
+        val label
+            get() = labelFun()
     }
 
     var mode = storeFor<QuickFilterModel<Mode>> {
         QuickFilterModel(
             Mode.CHART,
             Mode.entries,
-            { it.label() }
+            { it.label }
         )
     }
 
     val theme = AioTheme.DEFAULT
+
+    fun switchMode(newMode : Mode) {
+        mode.value = mode.value.copy(selected = newMode)
+    }
 
     val historyService = getService<AioHistoryApi>(transport)
 

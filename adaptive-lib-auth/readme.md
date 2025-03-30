@@ -91,7 +91,7 @@ This implementation consists of:
 
 As authentication and authorization data is very sensitive, the `lib-auth` uses its own value store,
 separated from other value stores in the application. This ensures that no query can return with
-auth information accidentally as the value API for the auth store is restricted for security officers
+auth information accidentally as the value API for the auth store is restricted for security officers.
 
 - Passwords are encrypted with `BCrypt`.
 - The module ensures that there are no two principals with the same `name`.

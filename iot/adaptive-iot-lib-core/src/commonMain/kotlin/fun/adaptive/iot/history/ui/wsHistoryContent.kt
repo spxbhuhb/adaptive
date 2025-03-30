@@ -10,11 +10,13 @@ import `fun`.adaptive.iot.generated.resources.historicalData
 import `fun`.adaptive.iot.generated.resources.noname
 import `fun`.adaptive.iot.history.ui.HistoryContentController.Mode
 import `fun`.adaptive.iot.history.ui.chart.historyChart
+import `fun`.adaptive.iot.history.ui.settings.historySettings
 import `fun`.adaptive.iot.history.ui.table.historyTable
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.button
-import `fun`.adaptive.ui.filter.quickFilter
+import `fun`.adaptive.ui.icon.actionIcon
+import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.input.datetime.dateInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
@@ -37,10 +39,10 @@ fun wsHistoryContent(
 
         title(pane.controller, name)
 
-        if (mode.selected == Mode.TABLE) {
-            historyTable(pane.controller)
-        } else {
-            historyChart(pane.controller)
+        when (mode.selected) {
+            Mode.TABLE -> historyTable(pane.controller)
+            Mode.CHART -> historyChart(pane.controller)
+            Mode.SETTINGS -> historySettings(pane.controller)
         }
     }
 
@@ -74,13 +76,22 @@ fun title(
         }
 
         row {
-            gap { 16.dp }
-            quickFilter(mode) { controller.mode.value = mode.copy(selected = it) }
+            gap { 16.dp } .. alignItems.startCenter
 
+            row {
+                modeIcon(controller, Mode.CHART)
+                modeIcon(controller, Mode.TABLE)
+            }
 
-            //quickFilter(status2, listOf("Ma", "Hét", "Hónap", "Egyedi"), { this }) { v -> status2 = v }
-            dateInput(start) { v -> start = v }
-            dateInput(end) { v -> end = v }
+            dateInput(start) { v -> start = v } .. width { 112.dp } .. alignItems.center
+            dateInput(end) { v -> end = v } .. width { 112.dp } .. alignItems.center
+
+            modeIcon(controller, Mode.SETTINGS)
         }
     }
+}
+
+@Adaptive
+fun modeIcon(controller: HistoryContentController, mode : Mode) {
+    actionIcon(mode.icon, tooltip = mode.label, theme = tableIconTheme) .. onClick { controller.switchMode(mode) }
 }

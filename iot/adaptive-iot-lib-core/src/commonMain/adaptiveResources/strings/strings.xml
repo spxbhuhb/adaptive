@@ -19,6 +19,7 @@
     <string name="enable">Engedélyezés</string>
     <string name="add">Hozzáadás</string>
     <string name="save">Mentés</string>
+    <string name="settings">Beállítások</string>
 
     <string name="saveSuccess">Sikeres mentés.</string>
     <string name="saveFail">Sikertelen mentés.</string>

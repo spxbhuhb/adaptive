@@ -17,7 +17,7 @@ var onSurfaceIconTheme = IconTheme(colors.onSurface)
 var primaryIconTheme = IconTheme(colors.primary)
 
 val tableIconTheme = IconTheme(
-    colors.primary,
+    colors.onSurface,
     iconSize = 24.dp,
     containerSize = 34.dp,
     margin = 3.dp,

@@ -45,7 +45,7 @@ fun dateInput(
     box(themeInstructions, theme.singleLine, instructions()) {
         tabIndex { 0 }
 
-        text(value.toString()) .. width { 200.dp } .. alignSelf.startCenter
+        text(value.toString()) .. alignSelf.startCenter
 
         if (! observed.disabled) {
 
