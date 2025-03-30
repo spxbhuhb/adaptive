@@ -2,6 +2,7 @@ package `fun`.adaptive.iot.history.ui.table
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.iot.history.ui.HistoryBrowserWsItem
 import `fun`.adaptive.iot.history.ui.HistoryContentController
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.fill
@@ -12,6 +13,7 @@ import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
 fun historyTable(
+    item : HistoryBrowserWsItem,
     controller: HistoryContentController,
 ) {
     val context = valueFrom { controller.chartContext }
@@ -30,7 +32,7 @@ fun historyTable(
             }
 
             else -> {
-                multiHistoryTableHeader(controller)
+                multiHistoryTableHeader(item, controller)
                 column {
                     maxSize .. gap { 4.dp } .. verticalScroll
                     multiHistoryTableContent(controller)

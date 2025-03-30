@@ -127,7 +127,7 @@ class HistoryToolController(
         val name = if (items.size == 1) first.name else Strings.historicalData
 
         workspace.addContent(
-            HistoryBrowserWsItem(name, WSIT_HISTORY, items),
+            HistoryBrowserWsItem(name, WSIT_HISTORY, this, items),
             emptySet()
         )
 

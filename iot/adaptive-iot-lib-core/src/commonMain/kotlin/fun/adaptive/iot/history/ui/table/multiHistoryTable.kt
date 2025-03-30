@@ -4,20 +4,29 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.common.timestamp
 import `fun`.adaptive.iot.generated.resources.timestamp
+import `fun`.adaptive.iot.history.ui.HistoryBrowserWsItem
 import `fun`.adaptive.iot.history.ui.HistoryContentController
+import `fun`.adaptive.iot.history.ui.columnName
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.grid
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.normalFont
+import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textMedium
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.utility.format
 
 @Adaptive
 fun multiHistoryTableHeader(
+    hisItem: HistoryBrowserWsItem,
     controller: HistoryContentController
 ) {
     val context = valueFrom { controller.chartContext }
@@ -27,7 +36,7 @@ fun multiHistoryTableHeader(
 
         text(Strings.timestamp) .. textMedium .. normalFont
         for (item in context.items) {
-            text(item.attachment?.name) .. textMedium .. normalFont
+            text(columnName(hisItem.controller, item)) .. textMedium .. normalFont .. maxWidth
         }
     }
 }

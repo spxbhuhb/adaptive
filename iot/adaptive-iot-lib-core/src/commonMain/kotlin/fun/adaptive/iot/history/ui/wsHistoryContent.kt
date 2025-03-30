@@ -12,15 +12,19 @@ import `fun`.adaptive.iot.history.ui.HistoryContentController.Mode
 import `fun`.adaptive.iot.history.ui.chart.historyChart
 import `fun`.adaptive.iot.history.ui.settings.historySettings
 import `fun`.adaptive.iot.history.ui.table.historyTable
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.builtin.arrow_right
 import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.icon.actionIcon
+import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.input.datetime.dateInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.utility.localDate
 
@@ -37,10 +41,10 @@ fun wsHistoryContent(
         maxSize .. padding { 16.dp } .. backgrounds.surface
         fill.constrain .. backgrounds.surfaceVariant
 
-        title(pane.controller, name)
+        title(pane, name)
 
         when (mode.selected) {
-            Mode.TABLE -> historyTable(pane.controller)
+            Mode.TABLE -> historyTable(pane.data, pane.controller)
             Mode.CHART -> historyChart(pane.controller)
             Mode.SETTINGS -> historySettings(pane.controller)
         }
@@ -52,9 +56,10 @@ fun wsHistoryContent(
 
 @Adaptive
 fun title(
-    controller: HistoryContentController,
+    pane: WsPane<HistoryBrowserWsItem, HistoryContentController>,
     name: String
 ) {
+    val controller = pane.controller
     val mode = valueFrom { controller.mode }
 
     var status2 = ""
@@ -62,12 +67,15 @@ fun title(
     var end = localDate()
 
     column {
-        paddingBottom { 24.dp }
+        paddingBottom { 40.dp }
 
         grid {
             maxWidth .. colTemplate(1.fr, 1.fr) .. height { 32.dp }
 
-            h2(name)
+            column {
+                h2(name)
+                historyPath(pane.data)
+            }
 
             row {
                 alignSelf.endCenter .. alignItems.center .. gap { 24.dp } .. backgrounds.surfaceVariant
@@ -85,7 +93,7 @@ fun title(
                 }
 
                 button(Strings.downloadReport) .. onClick {
-                    downloadReport(controller)
+                    downloadReport(pane.data, controller)
                 }
             }
         }
@@ -95,4 +103,21 @@ fun title(
 @Adaptive
 fun modeIcon(controller: HistoryContentController, mode : Mode) {
     actionIcon(mode.icon, tooltip = mode.label, theme = tableIconTheme) .. onClick { controller.switchMode(mode) }
+}
+
+@Adaptive
+fun historyPath(item: HistoryBrowserWsItem) {
+    val names = historyPathNames(item.controller, item.items.first())
+
+    row {
+        alignItems.center
+
+        for (name in names.indices) {
+            text(names[name]) .. textColors.onSurfaceVariant
+            if (name < names.size - 1) {
+                icon(Graphics.arrow_right) .. textColors.onSurfaceVariant
+            }
+        }
+    }
+
 }
