@@ -93,7 +93,7 @@
     <string name="value">Érték</string>
     <string name="table">Táblázat</string>
     <string name="chart">Grafikon</string>
-    <string name="noHistoricalData">Ehhez a ponthoz nincs még történeti adat.</string>
+    <string name="noHistoricalData">Nincs megjeleníthető adat.</string>
     <string name="today">Ma</string>
     <string name="yesterday">Tegnap</string>
     <string name="thisWeek">Aktuális hét</string>

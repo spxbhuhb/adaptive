@@ -10,6 +10,7 @@ import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.value.storeFor
+import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.graphics.canvas.api.stroke
 import `fun`.adaptive.iot.common.AioTheme
 import `fun`.adaptive.iot.generated.resources.chart
@@ -42,11 +43,13 @@ import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
 import kotlin.time.Duration.Companion.minutes
 
 class HistoryContentController(
     override val workspace: Workspace
-) : WsPaneController<HistoryBrowserWsItem>(), WithWorkspace {
+) : WsPaneController<HistoryBrowserWsItem>(), WithWorkspace, ObservableListener<HistoryContentConfig> {
 
     enum class Mode(val labelFun: () -> String, val icon : GraphicsResourceSet) {
         TABLE({ Strings.table }, Graphics.table),
@@ -65,7 +68,18 @@ class HistoryContentController(
     }
 
     val splitConfig = storeFor { SplitPaneConfiguration(SplitVisibility.Both, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
-    val config = storeFor { HistoryContentConfig() }
+
+    val config = storeFor { HistoryContentConfig() }.also { it.addListener(this) }
+
+    val lastConfigStart = config.value.start
+    val lastConfigEnd = config.value.end
+    var lastBrowserItem : HistoryBrowserWsItem? = null
+
+    override fun onChange(value: HistoryContentConfig) {
+        if (value.start != lastConfigStart || value.end != lastConfigEnd) {
+            lastBrowserItem?.let { loadHistories(it, false) }
+        }
+    }
 
     val theme = AioTheme.DEFAULT
 
@@ -141,6 +155,8 @@ class HistoryContentController(
     }
 
     fun loadHistories(browserItem: HistoryBrowserWsItem, add: Boolean) {
+        lastBrowserItem = browserItem
+
         if (! add) {
             chartItems.value = emptyList()
         }
@@ -193,7 +209,11 @@ class HistoryContentController(
     }
 
     suspend fun query(item: AvItem<*>): List<AioDoubleHistoryRecord> {
-        val query = AioHistoryQuery(item.uuid.cast(), Instant.DISTANT_PAST, Instant.DISTANT_FUTURE)
+        val start = config.value.start.atStartOfDayIn(TimeZone.currentSystemDefault())
+        val end = config.value.end.atStartOfDayIn(TimeZone.currentSystemDefault())
+
+        val query = AioHistoryQuery(item.uuid.cast(), start, end)
+
         val out = mutableListOf<AioDoubleHistoryRecord>()
         try {
             historyService.query(query).decodeChunks(out)
