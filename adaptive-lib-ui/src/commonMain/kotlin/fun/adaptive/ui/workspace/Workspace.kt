@@ -309,8 +309,6 @@ open class Workspace(
             return
         }
 
-        println(item)
-
         val pane = builder.invoke(item)
 
         when (pane.singularity) {
