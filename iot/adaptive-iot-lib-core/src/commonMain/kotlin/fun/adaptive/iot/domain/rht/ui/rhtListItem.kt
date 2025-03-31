@@ -16,6 +16,7 @@ import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.colTemplate
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.icon
@@ -50,8 +51,9 @@ fun rhtListItem(
             theme.itemListIconContainer
             icon(iconFor(item)) .. theme.itemListIcon
         }
-        text(item.friendlyId)
-        text(item.name)
+
+        text(item.friendlyId) .. maxWidth
+        text(item.name) .. maxWidth
 
         temperature(tempValue?.value)
         relativeHumidity(humidityValue?.value)
@@ -62,7 +64,7 @@ fun rhtListItem(
             alarmIcon(item.status.flags)
         }
 
-        timestamp(item.timestamp) .. textSmall .. alignSelf.center
+        timestamp(item.timestamp) .. textSmall .. alignSelf.center .. maxWidth
 
         box {
             maxSize .. alignItems.center

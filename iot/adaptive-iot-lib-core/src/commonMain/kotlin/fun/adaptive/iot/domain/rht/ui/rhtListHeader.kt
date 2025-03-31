@@ -33,14 +33,14 @@ fun rhtListHeader(
         colTemplate(36.dp, 80.dp, 1.fr, 0.5.fr, 0.5.fr, 82.dp, 60.dp, 160.dp, 48.dp)
 
         box {  }
-        text(Strings.spxbId) .. textMedium .. normalFont
-        text(Strings.name) .. textMedium .. normalFont
+        text(Strings.spxbId) .. textMedium .. normalFont .. maxWidth
+        text(Strings.name) .. textMedium .. normalFont .. maxWidth
 
-        text(Strings.temperature) .. textMedium .. normalFont
-        text(Strings.humidity) .. textMedium .. normalFont
-        text(Strings.status) .. alignSelf.center .. textMedium .. normalFont
-        text(Strings.alarm) .. textMedium .. normalFont
-        text(Strings.lastSeen) .. textMedium .. normalFont
+        text(Strings.temperature) .. textMedium .. normalFont .. maxWidth
+        text(Strings.humidity) .. textMedium .. normalFont .. maxWidth
+        text(Strings.status) .. alignSelf.center .. textMedium .. normalFont .. maxWidth
+        text(Strings.alarm) .. textMedium .. normalFont .. maxWidth
+        text(Strings.lastSeen) .. textMedium .. normalFont .. maxWidth
         icon(Graphics.open_in_new) .. svgWidth(24.dp) .. svgHeight(24.dp) .. alignSelf.center
     }
 
