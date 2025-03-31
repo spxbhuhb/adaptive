@@ -3,26 +3,30 @@ package `fun`.adaptive.iot.history.ui.settings
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.generated.resources.*
 import `fun`.adaptive.iot.history.ui.HistoryContentController
 import `fun`.adaptive.iot.history.ui.model.HistoryContentConfig
+import `fun`.adaptive.iot.history.ui.model.NamedDurationType
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.filter.QuickFilterModel
+import `fun`.adaptive.ui.filter.quickFilter
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.focusTableIconTheme
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.input.datetime.dateInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.withLabel
-import `fun`.adaptive.ui.misc.todo
 import `fun`.adaptive.ui.popup.PopupTheme
 import `fun`.adaptive.ui.theme.colors
 
 @Adaptive
 fun historySettings(controller: HistoryContentController) {
 
-    val config = copyOf { controller.config.value }
+    val controllerConfig = valueFrom { controller.config }
+    val config = copyOf { controllerConfig }
     var manual = false
 
     column {
@@ -45,15 +49,15 @@ fun historySettings(controller: HistoryContentController) {
 
             if (manual) {
                 actionIcon(Graphics.play_circle, tooltip = Strings.applySettings, theme = focusTableIconTheme) .. onClick {
-                    controller.config.value = config
+                    controller.config.value = config.copy(selectedDuration = NamedDurationType.Custom)
                     manual = false
                 } .. alignSelf.bottom
             } else {
                 box {
                     actionIcon(Graphics.tune, tooltip = Strings.quickSetting, theme = tableIconTheme)
                     primaryPopup { hide ->
-                        PopupTheme.default.inlineEditorPopup .. popupAlign.beforeBelow .. width { 300.dp }
-                        quickInterval(config, hide)
+                        PopupTheme.default.inlineEditorPopup .. popupAlign.belowCenter
+                        quickInterval(controller, config, hide)
                     }
                 } .. alignSelf.bottom
             }
@@ -62,6 +66,30 @@ fun historySettings(controller: HistoryContentController) {
 }
 
 @Adaptive
-fun quickInterval(config: HistoryContentConfig, hide: () -> Unit) {
-    todo()
+fun quickInterval(
+    controller: HistoryContentController,
+    config: HistoryContentConfig,
+    hide: () -> Unit
+) {
+    var qfm = QuickFilterModel<NamedDurationType>(
+        NamedDurationType.Today,
+        NamedDurationType.entries,
+        { it.labelFun() }
+    )
+
+    quickFilter(qfm) {
+        val (start, end) = it.calcFun()
+
+        if (it == NamedDurationType.Custom) {
+            hide()
+        }
+
+        controller.config.value = config.copy(
+            start = start,
+            end = end,
+            selectedDuration = it
+        )
+
+        hide()
+    }
 }

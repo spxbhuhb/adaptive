@@ -42,5 +42,7 @@ fun downloadReport(
         out.appendLine()
     }
 
-    downloadFile(out.toString().encodeToByteArray(), "history.csv", "text/csv")
+    val utf8Bom = byteArrayOf(0xEF.toByte(), 0xBB.toByte(), 0xBF.toByte())
+
+    downloadFile(utf8Bom + out.toString().encodeToByteArray(), "history.csv", "text/csv")
 }

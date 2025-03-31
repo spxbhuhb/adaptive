@@ -41,10 +41,8 @@ import `fun`.adaptive.utility.replaceFirst
 import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
+import kotlinx.datetime.*
 import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.atStartOfDayIn
 import kotlin.time.Duration.Companion.minutes
 
 class HistoryContentController(
@@ -210,7 +208,11 @@ class HistoryContentController(
 
     suspend fun query(item: AvItem<*>): List<AioDoubleHistoryRecord> {
         val start = config.value.start.atStartOfDayIn(TimeZone.currentSystemDefault())
-        val end = config.value.end.atStartOfDayIn(TimeZone.currentSystemDefault())
+
+        val end = config.value.end
+            .plus(1, DateTimeUnit.DAY)
+            .atStartOfDayIn(TimeZone.currentSystemDefault())
+            .minus(1, DateTimeUnit.MILLISECOND)
 
         val query = AioHistoryQuery(item.uuid.cast(), start, end)
 
