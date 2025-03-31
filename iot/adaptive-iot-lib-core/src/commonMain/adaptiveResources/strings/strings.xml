@@ -94,6 +94,18 @@
     <string name="table">Táblázat</string>
     <string name="chart">Grafikon</string>
     <string name="noHistoricalData">Ehhez a ponthoz nincs még történeti adat.</string>
+    <string name="today">Ma</string>
+    <string name="yesterday">Tegnap</string>
+    <string name="thisWeek">Aktuális hét</string>
+    <string name="lastWeek">Előző hét</string>
+    <string name="thisMonth">Aktuális hónap</string>
+    <string name="lastMonth">Előző hónap</string>
+    <string name="twoMonthsBefore">-2 hónap</string>
+    <string name="custom">Egyedi</string>
+    <string name="start">Kezdete</string>
+    <string name="end">Vége</string>
+    <string name="quickSetting">Gyorsbeállítás</string>
+    <string name="applySettings">Alkalmaz</string>
 
     <!-- alarm -->
 

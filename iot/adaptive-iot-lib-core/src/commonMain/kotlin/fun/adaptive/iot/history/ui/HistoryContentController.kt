@@ -14,21 +14,24 @@ import `fun`.adaptive.graphics.canvas.api.stroke
 import `fun`.adaptive.iot.common.AioTheme
 import `fun`.adaptive.iot.generated.resources.chart
 import `fun`.adaptive.iot.generated.resources.monitoring
-import `fun`.adaptive.iot.generated.resources.settings
 import `fun`.adaptive.iot.generated.resources.table
 import `fun`.adaptive.iot.history.AioHistoryApi
 import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
 import `fun`.adaptive.iot.history.model.AioHistoryQuery
 import `fun`.adaptive.iot.history.ui.chart.DoubleHistoryValueNormalizer
+import `fun`.adaptive.iot.history.ui.model.HistoryContentConfig
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.ui.builtin.settings
 import `fun`.adaptive.ui.filter.QuickFilterModel
+import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.instruction.event.EventModifier
+import `fun`.adaptive.ui.instruction.layout.Orientation
+import `fun`.adaptive.ui.instruction.layout.SplitMethod
+import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
@@ -47,8 +50,7 @@ class HistoryContentController(
 
     enum class Mode(val labelFun: () -> String, val icon : GraphicsResourceSet) {
         TABLE({ Strings.table }, Graphics.table),
-        CHART({ Strings.chart }, Graphics.monitoring),
-        SETTINGS({ Strings.settings }, Graphics.settings);
+        CHART({ Strings.chart }, Graphics.monitoring);
 
         val label
             get() = labelFun()
@@ -61,6 +63,9 @@ class HistoryContentController(
             { it.label }
         )
     }
+
+    val splitConfig = storeFor { SplitPaneConfiguration(SplitVisibility.Both, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
+    val config = storeFor { HistoryContentConfig() }
 
     val theme = AioTheme.DEFAULT
 

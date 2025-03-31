@@ -27,4 +27,14 @@ data class SplitPaneConfiguration(
     val orientation : Orientation,
     val dividerOverlaySize : DPixel = 9.dp,
     val dividerEffectiveSize : DPixel = 1.dp
-)
+) {
+
+    fun toggleFirst() =
+        when (visibility) {
+            SplitVisibility.First -> copy(visibility = SplitVisibility.None)
+            SplitVisibility.Second -> copy(visibility = SplitVisibility.Both)
+            SplitVisibility.Both -> copy(visibility = SplitVisibility.Second)
+            SplitVisibility.None -> copy(visibility = SplitVisibility.First)
+
+        }
+}

@@ -62,7 +62,7 @@ fun accountEditor(
                 button(Strings.passwordChange, theme = ButtonTheme.noFocus)
                 primaryPopup(popupState) { hide ->
                     PopupTheme.default.inlineEditorPopup .. width { 300.dp }
-                    changePasswordPopup(copy.uuid) { }
+                    changePasswordPopup(copy.uuid, hide)
                 }
             }
             button(Strings.save) .. onClick { save(copy) }

@@ -36,6 +36,9 @@ operator fun Instant.compareTo(other: LocalDate) =
 operator fun Instant.compareTo(other: LocalTime) =
     this.compareTo(LocalDateTime(localDate(), other).toInstant(TimeZone.currentSystemDefault()))
 
+fun Instant.localDate() =
+    this.toLocalDateTime(TimeZone.currentSystemDefault()).date
+
 fun Instant.localTime() =
     this.toLocalDateTime(TimeZone.currentSystemDefault()).time
 
@@ -50,3 +53,15 @@ fun LocalDate.isBetween(start: Instant, end: Instant): Boolean =
 
 fun LocalTime.isBetween(start: Instant, end: Instant): Boolean =
     start <= this && this <= end
+
+val LocalDate.previousMonth: LocalDate
+    get() = minus(1, DateTimeUnit.MONTH)
+
+val LocalDate.twoMonthsBefore: LocalDate
+    get() = minus(2, DateTimeUnit.MONTH)
+
+val LocalDate.firstDayOfMonth: LocalDate
+    get() = minus(dayOfMonth - 1, DateTimeUnit.DAY)
+
+val LocalDate.lastDayOfMonth: LocalDate
+    get() = plus(1, DateTimeUnit.MONTH).firstDayOfMonth.minus(1, DateTimeUnit.DAY)

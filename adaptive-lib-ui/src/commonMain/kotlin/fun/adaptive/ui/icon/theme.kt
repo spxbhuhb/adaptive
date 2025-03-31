@@ -24,6 +24,14 @@ val tableIconTheme = IconTheme(
     cornerRadius = 6.dp
 )
 
+val focusTableIconTheme = IconTheme(
+    colors.primary,
+    iconSize = 24.dp,
+    containerSize = 34.dp,
+    margin = 3.dp,
+    cornerRadius = 6.dp
+)
+
 val denseIconTheme = IconTheme(
     colors.onSurface,
     iconSize = 22.dp,
