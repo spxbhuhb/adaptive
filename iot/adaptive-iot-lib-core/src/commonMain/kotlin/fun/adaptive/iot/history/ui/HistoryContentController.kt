@@ -208,11 +208,7 @@ class HistoryContentController(
 
     suspend fun query(item: AvItem<*>): List<AioDoubleHistoryRecord> {
         val start = config.value.start.atStartOfDayIn(TimeZone.currentSystemDefault())
-
-        val end = config.value.end
-            .plus(1, DateTimeUnit.DAY)
-            .atStartOfDayIn(TimeZone.currentSystemDefault())
-            .minus(1, DateTimeUnit.MILLISECOND)
+        val end = config.value.end.asEndOfDayInDefault()
 
         val query = AioHistoryQuery(item.uuid.cast(), start, end)
 
@@ -234,8 +230,14 @@ class HistoryContentController(
     fun ByteArray.decodeChunk(out: MutableList<AioDoubleHistoryRecord>) {
         val decoder = ProtoWireFormatDecoder(this)
 
+        val start = config.value.start.atStartOfDayIn(TimeZone.currentSystemDefault())
+        val end = config.value.end.asEndOfDayInDefault()
+
         for (record in decoder.records) {
-            out += record.decoder().rawInstance(record, AioDoubleHistoryRecord)
+            val record = record.decoder().rawInstance(record, AioDoubleHistoryRecord)
+            if (record.timestamp >= start && record.timestamp < end) {
+                out += record
+            }
         }
     }
 
@@ -264,5 +266,11 @@ class HistoryContentController(
 
         return markerColumn to valueColumns
     }
+
+
+    fun LocalDate.asEndOfDayInDefault() =
+        this.plus(1, DateTimeUnit.DAY)
+            .atStartOfDayIn(TimeZone.currentSystemDefault())
+            .minus(1, DateTimeUnit.MILLISECOND)
 
 }

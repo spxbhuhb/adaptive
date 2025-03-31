@@ -6,6 +6,7 @@ import `fun`.adaptive.chart.model.ChartMarker
 import `fun`.adaptive.ui.fragment.layout.RawSize
 import `fun`.adaptive.utility.p02
 import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
@@ -52,10 +53,13 @@ fun instantLabelText(value: Instant?, tickRange: Duration): String {
     val localDateTime = value.toLocalDateTime(TimeZone.currentSystemDefault())
 
     return when {
-        tickRange < 1.seconds -> value.toString()
+        tickRange < 1.seconds -> localDateTime.dayAndTime()
         tickRange < 1.minutes -> "${localDateTime.minute.p02}:${localDateTime.second.p02}"
         tickRange < 1.hours -> "${localDateTime.hour.p02}:${localDateTime.minute.p02}" // Show hour and minute
-        tickRange < 1.days -> "${(localDateTime.month.ordinal + 1).p02}.${localDateTime.dayOfMonth.p02}. ${localDateTime.hour.p02}:${localDateTime.minute.p02}" // Include date and hour
+        tickRange < 1.days -> localDateTime.dayAndTime() // Include date and hour
         else -> "${(localDateTime.month.ordinal + 1).p02}.${localDateTime.dayOfMonth.p02}." // Display only the date
     }
 }
+
+fun LocalDateTime.dayAndTime() =
+    "${(month.ordinal + 1).p02}.${dayOfMonth.p02}. ${hour.p02}:${minute.p02}"

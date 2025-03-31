@@ -65,6 +65,7 @@ open class CanvasFillText(
             null -> y
         }
 
+        safeRenderData.text?.let { canvas.setFont(it.toCssString(null)) }
 
         canvas.fillText(ax, ay, content)
     }

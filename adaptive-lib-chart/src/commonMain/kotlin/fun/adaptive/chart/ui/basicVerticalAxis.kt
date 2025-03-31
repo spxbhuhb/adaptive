@@ -34,7 +34,8 @@ fun basicVerticalAxis(
                 line(0.0, marker.offset, 0.0 - marker.tickSize, marker.offset) .. context.theme.axisLine
             }
             if (marker.labelText != null) {
-                fillText(- tickMax - 2.0, marker.offset + 1.0, marker.labelText, popupAlign.beforeCenter) .. context.theme.axisLabel .. marker.labelInstructions
+                // FIXME manual offset corrections in chart axes
+                fillText(- tickMax - 10.0, marker.offset - 4.0, marker.labelText, popupAlign.beforeCenter) .. context.theme.axisLabel .. marker.labelInstructions
             }
             if (marker.guide) {
                 line(0.0, marker.offset, guideSize, marker.offset) .. context.theme.axisGuide
