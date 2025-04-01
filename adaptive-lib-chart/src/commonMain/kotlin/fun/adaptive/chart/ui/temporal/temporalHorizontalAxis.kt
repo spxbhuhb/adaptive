@@ -1,8 +1,8 @@
 package `fun`.adaptive.chart.ui.temporal
 
 import `fun`.adaptive.chart.model.ChartAxis
-import `fun`.adaptive.chart.model.ChartRenderContext
 import `fun`.adaptive.chart.model.ChartMarker
+import `fun`.adaptive.chart.model.ChartRenderContext
 import `fun`.adaptive.ui.fragment.layout.RawSize
 import `fun`.adaptive.utility.p02
 import kotlinx.datetime.Instant
@@ -12,6 +12,7 @@ import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.Duration.Companion.seconds
 
@@ -22,29 +23,31 @@ fun temporalHorizontalAxisMarkers(
 ): List<ChartMarker> {
     val range = context.range ?: return emptyList()
 
-    val itemsWidth = canvasSize.width - context.plotPadding.start
-    val count = (itemsWidth / 100).toInt()
-    val step = 1.0 / count
+    val availableHeight = canvasSize.width - context.plotPadding.start - context.plotPadding.end
+    val approxLabelSpacing = 80.0
 
-    val normalizer = context.normalizer
+    val markerRange: Duration
 
-    val xRange = range.xEnd - range.xStart
-    val tickRange = xRange / count
+    calculateMarkerPositions(
+        availableHeight,
+        approxLabelSpacing,
+        range.xStart,
+        range.xEnd
+    ).also {
 
-    val out = mutableListOf<ChartMarker>()
+        markerRange = if (it.size >= 2) it[1].second - it[0].second else Duration.ZERO
 
-    for (i in 1 .. count - 1) {
-        val offset = i * step
-        out += ChartMarker(
-            offset = i * step * itemsWidth,
-            tickSize = if (i % 2 == 0) 8.0 else 4.0,
-            labelText = instantLabelText(normalizer.denormalizeX(offset), tickRange),
-            labelOffset = 0.0,
+    }.map { (offset, value) ->
+
+        ChartMarker(
+            offset = offset,
+            labelText = instantLabelText(value, markerRange),
             guide = true
         )
+    }.also {
+        return it
     }
 
-    return out
 }
 
 fun instantLabelText(value: Instant?, tickRange: Duration): String {
@@ -63,3 +66,70 @@ fun instantLabelText(value: Instant?, tickRange: Duration): String {
 
 fun LocalDateTime.dayAndTime() =
     "${(month.ordinal + 1).p02}.${dayOfMonth.p02}. ${hour.p02}:${minute.p02}"
+
+
+fun calculateMarkerPositions(
+    availableSize: Double,
+    stepSize: Double,
+    start: Instant,
+    end: Instant
+): List<Pair<Double, Instant>> {
+    val totalDuration = end - start
+    val maxCount = availableSize / stepSize
+    val stepDuration = niceDuration(totalDuration / maxCount, true)
+    val totalMillis = totalDuration.inWholeMilliseconds.toDouble()
+    val millisPerPixel = totalMillis / availableSize
+    val stepOffset = stepDuration.inWholeMilliseconds / millisPerPixel
+
+    val result = mutableListOf<Pair<Double, Instant>>()
+    var offset = 0.0
+    var current = start
+
+    while (offset < availableSize) {
+        result += offset to current
+        current += stepDuration
+        offset += stepOffset
+    }
+
+    return result
+}
+
+fun niceDuration(range: Duration, round: Boolean): Duration {
+    return if (round) {
+        durationCandidates.firstOrNull { it >= range } ?: durationCandidates.last()
+    } else {
+        durationCandidates.firstOrNull { it > range } ?: durationCandidates.last()
+    }
+}
+
+val durationCandidates = listOf(
+    1.milliseconds,
+    2.milliseconds,
+    5.milliseconds,
+    10.milliseconds,
+    20.milliseconds,
+    50.milliseconds,
+    100.milliseconds,
+    200.milliseconds,
+    500.milliseconds,
+    1.seconds,
+    2.seconds,
+    5.seconds,
+    10.seconds,
+    15.seconds,
+    30.seconds,
+    1.minutes,
+    2.minutes,
+    5.minutes,
+    10.minutes,
+    15.minutes,
+    30.minutes,
+    1.hours,
+    2.hours,
+    3.hours,
+    6.hours,
+    12.hours,
+    1.days,
+    2.days,
+    7.days
+)

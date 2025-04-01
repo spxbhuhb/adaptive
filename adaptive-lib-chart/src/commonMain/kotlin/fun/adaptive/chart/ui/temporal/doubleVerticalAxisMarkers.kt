@@ -16,14 +16,14 @@ fun <YT : Comparable<YT>> doubleVerticalAxisMarkers(
     labelTextFun: (YT) -> Double
 ): List<ChartMarker> {
 
-    val availableHeight = canvasSize.height - context.plotPadding.bottom
-    val approxLabelHeight = 50.0
+    val availableHeight = canvasSize.height - context.plotPadding.top - context.plotPadding.bottom
+    val approxLabelSpacing = 50.0
 
     val normalizer = context.normalizer as? AbstractDoubleNormalizer ?: return emptyList()
 
     calculateMarkerPositions(
         availableHeight,
-        approxLabelHeight,
+        approxLabelSpacing,
         normalizer.yStart,
         normalizer.yEnd
     ).map { (offset, value) ->

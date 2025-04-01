@@ -72,7 +72,7 @@ fun quickInterval(
     hide: () -> Unit
 ) {
     var qfm = QuickFilterModel<NamedDurationType>(
-        NamedDurationType.Today,
+        config.selectedDuration,
         NamedDurationType.entries,
         { it.labelFun() }
     )
