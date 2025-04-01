@@ -1,9 +1,8 @@
 package `fun`.adaptive.lib.util.path
 
-import `fun`.adaptive.utility.PlatformType
+import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.clearedTestPath
 import `fun`.adaptive.utility.ensure
-import `fun`.adaptive.utility.platformType
 import `fun`.adaptive.utility.write
 import kotlinx.io.files.Path
 import kotlin.test.Test
@@ -14,7 +13,7 @@ class DiffTest {
 
     @Test
     fun both_directories_are_empty() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")
@@ -27,7 +26,7 @@ class DiffTest {
 
     @Test
     fun first_contains_a_surplus_empty_directory() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")
@@ -44,7 +43,7 @@ class DiffTest {
 
     @Test
     fun second_contains_a_surplus_empty_directory() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")
@@ -62,7 +61,7 @@ class DiffTest {
 
     @Test
     fun same_directory_structure_but_different_file_content() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")
@@ -83,7 +82,7 @@ class DiffTest {
 
     @Test
     fun one_directory_has_extra_files_and_folders() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")
@@ -102,7 +101,7 @@ class DiffTest {
 
     @Test
     fun files_with_same_name_but_differ_in_directory_and_file() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         val testDir = clearedTestPath()
         val dir1 = testDir.ensure("dir1")

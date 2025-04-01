@@ -10,4 +10,7 @@ object GlobalRuntimeContext {
 
     var nodeType: ApplicationNodeType? = null
 
+    val platform
+        get() = getPlatformType()
+
 }

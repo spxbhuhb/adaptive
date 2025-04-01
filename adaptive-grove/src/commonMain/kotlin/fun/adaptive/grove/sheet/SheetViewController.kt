@@ -577,7 +577,7 @@ open class SheetViewController(
 
             Keys.V -> this += Paste()
 
-            Keys.Z -> if (EventModifier.CTRL in modifiers || EventModifier.META in modifiers) {
+            Keys.Z -> if (modifiers.any { it.isUiCtrl }) {
                 if (EventModifier.SHIFT in modifiers) {
                     this += Redo()
                 } else {

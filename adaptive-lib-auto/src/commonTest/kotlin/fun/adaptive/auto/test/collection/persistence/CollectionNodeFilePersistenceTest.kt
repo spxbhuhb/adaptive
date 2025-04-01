@@ -1,17 +1,12 @@
 package `fun`.adaptive.auto.test.collection.persistence
 
 import `fun`.adaptive.auto.api.autoCommon
-import `fun`.adaptive.auto.test.support.CollectionTestSetupDirect
-import `fun`.adaptive.auto.test.support.content_12
-import `fun`.adaptive.auto.test.support.td12
-import `fun`.adaptive.auto.test.support.td23
-import `fun`.adaptive.auto.test.support.wait
+import `fun`.adaptive.auto.test.support.*
 import `fun`.adaptive.lib.util.path.PathDiffType
 import `fun`.adaptive.lib.util.path.diff
-import `fun`.adaptive.utility.PlatformType
+import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.clearedTestPath
 import `fun`.adaptive.utility.exists
-import `fun`.adaptive.utility.platformType
 import kotlinx.io.files.Path
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -21,7 +16,7 @@ class CollectionNodeFilePersistenceTest {
 
     @Test
     fun basic() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         autoCommon()
 
@@ -48,7 +43,7 @@ class CollectionNodeFilePersistenceTest {
 
     @Test
     fun empty_at_connect() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         autoCommon()
 
@@ -69,7 +64,7 @@ class CollectionNodeFilePersistenceTest {
 
     @Test
     fun update_during_connect() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         autoCommon()
 
@@ -98,7 +93,7 @@ class CollectionNodeFilePersistenceTest {
 
     @Test
     fun update_after_connect() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         autoCommon()
 

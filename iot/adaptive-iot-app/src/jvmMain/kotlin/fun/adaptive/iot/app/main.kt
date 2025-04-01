@@ -4,6 +4,7 @@ import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
 import `fun`.adaptive.app.server.BasicAppServerModule
 import `fun`.adaptive.auth.app.AuthBasicServerModule
 import `fun`.adaptive.backend.setting.dsl.inline
+import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.iot.lib.zigbee.ZigbeeModule
 import `fun`.adaptive.ktor.KtorJvmServerModule
@@ -16,8 +17,8 @@ import kotlinx.io.files.Path
 fun main() {
 
     settings {
+        propertyFile { "./etc/aio.properties" }
         inline(
-            "KTOR_PORT" to 8080,
             "KTOR_WIREFORMAT" to "proto",
             "AIO_HISTORY_PATH" to "./var/history"
         )

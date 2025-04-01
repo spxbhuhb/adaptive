@@ -5,6 +5,7 @@ import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.resource.defaultResourceReader
 import `fun`.adaptive.resource.platform.getResourceReader
+import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
 import kotlinx.io.buffered
@@ -279,7 +280,7 @@ fun Path.syncBySizeAndLastModification(other: Path, createThis: Boolean = true, 
 // Testing
 // ------------------------------------------------------------------------------------
 
-val testPath = Path("./build/adaptive/test/${platformType}")
+val testPath = Path("./build/adaptive/test/${GlobalRuntimeContext.platform.name}")
 
 /**
  * - Compose a unique, fully qualified path for a unit test.

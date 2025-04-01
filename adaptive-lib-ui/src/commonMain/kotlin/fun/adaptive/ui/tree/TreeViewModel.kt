@@ -46,7 +46,7 @@ class TreeViewModel<IT, CT>(
             viewModel: TreeViewModel<IT, CT>, item: TreeItem<IT>, modifiers: Set<EventModifier>
         ) {
             when {
-                viewModel.multiSelect && EventModifier.META in modifiers -> {
+                viewModel.multiSelect && modifiers.any { it.isMultiSelect } -> {
                     if (item !in viewModel.selection) {
                         viewModel.selection += item
                         item.selected = true

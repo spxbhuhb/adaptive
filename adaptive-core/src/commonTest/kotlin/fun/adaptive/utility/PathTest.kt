@@ -1,11 +1,8 @@
 package `fun`.adaptive.utility
 
+import `fun`.adaptive.runtime.GlobalRuntimeContext
 import kotlinx.coroutines.test.runTest
-import kotlin.test.Test
-import kotlin.test.assertContentEquals
-import kotlin.test.assertFailsWith
-import kotlin.test.assertFalse
-import kotlin.test.assertTrue
+import kotlin.test.*
 import kotlin.time.Duration.Companion.milliseconds
 
 class PathTest {
@@ -14,7 +11,7 @@ class PathTest {
 
     @Test
     fun testCopyExistsNoOverride() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         val testPath = clearedTestPath("$testFqn.testCopyExistsNoOverride")
         val filePath = testPath.resolve("test.txt")
@@ -28,7 +25,7 @@ class PathTest {
 
     @Test
     fun testCopyExistsOverride() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         val testPath = clearedTestPath("$testFqn.testCopyExistsOverride")
         val sourcePath = testPath.resolve("test.txt")
@@ -48,7 +45,7 @@ class PathTest {
 
     @Test
     fun testCopyNotExists() {
-        if (platformType == PlatformType.JsBrowser) return
+        if (GlobalRuntimeContext.platform.isJs) return
 
         val testPath = clearedTestPath("$testFqn.testCopyNotExists")
         val sourcePath = testPath.resolve("test.txt")
@@ -66,7 +63,7 @@ class PathTest {
 
     @Test
     fun testCopyKeepModification() = runTest {
-        if (platformType == PlatformType.JsBrowser || platformType == PlatformType.iOS) return@runTest
+        if (GlobalRuntimeContext.platform.let { it.isJs || it.isIos }) return@runTest
 
         val testPath = clearedTestPath("$testFqn.testCopyKeepModification")
 
@@ -89,7 +86,7 @@ class PathTest {
 
     @Test
     fun testEqualsBySizeAndLastModification() = runTest {
-        if (platformType == PlatformType.JsBrowser || platformType == PlatformType.iOS) return@runTest
+        if (GlobalRuntimeContext.platform.let { it.isJs || it.isIos }) return@runTest
 
         val testDir = clearedTestPath("$testFqn.testEqualsBySizeAndLastModification")
         val otherFile = testDir.resolve("other.txt")
@@ -117,7 +114,7 @@ class PathTest {
     @Test
     @OptIn(DangerousApi::class) // confined to test path by `clearedTestPath`
     fun testSyncBySizeAndLastModification() {
-        if (platformType == PlatformType.JsBrowser || platformType == PlatformType.iOS) return
+        if (GlobalRuntimeContext.platform.let { it.isJs || it.isIos }) return
 
         val testDir = clearedTestPath("$testFqn.testSyncBySizeAndLastModification")
         val sourceDir = testDir.resolve("source").ensure()

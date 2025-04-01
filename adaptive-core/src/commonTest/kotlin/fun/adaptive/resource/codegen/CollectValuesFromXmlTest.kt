@@ -1,7 +1,6 @@
 package `fun`.adaptive.resource.codegen
 
-import `fun`.adaptive.utility.PlatformType
-import `fun`.adaptive.utility.platformType
+import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.resolve
 import `fun`.adaptive.utility.testPath
 import kotlinx.io.files.Path
@@ -90,7 +89,7 @@ class CollectValuesFromXmlTest {
     }
 
     fun test(xmlContent: () -> String): Pair<ResourceCompilation, Map<String, ResourceCompilation.ResourceValue>>? {
-        if (platformType == PlatformType.JsBrowser) return null
+        if (GlobalRuntimeContext.platform.isJs) return null
 
         val sourcePath = testPath.resolve("resources")
         val filePath = Path("/fake/path/to/file.xml")
