@@ -6,11 +6,15 @@ package `fun`.adaptive.ui.instruction.layout
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.ui.instruction.DPixel
 
 @Adat
 class PopupAlign(
     val vertical: OuterAlignment?,
     val horizontal: OuterAlignment?,
+    val absolute: Boolean = false,
+    val modal: Boolean = false,
+    val topMax: DPixel? = null
 ) : AdaptiveInstruction {
 
     fun flipVertical(): PopupAlign = PopupAlign(
@@ -65,6 +69,17 @@ class PopupAlign(
         val belowAfter = PopupAlign(vertical = OuterAlignment.Below, horizontal = OuterAlignment.After)
 
         val centerCenter = PopupAlign(vertical = OuterAlignment.Center, horizontal = OuterAlignment.Center)
+
+        fun absoluteCenter(
+            modal: Boolean = false,
+            topMax: DPixel? = null
+        ) = PopupAlign(
+            vertical = OuterAlignment.Center,
+            horizontal = OuterAlignment.Center,
+            absolute = true,
+            modal = modal,
+            topMax = topMax
+        )
 
         fun findBestPopupAlignment(preferred: PopupAlign, check: (PopupAlign) -> Boolean): PopupAlign {
 

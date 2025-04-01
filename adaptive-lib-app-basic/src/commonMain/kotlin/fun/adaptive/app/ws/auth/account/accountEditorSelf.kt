@@ -6,8 +6,6 @@ import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.shared.wsContentHeader
 import `fun`.adaptive.auth.api.AuthPrincipalApi
 import `fun`.adaptive.auth.api.AuthRoleApi
-import `fun`.adaptive.auth.model.AuthPrincipal
-import `fun`.adaptive.auth.model.AuthRole
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.adapter
@@ -18,13 +16,9 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.ButtonTheme
 import `fun`.adaptive.ui.button.button
-import `fun`.adaptive.ui.checkbox.checkbox
-import `fun`.adaptive.ui.datetime.instant
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.label.inputLabel
 import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.popup.PopupTheme
 import `fun`.adaptive.ui.workspace.WorkspaceTheme
@@ -32,7 +26,7 @@ import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.uppercaseFirstChar
 
 @Adaptive
-fun accountEditor(
+fun accountEditorSelf(
     account: AccountEditorData? = null,
     save: (AccountEditorData) -> Unit
 ) {
@@ -81,79 +75,6 @@ fun accountEditor(
         withLabel(Strings.email.uppercaseFirstChar()) { state ->
             width { 400.dp }
             textInput(copy.email, safariHack) { copy.update(copy::email, it) }
-        }
-    }
-}
-
-@Adaptive
-fun loginTimes(principal: AuthPrincipal) {
-    grid {
-        maxWidth
-        rowTemplate(28.dp, 44.dp)
-        colTemplate(1.fr.repeat(2))
-        gapWidth { 32.dp }
-        alignItems.startCenter
-
-        inputLabel { "Utolsó sikeres azonosítás" }
-        inputLabel { "Utolsó sikertelen azonosítás" }
-
-        instant(principal.spec.lastAuthSuccess)
-        instant(principal.spec.lastAuthFail)
-    }
-}
-
-
-
-@Adaptive
-fun loginCounters(principal: AuthPrincipal) {
-    grid {
-        maxWidth
-        rowTemplate(28.dp, 44.dp)
-        colTemplate(1.fr.repeat(2))
-        gapWidth { 32.dp }
-        alignItems.startCenter
-
-        inputLabel { "Sikeres azonosítások száma" }
-        inputLabel { "Sikertelen azonosítások száma" }
-
-        text(principal.spec.authSuccessCount)
-        text(principal.spec.authFailCount)
-    }
-}
-
-@Adaptive
-fun roles(knownRoles: List<AuthRole>, principalRoles: List<AuthRole>) {
-
-    var selectedRoles = principalRoles
-
-    column {
-        paddingLeft { 32.dp } .. paddingRight { 16.dp } .. height { 120.dp } .. gap { 8.dp }
-
-        inputLabel { "Szerepkörök" }
-
-        flowBox {
-            gap { 8.dp }
-
-            for (role in knownRoles) {
-                row {
-                    alignItems.center .. gap { 8.dp }
-
-                    onClick {
-                        if (role in selectedRoles) {
-                            selectedRoles - role
-                        } else {
-                            selectedRoles + role
-                        }
-                    }
-
-                    box {
-                        size(24.dp, 24.dp) .. alignItems.center
-                        checkbox(role in selectedRoles) { }
-                    }
-
-                    text(role.name) .. noSelect
-                }
-            }
         }
     }
 }

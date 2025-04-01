@@ -11,7 +11,7 @@ fun wsAppAccountSelf(pane : WsPane<*, AccountSelfController>) : AdaptiveFragment
 
     val accountEditorData = fetch { pane.controller.getAccountEditorData() }
 
-    accountEditor(accountEditorData) { pane.controller.save(it) }
+    accountEditorSelf(accountEditorData) { pane.controller.save(it) }
 
     return fragment()
 }

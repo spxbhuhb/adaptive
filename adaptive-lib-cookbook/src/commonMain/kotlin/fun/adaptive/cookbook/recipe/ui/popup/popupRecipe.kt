@@ -17,6 +17,7 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.layout.PopupAlign.Companion.absoluteCenter
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textSmall
 
@@ -46,6 +47,14 @@ fun popupRecipe(): AdaptiveFragment {
             text(Strings.rightClickForPopup) .. noSelect
             contextPopup {
                 popupStyles .. popupAlign.afterCenter
+                text(Strings.popupContent)
+            }
+        }
+
+        box {
+            text(Strings.leftClickForPopup + " - absolute") .. noSelect
+            primaryPopup {
+                popupStyles .. absoluteCenter(false, 50.dp)
                 text(Strings.popupContent)
             }
         }

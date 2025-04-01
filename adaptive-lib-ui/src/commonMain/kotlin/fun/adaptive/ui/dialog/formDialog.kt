@@ -4,17 +4,9 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.paddingBottom
-import `fun`.adaptive.ui.api.paddingRight
-import `fun`.adaptive.ui.api.width
-
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.check
 import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.form.form
@@ -22,11 +14,12 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.OnClose
 
 @Adaptive
-fun formDialog(title : String, data : AdatClass, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+fun formDialog(title: String, data: AdatClass): AdaptiveFragment {
 
     val onClose = fragment().instructions.firstInstanceOfOrNull<OnClose>()
 
-    dialog(title, instructions()) {
+    dialog(title) {
+        instructions()
 
         column {
             padding { 32.dp }

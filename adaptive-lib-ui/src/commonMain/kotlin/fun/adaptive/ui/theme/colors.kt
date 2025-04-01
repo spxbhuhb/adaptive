@@ -35,7 +35,7 @@ class ThemeColors {
     val failSurface = fail
     val onFailSurface = color(0xFFFFFFu)
 
-    val primary = color(0x0D6EFD)
+    val primary = color(0x5C84F0)
     val onPrimary = color(0xFFFFFF)
 
     val primaryHover = color(0xCBDAFEu)
@@ -60,5 +60,4 @@ class ThemeColors {
     val onReverseVariant = color(0xBBBBBB)
 
     val focusColor = color(0x0D6EFD)
-
 }

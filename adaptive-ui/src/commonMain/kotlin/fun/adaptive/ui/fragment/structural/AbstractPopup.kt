@@ -17,6 +17,8 @@ import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.fragment.layout.computeFinal
 import `fun`.adaptive.ui.instruction.layout.*
 import `fun`.adaptive.ui.render.model.AuiRenderData
+import kotlin.math.max
+import kotlin.math.min
 
 abstract class AbstractPopup<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
@@ -34,6 +36,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
         const val CONTENT_INDEX = 3
 
         val ROOT_INSTRUCTIONS = instructionsOf(maxSize, noPointerEvents, zIndex { 2000 })
+        val ABSOLUTE_MODAL_ROOT_INSTRUCTIONS = instructionsOf(maxSize, zIndex { 2000 })
         val CONTAINER_INSTRUCTIONS = instructionsOf(enablePointerEvents, tabIndex { 0 })
     }
 
@@ -83,7 +86,8 @@ abstract class AbstractPopup<RT, CRT : RT>(
 
             OVERLAY_INDEX -> {
                 if (fragment.haveToPatch(closureDirtyMask, 1)) {
-                    fragment.setStateVariable(index = 0, value = ROOT_INSTRUCTIONS)
+                    val absoluteModal = instructions.firstInstanceOfOrNull<PopupAlign>()?.modal != false
+                    fragment.setStateVariable(index = 0, value = if (absoluteModal) ABSOLUTE_MODAL_ROOT_INSTRUCTIONS else ROOT_INSTRUCTIONS)
                 }
                 if (fragment.haveToPatch(closureDirtyMask, 0)) {
                     fragment.setStateVariable(
@@ -129,20 +133,19 @@ abstract class AbstractPopup<RT, CRT : RT>(
         patchInternal()
     }
 
-    fun getOverlay() : AbstractManualLayout<*,*>? {
+    fun getOverlay(): AbstractManualLayout<*, *>? {
         val select = children.first()
-        return select.firstOrNull<AbstractManualLayout<*,*>>()
+        return select.firstOrNull<AbstractManualLayout<*, *>>()
     }
 
     private fun computePopupLayout(proposedWidth: Double, proposedHeight: Double) {
 
         val layoutFragment = renderData.layoutFragment ?: return
-        val startPosition = layoutFragment.absolutePosition
 
         val overlay = getOverlay() ?: return
         overlay.computeFinal(proposedWidth, proposedWidth, proposedHeight, proposedWidth)
 
-        val container = overlay.first<AbstractBox<*,*>>()
+        val container = overlay.first<AbstractBox<*, *>>()
 
         val parentRenderData = layoutFragment.renderData
 
@@ -156,6 +159,40 @@ abstract class AbstractPopup<RT, CRT : RT>(
 
         var alignment = instructions.lastInstanceOfOrNull<PopupAlign>() ?: popupAlign.belowStart
 
+        if (alignment.absolute) {
+            absolutePosition(alignment, overlay, container)
+        } else {
+            relativePosition(alignment, layoutFragment.absolutePosition, container)
+        }
+    }
+
+    fun absolutePosition(
+        alignment: PopupAlign,
+        overlay: AbstractManualLayout<*, *>,
+        container: AbstractBox<*, *>
+    ) {
+        val availableWidth = overlay.renderData.finalWidth
+        val availableHeight = overlay.renderData.finalHeight
+
+        val popupRenderData = container.renderData
+
+        var top = (availableHeight - popupRenderData.finalHeight) / 2
+
+        if (alignment.topMax != null) {
+            top = min(top, uiAdapter.toPx(alignment.topMax))
+        }
+
+        container.placeLayout(
+            max(0.0, top),
+            max(0.0, (availableWidth - popupRenderData.finalWidth) / 2)
+        )
+    }
+
+    fun relativePosition(
+        alignment: PopupAlign,
+        startPosition: RawPosition,
+        container: AbstractBox<*, *>
+    ) {
         var position = RawPosition(0.0, 0.0)
 
         PopupAlign.findBestPopupAlignment(alignment) {
@@ -166,7 +203,10 @@ abstract class AbstractPopup<RT, CRT : RT>(
         container.placeLayout(startPosition.top + position.top, startPosition.left + position.left)
     }
 
-    fun getPosition(popupRenderData: AuiRenderData, alignment: PopupAlign): RawPosition {
+    fun getPosition(
+        popupRenderData: AuiRenderData,
+        alignment: PopupAlign
+    ): RawPosition {
         val instructed = instructions.lastInstanceOfOrNull<Position>()
         if (instructed != null) return instructed.toRaw(uiAdapter)
 

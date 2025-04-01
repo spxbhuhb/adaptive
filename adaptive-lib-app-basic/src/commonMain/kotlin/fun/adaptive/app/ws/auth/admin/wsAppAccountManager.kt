@@ -3,7 +3,6 @@ package `fun`.adaptive.app.ws.auth.admin
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.auth.account.AccountEditorData
-import `fun`.adaptive.app.ws.auth.account.accountEditor
 import `fun`.adaptive.app.ws.shared.wsContentHeader
 import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
@@ -18,8 +17,8 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.close
 import `fun`.adaptive.ui.builtin.more_vert
+import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.datetime.instant
-import `fun`.adaptive.ui.dialog.buttonDialog
 import `fun`.adaptive.ui.dialog.rowIconDialog
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.icon.actionIcon
@@ -54,7 +53,14 @@ fun accountList() {
             row {
                 gap { 16.dp }
                 editor { filter.text } .. width { 200.dp } .. inputPlaceholder { Strings.filter }
-                buttonDialog("Fiók", Graphics.add, Strings.addAccount) { accountEditor { } } .. alignSelf.endCenter
+
+                row {
+                    button(Strings.addAccount)
+                    primaryPopup { hide ->
+                        popupAlign.absoluteCenter(modal = true, 150.dp)
+                        accountEditorAdmin(hide = hide) { }
+                    }
+                }
             }
         }
 
@@ -118,7 +124,7 @@ private fun item(item: BasicAccountSummary) {
         box {
             if (hover || modalOpen) {
                 rowIconDialog(Graphics.edit, "Fiók szerkesztése", feedback = { modalOpen = it }) {
-                    accountEditor(
+                    accountEditorAdmin(
                         AccountEditorData(
                             item.accountId,
                             item.login,
@@ -126,7 +132,8 @@ private fun item(item: BasicAccountSummary) {
                             item.email,
                             item.activated,
                             item.locked
-                        )
+                        ),
+                        hide = { }
                     ) { }
                 }
             }

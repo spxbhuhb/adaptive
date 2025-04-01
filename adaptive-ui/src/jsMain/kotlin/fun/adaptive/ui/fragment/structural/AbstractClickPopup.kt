@@ -6,6 +6,7 @@ import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractBox
 import `fun`.adaptive.ui.input.InputContext
+import `fun`.adaptive.ui.instruction.layout.PopupAlign
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.events.Event
@@ -38,7 +39,7 @@ abstract class AbstractClickPopup(
 
         val inside = this.firstOrNull { it is AbstractAuiFragment<*> && it.receiver === target }
 
-        if (inside == null) {
+        if (inside == null && instructions.firstInstanceOfOrNull<PopupAlign>()?.modal != true) {
             super.hide()
 
             inputContext?.let { it.popupOpen = false }
