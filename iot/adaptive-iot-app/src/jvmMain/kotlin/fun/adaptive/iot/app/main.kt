@@ -32,4 +32,5 @@ fun main() {
         module { KtorJvmServerModule() }
         module { BasicAppServerModule() }
     }
+
 }

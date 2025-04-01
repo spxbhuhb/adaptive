@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.TimeZone
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import `fun`.adaptive.gradle.js.CompressJsResourcesTask
 
 
 /*
@@ -158,12 +159,23 @@ tasks.getByName("build") {
             commit: ${out.toByteArray().decodeToString()}
         """.trimIndent()
 
-        Files.write(Paths.get("$projectDir/var/release/about.yaml"), about.encodeToByteArray(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
+        val releaseDir = Paths.get("$projectDir/var/release")
+        Files.createDirectories(releaseDir)
+        Files.write(Paths.get("$releaseDir/about.yaml"), about.encodeToByteArray(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
     }
 }
 
+tasks.register<CompressJsResourcesTask>("compressJsResources") {
+    dependsOn("build")
+}
+
+tasks.named("jsBrowserProductionWebpack") {
+    finalizedBy("compressJsResources")
+}
+
 tasks.register("release") {
-    dependsOn("build", "jvmShadowJar")
+    group = "release"
+    dependsOn("build", "jvmShadowJar", "compressJsResources")
     outputs.upToDateWhen { false }
     doLast {
         Files.write(Paths.get("$projectDir/build/version.txt"), "$version".encodeToByteArray(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
@@ -173,3 +185,4 @@ tasks.register("release") {
             .waitFor()
     }
 }
+

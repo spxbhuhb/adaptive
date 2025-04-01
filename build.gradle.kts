@@ -7,7 +7,7 @@ val jsTasks = listOf(
 )
 
 val noJsBuilds = listOf(
-    "adaptive-gradle-plugin", "adaptive-kotlin-plugin", "test"
+    "adaptive-gradle-plugin", "adaptive-kotlin-plugin", "test", "adaptive-iot-cli"
 )
 
 val publishTasks = listOf(

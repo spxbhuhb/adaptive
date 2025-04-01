@@ -8,10 +8,8 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.lib.auth.authJvm
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.service.api.getService
@@ -53,9 +51,7 @@ class DuplexTest {
         // client connects though websocket.
 
         val serverBackend = backend {
-            inMemoryH2(callSiteName.substringAfterLast('.'))
             service { DuplexService() }
-            authJvm() // to have session worker
             ktor()
         }
 
@@ -74,7 +70,7 @@ class DuplexTest {
     }
 
     @Test
-    fun throwAdat() {
+    fun duplexTest() {
         duplexTest {
             // it.transport is a ClientWebSocketServiceCallTransport
             val service = getService<DuplexApi>(it.transport)

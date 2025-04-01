@@ -103,7 +103,11 @@ class KtorWorker(
 
     fun Routing.sessionWebsocketServiceCallTransport() {
         val safeAdapter = adapter ?: return
-        val provider = sessionProvider ?: return
+        val provider = sessionProvider
+
+        if (sessionProvider == null) {
+            logger.warning("No session provider, authentication won't work.")
+        }
 
         webSocket(serviceWebSocketRoute) {
 
@@ -124,7 +128,7 @@ class KtorWorker(
                 wireFormatProvider,
                 this,
                 sessionUuid,
-                provider.getSession(sessionUuid),
+                provider?.getSession(sessionUuid),
                 fileTransport
             )
 
@@ -153,6 +157,7 @@ class KtorWorker(
     fun Routing.jsAppFiles() {
         staticFiles("/", File(staticResourcesPath)) {
             this.default("index.html")
+            preCompressed(CompressedFileType.GZIP, CompressedFileType.BROTLI)
         }
     }
 

@@ -723,7 +723,7 @@ class JsonWireFormatEncoder(
             WireFormatKind.Primitive -> Unit
             WireFormatKind.Collection -> writer.openArray()
             WireFormatKind.Instance -> writer.openObject()
-            WireFormatKind.Polymorphic -> writer.openObject()
+            WireFormatKind.Polymorphic -> Unit
         }
 
         wireFormat.wireFormatEncode(this, value)
@@ -732,7 +732,7 @@ class JsonWireFormatEncoder(
             WireFormatKind.Primitive -> Unit
             WireFormatKind.Collection -> writer.closeArray()
             WireFormatKind.Instance -> writer.closeObject()
-            WireFormatKind.Polymorphic -> writer.closeObject()
+            WireFormatKind.Polymorphic ->Unit
         }
 
         return this

@@ -13,6 +13,7 @@ androidx-constraintlayout = "2.1.4"
 androidx-core-ktx = "1.13.0"
 androidx-espresso-core = "3.5.1"
 androidx-test-junit = "1.1.5"
+brotli4j="1.15.0"
 clikt="5.0.3"
 coroutines = "1.7.3"
 datetime = "0.4.0"
@@ -66,6 +67,13 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-espresso-core" }
 androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
+
+brotli4j = { module = "com.aayushatharva.brotli4j:brotli4j", version.ref = "brotli4j" }
+brotli4j-linux = { module = "com.aayushatharva.brotli4j:native-linux-x86_64", version.ref = "brotli4j" }
+brotli4j-linux-aarch64 = { module = "com.aayushatharva.brotli4j:native-linux-aarch64", version.ref = "brotli4j" }
+brotli4j-macos = { module = "com.aayushatharva.brotli4j:native-osx-x86_64", version.ref = "brotli4j" }
+brotli4j-macos-aarch64 = { module = "com.aayushatharva.brotli4j:native-osx-aarch64", version.ref = "brotli4j" }
+brotli4j-windows = { module = "com.aayushatharva.brotli4j:native-windows-x86_64", version.ref = "brotli4j" }
 
 clikt = { module = "com.github.ajalt.clikt:clikt", version.ref = "clikt" }
 

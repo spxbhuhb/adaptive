@@ -5,21 +5,26 @@
 package `fun`.adaptive.ktor.worker
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.auth.app.AuthBasicServerModule
 import `fun`.adaptive.auth.context.publicAccess
-import `fun`.adaptive.exposed.inMemoryH2
-import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.lib.auth.authJvm
-import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.backend
+import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.backend.setting.dsl.inline
+import `fun`.adaptive.backend.setting.dsl.settings
+import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.ktor.api.webSocketTransport
+import `fun`.adaptive.ktor.ktor
+import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallException
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.utility.ensure
 import kotlinx.coroutines.runBlocking
+import kotlinx.io.files.Path
 import org.junit.Test
 import kotlin.test.assertEquals
 
@@ -63,14 +68,14 @@ class ExceptionTest {
         callSiteName: String = "unknown",
         test: suspend (it: BackendAdapter) -> Unit
     ) {
+
         val serverBackend = backend {
-            inMemoryH2(callSiteName.substringAfterLast('.'))
             service { NumberService() }
-            authJvm() // to have session worker
-            ktor()
+            worker { KtorWorker(10001) }
         }
 
-        val clientBackend = backend(webSocketTransport("http://localhost:8080")) { }.start()
+        val clientTransport = webSocketTransport("http://127.0.0.1:10001")
+        val clientBackend = backend(clientTransport) { }
 
         runBlocking {
             try {
