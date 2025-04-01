@@ -33,10 +33,15 @@ fun basicVerticalAxis(
             if (marker.tickSize != null) {
                 line(0.0, marker.offset, 0.0 - marker.tickSize, marker.offset) .. context.theme.axisLine
             }
-            if (marker.labelText != null) {
+
+            // TODO axis label hiding algorithm
+            // The > 12.0 condition hopefully hides the label when it would be cut. This should be
+            // label size dependent.
+            if (marker.labelText != null && (marker.offset - 4.0 > 12.0)) {
                 // FIXME manual offset corrections in chart axes
                 fillText(- tickMax - 10.0, marker.offset - 4.0, marker.labelText, popupAlign.beforeCenter) .. context.theme.axisLabel .. marker.labelInstructions
             }
+
             if (marker.guide) {
                 line(0.0, marker.offset, guideSize, marker.offset) .. context.theme.axisGuide
             }

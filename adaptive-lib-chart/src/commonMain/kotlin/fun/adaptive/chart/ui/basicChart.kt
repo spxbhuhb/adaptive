@@ -13,6 +13,7 @@ import `fun`.adaptive.graphics.canvas.api.canvas
 import `fun`.adaptive.graphics.canvas.api.stroke
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.utility.format
 import kotlinx.datetime.Clock.System.now
@@ -34,7 +35,7 @@ val yAxis = ChartAxis<Instant, Double, Unit>(
     WsChartContext.BASIC_VERTICAL_AXIS
 ) { context, axis, canvasSize ->
 
-    val itemsHeight = canvasSize.height - context.itemOffsetY
+    val itemsHeight = canvasSize.height - context.plotPadding.bottom
     val count = (itemsHeight / 50).toInt() - 1
     val step = 1.0 / count
 
@@ -85,8 +86,7 @@ val items = listOf(item1, item2)
 val context = ChartRenderContext<Instant, Double, Unit>(
     items,
     listOf(xAxis, yAxis),
-    50.0,
-    50.0,
+    RawSurrounding(0.0, 0.0, 50.0, 50.0),
     0.0,
     { InstantDoubleNormalizer(it) }
 )

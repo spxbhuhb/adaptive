@@ -22,7 +22,7 @@ fun temporalHorizontalAxisMarkers(
 ): List<ChartMarker> {
     val range = context.range ?: return emptyList()
 
-    val itemsWidth = canvasSize.width - context.itemOffsetX
+    val itemsWidth = canvasSize.width - context.plotPadding.start
     val count = (itemsWidth / 100).toInt()
     val step = 1.0 / count
 

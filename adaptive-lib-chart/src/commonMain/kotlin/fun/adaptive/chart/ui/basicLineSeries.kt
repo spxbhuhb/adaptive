@@ -24,7 +24,7 @@ fun  basicLineSeries(
     if (first != null) {
         path(operations, first.let { MoveTo(it.x, it.y) }) ..
             item.instructions ..
-            translate(context.itemOffsetX, canvasSize.height - context.itemOffsetY)
+            translate(context.plotPadding.start, canvasSize.height - context.plotPadding.bottom)
     }
 
     return fragment()
@@ -41,7 +41,7 @@ private fun <XT : Comparable<XT>, YT : Comparable<YT>,AT> operations(
     @Suppress("UNCHECKED_CAST")
     item as ChartItem<XT, YT, AT>
 
-    val width = canvasSize.width - context.itemOffsetX
-    val height = canvasSize.height - context.itemOffsetY
+    val width = canvasSize.width - context.plotPadding.start
+    val height = (canvasSize.height - context.plotPadding.bottom) * context.plotSpaceRatio
     return item.normalize(context.normalizer).prepareOperations(width, height).operations
 }

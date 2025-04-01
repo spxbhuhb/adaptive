@@ -2,6 +2,7 @@ package `fun`.adaptive.iot.history.ui
 
 import `fun`.adaptive.chart.calculation.CalculationContext
 import `fun`.adaptive.chart.model.ChartAxis
+import `fun`.adaptive.chart.model.ChartDataRange
 import `fun`.adaptive.chart.model.ChartItem
 import `fun`.adaptive.chart.model.ChartRenderContext
 import `fun`.adaptive.chart.ui.temporal.doubleVerticalAxisMarkers
@@ -28,6 +29,7 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.filter.QuickFilterModel
+import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.layout.Orientation
@@ -130,10 +132,10 @@ class HistoryContentController(
         ChartRenderContext<Instant, AioDoubleHistoryRecord, AvItem<*>>(
             items,
             listOf(xAxis, yAxis),
-            50.0,
-            50.0,
+            RawSurrounding(0.0, 0.0, 50.0, 50.0),
             AioDoubleHistoryRecord.ZERO,
-            { DoubleHistoryValueNormalizer(it) }
+            { DoubleHistoryValueNormalizer(it) },
+            ::extendChartRange
         )
 
     override fun accepts(pane: WsPaneType<HistoryBrowserWsItem>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
@@ -273,4 +275,14 @@ class HistoryContentController(
             .atStartOfDayIn(TimeZone.currentSystemDefault())
             .minus(1, DateTimeUnit.MILLISECOND)
 
+    fun extendChartRange(
+        sourceRange: ChartDataRange<Instant, AioDoubleHistoryRecord>
+    ): ChartDataRange<Instant, AioDoubleHistoryRecord> {
+        return ChartDataRange(
+            config.value.start.atStartOfDayIn(TimeZone.currentSystemDefault()),
+            config.value.end.asEndOfDayInDefault(),
+            sourceRange.yStart,
+            sourceRange.yEnd
+        )
+    }
 }
