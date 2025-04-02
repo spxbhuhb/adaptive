@@ -18,7 +18,8 @@ import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.ui.builtin.*
+import `fun`.adaptive.ui.builtin.eco
+import `fun`.adaptive.ui.builtin.home
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.WsSideBarAction
@@ -77,12 +78,13 @@ class BasicAppWsModule<WT : Workspace> : AppModule<WT>() {
 
         + WsPane(
             UUID(),
+            this,
             Strings.administration,
             Graphics.local_police,
             WsPanePosition.RightMiddle,
             ADMIN_TOOL_KEY,
             Unit,
-            WsUnitPaneController(),
+            WsUnitPaneController(this),
             displayOrder = Int.MAX_VALUE
         )
 
@@ -95,18 +97,20 @@ class BasicAppWsModule<WT : Workspace> : AppModule<WT>() {
         addContentPaneBuilder(HOME_CONTENT_KEY) {
             WsPane(
                 UUID(),
+                workspace = this,
                 Strings.home,
                 Graphics.eco,
                 WsPanePosition.Center,
                 HOME_CONTENT_KEY,
                 HOME_CONTENT_ITEM,
-                WsSingularPaneController(HOME_CONTENT_ITEM),
+                WsSingularPaneController(this, HOME_CONTENT_ITEM),
                 singularity = WsPaneSingularity.SINGULAR,
                 displayOrder = 0
             )
         }
 
         + WsSideBarAction(
+            workspace = this,
             Strings.home,
             Graphics.eco,
             WsPanePosition.LeftTop,

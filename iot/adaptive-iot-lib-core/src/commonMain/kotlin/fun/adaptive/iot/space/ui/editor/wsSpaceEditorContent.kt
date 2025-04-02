@@ -44,6 +44,7 @@ fun wsSpaceEditorContentDef(context: AioWsContext) {
     workspace.addContentPaneBuilder(AioWsContext.WSIT_SPACE) { item ->
         WsPane(
             UUID(),
+            workspace = workspace,
             item.name,
             context[item].icon,
             WsPanePosition.Center,

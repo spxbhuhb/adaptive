@@ -29,12 +29,13 @@ class ChartWsModule<WT : Workspace> : ChartModule<WT>() {
 
             WsPane(
                 UUID(),
+                workspace,
                 item.name,
                 Graphics.monitoring,
                 WsPanePosition.Center,
                 WsChartContext.CHART_CONTENT_PANE_KEY,
                 data = WsChartPaneData(),
-                controller = WsChartContentController()
+                controller = WsChartContentController(this)
             )
 
         }

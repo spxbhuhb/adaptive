@@ -28,6 +28,7 @@ fun wsDocBrowserToolDef(context: DocWsContext): WsPane<Unit, DocBrowserToolContr
 
     val pane = WsPane(
         UUID(),
+        context.workspace,
         Strings.documentation,
         Graphics.book_3,
         WsPanePosition.LeftMiddle,

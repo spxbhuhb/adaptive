@@ -1,10 +1,10 @@
 package `fun`.adaptive.iot.history.ui
 
-import `fun`.adaptive.iot.generated.resources.database
-import `fun`.adaptive.iot.generated.resources.historicalData
 import `fun`.adaptive.foundation.value.adaptiveStoreFor
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.iot.device.DeviceMarkers
+import `fun`.adaptive.iot.generated.resources.database
+import `fun`.adaptive.iot.generated.resources.historicalData
 import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.iot.space.SpaceMarkers
@@ -14,17 +14,16 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
-import `fun`.adaptive.ui.workspace.WithWorkspace
+import `fun`.adaptive.ui.value.AvNameCache
+import `fun`.adaptive.ui.value.AvUiTree
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.ui.value.AvNameCache
-import `fun`.adaptive.ui.value.AvUiTree
 
 class HistoryToolController(
     override val workspace: Workspace
-) : WsPaneController<Unit>(), WithWorkspace, ObservableListener<AvNameCache> {
+) : WsPaneController<Unit>(), ObservableListener<AvNameCache> {
 
     enum class Mode {
         SPACE, DEVICE

@@ -11,6 +11,7 @@ import `fun`.adaptive.ui.workspace.logic.WsPaneType
 
 data class WsPane<D, C : WsPaneController<D>>(
     val uuid: WsPaneId,
+    override val workspace: Workspace,
     override val name: String,
     override val icon: GraphicsResourceSet,
     override val position: WsPanePosition,

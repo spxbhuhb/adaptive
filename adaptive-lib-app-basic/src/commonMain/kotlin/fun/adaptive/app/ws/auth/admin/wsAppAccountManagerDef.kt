@@ -23,12 +23,13 @@ fun Workspace.wsAppAccountManagerDef() {
     addContentPaneBuilder(ACCOUNT_MANAGER_KEY) {
         WsPane(
             UUID(),
+            workspace = this,
             Strings.accounts,
             Graphics.supervised_user_circle,
             WsPanePosition.Center,
             ACCOUNT_MANAGER_KEY,
             ACCOUNT_MANAGER_ITEM,
-            AccountManagerController()
+            AccountManagerController(this)
         )
     }
 

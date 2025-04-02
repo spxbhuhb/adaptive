@@ -25,24 +25,26 @@ fun Workspace.chartCommon() {
 
     toolPanes += WsPane(
         UUID(),
+        this,
         "Chart",
         Graphics.menu,
         WsPanePosition.RightTop,
         WsChartContext.CHART_TOOL_PANE_KEY,
         data = Unit,
-        controller = WsUnitPaneController()
+        controller = WsUnitPaneController(this)
     )
 
     addContentPaneBuilder(WsChartContext.WSIT_CHART_SERIES) { item ->
 
         WsPane(
             UUID(),
+            this,
             item.name,
             Graphics.monitoring,
             WsPanePosition.Center,
             WsChartContext.CHART_CONTENT_PANE_KEY,
             data = WsChartPaneData(),
-            controller = WsChartContentController()
+            controller = WsChartContentController(this)
         )
 
     }

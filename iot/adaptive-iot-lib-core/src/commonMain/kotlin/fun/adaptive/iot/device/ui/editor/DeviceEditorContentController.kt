@@ -9,22 +9,21 @@ import `fun`.adaptive.iot.generated.resources.saveFail
 import `fun`.adaptive.iot.generated.resources.saveSuccess
 import `fun`.adaptive.iot.space.AioSpaceApi
 import `fun`.adaptive.iot.space.SpaceMarkers
+import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.workspace.WithWorkspace
+import `fun`.adaptive.ui.value.iconFor
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
-import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
-import `fun`.adaptive.ui.value.iconFor
 
 class DeviceEditorContentController(
     override val workspace: Workspace
-) : WsPaneController<AvItem<AioDeviceSpec>>(), WithWorkspace {
+) : WsPaneController<AvItem<AioDeviceSpec>>() {
 
     val spaceService = getService<AioSpaceApi>(transport)
     val deviceService = getService<AioDeviceApi>(transport)

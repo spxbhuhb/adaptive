@@ -25,23 +25,25 @@ class CookbookWsModule<WT : Workspace> : CookbookModule<WT>() {
 
         toolPanes += WsPane(
             UUID(),
+            workspace = workspace,
             "Cookbook",
             Graphics.flatware,
             WsPanePosition.LeftMiddle,
             cookbookRecipePaneKey,
             data = Unit,
-            controller = WsUnitPaneController()
+            controller = WsUnitPaneController(this)
         )
 
         addContentPaneBuilder(CbWsContext.WSIT_CB_RECIPE) { item ->
             WsPane(
                 UUID(),
+                workspace = workspace,
                 item.name,
                 context[item].icon,
                 WsPanePosition.Center,
                 "cookbook:center",
                 data = item,
-                controller = CookbookPaneController(context)
+                controller = CookbookPaneController(workspace, context)
             )
         }
 

@@ -19,12 +19,13 @@ fun Workspace.groveApmCommon() {
 
     toolPanes += WsPane(
         UUID(),
+        workspace = this,
         "Project",
         Graphics.folder,
         WsPanePosition.LeftTop,
         ApmWsContext.APM_PROJECT_TOOL_KEY,
         data = Unit,
-        controller = WsUnitPaneController()
+        controller = WsUnitPaneController(this)
     )
 
 }

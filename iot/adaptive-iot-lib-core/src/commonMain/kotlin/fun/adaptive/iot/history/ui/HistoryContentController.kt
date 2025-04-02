@@ -35,7 +35,6 @@ import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
-import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
@@ -49,7 +48,7 @@ import kotlin.time.Duration.Companion.minutes
 
 class HistoryContentController(
     override val workspace: Workspace
-) : WsPaneController<HistoryBrowserWsItem>(), WithWorkspace, ObservableListener<HistoryContentConfig> {
+) : WsPaneController<HistoryBrowserWsItem>(), ObservableListener<HistoryContentConfig> {
 
     enum class Mode(val labelFun: () -> String, val icon : GraphicsResourceSet) {
         TABLE({ Strings.table }, Graphics.table),

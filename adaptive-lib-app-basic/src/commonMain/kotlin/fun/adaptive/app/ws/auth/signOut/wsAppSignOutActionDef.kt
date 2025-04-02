@@ -15,6 +15,7 @@ import `fun`.adaptive.ui.workspace.model.WsPanePosition
 fun Workspace.wsAppSignOutActionDef(application: AbstractApplication<*>) {
 
     + WsSideBarAction(
+        workspace = this,
         Strings.signOut,
         Graphics.power_settings_new,
         WsPanePosition.LeftBottom,

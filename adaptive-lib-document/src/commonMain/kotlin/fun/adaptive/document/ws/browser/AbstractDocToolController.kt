@@ -5,15 +5,14 @@ import `fun`.adaptive.document.ws.DocTreeModel
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
-import `fun`.adaptive.ui.workspace.WithWorkspace
+import `fun`.adaptive.ui.value.AvUiTree
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.ui.value.AvUiTree
 
 abstract class AbstractDocToolController(
     override val workspace: Workspace
-) : WsPaneController<Unit>(), WithWorkspace {
+) : WsPaneController<Unit>() {
 
     val treeViewModel = TreeViewModel<AvValueId, AbstractDocToolController>(
         emptyList(),

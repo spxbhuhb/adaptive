@@ -51,12 +51,13 @@ class BasicAppAuthWsModule<WT : Workspace> : AuthModule<WT>() {
         addContentPaneBuilder(SIGN_IN_KEY) {
             WsPane(
                 UUID(),
+                this,
                 Strings.signInTitle,
                 Graphics.account_circle,
                 WsPanePosition.Center,
                 SIGN_IN_KEY,
                 SIGN_IN_ITEM,
-                WsSingularPaneController(SIGN_IN_ITEM),
+                WsSingularPaneController(this, SIGN_IN_ITEM),
                 singularity = WsPaneSingularity.FULLSCREEN
             )
         }

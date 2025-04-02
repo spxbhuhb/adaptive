@@ -33,6 +33,7 @@ fun wsRhtBrowserToolDef(context: AioWsContext): WsPane<Unit, SpaceBrowserToolCon
 
     val pane = WsPane(
         UUID(),
+        workspace = context.workspace,
         Strings.temperatureAndHumidity,
         Graphics.dew_point,
         WsPanePosition.LeftTop,

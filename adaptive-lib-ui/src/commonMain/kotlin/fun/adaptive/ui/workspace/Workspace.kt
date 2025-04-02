@@ -40,17 +40,6 @@ open class Workspace(
 
         const val WS_CENTER_PANE = "lib:ws:center"
         const val WSPANE_EMPTY = "lib:ws:nocontent"
-
-        val noContentPane = WsPane(
-            UUID(),
-            "No content",
-            Graphics.menu,
-            WsPanePosition.Center,
-            WSPANE_EMPTY,
-            data = Unit,
-            controller = WsUnitPaneController(),
-            singularity = WsPaneSingularity.SINGULAR
-        )
     }
 
     val logger = getLogger("workspace")
@@ -63,6 +52,18 @@ open class Workspace(
     val toolPanes = mutableListOf<WsPane<*, *>>()
 
     val sideBarActions = mutableListOf<AbstractSideBarAction>()
+
+    val noContentPane = WsPane(
+        UUID(),
+        this,
+        "No content",
+        Graphics.menu,
+        WsPanePosition.Center,
+        WSPANE_EMPTY,
+        data = Unit,
+        controller = WsUnitPaneController(this),
+        singularity = WsPaneSingularity.SINGULAR
+    )
 
     val contentPaneGroups = storeFor {
         listOf<WsContentPaneGroup>(

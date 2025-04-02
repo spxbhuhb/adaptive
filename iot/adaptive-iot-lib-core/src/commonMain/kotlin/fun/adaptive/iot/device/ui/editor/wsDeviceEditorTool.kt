@@ -47,6 +47,7 @@ fun wsDeviceEditorToolDef(context: AioWsContext): WsPane<Unit, DeviceEditorToolC
 
     val pane = WsPane(
         UUID(),
+        workspace = context.workspace,
         Strings.devices,
         Graphics.account_tree,
         WsPanePosition.RightMiddle,

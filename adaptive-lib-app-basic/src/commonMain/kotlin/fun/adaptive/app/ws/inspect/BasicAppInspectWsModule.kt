@@ -31,12 +31,13 @@ class BasicAppInspectWsModule<WT : Workspace> : AppModule<WT>() {
 
         + WsPane(
             UUID(),
+            workspace = this,
             Strings.devTools,
             Graphics.pest_control,
             WsPanePosition.RightBottom,
             INSPECT_TOOL_KEY,
             Unit,
-            WsUnitPaneController()
+            WsUnitPaneController(this)
         )
 
     }

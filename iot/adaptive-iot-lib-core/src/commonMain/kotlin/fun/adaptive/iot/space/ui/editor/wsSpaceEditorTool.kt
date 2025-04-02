@@ -45,6 +45,7 @@ fun wsSpaceEditorToolDef(context: AioWsContext): WsPane<Unit, SpaceEditorToolCon
 
     val pane = WsPane(
         UUID(),
+        workspace = context.workspace,
         Strings.areas,
         Graphics.apartment,
         WsPanePosition.RightTop,

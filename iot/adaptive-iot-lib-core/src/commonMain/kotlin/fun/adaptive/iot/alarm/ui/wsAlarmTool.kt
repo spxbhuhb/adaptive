@@ -30,12 +30,13 @@ const val WSPANE_ALARM_TOOL: FragmentKey = "aio:history:alarm"
 fun Workspace.wsAlarmToolDef() {
     + WsPane(
         UUID(),
+        workspace = this,
         Strings.notifications,
         Graphics.notifications,
         WsPanePosition.LeftMiddle,
         WSPANE_ALARM_TOOL,
         Unit,
-        WsUnitPaneController(),
+        WsUnitPaneController(this),
         displayOrder = 1
     )
 }

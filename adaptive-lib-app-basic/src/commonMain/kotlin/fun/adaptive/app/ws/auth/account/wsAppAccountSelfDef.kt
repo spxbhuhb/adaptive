@@ -22,6 +22,7 @@ fun Workspace.wsAppAccountSelfDef() {
     addContentPaneBuilder(ACCOUNT_SELF_KEY) {
         WsPane(
             UUID(),
+            workspace = this,
             Strings.accountSelf,
             Graphics.account_circle,
             WsPanePosition.Center,
@@ -33,6 +34,7 @@ fun Workspace.wsAppAccountSelfDef() {
     }
 
     + WsSideBarAction(
+        workspace = this,
         Strings.account,
         Graphics.account_circle,
         WsPanePosition.LeftBottom,

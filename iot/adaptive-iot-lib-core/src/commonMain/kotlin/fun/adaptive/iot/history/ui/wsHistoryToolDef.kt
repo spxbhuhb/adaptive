@@ -21,6 +21,7 @@ fun Workspace.wsHistoryToolDef() {
 
     + WsPane(
         UUID(),
+        workspace = this,
         Strings.historicalData,
         Graphics.monitoring,
         WsPanePosition.LeftTop,

@@ -65,35 +65,48 @@ fun accountEditorAdmin(
         wrapFromTop(26.dp, { modalPopupTitle(Strings.addAccount, theme, hide) }) {
 
             column {
-                width { 400.dp }
-
-                column {
-                    padding { 16.dp } .. gap { 8.dp } .. maxWidth
-
-                    withLabel(Strings.accountName) { state ->
-                        textInput(copy.login, state) { }
-                    }
-
-                    withLabel(Strings.name) { state ->
-                        textInput(copy.name, safariHack) { copy.update(copy::name, it) }
-                    }
-
-                    withLabel(Strings.email.uppercaseFirstChar()) { state ->
-                        textInput(copy.email, safariHack) { copy.update(copy::email, it) }
-                    }
-
-                }
 
                 row {
-                    maxWidth .. alignItems.end .. borderTop(colors.lightOutline)
-                    paddingVertical { 12.dp } .. paddingRight { 16.dp }
-                    gap { 12.dp }
-
-                    button(Strings.cancel, theme = ButtonTheme.noFocus) .. onClick { hide() }
-                    button(Strings.save)
+                    editFields(copy, safariHack)
+                    //roles()
                 }
+
+                buttons(hide) { save(copy) }
+
             }
         }
+    }
+}
+
+@Adaptive
+fun editFields(copy: AccountEditorData, safariHack: InputContext) {
+    column {
+        width { 400.dp } .. padding { 16.dp } .. gap { 8.dp } .. maxWidth
+
+        withLabel(Strings.accountName) { state ->
+            textInput(copy.login, state) { }
+        }
+
+        withLabel(Strings.name) { state ->
+            textInput(copy.name, safariHack) { copy.update(copy::name, it) }
+        }
+
+        withLabel(Strings.email.uppercaseFirstChar()) { state ->
+            textInput(copy.email, safariHack) { copy.update(copy::email, it) }
+        }
+
+    }
+}
+
+@Adaptive
+fun buttons(hide: () -> Unit, save: () -> Unit) {
+    row {
+        maxWidth .. alignItems.end .. borderTop(colors.lightOutline)
+        paddingVertical { 12.dp } .. paddingRight { 16.dp }
+        gap { 12.dp }
+
+        button(Strings.cancel, theme = ButtonTheme.noFocus) .. onClick { hide() }
+        button(Strings.save) .. onClick { save() }
     }
 }
 

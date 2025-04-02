@@ -11,6 +11,7 @@ fun wsDocBrowserContentDef(context: DocWsContext) {
     workspace.addContentPaneBuilder(DocWsContext.WSIT_DOC_ITEM) { item ->
         WsPane(
             UUID(),
+            workspace,
             item.name,
             context[item].icon,
             WsPanePosition.Center,

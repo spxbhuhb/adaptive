@@ -2,9 +2,11 @@ package `fun`.adaptive.ui.workspace.logic
 
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.model.NamedItem
+import `fun`.adaptive.ui.workspace.Workspace
 import kotlin.reflect.KClass
 
 class WsClassPaneController<D : Any>(
+    override val workspace: Workspace,
     val kClass : KClass<D>
 ) : WsPaneController<D>() {
 

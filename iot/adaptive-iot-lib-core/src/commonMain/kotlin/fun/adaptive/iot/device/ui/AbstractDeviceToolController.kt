@@ -8,13 +8,12 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
-import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 
 abstract class AbstractDeviceToolController(
     override val workspace: Workspace
-) : WsPaneController<Unit>(), WithWorkspace {
+) : WsPaneController<Unit>() {
 
     val deviceService = getService<AioDeviceApi>(transport)
 

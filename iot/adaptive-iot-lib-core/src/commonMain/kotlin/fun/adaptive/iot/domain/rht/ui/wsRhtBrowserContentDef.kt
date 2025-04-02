@@ -14,6 +14,7 @@ fun wsRhtBrowserContentDef(context: AioWsContext) {
     workspace.addContentPaneBuilder(AmvRelativeHumidityAndTemperature.WSIT_RHT_BROWSER_ITEM) { item ->
         WsPane(
             UUID(),
+            workspace = workspace,
             item.name,
             context[item].icon,
             WsPanePosition.Center,

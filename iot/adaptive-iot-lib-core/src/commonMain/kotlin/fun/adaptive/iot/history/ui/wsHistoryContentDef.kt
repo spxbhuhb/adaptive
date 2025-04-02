@@ -13,6 +13,7 @@ fun wsHistoryContentDef(context: AioWsContext) {
     workspace.addContentPaneBuilder(AioWsContext.WSIT_HISTORY) { item ->
         WsPane(
             UUID(),
+            workspace = workspace,
             item.name,
             context[item].icon,
             WsPanePosition.Center,

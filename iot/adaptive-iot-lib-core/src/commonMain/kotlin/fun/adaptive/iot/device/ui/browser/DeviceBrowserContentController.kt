@@ -1,17 +1,16 @@
 package `fun`.adaptive.iot.device.ui.browser
 
 import `fun`.adaptive.iot.device.AioDeviceApi
+import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.workspace.WithWorkspace
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
-import `fun`.adaptive.model.NamedItem
 
 class DeviceBrowserContentController(
     override val workspace: Workspace
-) : WsPaneController<DeviceBrowserWsItem>(), WithWorkspace {
+) : WsPaneController<DeviceBrowserWsItem>() {
 
     val deviceService = getService<AioDeviceApi>(transport)
 

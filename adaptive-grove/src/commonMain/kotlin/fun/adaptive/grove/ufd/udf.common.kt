@@ -21,54 +21,59 @@ fun Workspace.groveUfdCommon() {
 
     toolPanes += WsPane(
         UUID(),
+        workspace = this,
         Strings.palette,
         Graphics.palette,
         WsPanePosition.LeftTop,
         UfdWsContext.PALETTE_TOOL_KEY,
         data = Unit,
-        controller = WsUnitPaneController()
+        controller = WsUnitPaneController(this)
     )
 
     toolPanes += WsPane(
         UUID(),
+        workspace = this,
         Strings.components,
         Graphics.cards,
         WsPanePosition.LeftMiddle,
         UfdWsContext.COMPONENTS_TOOL_KEY,
         data = Unit,
-        controller = WsUnitPaneController()
+        controller = WsUnitPaneController(this)
     )
 
     toolPanes += WsPane(
         UUID(),
+        workspace = this,
         Strings.instructions,
         Graphics.stroke_partial,
         WsPanePosition.RightTop,
         UfdWsContext.INSTRUCTIONS_TOOL_KEY,
         data = Unit,
-        controller = WsUnitPaneController()
+        controller = WsUnitPaneController(this)
     )
 
     toolPanes += WsPane(
         UUID(),
+        workspace = this,
         Strings.state,
         Graphics.data_table,
         WsPanePosition.RightTop,
         UfdWsContext.STATE_TOOL_KEY,
         data = Unit,
-        controller = WsUnitPaneController()
+        controller = WsUnitPaneController(this)
     )
 
     addContentPaneBuilder(UfdWsContext.WSIT_UFD_FRAGMENT) { item ->
 
         WsPane(
             UUID(),
+            workspace = this,
             item.name,
             Graphics.cards,
             WsPanePosition.Center,
             UfdWsContext.CONTENT_PANE_KEY,
             data = UfdWsContentPaneData(),
-            controller = UfdWsContentController()
+            controller = UfdWsContentController(this)
         )
 
     }

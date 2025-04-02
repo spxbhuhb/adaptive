@@ -13,6 +13,7 @@ class AccountEditorData(
     val email: String = "",
     val activated: Boolean = false,
     val locked: Boolean = false,
+    val roles : Set<String> = emptySet()
 ) {
     override fun descriptor() {
         properties {

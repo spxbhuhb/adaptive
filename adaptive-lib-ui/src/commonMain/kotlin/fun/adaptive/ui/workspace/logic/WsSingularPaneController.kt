@@ -3,8 +3,10 @@ package `fun`.adaptive.ui.workspace.logic
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.model.SingularWsItem
 import `fun`.adaptive.model.NamedItem
+import `fun`.adaptive.ui.workspace.Workspace
 
 open class WsSingularPaneController(
+    override val workspace: Workspace,
     val item : SingularWsItem
 ): WsPaneController<SingularWsItem>() {
 

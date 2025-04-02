@@ -72,89 +72,98 @@ fun initPanes(workspace: Workspace) {
         listOf(
             WsPane(
                 UUID(),
+                workspace = workspace,
                 "Left Top",
                 Graphics.menu,
                 WsPanePosition.LeftTop,
                 "cookbook:support:lefttop",
                 tooltip = "⌘ P",
                 data = Unit,
-                controller = WsUnitPaneController()
+                controller = WsUnitPaneController(workspace)
             ),
             WsPane(
                 UUID(),
+                workspace = workspace,
                 "Left Middle - 1",
                 Graphics.account_box,
                 WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle1",
                 data = Unit,
-                controller = WsUnitPaneController()
+                controller = WsUnitPaneController(workspace)
             ),
             WsPane(
                 UUID(),
+                workspace = workspace,
                 "Left Middle - 2",
                 Graphics.settings,
                 WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle2",
                 data = Unit,
-                controller = WsUnitPaneController()
+                controller = WsUnitPaneController(workspace)
             ),
             WsPane(
                 UUID(),
+                workspace = workspace,
                 "Left Middle - 3",
                 Graphics.more_vert,
                 WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle3",
                 data = Unit,
-                controller = WsUnitPaneController()
+                controller = WsUnitPaneController(workspace)
             ),
             WsPane(
                 UUID(),
+                workspace = workspace,
                 "Left Bottom",
                 Graphics.power_settings_new,
                 WsPanePosition.LeftBottom,
                 "cookbook:support:bottomleft",
                 tooltip = "⌘ P",
                 data = Unit,
-                controller = WsUnitPaneController()
+                controller = WsUnitPaneController(workspace)
             ),
             WsPane(
                 UUID(),
+                workspace = workspace,
                 "Right Top",
                 Graphics.account_box,
                 WsPanePosition.RightTop,
                 "cookbook:support:righttop",
                 tooltip = "⌘ P",
                 data = Unit,
-                controller = WsUnitPaneController()
+                controller = WsUnitPaneController(workspace)
             ),
             WsPane(
                 UUID(),
+                workspace = workspace,
                 "Right Middle",
                 Graphics.account_box,
                 WsPanePosition.RightMiddle,
                 "cookbook:support:rightmiddle",
                 tooltip = "⌘ P",
                 data = Unit,
-                controller = WsUnitPaneController()
+                controller = WsUnitPaneController(workspace)
             ),
             WsPane(
                 UUID(),
+                workspace = workspace,
                 "Right Bottom",
                 Graphics.account_circle,
                 WsPanePosition.RightBottom,
                 "cookbook:support:bottomright",
                 tooltip = "⌘ P",
                 data = Unit,
-                controller = WsUnitPaneController()
+                controller = WsUnitPaneController(workspace)
             ),
             WsPane(
                 UUID(),
+                workspace = workspace,
                 "Center",
                 Graphics.menu,
                 WsPanePosition.Center,
                 "cookbook:support:center",
                 data = Unit,
-                controller = WsUnitPaneController()
+                controller = WsUnitPaneController(workspace)
             ),
         )
     )
