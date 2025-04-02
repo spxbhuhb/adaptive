@@ -8,6 +8,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.encode
 import `fun`.adaptive.log.LogLevel
 import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.factory.ServiceImplFactory
 import `fun`.adaptive.service.model.DisconnectException
@@ -21,6 +22,9 @@ import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatEncoder
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.WireFormatRegistry
+import `fun`.adaptive.wireformat.json.JsonWireFormatDecoder
+import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
+import `fun`.adaptive.wireformat.protobuf.dumpProto
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
@@ -106,12 +110,21 @@ abstract class ServiceCallTransport(
 
         } catch (ex: ReturnException) {
 
-            transportLog.info("${ex::class.simpleName} ${ex.message ?: ""}")
+            transportLog.info("service call dispatch has thrown ReturnException (in ServiceCallTransport.serve): ${ex::class.simpleName} ${ex.message ?: ""}")
             ex.toEnvelope(request.callId)
 
         } catch (ex: Exception) {
 
-            transportLog.error(ex)
+            transportLog.error("error while processing incoming service request (in ServiceCallTransport.serve)", ex)
+
+            if (GlobalRuntimeContext.devMode) {
+                if (wireFormatProvider is JsonWireFormatProvider) {
+                    println(JsonWireFormatDecoder(request.payload).root.asPrettyString)
+                } else {
+                    println(request.payload.dumpProto())
+                }
+            }
+
             ex.toEnvelope(request.callId)
 
         }
@@ -198,6 +211,7 @@ abstract class ServiceCallTransport(
      * service call would be hanging forever.
      */
     open fun responseError(serviceName: String, funName: String, envelope: TransportEnvelope): Nothing {
+        println("stuff: $serviceName $funName $envelope")
         val serviceExceptionData = wireFormatProvider.decode(envelope.payload, ServiceExceptionData)
 
         val wireFormat = WireFormatRegistry[serviceExceptionData.className] // FIXME do we want className or wireFormatName here?

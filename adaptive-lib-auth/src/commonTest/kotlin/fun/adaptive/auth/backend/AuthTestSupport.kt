@@ -39,7 +39,7 @@ class AuthTestSupport : AbstractTestSupport(
 
     suspend fun addPrincipal(name: String, password: String?, spec: PrincipalSpec = PrincipalSpec()): AuthPrincipalId {
 
-        val principalId = authWorker.getPrincipalService().addPrincipal(name, spec, PASSWORD, password)
+        val principalId = authWorker.getPrincipalService(authWorker.securityOfficer).addPrincipal(name, spec, PASSWORD, password)
 
         waitForReal(1.seconds) { valueWorker.isIdle }
 

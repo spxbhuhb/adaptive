@@ -4,18 +4,15 @@ import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.auth.account.AccountEditorData
 import `fun`.adaptive.app.ws.shared.wsContentHeader
-import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.producer.fetch
+import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.close
 import `fun`.adaptive.ui.builtin.edit
@@ -40,7 +37,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 fun wsAppAccountManager(pane: WsPane<*, AccountManagerController>): AdaptiveFragment {
 
     val filter = copyOf { AccountFilter() }
-    val items = fetch { getService<AuthBasicApi>(adapter().transport).accounts() }
+    val items = valueFrom { pane.controller.accounts }
 
     column {
         WorkspaceTheme.DEFAULT.contentPaneContainer
@@ -61,7 +58,7 @@ fun wsAppAccountManager(pane: WsPane<*, AccountManagerController>): AdaptiveFrag
         }
 
         localContext(pane.controller) {
-            items(items?.filter { filter.matches(it) }, filter.isEmpty())
+            items(items.filter { filter.matches(it) }, filter.isEmpty())
         }
     }
 

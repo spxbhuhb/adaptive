@@ -7,6 +7,7 @@ import `fun`.adaptive.auth.model.Credential
 import `fun`.adaptive.auth.model.CredentialType
 import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
+import `fun`.adaptive.auth.util.BasicAccountSummaryStore
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.workspace.Workspace
@@ -21,6 +22,8 @@ class AccountManagerController(
         get() = true
 
     val authBasic = getService<AuthBasicApi>(transport)
+
+    val accounts = BasicAccountSummaryStore(workspace.backend)
 
     fun add(data: AccountEditorData) {
         remote(Strings.saveSuccess, "ops") {

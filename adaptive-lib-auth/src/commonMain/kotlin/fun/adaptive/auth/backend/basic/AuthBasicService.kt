@@ -7,8 +7,8 @@ import `fun`.adaptive.auth.backend.AuthWorker
 import `fun`.adaptive.auth.backend.getPrincipalService
 import `fun`.adaptive.auth.context.ensureHas
 import `fun`.adaptive.auth.context.ensurePrincipalOrHas
+import `fun`.adaptive.auth.context.ensuredByLogic
 import `fun`.adaptive.auth.context.getPrincipalIdOrNull
-import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.auth.model.AuthMarkers
 import `fun`.adaptive.auth.model.Credential
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD
@@ -42,25 +42,29 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
 
         return accounts.mapNotNull { account ->
             principals[account.parentId]?.asAvItem<PrincipalSpec>()?.let {
-                accountSummary(it, account.asAvItem<BasicAccountSpec>())
+                BasicAccountSummary(it, account.asAvItem<BasicAccountSpec>())
             }
         }
     }
 
-    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId) {
+    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
         ensureHas(securityOfficer)
+
+        val conditions = listOf(
+            AvSubscribeCondition(marker = AuthMarkers.BASIC_ACCOUNT),
+            AvSubscribeCondition(marker = AuthMarkers.PRINCIPAL)
+        )
 
         val subscription = AvClientSubscription(
             subscriptionId,
-            conditions = listOf(
-                AvSubscribeCondition(marker = AuthMarkers.BASIC_ACCOUNT),
-                AvSubscribeCondition(marker = AuthMarkers.PRINCIPAL)
-            ),
+            conditions = conditions,
             transport = serviceContext.transport,
             scope = safeAdapter.scope
         )
 
         valueWorker.subscribe(subscription)
+
+        return conditions
     }
 
     override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
@@ -70,14 +74,14 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
     }
 
     override suspend fun account(): BasicAccountSummary? {
-        publicAccess()
+        ensuredByLogic("the user can access his/her own account")
 
         val principalId = serviceContext.getPrincipalIdOrNull() ?: return null
 
         val principal = valueWorker.item(principalId).withSpec<PrincipalSpec>()
         val account = valueWorker.refItem<BasicAccountSpec>(principal, AuthMarkers.ACCOUNT_REF)
 
-        return accountSummary(principal, account)
+        return BasicAccountSummary(principal, account)
     }
 
     override suspend fun signUp(signUp: BasicSignUp) {
@@ -143,16 +147,4 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
             )
         }
     }
-
-    private fun accountSummary(principal: AvItem<PrincipalSpec>, account: AvItem<BasicAccountSpec>) =
-        BasicAccountSummary(
-            accountId = account.uuid,
-            principalId = principal.uuid,
-            login = principal.name,
-            name = account.name,
-            email = account.spec.email,
-            activated = principal.spec.activated,
-            locked = principal.spec.locked,
-            lastLogin = principal.spec.lastAuthSuccess
-        )
 }

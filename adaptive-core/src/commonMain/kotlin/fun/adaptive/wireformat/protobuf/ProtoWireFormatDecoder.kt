@@ -465,7 +465,7 @@ class ProtoWireFormatDecoder(
         check(data is LenProtoRecord)
 
         @Suppress("UNCHECKED_CAST")
-        val wireFormat = WireFormatRegistry[wireFormatName] as WireFormat<T>
+        val wireFormat = checkNotNull(WireFormatRegistry[wireFormatName] as? WireFormat<T>) { "wireformat $wireFormatName is not in the registry" }
 
         return when (wireFormat.wireFormatKind) {
             WireFormatKind.Primitive -> wireFormat.wireFormatDecode(data.decoder(), 1, "") !!
@@ -539,6 +539,7 @@ class ProtoWireFormatDecoder(
             WireFormatKind.Primitive -> {
                 wireFormat.wireFormatDecode(source, this)
             }
+
             else -> {
                 check(source is LenProtoRecord)
                 wireFormat.wireFormatDecode(source, source.decoder())
@@ -578,4 +579,5 @@ class ProtoWireFormatDecoder(
         return list
     }
 
+    override fun dump() = dumpProto().joinToString("\n")
 }

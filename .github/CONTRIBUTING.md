@@ -176,3 +176,23 @@ To get layout update statistics:
 ```kotlin
 adapter().dumpStatistics()
 ```
+
+To debug wire format error:
+
+1. Enable dev mode in `GlobalRuntimeContext`.
+2. The app will dump the problematic message.
+3. Copy the appropriate part into `s`:
+
+```kotlin
+class A {
+
+  @OptIn(ExperimentalStdlibApi::class)
+  @Test
+  fun test() {
+    val s = "0a10.. hex stuff ..7374"
+    val ba = s.hexToByteArray()
+
+    PolymorphicWireFormat.wireFormatDecode(ProtoWireFormatDecoder(ba), 9, "9").debug()
+  }
+}
+```

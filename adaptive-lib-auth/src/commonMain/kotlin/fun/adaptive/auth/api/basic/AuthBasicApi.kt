@@ -6,6 +6,7 @@ import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.auth.model.basic.BasicSignUp
 import `fun`.adaptive.service.ServiceApi
+import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueSubscriptionId
 
@@ -21,7 +22,7 @@ interface AuthBasicApi {
      * Subscribe for principals and accounts. Whenever one of
      * these changes, the change will be sent to the client.
      */
-    suspend fun subscribe(subscriptionId: AvValueSubscriptionId)
+    suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition>
 
     suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId)
 

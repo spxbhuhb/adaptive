@@ -7,6 +7,7 @@ import `fun`.adaptive.app.ws.auth.account.AccountEditorData
 import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.auth.model.AuthPrincipal
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.foundation.value.valueFrom
@@ -42,6 +43,7 @@ fun accountEditorAdmin(
 
     val safariHack = InputContext(disabled = popupState.value.popupOpen)
 
+    @Independent
     var copy = copyOf { account ?: AccountEditorData() }
 
     modalEditor(Strings.addAccount, hide, { save(copy); hide() }) {

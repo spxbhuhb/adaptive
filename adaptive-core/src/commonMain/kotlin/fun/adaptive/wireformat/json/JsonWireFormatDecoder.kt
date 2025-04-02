@@ -593,4 +593,5 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
         return result
     }
 
+    override fun dump(): String = root.toPrettyString()
 }

@@ -313,4 +313,10 @@ interface WireFormatDecoder<ST> {
 
     fun <T> items(source: ST, typeArgument: WireFormatTypeArgument<T>): MutableList<T?>
 
+    // -----------------------------------------------------------------------------------------
+    // Debug / trace utilities
+    // -----------------------------------------------------------------------------------------
+
+    fun dump(): String
+
 }

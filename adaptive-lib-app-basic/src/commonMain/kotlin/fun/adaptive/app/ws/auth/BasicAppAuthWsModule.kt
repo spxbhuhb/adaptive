@@ -1,21 +1,14 @@
 package `fun`.adaptive.app.ws.auth
 
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.signInTitle
-import `fun`.adaptive.app.ClientApplication
 import `fun`.adaptive.app.ws.BasicAppWsModule
-import `fun`.adaptive.app.ws.auth.account.AccountEditorData
-import `fun`.adaptive.app.ws.auth.admin.wsAppAccountManager
 import `fun`.adaptive.app.ws.auth.admin.wsAppAccountManagerDef
-import `fun`.adaptive.auth.api.AuthPrincipalApi
-import `fun`.adaptive.auth.api.basic.AuthBasicApi
-import `fun`.adaptive.auth.app.AuthAppContext
 import `fun`.adaptive.auth.app.AuthAppContext.Companion.authContext
-import `fun`.adaptive.auth.app.AuthModule
+import `fun`.adaptive.auth.app.AuthBasicClientModule
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.builtin.account_circle
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
@@ -24,10 +17,9 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.debug
 import `fun`.adaptive.utility.firstInstance
 
-class BasicAppAuthWsModule<WT : Workspace> : AuthModule<WT>() {
+class BasicAppAuthWsModule<WT : Workspace> : AuthBasicClientModule<WT>() {
 
     companion object {
         const val SIGN_IN_KEY: FragmentKey = "app:ws:auth:sign-in"
