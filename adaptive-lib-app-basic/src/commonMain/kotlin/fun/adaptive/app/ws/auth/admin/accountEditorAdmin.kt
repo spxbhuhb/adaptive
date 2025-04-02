@@ -55,7 +55,7 @@ fun accountEditorAdmin(
 @Adaptive
 fun editFields(copy: AccountEditorData, safariHack: InputContext) {
     column {
-        width { 400.dp } .. padding { 16.dp } .. gap { 8.dp }
+        width { 400.dp } .. padding { 16.dp } .. gap { 8.dp } .. borderRight(colors.lightOutline)
 
         withLabel(Strings.accountName) { state ->
             textInput(copy.principalName, state) { copy.update(copy::principalName, it)}
@@ -127,7 +127,7 @@ fun roles(editorData: AccountEditorData) {
 
     column {
         padding(16.dp) .. gap { 8.dp }
-        width { 320.dp } .. height { 300.dp } .. borderLeft(colors.lightOutline) .. verticalScroll
+        width { 320.dp } .. height { 300.dp } .. verticalScroll
 
         withLabel(Strings.roles) {
             for (role in knownRoles) {

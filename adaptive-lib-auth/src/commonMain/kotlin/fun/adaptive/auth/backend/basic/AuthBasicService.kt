@@ -18,8 +18,11 @@ import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.auth.model.basic.BasicSignUp
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.value.AvClientSubscription
+import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.AvValueSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
@@ -42,6 +45,28 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
                 accountSummary(it, account.asAvItem<BasicAccountSpec>())
             }
         }
+    }
+
+    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId) {
+        ensureHas(securityOfficer)
+
+        val subscription = AvClientSubscription(
+            subscriptionId,
+            conditions = listOf(
+                AvSubscribeCondition(marker = AuthMarkers.BASIC_ACCOUNT),
+                AvSubscribeCondition(marker = AuthMarkers.PRINCIPAL)
+            ),
+            transport = serviceContext.transport,
+            scope = safeAdapter.scope
+        )
+
+        valueWorker.subscribe(subscription)
+    }
+
+    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+        ensureHas(securityOfficer)
+
+        valueWorker.unsubscribe(subscriptionId)
     }
 
     override suspend fun account(): BasicAccountSummary? {
@@ -81,7 +106,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
         principalName: String,
         principalSpec: PrincipalSpec,
         credential: Credential,
-        roles : Set<AvValueId>,
+        roles: Set<AvValueId>,
         accountName: String,
         accountSpec: BasicAccountSpec
     ): AvValueId {
