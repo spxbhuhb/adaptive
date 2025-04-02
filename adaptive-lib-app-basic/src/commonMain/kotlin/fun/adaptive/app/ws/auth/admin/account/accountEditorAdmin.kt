@@ -1,4 +1,4 @@
-package `fun`.adaptive.app.ws.auth.admin
+package `fun`.adaptive.app.ws.auth.admin.account
 
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.api.update
@@ -49,15 +49,14 @@ fun editFields(copy: AccountEditorData) {
     val accountNameState = InputContext(invalid = copy.principalName.isEmpty())
 
     val passwordState = InputContext(
-        invalid =
-            copy.password != copy.passwordConfirm
+        invalid = copy.password != copy.passwordConfirm
     )
 
     column {
         width { 400.dp } .. padding { 16.dp } .. gap { 8.dp } .. borderRight(colors.lightOutline)
 
         withLabel(Strings.accountName, accountNameState) { state ->
-            textInput(copy.principalName, state) { copy.update(copy::principalName, it)}
+            textInput(copy.principalName, state) { copy.update(copy::principalName, it) }
         }
 
         withLabel(Strings.name) { state ->
@@ -113,7 +112,7 @@ fun loginCounters(principal: AuthPrincipal) {
     }
 }
 
-fun AccountEditorData.roles(roles : Set<AvValueId>) {
+fun AccountEditorData.roles(roles: Set<AvValueId>) {
     update(this::roles, roles)
 }
 

@@ -7,12 +7,20 @@ package `fun`.adaptive.auth.api
 import `fun`.adaptive.auth.model.AuthRole
 import `fun`.adaptive.auth.model.RoleSpec
 import `fun`.adaptive.service.ServiceApi
+import `fun`.adaptive.value.AvSubscribeCondition
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.AvValueSubscriptionId
+import `fun`.adaptive.value.local.AvPublisher
 
 @ServiceApi
-interface AuthRoleApi {
+interface AuthRoleApi : AvPublisher {
 
     suspend fun all(): List<AuthRole>
 
-    suspend fun add(name: String, spec: RoleSpec)
+    suspend fun save(roleId: AvValueId?, name: String, spec: RoleSpec)
+
+    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition>
+
+    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId)
 
 }

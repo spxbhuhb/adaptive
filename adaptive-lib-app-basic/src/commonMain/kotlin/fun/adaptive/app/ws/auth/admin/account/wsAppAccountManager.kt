@@ -1,4 +1,4 @@
-package `fun`.adaptive.app.ws.auth.admin
+package `fun`.adaptive.app.ws.auth.admin.account
 
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf

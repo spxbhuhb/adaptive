@@ -11,7 +11,7 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.withSpec
-import `fun`.adaptive.value.store.AvLocalStore
+import `fun`.adaptive.value.local.AvLocalStore
 
 class BasicAccountSummaryStore(
     backend: BackendAdapter

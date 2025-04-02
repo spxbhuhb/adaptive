@@ -1,4 +1,4 @@
-package `fun`.adaptive.app.ws.auth.admin
+package `fun`.adaptive.app.ws.auth.admin.account
 
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.saveFail
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.saveSuccess
@@ -32,7 +32,11 @@ class AccountManagerController(
                 principalId = data.principalId,
                 data.principalName,
                 PrincipalSpec(activated = data.activated, locked = data.locked, roles = data.roles),
-                if (data.password.isEmpty()) null else Credential(CredentialType.PASSWORD, data.password, now()),
+                if (data.principalId != null && data.password.isEmpty()) {
+                    null
+                } else {
+                    Credential(CredentialType.PASSWORD, data.password, now())
+                },
                 data.name,
                 BasicAccountSpec(data.email),
             )

@@ -9,9 +9,13 @@ import `fun`.adaptive.auth.context.ensureHas
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.value.AvSubscribeCondition
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.AvValueSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.util.serviceSubscribe
 
 class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService> {
 
@@ -27,10 +31,19 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService> {
         }
     }
 
-    override suspend fun add(name: String, spec: RoleSpec) {
+    override suspend fun save(roleId: AvValueId?, name: String, spec: RoleSpec) {
         ensureHas(securityOfficer)
 
         //history(role)
+
+        if (roleId == null) {
+            add(name, spec)
+        } else {
+            update(roleId, name, spec)
+        }
+    }
+
+    private suspend fun add(name: String, spec: RoleSpec) {
 
         val roleValue = AvItem(
             name = name,
@@ -47,6 +60,22 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService> {
 
             this += roleValue
         }
+    }
+
+    private suspend fun update(roleId: AvValueId, name: String, spec: RoleSpec) {
+        valueWorker.update<AvItem<*>>(roleId) { item ->
+            item.asAvItem<RoleSpec>().copy(name = name, spec = spec)
+        }
+    }
+
+    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
+        ensureHas(securityOfficer)
+        return serviceSubscribe(valueWorker, subscriptionId, AuthMarkers.ROLE)
+    }
+
+    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+        ensureHas(securityOfficer)
+        valueWorker.unsubscribe(subscriptionId)
     }
 
 }

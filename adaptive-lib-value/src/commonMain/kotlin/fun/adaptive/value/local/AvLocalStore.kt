@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.store
+package `fun`.adaptive.value.local
 
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.general.ObservableListener
@@ -18,7 +18,7 @@ import kotlinx.coroutines.supervisorScope
  *
  * Override [process] to process the incoming data into [V].
  *
- * Call [notifyListeners] when [fun.adaptive.general.Observable.value] changes.
+ * Call [notifyListeners] when [Observable.value] changes.
  */
 abstract class AvLocalStore<V> : Observable<V>() {
 

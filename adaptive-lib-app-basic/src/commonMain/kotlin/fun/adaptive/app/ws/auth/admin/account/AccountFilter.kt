@@ -1,4 +1,4 @@
-package `fun`.adaptive.app.ws.auth.admin
+package `fun`.adaptive.app.ws.auth.admin.account
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary

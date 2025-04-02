@@ -2,7 +2,8 @@ package `fun`.adaptive.app.ws.auth
 
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.signInTitle
 import `fun`.adaptive.app.ws.BasicAppWsModule
-import `fun`.adaptive.app.ws.auth.admin.wsAppAccountManagerDef
+import `fun`.adaptive.app.ws.auth.admin.account.wsAppAccountManagerDef
+import `fun`.adaptive.app.ws.auth.admin.role.wsAppRoleManagerDef
 import `fun`.adaptive.auth.app.AuthAppContext.Companion.authContext
 import `fun`.adaptive.auth.app.AuthBasicClientModule
 import `fun`.adaptive.foundation.AdaptiveAdapter
@@ -34,6 +35,7 @@ class BasicAppAuthWsModule<WT : Workspace> : AuthBasicClientModule<WT>() {
     override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
         wsAppSignInDef()
         wsAppAccountManagerDef()
+        wsAppRoleManagerDef()
     }
 
     fun Workspace.wsAppSignInDef() {

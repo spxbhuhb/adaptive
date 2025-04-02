@@ -7,7 +7,7 @@ package `fun`.adaptive.auth.model
 import `fun`.adaptive.adat.Adat
 
 @Adat
-class RoleSpec(
+data class RoleSpec(
     var context: String? = null,
     var group: Boolean = false,
     var displayOrder: Int = 0

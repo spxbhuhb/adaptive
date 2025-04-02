@@ -21,6 +21,7 @@ import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.value.item.AvItem.Companion.withSpec
 import `fun`.adaptive.value.store.AvComputeContext
+import `fun`.adaptive.value.util.serviceSubscribe
 import kotlinx.datetime.Clock.System.now
 
 class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
@@ -44,27 +45,11 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
 
     override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
         ensureHas(securityOfficer)
-
-        val conditions = listOf(
-            AvSubscribeCondition(marker = AuthMarkers.BASIC_ACCOUNT),
-            AvSubscribeCondition(marker = AuthMarkers.PRINCIPAL)
-        )
-
-        val subscription = AvClientSubscription(
-            subscriptionId,
-            conditions = conditions,
-            transport = serviceContext.transport,
-            scope = safeAdapter.scope
-        )
-
-        valueWorker.subscribe(subscription)
-
-        return conditions
+        return serviceSubscribe(valueWorker, subscriptionId, AuthMarkers.BASIC_ACCOUNT, AuthMarkers.PRINCIPAL)
     }
 
     override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
         ensureHas(securityOfficer)
-
         valueWorker.unsubscribe(subscriptionId)
     }
 
@@ -190,7 +175,9 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
         val originalPrincipal = item<PrincipalSpec>(principalId)
         val originalAccount = refItem<BasicAccountSpec>(originalPrincipal, AuthMarkers.ACCOUNT_REF)
 
-        val uniqueName = valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).none { it.name == principalName }
+        val uniqueName = valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).none {
+            it.name == principalName && it.uuid != principalId
+        }
         requirement(AuthModule.ALREADY_EXISTS) { uniqueName }
 
         update(originalPrincipal, principalName, principalSpec)
