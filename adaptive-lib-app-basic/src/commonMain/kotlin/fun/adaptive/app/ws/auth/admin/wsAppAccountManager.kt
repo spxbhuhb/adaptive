@@ -51,7 +51,7 @@ fun wsAppAccountManager(pane: WsPane<*, AccountManagerController>): AdaptiveFrag
                     button(Strings.addAccount)
                     primaryPopup { hide ->
                         popupAlign.absoluteCenter(modal = true, 150.dp)
-                        accountEditorAdmin(hide = hide) { pane.controller.add(it) }
+                        accountEditorAdmin(hide = hide) { pane.controller.save(it) }
                     }
                 }
             }
@@ -86,7 +86,8 @@ fun BasicAccountSummary.toAccountEditorData() = AccountEditorData(
     name,
     email,
     activated,
-    locked
+    locked,
+    roles = roles
 )
 
 @Adaptive

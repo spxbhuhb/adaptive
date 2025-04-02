@@ -20,4 +20,7 @@ abstract class AuthModule<WT : AbstractWorkspace> : AppModule<WT>() {
         + Session
     }
 
+    companion object {
+        const val ALREADY_EXISTS = "already exists"
+    }
 }

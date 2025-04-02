@@ -16,7 +16,6 @@ import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.value.store.AvComputeContext
@@ -122,7 +121,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
     }
 
     internal fun unsafeSetCurVal(context: AvComputeContext, pointId: AvValueId, curVal: AvValue): AvValue {
-        val point = context.item(pointId).asAvItem<AioPointSpec>()
+        val point = context.item<AioPointSpec>(pointId)
         val originalCurValId = point.markers[PointMarkers.CUR_VAL]
         val curValId = originalCurValId ?: uuid7<AvValue>()
 

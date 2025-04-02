@@ -3,6 +3,7 @@ package `fun`.adaptive.auth.model.basic
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.properties
 import `fun`.adaptive.auth.model.AuthPrincipalId
+import `fun`.adaptive.auth.model.AuthRoleId
 import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.value.AvValueId
@@ -18,7 +19,8 @@ class BasicAccountSummary(
     val email: String,
     val activated: Boolean,
     val locked: Boolean,
-    val lastLogin: Instant?
+    val lastLogin: Instant?,
+    val roles: Set<AuthRoleId>
 ) : SelfObservable<BasicAccountSummary>() {
 
     override fun descriptor() {
@@ -36,7 +38,8 @@ class BasicAccountSummary(
         email = account.spec.email,
         activated = principal.spec.activated,
         locked = principal.spec.locked,
-        lastLogin = principal.spec.lastAuthSuccess
+        lastLogin = principal.spec.lastAuthSuccess,
+        roles = principal.spec.roles
     )
 
 }

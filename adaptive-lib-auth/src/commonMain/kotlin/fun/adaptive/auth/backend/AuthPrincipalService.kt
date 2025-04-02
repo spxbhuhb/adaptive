@@ -1,18 +1,19 @@
 package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.api.AuthPrincipalApi
+import `fun`.adaptive.auth.app.AuthModule
 import `fun`.adaptive.auth.context.ensureHas
 import `fun`.adaptive.auth.context.ensurePrincipalOrHas
 import `fun`.adaptive.auth.context.ofPrincipal
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.ACTIVATION_KEY
-import `fun`.adaptive.auth.model.CredentialType.PASSWORD
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD_RESET_KEY
 import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.query.firstImpl
+import `fun`.adaptive.lib.util.error.requirement
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
@@ -96,7 +97,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
 
         valueWorker.execute {
             val uniqueName = valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).none { it.name == name }
-            require(uniqueName) { "principal with the same name already exists" }
+            requirement(AuthModule.ALREADY_EXISTS) { uniqueName }
 
             this += principalValue
             this += credentialListValue
@@ -198,10 +199,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         updateSpec(principalId) { it.copy(locked = locked) }
     }
 
-    private fun Credential.hash(type: String? = null) =
-        Credential(type ?: PASSWORD, BCrypt.hashpw(value, BCrypt.gensalt()), now())
-
-    private fun AvComputeContext.updateCredentials(
+    fun AvComputeContext.updateCredentials(
         principalId: AvValueId,
         updateFun: (MutableSet<Credential>) -> Set<Credential>
     ) {

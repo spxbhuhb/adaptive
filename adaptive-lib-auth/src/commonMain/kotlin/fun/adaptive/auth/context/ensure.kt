@@ -115,8 +115,8 @@ fun ServiceImpl<*>.ensurePrincipal(principalId: AuthPrincipalId) {
  * Ensure that the service context runs in the name of the principal specified **OR**
  * it has **AT LEASE ONE** of the specified roles.
  */
-fun ServiceImpl<*>.ensurePrincipalOrHas(principalId: AuthPrincipalId, roleId: AuthRoleId) {
-    if (serviceContext.ofPrincipal(principalId)) return
+fun ServiceImpl<*>.ensurePrincipalOrHas(principalId: AuthPrincipalId?, roleId: AuthRoleId) {
+    if (principalId != null && serviceContext.ofPrincipal(principalId)) return
     ensureHas(roleId)
 }
 

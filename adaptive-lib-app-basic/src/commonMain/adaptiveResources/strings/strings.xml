@@ -36,6 +36,7 @@
     <string name="name">Név</string>
     <string name="save">Mentés</string>
     <string name="saveSuccess">Sikeres mentés.</string>
+    <string name="saveFail">Nem sikerült a mentés.</string>
     <string name="passwordChange">Jelszó változtatás</string>
     <string name="accountSelf">Saját fiók</string>
 

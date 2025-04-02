@@ -10,7 +10,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.producer.fetch
-import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
@@ -33,50 +32,48 @@ fun accountEditorAdmin(
     hide: () -> Unit,
     save: (AccountEditorData) -> Unit
 ) {
-    val popupState = valueFrom { InputContext() }
-
-    // This is to prevent Safari overwriting the e-mail field on password change.
-    // With autofill, Safari just finds whatever field it likes and changes the value.
-    // Nothing else matters, but the field being disabled. So, I disable the input fields
-    // on the form when the password change popup is open. This strangely works.
-    // I lost a few years of my life by being very-very angry while I figured this out.
-
-    val safariHack = InputContext(disabled = popupState.value.popupOpen)
-
     @Independent
     var copy = copyOf { account ?: AccountEditorData() }
 
     modalEditor(Strings.addAccount, hide, { save(copy); hide() }) {
         row {
-            editFields(copy, safariHack)
+            editFields(copy)
             roles(copy)
         }
     }
 }
 
 @Adaptive
-fun editFields(copy: AccountEditorData, safariHack: InputContext) {
+fun editFields(copy: AccountEditorData) {
+
+    val accountNameState = InputContext(invalid = copy.principalName.isEmpty())
+
+    val passwordState = InputContext(
+        invalid =
+            copy.password != copy.passwordConfirm
+    )
+
     column {
         width { 400.dp } .. padding { 16.dp } .. gap { 8.dp } .. borderRight(colors.lightOutline)
 
-        withLabel(Strings.accountName) { state ->
+        withLabel(Strings.accountName, accountNameState) { state ->
             textInput(copy.principalName, state) { copy.update(copy::principalName, it)}
         }
 
         withLabel(Strings.name) { state ->
-            textInput(copy.name, safariHack) { copy.update(copy::name, it) }
+            textInput(copy.name) { copy.update(copy::name, it) }
         }
 
         withLabel(Strings.email.uppercaseFirstChar()) { state ->
-            textInput(copy.email, safariHack) { copy.update(copy::email, it) }
+            textInput(copy.email) { copy.update(copy::email, it) }
         }
 
-        withLabel(Strings.password.uppercaseFirstChar(), safariHack) { s ->
-            textInput("", s) { v -> copy.update(copy::password, v) } .. secret
+        withLabel(Strings.password.uppercaseFirstChar(), passwordState) { s ->
+            textInput(copy.password, s) { v -> copy.update(copy::password, v) } .. secret
         }
 
-        withLabel(Strings.confirmPassword, safariHack) { s ->
-            textInput("", s) { v -> copy.update(copy::passwordConfirm, v); } .. secret
+        withLabel(Strings.confirmPassword, passwordState) { s ->
+            textInput(copy.passwordConfirm, s) { v -> copy.update(copy::passwordConfirm, v); } .. secret
         }
     }
 }

@@ -10,5 +10,5 @@ data class AccountFilter(
     fun isEmpty() = text.isEmpty()
 
     fun matches(item: BasicAccountSummary): Boolean =
-        (text.isEmpty() || item.name.contains(text, ignoreCase = true))
+        (text.isEmpty() || item.name.contains(text, ignoreCase = true) || item.email.contains(text, ignoreCase = true))
 }

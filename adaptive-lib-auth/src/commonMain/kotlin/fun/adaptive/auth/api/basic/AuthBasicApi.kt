@@ -36,15 +36,18 @@ interface AuthBasicApi {
      */
     suspend fun signUp(signUp: BasicSignUp)
 
-    suspend fun add(
+    /**
+     * Adds (when [principalId] is null) or updates a principal and an account.
+     */
+    suspend fun save(
+        principalId: AvValueId?,
         principalName: String,
         principalSpec: PrincipalSpec,
-        credential: Credential,
-        roles: Set<AvValueId>,
+        credential: Credential?,
         accountName: String,
-        accountSpec: BasicAccountSpec
+        accountSpec: BasicAccountSpec,
+        callCredential: Credential? = null
     ): AvValueId
 
-    suspend fun save(principalId: AvValueId, name: String, spec: BasicAccountSpec)
 
 }

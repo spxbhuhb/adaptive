@@ -2,15 +2,12 @@ package `fun`.adaptive.auth.backend.basic
 
 import `fun`.adaptive.adat.ensureValid
 import `fun`.adaptive.auth.api.basic.AuthBasicApi
-import `fun`.adaptive.auth.backend.AuthPrincipalService
-import `fun`.adaptive.auth.backend.AuthWorker
-import `fun`.adaptive.auth.backend.getPrincipalService
-import `fun`.adaptive.auth.context.ensureHas
-import `fun`.adaptive.auth.context.ensurePrincipalOrHas
-import `fun`.adaptive.auth.context.ensuredByLogic
-import `fun`.adaptive.auth.context.getPrincipalIdOrNull
+import `fun`.adaptive.auth.app.AuthModule
+import `fun`.adaptive.auth.backend.*
+import `fun`.adaptive.auth.context.*
 import `fun`.adaptive.auth.model.AuthMarkers
 import `fun`.adaptive.auth.model.Credential
+import `fun`.adaptive.auth.model.CredentialList
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD
 import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
@@ -18,15 +15,13 @@ import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.auth.model.basic.BasicSignUp
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
-import `fun`.adaptive.value.AvClientSubscription
-import `fun`.adaptive.value.AvSubscribeCondition
-import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValueSubscriptionId
-import `fun`.adaptive.value.AvValueWorker
+import `fun`.adaptive.lib.util.error.requirement
+import `fun`.adaptive.value.*
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.value.item.AvItem.Companion.withSpec
+import `fun`.adaptive.value.store.AvComputeContext
+import kotlinx.datetime.Clock.System.now
 
 class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
 
@@ -106,15 +101,65 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
         )
     }
 
-    override suspend fun add(
+    override suspend fun save(
+        principalId: AvValueId?,
         principalName: String,
         principalSpec: PrincipalSpec,
+        credential: Credential?,
+        accountName: String,
+        accountSpec: BasicAccountSpec,
+        callCredential: Credential?
+    ): AvValueId {
+        ensurePrincipalOrHas(principalId, securityOfficer)
+
+        if (principalId == null) {
+            // in this case we have a security officer for sure as ensure got a null principal
+            return add(principalName, credential !!, principalSpec.roles, accountName, accountSpec)
+        }
+
+        val originalPrincipal = valueWorker.item(principalId).withSpec<PrincipalSpec>()
+        val originalAccount = valueWorker.refItem<BasicAccountSpec>(principalId, AuthMarkers.ACCOUNT_REF)
+
+        // credential, e-mail and login name change of own account requires the call to supply valid credentials
+
+        val sensitive = (
+            credential != null
+                || principalName != originalPrincipal.name
+                || accountSpec.email != originalAccount.spec.email
+            )
+
+        if (principalId == serviceContext.getPrincipalId() && sensitive) {
+            checkNotNull(callCredential)
+            getSessionService(securityOfficer).authenticate(
+                principalId,
+                callCredential.value,
+                checkCredentials = true,
+                callCredential.type,
+                AuthPrincipalService().policy
+            )
+        }
+
+        // roles can be changed only by the security officer
+
+        val roleChange = (principalSpec.roles != originalPrincipal.spec.roles)
+        require(! roleChange || serviceContext.has(securityOfficer))
+
+        // apply the changes
+
+        valueWorker.execute {
+            update(principalId, principalName, principalSpec, credential, accountName, accountSpec)
+        }
+
+        return principalId
+    }
+
+    private suspend fun add(
+        principalName: String,
         credential: Credential,
         roles: Set<AvValueId>,
         accountName: String,
         accountSpec: BasicAccountSpec
     ): AvValueId {
-
         val account = AvItem<BasicAccountSpec>(
             name = accountName,
             type = AuthMarkers.BASIC_ACCOUNT,
@@ -134,17 +179,73 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
         }
     }
 
-    override suspend fun save(principalId: AvValueId, name: String, spec: BasicAccountSpec) {
-        ensurePrincipalOrHas(principalId, securityOfficer)
-        ensureValid(spec)
+    private fun AvComputeContext.update(
+        principalId: AvValueId,
+        principalName: String,
+        principalSpec: PrincipalSpec,
+        credential: Credential?,
+        accountName: String,
+        accountSpec: BasicAccountSpec
+    ) {
+        val originalPrincipal = item<PrincipalSpec>(principalId)
+        val originalAccount = refItem<BasicAccountSpec>(originalPrincipal, AuthMarkers.ACCOUNT_REF)
 
-        val accountId = valueWorker.ref(principalId, AuthMarkers.ACCOUNT_REF)
+        val uniqueName = valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).none { it.name == principalName }
+        requirement(AuthModule.ALREADY_EXISTS) { uniqueName }
 
-        valueWorker.update<AvValue>(accountId) { item ->
-            item.asAvItem<BasicAccountSpec>().copy(
-                name = name,
-                spec = spec
+        update(originalPrincipal, principalName, principalSpec)
+        update(originalAccount, accountName, accountSpec)
+        update(originalPrincipal, credential)
+    }
+
+    private fun AvComputeContext.update(
+        currentPrincipal: AvItem<PrincipalSpec>,
+        name: String,
+        spec: PrincipalSpec
+    ) {
+        var copy = currentPrincipal.copy(
+            name = name,
+            spec = currentPrincipal.spec.copy(
+                activated = spec.activated,
+                locked = spec.locked,
+                authFailCount = if (currentPrincipal.spec.locked && ! spec.locked) 0 else currentPrincipal.spec.authFailCount,
+                roles = spec.roles
             )
+        )
+
+        if (copy != currentPrincipal) {
+            this += copy
         }
     }
+
+    private fun AvComputeContext.update(
+        currentAccount: AvItem<BasicAccountSpec>,
+        name: String,
+        spec: BasicAccountSpec
+    ) {
+        var copy = currentAccount.copy(
+            name = name,
+            spec = currentAccount.spec.copy(email = spec.email)
+        )
+
+        if (copy != currentAccount) {
+            this += copy
+        }
+    }
+
+    private fun AvComputeContext.update(
+        currentPrincipal: AvItem<PrincipalSpec>,
+        credential: Credential?
+    ) {
+        if (credential == null) return
+
+        val credentialList = markerVal<CredentialList>(currentPrincipal, AuthMarkers.CREDENTIAL_LIST)
+
+        val newSet = credentialList.credentials.toMutableSet()
+        newSet.removeAll { it.type == credential.type }
+        newSet.add(credential.hash())
+
+        this += credentialList.copy(timestamp = now(), credentials = newSet)
+    }
+
 }

@@ -1,5 +1,6 @@
 package `fun`.adaptive.app.ws.auth.admin
 
+import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.saveFail
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.saveSuccess
 import `fun`.adaptive.app.ws.auth.account.AccountEditorData
 import `fun`.adaptive.auth.api.basic.AuthBasicApi
@@ -25,25 +26,15 @@ class AccountManagerController(
 
     val accounts = BasicAccountSummaryStore(workspace.backend)
 
-    fun add(data: AccountEditorData) {
-        remote(Strings.saveSuccess, "ops") {
-            authBasic.add(
+    fun save(data: AccountEditorData) {
+        remote(Strings.saveSuccess, Strings.saveFail) {
+            authBasic.save(
+                principalId = data.principalId,
                 data.principalName,
-                PrincipalSpec(activated = true),
-                Credential(CredentialType.PASSWORD, data.password, now()),
-                data.roles,
+                PrincipalSpec(activated = data.activated, locked = data.locked, roles = data.roles),
+                if (data.password.isEmpty()) null else Credential(CredentialType.PASSWORD, data.password, now()),
                 data.name,
                 BasicAccountSpec(data.email),
-            )
-        }
-    }
-
-    fun save(data: AccountEditorData) {
-        remote(Strings.saveSuccess, "ops") {
-            authBasic.save(
-                data.principalId!!,
-                data.name,
-                BasicAccountSpec(data.email)
             )
         }
     }

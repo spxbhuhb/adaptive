@@ -6,6 +6,7 @@ import `fun`.adaptive.value.AvSubscription
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.item.AvItem.Companion.withSpec
 import `fun`.adaptive.value.item.AvItemIdList
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
@@ -22,11 +23,18 @@ class AvComputeContext(
     operator fun get(valueId: AvValueId): AvValue? =
         store.unsafeValueOrNull(valueId)
 
-    fun item(valueId: AvValueId): AvItem<*> =
-        store.unsafeItem(valueId)
+    inline fun <reified T> item(valueId: AvValueId): AvItem<T> =
+        checkNotNull(itemOrNull(valueId)) { "cannot find item for $valueId" }.withSpec<T>()
 
     fun itemOrNull(valueId: AvValueId?): AvItem<*>? =
         valueId?.let { store.unsafeItem(valueId) }
+
+    inline fun <reified T> refItem(item: AvItem<*>, refMarker: AvMarker): AvItem<T> =
+        checkNotNull(refItemOrNull(item, refMarker)) { "cannot find ref item for marker $refMarker in item $item" }
+            .withSpec<T>()
+
+    fun refItemOrNull(item: AvItem<*>, refMarker: AvMarker): AvItem<*>? =
+        item.markersOrNull?.get(refMarker)?.let { store.unsafeItem(it) }
 
     fun nextFriendlyId(marker: AvMarker, prefix: String): String {
         var max = 0
@@ -59,6 +67,15 @@ class AvComputeContext(
 
     fun internalGetMarkerVal(itemId: AvValueId, marker: AvMarker) =
         store.unsafeGetMarkerValue(itemId, marker)
+
+    inline fun <reified T> markerVal(item: AvItem<*>, marker: AvMarker) =
+        internalGetMarkerVal(item, marker) as T
+
+    inline fun <reified T> markerValOrNull(item: AvItem<*>, marker: AvMarker) =
+        internalGetMarkerVal(item, marker) as T?
+
+    fun internalGetMarkerVal(item: AvItem<*>, marker: AvMarker) =
+        store.unsafeGetMarkerValue(item, marker)
 
     fun getContainingList(
         childId: AvValueId,
