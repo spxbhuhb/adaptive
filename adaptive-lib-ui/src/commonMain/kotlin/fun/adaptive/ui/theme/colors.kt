@@ -17,6 +17,7 @@ class ThemeColors {
 
     val surface = color(0xFFFFFF)
     val onSurface = color(0x1E1E1E)
+    val onSurfaceMedium = color(0x4A4A4A)
     val onSurfaceFriendly = friendly
     val onSurfaceAngry = angry
 

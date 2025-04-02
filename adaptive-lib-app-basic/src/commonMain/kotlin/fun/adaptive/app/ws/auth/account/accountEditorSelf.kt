@@ -4,15 +4,9 @@ import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.shared.wsContentHeader
-import `fun`.adaptive.auth.api.AuthPrincipalApi
-import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.Independent
-import `fun`.adaptive.foundation.adapter
-import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.ButtonTheme
 import `fun`.adaptive.ui.button.button
@@ -22,7 +16,6 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.popup.PopupTheme
 import `fun`.adaptive.ui.workspace.WorkspaceTheme
-import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.uppercaseFirstChar
 
 @Adaptive
@@ -42,21 +35,15 @@ fun accountEditorSelf(
 
     var copy = copyOf { account ?: AccountEditorData() }
 
-    @Independent
-    val principal = fetch { getService<AuthPrincipalApi>(adapter().transport).getOrNull(account?.uuid?.cast() ?: UUID.nil()) }
-
-    val knownRoles = fetch { getService<AuthRoleApi>(adapter().transport).all() } ?: emptyList()
-    //val principalRoles = fetch { getService<AuthRoleApi>(adapter().transport).rolesOf(account?.id?.cast() ?: UUID.nil(), null) } ?: emptyList()
-
     column {
         WorkspaceTheme.DEFAULT.contentPaneContainer
 
-        wsContentHeader(Strings.accountSelf, copy.uuid) {
+        wsContentHeader(Strings.accountSelf, copy.principalId) {
             row {
                 button(Strings.passwordChange, theme = ButtonTheme.noFocus)
                 primaryPopup(popupState) { hide ->
                     PopupTheme.default.inlineEditorPopup .. width { 300.dp }
-                    changePasswordPopup(copy.uuid, hide)
+                    changePasswordPopup(copy.principalId!!, hide)
                 }
             }
             button(Strings.save) .. onClick { save(copy) }
@@ -64,7 +51,7 @@ fun accountEditorSelf(
 
         withLabel(Strings.accountName, InputContext(disabled = true)) { state ->
             width { 400.dp }
-            textInput(copy.login, state) { }
+            textInput(copy.principalName, state) { }
         }
 
         withLabel(Strings.name) { state ->

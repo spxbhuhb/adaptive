@@ -1,5 +1,7 @@
 package `fun`.adaptive.auth.api.basic
 
+import `fun`.adaptive.auth.model.Credential
+import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.auth.model.basic.BasicSignUp
@@ -24,9 +26,15 @@ interface AuthBasicApi {
      */
     suspend fun signUp(signUp: BasicSignUp)
 
-    /**
-     * Save basic account name and spec.
-     */
+    suspend fun add(
+        principalName: String,
+        principalSpec: PrincipalSpec,
+        credential: Credential,
+        roles : Set<AvValueId>,
+        accountName: String,
+        accountSpec: BasicAccountSpec
+    ) : AvValueId
+
     suspend fun save(principalId : AvValueId, name : String, spec: BasicAccountSpec)
 
 }

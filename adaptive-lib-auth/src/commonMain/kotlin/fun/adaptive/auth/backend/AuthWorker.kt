@@ -74,7 +74,7 @@ class AuthWorker : WorkerImpl<AuthWorker> {
                 )
             }
 
-            getPrincipalService().addPrincipal(
+            getPrincipalService(securityOfficer).addPrincipal(
                 "so",
                 PrincipalSpec(activated = true, roles = setOf(securityOfficer)),
                 PASSWORD,
@@ -83,8 +83,5 @@ class AuthWorker : WorkerImpl<AuthWorker> {
             )
         }
     }
-
-    fun getPrincipalService() =
-        safeAdapter.firstImpl<AuthPrincipalService>().newInstance(Session.contextForRole(securityOfficer))
 
 }

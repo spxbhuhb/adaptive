@@ -4,11 +4,13 @@ import `fun`.adaptive.adat.ensureValid
 import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.backend.AuthPrincipalService
 import `fun`.adaptive.auth.backend.AuthWorker
+import `fun`.adaptive.auth.backend.getPrincipalService
 import `fun`.adaptive.auth.context.ensureHas
 import `fun`.adaptive.auth.context.ensurePrincipalOrHas
 import `fun`.adaptive.auth.context.getPrincipalIdOrNull
 import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.auth.model.AuthMarkers
+import `fun`.adaptive.auth.model.Credential
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD
 import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
@@ -75,7 +77,35 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
         )
     }
 
-    override suspend fun save(principalId : AvValueId, name : String, spec: BasicAccountSpec) {
+    override suspend fun add(
+        principalName: String,
+        principalSpec: PrincipalSpec,
+        credential: Credential,
+        roles : Set<AvValueId>,
+        accountName: String,
+        accountSpec: BasicAccountSpec
+    ): AvValueId {
+
+        val account = AvItem<BasicAccountSpec>(
+            name = accountName,
+            type = AuthMarkers.BASIC_ACCOUNT,
+            friendlyId = accountName.split(" ").mapNotNull { it.firstOrNull()?.toString()?.uppercase() }.take(2).joinToString(""),
+            spec = accountSpec,
+            markersOrNull = mutableMapOf(AuthMarkers.BASIC_ACCOUNT to null)
+        )
+
+        getPrincipalService(securityOfficer).addPrincipal(
+            principalName,
+            PrincipalSpec(activated = true, roles = roles),
+            credential.type,
+            credential.value,
+            account
+        ).also {
+            return it
+        }
+    }
+
+    override suspend fun save(principalId: AvValueId, name: String, spec: BasicAccountSpec) {
         ensurePrincipalOrHas(principalId, securityOfficer)
         ensureValid(spec)
 
@@ -89,7 +119,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
         }
     }
 
-    private fun accountSummary(principal : AvItem<PrincipalSpec>, account : AvItem<BasicAccountSpec>) =
+    private fun accountSummary(principal: AvItem<PrincipalSpec>, account: AvItem<BasicAccountSpec>) =
         BasicAccountSummary(
             accountId = account.uuid,
             principalId = principal.uuid,

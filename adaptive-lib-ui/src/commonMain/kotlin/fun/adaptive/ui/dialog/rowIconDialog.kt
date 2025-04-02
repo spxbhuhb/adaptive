@@ -34,7 +34,7 @@ fun rowIconDialog(
 ): AdaptiveFragment {
     var modalOpen = false
 
-    actionIcon(icon, instructions(), theme = theme) .. onClick { modalOpen = true; feedback?.invoke(true) }
+    actionIcon(icon, theme = theme) .. onClick { modalOpen = true; feedback?.invoke(true) } .. instructions()
 
     if (modalOpen) {
         dialog(title) {

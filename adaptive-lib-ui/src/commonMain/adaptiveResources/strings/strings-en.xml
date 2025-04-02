@@ -10,7 +10,10 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Mégse</string>
+    <string name="save">Mentés</string>
     <string name="hide">Elrejtés</string>
+    <string name="edit">Szerkesztés</string>
+    <string name="notSet">nincs megadva</string>
 
     <string name="copyToClipboard">Copy to clipboard</string>
 

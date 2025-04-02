@@ -14,6 +14,7 @@ class ThemeTextColors {
     val focus = textColor(colors.focusColor)
 
     val onSurface = textColor(colors.onSurface)
+    val onSurfaceMedium = textColor(colors.onSurfaceMedium)
     val onSurfaceVariant = textColor(colors.onSurfaceVariant)
     val onSurfaceFriendly = textColor(colors.onSurfaceFriendly)
     val onSurfaceAngry = textColor(colors.onSurfaceAngry)

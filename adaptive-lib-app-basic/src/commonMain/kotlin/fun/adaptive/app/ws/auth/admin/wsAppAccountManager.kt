@@ -9,6 +9,8 @@ import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.api.firstContext
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.resource.graphics.Graphics
@@ -16,13 +18,15 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.builtin.close
+import `fun`.adaptive.ui.builtin.edit
 import `fun`.adaptive.ui.builtin.more_vert
+import `fun`.adaptive.ui.builtin.notSet
 import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.datetime.instant
-import `fun`.adaptive.ui.dialog.rowIconDialog
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.tableIconTheme
+import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
@@ -33,16 +37,8 @@ import `fun`.adaptive.ui.workspace.WorkspaceTheme
 import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
-fun wsAppAccountManager(pane: WsPane<*, *>): AdaptiveFragment {
+fun wsAppAccountManager(pane: WsPane<*, AccountManagerController>): AdaptiveFragment {
 
-    accountList()
-
-    return fragment()
-}
-
-
-@Adaptive
-fun accountList() {
     val filter = copyOf { AccountFilter() }
     val items = fetch { getService<AuthBasicApi>(adapter().transport).accounts() }
 
@@ -58,14 +54,18 @@ fun accountList() {
                     button(Strings.addAccount)
                     primaryPopup { hide ->
                         popupAlign.absoluteCenter(modal = true, 150.dp)
-                        accountEditorAdmin(hide = hide) { }
+                        accountEditorAdmin(hide = hide) { pane.controller.add(it) }
                     }
                 }
             }
         }
 
-        items(items?.filter { filter.matches(it) }, filter.isEmpty())
+        localContext(pane.controller) {
+            items(items?.filter { filter.matches(it) }, filter.isEmpty())
+        }
     }
+
+    return fragment()
 }
 
 @Adaptive
@@ -82,10 +82,20 @@ private fun items(items: List<BasicAccountSummary>?, emptyFilter: Boolean) {
     }
 }
 
+fun BasicAccountSummary.toAccountEditorData() = AccountEditorData(
+    principalId,
+    accountId,
+    login,
+    name,
+    email,
+    activated,
+    locked
+)
+
 @Adaptive
 private fun item(item: BasicAccountSummary) {
     val hover = hover()
-    var modalOpen = false
+    val popupState = InputContext()
 
     val background =
         when {
@@ -95,7 +105,7 @@ private fun item(item: BasicAccountSummary) {
 
     grid {
         maxWidth .. height { 36.dp } .. alignItems.startCenter .. borders.outline
-        paddingLeft { 32.dp } .. paddingRight { 16.dp } .. gap { 16.dp }
+        paddingLeft { 32.dp } .. paddingRight { 16.dp } .. gap { 16.dp } .. noSelect
 
         colTemplate(
             1.fr,    // login
@@ -114,7 +124,7 @@ private fun item(item: BasicAccountSummary) {
 
         text(item.login) .. maxWidth
         text(item.name) .. maxWidth
-        text(item.email.ifEmpty { "(nincs email)" }) .. maxWidth .. emptyInst(item.email)
+        text(item.email.ifEmpty { Strings.notSet }) .. maxWidth .. emptyInst(item.email)
 
         friendlyOrAngry(item.activated, Graphics.check_circle, Graphics.close)
         friendlyOrAngry(! item.locked, Graphics.lock_open, Graphics.lock)
@@ -122,19 +132,16 @@ private fun item(item: BasicAccountSummary) {
         instant(item.lastLogin) .. maxWidth .. alignSelf.endCenter .. textSmall
 
         box {
-            if (hover || modalOpen) {
-                rowIconDialog(Graphics.edit, "Fiók szerkesztése", feedback = { modalOpen = it }) {
+            if (hover || popupState.value.popupOpen) {
+                actionIcon(Graphics.edit, Strings.edit)
+                primaryPopup(popupState) { hide ->
+                    popupAlign.absoluteCenter(modal = true, 150.dp)
                     accountEditorAdmin(
-                        AccountEditorData(
-                            item.accountId,
-                            item.login,
-                            item.name,
-                            item.email,
-                            item.activated,
-                            item.locked
-                        ),
-                        hide = { }
-                    ) { }
+                        item.toAccountEditorData(),
+                        hide = hide
+                    ) {
+                        fragment().firstContext<AccountManagerController>().save(it)
+                    }
                 }
             }
         }

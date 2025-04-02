@@ -12,7 +12,6 @@ import `fun`.adaptive.ui.api.*
 @Adaptive
 fun actionIcon(
     icon: GraphicsResourceSet,
-    vararg instructions: AdaptiveInstruction,
     tooltip: String? = null,
     theme: IconTheme = onSurfaceIconTheme,
 ): AdaptiveFragment {

@@ -46,6 +46,7 @@
     <!-- admin -->
     <string name="administration">Adminisztráció</string>
     <string name="addAccount">Fiók hozzáadása</string>
+    <string name="roles">Szerepkörök</string>
 
     <!-- inspect -->
     <string name="devTools">Fejlesztői eszközök</string>

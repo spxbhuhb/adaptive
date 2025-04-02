@@ -29,7 +29,8 @@ class AccountSelfController(
 
         return AccountEditorData(
             principal.uuid,
-            login = principal.name,
+            account.accountId,
+            principalName = principal.name,
             name = account.name,
             email = account.email,
             activated = principal.spec.activated,
@@ -39,7 +40,7 @@ class AccountSelfController(
 
     fun save(data : AccountEditorData) {
         io {
-            getService<AuthBasicApi>(transport).save(data.uuid, data.name, BasicAccountSpec(data.email))
+            getService<AuthBasicApi>(transport).save(data.principalId!!, data.name, BasicAccountSpec(data.email))
             ui {
                 successNotification(Strings.saveSuccess)
             }

@@ -29,15 +29,17 @@ class PopupTheme {
         dropShadow(colors.overlay, 16.dp, 16.dp, 16.dp),
     )
 
+    val modalTitleHeight = 28.dp
+
     val modalTitleContainer = instructionsOf(
         colTemplate(28.dp, 1.fr),
         rowTemplate(28.dp),
-        height { 28.dp },
+        height(modalTitleHeight),
         cornerRadius { 8.dp }
     )
 
     val modalTitleText = instructionsOf(
-        textColors.onSurfaceVariant,
+        textColors.onSurfaceMedium,
         fontSize { 13.sp },
         semiBoldFont,
         alignSelf.center
@@ -50,6 +52,19 @@ class PopupTheme {
         svgHeight(16.dp),
         alignSelf.center,
     )
+
+    val modalButtonsHeight = 52.dp
+
+    val modalButtons = instructionsOf(
+        maxWidth,
+        alignItems.end,
+        borderTop(colors.lightOutline),
+        paddingVertical { 12.dp },
+        paddingRight { 16.dp },
+        gap { 12.dp },
+        height { modalButtonsHeight }
+    )
+
     companion object {
         var default = PopupTheme()
     }
