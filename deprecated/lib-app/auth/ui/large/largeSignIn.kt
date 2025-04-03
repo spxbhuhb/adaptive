@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.app.basic.auth.ui.large
 
-import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
+import `fun`.adaptive.adaptive_lib_app.generated.resources.*
 import `fun`.adaptive.adat.api.touchAndValidate
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.basic.appData

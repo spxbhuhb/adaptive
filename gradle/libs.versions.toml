@@ -42,7 +42,7 @@ subethamail = "3.1.7"
 adaptive-core = { module = "fun.adaptive:adaptive-core", version.ref = "adaptive" }
 adaptive-grove = { module = "fun.adaptive:adaptive-grove", version.ref = "adaptive" }
 adaptive-grove-runtime = { module = "fun.adaptive:adaptive-grove-runtime", version.ref = "adaptive" }
-adaptive-lib-app-basic = { module = "fun.adaptive:adaptive-lib-app-basic", version.ref = "adaptive" }
+adaptive-lib-app = { module = "fun.adaptive:adaptive-lib-app", version.ref = "adaptive" }
 adaptive-lib-auth = { module = "fun.adaptive:adaptive-lib-auth", version.ref = "adaptive" }
 adaptive-lib-auto = { module = "fun.adaptive:adaptive-lib-auto", version.ref = "adaptive" }
 adaptive-lib-chart = { module = "fun.adaptive:adaptive-lib-chart", version.ref = "adaptive" }

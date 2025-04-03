@@ -20,7 +20,7 @@ dependencyResolutionManagement {
 
 includeBuild("../adaptive-core")
 includeBuild("../adaptive-ui")
-includeBuild("../adaptive-lib-app-basic")
+includeBuild("../adaptive-lib-app")
 includeBuild("../adaptive-lib-email")
 includeBuild("../adaptive-lib-ktor")
 includeBuild("../adaptive-lib-auth")

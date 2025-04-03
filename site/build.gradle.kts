@@ -74,7 +74,7 @@ kotlin {
                 implementation(libs.adaptive.lib.util)
                 implementation(libs.adaptive.lib.ui)
                 implementation(libs.adaptive.grove)
-                implementation(libs.adaptive.lib.app.basic)
+                implementation(libs.adaptive.lib.app)
                 implementation(libs.adaptive.grove.runtime)
                 implementation(libs.kotlinx.coroutines.debug)
             }

@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.app.basic.auth.ui.small
 
-import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
+import `fun`.adaptive.adaptive_lib_app.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.basic.auth.model.BasicSignUp
 import `fun`.adaptive.document.ui.direct.h1

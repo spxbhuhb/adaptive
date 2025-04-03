@@ -48,7 +48,7 @@ kotlin {
         commonMain {
             dependencies {
                 implementation(libs.adaptive.core)
-                implementation(libs.adaptive.lib.app.basic)
+                implementation(libs.adaptive.lib.app)
                 implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.util)
