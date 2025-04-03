@@ -22,7 +22,7 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-version = "0.25.331.2"
+version = "0.25.403"
 
 adaptive {
     pluginDebug = false
