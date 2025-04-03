@@ -89,4 +89,8 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
     override fun onSignOut() {
         window.location.reload()
     }
+
+    override fun onSignIn() {
+        window.location.reload()
+    }
 }

@@ -12,7 +12,7 @@ class IotAppWsModule<WT : Workspace>() : AppModule<WT>() {
     }
 
     override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter) {
-        + AppFragmentFactory
+        fragmentFactory.add(application.wsAppMain.HOME_CONTENT_KEY, ::appHome)
     }
 
 }

@@ -61,7 +61,7 @@ abstract class ClientApplication<WT : ClientWorkspace> : AbstractApplication<WT>
         modules.forEach { it.workspaceInit(workspace, session) }
     }
 
-    open fun onSignInSuccess() {
+    open fun onSignIn() {
 
     }
 

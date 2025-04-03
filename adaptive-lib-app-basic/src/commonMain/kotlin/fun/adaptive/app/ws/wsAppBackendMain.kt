@@ -1,6 +1,5 @@
-package `fun`.adaptive.app.ws.main.backend
+package `fun`.adaptive.app.ws
 
-import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment

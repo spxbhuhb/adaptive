@@ -3,8 +3,8 @@
  */
 
 import `fun`.adaptive.app.WsBrowserClientApplication.Companion.wsBrowserClient
-import `fun`.adaptive.app.ws.BasicAppWsModule
-import `fun`.adaptive.app.ws.inspect.BasicAppInspectWsModule
+import `fun`.adaptive.app.ws.AppMainWsModule
+import `fun`.adaptive.app.ws.inspect.AppInspectWsModule
 import `fun`.adaptive.auth.app.NoAuthClientModule
 import `fun`.adaptive.cookbook.app.CookbookWsModule
 import `fun`.adaptive.document.DocWsModule
@@ -24,7 +24,7 @@ fun main() {
         module { CookbookWsModule() }
         module { DocWsModule() }
         module { SiteWsModule() }
-        module { BasicAppWsModule() }
-        module { BasicAppInspectWsModule() }
+        module { AppMainWsModule() }
+        module { AppInspectWsModule() }
     }
 }

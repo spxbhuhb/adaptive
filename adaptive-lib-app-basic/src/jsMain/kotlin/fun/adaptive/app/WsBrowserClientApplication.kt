@@ -1,10 +1,9 @@
 package `fun`.adaptive.app
 
-import `fun`.adaptive.app.ws.BasicAppWsModule
+import `fun`.adaptive.app.ws.wsAppMain
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.workspace.Workspace
-import kotlinx.browser.window
 
 open class WsBrowserClientApplication(
     vararg modules: AppModule<Workspace>
@@ -15,10 +14,10 @@ open class WsBrowserClientApplication(
     }
 
     override val backendMainKey: FragmentKey
-        get() = BasicAppWsModule.BACKEND_MAIN_KEY
+        get() = wsAppMain.BACKEND_MAIN_KEY
 
     override val frontendMainKey: FragmentKey
-        get() = BasicAppWsModule.FRONTEND_MAIN_KEY
+        get() = wsAppMain.FRONTEND_MAIN_KEY
 
     override fun buildWorkspace(session: Any?) {
 

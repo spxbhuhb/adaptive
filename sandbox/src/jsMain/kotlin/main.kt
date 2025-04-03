@@ -6,7 +6,7 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.WsBrowserClientApplication.Companion.wsBrowserClient
-import `fun`.adaptive.app.ws.BasicAppWsModule
+import `fun`.adaptive.app.ws.AppMainWsModule
 import `fun`.adaptive.app.ws.WsSandBoxModule
 import `fun`.adaptive.auto.api.auto
 import `fun`.adaptive.backend.backend
@@ -57,7 +57,7 @@ fun iotMain() {
         module { ChartWsModule() }
         module { DocWsModule() }
         module { IotWsModule() }
-        module { BasicAppWsModule() }
+        module { AppMainWsModule() }
         module { WsSandBoxModule }
     }
 }

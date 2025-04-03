@@ -3,10 +3,11 @@
  */
 
 import `fun`.adaptive.app.WsBrowserClientApplication.Companion.wsBrowserClient
-import `fun`.adaptive.app.ws.BasicAppWsModule
+import `fun`.adaptive.app.ws.AppMainWsModule
 import `fun`.adaptive.app.ws.IotAppWsModule
-import `fun`.adaptive.app.ws.auth.BasicAppAuthWsModule
-import `fun`.adaptive.app.ws.inspect.BasicAppInspectWsModule
+import `fun`.adaptive.app.ws.admin.AppAdminWsModule
+import `fun`.adaptive.app.ws.auth.AppAuthWsModule
+import `fun`.adaptive.app.ws.inspect.AppInspectWsModule
 import `fun`.adaptive.auth.app.AuthClientModule
 import `fun`.adaptive.chart.ChartWsModule
 import `fun`.adaptive.document.DocWsModule
@@ -26,9 +27,10 @@ fun main() {
         module { DocWsModule() }
         module { IotWsModule() }
         module { ZigbeeModule() }
-        module { BasicAppWsModule() }
-        module { BasicAppInspectWsModule() }
-        module { BasicAppAuthWsModule() }
+        module { AppAdminWsModule() }
+        module { AppInspectWsModule() }
+        module { AppMainWsModule() }
+        module { AppAuthWsModule() }
         module { IotAppWsModule() }
     }
 }

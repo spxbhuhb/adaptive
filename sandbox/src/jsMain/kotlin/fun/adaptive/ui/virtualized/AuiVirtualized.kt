@@ -49,5 +49,4 @@ class AuiVirtualized(
         layoutItems[itemIndex].receiver.style.transform = "translateY($itemOffset)"
     }
 
-
 }

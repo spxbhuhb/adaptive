@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.ws.admin
 
-import `fun`.adaptive.app.ws.BasicAppWsModule.Companion.wsAddContent
+import `fun`.adaptive.app.ws.wsAddContent
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment

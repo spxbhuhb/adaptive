@@ -13,13 +13,15 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
+import `fun`.adaptive.ui.workspace.model.SingularWsItem
 import `fun`.adaptive.utility.firstInstance
 import `fun`.adaptive.value.AvValueId
 import kotlinx.datetime.Clock.System.now
 
 class AccountSelfController(
-    workspace : Workspace
-) : WsSingularPaneController(workspace, ACCOUNT_SELF_ITEM) {
+    workspace : Workspace,
+    item : SingularWsItem
+) : WsSingularPaneController(workspace, item) {
 
     val service = getService<AuthBasicApi>(transport)
 

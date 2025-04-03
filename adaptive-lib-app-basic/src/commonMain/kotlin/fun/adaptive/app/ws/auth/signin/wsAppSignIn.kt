@@ -5,16 +5,13 @@
 package `fun`.adaptive.app.ws.auth.signin
 
 import `fun`.adaptive.adaptive_lib_app_basic.generated.resources.*
-import `fun`.adaptive.adat.api.touchAndValidate
 import `fun`.adaptive.adat.store.copyOf
-import `fun`.adaptive.app.ws.BasicAppWsModule
-import `fun`.adaptive.app.ws.BasicAppWsModule.Companion.wsApplication
+import `fun`.adaptive.app.ws.wsApplication
 import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.auth.app.AuthAppContext.Companion.authContext
 import `fun`.adaptive.auth.model.basic.BasicSignIn
 import `fun`.adaptive.document.ui.direct.h1
 import `fun`.adaptive.document.ui.direct.h2
-import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter
@@ -33,14 +30,13 @@ import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.utility.firstInstance
+import `fun`.adaptive.ui.workspace.model.WsPane
 import kotlinx.coroutines.launch
 
 @Adaptive
-fun largeSignIn(): AdaptiveFragment {
+fun wsAppSignIn(@Suppress("unused") pane : WsPane<*,*>): AdaptiveFragment {
 
     val app = fragment().wsApplication
-    val basicAppWsModule = app.modules.firstInstance<BasicAppWsModule<*>>()
 
     val signIn = copyOf { BasicSignIn() }
     val signInFragment = fragment()
@@ -84,8 +80,7 @@ fun largeSignIn(): AdaptiveFragment {
                 adapter().scope.launch {
                     try {
                         app.authContext.sessionOrNull = getService<AuthSessionApi>(adapter().transport).signIn(actualSignIn.login, actualSignIn.password)
-                        app.workspace.addContent(basicAppWsModule.HOME_CONTENT_ITEM)
-                        app.onSignInSuccess()
+                        app.onSignIn()
                     } catch (t: Throwable) {
                         t.printStackTrace()
                         failNotification(Strings.singInFail)

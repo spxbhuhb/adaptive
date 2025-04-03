@@ -1,4 +1,4 @@
-package `fun`.adaptive.app.ws.main.frontend
+package `fun`.adaptive.app.ws
 
 import `fun`.adaptive.app.ClientApplication
 import `fun`.adaptive.foundation.Adaptive
