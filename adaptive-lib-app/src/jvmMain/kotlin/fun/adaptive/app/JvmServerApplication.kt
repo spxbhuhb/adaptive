@@ -36,7 +36,7 @@ class JvmServerApplication(
 
             wireFormatInit()
 
-            resourceLoad()
+            loadResources()
 
             workspaceInit(workspace)
 

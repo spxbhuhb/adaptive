@@ -23,10 +23,8 @@ abstract class ServerApplication<WT : AbstractWorkspace> : AbstractApplication<W
         modules.forEach { it.wireFormatInit(WireFormatRegistry)  }
     }
 
-    suspend fun resourceLoad() {
-        coroutineScope {
-            modules.map { async { it.resourceInit() } }.awaitAll()
-        }
+    fun loadResources() {
+        modules.forEach { it.resourceInit() }
     }
 
     fun backendAdapterInit(adapter: BackendAdapter) {
