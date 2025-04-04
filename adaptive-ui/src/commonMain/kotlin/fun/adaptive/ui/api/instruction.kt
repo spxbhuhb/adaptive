@@ -163,7 +163,7 @@ val spaceBetween: DistributeSpace = DistributeSpace(SpaceDistribution.Between)
 
 val scroll: Scroll = Scroll(horizontal = true, vertical = true)
 val verticalScroll: Scroll = Scroll(horizontal = false, vertical = true)
-val horizontalScroll: Scroll = Scroll(horizontal = true, vertical = true)
+val horizontalScroll: Scroll = Scroll(horizontal = true, vertical = false)
 
 val fixed = Fixed()
 val overflow = Overflow.Companion

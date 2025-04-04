@@ -72,6 +72,8 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
 
     override val scope = CoroutineScope(dispatcher)
 
+    open val scrollBarSize: Double = 0.0
+
     var autoSizing: Boolean = true
 
     var actualBatchOwner: AbstractContainer<*, *>? = null

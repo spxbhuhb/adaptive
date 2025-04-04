@@ -32,6 +32,17 @@
             color-scheme: light;
         }
 
+        /* WebKit (Chrome, Edge, Safari) */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+        }
+
         * {
             box-sizing: border-box;
             position: absolute;
@@ -49,7 +60,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             user-select: text;
-            -webkit-user-select: auto; /* Safari */
+            -webkit-user-select: text; /* Safari */
             display: inline-block;
         }
 

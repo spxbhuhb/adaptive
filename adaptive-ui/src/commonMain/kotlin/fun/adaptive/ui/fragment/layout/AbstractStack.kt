@@ -69,16 +69,21 @@ abstract class AbstractStack<RT, CRT : RT>(
         var itemsWidth = totalGap
         var itemsHeight = totalGap
 
-        var proposedItemWidth = if (renderData.container?.horizontalScroll == true) {
+        val horizontalScroll = (container?.horizontalScroll == true)
+        val verticalScroll = (container?.verticalScroll == true)
+
+        var proposedItemWidth = if (horizontalScroll) {
             Double.POSITIVE_INFINITY
         } else {
-            (instructedWidth ?: proposedWidth) - data.surroundingHorizontal
+            val w = (instructedWidth ?: proposedWidth) - data.surroundingHorizontal
+            if (verticalScroll) w - uiAdapter.scrollBarSize else w
         }
 
         var proposedItemHeight = if (renderData.container?.verticalScroll == true) {
             Double.POSITIVE_INFINITY
         } else {
-            (instructedHeight ?: proposedHeight) - data.surroundingVertical
+            val h = (instructedHeight ?: proposedHeight) - data.surroundingVertical
+            if (horizontalScroll) h - uiAdapter.scrollBarSize else h
         }
 
         val fill = data.layout?.fill

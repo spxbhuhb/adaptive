@@ -20,8 +20,7 @@ open class TreeTheme(
     open val itemPadding : DPixel = 4.dp,
 ) {
     open val container = instructionsOf(
-        alignItems.startCenter,
-        maxWidth
+        alignItems.startCenter
     )
 
     open val icon = instructionsOf(
@@ -33,7 +32,6 @@ open class TreeTheme(
     open val item = instructionsOf(
         height(itemHeight),
         alignItems.startCenter,
-        maxWidth,
         cornerRadius { 4.dp }
     )
 
