@@ -65,6 +65,23 @@ class PopupTheme {
         height { modalButtonsHeight }
     )
 
+    val feedbackContainer = instructionsOf(
+        paddingVertical { 4.dp },
+        paddingHorizontal { 12.dp },
+        //border(colors.outline, 1.dp),
+        cornerRadius(4.dp),
+        backgrounds.reverse,
+        popupAlign.afterBelow,
+        zIndex { 100 },
+        // this is buggy - dropShadow(colors.reverse.opaque(0.2f), 4.dp, 4.dp, 4.dp),
+    )
+
+    val feedbackText = instructionsOf(
+        textSmall,
+        textColors.onReverse,
+        noSelect
+    )
+
     companion object {
         var default = PopupTheme()
     }

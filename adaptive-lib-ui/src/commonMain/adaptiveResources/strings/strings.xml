@@ -14,6 +14,7 @@
     <string name="hide">Elrejtés</string>
     <string name="edit">Szerkesztés</string>
     <string name="notSet">nincs megadva</string>
+    <string name="copied">másolva</string>
 
     <string name="executionError">Hiba a művelet végrehajtása közben.</string>
 

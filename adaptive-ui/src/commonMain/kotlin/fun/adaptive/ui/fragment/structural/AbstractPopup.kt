@@ -11,10 +11,7 @@ import `fun`.adaptive.foundation.query.first
 import `fun`.adaptive.foundation.query.firstOrNull
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.fragment.layout.AbstractBox
-import `fun`.adaptive.ui.fragment.layout.AbstractManualLayout
-import `fun`.adaptive.ui.fragment.layout.RawPosition
-import `fun`.adaptive.ui.fragment.layout.computeFinal
+import `fun`.adaptive.ui.fragment.layout.*
 import `fun`.adaptive.ui.instruction.layout.*
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import kotlin.math.max
@@ -47,6 +44,21 @@ abstract class AbstractPopup<RT, CRT : RT>(
 
     open val modal: Boolean
         get() = false
+
+    open val positioningRenderData
+        get() = renderData.layoutFragment?.renderData
+
+    open val positioningFinalWidth: Double?
+        get() = positioningRenderData?.finalWidth
+
+    open val positioningFinalHeight: Double?
+        get() = positioningRenderData?.finalHeight
+
+    open val positioningAbsolutePosition: RawPosition?
+        get() = renderData.layoutFragment?.absolutePosition
+
+    open val positioningRawFrame: RawFrame?
+        get() = positioningRenderData?.rawFrame
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         when (declarationIndex) {
@@ -140,21 +152,22 @@ abstract class AbstractPopup<RT, CRT : RT>(
 
     private fun computePopupLayout(proposedWidth: Double, proposedHeight: Double) {
 
-        val layoutFragment = renderData.layoutFragment ?: return
+        val layoutFinalWidth = positioningFinalWidth ?: return
+        val layoutFinalHeight = positioningFinalHeight ?: return
+        val layoutAbsolutePosition = positioningAbsolutePosition ?: return
 
         val overlay = getOverlay() ?: return
         overlay.computeFinal(proposedWidth, proposedWidth, proposedHeight, proposedWidth)
 
         val container = overlay.first<AbstractBox<*, *>>()
 
-        val parentRenderData = layoutFragment.renderData
 
         val maxWidth = instructions.firstInstanceOfOrNull<MaxWidth>()
         val maxHeight = instructions.lastInstanceOfOrNull<MaxHeight>()
 
         container.computeLayout(
-            maxWidth?.let { parentRenderData.finalWidth } ?: Double.POSITIVE_INFINITY,
-            maxHeight?.let { parentRenderData.finalHeight } ?: Double.POSITIVE_INFINITY,
+            maxWidth?.let { layoutFinalWidth } ?: Double.POSITIVE_INFINITY,
+            maxHeight?.let { layoutFinalHeight } ?: Double.POSITIVE_INFINITY,
         )
 
         var alignment = instructions.lastInstanceOfOrNull<PopupAlign>() ?: popupAlign.belowStart
@@ -162,7 +175,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
         if (alignment.absolute) {
             absolutePosition(alignment, overlay, container)
         } else {
-            relativePosition(alignment, layoutFragment.absolutePosition, container)
+            relativePosition(alignment, layoutAbsolutePosition, container)
         }
     }
 
@@ -210,8 +223,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
         val instructed = instructions.lastInstanceOfOrNull<Position>()
         if (instructed != null) return instructed.toRaw(uiAdapter)
 
-        val parentRenderData = renderData.layoutFragment?.renderData ?: return RawPosition(0.0, 0.0)
-        val parentFrame = parentRenderData.rawFrame
+        val parentFrame = positioningRawFrame ?: return RawPosition(0.0, 0.0)
 
         val left = when (alignment.horizontal) {
             OuterAlignment.Before -> - popupRenderData.finalWidth

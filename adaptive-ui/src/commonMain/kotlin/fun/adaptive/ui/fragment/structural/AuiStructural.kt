@@ -41,9 +41,9 @@ open class AuiStructural<RT, CRT : RT>(
                     uiAdapter.addActual(receiver, itemFragment.receiver)
                 }
             }
-        }
 
-        parent !!.addActual(fragment, if (direct == null) null else false)
+            parent?.addActual(fragment, if (direct == null) null else false)
+        }
     }
 
     override fun removeActual(fragment: AdaptiveFragment, direct: Boolean?) {
@@ -68,9 +68,9 @@ open class AuiStructural<RT, CRT : RT>(
                     uiAdapter.removeActual(itemFragment.receiver)
                 }
             }
-        }
 
-        parent !!.removeActual(fragment, if (direct == null) null else false)
+            parent?.removeActual(fragment, if (direct == null) null else false)
+        }
     }
 
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {

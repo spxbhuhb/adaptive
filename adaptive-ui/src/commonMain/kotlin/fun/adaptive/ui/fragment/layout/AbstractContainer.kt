@@ -44,7 +44,7 @@ abstract class AbstractContainer<RT, CRT : RT>(
 
     // State of containers has different sizes for different container types
     // We cannot use `by stateVariable()` here because of that.
-    val content: BoundFragmentFactory
+    open val content: BoundFragmentFactory
         get() = get(state.size - 1)
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {

@@ -50,7 +50,7 @@ class AuiAdapter(
     override fun addActualRoot(fragment: AdaptiveFragment) {
         traceAddActual(fragment)
 
-        fragment.alsoIfInstance<AbstractContainer<HTMLElement, HTMLDivElement>> {
+        fragment.alsoIfInstance<AbstractAuiFragment<HTMLElement>> {
             rootContainer.getBoundingClientRect().let { r ->
                 it.computeLayout(r.width, r.height)
                 it.placeLayout(0.0, 0.0)
@@ -64,7 +64,7 @@ class AuiAdapter(
     override fun removeActualRoot(fragment: AdaptiveFragment) {
         traceRemoveActual(fragment)
 
-        fragment.alsoIfInstance<AbstractContainer<HTMLElement, HTMLDivElement>> {
+        fragment.alsoIfInstance<AbstractAuiFragment<HTMLElement>> {
             rootContainer.removeChild(it.receiver)
         }
 

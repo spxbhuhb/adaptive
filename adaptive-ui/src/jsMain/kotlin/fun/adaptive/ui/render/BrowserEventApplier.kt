@@ -1,8 +1,12 @@
 package `fun`.adaptive.ui.render
 
 import `fun`.adaptive.adat.decodeFromJson
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
+import `fun`.adaptive.ui.fragment.structural.AuiFeedbackPopup
 import `fun`.adaptive.ui.instruction.event.*
 import `fun`.adaptive.ui.platform.BrowserEventListener
 import org.w3c.dom.DragEvent
@@ -78,6 +82,10 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
             eventHandler.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event), { event.stopPropagation() }))
 
             event.preventDefault()
+
+            if (eventHandler is OnClick) {
+                feedback(fragment, eventHandler)
+            }
         }
 
         fragment.receiver.addEventListener(eventName, listener)
@@ -130,10 +138,22 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
         }
     }
 
-    object Secondary : EventCondition() {
-        override fun matches(event: Event): Boolean {
-            if (event !is MouseEvent) return false
-            return (event.button.toInt() == 2)
+    fun feedback(fragment: AbstractAuiFragment<HTMLElement>, eventHandler: OnClick) {
+        if (eventHandler.feedbackText == null && eventHandler.feedbackIcon == null) return
+
+        fragment.renderData.layoutFragment?.let { layoutFragment ->
+
+            AuiFeedbackPopup(
+                fragment.uiAdapter as AuiAdapter,
+                layoutFragment,
+                eventHandler.feedbackText,
+                eventHandler.feedbackIcon
+            ).also {
+                it.setStateVariable(0, instructionsOf(popupAlign.afterAbove))
+                it.create()
+                it.mount()
+            }
         }
+
     }
 }

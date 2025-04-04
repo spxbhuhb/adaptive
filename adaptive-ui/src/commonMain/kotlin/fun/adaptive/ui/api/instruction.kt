@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.api
 
 import `fun`.adaptive.resource.file.FileResourceSet
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.instruction.decoration.*
@@ -59,6 +60,13 @@ val cursor = Cursor.Companion
 // ------------------------------------------------------------------------------------
 
 fun onClick(handler: (event: UIEvent) -> Unit) = OnClick(handler)
+
+fun onClick(
+    feedbackText: String? = null,
+    feedbackIcon: GraphicsResourceSet? = null,
+    handler: (event: UIEvent) -> Unit
+) = OnClick(handler, feedbackText, feedbackIcon)
+
 fun onDoubleClick(handler: (event: UIEvent) -> Unit) = OnDoubleClick(handler)
 
 fun onMove(handler: (event: UIEvent) -> Unit) = OnMove(handler)
