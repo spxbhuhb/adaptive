@@ -1,6 +1,6 @@
 package `fun`.adaptive.iot.history.ui
 
-import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.iot.generated.resources.*
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -14,9 +14,9 @@ import `fun`.adaptive.ui.workspace.model.WsPaneAction
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-const val WSPANE_HISTORY_TOOL: FragmentKey = "aio:history:tool"
-
-fun Workspace.wsHistoryToolDef() {
+fun Workspace.wsHistoryToolDef(
+    module: IotWsModule<*>
+) {
     val controller = HistoryToolController(this)
 
     + WsPane(
@@ -25,7 +25,7 @@ fun Workspace.wsHistoryToolDef() {
         Strings.historicalData,
         Graphics.monitoring,
         WsPanePosition.LeftTop,
-        WSPANE_HISTORY_TOOL,
+        module.WSPANE_HISTORY_TOOL,
         Unit,
         controller,
         actions = listOf(

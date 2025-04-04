@@ -7,20 +7,22 @@ import `fun`.adaptive.value.*
 import `fun`.adaptive.value.item.AvItem
 import kotlin.reflect.KClass
 
-open class AvLocalItemList<V : Any>(
+open class AvLocalItem<V : Any>(
+    val valueId: AvValueId,
     backend: BackendAdapter,
     val publisher: AvPublisher,
     val specClass: KClass<V>
-) : AvLocalStore<List<AvItem<V>>>() {
+) : AvLocalStore<AvItem<V>?>() {
 
     override val scope = backend.scope
 
     override val localWorker = backend.firstImpl<AvValueWorker>()
 
-    private val itemMap = mutableMapOf<AvValueId, AvItem<V>>()
+    override var value: AvItem<V>? = null
+        set(_) = unsupported()
 
     override suspend fun subscribe(id: AvValueSubscriptionId): List<AvSubscribeCondition> =
-        publisher.subscribeAll(id)
+        publisher.subscribe(id, valueId)
 
     override suspend fun unsubscribe(id: AvValueSubscriptionId) =
         publisher.unsubscribe(id)
@@ -30,13 +32,8 @@ open class AvLocalItemList<V : Any>(
         if (! specClass.isInstance(value.spec)) return
 
         @Suppress("UNCHECKED_CAST")
-        itemMap[value.uuid] = value as AvItem<V>
+        this.value = value as AvItem<V>
 
         notifyListeners()
     }
-
-    override var value: List<AvItem<V>>
-        get() = itemMap.values.toList()
-        set(_) = unsupported()
-
 }

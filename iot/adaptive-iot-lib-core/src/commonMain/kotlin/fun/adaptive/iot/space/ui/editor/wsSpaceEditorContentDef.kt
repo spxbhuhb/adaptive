@@ -1,27 +1,29 @@
-package `fun`.adaptive.iot.history.ui
+package `fun`.adaptive.iot.space.ui.editor
 
 import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 
 
-fun wsHistoryContentDef(
-    module: IotWsModule<*>
+fun wsSpaceEditorContentDef(
+    module : IotWsModule<*>
 ) {
     val workspace = module.workspace
 
-    workspace.addContentPaneBuilder(DeviceItems.WSIT_HISTORY) { item ->
+    workspace.addContentPaneBuilder(DeviceItems.WSIT_SPACE) { item ->
         WsPane(
             UUID(),
             workspace = workspace,
             item.name,
-            workspace.getItemConfig(item.type).icon,
+            workspace.getItemIcon(item),
             WsPanePosition.Center,
-            module.WSPANE_HISTORY_CONTENT,
-            controller = HistoryContentController(workspace),
-            data = item as HistoryBrowserWsItem
+            module.WSPANE_SPACE_CONTENT,
+            controller = SpaceEditorContentController(workspace),
+            data = item.asAvItem()
         )
     }
+
 }

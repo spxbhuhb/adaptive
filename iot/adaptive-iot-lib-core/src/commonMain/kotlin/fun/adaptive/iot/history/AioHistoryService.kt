@@ -1,7 +1,7 @@
 package `fun`.adaptive.iot.history
 
 import `fun`.adaptive.adat.encodeToProtoByteArray
-import `fun`.adaptive.auth.context.publicAccess
+import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.iot.history.backend.AioHistoryWorker
@@ -60,27 +60,27 @@ class AioHistoryService : ServiceImpl<AioHistoryService>, AioHistoryApi {
     }
 
     override suspend fun create(uuid: AioHistoryId, signature: String) {
-        publicAccess()
+        ensureLoggedIn()
         historyWorker.create(uuid, signature)
     }
 
     override suspend fun delete(uuid: AioHistoryId) {
-        publicAccess()
+        ensureLoggedIn()
         historyWorker.delete(uuid)
     }
 
     override suspend fun histories(): List<AioHistoryMetadata> {
-        publicAccess()
+        ensureLoggedIn()
         return historyWorker.histories()
     }
 
     override suspend fun append(uuid: AioHistoryId, timestamp: Instant, signature: String, record: ByteArray) {
-        publicAccess()
+        ensureLoggedIn()
         historyWorker.append(uuid, timestamp, signature, record)
     }
 
     override suspend fun query(query: AioHistoryQuery): List<ByteArray> {
-        publicAccess()
+        ensureLoggedIn()
         return historyWorker.query(query)
     }
 

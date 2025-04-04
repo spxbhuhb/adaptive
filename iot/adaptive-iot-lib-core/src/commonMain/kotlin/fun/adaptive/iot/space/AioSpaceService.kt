@@ -1,9 +1,9 @@
 package `fun`.adaptive.iot.space
 
-import `fun`.adaptive.auth.context.publicAccess
+import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
-import `fun`.adaptive.iot.ws.AioWsContext
+import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.AvValue
@@ -26,7 +26,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
     }
 
     override suspend fun add(name: String, spaceType: AvMarker, parentId: AvValueId?): AvValueId {
-        publicAccess()
+        ensureLoggedIn()
 
         val spaceId = uuid7<AvValue>()
 
@@ -34,7 +34,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
 
             val space = AvItem(
                 name,
-                AioWsContext.WSIT_SPACE + ":$spaceType",
+                DeviceItems.WSIT_SPACE + ":$spaceType",
                 spaceId,
                 now(),
                 AvStatus.OK,
@@ -60,7 +60,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
     }
 
     override suspend fun rename(spaceId: AvValueId, name: String) {
-        publicAccess()
+        ensureLoggedIn()
 
         worker.updateItem(spaceId) {
             it.copy(timestamp = now(), name = name)
@@ -68,7 +68,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
     }
 
     override suspend fun moveUp(spaceId: AvValueId) {
-        publicAccess()
+        ensureLoggedIn()
 
         worker.execute {
             moveUp(spaceId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
@@ -76,7 +76,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
     }
 
     override suspend fun moveDown(spaceId: AvValueId) {
-        publicAccess()
+        ensureLoggedIn()
 
         worker.execute {
             moveDown(spaceId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
@@ -84,7 +84,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
     }
 
     override suspend fun setSpecSpec(valueId: AvValueId, spec : AioSpaceSpec) {
-        publicAccess()
+        ensureLoggedIn()
 
         return worker.update<AvItem<AioSpaceSpec>>(valueId) {
             it.copy(timestamp = now(), spec = spec)
@@ -92,7 +92,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
     }
 
     override suspend fun setSpace(itemId: AvValueId, spaceId: AvValueId, listMarker : AvMarker) {
-        publicAccess()
+        ensureLoggedIn()
 
         worker.execute {
             addRef(itemId, SpaceMarkers.SPACE_REF, spaceId, listMarker)

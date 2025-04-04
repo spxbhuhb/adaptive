@@ -282,6 +282,10 @@ open class Workspace(
         toolPanes += this
     }
 
+    fun addToolPane(pane: () -> WsPane<*, *>) {
+        toolPanes += pane()
+    }
+
     operator fun WsSideBarAction.unaryPlus() {
         sideBarActions += this
     }
@@ -428,5 +432,7 @@ open class Workspace(
     }
 
     fun getItemConfig(type: NamedItemType) = itemTypes[type] ?: WsItemConfig.DEFAULT
+
+    fun getItemIcon(item: NamedItem) = (itemTypes[item.type] ?: WsItemConfig.DEFAULT).icon
 
 }

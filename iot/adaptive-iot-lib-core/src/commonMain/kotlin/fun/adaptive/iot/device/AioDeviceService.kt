@@ -1,9 +1,9 @@
 package `fun`.adaptive.iot.device
 
-import `fun`.adaptive.auth.context.publicAccess
+import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
-import `fun`.adaptive.iot.ws.AioWsContext
+import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.AvValue
@@ -32,7 +32,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
         spec: AioDeviceSpec,
         markers: Map<AvMarker, AvValueId?>?
     ): AvValueId {
-        publicAccess()
+        ensureLoggedIn()
 
         val itemId = markers?.get("migratedId")?.cast() ?: uuid7<AvValue>()
 
@@ -49,7 +49,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
 
             val item = AvItem<AioDeviceSpec>(
                 name,
-                AioWsContext.WSIT_DEVICE + ":$itemType",
+                DeviceItems.WSIT_DEVICE + ":$itemType",
                 itemId,
                 now(),
                 AvStatus.OK,
@@ -72,7 +72,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
     }
 
     override suspend fun rename(deviceId: AvValueId, name: String) {
-        publicAccess()
+        ensureLoggedIn()
 
         worker.updateItem(deviceId) {
             it.copy(timestamp = now(), name = name)
@@ -80,7 +80,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
     }
 
     override suspend fun moveUp(deviceId: AvValueId) {
-        publicAccess()
+        ensureLoggedIn()
 
         worker.execute {
             moveUp(deviceId, DeviceMarkers.SUB_DEVICES, DeviceMarkers.TOP_DEVICES)
@@ -88,7 +88,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
     }
 
     override suspend fun moveDown(deviceId: AvValueId) {
-        publicAccess()
+        ensureLoggedIn()
 
         worker.execute {
             moveDown(deviceId, DeviceMarkers.SUB_DEVICES, DeviceMarkers.TOP_DEVICES)
@@ -96,7 +96,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
     }
 
     override suspend fun setSpec(valueId: AvValueId, spec: AioDeviceSpec) {
-        publicAccess()
+        ensureLoggedIn()
 
         return worker.update<AvItem<AioDeviceSpec>>(valueId) {
             it.copy(timestamp = now(), spec = spec)

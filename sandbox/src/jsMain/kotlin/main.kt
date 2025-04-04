@@ -22,7 +22,6 @@ import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.iot.app.IotWsModule
-import `fun`.adaptive.iot.iotCommon
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
@@ -70,7 +69,6 @@ fun sandboxMain() {
         cookbookCommon()
         groveRuntimeCommon()
         chartCommon()
-        iotCommon()
 
         commonMainStringsStringStore0.load()
 
@@ -113,19 +111,3 @@ fun sandboxMain() {
 
 @Adat
 class Stuff(val spec: AioSpaceSpec)
-
-@Adaptive
-fun copyStore(stuff: Stuff) {
-    val originalSpec = copyOf { stuff.spec }
-    val editSpec = copyOf { stuff.spec }
-
-    println(editSpec)
-
-    column {
-        padding { 16.dp } .. maxSize
-
-        withLabel("Original spec") {
-            textInputArea(editSpec.notes) { v -> editSpec.update(editSpec::notes, v) } .. width { 300.dp }
-        }
-    }
-}

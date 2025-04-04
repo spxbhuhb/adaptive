@@ -7,14 +7,16 @@ import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.foundation.query.singleImpl
+import `fun`.adaptive.iot.app.IotModule
 import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
 import `fun`.adaptive.iot.history.model.AioHistoryId
-import `fun`.adaptive.iot.iotCommon
 import `fun`.adaptive.reflect.typeSignature
+import `fun`.adaptive.runtime.ServerWorkspace
 import `fun`.adaptive.utility.clearedTestPath
 import `fun`.adaptive.utility.exists
 import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.utility.waitForReal
+import `fun`.adaptive.wireformat.WireFormatRegistry
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
@@ -87,7 +89,7 @@ class HistoryWorkerTest {
             inline("AIO_HISTORY_PATH" to rootPath)
         }
 
-        iotCommon(false)
+        IotModule<ServerWorkspace>().wireFormatInit(WireFormatRegistry)
 
         val adapter = backend {
             worker { AioHistoryWorker() }

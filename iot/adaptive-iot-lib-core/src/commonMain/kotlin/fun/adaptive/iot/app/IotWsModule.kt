@@ -1,28 +1,69 @@
 package `fun`.adaptive.iot.app
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
-import `fun`.adaptive.iot.IotFragmentFactory
+import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.iot.alarm.ui.WSPANE_ALARM_TOOL
+import `fun`.adaptive.iot.alarm.ui.wsAlarmTool
 import `fun`.adaptive.iot.alarm.ui.wsAlarmToolDef
 import `fun`.adaptive.iot.device.DeviceMarkers
+import `fun`.adaptive.iot.device.ui.DeviceItems
+import `fun`.adaptive.iot.device.ui.editor.wsDeviceContentPane
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorContentDef
+import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorTool
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorToolDef
+import `fun`.adaptive.iot.domain.rht.AmvRelativeHumidityAndTemperature
+import `fun`.adaptive.iot.domain.rht.ui.rhtListHeader
+import `fun`.adaptive.iot.domain.rht.ui.rhtListItem
 import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserContentDef
 import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserToolDef
 import `fun`.adaptive.iot.generated.resources.*
+import `fun`.adaptive.iot.history.ui.wsHistoryContent
 import `fun`.adaptive.iot.history.ui.wsHistoryContentDef
+import `fun`.adaptive.iot.history.ui.wsHistoryTool
 import `fun`.adaptive.iot.history.ui.wsHistoryToolDef
 import `fun`.adaptive.iot.space.SpaceMarkers
+import `fun`.adaptive.iot.space.ui.browser.wsSpaceBrowserContent
+import `fun`.adaptive.iot.space.ui.browser.wsSpaceBrowserTool
+import `fun`.adaptive.iot.space.ui.editor.wsSpaceContentPane
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorContentDef
+import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorTool
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorToolDef
-import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.value.iconCache
+import `fun`.adaptive.ui.workspace.Workspace
 
 class IotWsModule<WT : Workspace> : IotModule<WT>() {
 
-    override fun frontendAdapterInit(adapter : AdaptiveAdapter)= with(adapter) {
-        + IotFragmentFactory
+    val WSPANE_SPACE_TOOL = "aio:space:tool"
+    val WSPANE_SPACE_CONTENT = "aio:space:content"
+
+    val WSPANE_DEVICE_TOOL = "aio:device:tool"
+    val WSPANE_DEVICE_CONTENT = "aio:device:content"
+
+    val WSPANE_RHT_BROWSER_TOOL = "aio:rht:browser:tool"
+    val WSPANE_RHT_BROWSER_CONTENT = "aio:rht:browser:content"
+
+    val WSPANE_HISTORY_TOOL: FragmentKey = "aio:history:tool"
+    val WSPANE_HISTORY_CONTENT = "aio:history:content"
+
+    override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {
+
+        add(WSPANE_SPACE_TOOL, ::wsSpaceEditorTool)
+        add(WSPANE_SPACE_CONTENT, ::wsSpaceContentPane)
+
+        add(WSPANE_DEVICE_TOOL, ::wsDeviceEditorTool)
+        add(WSPANE_DEVICE_CONTENT, ::wsDeviceContentPane)
+
+        add(WSPANE_ALARM_TOOL, ::wsAlarmTool)
+
+        add(WSPANE_HISTORY_TOOL, ::wsHistoryTool)
+        add(WSPANE_HISTORY_CONTENT, ::wsHistoryContent)
+
+        add(WSPANE_RHT_BROWSER_TOOL, ::wsSpaceBrowserTool)
+        add(WSPANE_RHT_BROWSER_CONTENT, ::wsSpaceBrowserContent)
+
+        add(AmvRelativeHumidityAndTemperature.RHT_LIST_ITEM, ::rhtListItem)
+        add(AmvRelativeHumidityAndTemperature.RHT_LIST_HEADER, ::rhtListHeader)
 
         iconCache[SpaceMarkers.SITE] = Graphics.responsive_layout
         iconCache[SpaceMarkers.BUILDING] = Graphics.apartment
@@ -35,27 +76,27 @@ class IotWsModule<WT : Workspace> : IotModule<WT>() {
         iconCache[DeviceMarkers.CONTROLLER] = Graphics.memory
     }
 
+    override fun contextInit() {
+        workspace.contexts += this
+    }
+
     override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
 
-        val context = AioWsContext(this)
+        wsRhtBrowserToolDef(this@IotWsModule)
+        wsRhtBrowserContentDef(this@IotWsModule)
 
-        contexts += context
+        wsHistoryToolDef(this@IotWsModule)
+        wsHistoryContentDef(this@IotWsModule)
 
-        + wsRhtBrowserToolDef(context)
-        wsRhtBrowserContentDef(context)
+        wsSpaceEditorToolDef(this@IotWsModule)
+        wsSpaceEditorContentDef(this@IotWsModule)
 
-        wsHistoryToolDef()
-        wsHistoryContentDef(context)
-
-        + wsSpaceEditorToolDef(context)
-        wsSpaceEditorContentDef(context)
-
-        + wsDeviceEditorToolDef(context)
-        wsDeviceEditorContentDef(context)
+        wsDeviceEditorToolDef(this@IotWsModule)
+        wsDeviceEditorContentDef(this@IotWsModule)
 
         wsAlarmToolDef()
 
-        addItemConfig(AioWsContext.WSIT_SPACE, Graphics.apartment)
+        addItemConfig(DeviceItems.WSIT_SPACE, Graphics.apartment)
 
     }
 }

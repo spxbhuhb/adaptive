@@ -3,12 +3,12 @@ package `fun`.adaptive.iot.history.ui
 import `fun`.adaptive.foundation.value.adaptiveStoreFor
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.iot.device.DeviceMarkers
+import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.iot.generated.resources.database
 import `fun`.adaptive.iot.generated.resources.historicalData
 import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.iot.space.SpaceMarkers
-import `fun`.adaptive.iot.ws.AioWsContext.Companion.WSIT_HISTORY
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.instruction.event.EventModifier
@@ -126,7 +126,7 @@ class HistoryToolController(
         val name = if (items.size == 1) first.name else Strings.historicalData
 
         workspace.addContent(
-            HistoryBrowserWsItem(name, WSIT_HISTORY, this, items),
+            HistoryBrowserWsItem(name, DeviceItems.WSIT_HISTORY, this, items),
             emptySet()
         )
 

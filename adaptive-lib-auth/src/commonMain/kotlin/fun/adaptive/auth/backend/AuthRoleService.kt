@@ -68,7 +68,15 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService> {
         }
     }
 
-    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
+    override suspend fun subscribe(
+        subscriptionId: AvValueSubscriptionId,
+        valueId: AvValueId
+    ): List<AvSubscribeCondition> {
+        ensureHas(securityOfficer)
+        return serviceSubscribe(valueWorker, subscriptionId, valueId)
+    }
+
+    override suspend fun subscribeAll(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
         ensureHas(securityOfficer)
         return serviceSubscribe(valueWorker, subscriptionId, AuthMarkers.ROLE)
     }

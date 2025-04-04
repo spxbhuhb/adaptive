@@ -8,12 +8,13 @@ import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.device.ui.DeviceTreeModel
 import `fun`.adaptive.iot.generated.resources.*
-import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.zIndex
-import `fun`.adaptive.ui.builtin.*
+import `fun`.adaptive.ui.builtin.arrow_drop_down
+import `fun`.adaptive.ui.builtin.arrow_drop_up
+import `fun`.adaptive.ui.builtin.empty
 import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.menu.MenuItemBase
 import `fun`.adaptive.ui.menu.MenuSeparator
@@ -21,11 +22,7 @@ import `fun`.adaptive.ui.menu.contextMenu
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPaneAction
-import `fun`.adaptive.ui.workspace.model.WsPaneMenuAction
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.wsToolPane
-import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 
@@ -41,34 +38,7 @@ fun wsDeviceEditorTool(pane: WsPane<Unit, DeviceEditorToolController>): Adaptive
     return fragment()
 }
 
-fun wsDeviceEditorToolDef(context: AioWsContext): WsPane<Unit, DeviceEditorToolController> {
-
-    val controller = DeviceEditorToolController(context.workspace)
-
-    val pane = WsPane(
-        UUID(),
-        workspace = context.workspace,
-        Strings.devices,
-        Graphics.account_tree,
-        WsPanePosition.RightMiddle,
-        AioWsContext.WSPANE_DEVICE_TOOL,
-        actions = listOf(
-            WsPaneAction(Graphics.unfold_more, Strings.expandAll, Unit) { controller.expandAll() },
-            WsPaneAction(Graphics.unfold_less, Strings.collapseAll, Unit) { controller.collapseAll() },
-            WsPaneMenuAction(Graphics.add, Strings.add, addTopMenu, { apply(controller, it.menuItem, null) })
-        ),
-        data = Unit,
-        controller = controller
-    )
-
-    context.io {
-        controller.start()
-    }
-
-    return pane
-}
-
-private fun apply(controller: DeviceEditorToolController, menuItem: MenuItem<AioDeviceEditOperation>, treeItem: TreeItem<AvValueId>?) {
+internal fun apply(controller: DeviceEditorToolController, menuItem: MenuItem<AioDeviceEditOperation>, treeItem: TreeItem<AvValueId>?) {
 
     val (name, marker, virtual) = when (menuItem.data) {
         AioDeviceEditOperation.AddComputer -> Triple(Strings.computer, DeviceMarkers.COMPUTER, false)
@@ -102,7 +72,7 @@ private val addDevice = MenuItem<AioDeviceEditOperation>(Graphics.empty, Strings
 private val addVirtualNetwork = MenuItem<AioDeviceEditOperation>(Graphics.account_tree, Strings.addVirtualNetwork, AioDeviceEditOperation.AddVirtualNetwork)
 private val addVirtualController = MenuItem<AioDeviceEditOperation>(Graphics.memory, Strings.addVirtualController, AioDeviceEditOperation.AddVirtualController)
 
-private val addTopMenu = listOf(addComputer, addNetwork, addDevice, addVirtualNetwork)
+internal val addTopMenu = listOf(addComputer, addNetwork, addDevice, addVirtualNetwork)
 private val computerMenu = listOf(addNetwork, addDevice)
 private val networkMenu = listOf(addController, addDevice)
 private val controllerMenu = listOf(addDevice)

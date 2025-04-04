@@ -1,6 +1,6 @@
 package `fun`.adaptive.iot.space
 
-import `fun`.adaptive.iot.ws.AioWsContext
+import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.AvValue
@@ -20,7 +20,7 @@ suspend fun addSpace(worker: AvValueWorker, name: String, friendlyItemId: Friend
 
     val space = AvItem<AioSpaceSpec>(
         name,
-        AioWsContext.WSIT_SPACE,
+        DeviceItems.WSIT_SPACE,
         spaceUuid,
         now(),
         AvStatus.OK,

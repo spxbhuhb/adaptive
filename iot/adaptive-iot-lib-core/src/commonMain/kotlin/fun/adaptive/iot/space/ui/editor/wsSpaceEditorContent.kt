@@ -16,7 +16,7 @@ import `fun`.adaptive.iot.point.ui.pointSummary
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.localizedSpaceType
-import `fun`.adaptive.iot.ws.AioWsContext
+import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.button
@@ -37,23 +37,6 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.ui.value.AvUiList
-
-fun wsSpaceEditorContentDef(context: AioWsContext) {
-    val workspace = context.workspace
-
-    workspace.addContentPaneBuilder(AioWsContext.WSIT_SPACE) { item ->
-        WsPane(
-            UUID(),
-            workspace = workspace,
-            item.name,
-            context[item].icon,
-            WsPanePosition.Center,
-            AioWsContext.WSPANE_SPACE_CONTENT,
-            controller = SpaceEditorContentController(workspace),
-            data = item.asAvItem()
-        )
-    }
-}
 
 @Adaptive
 fun wsSpaceContentPane(pane: WsPane<AvItem<AioSpaceSpec>, SpaceEditorContentController>): AdaptiveFragment {

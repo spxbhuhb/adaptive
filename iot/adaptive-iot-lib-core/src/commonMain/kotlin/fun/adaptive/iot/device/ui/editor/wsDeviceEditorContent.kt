@@ -3,11 +3,7 @@ package `fun`.adaptive.iot.device.ui.editor
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.document.ui.direct.h2
-import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.adapter
-import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instructions
+import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.common.AioTheme
 import `fun`.adaptive.iot.device.AioDeviceSpec
@@ -16,7 +12,6 @@ import `fun`.adaptive.iot.generated.resources.*
 import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.iot.point.ui.pointSummary
 import `fun`.adaptive.iot.space.SpaceMarkers
-import `fun`.adaptive.iot.ws.AioWsContext
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.button
@@ -30,32 +25,13 @@ import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.select.select
 import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.value.AvNameCacheEntry
+import `fun`.adaptive.ui.value.AvUiList
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
-import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.debug
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
-import `fun`.adaptive.ui.value.AvNameCacheEntry
-import `fun`.adaptive.ui.value.AvUiList
-
-fun wsDeviceEditorContentDef(context: AioWsContext) {
-    val workspace = context.workspace
-
-    workspace.addContentPaneBuilder(AioWsContext.WSIT_DEVICE) { item ->
-        WsPane(
-            UUID(),
-            workspace = workspace,
-            item.name,
-            context[item].icon,
-            WsPanePosition.Center,
-            AioWsContext.WSPANE_DEVICE_CONTENT,
-            controller = DeviceEditorContentController(workspace),
-            data = item.asAvItem()
-        )
-    }
-}
 
 @Adaptive
 fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentController>): AdaptiveFragment {
@@ -65,7 +41,7 @@ fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentC
     val editItem = copyOf { pane.data }
     val editSpec = copyOf { pane.data.spec }
 
-    val spaceNames = fragment().wsContext<AioWsContext>().spaceNameCache.value
+    val spaceNames = valueFrom { pane.controller.spaceNameCache }
 
     val originalSpace = spaceNames.firstOrNull { it.item.uuid == editItem.markers[SpaceMarkers.SPACE_REF] }
     var editSpace = spaceNames.firstOrNull { it.item.uuid == editItem.markers[SpaceMarkers.SPACE_REF] }
@@ -123,10 +99,12 @@ fun actions(
 
             if (editSpace != originalSpace) {
                 controller.setSpace(editItem.uuid, editSpace !!.item.uuid)
+                editItem.update(editItem::markersOrNull, originalItem.toMutableMarkers().also { it[SpaceMarkers.SPACE_REF] = editSpace.item.uuid})
             }
 
             if (originalItem.spec != editSpec) {
                 controller.setSpec(editItem.uuid, editSpec)
+                originalItem.update(originalItem::spec, editItem.spec)
             }
         }
 }

@@ -2,13 +2,13 @@ package `fun`.adaptive.iot.point
 
 import `fun`.adaptive.adat.AdatChange
 import `fun`.adaptive.adat.api.deepCopy
-import `fun`.adaptive.auth.context.publicAccess
+import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.iot.history.AioHistoryService
 import `fun`.adaptive.iot.point.computed.AioPointComputeWorker
 import `fun`.adaptive.iot.space.SpaceMarkers
-import `fun`.adaptive.iot.ws.AioWsContext
+import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
@@ -39,7 +39,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         spec: AioPointSpec,
         markers: Map<AvMarker, AvValueId?>?
     ): AvValueId {
-        publicAccess()
+        ensureLoggedIn()
 
         val itemId = markers?.get("migratedId")?.cast() ?: uuid7<AvValue>()
 
@@ -52,7 +52,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
 
             val item = AvItem(
                 name,
-                AioWsContext.WSIT_POINT + ":$itemType",
+                DeviceItems.WSIT_POINT + ":$itemType",
                 itemId,
                 now(),
                 AvStatus.OK,
@@ -71,7 +71,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
     }
 
     override suspend fun rename(spaceId: AvValueId, name: String) {
-        publicAccess()
+        ensureLoggedIn()
 
         valueWorker.updateItem(spaceId) {
             it.copy(timestamp = now(), name = name)
@@ -79,7 +79,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
     }
 
     override suspend fun moveUp(spaceId: AvValueId) {
-        publicAccess()
+        ensureLoggedIn()
 
         valueWorker.execute {
             moveUp(spaceId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
@@ -87,7 +87,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
     }
 
     override suspend fun moveDown(spaceId: AvValueId) {
-        publicAccess()
+        ensureLoggedIn()
 
         valueWorker.execute {
             moveDown(spaceId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
@@ -95,7 +95,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
     }
 
     override suspend fun setSpec(valueId: AvValueId, spec: AioPointSpec) {
-        publicAccess()
+        ensureLoggedIn()
 
         return valueWorker.update<AvItem<AioPointSpec>>(valueId) {
             it.copy(timestamp = now(), spec = spec)
@@ -103,7 +103,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
     }
 
     override suspend fun setCurVal(curVal: AvValue) {
-        publicAccess()
+        ensureLoggedIn()
 
         val pointId = checkNotNull(curVal.parentId)
 

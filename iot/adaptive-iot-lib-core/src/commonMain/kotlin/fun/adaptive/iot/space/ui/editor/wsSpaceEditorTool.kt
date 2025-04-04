@@ -4,10 +4,11 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.iot.generated.resources.*
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.SpaceTreeModel
-import `fun`.adaptive.iot.ws.AioWsContext
+import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.column
@@ -39,34 +40,7 @@ fun wsSpaceEditorTool(pane: WsPane<Unit, SpaceEditorToolController>): AdaptiveFr
     return fragment()
 }
 
-fun wsSpaceEditorToolDef(context: AioWsContext): WsPane<Unit, SpaceEditorToolController> {
-
-    val controller = SpaceEditorToolController(context.workspace)
-
-    val pane = WsPane(
-        UUID(),
-        workspace = context.workspace,
-        Strings.areas,
-        Graphics.apartment,
-        WsPanePosition.RightTop,
-        AioWsContext.WSPANE_SPACE_TOOL,
-        actions = listOf(
-            WsPaneAction(Graphics.unfold_more, Strings.expandAll, Unit) { controller.expandAll() },
-            WsPaneAction(Graphics.unfold_less, Strings.collapseAll, Unit) { controller.collapseAll() },
-            WsPaneMenuAction(Graphics.add, Strings.add, addTopMenu, { apply(controller, it.menuItem, null) })
-        ),
-        data = Unit,
-        controller = controller
-    )
-
-    context.io {
-        controller.start()
-    }
-
-    return pane
-}
-
-private fun apply(controller: SpaceEditorToolController, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AvValueId>?) {
+internal fun apply(controller: SpaceEditorToolController, menuItem: MenuItem<AioSpaceEditOperation>, treeItem: TreeItem<AvValueId>?) {
 
     val (name, marker) = when (menuItem.data) {
         AioSpaceEditOperation.AddSite -> Strings.site to SpaceMarkers.SITE
@@ -99,7 +73,7 @@ private val addFloor = MenuItem<AioSpaceEditOperation>(Graphics.stacks, Strings.
 private val addRoom = MenuItem<AioSpaceEditOperation>(Graphics.meeting_room, Strings.addRoom, AioSpaceEditOperation.AddRoom)
 private val addArea = MenuItem<AioSpaceEditOperation>(Graphics.crop_5_4, Strings.addArea, AioSpaceEditOperation.AddArea)
 
-private val addTopMenu = listOf(addSite, addBuilding, addArea)
+internal val addTopMenu = listOf(addSite, addBuilding, addArea)
 private val siteMenu = listOf(addBuilding, addArea)
 private val buildingMenu = listOf(addFloor, addArea)
 private val floorMenu = listOf(addRoom, addArea)
