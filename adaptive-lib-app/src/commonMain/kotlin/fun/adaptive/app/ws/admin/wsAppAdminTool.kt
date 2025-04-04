@@ -18,10 +18,10 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 @Adaptive
 fun wsAppAdminTool(pane: WsPane<*, *>): AdaptiveFragment {
 
-    val context = fragment().wsContext<WsAdminContext>()
+    val module = fragment().wsContext<AppAdminWsModule<*>>()
 
     val model = TreeViewModel(
-        context.adminItems.toTreeItems(),
+        module.adminItems.toTreeItems(),
         context = Unit,
         theme = TreeTheme.list,
         selectedFun = { _, item, _ -> fragment().wsAddContent(item.data) }

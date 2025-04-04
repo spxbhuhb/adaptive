@@ -11,9 +11,6 @@ abstract class WsPaneController<D> {
 
     abstract val workspace : Workspace
 
-    open val adminTool
-        get() = false
-
     open fun accepts(pane: WsPaneType<D>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
         return false
     }

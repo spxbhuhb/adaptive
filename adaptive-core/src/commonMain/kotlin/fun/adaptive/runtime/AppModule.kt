@@ -8,6 +8,9 @@ abstract class AppModule<WT : AbstractWorkspace> {
 
     lateinit var application : AbstractApplication<WT>
 
+    val workspace
+        get() = application.workspace
+
     open fun contextInit() {
 
     }

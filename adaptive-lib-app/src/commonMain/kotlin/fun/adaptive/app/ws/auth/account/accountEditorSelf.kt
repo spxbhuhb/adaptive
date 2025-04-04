@@ -20,7 +20,7 @@ import `fun`.adaptive.utility.uppercaseFirstChar
 
 @Adaptive
 fun accountEditorSelf(
-    account: AccountEditorData? = null,
+    account: AccountEditorData?,
     save: (AccountEditorData) -> Unit
 ) {
     val popupState = valueFrom { InputContext() }

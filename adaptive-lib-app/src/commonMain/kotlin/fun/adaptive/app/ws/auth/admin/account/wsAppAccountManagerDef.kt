@@ -2,34 +2,31 @@ package `fun`.adaptive.app.ws.auth.admin.account
 
 import `fun`.adaptive.adaptive_lib_app.generated.resources.accounts
 import `fun`.adaptive.adaptive_lib_app.generated.resources.supervised_user_circle
-import `fun`.adaptive.app.ws.admin.WsAdminContext
+import `fun`.adaptive.app.ws.addAdminItem
+import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.model.SingularWsItem
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.firstInstance
 
-const val ACCOUNT_MANAGER_KEY = "app:ws:admin:accounts"
+fun Workspace.wsAppAccountManagerDef(
+    module: AppAuthWsModule<*>
+) {
 
-val ACCOUNT_MANAGER_ITEM by lazy { SingularWsItem(Strings.accounts, ACCOUNT_MANAGER_KEY, Graphics.supervised_user_circle) }
+    addAdminItem(module.ACCOUNT_MANAGER_ITEM)
 
-fun Workspace.wsAppAccountManagerDef() {
-
-    contexts.firstInstance<WsAdminContext>().adminItems += ACCOUNT_MANAGER_ITEM
-
-    addContentPaneBuilder(ACCOUNT_MANAGER_KEY) {
+    addContentPaneBuilder(module.ACCOUNT_MANAGER_KEY) {
         WsPane(
             UUID(),
             workspace = this,
             Strings.accounts,
             Graphics.supervised_user_circle,
             WsPanePosition.Center,
-            ACCOUNT_MANAGER_KEY,
-            ACCOUNT_MANAGER_ITEM,
-            AccountManagerController(this)
+            module.ACCOUNT_MANAGER_KEY,
+            module.ACCOUNT_MANAGER_ITEM,
+            AccountManagerController(module)
         )
     }
 

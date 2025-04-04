@@ -42,7 +42,8 @@ class AccountSelfController(
             name = account.name,
             email = account.email,
             activated = principal.spec.activated,
-            locked = principal.spec.locked
+            locked = principal.spec.locked,
+            roles = principal.spec.roles
         )
     }
 

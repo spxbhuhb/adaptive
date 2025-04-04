@@ -11,8 +11,8 @@ class SiteWsModule<WT : Workspace>() : AppModule<WT>() {
         //application.stringStores += commonMainStringsStringStore0
     }
 
-    override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter) {
-        fragmentFactory.add(application.wsAppMain.HOME_CONTENT_KEY, ::siteHome)
+    override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {
+        add(application.wsAppMain.HOME_CONTENT_KEY, ::siteHome)
     }
 
 }

@@ -42,7 +42,8 @@ class LabelTheme {
     )
 
     val uuidLabelText = instructionsOf(
-        textColors.onSurfaceVariant, textSmall
+        textColors.onSurfaceVariant,
+        textSmall
     )
 
     val copyIconTheme = IconTheme(

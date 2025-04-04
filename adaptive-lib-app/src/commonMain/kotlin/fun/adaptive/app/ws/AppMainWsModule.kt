@@ -20,15 +20,10 @@ import `fun`.adaptive.utility.UUID
 
 class AppMainWsModule<WT : Workspace> : AppModule<WT>() {
 
-    val FRONTEND_MAIN_KEY: FragmentKey
-        get() = "app:ws:frontend:main"
+    val FRONTEND_MAIN_KEY: FragmentKey = "app:ws:frontend:main"
+    val BACKEND_MAIN_KEY: FragmentKey = "app:ws:backend:main"
 
-    val BACKEND_MAIN_KEY: FragmentKey
-        get() = "app:ws:backend:main"
-
-    val HOME_CONTENT_KEY: FragmentKey
-        get() = "app:ws:home:content"
-
+    val HOME_CONTENT_KEY: FragmentKey = "app:ws:home:content"
     val HOME_CONTENT_ITEM by lazy { SingularWsItem(Strings.home, HOME_CONTENT_KEY) }
 
     override fun resourceInit() {
@@ -40,8 +35,8 @@ class AppMainWsModule<WT : Workspace> : AppModule<WT>() {
 
     }
 
-    override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter) {
-        fragmentFactory.add(FRONTEND_MAIN_KEY, ::wsAppFrontendMain)
+    override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {
+        add(FRONTEND_MAIN_KEY, ::wsAppFrontendMain)
     }
 
     override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
