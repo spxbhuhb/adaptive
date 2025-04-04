@@ -34,8 +34,9 @@ fun accountEditorAdmin(
 ) {
     @Independent
     var copy = copyOf { account ?: AccountEditorData() }
+    val title = if (account == null) Strings.addAccount else Strings.editAccount
 
-    modalEditor(Strings.addAccount, hide, { save(copy); hide() }) {
+    modalEditor(title, hide, { save(copy); hide() }) {
         row {
             editFields(copy)
             roles(copy)

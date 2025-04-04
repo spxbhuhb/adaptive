@@ -47,6 +47,7 @@
     <!-- admin -->
     <string name="administration">Adminisztráció</string>
     <string name="addAccount">Fiók hozzáadása</string>
+    <string name="editAccount">Fiók szerkesztése</string>
     <string name="roles">Szerepkörök</string>
     <string name="addRole">Szerepkör hozzáadása</string>
     <string name="context">Környezet</string>
