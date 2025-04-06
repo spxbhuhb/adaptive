@@ -4,12 +4,13 @@ import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.value.AvValueClientService
+import `fun`.adaptive.value.AvValueDomain
 import `fun`.adaptive.value.AvValueWorker
 
 @Adaptive
-fun valueClientBackend() {
+fun valueClientBackend(domain: AvValueDomain) {
 
-    worker { AvValueWorker() }
+    worker { AvValueWorker(domain) }
     service { AvValueClientService() }
 
 }

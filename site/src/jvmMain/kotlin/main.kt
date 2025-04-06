@@ -7,6 +7,7 @@ import `fun`.adaptive.app.server.BasicAppServerModule
 import `fun`.adaptive.auth.app.NoAuthServerModule
 import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
+import `fun`.adaptive.document.app.DocServerModule
 import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.lib.util.app.UtilServerModule
 import `fun`.adaptive.value.app.ValueServerModule
@@ -19,7 +20,8 @@ fun main() {
 
     jvmServer {
         module { UtilServerModule() }
-        module { ValueServerModule() }
+        module { ValueServerModule("general") }
+        module { DocServerModule() }
         module { NoAuthServerModule() }
         module { KtorJvmServerModule() }
         module { BasicAppServerModule() }

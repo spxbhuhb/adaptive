@@ -2,9 +2,7 @@ package `fun`.adaptive.app
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
-import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.FragmentKey
-import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.service.transport.ServiceCallTransport
@@ -15,11 +13,6 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
 abstract class ClientApplication<WT : ClientWorkspace> : AbstractApplication<WT>() {
-
-    companion object {
-        val AdaptiveFragment.uiApplication
-            get() = this.firstContext<ClientApplication<*>>()
-    }
 
     abstract val transport : ServiceCallTransport
 
@@ -32,6 +25,8 @@ abstract class ClientApplication<WT : ClientWorkspace> : AbstractApplication<WT>
     open val defaultFontName = "Open Sans"
     open val defaultFontSize = 16.sp
     open val defaultFontWeight = 300
+
+    var genericSessionOrNull : Any? = null
 
     fun moduleInit() {
         modules.forEach { it.application = this }
@@ -56,12 +51,12 @@ abstract class ClientApplication<WT : ClientWorkspace> : AbstractApplication<WT>
         modules.forEach { it.frontendAdapterInit(adapter) }
     }
 
-    open fun workspaceInit(workspace : WT, session : Any?) {
+    open fun workspaceInit(workspace : WT) {
         modules.forEach {
             workspace.contexts += it
             it.contextInit()
         }
-        modules.forEach { it.workspaceInit(workspace, session) }
+        modules.forEach { it.workspaceInit(workspace, genericSessionOrNull) }
     }
 
     open fun onSignIn() {

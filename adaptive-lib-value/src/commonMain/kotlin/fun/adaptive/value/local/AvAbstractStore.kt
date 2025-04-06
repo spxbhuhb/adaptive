@@ -19,16 +19,25 @@ import kotlinx.coroutines.supervisorScope
  * Override [process] to process the incoming data into [V].
  *
  * Call [notifyListeners] when [Observable.value] changes.
+ *
+ * **Lifecycle**
+ *
+ * - [addListener] subscribes when there are no other listeners
+ * - [removeListener]
+ * - When there is at least one listener, the store is active. When the last listener is removed
+ * the store stops.
  */
-abstract class AvLocalStore<V> : Observable<V>() {
-
-    abstract val localWorker: AvValueWorker
-    abstract val scope: CoroutineScope
+abstract class AvAbstractStore<V>(
+    val publisher: AvPublisher,
+    val scope: CoroutineScope,
+    val localWorker: AvValueWorker,
+) : Observable<V>() {
 
     var job: Job? = null
 
     override fun addListener(listener: ObservableListener<V>) {
         if (job == null) {
+            onStart()
             job = scope.launch { supervisorScope { run() } }
         }
         super.addListener(listener)
@@ -47,6 +56,7 @@ abstract class AvLocalStore<V> : Observable<V>() {
         val subscriptionId = AvValueSubscriptionId()
 
         val conditions = subscribe(subscriptionId)
+
         localWorker.subscribe(AvChannelSubscription(subscriptionId, conditions, updates))
 
         try {
@@ -60,6 +70,7 @@ abstract class AvLocalStore<V> : Observable<V>() {
                         else -> Unit // forEach flattens the transactions, compute is not handled here
                     }
                 }
+                onCommit()
             }
         } finally {
             localWorker.unsubscribe(subscriptionId)
@@ -67,9 +78,17 @@ abstract class AvLocalStore<V> : Observable<V>() {
         }
     }
 
-    abstract suspend fun subscribe(id: AvValueSubscriptionId): List<AvSubscribeCondition>
+    suspend fun subscribe(id: AvValueSubscriptionId): List<AvSubscribeCondition> =
+        publisher.subscribe(id)
 
-    abstract suspend fun unsubscribe(id: AvValueSubscriptionId)
+    suspend fun unsubscribe(id: AvValueSubscriptionId) =
+        publisher.unsubscribe(id)
+
+    open fun onStart() = Unit
+
+    open fun onStop() = Unit
+
+    open fun onCommit() = Unit
 
     abstract fun process(value: AvValue)
 

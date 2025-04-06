@@ -10,7 +10,7 @@ import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.app.ws.inspect.AppInspectWsModule
 import `fun`.adaptive.auth.app.AuthClientModule
 import `fun`.adaptive.chart.ChartWsModule
-import `fun`.adaptive.document.DocWsModule
+import `fun`.adaptive.document.app.DocWsModule
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.iot.lib.zigbee.ZigbeeModule

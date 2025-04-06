@@ -5,25 +5,27 @@ import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.item.AvItem
+import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
 
+/**
+ * Subscribe a list of [AvItem<V>], notify the listener when the list or any item
+ * in the list changes.
+ */
 open class AvLocalItemList<V : Any>(
-    backend: BackendAdapter,
-    val publisher: AvPublisher,
-    val specClass: KClass<V>
-) : AvLocalStore<List<AvItem<V>>>() {
+    val specClass: KClass<V>,
+    publisher: AvPublisher,
+    scope: CoroutineScope,
+    localWorker: AvValueWorker
+) : AvAbstractStore<List<AvItem<V>>>(publisher, scope, localWorker) {
 
-    override val scope = backend.scope
-
-    override val localWorker = backend.firstImpl<AvValueWorker>()
+    constructor(
+        specClass: KClass<V>,
+        publisher: AvPublisher,
+        backend: BackendAdapter
+    ) : this(specClass, publisher, backend.scope, backend.firstImpl<AvValueWorker>())
 
     private val itemMap = mutableMapOf<AvValueId, AvItem<V>>()
-
-    override suspend fun subscribe(id: AvValueSubscriptionId): List<AvSubscribeCondition> =
-        publisher.subscribeAll(id)
-
-    override suspend fun unsubscribe(id: AvValueSubscriptionId) =
-        publisher.unsubscribe(id)
 
     override fun process(value: AvValue) {
         if (value !is AvItem<*>) return

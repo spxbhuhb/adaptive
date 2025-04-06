@@ -6,6 +6,7 @@ import `fun`.adaptive.auth.app.AuthBasicServerModule
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
+import `fun`.adaptive.document.app.DocServerModule
 import `fun`.adaptive.iot.lib.zigbee.ZigbeeModule
 import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.lib.util.app.UtilServerModule
@@ -26,8 +27,9 @@ fun main() {
 
     jvmServer {
         module { UtilServerModule() }
-        module { ValueServerModule(FilePersistence(Path("./var/values").ensure(), 2)) }
+        module { ValueServerModule("general", FilePersistence(Path("./var/values").ensure(), 2)) }
         module { AuthBasicServerModule() }
+        module { DocServerModule() }
         module { IotServerModule() }
         module { ZigbeeModule() }
         module { KtorJvmServerModule() }

@@ -1,4 +1,4 @@
-package `fun`.adaptive.document
+package `fun`.adaptive.document.app
 
 import `fun`.adaptive.adaptive_lib_document.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.document.ws.browser.wsDocBrowserContentDef
@@ -11,6 +11,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.builtin.menu_book
 import `fun`.adaptive.ui.workspace.Workspace
+import kotlin.collections.plusAssign
 
 class DocWsModule<WT : Workspace> : AppModule<WT>() {
 

@@ -11,10 +11,6 @@ abstract class AppModule<WT : AbstractWorkspace> {
     val workspace
         get() = application.workspace
 
-    open fun contextInit() {
-
-    }
-
     open fun wireFormatInit(registry: WireFormatRegistry) {
 
     }
@@ -28,6 +24,10 @@ abstract class AppModule<WT : AbstractWorkspace> {
     }
 
     open fun frontendAdapterInit(adapter : AdaptiveAdapter) {
+
+    }
+
+    open fun contextInit() {
 
     }
 

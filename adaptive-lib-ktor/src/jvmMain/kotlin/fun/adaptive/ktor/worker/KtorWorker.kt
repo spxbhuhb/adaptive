@@ -132,7 +132,8 @@ class KtorWorker(
                 fileTransport
             )
 
-            transport.start(safeAdapter)
+            transport.serviceImplFactory = safeAdapter
+            transport.start()
 
             try {
 

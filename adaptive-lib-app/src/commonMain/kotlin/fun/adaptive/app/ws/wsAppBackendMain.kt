@@ -11,7 +11,7 @@ import `fun`.adaptive.value.app.valueClientBackend
 fun wsAppBackendMain(): AdaptiveFragment {
 
     worker { SnackbarManager() }
-    valueClientBackend()
+    valueClientBackend("general") // FIXME "general" value domain
 
     return fragment()
 }

@@ -20,7 +20,7 @@ fun downloadReport(
     out.append(Strings.timestamp)
     out.append(";")
     for (valueColumn in valueColumns) {
-        out.append(historyName(item.controller, controller, valueColumn))
+        out.append(historyName(item.controller, valueColumn))
         out.append(";;")
     }
     out.appendLine()

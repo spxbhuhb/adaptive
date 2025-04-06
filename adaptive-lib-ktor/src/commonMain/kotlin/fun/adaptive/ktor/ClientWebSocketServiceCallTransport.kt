@@ -3,7 +3,6 @@ package `fun`.adaptive.ktor
 import `fun`.adaptive.ktor.api.toHttp
 import `fun`.adaptive.ktor.api.toWs
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.service.factory.ServiceImplFactory
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormatProvider
@@ -34,6 +33,8 @@ open class ClientWebSocketServiceCallTransport(
     wireFormatProvider
 ) {
 
+    var started : Boolean = false
+
     val clientIdUrl = host.toHttp(clientIdPath)
     val serviceUrl = host.toWs(servicePath)
 
@@ -47,10 +48,13 @@ open class ClientWebSocketServiceCallTransport(
         }
     }
 
-    override suspend fun start(serviceImplFactory: ServiceImplFactory) : ServiceCallTransport {
-        super.start(serviceImplFactory)
+    override suspend fun start() : ServiceCallTransport {
+        if (started) return this
+        started = true
+
         client.get(clientIdUrl) // initialize the client id cookie
         scope.launch { run() }
+
         return this
     }
 

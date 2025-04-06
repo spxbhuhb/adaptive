@@ -83,7 +83,8 @@ open class BackendAdapter(
 
     override fun start() : BackendAdapter {
         scope.safeLaunch(logger) {
-            transport.start(this@BackendAdapter)
+            transport.serviceImplFactory = this@BackendAdapter
+            transport.start()
         }
         isRunning = true
         while (wait && scope.isActive) {

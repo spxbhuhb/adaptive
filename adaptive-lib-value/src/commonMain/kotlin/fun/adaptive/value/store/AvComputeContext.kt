@@ -23,13 +23,13 @@ class AvComputeContext(
     operator fun get(valueId: AvValueId): AvValue? =
         store.unsafeValueOrNull(valueId)
 
-    inline fun <reified T> item(valueId: AvValueId): AvItem<T> =
+    inline fun <reified T : Any> item(valueId: AvValueId): AvItem<T> =
         checkNotNull(itemOrNull(valueId)) { "cannot find item for $valueId" }.withSpec<T>()
 
     fun itemOrNull(valueId: AvValueId?): AvItem<*>? =
         valueId?.let { store.unsafeItem(valueId) }
 
-    inline fun <reified T> refItem(item: AvItem<*>, refMarker: AvMarker): AvItem<T> =
+    inline fun <reified T : Any> refItem(item: AvItem<*>, refMarker: AvMarker): AvItem<T> =
         checkNotNull(refItemOrNull(item, refMarker)) { "cannot find ref item for marker $refMarker in item $item" }
             .withSpec<T>()
 
