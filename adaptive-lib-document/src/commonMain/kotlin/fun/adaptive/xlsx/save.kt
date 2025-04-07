@@ -13,4 +13,4 @@ suspend fun XlsxDocument.pack(): ByteArray {
     return toXlsxFile().toContentMap().pack()
 }
 
-expect suspend fun XlsxDocument.save(path: Path)
+expect suspend fun XlsxDocument.save(path: String)

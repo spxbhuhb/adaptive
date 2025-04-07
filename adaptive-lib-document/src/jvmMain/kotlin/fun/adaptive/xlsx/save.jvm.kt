@@ -8,6 +8,6 @@ import `fun`.adaptive.utility.write
 import `fun`.adaptive.xlsx.model.XlsxDocument
 import kotlinx.io.files.Path
 
-actual suspend fun XlsxDocument.save(path: Path) {
-    path.write(pack())
+actual suspend fun XlsxDocument.save(path: String) {
+    Path(path).write(pack())
 }

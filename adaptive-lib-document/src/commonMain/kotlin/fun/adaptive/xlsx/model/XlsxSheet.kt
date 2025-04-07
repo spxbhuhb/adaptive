@@ -14,7 +14,7 @@ import `fun`.adaptive.xlsx.internal.toColumnNumber
  *
  */
 
-data class XlsxSheet internal constructor(
+class XlsxSheet internal constructor(
     val name: String,
     val doc: XlsxDocument
 ) {

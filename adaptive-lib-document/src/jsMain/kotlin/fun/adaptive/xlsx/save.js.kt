@@ -6,12 +6,11 @@ package `fun`.adaptive.xlsx
 
 import `fun`.adaptive.ui.platform.download.downloadFile
 import `fun`.adaptive.xlsx.model.XlsxDocument
-import kotlinx.io.files.Path
 
-actual suspend fun XlsxDocument.save(path: Path) {
+actual suspend fun XlsxDocument.save(path: String) {
     downloadFile(
         pack(),
-        path.name,
+        path,
         "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
 }

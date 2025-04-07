@@ -16,24 +16,19 @@ import `fun`.adaptive.iot.history.ui.table.historyTable
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.arrow_right
 import `fun`.adaptive.ui.builtin.settings
 import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.filter.QuickFilterModel
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.icon.actionIcon
-import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.icon.tableIconTheme
-import `fun`.adaptive.ui.input.datetime.dateInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.splitpane.splitPaneDivider
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textMedium
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.utility.localDate
 
 @Adaptive
 fun wsHistoryContent(
@@ -89,7 +84,7 @@ fun title(
             row {
                 maxWidth .. alignItems.end .. gap { 24.dp }
                 button(Strings.downloadReport) .. onClick {
-                    downloadReport(pane.data, controller)
+                    downloadXlsx(pane.data, controller)
                 }
             }
         }
