@@ -12,7 +12,8 @@ fun main(args: Array<String>) {
     AdaptiveCli()
         .subcommands(
             CurValUpload(),
-            SimHistory()
+            SimHistory(),
+            UploadTextHistory()
         )
         .main(args)
 }
