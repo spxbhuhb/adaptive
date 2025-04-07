@@ -21,7 +21,7 @@ plugins {
     alias(libs.plugins.shadow)
 }
 
-version = "0.25.403"
+version = "0.25.407"
 
 // this is ugly but I don't use JS dependencies anyway, 
 // https://youtrack.jetbrains.com/issue/KT-50848/Kotlin-JS-inner-build-routines-are-using-vulnerable-NPM-dependencies-and-now-that-we-have-kotlin-js-store-github-audit-this

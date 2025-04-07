@@ -217,6 +217,6 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     }
 
     fun getSessionService() =
-        safeAdapter.firstImpl<AuthSessionService>().newInstance(Session.contextForRole(securityOfficer))
+        safeAdapter.firstImpl<AuthSessionService>().newInstance(Session.contextFor(roleId = securityOfficer))
 
 }

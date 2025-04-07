@@ -24,7 +24,7 @@ import kotlinx.datetime.Instant
 import kotlinx.io.files.Path
 
 fun main() {
-    CurValUpload().main(arrayOf("./iot/adaptive-iot-cli/var/curval", "http://localhost:8080"))
+    CurValUpload().main(arrayOf("./iot/adaptive-iot-cli/var/curval", "http://localhost:8080", "so", "so"))
 }
 
 class CurValUpload : CliktCommand(name = "curval-upload") {

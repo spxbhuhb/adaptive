@@ -9,11 +9,11 @@ import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.value.AvValueId
 import kotlinx.datetime.Clock.System.now
 
-fun BackendFragmentImpl.getPrincipalService(role : AvValueId) =
-    safeAdapter.firstImpl<AuthPrincipalService>().newInstance(Session.contextForRole(role))
+fun BackendFragmentImpl.getPrincipalService(roleId: AvValueId) =
+    safeAdapter.firstImpl<AuthPrincipalService>().newInstance(Session.contextFor(roleId = roleId))
 
-fun BackendFragmentImpl.getSessionService(role: AvValueId) =
-    safeAdapter.firstImpl<AuthSessionService>().newInstance(Session.contextForRole(role))
+fun BackendFragmentImpl.getSessionService(roleId: AvValueId) =
+    safeAdapter.firstImpl<AuthSessionService>().newInstance(Session.contextFor(roleId = roleId))
 
 internal fun Credential.hash(type: String? = null) =
     Credential(type ?: PASSWORD, BCrypt.hashpw(value, BCrypt.gensalt()), now())

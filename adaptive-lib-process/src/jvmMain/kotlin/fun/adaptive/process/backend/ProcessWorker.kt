@@ -52,7 +52,8 @@ class ProcessWorker(
             wireFormatProvider
         )
 
-        transport.start(safeAdapter)
+        transport.serviceImplFactory = safeAdapter
+        transport.start()
 
         try {
 

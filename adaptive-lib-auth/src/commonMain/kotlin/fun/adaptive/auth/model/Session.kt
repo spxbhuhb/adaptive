@@ -40,14 +40,16 @@ class Session(
 
     companion object {
         /**
-         * Create an empty session for with [role]. Useful for intra-server calls.
+         * Create an empty session for with [roleId]. Useful for intra-server calls.
          */
-        fun forRole(role: AvValueId) = Session(uuid7(), null, "", now(), 0L, 0L, setOf(role))
+        fun forRole(principalId: AvValueId?, roleId: AvValueId) =
+            Session(uuid7(), principalId, "", now(), 0L, 0L, setOf(roleId))
 
         /**
-         * Get a service context with an empty session with [role]. Useful for intra-server calls.
+         * Get a service context with an empty session with [roleId]. Useful for intra-server calls.
          */
-        fun contextForRole(role: AvValueId) = ServiceContext(NullTransport, sessionOrNull = forRole(role))
+        fun contextFor(principalId: AvValueId? = null, roleId: AvValueId) =
+            ServiceContext(NullTransport, sessionOrNull = forRole(principalId, roleId))
     }
 
 }
