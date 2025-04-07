@@ -15,6 +15,7 @@ import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.platform.NavSupport
 import `fun`.adaptive.ui.platform.ResizeObserver
+import `fun`.adaptive.ui.platform.applyCustomScrollBar
 import `fun`.adaptive.ui.platform.getScrollbarWidth
 import `fun`.adaptive.ui.platform.media.MediaMetrics
 import `fun`.adaptive.ui.render.*
@@ -37,12 +38,17 @@ class AuiAdapter(
     override val dispatcher: CoroutineDispatcher
         get() = Dispatchers.Default
 
-    override val scrollBarSize: Double = getScrollbarWidth()
-
     /**
      * Fragments which are over the main root fragment, such as dialog boxes.
      */
     val otherRootFragments = mutableListOf<AdaptiveFragment>()
+
+    init {
+        applyCustomScrollBar(rootContainer)
+    }
+
+    // the order is important here, apply the style first, measure after
+    override val scrollBarSize: Double = getScrollbarWidth()
 
     override fun makeContainerReceiver(fragment: AbstractContainer<HTMLElement, HTMLDivElement>): HTMLDivElement =
         document.createElement("div") as HTMLDivElement

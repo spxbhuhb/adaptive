@@ -7,7 +7,7 @@ import `fun`.adaptive.app.ws.AppMainWsModule
 import `fun`.adaptive.app.ws.WsSandBoxModule
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.chart.ChartWsModule
-import `fun`.adaptive.document.DocWsModule
+import `fun`.adaptive.document.app.DocWsModule
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
