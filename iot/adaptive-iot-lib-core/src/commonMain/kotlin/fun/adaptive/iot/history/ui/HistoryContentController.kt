@@ -70,12 +70,14 @@ class HistoryContentController(
 
     val config = storeFor { HistoryContentConfig() }.also { it.addListener(this) }
 
-    val lastConfigStart = config.value.start
-    val lastConfigEnd = config.value.end
+    var lastConfigStart = config.value.start
+    var lastConfigEnd = config.value.end
     var lastBrowserItem : HistoryBrowserWsItem? = null
 
     override fun onChange(value: HistoryContentConfig) {
         if (value.start != lastConfigStart || value.end != lastConfigEnd) {
+            lastConfigStart = value.start
+            lastConfigEnd = value.end
             lastBrowserItem?.let { loadHistories(it, false) }
         }
     }

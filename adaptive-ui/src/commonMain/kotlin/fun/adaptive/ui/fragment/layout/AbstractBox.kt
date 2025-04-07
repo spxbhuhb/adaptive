@@ -5,7 +5,6 @@
 package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import kotlin.math.max
@@ -44,10 +43,6 @@ abstract class AbstractBox<RT, CRT : RT>(
         } else {
             val h = (instructedHeight ?: proposedHeight) - data.surroundingVertical
             if (horizontalScroll) h - uiAdapter.scrollBarSize else h
-        }
-
-        if (proposedItemWidth > 24) {
-            println("${instructions.firstInstanceOfOrNull<Name>()} $proposedItemWidth $proposedItemHeight")
         }
 
         // ----  calculate layout of all items  ---------------------------------------

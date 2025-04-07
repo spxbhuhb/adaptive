@@ -7,7 +7,6 @@ package `fun`.adaptive.ui.fragment.layout
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
-import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.throwAway
@@ -120,7 +119,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         when (fragment.declarationIndex) {
             P1_BOX -> {
                 if (haveToPatchConf(closureMask, 1)) {
-                    fragment.setStateVariable(0, paneInstructions + Name("box-1"))
+                    fragment.setStateVariable(0, paneInstructions)
                 }
                 if (haveToPatchConf(closureMask, PANE1_BUILDER)) {
                     fragment.setStateVariable(1, BoundFragmentFactory(this, P1_ANY, null))
@@ -135,7 +134,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
             DI_BOX -> {
                 if (! wrap && haveToPatchConf(closureMask, 1)) {
-                    fragment.setStateVariable(0, dividerInstructions + Name("div"))
+                    fragment.setStateVariable(0, dividerInstructions)
                 }
                 if (haveToPatchConf(closureMask, DIVIDER_BUILDER)) {
                     fragment.setStateVariable(1, BoundFragmentFactory(this, DI_ANY, null))
@@ -150,7 +149,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
 
             P2_BOX -> {
                 if (haveToPatchConf(closureMask, 1)) {
-                    fragment.setStateVariable(0, paneInstructions + Name("box-2"))
+                    fragment.setStateVariable(0, paneInstructions)
                 }
                 if (haveToPatchConf(closureMask, PANE2_BUILDER)) {
                     fragment.setStateVariable(1, BoundFragmentFactory(this, P2_ANY, null))
