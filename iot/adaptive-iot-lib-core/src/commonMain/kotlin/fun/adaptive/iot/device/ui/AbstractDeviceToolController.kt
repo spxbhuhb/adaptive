@@ -1,6 +1,7 @@
 package `fun`.adaptive.iot.device.ui
 
 import `fun`.adaptive.iot.device.AioDeviceApi
+import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.ui.value.AvUiTree
 import `fun`.adaptive.value.AvValueId
@@ -25,21 +26,15 @@ abstract class AbstractDeviceToolController(
     )
 
     val valueTreeStore = AvUiTree(
+        deviceService,
         backend,
-        transport,
-        scope,
-        DeviceMarkers.DEVICE,
-        DeviceMarkers.SUB_DEVICES,
+        AioDeviceSpec::class,
         DeviceMarkers.TOP_DEVICES,
-        ::refreshTop
+        DeviceMarkers.SUB_DEVICES
     )
 
     fun start() {
-        valueTreeStore.start()
-    }
-
-    fun refreshTop(tops: List<TreeItem<AvValueId>>) {
-        treeViewModel.items = tops
+        valueTreeStore.addListener { treeViewModel.items = it }
     }
 
     fun expandAll() {

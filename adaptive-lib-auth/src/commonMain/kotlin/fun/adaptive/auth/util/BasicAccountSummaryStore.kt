@@ -1,34 +1,27 @@
 package `fun`.adaptive.auth.util
 
-import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.foundation.unsupported
-import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.value.*
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.withSpec
-import `fun`.adaptive.value.local.AvLocalStore
+import `fun`.adaptive.value.local.AvAbstractStore
+import `fun`.adaptive.value.local.AvPublisher
 
 class BasicAccountSummaryStore(
+    publisher: AvPublisher,
     backend: BackendAdapter
-) : AvLocalStore<List<BasicAccountSummary>>() {
-
-    override val scope = backend.scope
-
-    override val localWorker = backend.firstImpl<AvValueWorker>()
-
-    val service = getService<AuthBasicApi>(backend.transport)
-
-    override suspend fun subscribe(id: AvValueSubscriptionId): List<AvSubscribeCondition> =
-        service.subscribe(id)
-
-    override suspend fun unsubscribe(id: AvValueSubscriptionId) =
-        service.unsubscribe(id)
-
+) : AvAbstractStore<List<BasicAccountSummary>>(
+    publisher,
+    backend.scope,
+    backend.firstImpl<AvValueWorker>()
+) {
     private class Entry(
         val principal: AvItem<PrincipalSpec>?,
         val account: AvItem<BasicAccountSpec>?

@@ -1,6 +1,7 @@
 package `fun`.adaptive.iot.space.ui
 
 import `fun`.adaptive.iot.space.AioSpaceApi
+import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
@@ -25,21 +26,15 @@ abstract class AbstractSpaceToolController(
     )
 
     val valueTreeStore = AvUiTree(
+        spaceService,
         backend,
-        transport,
-        scope,
-        SpaceMarkers.SPACE,
-        SpaceMarkers.SUB_SPACES,
+        AioSpaceSpec::class,
         SpaceMarkers.TOP_SPACES,
-        ::refreshTop
+        SpaceMarkers.SUB_SPACES
     )
 
     fun start() {
-        valueTreeStore.start()
-    }
-
-    fun refreshTop(tops: List<TreeItem<AvValueId>>) {
-        treeViewModel.items = tops
+        valueTreeStore.addListener { treeViewModel.items = it }
     }
 
     fun expandAll() {

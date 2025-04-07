@@ -24,18 +24,16 @@ fun historyName(
 ) : String =
     historyName(
         pane.data.controller,
-        pane.controller,
         item
     )
 
 fun historyName(
     toolController : HistoryToolController,
-    contentController : HistoryContentController,
     valueColumn : ChartItem<Instant, AioDoubleHistoryRecord, AvItem<*>>
 ): String {
     val item = valueColumn.attachment ?: return Strings.noname
     val itemName = item.name
-    val names = historyPathNames(toolController, contentController, valueColumn.attachment!!)
+    val names = historyPathNames(toolController, valueColumn.attachment!!)
 
     val markers = item.markers
 
@@ -49,7 +47,6 @@ fun historyName(
 
 fun historyPathNames(
     toolController : HistoryToolController,
-    contentController : HistoryContentController,
     item : AvItem<*>
 ): List<String> {
 
@@ -67,7 +64,7 @@ fun historyPathNames(
     }
 }
 
-private fun collect(start : AvItem<*>?, tree: AvUiTree) : List<String> {
+private fun collect(start : AvItem<*>?, tree: AvUiTree<*>) : List<String> {
     val names = mutableListOf<String>()
     var item = start
 

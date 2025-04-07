@@ -1,7 +1,9 @@
 package `fun`.adaptive.document.ws.browser
 
+import `fun`.adaptive.document.api.DocApi
 import `fun`.adaptive.document.value.DocMarkers
 import `fun`.adaptive.document.ws.DocTreeModel
+import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
@@ -14,6 +16,8 @@ abstract class AbstractDocToolController(
     override val workspace: Workspace
 ) : WsPaneController<Unit>() {
 
+    val service = getService<DocApi>(workspace.transport)
+
     val treeViewModel = TreeViewModel<AvValueId, AbstractDocToolController>(
         emptyList(),
         selectedFun = ::selectedFun,
@@ -22,21 +26,15 @@ abstract class AbstractDocToolController(
     )
 
     val valueTreeStore = AvUiTree(
-        backend,
-        transport,
-        scope,
-        DocMarkers.DOCUMENT,
-        DocMarkers.SUB_DOCUMENTS,
+        service,
+        workspace.backend,
+        Any::class,
         DocMarkers.TOP_DOCUMENTS,
-        ::refreshTop
+        DocMarkers.SUB_DOCUMENTS
     )
 
     fun start() {
-        valueTreeStore.start()
-    }
-
-    fun refreshTop(tops: List<TreeItem<AvValueId>>) {
-        treeViewModel.items = tops
+        valueTreeStore.addListener { treeViewModel.items = it }
     }
 
     fun expandAll() {

@@ -5,27 +5,28 @@ import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.item.AvItem
+import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
 
+/**
+ * Subscribe a single [AvItem<V>] and notify listeners when the value is updated from
+ * the remote.
+ */
 open class AvLocalItem<V : Any>(
-    val valueId: AvValueId,
-    backend: BackendAdapter,
-    val publisher: AvPublisher,
-    val specClass: KClass<V>
-) : AvLocalStore<AvItem<V>?>() {
+    val specClass: KClass<V>,
+    publisher: AvPublisher,
+    scope: CoroutineScope,
+    localWorker: AvValueWorker
+) : AvAbstractStore<AvItem<V>?>(publisher, scope, localWorker) {
 
-    override val scope = backend.scope
-
-    override val localWorker = backend.firstImpl<AvValueWorker>()
+    constructor(
+        publisher: AvPublisher,
+        specClass: KClass<V>,
+        backend: BackendAdapter,
+    ) : this(specClass, publisher, backend.scope, backend.firstImpl<AvValueWorker>())
 
     override var value: AvItem<V>? = null
         set(_) = unsupported()
-
-    override suspend fun subscribe(id: AvValueSubscriptionId): List<AvSubscribeCondition> =
-        publisher.subscribe(id, valueId)
-
-    override suspend fun unsubscribe(id: AvValueSubscriptionId) =
-        publisher.unsubscribe(id)
 
     override fun process(value: AvValue) {
         if (value !is AvItem<*>) return

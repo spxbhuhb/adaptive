@@ -3,15 +3,15 @@ package `fun`.adaptive.iot.space
 import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
+import `fun`.adaptive.iot.app.IoTValueDomain
 import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
-import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValueWorker
+import `fun`.adaptive.value.*
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
+import `fun`.adaptive.value.util.serviceSubscribe
 import kotlinx.datetime.Clock.System.now
 
 class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
@@ -22,7 +22,21 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
 
     override fun mount() {
         check(GlobalRuntimeContext.isServer)
-        worker = safeAdapter.firstImpl<AvValueWorker>()
+        worker = safeAdapter.firstImpl<AvValueWorker> { it.domain == IoTValueDomain }
+    }
+
+    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
+        return serviceSubscribe(
+            worker,
+            subscriptionId,
+            SpaceMarkers.SPACE,
+            SpaceMarkers.TOP_SPACES,
+            SpaceMarkers.SUB_SPACES
+        )
+    }
+
+    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+       worker.unsubscribe(subscriptionId)
     }
 
     override suspend fun add(name: String, spaceType: AvMarker, parentId: AvValueId?): AvValueId {

@@ -211,7 +211,6 @@ abstract class ServiceCallTransport(
      * service call would be hanging forever.
      */
     open fun responseError(serviceName: String, funName: String, envelope: TransportEnvelope): Nothing {
-        println("stuff: $serviceName $funName $envelope")
         val serviceExceptionData = wireFormatProvider.decode(envelope.payload, ServiceExceptionData)
 
         val wireFormat = WireFormatRegistry[serviceExceptionData.className] // FIXME do we want className or wireFormatName here?
@@ -242,8 +241,7 @@ abstract class ServiceCallTransport(
         }
     }
 
-    open suspend fun start(serviceImplFactory: ServiceImplFactory): ServiceCallTransport {
-        this.serviceImplFactory = serviceImplFactory
+    open suspend fun start(): ServiceCallTransport {
         return this
     }
 

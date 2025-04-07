@@ -31,7 +31,7 @@ fun multiHistoryTableHeader(
 
         text(Strings.timestamp) .. textMedium .. normalFont
         for (item in context.items) {
-            text(historyName(hisItem.controller, controller, item)) .. textMedium .. normalFont .. maxWidth
+            text(historyName(hisItem.controller, item)) .. textMedium .. normalFont .. maxWidth
         }
     }
 }

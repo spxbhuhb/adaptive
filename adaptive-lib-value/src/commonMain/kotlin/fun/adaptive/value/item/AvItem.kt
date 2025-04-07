@@ -7,6 +7,7 @@ import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
+import kotlin.reflect.KClass
 
 @Adat
 data class AvItem<T>(
@@ -68,12 +69,14 @@ data class AvItem<T>(
             return this
         }
 
-        inline fun <reified T> AvItem<*>.withSpec(): AvItem<T> {
-            check(spec is T)
+        inline fun <reified T : Any> AvItem<*>.withSpec(): AvItem<T> =
+            withSpec(T::class)
+
+        fun <T : Any> AvItem<*>.withSpec(kClass : KClass<T>): AvItem<T> {
+            check(kClass.isInstance(spec)) { "Spec is not of type $kClass" }
             @Suppress("UNCHECKED_CAST")
             return this as AvItem<T>
         }
-
     }
 
 }

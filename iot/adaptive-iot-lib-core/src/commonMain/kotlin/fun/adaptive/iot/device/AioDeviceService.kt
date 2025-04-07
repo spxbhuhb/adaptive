@@ -6,12 +6,15 @@ import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
+import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.AvValueSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
+import `fun`.adaptive.value.util.serviceSubscribe
 import kotlinx.datetime.Clock.System.now
 
 class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
@@ -23,6 +26,20 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
     override fun mount() {
         check(GlobalRuntimeContext.isServer)
         worker = safeAdapter.firstImpl<AvValueWorker>()
+    }
+
+    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
+        return serviceSubscribe(
+            worker,
+            subscriptionId,
+            DeviceMarkers.DEVICE,
+            DeviceMarkers.TOP_DEVICES,
+            DeviceMarkers.SUB_DEVICES
+        )
+    }
+
+    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+        worker.unsubscribe(subscriptionId)
     }
 
     override suspend fun add(

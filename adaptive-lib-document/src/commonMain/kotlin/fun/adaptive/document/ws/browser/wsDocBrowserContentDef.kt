@@ -1,6 +1,6 @@
 package `fun`.adaptive.document.ws.browser
 
-import `fun`.adaptive.document.DocWsModule
+import `fun`.adaptive.document.app.DocWsModule
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID

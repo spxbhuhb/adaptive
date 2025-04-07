@@ -19,7 +19,7 @@ open class BasicBrowserClientApplication(
     override val frontendMainKey: FragmentKey
         get() = BasicAppClientModule.BASIC_CLIENT_FRONTEND_MAIN_KEY
 
-    override fun buildWorkspace(session : Any?) {
+    override fun buildWorkspace() {
         workspace = ClientWorkspace(backend)
     }
 

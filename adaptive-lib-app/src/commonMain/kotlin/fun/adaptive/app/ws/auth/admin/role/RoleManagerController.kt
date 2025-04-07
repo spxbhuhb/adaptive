@@ -17,7 +17,7 @@ class RoleManagerController(
 
     val service = getService<AuthRoleApi>(transport)
 
-    val roles = AvLocalItemList<RoleSpec>(workspace.backend, service, RoleSpec::class)
+    val roles = AvLocalItemList<RoleSpec>(RoleSpec::class, service, workspace.backend)
 
     fun save(data: AvItem<RoleSpec>, add: Boolean) {
         remote(Strings.saveSuccess, Strings.saveFail) {

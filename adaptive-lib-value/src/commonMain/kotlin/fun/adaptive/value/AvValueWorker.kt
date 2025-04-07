@@ -13,6 +13,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 open class AvValueWorker(
+    val domain : AvValueDomain,
     val persistence: AbstractValuePersistence = NoPersistence(),
     val trace: Boolean = false
 ) : WorkerImpl<AvValueWorker> {
@@ -170,13 +171,13 @@ open class AvValueWorker(
         store.item(valueId).markersOrNull?.get(refMarker)
 
     // FIXME move this down into the store to avoid locking twice
-    inline fun <reified T> refItem(valueId: AvValueId, refMarker: AvMarker) =
+    inline fun <reified T : Any> refItem(valueId: AvValueId, refMarker: AvMarker) =
         store.refItem(store.item(valueId), refMarker).withSpec<T>()
 
-    inline fun <reified T> refItem(item: AvItem<*>, refMarker: AvMarker) =
+    inline fun <reified T : Any> refItem(item: AvItem<*>, refMarker: AvMarker) =
         store.refItem(item, refMarker).withSpec<T>()
 
-    inline fun <reified T> refItemOrNull(item: AvItem<*>, refMarker: AvMarker) =
+    inline fun <reified T : Any> refItemOrNull(item: AvItem<*>, refMarker: AvMarker) =
         store.refItemOrNull(item, refMarker)?.withSpec<T>()
 
     fun queryByMarker(marker: AvMarker): List<AvValue> =

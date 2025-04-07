@@ -4,10 +4,10 @@
 
 package `fun`.adaptive.foundation.query
 
+import `fun`.adaptive.backend.BackendFragment
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.backend.BackendFragment
 
 // -------------------------------------------------------------
 // With general condition
@@ -192,7 +192,7 @@ inline fun <reified T : AdaptiveInstruction> AdaptiveAdapter.singleWith(deep: Bo
  * @param deep Deep search, go down in the fragment tree.
  * @param horizontal When [deep] is true, check a given level first, children second.
  */
-inline fun <reified T : AdaptiveInstruction> AdaptiveAdapter.collect(deep: Boolean = true, horizontal: Boolean = true) : MutableList<T> =
+inline fun <reified T : AdaptiveInstruction> AdaptiveAdapter.collect(deep: Boolean = true, horizontal: Boolean = true): MutableList<T> =
     rootFragment.collect(mutableListOf(), deep, horizontal) { fragment, matches ->
         matches += fragment.instructions.filterIsInstance<T>()
     }
@@ -212,6 +212,24 @@ inline fun <reified T : Any> AdaptiveAdapter.firstImpl(
     horizontal: Boolean = true
 ): T =
     first(deep, horizontal) { f -> (f as? BackendFragment)?.let { it.impl is T } == true }
+        .let { (it as BackendFragment).impl as T }
+
+/**
+ * Find the first backend fragment with implementation of a given class [T].
+ *
+ * @param deep Deep search, go down in the fragment tree.
+ * @param horizontal When [deep] is true, check a given level first, children second.
+ */
+inline fun <reified T : Any> AdaptiveAdapter.firstImpl(
+    deep: Boolean = true,
+    horizontal: Boolean = true,
+    crossinline condition: (T) -> Boolean
+): T =
+    first(deep, horizontal) { f ->
+        (f as? BackendFragment)?.let { bf ->
+            bf.impl?.let { impl -> impl is T && condition(impl)  }
+        } == true
+    }
         .let { (it as BackendFragment).impl as T }
 
 /**

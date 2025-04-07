@@ -10,7 +10,6 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 
 class ServerWebSocketServiceCallTransport(
     wireFormatProvider: WireFormatProvider,

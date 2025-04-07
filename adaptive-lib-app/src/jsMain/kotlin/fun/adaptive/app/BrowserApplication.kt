@@ -10,7 +10,6 @@ import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.ktor.api.webSocketTransport
-import `fun`.adaptive.ktor.util.clientId
 import `fun`.adaptive.runtime.ApplicationNodeType
 import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.runtime.GlobalRuntimeContext
@@ -30,7 +29,7 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
     override lateinit var frontend: AdaptiveAdapter
     override lateinit var workspace: WT
 
-    open fun buildWorkspace(session : Any?) = Unit
+    open fun buildWorkspace() = Unit
 
     fun main() {
 
@@ -42,11 +41,10 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
 
             wireFormatInit()
 
-            clientId()
-
-            loadResources()
-
             transport = webSocketTransport(window.location.origin, wireFormatProvider = Proto)
+                .also { it.start() }
+
+            genericSessionOrNull = getService<AuthSessionApi>(transport).getSession()
 
             backend = backend(transport) { adapter ->
                 backendAdapterInit(adapter)
@@ -56,10 +54,9 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
                 }
             }
 
-            // this must be after backend init as backend init starts the transport
-            val session = getService<AuthSessionApi>(transport).getSession()
+            loadResources()
 
-            buildWorkspace(session)
+            buildWorkspace()
 
             browser(
                 CanvasFragmentFactory,

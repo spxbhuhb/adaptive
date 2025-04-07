@@ -1,7 +1,6 @@
 package `fun`.adaptive.service.transport
 
 import `fun`.adaptive.service.ServiceContext
-import `fun`.adaptive.service.factory.ServiceImplFactory
 import `fun`.adaptive.service.model.TransportEnvelope
 import `fun`.adaptive.utility.safeCall
 import `fun`.adaptive.wireformat.WireFormatProvider
@@ -15,6 +14,8 @@ import java.io.OutputStream
 import java.nio.ByteBuffer
 import java.nio.channels.AsynchronousCloseException
 import java.nio.channels.Channels
+import java.nio.channels.ReadableByteChannel
+import java.nio.channels.WritableByteChannel
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -27,18 +28,22 @@ class StreamServiceCallTransport(
     val writeTimeout: Duration = 2.seconds,
 ) : ServiceCallTransport(scope) {
 
+    var started : Boolean = false
+
     val writeChannel = Channel<TransportEnvelope>(1)
 
-    val inputChannel = Channels.newChannel(inputStream)
-    val outputChannel = Channels.newChannel(outputStream)
+    val inputChannel : ReadableByteChannel = Channels.newChannel(inputStream)
+    val outputChannel  : WritableByteChannel = Channels.newChannel(outputStream)
 
     val readerThread = Thread { incoming() }
     val writerThread = Thread { outgoing() }
 
     val serviceContext: ServiceContext = serviceContext ?: ServiceContext(transport = this)
 
-    override suspend fun start(serviceImplFactory: ServiceImplFactory) : ServiceCallTransport {
-        super.start(serviceImplFactory)
+    override suspend fun start() : ServiceCallTransport {
+        if (started) return this
+        started = true
+
         readerThread.start()
         writerThread.start()
         return this

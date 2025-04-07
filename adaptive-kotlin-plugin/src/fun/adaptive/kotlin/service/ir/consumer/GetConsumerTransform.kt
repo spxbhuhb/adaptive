@@ -40,7 +40,7 @@ class GetConsumerTransform(
         val consumerClassId = ClassId(interfaceClassParent, interfaceClassName).createNestedClassId(Names.CONSUMER)
 
         val consumerClass = requireNotNull(irContext.referenceClass(consumerClassId)) {
-            "missing consumer class (should be generated, this is a plugin error): $consumerClassId"
+            "Missing consumer class: $consumerClassId. Have you added the @ServiceApi annotation to the interface?"
         }
 
         return IrConstructorCallImpl(

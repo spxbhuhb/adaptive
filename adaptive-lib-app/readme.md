@@ -120,14 +120,14 @@ fun main() {
 
 - the `application` property of the module is set to the application instance
 - call `wireFormatInit` for all modules
-- get a client id from the server
-- call `resourceInit` for all modules
-- load resources
 - create the service transport to the server
+  - get a client id from the server
+- get the session from the server (if there is one)
 - create the client backend
   - call `backendAdapterInit` for all modules
   - actualize the main backend fragment
-- get the session from the server (if exists)
+- call `resourceInit` for all modules
+- load resources
 - build the workspace
   - call `contextInit` for all modules
   - call `workspaceInit` for all modules

@@ -19,11 +19,11 @@ open class WsBrowserClientApplication(
     override val frontendMainKey: FragmentKey
         get() = wsAppMain.FRONTEND_MAIN_KEY
 
-    override fun buildWorkspace(session: Any?) {
+    override fun buildWorkspace() {
 
         workspace = Workspace(backend)
 
-        workspaceInit(workspace, session)
+        workspaceInit(workspace)
 
         workspace.updateSplits()
 
