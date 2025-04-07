@@ -20,6 +20,7 @@ import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.grove.groveRuntimeCommon
 import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.iot.space.AioSpaceSpec
+import `fun`.adaptive.lib.util.zip.ZipBuilder
 import `fun`.adaptive.sandbox.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
@@ -29,20 +30,37 @@ import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.platform.download.downloadFile
 import `fun`.adaptive.ui.snackbar.SnackbarManager
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.ui.virtualized.virtualizedMain
 import `fun`.adaptive.value.app.ValueClientModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 fun main() {
-    virtualizedMain()
+    zipMain()
+    //virtualizedMain()
     //iotMain()
     //basicAppMain()
     //sandboxMain()
     // iotMain()
+}
+
+@OptIn(ExperimentalStdlibApi::class)
+fun zipMain() {
+    CoroutineScope(Dispatchers.Default).launch {
+
+        val zipBuilder = ZipBuilder()
+        zipBuilder.add("hello.txt", "Hello World!".encodeToByteArray())
+        zipBuilder.add("hello-2.txt", "Hello World 2!".encodeToByteArray() )
+
+        downloadFile(
+            zipBuilder.finalize(),
+            "hello.zip",
+            "application/zip"
+        )
+    }
 }
 
 fun iotMain() {
