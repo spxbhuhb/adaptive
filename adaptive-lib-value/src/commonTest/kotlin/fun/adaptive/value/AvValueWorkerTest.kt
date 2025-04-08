@@ -3,7 +3,7 @@ package `fun`.adaptive.value
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarkerMap
 import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.value.item.AvItemIdList
+import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.builtin.AvString
 import `fun`.adaptive.value.operation.AvValueOperation
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
@@ -194,7 +194,7 @@ class AvValueWorkerTest {
 
         worker.subscribe(listOf(subscription))
 
-        val newValue = initialItem.copyWith(marker, AvItemIdList(initialItem.uuid, marker, emptyList()))
+        val newValue = initialItem.copyWith(marker, AvRefList(initialItem.uuid, marker, emptyList()))
 
         worker.queueUpdate(newValue)
 

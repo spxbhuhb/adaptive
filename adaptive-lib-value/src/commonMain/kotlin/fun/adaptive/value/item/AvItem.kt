@@ -69,6 +69,16 @@ data class AvItem<T>(
             return this
         }
 
+        inline fun <reified T : Any> AvValue.withSpec(): AvItem<T> =
+            withSpec(T::class)
+
+        fun <T : Any> AvValue.withSpec(kClass : KClass<T>): AvItem<T> {
+            this as AvItem<*>
+            check(kClass.isInstance(spec)) { "Spec is not of type $kClass for item $this" }
+            @Suppress("UNCHECKED_CAST")
+            return this as AvItem<T>
+        }
+
         inline fun <reified T : Any> AvItem<*>.withSpec(): AvItem<T> =
             withSpec(T::class)
 

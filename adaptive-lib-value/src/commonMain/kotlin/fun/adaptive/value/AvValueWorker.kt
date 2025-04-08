@@ -170,6 +170,12 @@ open class AvValueWorker(
     fun refOrNull(valueId: AvValueId, refMarker: AvMarker) =
         store.item(valueId).markersOrNull?.get(refMarker)
 
+    fun refValList(valueId: AvValueId, refListMarker: AvMarker) : List<AvValue> =
+        store.refValList(valueId, refListMarker)
+
+    inline fun <reified T : Any> refItemList(valueId: AvValueId, refListMarker: AvMarker) : List<AvItem<T>> =
+        store.refValList(valueId, refListMarker).map { it.withSpec(T::class) }
+
     // FIXME move this down into the store to avoid locking twice
     inline fun <reified T : Any> refItem(valueId: AvValueId, refMarker: AvMarker) =
         store.refItem(store.item(valueId), refMarker).withSpec<T>()

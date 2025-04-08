@@ -7,6 +7,7 @@ import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvMarkerValue
 import `fun`.adaptive.value.operation.*
@@ -557,6 +558,17 @@ open class AvValueStore(
 
     fun refItemOrNull(item : AvItem<*>, refMarker : AvMarker) : AvItem<*>? =
         item.markersOrNull?.get(refMarker)?.let { values[it] as? AvItem<*> }
+
+    fun refValList(itemId: AvValueId, refListMarker: AvMarker) : List<AvValue> {
+        return lock.use {
+            val item = values[itemId] as? AvItem<*> ?: throw NoSuchElementException("Item $itemId not found")
+            val refListId = item.markersOrNull?.get(refListMarker) ?: return emptyList()
+            val refList = values[refListId] as? AvRefList ?: throw IllegalStateException("$refListMarker of $item is not an AvValueIdList")
+            refList.refs.map {
+                checkNotNull(values[it]) { "Value with id $it does not exist, refList: $refListId, item: $itemId, marker: $refListMarker" }
+            }
+        }
+    }
 
     fun query(filterFun: (AvValue) -> Boolean): List<AvValue> =
         lock.use {

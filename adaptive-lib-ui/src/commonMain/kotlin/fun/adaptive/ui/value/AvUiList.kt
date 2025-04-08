@@ -9,7 +9,7 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.item.AvItemIdList
+import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.operation.*
@@ -114,9 +114,9 @@ class AvUiList(
     }
 
     fun processList(value: AvValue) {
-        value as AvItemIdList
-        if (value.uuid == listId && list != value.itemIds) {
-            list = value.itemIds
+        value as AvRefList
+        if (value.uuid == listId && list != value.refs) {
+            list = value.refs
             renew()
         }
     }

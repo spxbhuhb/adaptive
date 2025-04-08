@@ -43,3 +43,21 @@ fun ServiceImpl<*>.serviceSubscribe(
 
     return conditions
 }
+
+fun ServiceImpl<*>.serviceSubscribe(
+    worker: AvValueWorker,
+    subscriptionId: AvValueSubscriptionId,
+    conditions: List<AvSubscribeCondition>
+): List<AvSubscribeCondition> {
+
+    val subscription = AvClientSubscription(
+        subscriptionId,
+        conditions = conditions,
+        transport = serviceContext.transport,
+        scope = safeAdapter.scope
+    )
+
+    worker.subscribe(subscription)
+
+    return conditions
+}

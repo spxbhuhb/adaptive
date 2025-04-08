@@ -7,26 +7,26 @@ import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 
 @Adat
-data class AvItemIdList(
+data class AvRefList(
     override val uuid: AvValueId,
     override val timestamp: Instant,
     override val status: AvStatus,
     override val parentId: AvValueId,
     override val markerName: String,
-    val itemIds: List<AvValueId>
+    val refs: List<AvValueId>
 ) : AvMarkerValue() {
 
     constructor(
         parentId: AvValueId,
         markerName: String,
-        itemIds: List<AvValueId> = emptyList()
+        refs: List<AvValueId> = emptyList()
     ) : this(
         uuid = uuid7(),
         timestamp = now(),
         status = AvStatus.OK,
         parentId = parentId,
         markerName = markerName,
-        itemIds = itemIds
+        refs = refs
     )
 
 }

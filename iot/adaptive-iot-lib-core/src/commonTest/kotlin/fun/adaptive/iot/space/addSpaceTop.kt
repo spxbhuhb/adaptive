@@ -1,6 +1,6 @@
 package `fun`.adaptive.iot.space
 
-import `fun`.adaptive.value.item.AvItemIdList
+import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.utility.UUID.Companion.uuid7
@@ -11,13 +11,13 @@ suspend fun addSpaceTop(worker: AvValueWorker, spaceId: AvValueId) {
     val spaceTops = worker.queryByMarker(SpaceMarkers.TOP_SPACES)
 
     val original = spaceTops.firstOrNull()
-    val new: AvItemIdList
+    val new: AvRefList
 
     if (original != null) {
-        check(original is AvItemIdList) { "Expected AmvItemIdList, got $spaceTops" }
-        new = original.copy(itemIds = original.itemIds + spaceId)
+        check(original is AvRefList) { "Expected AmvItemIdList, got $spaceTops" }
+        new = original.copy(refs = original.refs + spaceId)
     } else {
-        new = AvItemIdList(parentId = uuid7(), markerName = SpaceMarkers.TOP_SPACES, listOf(spaceId))
+        new = AvRefList(parentId = uuid7(), markerName = SpaceMarkers.TOP_SPACES, listOf(spaceId))
     }
 
     worker.queueAddOrUpdate(new)

@@ -2,17 +2,17 @@ package `fun`.adaptive.iot.history.ui
 
 import `fun`.adaptive.foundation.value.adaptiveStoreFor
 import `fun`.adaptive.general.ObservableListener
-import `fun`.adaptive.iot.device.AioDeviceApi
 import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.device.DeviceMarkers
+import `fun`.adaptive.iot.device.publish.AioDeviceTreePublishApi
 import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.iot.generated.resources.database
 import `fun`.adaptive.iot.generated.resources.historicalData
 import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.iot.point.PointMarkers
-import `fun`.adaptive.iot.space.AioSpaceApi
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
+import `fun`.adaptive.iot.space.publish.AioSpaceTreePublishApi
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
@@ -52,22 +52,20 @@ class HistoryToolController(
         context = this
     )
 
-    val spaceService = getService<AioSpaceApi>(transport)
     val spacesTop = adaptiveStoreFor(emptyList<TreeItem<AvValueId>>())
 
     val spaceTreeStore = AvUiTree(
-        spaceService,
+        getService<AioSpaceTreePublishApi>(transport),
         backend,
         AioSpaceSpec::class,
         SpaceMarkers.TOP_SPACES,
         SpaceMarkers.SUB_SPACES
     )
 
-    val deviceService = getService<AioDeviceApi>(transport)
     var devicesTop = adaptiveStoreFor(emptyList<TreeItem<AvValueId>>())
 
     val deviceTreeStore = AvUiTree(
-        deviceService,
+        getService<AioDeviceTreePublishApi>(transport),
         backend,
         AioDeviceSpec::class,
         DeviceMarkers.TOP_DEVICES,

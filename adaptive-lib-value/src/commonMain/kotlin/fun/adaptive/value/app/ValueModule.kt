@@ -8,8 +8,10 @@ import `fun`.adaptive.value.builtin.AvConvertedDouble
 import `fun`.adaptive.value.builtin.AvDouble
 import `fun`.adaptive.value.builtin.AvString
 import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItemIdList
+import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.item.AvStatus
+import `fun`.adaptive.value.local.AvMarkedValueId
+import `fun`.adaptive.value.local.AvMarkedValueSubscriptionResult
 import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
@@ -26,12 +28,15 @@ abstract class ValueModule<WT : AbstractWorkspace> : AppModule<WT>() {
 
         + AvItem
         + AvStatus
-        + AvItemIdList
+        + AvRefList
 
         + AvString
         + AvDouble
         + AvConvertedDouble
         + AvBoolean
+
+        + AvMarkedValueId
+        + AvMarkedValueSubscriptionResult
     }
 
 }

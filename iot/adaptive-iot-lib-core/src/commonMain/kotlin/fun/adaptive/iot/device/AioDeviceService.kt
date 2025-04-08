@@ -28,20 +28,6 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
         worker = safeAdapter.firstImpl<AvValueWorker>()
     }
 
-    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
-        return serviceSubscribe(
-            worker,
-            subscriptionId,
-            DeviceMarkers.DEVICE,
-            DeviceMarkers.TOP_DEVICES,
-            DeviceMarkers.SUB_DEVICES
-        )
-    }
-
-    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
-        worker.unsubscribe(subscriptionId)
-    }
-
     override suspend fun add(
         name: String,
         itemType: AvMarker,

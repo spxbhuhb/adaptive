@@ -6,7 +6,7 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.withSpec
-import `fun`.adaptive.value.item.AvItemIdList
+import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.item.AvMarker
 import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
@@ -77,7 +77,7 @@ abstract class AvLocalTree<ST : Any, TI>(
     override fun process(value: AvValue) {
         when (value) {
             is AvItem<*> -> process(value)
-            is AvItemIdList -> process(value)
+            is AvRefList -> process(value)
         }
     }
 
@@ -105,16 +105,16 @@ abstract class AvLocalTree<ST : Any, TI>(
         }
     }
 
-    private fun process(list: AvItemIdList) {
+    private fun process(list: AvRefList) {
         when (list.markerName) {
             childListMarker -> {
                 val node = nodeMap.getOrPut(list.parentId) { Node() }
-                node.childIds = list.itemIds
+                node.childIds = list.refs
                 childRefresh += node
             }
 
             topListMarker -> {
-                topIds = list.itemIds
+                topIds = list.refs
                 topRefresh = true
             }
         }

@@ -1,18 +1,11 @@
 package `fun`.adaptive.iot.space
 
-import `fun`.adaptive.value.item.AvMarker
-import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.service.ServiceApi
-import `fun`.adaptive.value.AvSubscribeCondition
-import `fun`.adaptive.value.AvValueSubscriptionId
-import `fun`.adaptive.value.local.AvPublisher
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.item.AvMarker
 
 @ServiceApi
-interface AioSpaceApi : AvPublisher {
-
-    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition>
-
-    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId)
+interface AioSpaceApi {
 
     suspend fun add(name: String, spaceType: AvMarker, parentId: AvValueId?): AvValueId
 

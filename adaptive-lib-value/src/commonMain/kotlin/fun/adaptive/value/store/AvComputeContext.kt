@@ -7,7 +7,7 @@ import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.withSpec
-import `fun`.adaptive.value.item.AvItemIdList
+import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
 
@@ -54,7 +54,7 @@ class AvComputeContext(
     fun dump(): String = store.dump()
 
     fun itemIdsOrNull(itemListValeId: AvValueId?): List<AvValueId>? =
-        (store.unsafeValueOrNull(itemListValeId) as? AvItemIdList)?.itemIds
+        (store.unsafeValueOrNull(itemListValeId) as? AvRefList)?.refs
 
     fun safeItemIds(itemListValeId: AvValueId?): List<AvValueId> =
         itemIdsOrNull(itemListValeId) ?: emptyList()
@@ -80,13 +80,13 @@ class AvComputeContext(
     fun getContainingList(
         childId: AvValueId,
         childListMarker: AvMarker, topListMarker: AvMarker
-    ): AvItemIdList? {
+    ): AvRefList? {
         val parentId = store.unsafeItem(childId).parentId
 
-        val original: AvItemIdList?
+        val original: AvRefList?
 
         if (parentId == null) {
-            original = queryByMarker(topListMarker).firstOrNull() as? AvItemIdList
+            original = queryByMarker(topListMarker).firstOrNull() as? AvRefList
         } else {
             original = markerVal(parentId, childListMarker)
         }
@@ -98,13 +98,13 @@ class AvComputeContext(
         spaceId: AvValueId,
         listMarker: AvMarker
     ) {
-        val original = queryByMarker(listMarker).firstOrNull() as AvItemIdList?
-        val new: AvItemIdList
+        val original = queryByMarker(listMarker).firstOrNull() as AvRefList?
+        val new: AvRefList
 
         if (original != null) {
-            new = original.copy(itemIds = original.itemIds + spaceId)
+            new = original.copy(refs = original.refs + spaceId)
         } else {
-            new = AvItemIdList(parentId = uuid7(), listMarker, listOf(spaceId))
+            new = AvRefList(parentId = uuid7(), listMarker, listOf(spaceId))
         }
 
         this += new
@@ -115,14 +115,14 @@ class AvComputeContext(
         childId: AvValueId,
         childListMarker: AvMarker
     ) {
-        val original: AvItemIdList? = markerVal(parentId, childListMarker)
+        val original: AvRefList? = markerVal(parentId, childListMarker)
 
         if (original != null) {
-            this += original.copy(itemIds = original.itemIds + childId)
+            this += original.copy(refs = original.refs + childId)
             return
         }
 
-        val new = AvItemIdList(parentId = parentId, childListMarker, listOf(childId))
+        val new = AvRefList(parentId = parentId, childListMarker, listOf(childId))
 
         val parent = store.unsafeItem(parentId)
 
@@ -139,10 +139,10 @@ class AvComputeContext(
         childId: AvValueId,
         childListMarker: AvMarker
     ) {
-        val original: AvItemIdList? = markerVal(parentId, childListMarker)
+        val original: AvRefList? = markerVal(parentId, childListMarker)
 
         if (original != null) {
-            this += original.copy(itemIds = original.itemIds - childId)
+            this += original.copy(refs = original.refs - childId)
         }
     }
 
@@ -154,7 +154,7 @@ class AvComputeContext(
 
         val original = getContainingList(childId, childListMarker, topListMarker) ?: return
 
-        val originalList = original.itemIds.toMutableList()
+        val originalList = original.refs.toMutableList()
         val index = originalList.indexOf(childId)
         if (index < 1) return
 
@@ -162,7 +162,7 @@ class AvComputeContext(
         newList[index] = newList[index - 1]
         newList[index - 1] = childId
 
-        this += original.copy(itemIds = newList)
+        this += original.copy(refs = newList)
     }
 
     fun moveDown(
@@ -173,7 +173,7 @@ class AvComputeContext(
 
         val original = getContainingList(childId, childListMarker, topListMarker) ?: return
 
-        val originalList = original.itemIds.toMutableList()
+        val originalList = original.refs.toMutableList()
         val index = originalList.indexOf(childId)
         if (index >= originalList.lastIndex) return
 
@@ -181,7 +181,7 @@ class AvComputeContext(
         newList[index] = newList[index + 1]
         newList[index + 1] = childId
 
-        this += original.copy(itemIds = newList)
+        this += original.copy(refs = newList)
     }
 
     fun addRef(

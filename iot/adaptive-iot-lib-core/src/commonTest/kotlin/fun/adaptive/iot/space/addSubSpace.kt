@@ -1,6 +1,6 @@
 package `fun`.adaptive.iot.space
 
-import `fun`.adaptive.value.item.AvItemIdList
+import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.operation.AvoAdd
@@ -15,7 +15,7 @@ suspend fun addSubSpace(worker: AvValueWorker, spaceId: AvValueId, subSpaceId: A
 
     if (originalId == null) {
 
-        val subSpacesSpec = AvItemIdList(parentId = space.uuid, markerName = SpaceMarkers.SUB_SPACES, listOf(subSpaceId))
+        val subSpacesSpec = AvRefList(parentId = space.uuid, markerName = SpaceMarkers.SUB_SPACES, listOf(subSpaceId))
 
         worker.queueTransaction(
             listOf(
@@ -26,9 +26,9 @@ suspend fun addSubSpace(worker: AvValueWorker, spaceId: AvValueId, subSpaceId: A
     } else {
 
         val original = worker[originalId]
-        check(original is AvItemIdList) { "Expected AmvItemIdList, got $original" }
+        check(original is AvRefList) { "Expected AmvItemIdList, got $original" }
 
-        worker.queueUpdate(original.copy(itemIds = original.itemIds + subSpaceId))
+        worker.queueUpdate(original.copy(refs = original.refs + subSpaceId))
     }
 
     waitForReal(1.seconds) { worker.isIdle }

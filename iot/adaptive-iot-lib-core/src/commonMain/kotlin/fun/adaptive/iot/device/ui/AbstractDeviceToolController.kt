@@ -3,14 +3,15 @@ package `fun`.adaptive.iot.device.ui
 import `fun`.adaptive.iot.device.AioDeviceApi
 import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.device.DeviceMarkers
-import `fun`.adaptive.ui.value.AvUiTree
-import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.iot.device.publish.AioDeviceTreePublishApi
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
+import `fun`.adaptive.ui.value.AvUiTree
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
+import `fun`.adaptive.value.AvValueId
 
 abstract class AbstractDeviceToolController(
     override val workspace: Workspace
@@ -26,7 +27,7 @@ abstract class AbstractDeviceToolController(
     )
 
     val valueTreeStore = AvUiTree(
-        deviceService,
+        getService<AioDeviceTreePublishApi>(transport),
         backend,
         AioDeviceSpec::class,
         DeviceMarkers.TOP_DEVICES,

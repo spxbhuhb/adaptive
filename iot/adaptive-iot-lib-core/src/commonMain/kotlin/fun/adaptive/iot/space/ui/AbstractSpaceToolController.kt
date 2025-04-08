@@ -3,6 +3,7 @@ package `fun`.adaptive.iot.space.ui
 import `fun`.adaptive.iot.space.AioSpaceApi
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
+import `fun`.adaptive.iot.space.publish.AioSpaceTreePublishApi
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
@@ -26,7 +27,7 @@ abstract class AbstractSpaceToolController(
     )
 
     val valueTreeStore = AvUiTree(
-        spaceService,
+        getService<AioSpaceTreePublishApi>(transport),
         backend,
         AioSpaceSpec::class,
         SpaceMarkers.TOP_SPACES,
