@@ -1,2 +1,2 @@
-* [https://adaptive.fun](https://adapive.fun)
-* [docs](doc)
+* [https://adaptive.fun](https://adaptive.fun)
+* [docs](doc/getting-started.md)
