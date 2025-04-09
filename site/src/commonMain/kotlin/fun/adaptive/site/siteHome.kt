@@ -17,7 +17,12 @@ import `fun`.adaptive.ui.instruction.sp
 fun siteHome(): AdaptiveFragment {
 
     val media = mediaMetrics()
-    val contentWidth = if (media.isSmall) 320.dp else 640.dp
+
+    val contentWidth = when {
+        media.viewWidth < 600 -> 300.dp
+        media.viewWidth < 800 -> 500.dp
+        else -> 680.dp
+    }
 
     column {
         maxSize .. gap { 24.dp } .. paddingTop { 32.dp } .. verticalScroll

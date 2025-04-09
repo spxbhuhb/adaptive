@@ -1,4 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import `fun`.adaptive.gradle.js.CompressJsResourcesTask
+import org.gradle.kotlin.dsl.register
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import java.io.ByteArrayOutputStream
@@ -152,8 +154,16 @@ tasks.getByName("build") {
     }
 }
 
+tasks.register<CompressJsResourcesTask>("compressJsResources") {
+    dependsOn("build")
+}
+
+tasks.named("jsBrowserProductionWebpack") {
+    finalizedBy("compressJsResources")
+}
+
 tasks.register("release") {
-    dependsOn("build", "jvmShadowJar")
+    dependsOn("build", "jvmShadowJar", "compressJsResources")
     outputs.upToDateWhen { false }
     doLast {
         Files.write(Paths.get("$projectDir/build/version.txt"), "$version".encodeToByteArray(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)
