@@ -16,16 +16,5 @@ fun WsPane<DocBrowserWsItem, *>.getDocument(spaceId: AvValueId): AvItem<*>? {
 }
 
 fun DocBrowserWsItem.docPathNames(): List<String> {
-    val toolController = this.config.controller
-
-    val spaceId = this.uuid
-    val names = mutableListOf<String>()
-
-    var space: AvItem<*>? = toolController.valueTreeStore[spaceId]
-    while (space != null) {
-        names.add(space.name)
-        space = space.parentId?.let { toolController.valueTreeStore[it] }
-    }
-
-    return names.reversed()
+    return this.config.controller.valueTreeStore.pathNames(this.item)
 }

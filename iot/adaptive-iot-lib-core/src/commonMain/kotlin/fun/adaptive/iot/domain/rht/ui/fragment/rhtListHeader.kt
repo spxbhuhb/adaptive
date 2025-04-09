@@ -1,6 +1,5 @@
-package `fun`.adaptive.iot.domain.rht.ui
+package `fun`.adaptive.iot.domain.rht.ui.fragment
 
-import `fun`.adaptive.iot.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment

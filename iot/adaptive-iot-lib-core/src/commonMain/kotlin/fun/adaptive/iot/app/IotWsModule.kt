@@ -11,19 +11,16 @@ import `fun`.adaptive.iot.device.ui.editor.wsDeviceContentPane
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorContentDef
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorTool
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorToolDef
-import `fun`.adaptive.iot.domain.rht.AmvRelativeHumidityAndTemperature
-import `fun`.adaptive.iot.domain.rht.ui.rhtListHeader
-import `fun`.adaptive.iot.domain.rht.ui.rhtListItem
-import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserContentDef
-import `fun`.adaptive.iot.domain.rht.ui.wsRhtBrowserToolDef
+import `fun`.adaptive.iot.domain.rht.ui.def.rhtBrowserContentDef
+import `fun`.adaptive.iot.domain.rht.ui.def.rhtBrowserToolDef
 import `fun`.adaptive.iot.generated.resources.*
 import `fun`.adaptive.iot.history.ui.wsHistoryContent
 import `fun`.adaptive.iot.history.ui.wsHistoryContentDef
 import `fun`.adaptive.iot.history.ui.wsHistoryTool
 import `fun`.adaptive.iot.history.ui.wsHistoryToolDef
 import `fun`.adaptive.iot.space.SpaceMarkers
-import `fun`.adaptive.iot.space.ui.browser.wsSpaceBrowserContent
-import `fun`.adaptive.iot.space.ui.browser.wsSpaceBrowserTool
+import `fun`.adaptive.iot.domain.rht.ui.fragment.rhtBrowserContent
+import `fun`.adaptive.iot.domain.rht.ui.fragment.rhtBrowserTool
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceContentPane
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorContentDef
 import `fun`.adaptive.iot.space.ui.editor.wsSpaceEditorTool
@@ -59,11 +56,8 @@ class IotWsModule<WT : Workspace> : IotModule<WT>() {
         add(WSPANE_HISTORY_TOOL, ::wsHistoryTool)
         add(WSPANE_HISTORY_CONTENT, ::wsHistoryContent)
 
-        add(WSPANE_RHT_BROWSER_TOOL, ::wsSpaceBrowserTool)
-        add(WSPANE_RHT_BROWSER_CONTENT, ::wsSpaceBrowserContent)
-
-        add(AmvRelativeHumidityAndTemperature.RHT_LIST_ITEM, ::rhtListItem)
-        add(AmvRelativeHumidityAndTemperature.RHT_LIST_HEADER, ::rhtListHeader)
+        add(WSPANE_RHT_BROWSER_TOOL, ::rhtBrowserTool)
+        add(WSPANE_RHT_BROWSER_CONTENT, ::rhtBrowserContent)
 
         iconCache[SpaceMarkers.SITE] = Graphics.responsive_layout
         iconCache[SpaceMarkers.BUILDING] = Graphics.apartment
@@ -82,8 +76,8 @@ class IotWsModule<WT : Workspace> : IotModule<WT>() {
 
     override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
 
-        wsRhtBrowserToolDef(this@IotWsModule)
-        wsRhtBrowserContentDef(this@IotWsModule)
+        rhtBrowserToolDef(this@IotWsModule)
+        rhtBrowserContentDef(this@IotWsModule)
 
         wsHistoryToolDef(this@IotWsModule)
         wsHistoryContentDef(this@IotWsModule)

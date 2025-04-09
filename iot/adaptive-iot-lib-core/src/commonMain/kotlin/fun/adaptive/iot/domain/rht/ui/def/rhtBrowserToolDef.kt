@@ -1,11 +1,9 @@
-package `fun`.adaptive.iot.domain.rht.ui
+package `fun`.adaptive.iot.domain.rht.ui.def
 
 import `fun`.adaptive.iot.app.IotWsModule
-import `fun`.adaptive.iot.domain.rht.AmvRelativeHumidityAndTemperature
+import `fun`.adaptive.iot.domain.rht.ui.controller.RhtBrowserToolController
 import `fun`.adaptive.iot.generated.resources.dew_point
 import `fun`.adaptive.iot.generated.resources.temperatureAndHumidity
-import `fun`.adaptive.iot.space.ui.browser.SpaceBrowserConfig
-import `fun`.adaptive.iot.space.ui.browser.SpaceBrowserToolController
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.builtin.collapseAll
@@ -18,23 +16,13 @@ import `fun`.adaptive.ui.workspace.model.WsPaneAction
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-fun Workspace.wsRhtBrowserToolDef(
+fun Workspace.rhtBrowserToolDef(
     module: IotWsModule<*>
 ) {
 
     val workspace = this
 
-    val config = SpaceBrowserConfig(
-        Strings.temperatureAndHumidity,
-        Graphics.dew_point,
-        AmvRelativeHumidityAndTemperature.WSIT_RHT_BROWSER_ITEM,
-        headerKey = AmvRelativeHumidityAndTemperature.RHT_LIST_HEADER,
-        itemKey = AmvRelativeHumidityAndTemperature.RHT_LIST_ITEM
-    )
-
-    val controller = SpaceBrowserToolController(workspace, config)
-
-    config.controller = controller
+    val controller = RhtBrowserToolController(workspace)
 
     + WsPane(
         UUID(),

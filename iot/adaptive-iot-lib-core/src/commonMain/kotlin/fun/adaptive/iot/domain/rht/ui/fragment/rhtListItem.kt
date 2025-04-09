@@ -1,4 +1,4 @@
-package `fun`.adaptive.iot.domain.rht.ui
+package `fun`.adaptive.iot.domain.rht.ui.fragment
 
 import `fun`.adaptive.iot.generated.resources.monitoring
 import `fun`.adaptive.foundation.Adaptive

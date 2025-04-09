@@ -148,4 +148,21 @@ abstract class AvLocalTree<ST : Any, TI>(
 //        }
     }
 
+    /**
+     * Collect names of this item and its parents into a list.
+     *
+     * First item of the list is the topmost item without a
+     * parent.
+     */
+    fun pathNames(value : AvItem<*>): List<String> {
+        val names = mutableListOf<String>()
+
+        var current: AvItem<*>? = value
+        while (current != null) {
+            names.add(current.name)
+            current = current.parentId?.let { this[it] }
+        }
+
+        return names.reversed()
+    }
 }
