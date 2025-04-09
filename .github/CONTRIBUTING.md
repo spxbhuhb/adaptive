@@ -1,9 +1,5 @@
 ## How to contribute to Adaptive
 
-First of all, join the `#fun-adaptive` [kotlinlang](https://slack-chats.kotlinlang.org/) channel on Slack.
-
-I try to check the channel daily, there you can ask anything related to the project.
-
 ## Trying out things
 
 When you open the project in IDEA, the Gradle import creates shorthands to start
