@@ -183,6 +183,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       }
 
       @Test
+      @TestMetadata("copy.kt")
+      public void testCopy() {
+        runTest("testData/box/adat/functions/copy.kt");
+      }
+
+      @Test
       @TestMetadata("equals.kt")
       public void testEquals() {
         runTest("testData/box/adat/functions/equals.kt");

@@ -278,6 +278,16 @@ interface AbstractIrBuilder {
         return irGet(variable.type, variable.symbol, origin)
     }
 
+    fun irGetField(receiver: IrExpression, field: IrField): IrGetFieldImpl {
+        return IrGetFieldImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            field.symbol,
+            field.type,
+            receiver,
+            origin = IrStatementOrigin.GET_PROPERTY
+        )
+    }
+
     fun irGetObject(symbol: IrClassSymbol) = IrGetObjectValueImpl(
         SYNTHETIC_OFFSET,
         SYNTHETIC_OFFSET,

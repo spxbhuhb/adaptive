@@ -48,6 +48,7 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val VALUE = "value".name()
 
     val EQUALS = "equals".name()
+    val COPY = "copy".name()
     val HASHCODE = "hashCode".name()
     val TO_STRING = "toString".name()
 

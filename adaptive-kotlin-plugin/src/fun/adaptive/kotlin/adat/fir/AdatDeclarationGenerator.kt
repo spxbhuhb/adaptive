@@ -10,9 +10,11 @@ import `fun`.adaptive.kotlin.adat.FqNames
 import `fun`.adaptive.kotlin.adat.Names
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.fir.FirSession
+import org.jetbrains.kotlin.fir.analysis.checkers.declaration.primaryConstructorSymbol
 import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
+import org.jetbrains.kotlin.fir.expressions.impl.FirEmptyExpressionBlock
 import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
 import org.jetbrains.kotlin.fir.plugin.createCompanionObject
@@ -75,6 +77,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
     private val classCallableNames = setOf(
         Names.GEN_GET_VALUE,
         Names.GEN_SET_VALUE,
+        Names.COPY,
         Names.EQUALS,
         Names.HASHCODE,
         Names.TO_STRING,
@@ -254,6 +257,24 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                     createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, session.builtinTypes.unitType.coneType) {
                         valueParameter(Names.INDEX, session.builtinTypes.intType.coneType)
                         valueParameter(Names.VALUE, session.builtinTypes.nullableAnyType.coneType)
+                    }.symbol
+                )
+            }
+
+            Names.COPY -> {
+                listOf(
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, context.owner.defaultType()) {
+                        for (parameter in context.owner.primaryConstructorSymbol(session) !!.valueParameterSymbols) {
+                            valueParameter(parameter.name, parameter.resolvedReturnType, hasDefaultValue = true)
+                        }
+                    }.also{
+                        // The empty expression block here is to let the FIR analysis complete without an error.
+                        // Without it the `hasDefaultValue = true` above will generate an STUB and that STUB
+                        // causes an error later. I will replace the whole stuff in IR anyway, so it is not really
+                        // important to have a proper value generated here (I hope).
+                        it.replaceValueParameters(
+                            it.valueParameters.map { it.replaceDefaultValue(FirEmptyExpressionBlock()); it }
+                        )
                     }.symbol
                 )
             }

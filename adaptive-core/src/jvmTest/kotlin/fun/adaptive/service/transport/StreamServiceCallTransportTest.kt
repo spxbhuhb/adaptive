@@ -46,8 +46,10 @@ class StreamServiceCallTransportTest {
 
         runBlocking {
             try {
-                t1.start(serviceImplFactory)
-                t2.start(serviceImplFactory)
+                t1.serviceImplFactory = serviceImplFactory
+                t1.start()
+                t2.serviceImplFactory = serviceImplFactory
+                t2.start()
 
                 val consumer = TestApi1.Consumer()
                 consumer.serviceCallTransport = t1

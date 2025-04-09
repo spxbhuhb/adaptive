@@ -55,6 +55,18 @@ and for that compilation you need the core artifact.
 ./gradlew :adaptive-core:allTests
 ```
 
+## Running Kotlin plugin unit tests
+
+This is a bit confused, I think this works, but I won't spend time verifying it.
+
+The confusion is somewhere around having more than one versions in `core/build/libs` I think.
+
+```shell
+./gradlew :adaptive-core:clean
+./gradlew :adaptive-core:build
+./gradlew :adaptive-kotlin-plugin:test
+```
+
 ## Names
 
 **core modules**: The `adaptive-core`, `adaptive-gradle-plugin`, `adaptive-kotlin-plugin` modules.

@@ -39,6 +39,7 @@ class AdatClassTransform(
         when (declaration.name) {
             Names.GEN_GET_VALUE -> genGetValue(declaration, metadata.properties)
             Names.GEN_SET_VALUE -> genSetValue(declaration, metadata.properties)
+            Names.COPY -> copy(adatClass, declaration)
             Names.EQUALS -> equals(adatClass, declaration)
             Names.HASHCODE -> hashCode(adatClass, declaration)
             Names.TO_STRING -> toString(adatClass, declaration)
