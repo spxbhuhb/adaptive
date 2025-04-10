@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.input.number
+package `fun`.adaptive.sandbox.recipe.ui.input.number
 
 import `fun`.adaptive.cookbook.generated.resources.double_input
 import `fun`.adaptive.document.ui.basic.docDocument

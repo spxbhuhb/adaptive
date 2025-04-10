@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.layout.responsive
+package `fun`.adaptive.sandbox.recipe.ui.layout.responsive
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.Adaptive

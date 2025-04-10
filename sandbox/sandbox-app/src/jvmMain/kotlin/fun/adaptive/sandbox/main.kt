@@ -25,7 +25,7 @@ fun main() {
 
     jvmServer {
         module { UtilServerModule() }
-        module { ValueServerModule(FilePersistence(Path("./var/values").ensure(), 2)) }
+        module { ValueServerModule("general", FilePersistence(Path("./var/values").ensure(), 2)) }
         module { AuthServerModule() }
         module { IotServerModule() }
         module { KtorJvmServerModule() }

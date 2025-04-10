@@ -4,7 +4,7 @@
 rootProject.name = "adaptive-lib-email"
 
 pluginManagement {
-    includeBuild("../adaptive-gradle-plugin")
+    includeBuild("../../core/core-gradle-plugin")
     repositories {
         google()
         gradlePluginPortal()
@@ -18,10 +18,10 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from(files("../gradle/libs.versions.toml"))
+            from(files("../../gradle/libs.versions.toml"))
         }
     }
 }
 
-includeBuild("../adaptive-core")
+includeBuild("../../core/core-core")
 includeBuild("../adaptive-lib-exposed")

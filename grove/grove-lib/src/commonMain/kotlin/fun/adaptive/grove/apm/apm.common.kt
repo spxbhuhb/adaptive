@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.apm
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
-import `fun`.adaptive.grove.resources.folder
+import `fun`.adaptive.grove.generated.resources.folder
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController

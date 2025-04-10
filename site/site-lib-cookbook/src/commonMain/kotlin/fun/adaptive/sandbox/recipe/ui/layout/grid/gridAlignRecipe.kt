@@ -1,9 +1,9 @@
-package `fun`.adaptive.cookbook.recipe.ui.layout.grid
+package `fun`.adaptive.sandbox.recipe.ui.layout.grid
 
-import `fun`.adaptive.cookbook.support.blue
-import `fun`.adaptive.cookbook.support.green
-import `fun`.adaptive.cookbook.support.purple
-import `fun`.adaptive.cookbook.support.red
+import `fun`.adaptive.sandbox.support.blue
+import `fun`.adaptive.sandbox.support.green
+import `fun`.adaptive.sandbox.support.purple
+import `fun`.adaptive.sandbox.support.red
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf

@@ -1,11 +1,11 @@
 package `fun`.adaptive.app.ws.auth.account
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.accountSelf
+import `fun`.adaptive.lib_app.generated.resources.accountSelf
 import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.builtin.account
-import `fun`.adaptive.ui.builtin.account_circle
+import `fun`.adaptive.ui.generated.resources.account
+import `fun`.adaptive.ui.generated.resources.account_circle
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.WsSideBarAction
 import `fun`.adaptive.ui.workspace.model.WsPane

@@ -1,8 +1,8 @@
 package `fun`.adaptive.app.ws.auth.admin.role
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.addRole
-import `fun`.adaptive.adaptive_lib_app.generated.resources.context
-import `fun`.adaptive.adaptive_lib_app.generated.resources.name
+import `fun`.adaptive.lib_app.generated.resources.addRole
+import `fun`.adaptive.lib_app.generated.resources.context
+import `fun`.adaptive.lib_app.generated.resources.name
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.auth.model.AUTH_ROLE

@@ -26,10 +26,10 @@ repositories {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-gradle-plugin"
+val baseName = "core-gradle-plugin"
 val scmPath = "spxbhuhb/adaptive"
 val pomName = "Adaptive Gradle Plugin"
-val pluginDescription = "Kotlin Multiplatform compiler plugin for the Adaptive library."
+val pluginDescription = "Kotlin Multiplatform Gradle plugin for the Adaptive library."
 
 val embeddedDependencies by configurations.creating {
     isTransitive = false
@@ -61,7 +61,7 @@ dependencies {
     runtimeOnly(libs.brotli4j.windows)
 
     embedded(libs.kotlinx.io)
-    embedded(libs.adaptive.core)
+    embedded(libs.adaptive.core.core)
 }
 
 val packagesToRelocate = listOf("de.undercouch", "com.squareup.kotlinpoet")

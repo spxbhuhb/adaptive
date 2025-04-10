@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.text
+package `fun`.adaptive.sandbox.recipe.ui.text
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -13,7 +13,6 @@ import `fun`.adaptive.ui.api.flowBox
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.size

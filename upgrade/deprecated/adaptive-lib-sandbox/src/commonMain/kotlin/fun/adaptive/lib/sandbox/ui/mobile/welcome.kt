@@ -41,7 +41,7 @@ import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.textColor
 import `fun`.adaptive.ui.api.underline
-import `fun`.adaptive.ui.builtin.check
+import `fun`.adaptive.ui.generated.resources.check
 import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.instruction.*
 import `fun`.adaptive.ui.instruction.layout.AlignItems

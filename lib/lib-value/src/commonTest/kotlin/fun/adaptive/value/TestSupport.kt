@@ -54,12 +54,12 @@ class TestSupport {
                     val clientScope = CoroutineScope(clientDispatcher)
 
                     serverBackend = backend(serverTransport, dispatcher = serverDispatcher, scope = serverScope) {
-                        worker { AvValueWorker() }
+                        worker { AvValueWorker("general") }
                         service { AvValueTestServerService() }
                     }
 
                     clientBackend = backend(clientTransport, dispatcher = clientDispatcher, scope = clientScope) {
-                        worker { AvValueWorker() }
+                        worker { AvValueWorker("general") }
                         service { AvValueTestClientService() }
                     }
 

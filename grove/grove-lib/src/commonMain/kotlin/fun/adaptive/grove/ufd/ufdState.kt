@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.foundation.value.valueFromOrNull
-import `fun`.adaptive.grove.resources.selectForState
+import `fun`.adaptive.grove.generated.resources.selectForState
 import `fun`.adaptive.grove.sheet.SheetViewContext
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.resource.string.Strings

@@ -10,7 +10,7 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.check
+import `fun`.adaptive.ui.generated.resources.check
 import `fun`.adaptive.ui.checkbox.CheckboxTheme
 import `fun`.adaptive.ui.instruction.dp
 

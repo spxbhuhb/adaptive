@@ -158,22 +158,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
     }
 
     @Nested
-    @TestMetadata("testData/box/adat/exposed")
-    @TestDataPath("$PROJECT_ROOT")
-    public class Exposed {
-      @Test
-      public void testAllFilesPresentInExposed() {
-        KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/exposed"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
-      }
-
-      @Test
-      @TestMetadata("basic.kt")
-      public void testBasic() {
-        runTest("testData/box/adat/exposed/basic.kt");
-      }
-    }
-
-    @Nested
     @TestMetadata("testData/box/adat/functions")
     @TestDataPath("$PROJECT_ROOT")
     public class Functions {

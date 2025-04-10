@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.app.ws.auth.signin
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.*
+import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.wsApplication
 import `fun`.adaptive.auth.api.AuthSessionApi

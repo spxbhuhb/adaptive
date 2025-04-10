@@ -1,7 +1,7 @@
 package `fun`.adaptive.app.ws.admin
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.administration
-import `fun`.adaptive.adaptive_lib_app.generated.resources.local_police
+import `fun`.adaptive.lib_app.generated.resources.administration
+import `fun`.adaptive.lib_app.generated.resources.local_police
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.workspace.Workspace

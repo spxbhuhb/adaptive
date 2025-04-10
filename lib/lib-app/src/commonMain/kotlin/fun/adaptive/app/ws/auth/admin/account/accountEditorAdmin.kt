@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.ws.auth.admin.account
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.*
+import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.auth.account.AccountEditorData

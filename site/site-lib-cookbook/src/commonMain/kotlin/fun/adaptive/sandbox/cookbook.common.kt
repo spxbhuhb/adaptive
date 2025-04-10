@@ -1,18 +1,9 @@
-package `fun`.adaptive.cookbook
+package `fun`.adaptive.sandbox
 
 import `fun`.adaptive.cookbook.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.cookbook.recipe.ui.layout.workspace.WorkspaceRecipePaneFragmentFactory
-import `fun`.adaptive.cookbook.support.E
+import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.WorkspaceRecipePaneFragmentFactory
 import `fun`.adaptive.foundation.AdaptiveAdapter
-import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.LibFragmentFactory
-import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
-import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.wireformat.WireFormatRegistry
-import `fun`.adaptive.wireformat.builtin.EnumWireFormat
 
 const val cookbookRecipePaneKey = "cookbook:recipes"
 

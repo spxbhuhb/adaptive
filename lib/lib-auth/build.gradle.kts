@@ -13,7 +13,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-lib-auth"
+val baseName = "lib-auth"
 val pomName = "Adaptive Lib Auth"
 val scmPath = "spxbhuhb/adaptive"
 
@@ -50,7 +50,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.adaptive.core)
+            implementation(libs.adaptive.core.core)
             implementation(libs.adaptive.lib.util)
             implementation(libs.adaptive.lib.value)
         }
@@ -58,10 +58,6 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
-        }
-
-        jvmTest.dependencies {
-            implementation(libs.h2database)
         }
     }
 }

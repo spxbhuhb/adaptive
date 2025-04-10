@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.ws.auth.admin.account
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.*
+import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.auth.account.AccountEditorData
 import `fun`.adaptive.app.ws.shared.wsContentHeader
@@ -14,10 +14,10 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.close
-import `fun`.adaptive.ui.builtin.edit
-import `fun`.adaptive.ui.builtin.more_vert
-import `fun`.adaptive.ui.builtin.notSet
+import `fun`.adaptive.ui.generated.resources.close
+import `fun`.adaptive.ui.generated.resources.edit
+import `fun`.adaptive.ui.generated.resources.more_vert
+import `fun`.adaptive.ui.generated.resources.notSet
 import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.datetime.instant
 import `fun`.adaptive.ui.editor.editor

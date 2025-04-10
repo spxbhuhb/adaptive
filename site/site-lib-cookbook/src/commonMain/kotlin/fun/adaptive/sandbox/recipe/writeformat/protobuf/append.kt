@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.writeformat.protobuf
+package `fun`.adaptive.sandbox.recipe.writeformat.protobuf
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.encodeToProtoByteArray

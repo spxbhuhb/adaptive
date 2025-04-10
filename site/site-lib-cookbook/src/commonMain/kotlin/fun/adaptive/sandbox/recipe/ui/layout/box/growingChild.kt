@@ -1,6 +1,6 @@
-package `fun`.adaptive.cookbook.recipe.ui.layout.box
+package `fun`.adaptive.sandbox.recipe.ui.layout.box
 
-import `fun`.adaptive.cookbook.support.blue
+import `fun`.adaptive.sandbox.support.blue
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf

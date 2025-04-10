@@ -5,7 +5,7 @@ import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.chart.ws.model.WsChartPaneData
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.builtin.menu
+import `fun`.adaptive.ui.generated.resources.menu
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsPanePosition

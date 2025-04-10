@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.app.echo
+package `fun`.adaptive.sandbox.app.echo
 
 import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
 import `fun`.adaptive.app.server.BasicAppServerModule
@@ -12,7 +12,7 @@ fun main() {
     settings {
         inline(
             "KTOR_PORT" to 8080,
-            "KTOR_WIREFORMAT" to "json"
+            "KTOR_WIREFORMAT" to "proto"
         )
     }
 

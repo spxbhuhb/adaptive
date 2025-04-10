@@ -2,7 +2,7 @@
 
 ios-support = "none"
 
-adaptive = "0.25.407-SNAPSHOT"
+adaptive = "0.25.409-SNAPSHOT"
 agp = "8.2.0"
 android-compileSdk = "34"
 android-minSdk = "26"
@@ -39,27 +39,26 @@ subethamail = "3.1.7"
 
 [libraries]
 
-adaptive-core = { module = "fun.adaptive:adaptive-core", version.ref = "adaptive" }
-adaptive-grove = { module = "fun.adaptive:adaptive-grove", version.ref = "adaptive" }
-adaptive-grove-runtime = { module = "fun.adaptive:adaptive-grove-runtime", version.ref = "adaptive" }
-adaptive-lib-app = { module = "fun.adaptive:adaptive-lib-app", version.ref = "adaptive" }
-adaptive-lib-auth = { module = "fun.adaptive:adaptive-lib-auth", version.ref = "adaptive" }
-adaptive-lib-auto = { module = "fun.adaptive:adaptive-lib-auto", version.ref = "adaptive" }
-adaptive-lib-chart = { module = "fun.adaptive:adaptive-lib-chart", version.ref = "adaptive" }
-adaptive-lib-cookbook = { module = "fun.adaptive:adaptive-lib-cookbook", version.ref = "adaptive" }
-adaptive-lib-graphics = { module = "fun.adaptive:adaptive-lib-graphics", version.ref = "adaptive" }
-adaptive-lib-email = { module = "fun.adaptive:adaptive-lib-email", version.ref = "adaptive" }
-adaptive-lib-exposed = { module = "fun.adaptive:adaptive-lib-exposed", version.ref = "adaptive" }
-adaptive-lib-ktor = { module = "fun.adaptive:adaptive-lib-ktor", version.ref = "adaptive" }
-adaptive-lib-document = { module = "fun.adaptive:adaptive-lib-document", version.ref = "adaptive" }
-adaptive-lib-sandbox = { module = "fun.adaptive:adaptive-lib-sandbox", version.ref = "adaptive" }
-adaptive-lib-ui = { module = "fun.adaptive:adaptive-lib-ui", version.ref = "adaptive" }
-adaptive-lib-util = { module = "fun.adaptive:adaptive-lib-util", version.ref = "adaptive" }
-adaptive-lib-value = { module = "fun.adaptive:adaptive-lib-value", version.ref = "adaptive" }
-adaptive-ui = { module = "fun.adaptive:adaptive-ui", version.ref = "adaptive" }
+adaptive-core-core = { module = "fun.adaptive:core-core", version.ref = "adaptive" }
+adaptive-core-ui = { module = "fun.adaptive:core-ui", version.ref = "adaptive" }
 
-adaptive-iot-lib-core = { module = "fun.adaptive:adaptive-iot-lib-core", version.ref = "adaptive" }
-adaptive-iot-lib-zigbee = { module = "fun.adaptive:adaptive-iot-lib-zigbee", version.ref = "adaptive" }
+adaptive-grove-lib = { module = "fun.adaptive:grove-lib", version.ref = "adaptive" }
+adaptive-grove-runtime = { module = "fun.adaptive:grove-runtime", version.ref = "adaptive" }
+
+adaptive-lib-app = { module = "fun.adaptive:lib-app", version.ref = "adaptive" }
+adaptive-lib-auth = { module = "fun.adaptive:lib-auth", version.ref = "adaptive" }
+adaptive-lib-chart = { module = "fun.adaptive:lib-chart", version.ref = "adaptive" }
+adaptive-lib-graphics = { module = "fun.adaptive:lib-graphics", version.ref = "adaptive" }
+adaptive-lib-ktor = { module = "fun.adaptive:lib-ktor", version.ref = "adaptive" }
+adaptive-lib-document = { module = "fun.adaptive:lib-document", version.ref = "adaptive" }
+adaptive-lib-ui = { module = "fun.adaptive:lib-ui", version.ref = "adaptive" }
+adaptive-lib-util = { module = "fun.adaptive:lib-util", version.ref = "adaptive" }
+adaptive-lib-value = { module = "fun.adaptive:lib-value", version.ref = "adaptive" }
+
+adaptive-iot-lib-core = { module = "fun.adaptive:iot-lib-core", version.ref = "adaptive" }
+adaptive-iot-lib-zigbee = { module = "fun.adaptive:iot-lib-zigbee", version.ref = "adaptive" }
+
+adaptive-site-lib-cookbook = { module = "fun.adaptive:site-lib-cookbook", version.ref = "adaptive" }
 
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }

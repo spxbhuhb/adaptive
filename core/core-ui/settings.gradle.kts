@@ -1,10 +1,10 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-rootProject.name = "adaptive-ui"
+rootProject.name = "core-ui"
 
 pluginManagement {
-    includeBuild("../adaptive-gradle-plugin")
+    includeBuild("../../core/core-gradle-plugin")
     repositories {
         google {
             mavenContent {
@@ -31,9 +31,9 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from(files("../gradle/libs.versions.toml"))
+            from(files("../../gradle/libs.versions.toml"))
         }
     }
 }
 
-includeBuild("../adaptive-core")
+includeBuild("../../core/core-core")

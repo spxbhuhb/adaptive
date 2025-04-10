@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook
+package `fun`.adaptive.sandbox
 
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.ui.workspace.Workspace

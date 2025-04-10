@@ -9,7 +9,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.builtin.close
+import `fun`.adaptive.ui.generated.resources.close
 
 @Adaptive
 fun modalPopupTitle(

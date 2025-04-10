@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.support
+package `fun`.adaptive.sandbox.support
 
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.theme.ThemeBackgrounds

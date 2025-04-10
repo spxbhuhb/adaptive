@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.basic.auth.ui
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.*
+import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.basic.auth.api.BasicAccountApi
 import `fun`.adaptive.app.basic.auth.model.BasicAccountSummary
@@ -11,8 +11,8 @@ import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.close
-import `fun`.adaptive.ui.builtin.more_vert
+import `fun`.adaptive.ui.generated.resources.close
+import `fun`.adaptive.ui.generated.resources.more_vert
 import `fun`.adaptive.ui.datetime.instant
 import `fun`.adaptive.ui.dialog.buttonDialog
 import `fun`.adaptive.ui.dialog.rowIconDialog

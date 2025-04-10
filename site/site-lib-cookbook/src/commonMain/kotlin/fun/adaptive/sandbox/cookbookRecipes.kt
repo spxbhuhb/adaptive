@@ -1,6 +1,6 @@
-package `fun`.adaptive.cookbook
+package `fun`.adaptive.sandbox
 
-import `fun`.adaptive.cookbook.model.CbWsRecipeItem
+import `fun`.adaptive.sandbox.model.CbWsRecipeItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment

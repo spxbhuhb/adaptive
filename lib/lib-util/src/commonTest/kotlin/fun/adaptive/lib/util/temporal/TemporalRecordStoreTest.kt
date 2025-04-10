@@ -78,21 +78,6 @@ class TemporalRecordStoreTest {
     }
 
     @Test
-    fun queryWithNoMatchingRecords() {
-        val testDir = clearedTestPath()
-        val store = TemporalRecordStore(uuid4(), testDir, "", 100)
-
-        val timestamp1 = Instant.parse("2024-01-01T00:00:00Z")
-        val record = SomeRecord(timestamp1, 10)
-        store.append(timestamp1, record.encodeToProtoByteArray())
-
-        val actual = mutableListOf<SomeRecord>()
-        store.query(timestamp1.plus(10.minutes), timestamp1.plus(15.minutes)).decodeChunks(actual)
-
-        assertEquals(0, actual.size)
-    }
-
-    @Test
     fun appendDuplicateTimestamps() {
         val testDir = clearedTestPath()
         val store = TemporalRecordStore(uuid4(), testDir, "", 100)

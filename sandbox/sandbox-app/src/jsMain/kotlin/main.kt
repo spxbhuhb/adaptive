@@ -14,12 +14,12 @@ import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.sandbox.commonMainStringsStringStore0
+import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
-import `fun`.adaptive.ui.builtin.folder
+import `fun`.adaptive.ui.generated.resources.folder
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.backgrounds

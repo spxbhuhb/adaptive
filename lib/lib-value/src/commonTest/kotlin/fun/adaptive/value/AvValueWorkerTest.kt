@@ -229,7 +229,7 @@ class AvValueWorkerTest {
 
     fun test(timeout: Duration = 10.seconds, testFun: suspend (worker: AvValueWorker) -> Unit) =
         runTest(timeout = timeout) {
-            val worker = AvValueWorker()
+            val worker = AvValueWorker("general")
             worker.logger = getLogger("worker")
             val dispatcher = Dispatchers.Unconfined
             val scope = CoroutineScope(dispatcher)

@@ -1,6 +1,6 @@
 package `fun`.adaptive.ui.snackbar
 
-import `fun`.adaptive.auto.api.autoCollectionOrigin
+import `fun`.adaptive.foundation.value.storeFor
 import kotlinx.coroutines.channels.Channel
 
 /**
@@ -11,9 +11,9 @@ val pendingSnackChannel = Channel<Snack>(capacity = 100)
 /**
  * Snackbars being shown right now.
  */
-val activeSnackStore = autoCollectionOrigin(emptyList<Snack>())
+val activeSnackStore = storeFor { emptyList<Snack>() }
 
 /**
  * All snackbars created so far.
  */
-val snackStore = autoCollectionOrigin(emptyList<Snack>())
+val snackStore = storeFor { mutableListOf<Snack>() }

@@ -4,10 +4,10 @@
 
 package `fun`.adaptive.grove.ufd
 
-import `fun`.adaptive.auto.api.autoCollection
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 fun ufdPalette(pane: WsPane<*, *>): AdaptiveFragment {
 
     val context = fragment().wsContext<UfdWsContext>()
-    val items = autoCollection(context.palette) ?: emptyList()
+    val items = valueFrom { context.palette }
 
     wsToolPane(pane) {
         column {

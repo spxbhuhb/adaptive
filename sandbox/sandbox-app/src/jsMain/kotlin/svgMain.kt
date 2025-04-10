@@ -7,7 +7,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.margin
 import `fun`.adaptive.ui.api.size
-import `fun`.adaptive.ui.builtin.folder
+import `fun`.adaptive.ui.generated.resources.folder
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.borders
 

@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.xlsx
 
+import `fun`.adaptive.runtime.getPlatformType
 import `fun`.adaptive.utility.clearedTestPath
 import `fun`.adaptive.utility.resolve
 import `fun`.adaptive.xlsx.conf.XlsxConfiguration
@@ -17,6 +18,7 @@ class XlsxDocumentTest {
 
     @Test
     fun testWriteFile() = runTest {
+
         val testPath = clearedTestPath()
 
         val cfg = XlsxConfiguration()
@@ -50,8 +52,7 @@ class XlsxDocumentTest {
         summary["B2"].value = Random.nextDouble(9_000.0, 20_000.0)
         summary["B2"].numberFormat = roundedAndThousandSeparatedNumberFormat
 
-        doc.save(testPath.resolve("test.xlsx"))
-
+        doc.save(testPath.resolve("test.xlsx").toString())
     }
 
 

@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.ws.auth.account
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.saveSuccess
+import `fun`.adaptive.lib_app.generated.resources.saveSuccess
 import `fun`.adaptive.auth.api.AuthPrincipalApi
 import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.app.AuthAppContext

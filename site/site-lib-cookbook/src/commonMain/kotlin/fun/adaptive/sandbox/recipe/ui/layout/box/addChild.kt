@@ -1,7 +1,7 @@
-package `fun`.adaptive.cookbook.recipe.ui.layout.box
+package `fun`.adaptive.sandbox.recipe.ui.layout.box
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.cookbook.support.yellow
+import `fun`.adaptive.sandbox.support.yellow
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.foundation.value.valueFrom

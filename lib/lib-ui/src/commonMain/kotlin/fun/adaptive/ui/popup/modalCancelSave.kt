@@ -5,8 +5,8 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.tabIndex
-import `fun`.adaptive.ui.builtin.cancel
-import `fun`.adaptive.ui.builtin.save
+import `fun`.adaptive.ui.generated.resources.cancel
+import `fun`.adaptive.ui.generated.resources.save
 import `fun`.adaptive.ui.button.ButtonTheme
 import `fun`.adaptive.ui.button.button
 

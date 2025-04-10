@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.client.basic
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.lib_app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.app.client.basic.main.backend.BasicClientBackendFragmentFactory
 import `fun`.adaptive.app.client.basic.main.frontend.BasicClientFrontendFragmentFactory
 import `fun`.adaptive.backend.BackendAdapter

@@ -6,8 +6,8 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.builtin.content_copy
-import `fun`.adaptive.ui.builtin.copied
+import `fun`.adaptive.ui.generated.resources.content_copy
+import `fun`.adaptive.ui.generated.resources.copied
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.platform.clipboard.copyToClipboard
 import `fun`.adaptive.utility.UUID

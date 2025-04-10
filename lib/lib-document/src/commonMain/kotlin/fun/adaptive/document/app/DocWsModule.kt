@@ -1,6 +1,6 @@
 package `fun`.adaptive.document.app
 
-import `fun`.adaptive.adaptive_lib_document.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.document.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.document.ws.browser.wsDocBrowserContentDef
 import `fun`.adaptive.document.ws.browser.wsDocBrowserTool
 import `fun`.adaptive.document.ws.browser.wsDocBrowserToolDef
@@ -9,7 +9,7 @@ import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.ui.builtin.menu_book
+import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.workspace.Workspace
 import kotlin.collections.plusAssign
 

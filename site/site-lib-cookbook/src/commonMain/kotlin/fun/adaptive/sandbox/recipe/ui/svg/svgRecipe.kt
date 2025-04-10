@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.svg
+package `fun`.adaptive.sandbox.recipe.ui.svg
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment

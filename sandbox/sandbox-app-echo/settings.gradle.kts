@@ -1,10 +1,10 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-rootProject.name = "cookbook-app-echo"
+rootProject.name = "sandbox-app-echo"
 
 pluginManagement {
-    includeBuild("../../adaptive-gradle-plugin")
+    includeBuild("../../core/core-gradle-plugin")
 }
 
 dependencyResolutionManagement {
@@ -18,10 +18,11 @@ dependencyResolutionManagement {
     }
 }
 
-includeBuild("../../adaptive-core")
-includeBuild("../../adaptive-lib-app")
-includeBuild("../../adaptive-lib-auth")
-includeBuild("../../adaptive-lib-ktor")
-includeBuild("../../adaptive-lib-util")
-includeBuild("../../adaptive-lib-value")
-includeBuild("../../adaptive-ui")
+includeBuild("../../core/core-core")
+includeBuild("../../core/core-ui")
+
+includeBuild("../../lib/lib-app")
+includeBuild("../../lib/lib-auth")
+includeBuild("../../lib/lib-ktor")
+includeBuild("../../lib/lib-util")
+includeBuild("../../lib/lib-value")

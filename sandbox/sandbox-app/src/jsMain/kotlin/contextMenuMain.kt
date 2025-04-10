@@ -8,7 +8,7 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.builtin.folder
+import `fun`.adaptive.ui.generated.resources.folder
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.menu.MenuItem

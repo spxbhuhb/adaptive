@@ -7,8 +7,8 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.hide
-import `fun`.adaptive.ui.builtin.remove
+import `fun`.adaptive.ui.generated.resources.hide
+import `fun`.adaptive.ui.generated.resources.remove
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.icon.denseVariantIconTheme

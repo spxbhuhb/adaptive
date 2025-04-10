@@ -1,7 +1,7 @@
 package `fun`.adaptive.app.ws.auth.admin.role
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.military_tech
-import `fun`.adaptive.adaptive_lib_app.generated.resources.roles
+import `fun`.adaptive.lib_app.generated.resources.military_tech
+import `fun`.adaptive.lib_app.generated.resources.roles
 import `fun`.adaptive.app.ws.addAdminItem
 import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.resource.graphics.Graphics

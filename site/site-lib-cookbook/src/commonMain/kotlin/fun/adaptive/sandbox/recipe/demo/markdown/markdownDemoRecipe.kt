@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.demo.markdown
+package `fun`.adaptive.sandbox.recipe.demo.markdown
 
 import `fun`.adaptive.cookbook.generated.resources.markdown_demo
 import `fun`.adaptive.document.ui.basic.docDocument

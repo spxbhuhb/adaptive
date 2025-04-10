@@ -13,7 +13,7 @@ import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.arrow_right
+import `fun`.adaptive.ui.generated.resources.arrow_right
 import `fun`.adaptive.ui.filter.quickFilter
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.input.text.textInput

@@ -1,6 +1,6 @@
-package `fun`.adaptive.cookbook
+package `fun`.adaptive.sandbox
 
-import `fun`.adaptive.cookbook.model.CbWsRecipeItem
+import `fun`.adaptive.sandbox.model.CbWsRecipeItem
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType

@@ -9,8 +9,8 @@ import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.close
-import `fun`.adaptive.ui.builtin.more_vert
+import `fun`.adaptive.ui.generated.resources.close
+import `fun`.adaptive.ui.generated.resources.more_vert
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.icon.icon

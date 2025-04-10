@@ -1,6 +1,6 @@
-package `fun`.adaptive.cookbook.recipe.ui.layout.wrap
+package `fun`.adaptive.sandbox.recipe.ui.layout.wrap
 
-import `fun`.adaptive.cookbook.support.example
+import `fun`.adaptive.sandbox.support.example
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment

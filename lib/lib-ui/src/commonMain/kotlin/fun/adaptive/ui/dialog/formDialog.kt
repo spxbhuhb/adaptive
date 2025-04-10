@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.check
+import `fun`.adaptive.ui.generated.resources.check
 import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.form.form
 import `fun`.adaptive.ui.instruction.dp

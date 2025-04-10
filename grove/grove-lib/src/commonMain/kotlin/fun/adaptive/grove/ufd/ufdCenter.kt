@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.grove.resources.*
+import `fun`.adaptive.grove.generated.resources.*
 import `fun`.adaptive.grove.sheet.SheetViewContext
 import `fun`.adaptive.grove.sheet.SheetViewController
 import `fun`.adaptive.grove.sheet.fragment.sheet

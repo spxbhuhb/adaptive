@@ -13,7 +13,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-lib-document"
+val baseName = "lib-document"
 val pomName = "Adaptive Lib Document"
 val scmPath = "spxbhuhb/adaptive"
 
@@ -23,6 +23,12 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
     rootProject.the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().lockFileName = "skip-yarn-lock"
 }
 
+adaptive {
+    resources {
+        packageOfResources = "fun.adaptive.document.generated.resources"
+    }
+}
+
 kotlin {
 
     jvmToolchain(11)
@@ -30,7 +36,11 @@ kotlin {
     jvm()
 
     js(IR) {
-        browser()
+        browser {
+            testTask {
+                enabled = false
+            }
+        }
         binaries.library()
     }
 
@@ -50,12 +60,12 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.adaptive.core)
-            implementation(libs.adaptive.ui)
+            implementation(libs.adaptive.core.core)
+            implementation(libs.adaptive.core.ui)
+            implementation(libs.adaptive.grove.runtime)
             implementation(libs.adaptive.lib.ui)
             implementation(libs.adaptive.lib.util)
             implementation(libs.adaptive.lib.value)
-            implementation(libs.adaptive.grove.runtime)
         }
 
         commonTest.dependencies {

@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.support
+package `fun`.adaptive.sandbox.support
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.box

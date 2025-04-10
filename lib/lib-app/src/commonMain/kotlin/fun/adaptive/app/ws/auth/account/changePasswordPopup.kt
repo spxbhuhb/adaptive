@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.ws.auth.account
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.*
+import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.auth.api.AuthPrincipalApi
 import `fun`.adaptive.auth.model.Credential
 import `fun`.adaptive.auth.model.CredentialType

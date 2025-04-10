@@ -15,7 +15,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-lib-ktor"
+val baseName = "lib-ktor"
 val pomName = "Adaptive Lib Ktor"
 val scmPath = "spxbhuhb/adaptive"
 
@@ -55,7 +55,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.adaptive.core)
+            implementation(libs.adaptive.core.core)
             implementation(libs.adaptive.lib.auth)
             implementation(libs.ktor.client.websockets)
         }
@@ -69,7 +69,6 @@ kotlin {
         }
 
         jvmMain.dependencies {
-            implementation(libs.adaptive.lib.exposed)
             implementation(libs.ktor.server.core)
             implementation(libs.ktor.server.netty)
             implementation(libs.ktor.server.websockets)
@@ -77,7 +76,6 @@ kotlin {
         }
 
         jvmTest.dependencies {
-            implementation(libs.h2database)
             implementation(libs.ktor.client.okhttp)
         }
     }

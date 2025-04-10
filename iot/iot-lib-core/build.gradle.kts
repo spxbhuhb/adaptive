@@ -13,7 +13,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-iot-lib-core"
+val baseName = "iot-lib-core"
 val pomName = "Adaptive IoT Core Library"
 val scmPath = "spxbhuhb/adaptive"
 
@@ -60,16 +60,14 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.adaptive.core)
-            implementation(libs.adaptive.ui)
+            implementation(libs.adaptive.core.core)
+            implementation(libs.adaptive.core.ui)
             implementation(libs.adaptive.lib.ktor)
-            implementation(libs.adaptive.lib.auto)
             implementation(libs.adaptive.lib.chart)
             implementation(libs.adaptive.lib.auth)
             implementation(libs.adaptive.lib.ui)
             implementation(libs.adaptive.lib.graphics)
             implementation(libs.adaptive.lib.document)
-            implementation(libs.adaptive.lib.exposed)
             implementation(libs.adaptive.lib.util)
             implementation(libs.adaptive.lib.value)
         }
@@ -77,10 +75,6 @@ kotlin {
         commonTest.dependencies {
             implementation(libs.kotlin.test)
             implementation(libs.kotlinx.coroutines.test)
-        }
-
-        jvmTest.dependencies {
-            implementation(libs.h2database)
         }
     }
 }

@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.input.text
+package `fun`.adaptive.sandbox.recipe.ui.input.text
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment

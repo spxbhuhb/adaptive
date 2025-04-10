@@ -17,7 +17,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-ui"
+val baseName = "core-ui"
 val pomName = "Adaptive UI"
 val scmPath = "spxbhuhb/adaptive"
 
@@ -65,7 +65,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            api(libs.adaptive.core)
+            api(libs.adaptive.core.core)
         }
 
         commonTest.dependencies {

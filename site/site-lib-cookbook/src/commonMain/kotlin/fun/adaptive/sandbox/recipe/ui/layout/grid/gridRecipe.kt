@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.layout.grid
+package `fun`.adaptive.sandbox.recipe.ui.layout.grid
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment

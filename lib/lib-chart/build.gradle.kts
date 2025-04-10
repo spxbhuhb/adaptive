@@ -13,7 +13,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-lib-chart"
+val baseName = "lib-chart"
 val pomName = "Adaptive Lib Chart"
 val scmPath = "spxbhuhb/adaptive"
 
@@ -21,7 +21,7 @@ adaptive {
     pluginDebug = false
     resources {
         publicAccessors = true
-        packageOfResources = "fun.adaptive.chart"
+        packageOfResources = "fun.adaptive.chart.generated.resources"
     }
 }
 
@@ -58,8 +58,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.adaptive.core)
-            implementation(libs.adaptive.ui)
+            implementation(libs.adaptive.core.core)
+            implementation(libs.adaptive.core.ui)
             implementation(libs.adaptive.lib.ui)
             implementation(libs.adaptive.lib.graphics)
         }

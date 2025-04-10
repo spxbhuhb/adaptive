@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.close
+import `fun`.adaptive.ui.generated.resources.close
 import `fun`.adaptive.ui.instruction.event.OnClose
 
 @Adaptive

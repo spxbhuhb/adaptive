@@ -6,8 +6,8 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.ui.builtin.power_settings_new
-import `fun`.adaptive.ui.builtin.signOut
+import `fun`.adaptive.ui.generated.resources.power_settings_new
+import `fun`.adaptive.ui.generated.resources.signOut
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.WsSideBarAction
 import `fun`.adaptive.ui.workspace.model.WsPanePosition

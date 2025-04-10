@@ -1,9 +1,9 @@
-package `fun`.adaptive.cookbook.app
+package `fun`.adaptive.sandbox.app
 
-import `fun`.adaptive.cookbook.*
+import `fun`.adaptive.sandbox.*
 import `fun`.adaptive.cookbook.generated.resources.dining
 import `fun`.adaptive.cookbook.generated.resources.flatware
-import `fun`.adaptive.cookbook.recipe.ui.layout.workspace.WorkspaceRecipePaneFragmentFactory
+import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.WorkspaceRecipePaneFragmentFactory
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.workspace.Workspace

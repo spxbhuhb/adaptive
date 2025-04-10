@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.form
+package `fun`.adaptive.sandbox.recipe.ui.form
 
 import `fun`.adaptive.adat.api.hasProblem
 import `fun`.adaptive.adat.api.isNotValid

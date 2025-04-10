@@ -1,10 +1,10 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-rootProject.name = "adaptive-iot-cli"
+rootProject.name = "iot-cli"
 
 pluginManagement {
-    includeBuild("../../adaptive-gradle-plugin")
+    includeBuild("../../core/core-gradle-plugin")
 }
 
 dependencyResolutionManagement {
@@ -18,12 +18,12 @@ dependencyResolutionManagement {
     }
 }
 
-includeBuild("../../adaptive-core")
-includeBuild("../../adaptive-lib-ktor")
-includeBuild("../../adaptive-lib-auth")
-includeBuild("../../adaptive-lib-value")
-includeBuild("../../adaptive-lib-ui")
-includeBuild("../../adaptive-lib-util")
+includeBuild("../../core/core-core")
+includeBuild("../../lib/lib-ktor")
+includeBuild("../../lib/lib-auth")
+includeBuild("../../lib/lib-value")
+includeBuild("../../lib/lib-ui")
+includeBuild("../../lib/lib-util")
 
-includeBuild("../adaptive-iot-lib-core")
-includeBuild("../adaptive-iot-lib-zigbee")
+includeBuild("../../iot/iot-lib-core")
+includeBuild("../../iot/iot-lib-zigbee")

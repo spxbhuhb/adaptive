@@ -14,7 +14,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-grove-runtime"
+val baseName = "grove-runtime"
 val pomName = "Adaptive Grove Runtime"
 val scmPath = "spxbhuhb/adaptive"
 
@@ -45,7 +45,7 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(libs.adaptive.core)
+                implementation(libs.adaptive.core.core)
             }
         }
         commonTest {

@@ -3,25 +3,22 @@ package `fun`.adaptive.ui.navigation
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.auto.api.ItemBase
 import `fun`.adaptive.utility.decodeFromUrl
 import `fun`.adaptive.utility.encodeToUrl
-
-typealias NavStateOrigin = ItemBase<NavState>
 
 fun navState(vararg segments: String, title: String? = null, fullScreen: Boolean = false) =
     NavState(segments.toList(), title = title, fullScreen = fullScreen)
 
-fun NavStateOrigin.open(navState: NavState) {
-    update(
-        navState::segments,
-        navState::parameters,
-        navState::tag,
-        navState::custom,
-        navState::title,
-        navState::fullScreen
-    )
-}
+//fun NavStateOrigin.open(navState: NavState) {
+//    navState.update(
+//        navState::segments,
+//        navState::parameters,
+//        navState::tag,
+//        navState::custom,
+//        navState::title,
+//        navState::fullScreen
+//    )
+//}
 
 @Adat
 open class NavState(

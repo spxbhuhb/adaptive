@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.tab
+package `fun`.adaptive.sandbox.recipe.ui.tab
 
 import `fun`.adaptive.cookbook.generated.resources.menu
 import `fun`.adaptive.foundation.Adaptive

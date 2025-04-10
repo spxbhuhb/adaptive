@@ -1,11 +1,11 @@
 package `fun`.adaptive.app.ws.auth
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.accountSelf
-import `fun`.adaptive.adaptive_lib_app.generated.resources.accounts
-import `fun`.adaptive.adaptive_lib_app.generated.resources.military_tech
-import `fun`.adaptive.adaptive_lib_app.generated.resources.roles
-import `fun`.adaptive.adaptive_lib_app.generated.resources.signInTitle
-import `fun`.adaptive.adaptive_lib_app.generated.resources.supervised_user_circle
+import `fun`.adaptive.lib_app.generated.resources.accountSelf
+import `fun`.adaptive.lib_app.generated.resources.accounts
+import `fun`.adaptive.lib_app.generated.resources.military_tech
+import `fun`.adaptive.lib_app.generated.resources.roles
+import `fun`.adaptive.lib_app.generated.resources.signInTitle
+import `fun`.adaptive.lib_app.generated.resources.supervised_user_circle
 import `fun`.adaptive.app.ws.auth.account.wsAppAccountSelf
 import `fun`.adaptive.app.ws.auth.account.wsAppAccountSelfDef
 import `fun`.adaptive.app.ws.auth.admin.account.wsAppAccountManager

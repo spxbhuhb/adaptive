@@ -4,7 +4,7 @@
 rootProject.name = "adaptive-lib-sandbox"
 
 pluginManagement {
-    includeBuild("../adaptive-gradle-plugin")
+    includeBuild("../../core/core-gradle-plugin")
     repositories {
         google()
         gradlePluginPortal()
@@ -18,17 +18,17 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from(files("../gradle/libs.versions.toml"))
+            from(files("../../gradle/libs.versions.toml"))
         }
     }
 }
 
-includeBuild("../adaptive-core")
-includeBuild("../adaptive-ui")
+includeBuild("../../core/core-core")
+includeBuild("../../core/core-ui")
 includeBuild("../adaptive-lib-auth")
 includeBuild("../adaptive-lib-ktor")
 includeBuild("../adaptive-lib-email")
 includeBuild("../adaptive-lib-exposed")
-includeBuild("../adaptive-lib-graphics")
+includeBuild("../../lib/lib-graphics")
 includeBuild("../adaptive-lib-document")
 includeBuild("../adaptive-lib-ui")

@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.dialog
+package `fun`.adaptive.sandbox.recipe.ui.dialog
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.store.copyOf

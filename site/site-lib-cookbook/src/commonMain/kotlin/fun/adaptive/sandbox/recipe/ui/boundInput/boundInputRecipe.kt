@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.boundInput
+package `fun`.adaptive.sandbox.recipe.ui.boundInput
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.store.copyOf

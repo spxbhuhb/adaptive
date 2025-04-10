@@ -1,7 +1,7 @@
-package `fun`.adaptive.cookbook.model
+package `fun`.adaptive.sandbox.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.cookbook.CbWsContext
+import `fun`.adaptive.sandbox.CbWsContext
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.model.NamedItemType

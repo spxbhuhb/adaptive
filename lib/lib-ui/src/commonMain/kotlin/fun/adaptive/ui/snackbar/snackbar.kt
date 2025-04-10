@@ -10,7 +10,7 @@ import `fun`.adaptive.utility.UUID
  */
 fun snackbar(message: String, type: SnackType) {
     val snack = Snack(UUID(), message, type)
-    snackStore.add(snack)
+    snackStore.value.add(snack)
 
     val result = pendingSnackChannel.trySend(snack)
     if (! result.isSuccess) {

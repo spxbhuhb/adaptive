@@ -1,6 +1,6 @@
 package `fun`.adaptive.document.ws.browser
 
-import `fun`.adaptive.adaptive_lib_document.generated.resources.documentation
+import `fun`.adaptive.document.generated.resources.documentation
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -10,7 +10,7 @@ import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.arrow_right
+import `fun`.adaptive.ui.generated.resources.arrow_right
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds

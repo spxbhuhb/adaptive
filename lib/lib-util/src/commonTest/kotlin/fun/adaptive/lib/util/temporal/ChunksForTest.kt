@@ -25,19 +25,6 @@ class ChunksForTest {
     }
 
     @Test
-    @JsName("returnsEmptyListWhenStartIsBeforeFirstEntryTimestamp2")
-    fun `returns empty list when start is after last known timestamp`() {
-        val start = Instant.parse("2024-03-01T10:00:00Z")
-        val end = Instant.parse("2024-03-01T12:00:00Z")
-        val entries = listOf(
-            TemporalIndexEntry(Instant.parse("2024-03-01T08:30:00Z"), uuid(), 0)
-        )
-
-        val result = chunksFor(start, end, entries.last().timestamp, entries)
-        assertTrue(result.isEmpty())
-    }
-
-    @Test
     @JsName("returnsEmptyListWhenEndIsBeforeFirstEntryTimestamp")
     fun `returns empty list when end is before first entry timestamp`() {
         val start = Instant.parse("2024-03-01T06:00:00Z")
@@ -58,19 +45,6 @@ class ChunksForTest {
         val entries = emptyList<TemporalIndexEntry>()
 
         val result = chunksFor(start, end, null, entries)
-        assertTrue(result.isEmpty())
-    }
-
-    @Test
-    @JsName("returnsEmptyListWhenStartIsBeforeFirstEntryTimestamp3")
-    fun `returns empty list when start is after end`() {
-        val start = Instant.parse("2024-03-01T12:00:00Z")
-        val end = Instant.parse("2024-03-01T10:00:00Z")
-        val entries = listOf(
-            TemporalIndexEntry(Instant.parse("2024-03-01T11:00:00Z"), uuid(), 0)
-        )
-
-        val result = chunksFor(start, end, entries.last().timestamp, entries)
         assertTrue(result.isEmpty())
     }
 

@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.input.datetime
+package `fun`.adaptive.sandbox.recipe.ui.input.datetime
 
 import `fun`.adaptive.cookbook.generated.resources.date_input
 import `fun`.adaptive.document.ui.basic.docDocument

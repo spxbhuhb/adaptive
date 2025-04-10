@@ -15,14 +15,7 @@ object Strings {
     const val DECODE_METADATA = "decodeMetadata"
     const val GENERATE_DESCRIPTORS = "generateDescriptors"
 
-    const val EXPOSED_PACKAGE = "fun.adaptive.exposed"
-    const val JETBRAINS_EXPOSED_PACKAGE = "org.jetbrains.exposed.sql"
-    const val RESULT_ROW = "ResultRow"
-    const val COLUMN = "Column"
-    const val EXPOSED_ADAT_TABLE = "ExposedAdatTable"
-    const val EXPOSED_ADAT_SET = "ExposedAdatSet"
-    const val FROM_ROW = "fromRow"
-    const val TO_ROW = "toRow"
+
 }
 
 object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
@@ -53,17 +46,10 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val TO_STRING = "toString".name()
 
     val OTHER = "other".name()
-    val SET = "set".name()
-    val ID = "id".name()
-
-    val FROM_ROW = Strings.FROM_ROW.name()
-    val TO_ROW = Strings.TO_ROW.name()
 }
 
 object FqNames : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_ANNOTATION = FqName("fun.adaptive.adat.Adat")
-
-    val EXPOSED_ADAT_SET = Strings.EXPOSED_ADAT_SET.fqName { Strings.EXPOSED_PACKAGE }
     val ADAT_DESCRIPTOR_NAME = "AdatDescriptorName".fqName { Strings.DESCRIPTOR_PACKAGE }
     val ADAT_COMPANION_RESOLVE = "AdatCompanionResolve".fqName { Strings.RUNTIME_PACKAGE }
 }
@@ -83,30 +69,14 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_DESCRIPTOR_SET = "AdatDescriptorSet".classId { Strings.DESCRIPTOR_PACKAGE.fqName() }
 
     val WIREFORMAT_REGISTRY = "WireFormatRegistry".classId { "fun.adaptive.wireformat".fqName() }
-
-    val EXPOSED_ADAT_TABLE = Strings.EXPOSED_ADAT_TABLE.classId { Strings.EXPOSED_PACKAGE.fqName() }
-
-    val RESULT_ROW = Strings.RESULT_ROW.classId { Strings.JETBRAINS_EXPOSED_PACKAGE.fqName() }
-    val COLUMN = Strings.COLUMN.classId { Strings.JETBRAINS_EXPOSED_PACKAGE.fqName() }
-
-    val COMMON_UUID = "UUID".classId { "fun.adaptive.utility".fqName() }
-    val JAVA_UUID = "UUID".classId { "java.util".fqName() }
-    val ENTITY_ID = "EntityID".classId { "org.jetbrains.exposed.dao.id".fqName() }
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
-    val exposed = Strings.EXPOSED_PACKAGE.fqName()
 
     val api = "fun.adaptive.adat.api".fqName()
-
-    val asCommon = "asCommon".callableId { exposed }
-    val asEntityID = "asEntityID".callableId { exposed }
-    val asJava = "asJava".callableId { exposed }
 
     val properties = "properties".callableId { api }
 
     val adatCompanionOf = "adatCompanionOf".callableId { api }
 
-    //  See comments in AdatGenerationExtension
-    // val updateFun = "update".callableId { api }
 }

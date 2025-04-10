@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.button
+package `fun`.adaptive.sandbox.recipe.ui.button
 
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.cookbook.generated.resources.grid_view

@@ -10,9 +10,8 @@ plugins {
 }
 
 adaptive {
-    pluginDebug = false
     resources {
-        packageOfResources = "fun.adaptive.cookbook.app.echo"
+        packageOfResources = "fun.adaptive.sandbox.app.echo.generated.resources"
     }
 }
 
@@ -35,7 +34,7 @@ kotlin {
         withJava()
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         mainRun {
-            mainClass = "fun.adaptive.cookbook.app.echo.MainKt"
+            mainClass = "fun.adaptive.sandbox.app.echo.MainKt"
         }
     }
 
@@ -47,13 +46,13 @@ kotlin {
     sourceSets {
         commonMain {
             dependencies {
-                implementation(libs.adaptive.core)
+                implementation(libs.adaptive.core.core)
+                implementation(libs.adaptive.core.ui)
                 implementation(libs.adaptive.lib.app)
                 implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.util)
                 implementation(libs.adaptive.lib.value)
-                implementation(libs.adaptive.ui)
             }
         }
 

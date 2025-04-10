@@ -1,7 +1,7 @@
 package `fun`.adaptive.app.ws.inspect
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.devTools
-import `fun`.adaptive.adaptive_lib_app.generated.resources.pest_control
+import `fun`.adaptive.lib_app.generated.resources.devTools
+import `fun`.adaptive.lib_app.generated.resources.pest_control
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.workspace.Workspace

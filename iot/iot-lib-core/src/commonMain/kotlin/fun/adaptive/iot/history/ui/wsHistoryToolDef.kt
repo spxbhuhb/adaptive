@@ -4,10 +4,10 @@ import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.iot.generated.resources.*
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.builtin.collapseAll
-import `fun`.adaptive.ui.builtin.expandAll
-import `fun`.adaptive.ui.builtin.unfold_less
-import `fun`.adaptive.ui.builtin.unfold_more
+import `fun`.adaptive.ui.generated.resources.collapseAll
+import `fun`.adaptive.ui.generated.resources.expandAll
+import `fun`.adaptive.ui.generated.resources.unfold_less
+import `fun`.adaptive.ui.generated.resources.unfold_more
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPaneAction

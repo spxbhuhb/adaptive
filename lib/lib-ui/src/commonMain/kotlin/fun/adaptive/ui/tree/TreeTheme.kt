@@ -6,8 +6,8 @@ import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.arrow_drop_down
-import `fun`.adaptive.ui.builtin.arrow_right
+import `fun`.adaptive.ui.generated.resources.arrow_drop_down
+import `fun`.adaptive.ui.generated.resources.arrow_right
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp

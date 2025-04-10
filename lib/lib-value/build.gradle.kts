@@ -13,7 +13,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-lib-value"
+val baseName = "lib-value"
 val pomName = "Adaptive Lib Value"
 val scmPath = "spxbhuhb/adaptive"
 
@@ -54,7 +54,7 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.adaptive.core)
+            implementation(libs.adaptive.core.core)
             implementation(libs.adaptive.lib.util)
         }
 

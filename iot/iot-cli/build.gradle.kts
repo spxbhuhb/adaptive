@@ -1,15 +1,9 @@
-import org.gradle.kotlin.dsl.adaptive
-import org.gradle.kotlin.dsl.named
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
-import java.io.ByteArrayOutputStream
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.file.StandardOpenOption
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.TimeZone
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 
 /*
@@ -53,8 +47,8 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.client.websockets)
 
-                implementation(libs.adaptive.core)
-                implementation(libs.adaptive.ui)
+                implementation(libs.adaptive.core.core)
+                implementation(libs.adaptive.core.ui)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.value)

@@ -16,7 +16,7 @@ import `fun`.adaptive.cookbook.appData
 import `fun`.adaptive.auth.api.BasicAccountApi
 import `fun`.adaptive.cookbook.auth.authRecipe
 import `fun`.adaptive.cookbook.auth.ui.responsive.signIn
-import `fun`.adaptive.cookbook.commonMainStringsStringStore0
+import `fun`.adaptive.cookbook.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.cookbook.cookbookCommon
 import `fun`.adaptive.cookbook.goodmorning.goodMorning
 import `fun`.adaptive.cookbook.goodmorning.mobileExample

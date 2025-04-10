@@ -1,7 +1,7 @@
-package `fun`.adaptive.cookbook.app
+package `fun`.adaptive.sandbox.app
 
 import `fun`.adaptive.cookbook.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.cookbook.support.E
+import `fun`.adaptive.sandbox.support.E
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule

@@ -1,10 +1,10 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-rootProject.name = "adaptive-iot-lib-zigbee"
+rootProject.name = "iot-lib-zigbee"
 
 pluginManagement {
-    includeBuild("../../adaptive-gradle-plugin")
+    includeBuild("../../core/core-gradle-plugin")
     repositories {
         google()
         gradlePluginPortal()
@@ -23,12 +23,13 @@ dependencyResolutionManagement {
     }
 }
 
-includeBuild("../../adaptive-core")
-includeBuild("../../adaptive-ui")
-includeBuild("../../adaptive-lib-ui")
-includeBuild("../../adaptive-lib-graphics")
-includeBuild("../../adaptive-lib-document")
-includeBuild("../../adaptive-lib-util")
-includeBuild("../../adaptive-lib-value")
+includeBuild("../../core/core-core")
+includeBuild("../../core/core-ui")
 
-includeBuild("../adaptive-iot-lib-core")
+includeBuild("../../lib/lib-ui")
+includeBuild("../../lib/lib-graphics")
+includeBuild("../../lib/lib-document")
+includeBuild("../../lib/lib-util")
+includeBuild("../../lib/lib-value")
+
+includeBuild("../../iot/iot-lib-core")

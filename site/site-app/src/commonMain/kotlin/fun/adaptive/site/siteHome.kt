@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.resource.document.Documents
 import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.resource.image.Images
+import `fun`.adaptive.site.app.generated.resources.*
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp

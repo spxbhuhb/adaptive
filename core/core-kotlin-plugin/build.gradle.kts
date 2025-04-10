@@ -14,7 +14,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-kotlin-plugin"
+val baseName = "core-kotlin-plugin"
 val scmPath = "spxbhuhb/adaptive"
 
 repositories {
@@ -44,7 +44,7 @@ sourceSets {
 
 dependencies {
     compileOnly(libs.kotlin.compiler)
-    implementation(libs.adaptive.core)
+    implementation(libs.adaptive.core.core)
 
     testImplementation(libs.kotlin.compiler)
 
@@ -58,7 +58,6 @@ dependencies {
 
     testRuntimeOnly(libs.kotlinx.coroutines.core)
     testRuntimeOnly(libs.kotlinx.datetime)
-    testRuntimeOnly(libs.exposed.core)
     testRuntimeOnly(libs.slf4j)
     testRuntimeOnly(libs.slf4j.nop)
 
@@ -70,7 +69,7 @@ dependencies {
     testImplementation("org.junit.platform:junit-platform-suite-api")
 }
 
-// Copy `adaptive-core` into the plugin JAR. This is necessary as the plugin
+// Copy `core-core` into the plugin JAR. This is necessary as the plugin
 // uses classes and functions from the core and without this there is no way
 // to provided them.
 // TODO verify that only the necessary classes are copied into the plugin jar
@@ -93,7 +92,6 @@ tasks.test {
         setLibraryProperty("org.jetbrains.kotlin.test.kotlin-annotations-jvm", "kotlin-annotations-jvm")
         setLibraryProperty("adaptive.kotlin.test.kotlinx-coroutines-core", "kotlinx-coroutines-core-jvm")
         setLibraryProperty("adaptive.kotlin.test.kotlinx-datetime", "kotlinx-datetime-jvm")
-        setLibraryProperty("adaptive.org.jetbrains.exposed-core", "exposed-core")
         setLibraryProperty("adaptive.org.slf4j:slf4j-api", "slf4j-api")
         setLibraryProperty("adaptive.org.slf4j:slf4j-nop", "slf4j-nop")
     }

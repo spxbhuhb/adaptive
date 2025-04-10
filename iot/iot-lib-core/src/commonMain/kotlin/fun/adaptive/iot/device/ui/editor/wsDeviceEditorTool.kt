@@ -12,9 +12,9 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.zIndex
-import `fun`.adaptive.ui.builtin.arrow_drop_down
-import `fun`.adaptive.ui.builtin.arrow_drop_up
-import `fun`.adaptive.ui.builtin.empty
+import `fun`.adaptive.ui.generated.resources.arrow_drop_down
+import `fun`.adaptive.ui.generated.resources.arrow_drop_up
+import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.menu.MenuItemBase
 import `fun`.adaptive.ui.menu.MenuSeparator

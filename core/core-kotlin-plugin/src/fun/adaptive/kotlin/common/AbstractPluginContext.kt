@@ -49,7 +49,7 @@ abstract class AbstractPluginContext(
 
     fun ClassId.classSymbol() =
         checkNotNull(irContext.referenceClass(this)) {
-            "Missing ${this.asFqNameString()} class. Maybe the gradle dependency on \"fun.adaptive:adaptive-core\" is missing."
+            "Missing ${this.asFqNameString()} class. Maybe the gradle dependency on \"fun.adaptive:core-core\" is missing."
         }
 
     fun CallableId.propertyGetterSymbol() =

@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.basic
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.*
+import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.app.basic.auth.api.BasicAccountApi
 import `fun`.adaptive.app.basic.auth.ui.accountList
 import `fun`.adaptive.app.basic.auth.ui.large.largeSignIn

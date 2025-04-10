@@ -20,7 +20,7 @@
             font-style: normal;
             font-weight: 300 800;
             font-display: swap;
-            src: url('/resources/fun.adaptive.ui.builtin/fonts/OpenSans_All.woff2') format('woff2');
+            src: url('/resources/fun.adaptive.ui.generated.resources/fonts/OpenSans_All.woff2') format('woff2');
         }
 
         body, html {
@@ -96,7 +96,7 @@
 
         setTimeout(() => {
             const script = document.createElement('script');
-            script.src = '/adaptive-iot-app.js';
+            script.src = '/iot-app.js';
             document.body.appendChild(script);
             ctx.measureText("This is plain stupid, but it works: ő");
         }, 50);

@@ -26,7 +26,7 @@ class AuthTestSupport : AbstractTestSupport(
     )
 
     override val serverWorkers = listOf(
-        AvValueWorker(trace = true),
+        AvValueWorker("auth", trace = true),
         AuthWorker(),
         AuthSessionWorker()
     )

@@ -1,7 +1,7 @@
 package `fun`.adaptive.ui.virtualized
 
 import `fun`.adaptive.backend.backend
-import `fun`.adaptive.sandbox.commonMainStringsStringStore0
+import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.maxSize

@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.hover
+package `fun`.adaptive.sandbox.recipe.ui.hover
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ui.api.backgroundColor

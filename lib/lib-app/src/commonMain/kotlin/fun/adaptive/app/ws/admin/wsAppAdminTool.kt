@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.builtin.empty
+import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeTheme
 import `fun`.adaptive.ui.tree.TreeViewModel

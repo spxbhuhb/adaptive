@@ -6,7 +6,7 @@ import `fun`.adaptive.iot.generated.resources.add
 import `fun`.adaptive.iot.generated.resources.devices
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.builtin.*
+import `fun`.adaptive.ui.generated.resources.*
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPaneAction
 import `fun`.adaptive.ui.workspace.model.WsPaneMenuAction

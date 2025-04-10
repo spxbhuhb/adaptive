@@ -13,8 +13,8 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.service.transport.ServiceCallTransport
-import `fun`.adaptive.ui.builtin.executionError
-import `fun`.adaptive.ui.builtin.menu
+import `fun`.adaptive.ui.generated.resources.executionError
+import `fun`.adaptive.ui.generated.resources.menu
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.layout.Orientation

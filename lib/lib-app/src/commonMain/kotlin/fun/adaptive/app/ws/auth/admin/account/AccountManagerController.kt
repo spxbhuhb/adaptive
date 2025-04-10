@@ -1,7 +1,7 @@
 package `fun`.adaptive.app.ws.auth.admin.account
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.saveFail
-import `fun`.adaptive.adaptive_lib_app.generated.resources.saveSuccess
+import `fun`.adaptive.lib_app.generated.resources.saveFail
+import `fun`.adaptive.lib_app.generated.resources.saveSuccess
 import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.app.ws.auth.account.AccountEditorData
 import `fun`.adaptive.auth.api.basic.AuthBasicApi

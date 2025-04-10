@@ -9,14 +9,14 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.io.path.name
 
-fun runtimeClassPath() : List<File> {
+fun runtimeClassPath(): List<File> {
     val result = mutableListOf<File>()
 
-    Files.list(Paths.get("../adaptive-core/build/libs/"))
-        .filter { it.name.startsWith("adaptive-core-jvm-") && it.name.endsWith(".jar") }
+    Files.list(Paths.get("../core-core/build/libs/"))
+        .filter { it.name.startsWith("core-core-jvm-") && it.name.endsWith(".jar") && ! it.name.contains("-sources") }
         .forEach { result += it.toFile() }
 
-    check(result.isNotEmpty()) { "Runtime JAR does not exist. Please run :adaptive-core:build" }
+    check(result.isNotEmpty()) { "Runtime JAR does not exist. Please run :core-core:build" }
 
     val latest = result.maxBy { it.lastModified() }
 
@@ -25,7 +25,6 @@ fun runtimeClassPath() : List<File> {
 
     result += File(System.getProperty("adaptive.kotlin.test.kotlinx-coroutines-core"))
     result += File(System.getProperty("adaptive.kotlin.test.kotlinx-datetime"))
-    result += File(System.getProperty("adaptive.org.jetbrains.exposed-core"))
     result += File(System.getProperty("adaptive.org.slf4j:slf4j-api"))
     result += File(System.getProperty("adaptive.org.slf4j:slf4j-nop"))
 

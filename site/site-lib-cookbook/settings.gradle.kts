@@ -1,10 +1,10 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-rootProject.name = "adaptive-lib-cookbook"
+rootProject.name = "site-lib-cookbook"
 
 pluginManagement {
-    includeBuild("../adaptive-gradle-plugin")
+    includeBuild("../../core/core-gradle-plugin")
 }
 
 dependencyResolutionManagement {
@@ -13,18 +13,16 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from(files("../gradle/libs.versions.toml"))
+            from(files("../../gradle/libs.versions.toml"))
         }
     }
 }
 
-includeBuild("../adaptive-core")
-includeBuild("../adaptive-ui")
-includeBuild("../adaptive-lib-app")
-includeBuild("../adaptive-lib-email")
-includeBuild("../adaptive-lib-ktor")
-includeBuild("../adaptive-lib-auth")
-includeBuild("../adaptive-lib-auto")
-includeBuild("../adaptive-lib-graphics")
-includeBuild("../adaptive-lib-document")
-includeBuild("../adaptive-lib-ui")
+includeBuild("../../core/core-core")
+includeBuild("../../core/core-ui")
+includeBuild("../../lib/lib-app")
+includeBuild("../../lib/lib-ktor")
+includeBuild("../../lib/lib-auth")
+includeBuild("../../lib/lib-graphics")
+includeBuild("../../lib/lib-document")
+includeBuild("../../lib/lib-ui")

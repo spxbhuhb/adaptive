@@ -1,8 +1,8 @@
-package `fun`.adaptive.cookbook.recipe.ui.form
+package `fun`.adaptive.sandbox.recipe.ui.form
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.api.properties
-import `fun`.adaptive.cookbook.support.E
+import `fun`.adaptive.sandbox.support.E
 
 @Adat
 class FormData(

@@ -1,14 +1,14 @@
 package `fun`.adaptive.app.ws
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.lib_app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.ui.builtin.eco
-import `fun`.adaptive.ui.builtin.home
+import `fun`.adaptive.ui.generated.resources.eco
+import `fun`.adaptive.ui.generated.resources.home
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.WsSideBarAction
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController

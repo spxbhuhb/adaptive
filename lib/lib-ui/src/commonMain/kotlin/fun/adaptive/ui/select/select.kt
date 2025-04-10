@@ -7,8 +7,8 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.arrow_drop_down
-import `fun`.adaptive.ui.builtin.arrow_drop_up
+import `fun`.adaptive.ui.generated.resources.arrow_drop_down
+import `fun`.adaptive.ui.generated.resources.arrow_drop_up
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder

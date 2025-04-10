@@ -3,7 +3,7 @@ package `fun`.adaptive.ui
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.ui.builtin.commonMainStringsStringStore0
+import `fun`.adaptive.ui.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.ui.snackbar.SnackType
 import `fun`.adaptive.wireformat.WireFormatRegistry
 

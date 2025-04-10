@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.recipe.ui.layout.splitpane
+package `fun`.adaptive.sandbox.recipe.ui.layout.splitpane
 
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.foundation.Adaptive
@@ -12,7 +12,6 @@ import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.splitpane.splitPaneDivider
 import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.theme.colors
 
 @Adaptive
 fun splitPaneRecipe(): AdaptiveFragment {

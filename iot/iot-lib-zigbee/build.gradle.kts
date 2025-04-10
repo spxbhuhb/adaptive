@@ -13,7 +13,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-iot-lib-zigbee"
+val baseName = "iot-lib-zigbee"
 val pomName = "Adaptive IoT Lib ZigBee"
 val scmPath = "spxbhuhb/adaptive"
 
@@ -54,8 +54,8 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.adaptive.core)
-            implementation(libs.adaptive.ui)
+            implementation(libs.adaptive.core.core)
+            implementation(libs.adaptive.core.ui)
             implementation(libs.adaptive.lib.ui)
             implementation(libs.adaptive.lib.graphics)
             implementation(libs.adaptive.lib.document)

@@ -15,7 +15,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-core"
+val baseName = "core-core"
 val pomName = "Adaptive Core"
 val scmPath = "spxbhuhb/adaptive"
 

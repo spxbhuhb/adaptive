@@ -1,12 +1,12 @@
 package `fun`.adaptive.app.sidebar.ui
 
 import `fun`.adaptive.auth.model.Session
-import `fun`.adaptive.auto.api.autoItemOrigin
+import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.service.transport.ServiceCallTransport
-import `fun`.adaptive.ui.builtin.menu
-import `fun`.adaptive.ui.builtin.settings
+import `fun`.adaptive.ui.generated.resources.menu
+import `fun`.adaptive.ui.generated.resources.settings
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 
@@ -20,9 +20,9 @@ open class BasicAppData {
     var userFullName : String? = null
     var session : Session? = null
 
-    val navState = autoItemOrigin(NavState())
+    val navState = storeFor { NavState() }
 
-    val layoutState = autoItemOrigin(DefaultLayoutState())
+    val layoutState = storeFor { DefaultLayoutState() }
 
     var smallAppMenuIcon = Graphics.menu
     var smallSettingsAppIcon = Graphics.settings
@@ -41,7 +41,7 @@ open class BasicAppData {
     var onLogout: suspend () -> Unit = {}
 
     fun open(newState: NavState) {
-        this.navState.update(newState)
+        this.navState.value = newState
     }
 
 }

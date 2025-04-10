@@ -1,9 +1,9 @@
 package `fun`.adaptive.app.ws.auth.admin.role
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.addRole
-import `fun`.adaptive.adaptive_lib_app.generated.resources.edit
-import `fun`.adaptive.adaptive_lib_app.generated.resources.filter
-import `fun`.adaptive.adaptive_lib_app.generated.resources.roles
+import `fun`.adaptive.lib_app.generated.resources.addRole
+import `fun`.adaptive.lib_app.generated.resources.edit
+import `fun`.adaptive.lib_app.generated.resources.filter
+import `fun`.adaptive.lib_app.generated.resources.roles
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.shared.wsContentHeader
 import `fun`.adaptive.auth.model.RoleSpec
@@ -16,7 +16,7 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.builtin.edit
+import `fun`.adaptive.ui.generated.resources.edit
 import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.editor.editor

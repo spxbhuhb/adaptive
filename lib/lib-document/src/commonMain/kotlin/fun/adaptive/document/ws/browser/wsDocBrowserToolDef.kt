@@ -1,14 +1,14 @@
 package `fun`.adaptive.document.ws.browser
 
-import `fun`.adaptive.adaptive_lib_document.generated.resources.book_3
-import `fun`.adaptive.adaptive_lib_document.generated.resources.documentation
+import `fun`.adaptive.document.generated.resources.book_3
+import `fun`.adaptive.document.generated.resources.documentation
 import `fun`.adaptive.document.app.DocWsModule
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.builtin.collapseAll
-import `fun`.adaptive.ui.builtin.expandAll
-import `fun`.adaptive.ui.builtin.unfold_less
-import `fun`.adaptive.ui.builtin.unfold_more
+import `fun`.adaptive.ui.generated.resources.collapseAll
+import `fun`.adaptive.ui.generated.resources.expandAll
+import `fun`.adaptive.ui.generated.resources.unfold_less
+import `fun`.adaptive.ui.generated.resources.unfold_more
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPaneAction

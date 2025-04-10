@@ -1,8 +1,8 @@
 package `fun`.adaptive.grove.ufd
 
-import `fun`.adaptive.auto.api.autoCollectionOrigin
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.hydration.lfm.LfmMapping
@@ -17,12 +17,12 @@ class UfdWsContext(
     override val workspace: Workspace
 ) : WsContext {
 
-    val palette = autoCollectionOrigin(
+    val palette = storeFor {
         listOf(
             LfmDescendant("aui:text", emptyInstructions, LfmMapping(dependencyMask = 0, LfmConst("T", "Text"))),
             LfmDescendant("aui:rectangle", instructionsOf(size(100.dp, 100.dp), border(colors.danger, 1.dp)))
         )
-    )
+    }
 
     companion object {
         const val PALETTE_TOOL_KEY = "grove:ufd:pane:palette"

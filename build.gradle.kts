@@ -7,7 +7,7 @@ val jsTasks = listOf(
 )
 
 val noJsBuilds = listOf(
-    "adaptive-gradle-plugin", "adaptive-kotlin-plugin", "test", "adaptive-iot-cli"
+    "core-gradle-plugin", "core-kotlin-plugin", "iot-cli"
 )
 
 val publishTasks = listOf(
@@ -15,16 +15,13 @@ val publishTasks = listOf(
 )
 
 val noPublishBuilds = listOf(
-    "adaptive-grove",
-    "adaptive-lib-cookbook",
-    "adaptive-iot-app",
-    "adaptive-iot-cli",
-    "cookbook-app-echo",
-    "grove",
-    "cookbook",
-    "sandbox",
-    "site",
-    "test"
+    "grove-app",
+    "iot-app",
+    "iot-cli",
+    "sandbox-app",
+    "sandbox-app-echo",
+    "site-app",
+    "site-lib-cookbook"
 )
 
 fun registerTask(name: String) {
@@ -57,17 +54,15 @@ fun shorthand(buildName : String, taskName : String, shorthand:String) {
     }
 }
 
-shorthand("adaptive-kotlin-plugin", "generateTests", "plugin-generate-tests")
-shorthand("adaptive-kotlin-plugin", "test", "plugin-test")
-shorthand("grove", "jsBrowserDevelopmentRun", "grove-js")
-shorthand("grove", "jvmRun", "grove-jvm")
-shorthand("adaptive-grove", "processAdaptiveResourcesCommonMain", "grove-resources")
-shorthand("sandbox", "jsBrowserDevelopmentRun", "sandbox-js")
-shorthand("sandbox", "jvmRun", "sandbox-jvm")
-shorthand("site", "jsBrowserDevelopmentRun", "site-js")
-shorthand("site", "jvmRun", "site-jvm")
-shorthand("adaptive-iot-app", "jsBrowserDevelopmentRun", "iot-js")
-shorthand("adaptive-iot-app", "jvmRun", "iot-jvm")
+shorthand("grove-app", "jsBrowserDevelopmentRun", "grove-js")
+shorthand("grove-app", "jvmRun", "grove-jvm")
+shorthand("grove-lib", "processAdaptiveResourcesCommonMain", "grove-resources")
+shorthand("sandbox-app", "jsBrowserDevelopmentRun", "sandbox-js")
+shorthand("sandbox-app", "jvmRun", "sandbox-jvm")
+shorthand("site-app", "jsBrowserDevelopmentRun", "site-js")
+shorthand("site-app", "jvmRun", "site-jvm")
+shorthand("iot-app", "jsBrowserDevelopmentRun", "iot-js")
+shorthand("iot-app", "jvmRun", "iot-jvm")
 
 // If you add a shorthand, and it does not start the jvm/js double-check the project
 // name, typically that's what's wrong.

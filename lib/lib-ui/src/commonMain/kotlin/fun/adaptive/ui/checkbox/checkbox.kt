@@ -9,7 +9,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.builtin.check
+import `fun`.adaptive.ui.generated.resources.check
 
 @Adaptive
 fun checkbox(

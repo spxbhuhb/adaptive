@@ -1,10 +1,10 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-rootProject.name = "adaptive-lib-auth"
+rootProject.name = "lib-auth"
 
 pluginManagement {
-    includeBuild("../adaptive-gradle-plugin")
+    includeBuild("../../core/core-gradle-plugin")
     repositories {
         google()
         gradlePluginPortal()
@@ -18,11 +18,11 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from(files("../gradle/libs.versions.toml"))
+            from(files("../../gradle/libs.versions.toml"))
         }
     }
 }
 
-includeBuild("../adaptive-core")
-includeBuild("../adaptive-lib-util")
-includeBuild("../adaptive-lib-value")
+includeBuild("../../core/core-core")
+includeBuild("../../lib/lib-util")
+includeBuild("../../lib/lib-value")

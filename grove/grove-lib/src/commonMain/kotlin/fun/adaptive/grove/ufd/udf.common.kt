@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.ufd
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
-import `fun`.adaptive.grove.resources.*
+import `fun`.adaptive.grove.generated.resources.*
 import `fun`.adaptive.grove.ufd.logic.UfdWsContentController
 import `fun`.adaptive.grove.ufd.model.UfdWsContentPaneData
 import `fun`.adaptive.resource.graphics.Graphics

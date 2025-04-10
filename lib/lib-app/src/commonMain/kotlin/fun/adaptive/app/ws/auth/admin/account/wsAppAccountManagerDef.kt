@@ -1,7 +1,7 @@
 package `fun`.adaptive.app.ws.auth.admin.account
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.accounts
-import `fun`.adaptive.adaptive_lib_app.generated.resources.supervised_user_circle
+import `fun`.adaptive.lib_app.generated.resources.accounts
+import `fun`.adaptive.lib_app.generated.resources.supervised_user_circle
 import `fun`.adaptive.app.ws.addAdminItem
 import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.resource.graphics.Graphics

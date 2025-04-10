@@ -1,15 +1,15 @@
 package `fun`.adaptive.ui.navigation.sidebar
 
-import `fun`.adaptive.auto.api.autoItem
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
+import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.general.Observable
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.navigation.NavState
-import `fun`.adaptive.ui.navigation.NavStateOrigin
 import `fun`.adaptive.ui.navigation.sidebar.theme.ThinSidebarTheme
 import `fun`.adaptive.ui.navigation.sidebar.theme.thinSidebarTheme
 
@@ -17,11 +17,11 @@ import `fun`.adaptive.ui.navigation.sidebar.theme.thinSidebarTheme
 @Adaptive
 fun thinSidebar(
     items: Collection<SidebarItem>,
-    navStateOrigin: NavStateOrigin,
+    navStateOrigin: Observable<NavState>,
     theme: ThinSidebarTheme = thinSidebarTheme,
     vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
-    val navState = autoItem(navStateOrigin)
+    val navState = valueFrom { navStateOrigin }
 
     column(theme.container, instructions()) {
         for (item in items.sortedBy { it.index }) {

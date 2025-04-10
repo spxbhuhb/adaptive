@@ -13,7 +13,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-lib-ui"
+val baseName = "lib-ui"
 val pomName = "Adaptive Lib UI"
 val scmPath = "spxbhuhb/adaptive"
 
@@ -21,7 +21,7 @@ adaptive {
     pluginDebug = false
     resources {
         publicAccessors = true
-        packageOfResources = "fun.adaptive.ui.builtin"
+        packageOfResources = "fun.adaptive.ui.generated.resources"
     }
 }
 
@@ -58,10 +58,9 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-            implementation(libs.adaptive.core)
+            implementation(libs.adaptive.core.core)
+            implementation(libs.adaptive.core.ui)
             implementation(libs.adaptive.grove.runtime)
-            implementation(libs.adaptive.ui)
-            implementation(libs.adaptive.lib.auto)
             implementation(libs.adaptive.lib.value)
             implementation(libs.adaptive.lib.graphics)
         }

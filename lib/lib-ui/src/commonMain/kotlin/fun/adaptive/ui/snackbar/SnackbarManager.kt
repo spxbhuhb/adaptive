@@ -9,15 +9,15 @@ class SnackbarManager : WorkerImpl<SnackbarManager> {
     override suspend fun run() {
         for (snack in pendingSnackChannel) {
 
-            while (activeSnackStore.size >= 3) {
+            while (activeSnackStore.value.size >= 3) {
                 delay(100)
             }
 
-            activeSnackStore.add(snack)
+            activeSnackStore.value += snack
 
             launch {
                 delay(3000)
-                activeSnackStore.remove { it.id == snack.id }
+                activeSnackStore.value = activeSnackStore.value.filterNot { it.id == snack.id }
             }
         }
     }

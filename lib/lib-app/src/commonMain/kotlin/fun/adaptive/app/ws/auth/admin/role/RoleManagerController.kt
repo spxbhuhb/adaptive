@@ -1,7 +1,7 @@
 package `fun`.adaptive.app.ws.auth.admin.role
 
-import `fun`.adaptive.adaptive_lib_app.generated.resources.saveFail
-import `fun`.adaptive.adaptive_lib_app.generated.resources.saveSuccess
+import `fun`.adaptive.lib_app.generated.resources.saveFail
+import `fun`.adaptive.lib_app.generated.resources.saveSuccess
 import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.auth.model.RoleSpec

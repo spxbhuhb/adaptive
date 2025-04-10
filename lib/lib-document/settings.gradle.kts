@@ -1,10 +1,10 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-rootProject.name = "adaptive-lib-document"
+rootProject.name = "lib-document"
 
 pluginManagement {
-    includeBuild("../adaptive-gradle-plugin")
+    includeBuild("../../core/core-gradle-plugin")
     repositories {
         google()
         gradlePluginPortal()
@@ -18,14 +18,14 @@ dependencyResolutionManagement {
     }
     versionCatalogs {
         create("libs") {
-            from(files("../gradle/libs.versions.toml"))
+            from(files("../../gradle/libs.versions.toml"))
         }
     }
 }
 
-includeBuild("../adaptive-core")
-includeBuild("../adaptive-ui")
-includeBuild("../adaptive-lib-ui")
-includeBuild("../adaptive-lib-value")
-includeBuild("../adaptive-lib-util")
-includeBuild("../adaptive-grove-runtime")
+includeBuild("../../core/core-core")
+includeBuild("../../core/core-ui")
+includeBuild("../../grove/grove-runtime")
+includeBuild("../../lib/lib-ui")
+includeBuild("../../lib/lib-value")
+includeBuild("../../lib/lib-util")

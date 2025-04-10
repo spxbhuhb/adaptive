@@ -1,4 +1,4 @@
-package `fun`.adaptive.cookbook.app.echo
+package `fun`.adaptive.sandbox.app.echo
 
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.ServerWorkspace
