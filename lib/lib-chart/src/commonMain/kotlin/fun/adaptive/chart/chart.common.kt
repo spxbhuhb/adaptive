@@ -1,5 +1,7 @@
 package `fun`.adaptive.chart
 
+import `fun`.adaptive.chart.generated.resources.database
+import `fun`.adaptive.chart.generated.resources.monitoring
 import `fun`.adaptive.chart.ws.logic.WsChartContentController
 import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.chart.ws.model.WsChartPaneData
@@ -8,8 +10,8 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.generated.resources.menu
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
 fun chartCommon() {

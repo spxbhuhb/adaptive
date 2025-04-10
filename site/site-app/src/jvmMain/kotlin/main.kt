@@ -5,6 +5,7 @@
 import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
 import `fun`.adaptive.app.server.BasicAppServerModule
 import `fun`.adaptive.auth.app.NoAuthServerModule
+import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.document.app.DocServerModule
@@ -20,7 +21,7 @@ fun main() {
 
     jvmServer {
         module { UtilServerModule() }
-        module { ValueServerModule("general") }
+        module { ValueServerModule("general", { publicAccess() }) }
         module { DocServerModule() }
         module { NoAuthServerModule() }
         module { KtorJvmServerModule() }

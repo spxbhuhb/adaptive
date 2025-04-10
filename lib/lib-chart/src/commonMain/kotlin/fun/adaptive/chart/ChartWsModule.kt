@@ -1,5 +1,7 @@
 package `fun`.adaptive.chart
 
+import `fun`.adaptive.chart.generated.resources.database
+import `fun`.adaptive.chart.generated.resources.monitoring
 import `fun`.adaptive.chart.ws.logic.WsChartContentController
 import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.chart.ws.model.WsChartPaneData

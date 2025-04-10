@@ -1,4 +1,4 @@
-[submodule "site/src/commonMain/adaptiveResources"]
+[submodule "site/site-app/src/commonMain/adaptiveResources"]
 	path = site/site-app/src/commonMain/adaptiveResources
 	url = https://github.com/spxbhuhb/adaptive-site-resources
 	branch = main

@@ -3,6 +3,7 @@ package `fun`.adaptive.iot.app
 import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
 import `fun`.adaptive.app.server.BasicAppServerModule
 import `fun`.adaptive.auth.app.AuthBasicServerModule
+import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
@@ -27,7 +28,7 @@ fun main() {
 
     jvmServer {
         module { UtilServerModule() }
-        module { ValueServerModule("general", FilePersistence(Path("./var/values").ensure(), 2)) }
+        module { ValueServerModule("general", { ensureLoggedIn() }, FilePersistence(Path("./var/values").ensure(), 2)) }
         module { AuthBasicServerModule() }
         module { DocServerModule() }
         module { IotServerModule() }
