@@ -3,8 +3,6 @@
  */
 package `fun`.adaptive.grove
 
-import `fun`.adaptive.email.email
-import `fun`.adaptive.exposed.inMemoryH2
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.setting.dsl.propertyFile
@@ -18,9 +16,6 @@ fun main() {
             propertyFile(optional = false) { "./etc/grove.properties" }
         }
 
-        inMemoryH2()
-
-        email()
         ktor()
     }
 
