@@ -11,5 +11,8 @@ class ZigBeeControllerSpec(
     override val serialNumber: String? = null,
     override val firmwareVersion: String? = null,
     override val hardwareVersion: String? = null,
-    override val displayAddress: String? = null
+    override val displayAddress: String? = null,
+    val networkAddress: Int? = null,
+    val ieeeAddress: String? = null,
+    val endpoints : List<ZigBeeEndpoint>
 ) : AioDeviceSpec()
