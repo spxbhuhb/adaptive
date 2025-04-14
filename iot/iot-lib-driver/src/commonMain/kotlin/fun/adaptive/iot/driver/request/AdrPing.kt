@@ -5,7 +5,7 @@ import `fun`.adaptive.value.AvValueId
 import kotlinx.datetime.Instant
 
 @Adat
-class AdrPing<T>(
+class AdrPing(
     override val timestamp: Instant,
     override val networkId: AvValueId,
     val controllerId : AvValueId,

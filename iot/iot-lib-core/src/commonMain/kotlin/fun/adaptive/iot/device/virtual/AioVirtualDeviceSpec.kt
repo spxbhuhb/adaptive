@@ -5,6 +5,7 @@ import `fun`.adaptive.iot.device.AioDeviceSpec
 
 @Adat
 class AioVirtualDeviceSpec(
+    override val enabled: Boolean = true,
     override val notes: String = "",
     override val manufacturer: String? = null,
     override val model: String? = null,

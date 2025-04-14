@@ -13,7 +13,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 open class AvValueWorker(
-    val domain : AvValueDomain,
+    val domain: AvValueDomain,
     val persistence: AbstractValuePersistence = NoPersistence(),
     val trace: Boolean = false
 ) : WorkerImpl<AvValueWorker> {
@@ -162,7 +162,10 @@ open class AvValueWorker(
         store.getMarkerValue(itemId, marker) as T?
 
     fun item(valueId: AvValueId): AvItem<*> =
-        get(valueId) as AvItem<*>
+        checkNotNull(get(valueId)) { "item $valueId not found" } as AvItem<*>
+
+    fun itemOrNull(valueId: AvValueId): AvItem<*>? =
+        get(valueId)?.let { it as AvItem<*> }
 
     fun ref(valueId: AvValueId, refMarker: AvMarker) =
         checkNotNull(refOrNull(valueId, refMarker)) { "Marker $refMarker not found for value $valueId" }
@@ -170,10 +173,10 @@ open class AvValueWorker(
     fun refOrNull(valueId: AvValueId, refMarker: AvMarker) =
         store.item(valueId).markersOrNull?.get(refMarker)
 
-    fun refValList(valueId: AvValueId, refListMarker: AvMarker) : List<AvValue> =
+    fun refValList(valueId: AvValueId, refListMarker: AvMarker): List<AvValue> =
         store.refValList(valueId, refListMarker)
 
-    inline fun <reified T : Any> refItemList(valueId: AvValueId, refListMarker: AvMarker) : List<AvItem<T>> =
+    inline fun <reified T : Any> refItemList(valueId: AvValueId, refListMarker: AvMarker): List<AvItem<T>> =
         store.refValList(valueId, refListMarker).map { it.withSpec(T::class) }
 
     // FIXME move this down into the store to avoid locking twice

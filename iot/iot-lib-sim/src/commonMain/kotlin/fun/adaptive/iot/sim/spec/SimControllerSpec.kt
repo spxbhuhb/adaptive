@@ -1,11 +1,10 @@
-package `fun`.adaptive.iot.lib.zigbee.model
+package `fun`.adaptive.iot.sim.spec
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.adat.Secret
 import `fun`.adaptive.iot.device.AioDeviceSpec
 
 @Adat
-class ZigBeeNetworkSpec(
+class SimControllerSpec(
     override val enabled: Boolean = true,
     override val notes: String = "",
     override val manufacturer: String? = null,
@@ -13,13 +12,5 @@ class ZigBeeNetworkSpec(
     override val serialNumber: String? = null,
     override val firmwareVersion: String? = null,
     override val hardwareVersion: String? = null,
-    override val displayAddress: String? = null,
-    val dongleType: String = "EMBER",
-    val channel: Int = 0,
-    val pan: Int = 0,
-    val epan: Long = 0,
-    val nwkKey: Secret = "",
-    val localEndpointId: Int = 1,
-    val maxEndpoints: Int = 0,
-    val radioTxPower: Int = 20
+    override val displayAddress: String? = null
 ) : AioDeviceSpec()

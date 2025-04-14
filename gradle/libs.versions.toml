@@ -56,6 +56,7 @@ adaptive-lib-util = { module = "fun.adaptive:lib-util", version.ref = "adaptive"
 adaptive-lib-value = { module = "fun.adaptive:lib-value", version.ref = "adaptive" }
 
 adaptive-iot-lib-core = { module = "fun.adaptive:iot-lib-core", version.ref = "adaptive" }
+adaptive-iot-lib-driver = { module = "fun.adaptive:iot-lib-driver", version.ref = "adaptive" }
 adaptive-iot-lib-zigbee = { module = "fun.adaptive:iot-lib-zigbee", version.ref = "adaptive" }
 
 adaptive-site-lib-cookbook = { module = "fun.adaptive:site-lib-cookbook", version.ref = "adaptive" }

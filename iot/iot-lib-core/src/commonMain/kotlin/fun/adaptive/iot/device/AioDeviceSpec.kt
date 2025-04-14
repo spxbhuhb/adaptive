@@ -4,6 +4,7 @@ import `fun`.adaptive.adat.AdatClass
 
 abstract class AioDeviceSpec : AdatClass {
 
+    abstract val enabled: Boolean
     abstract val notes: String
     abstract val manufacturer: String?
     abstract val model: String?
