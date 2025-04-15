@@ -1,5 +1,7 @@
 package `fun`.adaptive.iot.driver.backend
 
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.encodeToJsonString
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.iot.device.AioDeviceSpec
@@ -7,49 +9,94 @@ import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.driver.request.*
 import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.iot.point.PointMarkers
+import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
+import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.withSpec
 import kotlin.reflect.KClass
 
-class AioDriverWorker<NT : AioDeviceSpec,CT: AioDeviceSpec,PT: AioPointSpec>(
-    val plugin: AioProtocolPlugin<NT,CT,PT>,
-    val networkSpecClass : KClass<NT>,
-    val controllerSpecClass : KClass<CT>,
-    val pointSpecClass : KClass<PT>
-) : WorkerImpl<AioDriverWorker<*,*,*>> {
+class AioDriverWorker<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec>(
+    val plugin: AioProtocolPlugin<NT, CT, PT>,
+    val networkSpecClass: KClass<NT>,
+    val controllerSpecClass: KClass<CT>,
+    val pointSpecClass: KClass<PT>
+) : WorkerImpl<AioDriverWorker<*, *, *>> {
 
     val valueWorker by worker<AvValueWorker>()
 
     override suspend fun run() {
+        plugin.driverWorker = this
         plugin.valueWorker = valueWorker
+        plugin.start()
+    }
+
+    override fun unmount() {
+        plugin.stop()
+        super.unmount()
+    }
+
+    fun history(data: AdatClass, message: () -> String) {
+        logger.info { "${message()} ${data.encodeToJsonString()}" }
+    }
+
+    fun history(new: AdatClass, original : AdatClass, message: () -> String) {
+        logger.info { "${message()} new: ${new.encodeToJsonString()} original: ${original.encodeToJsonString()}" }
     }
 
     suspend fun commissionNetwork(request: AdrCommissionNetwork<*>) {
         val new = request.item.withSpec(networkSpecClass)
+
         valueWorker.execute {
             val original = queryByMarker(DeviceMarkers.NETWORK).singleOrNull()?.withSpec(networkSpecClass)
-            check(original == null || original.uuid == new.uuid) { "uuid mismatch: ${original!!.uuid} != ${new.uuid}"}
+            check(original == null || original.uuid == new.uuid) { "uuid mismatch: ${original !!.uuid} != ${new.uuid}" }
 
             plugin.commissionNetwork(this, original, new)
 
             if (original == null) {
-                logger.info { "initial network commissioning: $new" }
+                history(new) { "initial network commissioning" }
             } else {
-                logger.info { "network change: $new" }
+                history(new, original) { "network change" }
             }
         }
+
     }
 
     suspend fun commissionController(request: AdrCommissionController<*>) {
-        plugin.commissionController(request.item.withSpec(controllerSpecClass))
+        val new = request.item.withSpec(controllerSpecClass)
+
+        valueWorker.execute {
+            val original = get(new.uuid)?.withSpec(controllerSpecClass)
+
+            plugin.commissionController(this, original, new)
+
+            if (original == null) {
+                history(new) { "initial controller commissioning" }
+            } else {
+                history(new, original) { "controller change" }
+            }
+        }
+
     }
 
     suspend fun commissionPoint(request: AdrCommissionPoint<*>) {
-        plugin.commissionPoint(request.item.withSpec(pointSpecClass))
+        val new = request.item.withSpec(pointSpecClass)
+
+        valueWorker.execute {
+            val original = get(new.uuid)?.withSpec(pointSpecClass)
+
+            plugin.commissionPoint(this, original, new)
+
+            if (original == null) {
+                history(new) { "initial point commissioning" }
+            } else {
+                history(new, original) { "point change" }
+            }
+        }
+
     }
 
-    suspend fun startControllerDiscovery(request: AdrStartControllerDiscovery) {
-        TODO("Not yet implemented")
+    fun startControllerDiscovery(request: AdrStartControllerDiscovery) {
+        plugin.startControllerDiscovery(request)
     }
 
     suspend fun disable(request: AdrDisable) {
@@ -73,15 +120,18 @@ class AioDriverWorker<NT : AioDeviceSpec,CT: AioDeviceSpec,PT: AioPointSpec>(
     }
 
     suspend fun writePoint(request: AdrWritePoint<*>) {
-        TODO("Not yet implemented")
+        val (controller, point) = controllerAndPoint(request.pointId)
+        plugin.writePoint(controller, point, request.value)
     }
 
     suspend fun readPoint(request: AdrReadPoint) {
-        TODO("Not yet implemented")
+        val (controller, point) = controllerAndPoint(request.pointId)
+        plugin.readPoint(controller, point)
     }
 
     suspend fun ping(request: AdrPing) {
-        TODO("Not yet implemented")
+        val controller = valueWorker.item(request.controllerId).withSpec(controllerSpecClass)
+        plugin.ping(controller)
     }
 
     suspend fun startTrace(request: AdrStartTrace) {
@@ -89,8 +139,13 @@ class AioDriverWorker<NT : AioDeviceSpec,CT: AioDeviceSpec,PT: AioPointSpec>(
     }
 
     suspend fun stopTrace(request: AdrStopTrace) {
-        TODO("Not yet implemented")
+
     }
 
-
+    fun controllerAndPoint(pointId : AvValueId) : Pair<AvItem<CT>, AvItem<PT>> {
+        val point = valueWorker.item(pointId).withSpec(pointSpecClass)
+        val controllerId = checkNotNull(point.parentId) { "point ${point.uuid} has no parent controller" }
+        val controller = valueWorker.item(controllerId).withSpec(controllerSpecClass)
+        return controller to point
+    }
 }
