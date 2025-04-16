@@ -6,6 +6,6 @@ import `fun`.adaptive.service.ServiceApi
 @ServiceApi
 interface AioDriverApi {
 
-    suspend fun process(request: AioDriverRequest): Any
+    suspend fun process(request: AioDriverRequest)
 
 }

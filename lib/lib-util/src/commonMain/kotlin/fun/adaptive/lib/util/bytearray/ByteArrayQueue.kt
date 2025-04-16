@@ -9,6 +9,8 @@ import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlinx.io.readByteArray
+import kotlinx.io.readString
+import kotlinx.io.writeString
 
 /**
  * A file backed byte array queue:
@@ -25,16 +27,16 @@ import kotlinx.io.readByteArray
  * - all calls are thread-safe
  * - [enqueue] flushes the file before returning
  * - [dequeueOrNull] flushes dequeue position before returning
- * - Data is stored in chunk files, each named as `<uuid-7>.bin`.
+ * - Data is stored in chunk files, each named as `<uuid-7>.bin` or <uuid-7>.txt.
  * - The UUID is guaranteed to be monotonic, even if the clock shifts.
  *     - (assuming the latest chunk file is present during initialization)
  * - The dequeue position can be persisted with [persistDequeue] = `true`
- *     - dequeue position file is named `dequeue.bin`
+ *     - dequeue position file is named `dequeue.txt`
  *
  * Chunk file is a sequence of records. Record structure:
  *
  * - barrier (if not empty)
- * - length (4 bytes)
+ * - length (4 or 10 bytes)
  * - data
  *
  * The barrier can be used to aid recovery, theoretically it is not necessary.
@@ -48,6 +50,9 @@ import kotlinx.io.readByteArray
  * @property  chunkSizeLimit  Maximum size of one queue chunk file in bytes.
  * @property  barrier         A byte array to put between entries, may be empty.
  * @property  persistDequeue  When true, [dequeueOrNull] persists the dequeue position in a file.
+ * @property  textual         When true, the queue stores the entry sizes as text (hexadecimal). Useful for
+ *                            queues that can be viewed/edited with a text editor, assuming the barrier is
+ *                            a new line.
  * @property  initialize      When true, [initialize] is called automatically by class `init`.
  */
 class ByteArrayQueue(
@@ -55,11 +60,12 @@ class ByteArrayQueue(
     val chunkSizeLimit: Long,
     val barrier: ByteArray,
     val persistDequeue: Boolean = false,
+    val textual : Boolean = false,
     initialize: Boolean = true
 ) {
 
     companion object {
-        const val DEQUEUE_NAME = "dequeue.bin"
+        const val DEQUEUE_NAME = "dequeue.txt"
     }
 
     private var lock = getLock()
@@ -85,6 +91,10 @@ class ByteArrayQueue(
 
     private var peekData: ByteArray? = null
 
+    val sizeSize : Int = if (textual) 10 else 4
+
+    val extension = if (textual) "txt" else "bin"
+
     val isInitialized: Boolean
         get() = lock.use { initialized }
 
@@ -98,7 +108,7 @@ class ByteArrayQueue(
         check(initialized) { "byte array queue is not initialized yet at $path" }
     }
 
-    fun chunkFileName(uuid: UUID<*>) = "$uuid.bin"
+    fun chunkFileName(uuid: UUID<*>) = "$uuid.$extension"
 
     val String.asChunkId
         get() = UUID<Any>(this.substringBeforeLast('.'))
@@ -114,7 +124,7 @@ class ByteArrayQueue(
             path.ensure()
             path.list().forEach {
                 val name = it.name
-                if (name.startsWith(".") || ! name.endsWith(".bin") || name == DEQUEUE_NAME) return@forEach
+                if (name.startsWith(".") || ! name.endsWith(".$extension") || name == DEQUEUE_NAME) return@forEach
                 chunkIds += name.asChunkId
             }
             chunkIds.sort()
@@ -131,6 +141,7 @@ class ByteArrayQueue(
         }
     }
 
+    @OptIn(ExperimentalStdlibApi::class)
     fun enqueue(data: ByteArray) {
         lock.use {
             ensureInitialized()
@@ -139,12 +150,16 @@ class ByteArrayQueue(
 
             checkNotNull(enqueueChunk).apply {
                 write(barrier)
-                writeInt(data.size)
+                if (textual) {
+                    writeString(data.size.toHexString(HexFormat.Default).padStart(8,'0') + "  ")
+                } else {
+                    writeInt(data.size)
+                }
                 write(data)
                 flush()
             }
 
-            enqueuePosition += data.size + barrierSize + 4
+            enqueuePosition += data.size + barrierSize + sizeSize
             notificationQueue.trySend(true)
         }
     }
@@ -223,7 +238,11 @@ class ByteArrayQueue(
         if (dequeuePosition >= dequeueEnd) return null
 
         val barrier = chunk.readByteArray(barrierSize)
-        val size = chunk.readInt()
+        val size = if (textual) {
+            chunk.readString(sizeSize.toLong()).trim().toInt(16)
+        } else {
+            chunk.readInt()
+        }
         peekData = chunk.readByteArray(size)
 
         check(barrier.withIndex().all { it.value == barrier[it.index] }) { "invalid queue barrier at position $dequeuePosition in file ${path.resolve(chunkFileName(dequeueId !!))}" }
@@ -234,7 +253,7 @@ class ByteArrayQueue(
     private fun unSafeConsume(): ByteArray {
         val safePeekData = checkNotNull(peekData)
 
-        dequeuePosition += barrierSize + 4L + safePeekData.size
+        dequeuePosition += barrierSize + sizeSize + safePeekData.size
 
         if (persistDequeue) {
             dequeuePath.write("$dequeueId;$dequeuePosition", overwrite = true, useTemporaryFile = true)

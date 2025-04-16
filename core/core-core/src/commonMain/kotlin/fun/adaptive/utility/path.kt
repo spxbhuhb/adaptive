@@ -313,11 +313,11 @@ val testPath = Path("./build/adaptive/test/${GlobalRuntimeContext.platform.name}
  */
 @CallSiteName
 @OptIn(DangerousApi::class) // this is fine, confined into testPath
-fun clearedTestPath(callSiteName: String = "unknown"): Path {
+fun clearedTestPath(callSiteName: String = "unknown", vararg scope : String): Path {
 
     check(".." !in callSiteName) { "'..' is not allowed in the path: $callSiteName" }
 
-    val testDir = Path(testPath, callSiteName.removeSuffix(".<anonymous>"))
+    val testDir = Path(testPath, callSiteName.removeSuffix(".<anonymous>")).resolve(*scope)
 
     if (testDir.exists()) {
         testDir.deleteRecursively()

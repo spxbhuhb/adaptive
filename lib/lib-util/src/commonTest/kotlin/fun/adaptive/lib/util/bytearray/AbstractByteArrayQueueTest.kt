@@ -8,26 +8,31 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withTimeoutOrNull
 import kotlin.test.*
 
-class ByteArrayQueueTest {
+abstract class AbstractByteArrayQueueTest(
+    val textual : Boolean
+) {
 
+    val pathScope = arrayOf(if (textual) "textual" else "binary")
+    
     @Test
     fun testInitializationWithoutBarrier() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
         assertTrue(queue.isInitialized)
     }
 
     @Test
     fun testInitializationWithBarrier() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(1, 2, 3))
+        val testPath = clearedTestPath(scope = pathScope)
+        val barrier = if (textual) byteArrayOf(0x0A) else byteArrayOf(1, 2, 3)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = barrier, textual = textual)
         assertTrue(queue.isInitialized)
     }
 
     @Test
     fun testEnqueueDequeueWithoutBarrier() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
         val data = "Hello, World!".encodeToByteArray()
 
         queue.enqueue(data)
@@ -40,9 +45,9 @@ class ByteArrayQueueTest {
 
     @Test
     fun testEnqueueDequeueWithBarrier() {
-        val testPath = clearedTestPath()
-        val barrier = byteArrayOf(1, 2, 3)
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = barrier)
+        val testPath = clearedTestPath(scope = pathScope)
+        val barrier = if (textual) byteArrayOf(0x0A) else byteArrayOf(1, 2, 3)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = barrier, textual = textual)
         val data = "Barrier Test".encodeToByteArray()
 
         queue.enqueue(data)
@@ -55,16 +60,16 @@ class ByteArrayQueueTest {
 
     @Test
     fun testEmptyQueueDequeueReturnsNull() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
         assertTrue(queue.isEmpty)
         assertNull(queue.dequeueOrNull())
     }
 
     @Test
     fun testChunkRollingWithoutBarrier() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 10, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 10, barrier = byteArrayOf(), textual = textual)
 
         queue.enqueue("12345".encodeToByteArray())
         queue.enqueue("67890".encodeToByteArray())
@@ -76,8 +81,9 @@ class ByteArrayQueueTest {
 
     @Test
     fun testChunkRollingWithBarrier() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 10, barrier = byteArrayOf(1, 2, 3))
+        val testPath = clearedTestPath(scope = pathScope)
+        val barrier = if (textual) byteArrayOf(0x0A) else byteArrayOf(1, 2, 3)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 10, barrier = barrier, textual = textual)
 
         queue.enqueue("12345".encodeToByteArray())
         queue.enqueue("67890".encodeToByteArray())
@@ -89,8 +95,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testPersistentDequeuePosition() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), persistDequeue = true)
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), persistDequeue = true, textual = textual)
         val data = "PersistentData".encodeToByteArray()
         queue.enqueue(data)
 
@@ -104,8 +110,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testDequeueOrderWithoutBarrier() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
         val first = "First".encodeToByteArray()
         val second = "Second".encodeToByteArray()
 
@@ -118,9 +124,9 @@ class ByteArrayQueueTest {
 
     @Test
     fun testDequeueOrderWithBarrier() {
-        val testPath = clearedTestPath()
-        val barrier = byteArrayOf(1, 2, 3, 4)
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = barrier)
+        val testPath = clearedTestPath(scope = pathScope)
+        val barrier = if (textual) byteArrayOf(0x0A) else byteArrayOf(1, 2, 3, 4)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = barrier, textual = textual)
         val first = "First".encodeToByteArray()
         val second = "Second".encodeToByteArray()
 
@@ -133,8 +139,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testQueueIntegrityAfterMultipleOperations() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
 
         queue.enqueue("Data1".encodeToByteArray())
         queue.dequeueOrNull()
@@ -148,8 +154,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testInvalidDequeuePositionThrows() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
 
         val exception = assertFailsWith<IllegalArgumentException> {
             queue.position(UUID(), 0L)
@@ -160,8 +166,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testDequeueWithTimeout() = runTest {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
         val data = "Timeout Test".encodeToByteArray()
 
         queue.enqueue(data)
@@ -173,8 +179,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testDequeueWithTimeoutNoData() = runTest {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
 
         val dequeued = withTimeoutOrNull(100) { queue.dequeue() }
 
@@ -183,8 +189,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testDequeueMultipleItems() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
 
         val first = "First Item".encodeToByteArray()
         val second = "Second Item".encodeToByteArray()
@@ -202,8 +208,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testDequeueAfterEnd() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
 
         val data = "End Test".encodeToByteArray()
         queue.enqueue(data)
@@ -214,8 +220,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testPeekReturnsNextItemWithoutRemoving() = runTest {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
         val data = "Peek Test".encodeToByteArray()
 
         queue.enqueue(data)
@@ -225,8 +231,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testPeekOrNullReturnsNextItemOrNull() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
         val data = "PeekOrNull Test".encodeToByteArray()
 
         assertNull(queue.peekOrNull()) // Ensure null is returned when empty
@@ -238,8 +244,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testConsumePeekRemovesPeekedItem() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
         val data = "ConsumePeek Test".encodeToByteArray()
 
         queue.enqueue(data)
@@ -251,8 +257,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testMultiEnqueueDequeuePeek() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
 
         val first = "First Message".encodeToByteArray()
         val second = "Second Message".encodeToByteArray()
@@ -290,8 +296,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testInterleavedEnqueueDequeuePeek() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
 
         val data1 = "Data1".encodeToByteArray()
         val data2 = "Data2".encodeToByteArray()
@@ -314,8 +320,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testMultiplePeeksWithoutDequeue() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 1024, barrier = byteArrayOf(), textual = textual)
 
         val data1 = "DataA".encodeToByteArray()
         val data2 = "DataB".encodeToByteArray()
@@ -335,8 +341,8 @@ class ByteArrayQueueTest {
 
     @Test
     fun testChunkRollingWithMultipleOperations() {
-        val testPath = clearedTestPath()
-        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 20, barrier = byteArrayOf())
+        val testPath = clearedTestPath(scope = pathScope)
+        val queue = ByteArrayQueue(testPath, chunkSizeLimit = 20, barrier = byteArrayOf(), textual = textual)
 
         val data1 = "Chunk1".encodeToByteArray()
         val data2 = "Chunk2".encodeToByteArray()

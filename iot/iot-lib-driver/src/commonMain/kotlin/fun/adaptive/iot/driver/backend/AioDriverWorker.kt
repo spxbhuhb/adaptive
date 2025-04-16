@@ -9,20 +9,31 @@ import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.driver.request.*
 import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.iot.point.PointMarkers
+import `fun`.adaptive.lib.util.bytearray.ByteArrayQueue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.withSpec
+import kotlinx.io.files.Path
 import kotlin.reflect.KClass
 
 class AioDriverWorker<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec>(
     val plugin: AioProtocolPlugin<NT, CT, PT>,
+    announcementQueuePath: Path,
     val networkSpecClass: KClass<NT>,
     val controllerSpecClass: KClass<CT>,
     val pointSpecClass: KClass<PT>
 ) : WorkerImpl<AioDriverWorker<*, *, *>> {
 
     val valueWorker by worker<AvValueWorker>()
+
+    val announcementQueue = ByteArrayQueue(
+        announcementQueuePath,
+        chunkSizeLimit = 1024*1024,
+        barrier = byteArrayOf(0x0A),
+        persistDequeue = true,
+        textual = true
+    )
 
     override suspend fun run() {
         plugin.driverWorker = this

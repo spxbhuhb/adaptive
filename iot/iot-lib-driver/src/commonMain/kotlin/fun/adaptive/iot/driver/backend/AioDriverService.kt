@@ -2,6 +2,7 @@ package `fun`.adaptive.iot.driver.backend
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.query.firstImpl
+import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.driver.api.AioDriverApi
 import `fun`.adaptive.iot.driver.request.AdrCommissionController
 import `fun`.adaptive.iot.driver.request.AdrCommissionNetwork
@@ -15,8 +16,9 @@ import `fun`.adaptive.iot.driver.request.AdrStartTrace
 import `fun`.adaptive.iot.driver.request.AdrStopTrace
 import `fun`.adaptive.iot.driver.request.AdrWritePoint
 import `fun`.adaptive.iot.driver.request.AioDriverRequest
+import `fun`.adaptive.iot.point.AioPointSpec
 
-class AioDriverService<T> : ServiceImpl<AioDriverService<*>>, AioDriverApi {
+class AioDriverService<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec> : ServiceImpl<AioDriverService<NT,CT,PT>>, AioDriverApi {
 
     companion object {
         lateinit var worker : AioDriverWorker<*,*,*>
@@ -26,7 +28,7 @@ class AioDriverService<T> : ServiceImpl<AioDriverService<*>>, AioDriverApi {
         worker = safeAdapter.firstImpl<AioDriverWorker<*,*,*>>()
     }
 
-    override suspend fun process(request: AioDriverRequest): Any =
+    override suspend fun process(request: AioDriverRequest) =
         when (request) {
             is AdrWritePoint<*> -> worker.writePoint(request)
             is AdrReadPoint -> worker.readPoint(request)

@@ -1,9 +1,9 @@
 package `fun`.adaptive.iot.sim.driver
 
-import `fun`.adaptive.foundation.query.first
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.iot.driver.backend.AioDriverWorker
 import `fun`.adaptive.iot.driver.backend.AioProtocolPlugin
+import `fun`.adaptive.iot.driver.backend.protocol.FifoProtocolWorker
 import `fun`.adaptive.iot.driver.request.AdrStartControllerDiscovery
 import `fun`.adaptive.iot.sim.spec.SimControllerSpec
 import `fun`.adaptive.iot.sim.spec.SimNetworkSpec
@@ -17,10 +17,10 @@ class SimProtocolPlugin : AioProtocolPlugin<SimNetworkSpec, SimControllerSpec, S
     override lateinit var driverWorker: AioDriverWorker<SimNetworkSpec, SimControllerSpec, SimPointSpec>
     override lateinit var valueWorker: AvValueWorker
 
-    lateinit var simWorker: SimProtocolWorker
+    lateinit var simWorker: FifoProtocolWorker<SimNetworkSpec, SimControllerSpec, SimPointSpec>
 
     override fun start() {
-        simWorker = driverWorker.safeAdapter.firstImpl<SimProtocolWorker>()
+        simWorker = driverWorker.safeAdapter.firstImpl<FifoProtocolWorker<SimNetworkSpec, SimControllerSpec, SimPointSpec>>()
     }
 
     override fun commissionNetwork(cc: AvComputeContext, original: AvItem<SimNetworkSpec>?, new: AvItem<SimNetworkSpec>) {

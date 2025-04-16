@@ -104,7 +104,7 @@ class UUID<T> : Comparable<UUID<T>> {
 
             val lastTimestamp = lastId.msb ushr 16
 
-            val adjustedMsb = ((lastTimestamp + 1) shl 16) or newUuid.msb and 0xFFFF
+            val adjustedMsb = ((lastTimestamp + 1) shl 16) or (newUuid.msb and 0xFFFF)
 
             return UUID<T>(adjustedMsb, newUuid.lsb)
         }
