@@ -5,6 +5,8 @@ package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
 import `fun`.adaptive.kotlin.common.property
+import `fun`.adaptive.kotlin.foundation.ClassIds
+import `fun`.adaptive.kotlin.foundation.FqNames
 import `fun`.adaptive.kotlin.foundation.Indices
 import `fun`.adaptive.kotlin.foundation.Names
 import `fun`.adaptive.kotlin.foundation.Strings
@@ -19,13 +21,18 @@ import org.jetbrains.kotlin.ir.declarations.IrDeclarationParent
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
+import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionReferenceImplWithShape
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
+import org.jetbrains.kotlin.ir.util.hasAnnotation
+import org.jetbrains.kotlin.ir.util.isKFunction
 import org.jetbrains.kotlin.ir.util.parents
+import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
+import kotlin.math.exp
 
 @OptIn(UnsafeDuringIrConstructionAPI::class)
 class StateAccessTransform(
@@ -195,6 +202,24 @@ class StateAccessTransform(
 
         return transformed
     }
+
+    override fun visitFunctionReference(expression: IrFunctionReference): IrExpression {
+        val target = expression.reflectionTarget ?: return super.visitFunctionReference(expression)
+        if (! target.owner.hasAnnotation(ClassIds.ADAPTIVE)) return super.visitFunctionReference(expression)
+
+        return IrFunctionReferenceImplWithShape(
+            expression.startOffset,
+            expression.endOffset,
+            pluginContext.kFunctionAdaptiveReferenceType,
+            expression.symbol,
+            typeArgumentsCount = 0,
+            valueArgumentsCount = 2,
+            contextParameterCount = 0,
+            hasDispatchReceiver = false,
+            hasExtensionReceiver = false
+        )
+    }
+
 //
 //    fun debugParents(label: String, declaration: IrDeclaration) {
 //        pluginContext.debug(label) {
