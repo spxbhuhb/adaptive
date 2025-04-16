@@ -47,11 +47,11 @@ class AioDriverWorker<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec>
     }
 
     fun history(data: AdatClass, message: () -> String) {
-        logger.info { "${message()} ${data.encodeToJsonString()}" }
+        logger.info { "${message()}, ${data.encodeToJsonString()}" }
     }
 
     fun history(new: AdatClass, original : AdatClass, message: () -> String) {
-        logger.info { "${message()} new: ${new.encodeToJsonString()} original: ${original.encodeToJsonString()}" }
+        logger.info { "${message()}, new: ${new.encodeToJsonString()} original: ${original.encodeToJsonString()}" }
     }
 
     suspend fun commissionNetwork(request: AdrCommissionNetwork<*>) {
@@ -76,6 +76,10 @@ class AioDriverWorker<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec>
         val new = request.item.withSpec(controllerSpecClass)
 
         valueWorker.execute {
+            val network = queryByMarker(DeviceMarkers.NETWORK).singleOrNull()
+            checkNotNull(network) { "no network is commissioned yet" }
+            require(new.parentId == network.uuid) { "uuid mismatch: ${network.uuid} (network) != ${new.uuid} (controller)" }
+
             val original = get(new.uuid)?.withSpec(controllerSpecClass)
 
             plugin.commissionController(this, original, new)

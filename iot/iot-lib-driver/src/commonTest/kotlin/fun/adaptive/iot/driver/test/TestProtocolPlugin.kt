@@ -5,6 +5,7 @@ import `fun`.adaptive.iot.driver.backend.AioDriverWorker
 import `fun`.adaptive.iot.driver.backend.AioProtocolPlugin
 import `fun`.adaptive.iot.driver.backend.protocol.FifoProtocolWorker
 import `fun`.adaptive.iot.driver.request.AdrStartControllerDiscovery
+import `fun`.adaptive.iot.driver.test.task.CommissionController
 import `fun`.adaptive.iot.driver.test.task.CommissionNetwork
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
@@ -28,6 +29,7 @@ class TestProtocolPlugin : AioProtocolPlugin<TestNetworkSpec, TestControllerSpec
 
     override fun commissionController(cc: AvComputeContext, original: AvItem<TestControllerSpec>?, new: AvItem<TestControllerSpec>) {
         cc += new
+        protocolWorker += CommissionController(new)
     }
 
     override fun commissionPoint(cc: AvComputeContext, original: AvItem<TestPointSpec>?, new: AvItem<TestPointSpec>) {

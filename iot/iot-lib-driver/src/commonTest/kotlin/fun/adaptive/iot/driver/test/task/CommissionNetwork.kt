@@ -3,9 +3,9 @@ package `fun`.adaptive.iot.driver.test.task
 import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.driver.announcement.AdaNetworkCommissioned
 import `fun`.adaptive.iot.driver.backend.protocol.AbstractProtocolWorker
-import `fun`.adaptive.iot.driver.backend.task.DriverCommTask
 import `fun`.adaptive.iot.driver.backend.task.DriverTask
 import `fun`.adaptive.iot.point.AioPointSpec
+import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.item.AvItem
 import kotlinx.coroutines.channels.Channel
 
@@ -27,7 +27,7 @@ class CommissionNetwork<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpe
 
         worker.networkOrNull = item
 
-        worker += AdaNetworkCommissioned(item.uuid, item)
+        worker += AdaNetworkCommissioned(uuid7(), item.uuid, item)
 
     }
 
