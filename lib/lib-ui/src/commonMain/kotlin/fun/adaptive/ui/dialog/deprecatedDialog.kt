@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.generated.resources.close
 import `fun`.adaptive.ui.instruction.event.OnClose
 
 @Adaptive
-fun dialog(
+fun deprecatedDialog(
     title: String,
     theme: DialogTheme = DialogTheme.default,
     @Adaptive _fixme_adaptive_content: () -> Unit

@@ -124,14 +124,18 @@ abstract class AbstractPopup<RT, CRT : RT>(
             }
 
             CONTENT_INDEX -> {
-                if (fragment.haveToPatch(closureDirtyMask, 1 shl 1)) {
-                    fragment.setStateVariable(index = 1, value = ::hide)
+                if (closureDirtyMask != 0) {
+                    patchContent(fragment)
                     getOverlay()?.scheduleUpdate()
                 }
             }
 
             else -> invalidIndex(index)
         }
+    }
+
+    open fun patchContent(fragment: AdaptiveFragment) {
+        fragment.setStateVariable(index = 1, value = ::hide)
     }
 
     open fun show() {

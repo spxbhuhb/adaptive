@@ -30,7 +30,7 @@ fun textDialog(
     text(label, instructions()) .. onClick { modalOpen = true }
 
     if (modalOpen) {
-        dialog(title) {
+        deprecatedDialog(title) {
             onClose { modalOpen = false }
             _fixme_adaptive_content { modalOpen = false }
         }

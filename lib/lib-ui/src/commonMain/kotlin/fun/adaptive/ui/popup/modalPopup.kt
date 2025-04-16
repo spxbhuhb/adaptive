@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.popup
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.wrap.wrapFromBottom
 import `fun`.adaptive.ui.wrap.wrapFromTop
@@ -16,7 +17,7 @@ fun modalPopup(
     _fixme_content : () -> Unit
 ) {
 
-    column {
+    column(instructions()) {
         theme.modalContainer
 
         wrapFromTop(theme.modalTitleHeight, { modalPopupTitle(title, theme, hide) }) {

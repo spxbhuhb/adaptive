@@ -18,7 +18,7 @@ fun formDialog(title: String, data: AdatClass): AdaptiveFragment {
 
     val onClose = fragment().instructions.firstInstanceOfOrNull<OnClose>()
 
-    dialog(title) {
+    deprecatedDialog(title) {
         instructions()
 
         column {

@@ -37,7 +37,7 @@ fun rowIconDialog(
     actionIcon(icon, theme = theme) .. onClick { modalOpen = true; feedback?.invoke(true) } .. instructions()
 
     if (modalOpen) {
-        dialog(title) {
+        deprecatedDialog(title) {
             onClose { modalOpen = false; feedback?.invoke(false) }
             _fixme_adaptive_content { modalOpen = false; feedback?.invoke(false) }
         }
