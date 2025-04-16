@@ -82,6 +82,8 @@ kotlin {
                 implementation(libs.adaptive.lib.value)
 
                 implementation(libs.adaptive.iot.lib.core)
+                implementation(libs.adaptive.iot.lib.node)
+                implementation(libs.adaptive.iot.lib.sim)
                 implementation(libs.adaptive.iot.lib.zigbee)
 
             }

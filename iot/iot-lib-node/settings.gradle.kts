@@ -1,10 +1,15 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
-rootProject.name = "iot-app"
+rootProject.name = "iot-lib-node"
 
 pluginManagement {
     includeBuild("../../core/core-gradle-plugin")
+    repositories {
+        google()
+        gradlePluginPortal()
+        mavenCentral()
+    }
 }
 
 dependencyResolutionManagement {
@@ -19,21 +24,10 @@ dependencyResolutionManagement {
 }
 
 includeBuild("../../core/core-core")
-includeBuild("../../core/core-ui")
 
-includeBuild("../../grove/grove-runtime")
-
-includeBuild("../../lib/lib-app")
 includeBuild("../../lib/lib-ktor")
-includeBuild("../../lib/lib-auth")
-includeBuild("../../lib/lib-graphics")
-includeBuild("../../lib/lib-document")
-includeBuild("../../lib/lib-ui")
 includeBuild("../../lib/lib-util")
-includeBuild("../../lib/lib-chart")
 includeBuild("../../lib/lib-value")
 
 includeBuild("../../iot/iot-lib-core")
-includeBuild("../../iot/iot-lib-node")
-includeBuild("../../iot/iot-lib-sim")
-includeBuild("../../iot/iot-lib-zigbee")
+includeBuild("../../iot/iot-lib-driver")

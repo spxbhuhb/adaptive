@@ -13,7 +13,9 @@ import `fun`.adaptive.chart.ChartWsModule
 import `fun`.adaptive.document.app.DocWsModule
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.iot.app.IotWsModule
-import `fun`.adaptive.iot.lib.zigbee.ZigbeeModule
+import `fun`.adaptive.iot.lib.zigbee.app.ZigbeeDriverWsModule
+import `fun`.adaptive.iot.node.app.NodeDriverWsModule
+import `fun`.adaptive.iot.sim.app.SimDriverWsModule
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.value.app.ValueClientModule
 
@@ -26,7 +28,9 @@ fun main() {
         module { ChartWsModule() }
         module { DocWsModule() }
         module { IotWsModule() }
-        module { ZigbeeModule() }
+        module { SimDriverWsModule() }
+        module { NodeDriverWsModule() }
+        module { ZigbeeDriverWsModule() }
         module { AppAdminWsModule() }
         module { AppInspectWsModule() }
         module { AppMainWsModule() }
