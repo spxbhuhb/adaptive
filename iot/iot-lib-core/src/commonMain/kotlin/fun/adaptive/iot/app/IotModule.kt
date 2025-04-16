@@ -40,7 +40,7 @@ open class IotModule<WT : AbstractWorkspace> : AppModule<WT>() {
     }
 
     operator fun plusAssign(driverDef: AioDriverDef) {
-        driverDefs += driverDefs
+        driverDefs += driverDef
     }
 
     companion object {

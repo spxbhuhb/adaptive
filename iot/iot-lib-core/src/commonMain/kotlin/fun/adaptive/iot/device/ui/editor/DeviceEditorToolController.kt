@@ -1,11 +1,12 @@
 package `fun`.adaptive.iot.device.ui.editor
 
-import `fun`.adaptive.iot.generated.resources.humidity
-import `fun`.adaptive.iot.generated.resources.temperature
+import `fun`.adaptive.iot.app.IotModule.Companion.iotModule
 import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.device.ui.AbstractDeviceToolController
 import `fun`.adaptive.iot.device.ui.DeviceTreeModel
 import `fun`.adaptive.iot.device.virtual.AioVirtualDeviceSpec
+import `fun`.adaptive.iot.generated.resources.humidity
+import `fun`.adaptive.iot.generated.resources.temperature
 import `fun`.adaptive.iot.haystack.PhScienceMarkers
 import `fun`.adaptive.iot.point.AioPointApi
 import `fun`.adaptive.iot.point.PointMarkers
@@ -61,5 +62,8 @@ class DeviceEditorToolController(
     fun moveDown(item: AvValueId) {
         io { deviceService.moveDown(item) }
     }
+
+    fun driversDefs() =
+        workspace.application.iotModule.driverDefs
 
 }

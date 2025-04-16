@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.device.ui.DeviceTreeModel
+import `fun`.adaptive.iot.device.ui.editor.dialogs.addNetworkDialog
 import `fun`.adaptive.iot.generated.resources.*
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -19,6 +20,7 @@ import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.menu.MenuItemBase
 import `fun`.adaptive.ui.menu.MenuSeparator
 import `fun`.adaptive.ui.menu.contextMenu
+import `fun`.adaptive.ui.popup.wsDialog
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.model.WsPane
@@ -42,7 +44,6 @@ internal fun apply(controller: DeviceEditorToolController, menuItem: MenuItem<Ai
 
     val (name, marker, virtual) = when (menuItem.data) {
         AioDeviceEditOperation.AddComputer -> Triple(Strings.computer, DeviceMarkers.COMPUTER, false)
-        AioDeviceEditOperation.AddNetwork -> Triple(Strings.network, DeviceMarkers.NETWORK, false)
         AioDeviceEditOperation.AddController -> Triple(Strings.controller, DeviceMarkers.CONTROLLER, false)
         AioDeviceEditOperation.AddDevice -> Triple(Strings.device, DeviceMarkers.DEVICE, false)
         AioDeviceEditOperation.AddVirtualNetwork -> Triple(Strings.virtualNetwork, DeviceMarkers.NETWORK, true)
@@ -52,6 +53,11 @@ internal fun apply(controller: DeviceEditorToolController, menuItem: MenuItem<Ai
 
     if (name != null && marker != null && virtual != null) {
         controller.addDevice(name, marker, treeItem?.data, virtual)
+        return
+    }
+
+    if (menuItem.data == AioDeviceEditOperation.AddNetwork) {
+        wsDialog(controller, controller, ::addNetworkDialog)
         return
     }
 
