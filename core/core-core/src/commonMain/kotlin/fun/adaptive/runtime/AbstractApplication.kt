@@ -13,4 +13,6 @@ abstract class AbstractApplication<WT : AbstractWorkspace> {
 
     inline fun <reified T> firstContext() = workspace.contexts.firstInstance<T>()
 
+    inline fun <reified T> firstModule() = modules.firstInstance<T>()
+
 }

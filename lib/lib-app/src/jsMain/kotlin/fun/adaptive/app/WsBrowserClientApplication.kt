@@ -1,6 +1,7 @@
 package `fun`.adaptive.app
 
 import `fun`.adaptive.app.ws.wsAppMain
+import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.workspace.Workspace
@@ -22,12 +23,19 @@ open class WsBrowserClientApplication(
     override fun buildWorkspace() {
 
         workspace = Workspace(backend)
+        workspace.applicationOrNull = this
 
         workspaceInit(workspace)
 
         workspace.updateSplits()
 
     }
+
+    override fun frontendAdapterInit(adapter: AdaptiveAdapter) {
+        workspace.frontendOrNull = adapter
+        super.frontendAdapterInit(adapter)
+    }
+
 
     companion object {
         fun wsBrowserClient(start: Boolean = true, buildFun: WsBrowserClientBuilder.() -> Unit) {

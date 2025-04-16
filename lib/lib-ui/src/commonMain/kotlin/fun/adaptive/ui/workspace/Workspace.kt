@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.workspace
 
 import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.value.storeFor
@@ -11,11 +12,12 @@ import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.generated.resources.executionError
 import `fun`.adaptive.ui.generated.resources.menu
-import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
@@ -43,6 +45,16 @@ open class Workspace(
     }
 
     val logger = getLogger("workspace")
+
+    val application: AbstractApplication<*>
+        get() = checkNotNull(applicationOrNull)
+
+    var applicationOrNull: AbstractApplication<*>? = null
+
+    val frontend: AdaptiveAdapter
+        get() = checkNotNull(frontendOrNull)
+
+    var frontendOrNull: AdaptiveAdapter? = null
 
     val contentPaneBuilders = mutableMapOf<NamedItemType, MutableList<WsContentPaneBuilder>>()
 

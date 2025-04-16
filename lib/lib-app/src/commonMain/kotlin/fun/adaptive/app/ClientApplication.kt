@@ -47,7 +47,7 @@ abstract class ClientApplication<WT : ClientWorkspace> : AbstractApplication<WT>
         modules.forEach { it.backendAdapterInit(adapter) }
     }
 
-    fun frontendAdapterInit(adapter: AdaptiveAdapter) {
+    open fun frontendAdapterInit(adapter: AdaptiveAdapter) {
         modules.forEach { it.frontendAdapterInit(adapter) }
     }
 
