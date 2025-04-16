@@ -62,7 +62,7 @@ class InputTheme : AbstractTheme() {
 
     val textAreaFocused = instructionsOf(
         paddingTop { 5.dp },
-        paddingLeft { 7.dp }
+        paddingLeft { 6.dp }
     )
 
     val textAreaNonFocused = instructionsOf(
