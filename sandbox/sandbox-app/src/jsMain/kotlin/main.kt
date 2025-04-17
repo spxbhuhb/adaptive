@@ -8,27 +8,23 @@ import `fun`.adaptive.app.ws.WsSandBoxModule
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.chart.ChartWsModule
 import `fun`.adaptive.document.app.DocWsModule
-import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.someForm
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
-import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.maxSize
+import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.generated.resources.folder
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.tree.TreeViewModel
-import `fun`.adaptive.ui.tree.TreeViewModel.Companion.defaultSelectedFun
-import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.value.app.ValueClientModule
 import kotlinx.coroutines.CoroutineScope
@@ -109,7 +105,7 @@ fun sandboxMain() {
 //            }
             box {
                 maxSize .. padding { 16.dp } .. backgrounds.friendlyOpaque
-                someForm()
+                //editSomeData()
             }
         }
     }
