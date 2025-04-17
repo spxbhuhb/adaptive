@@ -40,8 +40,6 @@ fun textInput2(
     val observed = valueFrom { viewBackend }
     val focus = focus()
 
-    println("textInput2: ${observed.inputValue} ${observed.isInvalid}")
-
     decoratedInput(focus, observed) {
         singleLineTextInput(value = observed.inputValue, onChange = { v -> observed.inputValue = v }) ..
             observed.themeInstructions(focus) ..

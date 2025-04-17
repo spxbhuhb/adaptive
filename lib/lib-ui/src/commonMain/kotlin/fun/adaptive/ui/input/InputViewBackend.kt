@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.input
 
 import `fun`.adaptive.general.SelfObservable
+import `fun`.adaptive.ui.form.FormViewBackend
 import `fun`.adaptive.ui.instruction.input.Secret
 import `fun`.adaptive.ui.label.LabelTheme
 import kotlin.properties.Delegates.observable
@@ -72,6 +73,9 @@ class InputViewBackend<T>(
     var inputTheme = InputTheme.DEFAULT
     var labelTheme = LabelTheme.DEFAULT
 
+    var formBackend: FormViewBackend? = null
+    var path: List<String> = emptyList()
+
     val isInvalid: Boolean
         get() = isInConstraintError || isInConversionError
 
@@ -81,7 +85,6 @@ class InputViewBackend<T>(
             isInvalid && isTouched -> if (focus) inputTheme.invalidFocused else inputTheme.invalidNotFocused
             else -> if (focus) inputTheme.focused else inputTheme.enabled
         }.let {
-            if (isSecret) println("invalid : $isInvalid $isInConstraintError")
             if (isSecret) it + Secret() else it
         }
 
@@ -97,12 +100,16 @@ class InputViewBackend<T>(
     }
 
     override fun <PT> notify(property: KProperty<*>, oldValue: PT, newValue: PT) {
-        isTouched = true
 
         if (property.name == ::inputValue.name) {
+            isTouched = true
+
             val valid = validateFun?.invoke(inputValue) ?: true
+
             if (! valid && ! isInConstraintError) isInConstraintError = true
             if (valid && isInConstraintError) isInConstraintError = false
+
+            formBackend?.onInputValueChange(this)
         }
 
         super.notify(property, oldValue, newValue)
