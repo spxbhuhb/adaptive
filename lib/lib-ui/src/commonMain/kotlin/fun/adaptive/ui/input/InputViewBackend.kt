@@ -10,36 +10,6 @@ import kotlin.reflect.KProperty
 /**
  * View backend for input fragments.
  *
- * ## Invalid inputs
- *
- * ### Constrain Error
- *
- * The [isInConstraintError] property stores the result of constrain-based validation.
- *
- * There are different ways to validate an input, which one is used depends on the
- * actual situation:
- *
- * - Adat metadata-based validation
- * - manual validation, passed in [validateFun]
- * - form level validation by whatever means
- *
- * ### Conversion Error
- *
- * For many inputs it is possible that the actual value on the UI cannot be converted into
- * the proper type.
- *
- * For example, when you have a numeric input, you want the user to be able to paste invalid
- * values into it. You don't want to refuse those as it would feel very strange for the user.
- * Instead, you let the user paste the invalid value and edit it to make it valid.
- *
- * Let's say the user pastes "v=123" into a numeric field and then wants to delete "v=". This
- * is a perfectly valid expectation.
- *
- * However, those invalid values cannot be stored as [inputValue] is type safe.
- *
- * The solution is the [isInConversionError] property which is true when the value cannot be converted
- * into a type safe instance.
- *
  * @property  inputValue  The current, type safe value of the input. This might not be what the user
  *                        sees in cases where the input can hold invalid values. See explanation above.
  *
