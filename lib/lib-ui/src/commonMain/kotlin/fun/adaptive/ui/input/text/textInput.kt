@@ -9,6 +9,8 @@ import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.singleLineTextInput
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.InputTheme
+import `fun`.adaptive.ui.input.InputViewBackend
+import `fun`.adaptive.ui.input.decoratedInput
 
 @Adaptive
 fun textInput(
@@ -27,6 +29,25 @@ fun textInput(
     }
 
     singleLineTextInput(value = value, onChange = onChange) .. themeInstructions .. theme.singleLine .. instructions()
+
+    return fragment()
+}
+
+@Adaptive
+fun textInput2(
+    viewBackend: InputViewBackend<String>
+): AdaptiveFragment {
+    val observed = valueFrom { viewBackend }
+    val focus = focus()
+
+    println("textInput2: ${observed.inputValue} ${observed.isInvalid}")
+
+    decoratedInput(focus, observed) {
+        singleLineTextInput(value = observed.inputValue, onChange = { v -> observed.inputValue = v }) ..
+            observed.themeInstructions(focus) ..
+            observed.inputTheme.singleLine ..
+            instructions()
+    }
 
     return fragment()
 }

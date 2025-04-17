@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.utility.uppercaseFirstChar
 
 @Adaptive
 fun <T> decoratedInput(
@@ -35,7 +36,7 @@ private fun <T> withLabel(
     val themeInstructions = viewBackend.labelThemeInstructions(focused)
 
     column(instructions()) {
-        text(viewBackend.label, themeInstructions)
+        text(viewBackend.label?.uppercaseFirstChar(), themeInstructions)
         _KT_74337_content(viewBackend)
     }
 

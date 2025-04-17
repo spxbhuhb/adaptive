@@ -263,7 +263,9 @@ fun <T> toText(toTextFun: (T) -> String) = ToText(toTextFun)
 inline fun tabIndex(value: () -> Int) = TabIndex(value())
 inline fun inputPlaceholder(valueFun: () -> String) = InputPlaceholder(valueFun())
 
+@Deprecated("use InputValueBackend.isDisabled")
 val disabled = Disabled()
+@Deprecated("use InputValueBackend.isSecret")
 val secret = Secret()
 
 // ------------------------------------------------------------------------------------

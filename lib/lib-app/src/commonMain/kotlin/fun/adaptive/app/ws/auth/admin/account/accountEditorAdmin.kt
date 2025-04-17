@@ -1,6 +1,5 @@
 package `fun`.adaptive.app.ws.auth.admin.account
 
-import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.auth.account.AccountEditorData
@@ -10,20 +9,20 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.producer.fetch
+import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.datetime.instant
-import `fun`.adaptive.ui.input.InputContext
-import `fun`.adaptive.ui.input.text.textInput
+import `fun`.adaptive.ui.input.inputBackend
+import `fun`.adaptive.ui.input.text.textInput2
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.inputLabel
 import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.popup.modalEditor
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.utility.uppercaseFirstChar
 import `fun`.adaptive.value.AvValueId
 
 @Adaptive
@@ -47,34 +46,38 @@ fun accountEditorAdmin(
 @Adaptive
 fun editFields(copy: AccountEditorData) {
 
-    val accountNameState = InputContext(invalid = copy.principalName.isEmpty())
+    val accountName = inputBackend(copy.principalName) {
+        label = Strings.accountName
+        validateFun = { it?.isNotEmpty() ?: false }
+    }
 
-    val passwordState = InputContext(
-        invalid = copy.password != copy.passwordConfirm
-    )
+    val name = inputBackend(copy.name) {
+        label = Strings.name
+    }
+
+    val email = inputBackend(copy.email) {
+        label = Strings.email
+    }
+
+    val password = inputBackend(copy.password) {
+        label = Strings.password
+        secret = true
+    }
+
+    val confirmation = inputBackend(copy.passwordConfirm) {
+        label = Strings.confirmPassword
+        secret = true
+        validateFun = { password.inputValue == it }
+    }
 
     column {
         width { 400.dp } .. padding { 16.dp } .. gap { 8.dp } .. borderRight(colors.lightOutline)
 
-        withLabel(Strings.accountName, accountNameState) { state ->
-            textInput(copy.principalName, state) { copy.update(copy::principalName, it) }
-        }
-
-        withLabel(Strings.name) { state ->
-            textInput(copy.name) { copy.update(copy::name, it) }
-        }
-
-        withLabel(Strings.email.uppercaseFirstChar()) { state ->
-            textInput(copy.email) { copy.update(copy::email, it) }
-        }
-
-        withLabel(Strings.password.uppercaseFirstChar(), passwordState) { s ->
-            textInput(copy.password, s) { v -> copy.update(copy::password, v) } .. secret
-        }
-
-        withLabel(Strings.confirmPassword, passwordState) { s ->
-            textInput(copy.passwordConfirm, s) { v -> copy.update(copy::passwordConfirm, v); } .. secret
-        }
+        textInput2(accountName)
+        textInput2(name)
+        textInput2(email)
+        textInput2(password)
+        textInput2(confirmation)
     }
 }
 

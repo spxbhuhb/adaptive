@@ -8,6 +8,7 @@ class InputViewBackendBuilder<T>(
 
     var invalid: Boolean = false
     var disabled: Boolean = false
+    var secret : Boolean = false
     var label: String? = null
     var onChange: ((T?) -> Unit)? = null
     var validateFun: ((T?) -> Boolean)? = null
@@ -18,7 +19,8 @@ class InputViewBackendBuilder<T>(
         inputValue,
         invalid,
         disabled,
-        label
+        label,
+        secret
     ).also {
         it.onChange = onChange
         it.validateFun = validateFun
