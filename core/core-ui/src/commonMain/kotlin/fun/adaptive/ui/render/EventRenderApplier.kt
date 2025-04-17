@@ -141,7 +141,7 @@ abstract class EventRenderApplier<R> : AbstractRenderApplier() {
 
     abstract fun applyNoPointerEvents(fragment: AbstractAuiFragment<R>, previous: PointerEvents?, current: PointerEvents?)
 
-    abstract fun addEventListener(fragment: AbstractAuiFragment<R>, eventFun: UIEventHandler): Any?
+    abstract fun addEventListener(fragment: AbstractAuiFragment<R>, eventHandler: UIEventHandler): Any?
 
     abstract fun removeListener(fragment: AbstractAuiFragment<R>, eventListener: Any?)
 

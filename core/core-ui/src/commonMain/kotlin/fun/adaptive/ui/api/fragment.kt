@@ -10,6 +10,7 @@ import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
 import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
+import `fun`.adaptive.ui.fragment.structural.PopupSourceViewBackend
 import `fun`.adaptive.ui.input.InputContext
 
 @AdaptiveExpect(aui)
@@ -115,13 +116,13 @@ fun hoverPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: (hid
 }
 
 @AdaptiveExpect(aui)
-fun primaryPopup(inputContext: InputContext? = null, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide: () -> Unit) -> Unit): AdaptiveFragment {
-    manualImplementation(inputContext, content, instructions)
+fun primaryPopup(sourceViewBackend: PopupSourceViewBackend? = null, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide: () -> Unit) -> Unit): AdaptiveFragment {
+    manualImplementation(sourceViewBackend, content, instructions)
 }
 
 @AdaptiveExpect(aui)
-fun contextPopup(inputContext: InputContext? = null, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide: () -> Unit) -> Unit): AdaptiveFragment {
-    manualImplementation(inputContext, content, instructions)
+fun contextPopup(sourceViewBackend: PopupSourceViewBackend? = null, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide: () -> Unit) -> Unit): AdaptiveFragment {
+    manualImplementation(sourceViewBackend, content, instructions)
 }
 
 @AdaptiveExpect(aui)

@@ -5,7 +5,6 @@ import `fun`.adaptive.foundation.query.firstOrNull
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractBox
-import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.instruction.layout.PopupAlign
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -23,8 +22,8 @@ abstract class AbstractClickPopup(
     override val modal: Boolean
         get() = true
 
-    val inputContext
-        get() = get<InputContext?>(1)
+    val sourceViewBackend
+        get() = get<PopupSourceViewBackend?>(1)
 
     val blurHandler = { event: Any ->
         event as FocusEvent
@@ -42,9 +41,9 @@ abstract class AbstractClickPopup(
         if (inside == null && instructions.firstInstanceOfOrNull<PopupAlign>()?.modal != true) {
             super.hide()
 
-            inputContext?.let { it.popupOpen = false }
+            sourceViewBackend?.let { it.popupOpen = false }
 
-            if (inputContext?.focusContainerOnPopupFocusOut == true) {
+            if (sourceViewBackend?.focusContainerOnPopupFocusOut == true) {
                 layoutReceiver?.focus()
             }
         }
@@ -75,16 +74,16 @@ abstract class AbstractClickPopup(
     }
 
     override fun show() {
-        inputContext?.let { it.popupOpen = true }
+        sourceViewBackend?.let { it.popupOpen = true }
         super.show()
     }
 
     override fun hide() {
         super.hide()
 
-        inputContext?.let { it.popupOpen = false }
+        sourceViewBackend?.let { it.popupOpen = false }
 
-        if (inputContext?.focusContainerOnPopupClose == true) {
+        if (sourceViewBackend?.focusContainerOnPopupClose == true) {
             layoutReceiver?.focus()
         }
     }

@@ -46,14 +46,16 @@ class InputTheme : AbstractTheme() {
         border(colors.fail, 2.dp),
         paddingB2,
         textColors.onSurface,
-        backgroundColor(colors.failSurface.opaque(0.05f)),
+        backgrounds.surface
+        //backgroundColor(colors.failSurface.opaque(0.05f))
     )
 
     val invalidNotFocused = base + instructionsOf(
         border(colors.fail, 1.dp),
         paddingB1,
         textColors.onSurface,
-        backgroundColor(colors.failSurface.opaque(0.05f)),
+        backgrounds.surface
+        //backgroundColor(colors.failSurface.opaque(0.05f)),
     )
 
     val singleLine = instructionsOf(

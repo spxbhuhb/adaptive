@@ -21,7 +21,7 @@ abstract class Observable<VT> {
     }
 
     @Suppress("unused")
-    fun <PT> notify(property: KProperty<*>, oldValue: PT, newValue: PT) {
+    open fun <PT> notify(property: KProperty<*>, oldValue: PT, newValue: PT) {
         notifyListeners()
     }
 
