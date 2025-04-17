@@ -9,11 +9,10 @@ import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import `fun`.adaptive.kotlin.foundation.ir.util.HigherOrderProcessing
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.expressions.*
-import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
+import org.jetbrains.kotlin.ir.util.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.isFunction
 import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
-import kotlin.reflect.KFunction
 
 class InnerInstructionLowering(
     override val pluginContext: FoundationPluginContext,

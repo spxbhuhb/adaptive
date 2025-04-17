@@ -68,7 +68,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         if (owner.companionObjectSymbol != null || owner.isCompanion) return null
 
         val companion = createCompanionObject(owner, AdatPluginKey) {
-            superType(ClassIds.ADAT_COMPANION.constructClassLikeType(arrayOf(owner.defaultType()), false))
+            superType(ClassIds.ADAT_COMPANION.constructClassLikeType(arrayOf(owner.classId.defaultType(emptyList())), false))
         }
 
         return companion.symbol

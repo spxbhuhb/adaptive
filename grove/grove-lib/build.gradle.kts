@@ -39,9 +39,7 @@ kotlin {
 
     jvmToolchain(11)
 
-    jvm {
-        withJava()
-    }
+    jvm()
 
     js(IR) {
         browser()

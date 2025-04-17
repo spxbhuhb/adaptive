@@ -15,6 +15,7 @@ import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.sandbox.someForm
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
@@ -96,15 +97,19 @@ fun sandboxMain() {
             //contextMenuMain()
             //datePickerMain()
             //copyStore(Stuff(AioSpaceSpec()))
-            box(name("outer")) {
+//            box(name("outer")) {
+//                maxSize .. padding { 16.dp } .. backgrounds.friendlyOpaque
+//                box(name("300")) {
+//                    width { 200.dp } .. height { 300.dp } .. padding { 16.dp } .. borders.outline .. backgrounds.surface
+//                    box {
+//                        scroll .. maxSize
+//                        tree(TreeViewModel(generate(), context = Unit, selectedFun = ::defaultSelectedFun, openWithSingleClick = true))
+//                    }
+//                }
+//            }
+            box {
                 maxSize .. padding { 16.dp } .. backgrounds.friendlyOpaque
-                box(name("300")) {
-                    width { 200.dp } .. height { 300.dp } .. padding { 16.dp } .. borders.outline .. backgrounds.surface
-                    box {
-                        scroll .. maxSize
-                        tree(TreeViewModel(generate(), context = Unit, selectedFun = ::defaultSelectedFun, openWithSingleClick = true))
-                    }
-                }
+                someForm()
             }
         }
     }

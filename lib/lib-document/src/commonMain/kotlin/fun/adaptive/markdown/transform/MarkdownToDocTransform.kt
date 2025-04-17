@@ -62,21 +62,21 @@ class MarkdownToDocTransform(
         error("Should not be called")
     }
 
-    override fun visitHeader(header: MarkdownHeader, styleMask: Int): DocHeader {
-        val mask = styleMask or (header.level shl 8)
+    override fun visitHeader(header: MarkdownHeader, context: Int): DocHeader {
+        val mask = context or (header.level shl 8)
 
         // fills the inline stack
         header.children.forEach { it.accept(this, mask) }
 
-        return DocHeader(styleMask.styleIndex, consumeInlineStack(), header.level)
+        return DocHeader(context.styleIndex, consumeInlineStack(), header.level)
     }
 
     @Suppress("SameReturnValue")
-    override fun visitInline(inline: MarkdownInline, styleMask: Int): DocBlockElement? {
+    override fun visitInline(inline: MarkdownInline, context: Int): DocBlockElement? {
 
         if (inline.text.isEmpty()) return null
 
-        var mask = styleMask
+        var mask = context
 
         if (inline.bold) mask = mask or BOLD
         if (inline.italic) mask = mask or ITALIC
@@ -96,7 +96,7 @@ class MarkdownToDocTransform(
         return null
     }
 
-    override fun visitParagraph(paragraph: MarkdownParagraph, styleMask: Int): DocBlockElement {
+    override fun visitParagraph(paragraph: MarkdownParagraph, context: Int): DocBlockElement {
 
         if (paragraph.children.size == 1) {
             val first = paragraph.children.first()
@@ -104,7 +104,7 @@ class MarkdownToDocTransform(
         }
 
         // fills the inline stack
-        paragraph.children.forEach { it.accept(this, styleMask) }
+        paragraph.children.forEach { it.accept(this, context) }
 
         return DocParagraph(- 1, consumeInlineStack(), standalone = (level == 0))
     }
@@ -128,7 +128,7 @@ class MarkdownToDocTransform(
 
     val listPath = mutableListOf<Int>()
 
-    override fun visitList(list: MarkdownList, styleMask: Int): DocBlockElement {
+    override fun visitList(list: MarkdownList, context: Int): DocBlockElement {
 
         level ++
         listPath += 0
@@ -136,7 +136,7 @@ class MarkdownToDocTransform(
 
         val children = list.items.map {
             listPath[pathIndex] = listPath[pathIndex] + 1
-            it.accept(this, styleMask)
+            it.accept(this, context)
         }
 
         listPath.removeLast()
@@ -146,24 +146,24 @@ class MarkdownToDocTransform(
         return DocList(- 1, children as List<DocListItem>, level == 0)
     }
 
-    override fun visitListItem(listItem: MarkdownListItem, styleMask: Int): DocBlockElement? {
+    override fun visitListItem(listItem: MarkdownListItem, context: Int): DocBlockElement? {
         return DocListItem(
             - 1,
-            listItem.content.accept(this, styleMask) as DocBlockElement,
-            listItem.subList?.accept(this, styleMask) as? DocList,
+            listItem.content.accept(this, context) as DocBlockElement,
+            listItem.subList?.accept(this, context) as? DocList,
             listPath.toList(),
             listItem.bullet
         )
     }
 
-    override fun visitCodeFence(codeFence: MarkdownCodeFence, styleMask: Int): DocCodeFence? =
+    override fun visitCodeFence(codeFence: MarkdownCodeFence, context: Int): DocCodeFence? =
         DocCodeFence(- 1, codeFence.content, codeFence.language)
 
-    override fun visitQuote(quote: MarkdownQuote, styleMask: Int): DocQuote =
+    override fun visitQuote(quote: MarkdownQuote, context: Int): DocQuote =
         // quote content should be treated as standalone to have proper separation
-        DocQuote(- 1, quote.children.mapNotNull { it.accept(this, styleMask) })
+        DocQuote(- 1, quote.children.mapNotNull { it.accept(this, context) })
 
-    override fun visitHorizontalRule(horizontalRule: MarkdownHorizontalRule, styleMask: Int): DocRule =
+    override fun visitHorizontalRule(horizontalRule: MarkdownHorizontalRule, context: Int): DocRule =
         DocRule()
 
     fun buildStyle(index: Int, mask: Int): DocStyle {

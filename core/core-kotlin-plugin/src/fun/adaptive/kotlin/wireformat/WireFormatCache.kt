@@ -18,8 +18,8 @@ import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
-import org.jetbrains.kotlin.ir.types.isNullable
-import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
+import org.jetbrains.kotlin.ir.util.isNullable
+import org.jetbrains.kotlin.ir.util.isSubtypeOfClass
 import org.jetbrains.kotlin.name.ClassId
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
@@ -138,7 +138,7 @@ class WireFormatCache(
 
         irType.arguments.forEach {
             check(it is IrType) { "invalid type argument in : $irType $signature" }
-            arguments += getSignatureFormat(it as IrType)
+            arguments += getSignatureFormat(it)
         }
 
         val genericFormat = genericFormats[classFqName] ?: loadGeneratedGenericFormat(classFqName.asClassId)

@@ -8,6 +8,7 @@ import `fun`.adaptive.kotlin.foundation.Indices
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmDetachExpression
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmSequence
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
+import org.jetbrains.kotlin.ir.InternalSymbolFinderAPI
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrVariable
@@ -42,6 +43,7 @@ class ArmSequenceBuilder(
             )
         )
 
+    @OptIn(InternalSymbolFinderAPI::class)
     fun patchVariableValue(patchFun: IrSimpleFunction): IrExpression =
         irSetDescendantStateVariable(
             patchFun,
@@ -49,7 +51,7 @@ class ArmSequenceBuilder(
             IrCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irBuiltIns.intArray.defaultType,
-                irContext.irBuiltIns.findFunctions(Name.identifier("intArrayOf")).single(),
+                irContext.irBuiltIns.symbolFinder.findFunctions(Name.identifier("intArrayOf")).single(),
                 typeArgumentsCount = 0
             ).apply {
                 putValueArgument(0,

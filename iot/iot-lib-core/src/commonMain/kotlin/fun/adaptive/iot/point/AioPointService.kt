@@ -70,27 +70,27 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
         return itemId
     }
 
-    override suspend fun rename(spaceId: AvValueId, name: String) {
+    override suspend fun rename(valueId: AvValueId, name: String) {
         ensureLoggedIn()
 
-        valueWorker.updateItem(spaceId) {
+        valueWorker.updateItem(valueId) {
             it.copy(timestamp = now(), name = name)
         }
     }
 
-    override suspend fun moveUp(spaceId: AvValueId) {
+    override suspend fun moveUp(valueId: AvValueId) {
         ensureLoggedIn()
 
         valueWorker.execute {
-            moveUp(spaceId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
+            moveUp(valueId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
         }
     }
 
-    override suspend fun moveDown(spaceId: AvValueId) {
+    override suspend fun moveDown(valueId: AvValueId) {
         ensureLoggedIn()
 
         valueWorker.execute {
-            moveDown(spaceId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
+            moveDown(valueId, SpaceMarkers.SUB_SPACES, SpaceMarkers.TOP_SPACES)
         }
     }
 
@@ -123,7 +123,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
     internal fun unsafeSetCurVal(context: AvComputeContext, pointId: AvValueId, curVal: AvValue): AvValue {
         val point = context.item<AioPointSpec>(pointId)
         val originalCurValId = point.markers[PointMarkers.CUR_VAL]
-        val curValId = originalCurValId ?: uuid7<AvValue>()
+        val curValId = originalCurValId ?: uuid7()
 
         val curValWithId = curVal.deepCopy(AdatChange(listOf("uuid"), curValId))
 

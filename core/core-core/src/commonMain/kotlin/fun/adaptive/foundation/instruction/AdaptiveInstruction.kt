@@ -35,8 +35,8 @@ interface AdaptiveInstruction {
      * - inner
      * - argument (weakest)
      */
-    operator fun rangeTo(group: AdaptiveInstructionGroup): AdaptiveInstructionGroup {
-        return AdaptiveInstructionGroup(listOf(this, group))
+    operator fun rangeTo(other: AdaptiveInstructionGroup): AdaptiveInstructionGroup {
+        return AdaptiveInstructionGroup(listOf(this, other))
     }
 
     fun matchOrNull(predicate: (AdaptiveInstruction) -> Boolean) : AdaptiveInstruction? =

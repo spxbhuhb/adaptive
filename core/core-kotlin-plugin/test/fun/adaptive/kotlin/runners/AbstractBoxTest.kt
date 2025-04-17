@@ -38,45 +38,47 @@ open class AbstractBoxTest : BaseTestRunner(), RunnerWithTargetBackendForTestGen
     override val targetBackend: TargetBackend
         get() = TargetBackend.JVM_IR
 
-    override fun TestConfigurationBuilder.configuration() {
-        globalDefaults {
-            targetBackend = TargetBackend.JVM_IR
-            targetPlatform = JvmPlatforms.defaultJvmPlatform
-            dependencyKind = DependencyKind.Binary
-        }
-
-        val dumps = false
-
-        useCustomRuntimeClasspathProviders(AbstractBoxTest::coreRuntimeClassPathProvider)
-
-        configureFirParser(FirParser.Psi)
-
-        if (dumps) {
-            defaultDirectives {
-                + DUMP_IR
+    override fun configure(builder: TestConfigurationBuilder) {
+        with(builder) {
+            globalDefaults {
+                targetBackend = TargetBackend.JVM_IR
+                targetPlatform = JvmPlatforms.defaultJvmPlatform
+                dependencyKind = DependencyKind.Binary
             }
-        }
-        commonFirWithPluginFrontendConfiguration(dumpFir = dumps)
-        fir2IrStep()
-        irHandlersStep {
+
+            val dumps = false
+
+            useCustomRuntimeClasspathProviders(AbstractBoxTest::coreRuntimeClassPathProvider)
+
+            configureFirParser(FirParser.Psi)
+
             if (dumps) {
-                useHandlers(
-                    ::IrTextDumpHandler,
-                    ::IrTreeVerifierHandler,
-                )
-            } else {
-                useHandlers(
-                    ::IrTreeVerifierHandler
-                )
+                defaultDirectives {
+                    + DUMP_IR
+                }
             }
-        }
-        facadeStep(::JvmIrBackendFacade)
+            commonFirWithPluginFrontendConfiguration(dumpFir = dumps)
+            fir2IrStep()
+            irHandlersStep {
+                if (dumps) {
+                    useHandlers(
+                        ::IrTextDumpHandler,
+                        ::IrTreeVerifierHandler,
+                    )
+                } else {
+                    useHandlers(
+                        ::IrTreeVerifierHandler
+                    )
+                }
+            }
+            facadeStep(::JvmIrBackendFacade)
 
-        jvmArtifactsHandlersStep {
-            useHandlers(::JvmBoxRunner)
-        }
+            jvmArtifactsHandlersStep {
+                useHandlers(::JvmBoxRunner)
+            }
 
-        useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
+            useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
+        }
     }
 
     class coreRuntimeClassPathProvider(testServices: TestServices) : RuntimeClasspathProvider(testServices) {

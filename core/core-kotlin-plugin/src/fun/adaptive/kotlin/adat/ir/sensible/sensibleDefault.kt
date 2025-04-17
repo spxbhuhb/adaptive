@@ -275,7 +275,6 @@ private object MISSING : IrExpression() {
         get() = throw UnsupportedOperationException()
         set(@Suppress("UNUSED_PARAMETER") v) = throw UnsupportedOperationException()
     override val endOffset = 0
-    override var originalBeforeInline: IrAttributeContainer? = null
     override val startOffset = 0
     override var type: IrType
         get() = throw UnsupportedOperationException()

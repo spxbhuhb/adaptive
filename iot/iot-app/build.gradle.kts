@@ -51,7 +51,6 @@ kotlin {
     jvmToolchain(11)
 
     jvm {
-        withJava()
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         mainRun {
             mainClass = mainClassName

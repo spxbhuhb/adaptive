@@ -38,40 +38,42 @@ open class AbstractAdhocTest : BaseTestRunner(), RunnerWithTargetBackendForTestG
     override val targetBackend: TargetBackend
         get() = TargetBackend.JVM_IR
 
-    override fun TestConfigurationBuilder.configuration() {
-        globalDefaults {
-            targetBackend = TargetBackend.JVM_IR
-            targetPlatform = JvmPlatforms.defaultJvmPlatform
-            dependencyKind = DependencyKind.Binary
-        }
-
-        val dumps = false
-
-        useCustomRuntimeClasspathProviders(AbstractAdhocTest::coreRuntimeClassPathProvider)
-
-        configureFirParser(FirParser.Psi)
-
-        defaultDirectives {
-            if (dumps) + DUMP_IR
-        }
-
-        commonFirWithPluginFrontendConfiguration(dumpFir = dumps)
-        fir2IrStep()
-        irHandlersStep {
-            if (dumps) {
-                useHandlers(
-                    ::IrTextDumpHandler,
-                    ::IrTreeVerifierHandler,
-                )
+    override fun configure(builder : TestConfigurationBuilder) {
+        with(builder) {
+            globalDefaults {
+                targetBackend = TargetBackend.JVM_IR
+                targetPlatform = JvmPlatforms.defaultJvmPlatform
+                dependencyKind = DependencyKind.Binary
             }
-        }
-        facadeStep(::JvmIrBackendFacade)
 
-        jvmArtifactsHandlersStep {
-            useHandlers(::JvmBoxRunner)
-        }
+            val dumps = false
 
-        useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
+            useCustomRuntimeClasspathProviders(AbstractAdhocTest::coreRuntimeClassPathProvider)
+
+            configureFirParser(FirParser.Psi)
+
+            defaultDirectives {
+                if (dumps) + DUMP_IR
+            }
+
+            commonFirWithPluginFrontendConfiguration(dumpFir = dumps)
+            fir2IrStep()
+            irHandlersStep {
+                if (dumps) {
+                    useHandlers(
+                        ::IrTextDumpHandler,
+                        ::IrTreeVerifierHandler,
+                    )
+                }
+            }
+            facadeStep(::JvmIrBackendFacade)
+
+            jvmArtifactsHandlersStep {
+                useHandlers(::JvmBoxRunner)
+            }
+
+            useAfterAnalysisCheckers(::BlackBoxCodegenSuppressor)
+        }
     }
 
     class coreRuntimeClassPathProvider(testServices: TestServices) : RuntimeClasspathProvider(testServices) {

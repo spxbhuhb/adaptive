@@ -15,9 +15,9 @@ abstract class ParagraphItem {
     abstract fun measure(paragraph: AbstractParagraph<*, *>)
 
     /**
-     * If this paragraph item can merge with [item] then return
+     * If this paragraph item can merge with [other] then return
      * with the merged item.
      */
-    abstract fun merge(paragraph: AbstractParagraph<*, *>, item: ParagraphItem): ParagraphItem?
+    abstract fun merge(paragraph: AbstractParagraph<*, *>, other: ParagraphItem): ParagraphItem?
 
 }

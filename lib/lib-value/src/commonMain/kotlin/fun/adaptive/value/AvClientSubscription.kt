@@ -53,8 +53,8 @@ class AvClientSubscription(
         }
     }
 
-    override fun send(value: AvValueOperation) {
-        val success = channel.trySend(value).isSuccess
+    override fun send(operation: AvValueOperation) {
+        val success = channel.trySend(operation).isSuccess
 
         if (! success) {
             logger.warning("Channel full, dropping update")

@@ -15,8 +15,8 @@ class TestParagraphItem(
 
     }
 
-    override fun merge(paragraph: AbstractParagraph<*, *>, item: ParagraphItem): ParagraphItem? {
-        return this.mergeFun(item)
+    override fun merge(paragraph: AbstractParagraph<*, *>, other: ParagraphItem): ParagraphItem? {
+        return this.mergeFun(other)
     }
 
 }

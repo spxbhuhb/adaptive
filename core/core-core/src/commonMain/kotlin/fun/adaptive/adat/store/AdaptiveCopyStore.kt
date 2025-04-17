@@ -60,15 +60,15 @@ class AdaptiveCopyStore<A>(
 
     override var latestValue: A? = makeCopy(initialValue, null, false)
 
-    override fun update(newValue: A) {
-        makeCopy(newValue, null, true)
+    override fun update(new: A) {
+        makeCopy(new, null, true)
     }
 
-    override fun update(original: A, newValue: A) {
-        makeCopy(newValue, null, true)
+    override fun update(original: A, new: A) {
+        makeCopy(new, null, true)
     }
 
-    override fun update(instance: A, path: Array<String>, value: Any?) {
+    override fun update(original: A, path: Array<String>, value: Any?) {
         val current = requireNotNull(latestValue) { "missing copyStore value" }
         makeCopy(current, AdatChange(path.toList(), value), patch = true)
     }

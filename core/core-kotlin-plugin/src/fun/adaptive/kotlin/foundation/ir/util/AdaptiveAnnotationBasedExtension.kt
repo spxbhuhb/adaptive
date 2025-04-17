@@ -11,9 +11,9 @@ import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.types.getArrayElementType
+import org.jetbrains.kotlin.ir.util.getArrayElementType
 import org.jetbrains.kotlin.ir.types.isArray
-import org.jetbrains.kotlin.ir.types.isSubtypeOfClass
+import org.jetbrains.kotlin.ir.util.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.dump
 import org.jetbrains.kotlin.ir.util.hasAnnotation
 import org.jetbrains.kotlin.ir.util.isFunctionOrKFunction
@@ -33,7 +33,7 @@ interface AdaptiveAnnotationBasedExtension {
             if (this.name.isSpecial) return false
             if (this.name.identifier.startsWith("_fixme_")) return true
             if (this.name.identifier.startsWith("_KT_74337_")) return true
-            return this.hasAnnotation(pluginContext.adaptiveClass) == true
+            return this.hasAnnotation(pluginContext.adaptiveClass)
         }
 
     val IrValueParameter?.isInstructions: Boolean

@@ -31,7 +31,6 @@ kotlin {
     jvmToolchain(11)
 
     jvm {
-        withJava()
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         mainRun {
             mainClass = "fun.adaptive.sandbox.app.echo.MainKt"

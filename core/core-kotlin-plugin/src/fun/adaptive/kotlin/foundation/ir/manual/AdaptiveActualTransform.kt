@@ -97,8 +97,7 @@ class AdaptiveActualTransform(
                 irCall(
                     pluginContext.get,
                     getter.returnType,
-                    typeArgumentsCount = 1,
-                    valueArgumentsCount = 1
+                    typeArgumentsCount = 1
                 ).also { call ->
                     call.dispatchReceiver = irGet(getter.dispatchReceiverParameter !!)
                     call.putTypeArgument(0, getter.returnType)
@@ -116,8 +115,7 @@ class AdaptiveActualTransform(
                 irCall(
                     pluginContext.set,
                     property.getter !!.returnType,
-                    typeArgumentsCount = 0,
-                    valueArgumentsCount = 1
+                    typeArgumentsCount = 0
                 ).also { call ->
                     call.dispatchReceiver = irGet(setter.dispatchReceiverParameter !!)
                     call.putValueArgument(0, irInt(index))

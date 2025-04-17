@@ -165,7 +165,11 @@ class ArmClassBuilder(
 
         buildFun.origin = IrDeclarationOrigin.DEFINED
         buildFun.isFakeOverride = false
-        buildFun.dispatchReceiverParameter = buildReceiverParameter(buildFun, IrDeclarationOrigin.INSTANCE_RECEIVER, irClass.defaultType)
+
+        buildFun.dispatchReceiverParameter = buildFun.buildReceiverParameter {
+            this.origin = IrDeclarationOrigin.INSTANCE_RECEIVER
+            this.type = irClass.defaultType
+        }
 
         buildFun.body = DeclarationIrBuilder(irContext, buildFun.symbol).irBlockBody {
 
@@ -235,7 +239,11 @@ class ArmClassBuilder(
 
         patchFun.origin = IrDeclarationOrigin.DEFINED
         patchFun.isFakeOverride = false
-        patchFun.dispatchReceiverParameter = buildReceiverParameter(patchFun, IrDeclarationOrigin.INSTANCE_RECEIVER, irClass.defaultType)
+
+        patchFun.dispatchReceiverParameter = patchFun.buildReceiverParameter {
+            this.origin = IrDeclarationOrigin.INSTANCE_RECEIVER
+            this.type = irClass.defaultType
+        }
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 
@@ -298,7 +306,11 @@ class ArmClassBuilder(
 
         patchFun.origin = IrDeclarationOrigin.DEFINED
         patchFun.isFakeOverride = false
-        patchFun.dispatchReceiverParameter = buildReceiverParameter(patchFun, IrDeclarationOrigin.INSTANCE_RECEIVER, irClass.defaultType)
+
+        patchFun.dispatchReceiverParameter = patchFun.buildReceiverParameter {
+            this.origin = IrDeclarationOrigin.INSTANCE_RECEIVER
+            this.type = irClass.defaultType
+        }
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 
