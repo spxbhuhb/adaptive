@@ -24,10 +24,10 @@ abstract class AbstractRow<RT, CRT : RT>(
     override fun itemsHeightCalc(itemsHeight: Double, item: AbstractAuiFragment<RT>): Double =
         max(itemsHeight, item.renderData.finalHeight)
 
-    override fun constrainWidthCalc(remainingWidth: Double, item: AbstractAuiFragment<RT>): Double =
-        remainingWidth - item.renderData.finalWidth
+    override fun constrainWidthCalc(remainingWidth: Double, item: AbstractAuiFragment<RT>, gap : Double): Double =
+        remainingWidth - item.renderData.finalWidth - gap
 
-    override fun constrainHeightCalc(remainingHeight: Double, item: AbstractAuiFragment<RT>): Double =
+    override fun constrainHeightCalc(remainingHeight: Double, item: AbstractAuiFragment<RT>, gap : Double): Double =
         remainingHeight
 
     override fun instructedGap(): Double =

@@ -34,9 +34,9 @@ abstract class AbstractStack<RT, CRT : RT>(
 
     abstract fun itemsHeightCalc(itemsHeight: Double, item: AbstractAuiFragment<RT>): Double
 
-    abstract fun constrainWidthCalc(remainingWidth: Double, item: AbstractAuiFragment<RT>): Double
+    abstract fun constrainWidthCalc(remainingWidth: Double, item: AbstractAuiFragment<RT>, gap : Double): Double
 
-    abstract fun constrainHeightCalc(remainingHeight: Double, item: AbstractAuiFragment<RT>): Double
+    abstract fun constrainHeightCalc(remainingHeight: Double, item: AbstractAuiFragment<RT>, gap : Double): Double
 
     abstract fun instructedGap(): Double
 
@@ -79,7 +79,7 @@ abstract class AbstractStack<RT, CRT : RT>(
             if (verticalScroll) w - uiAdapter.scrollBarSize else w
         }
 
-        var proposedItemHeight = if (renderData.container?.verticalScroll == true) {
+        var proposedItemHeight = if (verticalScroll) {
             Double.POSITIVE_INFINITY
         } else {
             val h = (instructedHeight ?: proposedHeight) - data.surroundingVertical
@@ -98,8 +98,8 @@ abstract class AbstractStack<RT, CRT : RT>(
             itemsWidth = itemsWidthCalc(itemsWidth, item)
             itemsHeight = itemsHeightCalc(itemsHeight, item)
             if (fill != null) {
-                proposedItemWidth = constrainWidthCalc(proposedItemWidth, item)
-                proposedItemHeight = constrainHeightCalc(proposedItemHeight, item)
+                proposedItemWidth = constrainWidthCalc(proposedItemWidth, item, instructedGap)
+                proposedItemHeight = constrainHeightCalc(proposedItemHeight, item, instructedGap)
             }
         }
 

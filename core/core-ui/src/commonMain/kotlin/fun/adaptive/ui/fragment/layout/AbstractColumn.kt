@@ -24,11 +24,11 @@ abstract class AbstractColumn<RT, CRT : RT>(
     override fun itemsHeightCalc(itemsHeight: Double, item: AbstractAuiFragment<RT>): Double =
         itemsHeight + item.renderData.finalHeight
 
-    override fun constrainWidthCalc(remainingWidth: Double, item: AbstractAuiFragment<RT>): Double =
+    override fun constrainWidthCalc(remainingWidth: Double, item: AbstractAuiFragment<RT>, gap : Double): Double =
         remainingWidth
 
-    override fun constrainHeightCalc(remainingHeight: Double, item: AbstractAuiFragment<RT>): Double =
-        remainingHeight - item.renderData.finalHeight
+    override fun constrainHeightCalc(remainingHeight: Double, item: AbstractAuiFragment<RT>, gap : Double): Double =
+        remainingHeight - item.renderData.finalHeight - gap
 
     override fun instructedGap(): Double =
         renderData.container?.gapHeight ?: 0.0
