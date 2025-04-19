@@ -1,10 +1,10 @@
 package `fun`.adaptive.foundation.value
 
-import `fun`.adaptive.general.Observable
+import `fun`.adaptive.general.AbstractObservable
 
 class AdaptiveValueStore<VT>(
     value: VT
-) : Observable<VT>() {
+) : AbstractObservable<VT>() {
 
     override var value: VT = value
         set(v) {

@@ -356,7 +356,7 @@ open class Workspace(
 
         while (generalType.isNotEmpty()) {
 
-            var builder = contentPaneBuilders[generalType]?.firstOrNull()
+            builder = contentPaneBuilders[generalType]?.firstOrNull()
             if (builder != null) return builder
 
             val lastColon = generalType.lastIndexOf(':')

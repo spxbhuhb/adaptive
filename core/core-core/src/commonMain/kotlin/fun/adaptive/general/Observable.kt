@@ -2,26 +2,26 @@ package `fun`.adaptive.general
 
 import kotlin.reflect.KProperty
 
-abstract class Observable<VT> {
+interface Observable<VT> {
 
-    abstract var value: VT
+    var value: VT
 
-    val listeners = mutableListOf<ObservableListener<VT>>()
+    val listeners : MutableList<ObservableListener<VT>>
 
     fun notifyListeners() {
         for (listener in listeners) listener.onChange(value)
     }
 
-    open fun addListener(listener: ObservableListener<VT>) {
+    fun addListener(listener: ObservableListener<VT>) {
         listeners += listener
     }
 
-    open fun removeListener(listener: ObservableListener<VT>) {
+    fun removeListener(listener: ObservableListener<VT>) {
         listeners -= listener
     }
 
     @Suppress("unused")
-    open fun <PT> notify(property: KProperty<*>, oldValue: PT, newValue: PT) {
+    fun <PT> notify(property: KProperty<*>, oldValue: PT, newValue: PT) {
         notifyListeners()
     }
 

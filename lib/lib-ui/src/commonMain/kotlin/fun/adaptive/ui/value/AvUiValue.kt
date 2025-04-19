@@ -2,7 +2,7 @@ package `fun`.adaptive.ui.value
 
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.AdaptiveAdapter
-import `fun`.adaptive.general.Observable
+import `fun`.adaptive.general.AbstractObservable
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.api.getService
@@ -20,7 +20,7 @@ class AvUiValue<T : AvValue>(
     adapter: AdaptiveAdapter,
     val valueId: AvValueId?,
     val kClass : KClass<T>
-) : Observable<T?>() {
+) : AbstractObservable<T?>() {
 
     companion object {
         inline operator fun <reified T : AvValue> invoke(

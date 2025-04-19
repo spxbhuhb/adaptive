@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.value
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.unsupported
-import `fun`.adaptive.general.Observable
+import `fun`.adaptive.general.AbstractObservable
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
@@ -23,7 +23,7 @@ class AvUiList(
     adapter: AdaptiveAdapter,
     val valueId: AvValueId,
     val listMarker: AvMarker
-) : Observable<List<AvItem<*>>>() {
+) : AbstractObservable<List<AvItem<*>>>() {
 
     override var value: List<AvItem<*>>
         get() = list.mapNotNull { valueMap[it] }.sortedBy { it.friendlyId }

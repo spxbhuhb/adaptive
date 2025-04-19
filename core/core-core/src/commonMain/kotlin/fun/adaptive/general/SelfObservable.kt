@@ -13,7 +13,7 @@ package `fun`.adaptive.general
  *
  * Note that these classes typically **MUTABLE**.
  */
-abstract class SelfObservable<VT> : Observable<VT>() {
+abstract class SelfObservable<VT> : AbstractObservable<VT>() {
 
     @Suppress("UNCHECKED_CAST")
     override var value: VT

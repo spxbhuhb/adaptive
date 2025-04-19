@@ -2,7 +2,7 @@ package `fun`.adaptive.ui.value
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.query.firstImpl
-import `fun`.adaptive.general.Observable
+import `fun`.adaptive.general.AbstractObservable
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID
@@ -21,7 +21,7 @@ class AvNameCache(
     transport: ServiceCallTransport,
     val scope: CoroutineScope,
     itemMarker: AvMarker
-) : Observable<List<AvNameCacheEntry>>() {
+) : AbstractObservable<List<AvNameCacheEntry>>() {
 
 
     override var value: List<AvNameCacheEntry> = emptyList()

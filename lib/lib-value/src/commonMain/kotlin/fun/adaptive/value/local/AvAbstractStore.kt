@@ -1,6 +1,6 @@
 package `fun`.adaptive.value.local
 
-import `fun`.adaptive.general.Observable
+import `fun`.adaptive.general.AbstractObservable
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.operation.*
@@ -18,7 +18,7 @@ import kotlinx.coroutines.supervisorScope
  *
  * Override [process] to process the incoming data into [V].
  *
- * Call [notifyListeners] when [Observable.value] changes.
+ * Call [notifyListeners] when [AbstractObservable.value] changes.
  *
  * **Lifecycle**
  *
@@ -31,7 +31,7 @@ abstract class AvAbstractStore<V>(
     val publisher: AvPublisher,
     val scope: CoroutineScope,
     val localWorker: AvValueWorker,
-) : Observable<V>() {
+) : AbstractObservable<V>() {
 
     var job: Job? = null
 
