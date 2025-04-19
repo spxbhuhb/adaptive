@@ -1,22 +1,23 @@
 package `fun`.adaptive.app.ws.auth.admin.account
 
 import `fun`.adaptive.adat.api.update
-import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.auth.account.AccountEditorData
 import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.auth.model.AuthPrincipal
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.producer.fetch
-import `fun`.adaptive.lib_app.generated.resources.*
+import `fun`.adaptive.lib_app.generated.resources.addAccount
+import `fun`.adaptive.lib_app.generated.resources.editAccount
+import `fun`.adaptive.lib_app.generated.resources.roles
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.datetime.instant
-import `fun`.adaptive.ui.input.inputBackend
-import `fun`.adaptive.ui.input.text.textInput2
+import `fun`.adaptive.ui.editor.textEditor
+import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.inputLabel
@@ -31,53 +32,36 @@ fun accountEditorAdmin(
     hide: () -> Unit,
     save: (AccountEditorData) -> Unit
 ) {
-    @Independent
-    var copy = copyOf { account ?: AccountEditorData() }
+    val form = adatFormBackend(account ?: AccountEditorData()) {
+        expectEquals(it::password, it::passwordConfirm, dualTouch = true)
+    }
+
+
     val title = if (account == null) Strings.addAccount else Strings.editAccount
 
-    modalEditor(title, hide, { save(copy); hide() }) {
+    modalEditor(title, hide, { save(form.formValue); hide() }) {
         row {
-            editFields(copy)
-            roles(copy)
+            localContext(form) {
+                editFields()
+                // roles()
+            }
         }
     }
 }
 
 @Adaptive
-fun editFields(copy: AccountEditorData) {
+fun editFields() {
 
-    val accountName = inputBackend(copy.principalName) {
-        label = Strings.accountName
-        validateFun = { it?.isNotEmpty() ?: false }
-    }
-
-    val name = inputBackend(copy.name) {
-        label = Strings.name
-    }
-
-    val email = inputBackend(copy.email) {
-        label = Strings.email
-    }
-
-    val password = inputBackend(copy.password) {
-        label = Strings.password
-        secret = true
-    }
-
-    val confirmation = inputBackend(copy.passwordConfirm) {
-        label = Strings.confirmPassword
-        secret = true
-        validateFun = { password.inputValue == it }
-    }
+    val template = AccountEditorData()
 
     column {
         width { 400.dp } .. padding { 16.dp } .. gap { 8.dp } .. borderRight(colors.lightOutline)
 
-        textInput2(accountName)
-        textInput2(name)
-        textInput2(email)
-        textInput2(password)
-        textInput2(confirmation)
+        textEditor { template.principalName }
+        textEditor { template.name }
+        textEditor { template.email }
+        textEditor { template.password }
+        textEditor { template.passwordConfirm }
     }
 }
 

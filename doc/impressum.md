@@ -52,9 +52,6 @@ We'll see how it turns out. I've put in the work, and I'll continue to do so in 
 
 **Server side**
 
-* [PostgreSQL](https://www.postgresql.org) (by The PostgreSQL Global Development Group, PostgreSQL Licence)
-* [Exposed](https://github.com/JetBrains/Exposed) (by the JB Team, Apache 2.0)
-* [HikariCP](https://github.com/brettwooldridge/HikariCP) (by Brett Wooldridge, Apache 2.0)
 * [LOGBack](http://logback.qos.ch) (by QOS.ch, EPL v1.0 or LGPL 2.1)
 * [JavaMail](https://javaee.github.io/javamail/)  (by Oracle, CDDL 1.0)
 
@@ -64,7 +61,6 @@ We'll see how it turns out. I've put in the work, and I'll continue to do so in 
 
 **Testing**
 
-* [H2](https://www.h2database.com/) (by multiple contributors, MPL 2.0 or EPL 1.0)
 * [SubEtha SMTP](https://github.com/voodoodyne/subethasmtp) (by SubEthaMail.org, Apache 2.0)
 * [kotlin-compiler-testing](https://github.com/ZacSweers/kotlin-compile-testing) (by multiple contributors, MPL 2.0)
 
@@ -85,8 +81,13 @@ We'll see how it turns out. I've put in the work, and I'll continue to do so in 
 * [KVision](https://kvision.io) (some service related ideas)
 * [Tailwindcss](https://tailwindcss.com) (style concept)
 
-**Images, colors**
+**Images, colors, icons, fonts**
 
+* [Google Fonts](https://fonts.google.com)
+  * Open Sans (SIL Open Font License 1.1)
+  * icons (Apache 2.0)
+* [SVG Repo](https://svgrepo.com)
+  * SVG icons
 * [SvgPathEditor](https://yqnn.github.io/svg-path-editor/) SVG Path Editor by Yann Armelin
 * [ChatGPT](https://chatgpt.com)
     * cartoon-like images are generated with ChatGPT 4o

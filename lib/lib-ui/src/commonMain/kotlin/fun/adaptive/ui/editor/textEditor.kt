@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.form.FormViewBackend
+import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
 import `fun`.adaptive.ui.input.InputViewBackend
 import `fun`.adaptive.ui.input.text.textInput2
 
@@ -14,8 +15,11 @@ fun textEditor(
     binding: AdaptiveStateVariableBinding<String>? = null,
     @Suppress("unused")
     @PropertySelector
-    selector: () -> String,
+    selector: () -> String?
 ) {
-    val inputBackend = fragment().firstContextOrNull<FormViewBackend>()?.backendFor(binding) ?: InputViewBackend()
-    textInput2(inputBackend)
+    textInput2(
+        fragment().viewBackendFor(binding) { value, label, isSecret ->
+            InputViewBackend(value, label, isSecret)
+        }
+    )
 }

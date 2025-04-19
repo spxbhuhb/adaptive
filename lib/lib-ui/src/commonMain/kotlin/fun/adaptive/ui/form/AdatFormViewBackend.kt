@@ -8,7 +8,6 @@ import `fun`.adaptive.adat.api.validate
 import `fun`.adaptive.adat.descriptor.InstanceValidationResult
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.ui.input.InputViewBackend
-import kotlin.collections.plusAssign
 import kotlin.reflect.KProperty0
 
 class AdatFormViewBackend<T : AdatClass>(
@@ -27,8 +26,11 @@ class AdatFormViewBackend<T : AdatClass>(
         validate()
     }
 
-    override fun <T> backendFor(binding: AdaptiveStateVariableBinding<T>?): InputViewBackend<T>? {
-        return super.backendFor(binding)?.also {
+    override fun <T, BT : InputViewBackend<T>> backendFor(
+        binding: AdaptiveStateVariableBinding<T>?,
+        newBackendFun: (value: T?, label: String?, secret: Boolean) -> BT
+    ): BT {
+        return super.backendFor(binding, newBackendFun).also {
             if (it.path in failPaths) it.isInConstraintError = true
         }
     }

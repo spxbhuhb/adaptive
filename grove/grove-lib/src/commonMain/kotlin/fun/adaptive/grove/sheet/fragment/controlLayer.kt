@@ -44,6 +44,7 @@ fun controlLayer(controller: SheetViewController) {
             }
 
             onKeydown { event ->
+                event.preventDefault()
                 controller.onKeyDown(event.keyInfo ?: return@onKeydown, event.modifiers)
             }
 

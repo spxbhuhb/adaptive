@@ -36,7 +36,7 @@ fun ufdCenter(pane: WsPane<*, *>): AdaptiveFragment {
 
             row {
                 maxSize .. borderBottom(DEFAULT.toolBorderColor) .. spaceBetween
-                onKeydown { controller.onKeyDown(it.keyInfo !!, it.modifiers) }
+                onKeydown { it.preventDefault(); controller.onKeyDown(it.keyInfo !!, it.modifiers) }
 
                 row {
                     alignSelf.startCenter

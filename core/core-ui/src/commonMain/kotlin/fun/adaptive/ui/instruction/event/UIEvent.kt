@@ -25,6 +25,7 @@ class UIEvent(
     val transferData: TransferData? = null,
     val keyInfo : KeyInfo? = null,
     val modifiers: Set<EventModifier> = emptySet(),
+    val preventDefault: () -> Unit = { },
     val stopPropagation: () -> Unit = { }
 ) {
     val position: Position

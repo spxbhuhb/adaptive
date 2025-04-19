@@ -17,7 +17,7 @@ class LabelTheme {
     )
 
     val enabled = base + instructionsOf(
-        textColors.onSurfaceVariant
+        textColors.onSurface
     )
 
     val focused = base + instructionsOf(

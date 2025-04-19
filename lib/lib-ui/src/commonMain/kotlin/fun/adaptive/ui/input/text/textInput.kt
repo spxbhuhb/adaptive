@@ -42,7 +42,7 @@ fun textInput2(
 
     decoratedInput(focus, observed) {
         singleLineTextInput(value = observed.inputValue, onChange = { v -> observed.inputValue = v }) ..
-            observed.themeInstructions(focus) ..
+            observed.containerThemeInstructions(focus) ..
             observed.inputTheme.singleLine ..
             instructions()
     }

@@ -23,6 +23,8 @@ class AccountEditorData(
             principalName blank false
             name blank false minLength 5 maxLength 255
             email blank false pattern "^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
+            password secret true
+            passwordConfirm secret true
         }
     }
 }

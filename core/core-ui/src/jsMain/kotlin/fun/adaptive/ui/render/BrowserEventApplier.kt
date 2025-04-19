@@ -73,15 +73,15 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
             }
 
             val keyInfo = if (event is KeyboardEvent) {
-                event.preventDefault()
+//                event.preventDefault()
                 UIEvent.KeyInfo(event.key, event.isComposing, event.repeat)
             } else {
                 null
             }
 
-            eventHandler.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event), { event.stopPropagation() }))
+            eventHandler.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event), { event.preventDefault() }, { event.stopPropagation() }))
 
-            event.preventDefault()
+//            event.preventDefault()
 
             if (eventHandler is OnClick) {
                 feedback(fragment, eventHandler)

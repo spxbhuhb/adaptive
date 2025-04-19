@@ -3,11 +3,11 @@ package `fun`.adaptive.ui.input
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.input.Disabled
 import `fun`.adaptive.ui.theme.AbstractTheme
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
-import `fun`.adaptive.ui.api.disabled as uiDisabled
 
 class InputTheme : AbstractTheme() {
 
@@ -35,7 +35,7 @@ class InputTheme : AbstractTheme() {
     )
 
     val disabled = base + instructionsOf(
-        uiDisabled,
+        Disabled(),
         border(colors.outline, 1.dp),
         paddingB1,
         textColors.onSurface,

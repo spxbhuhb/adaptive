@@ -1,14 +1,9 @@
-package `fun`.adaptive.ui.checkbox
+package `fun`.adaptive.ui.input.bool
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.border
-import `fun`.adaptive.ui.api.cornerRadius
-import `fun`.adaptive.ui.api.noSelect
-import `fun`.adaptive.ui.api.position
-import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
@@ -16,14 +11,15 @@ import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.iconColors
 import `fun`.adaptive.ui.theme.textColors
 
-class CheckboxTheme(
+class BooleanInputTheme(
     containerSize: DPixel,
     contentSize: DPixel
 ) {
 
     var container = instructionsOf(
         size(containerSize),
-        alignItems.center
+        alignItems.center,
+        tabIndex { 0 }
     )
 
     var active = instructionsOf(
@@ -48,7 +44,7 @@ class CheckboxTheme(
     )
 
     companion object {
-        var DEFAULT = CheckboxTheme(38.dp, 20.dp)
-        var small = CheckboxTheme(24.dp, 16.dp)
+        var default = BooleanInputTheme(38.dp, 20.dp)
+        var small = BooleanInputTheme(24.dp, 16.dp)
     }
 }
