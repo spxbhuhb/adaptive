@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.box
 
 @Adaptive
-fun hr(theme : DocumentTheme = DocumentTheme.DEFAULT) : AdaptiveFragment {
+fun hr(theme : DocumentTheme = DocumentTheme.default) : AdaptiveFragment {
 
     box { theme.rule } .. instructions()
 

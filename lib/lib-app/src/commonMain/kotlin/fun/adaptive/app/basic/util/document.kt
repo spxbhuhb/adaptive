@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.instruction.dp
 fun document(
     doc: DocumentResourceSet,
     argument: AdatClass? = null,
-    theme: DocumentTheme = DocumentTheme.DEFAULT
+    theme: DocumentTheme = DocumentTheme.default
 ): AdaptiveFragment {
 
     column {

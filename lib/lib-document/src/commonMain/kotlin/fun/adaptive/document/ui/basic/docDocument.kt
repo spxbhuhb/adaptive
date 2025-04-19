@@ -11,21 +11,20 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.resource.document.DocumentResourceSet
 import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.text
 
 @Adaptive
 fun docDocument(
     resource : DocumentResourceSet,
-    theme : DocumentTheme = DocumentTheme.DEFAULT,
+    theme : DocumentTheme = DocumentTheme.default,
     arguments : AdatClass? = null
 ) : AdaptiveFragment {
 
-    val document = fetch { resource.fetchAndCompile() }
+    val document = fetch { resource.fetchAndCompile(theme) }
 
-    val context = document?.let {
+    val context = document?.let { doc ->
         DocRenderContext(
-            document = it,
-            styles = it.styles.map { it.instructions },
+            document = doc,
+            styles = doc.styles.map { it.instructions },
             theme = theme,
             arguments = arguments
         )

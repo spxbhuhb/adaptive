@@ -11,7 +11,7 @@ import `fun`.adaptive.markdown.model.*
 
 class MarkdownToDocTransform(
     val ast: List<MarkdownElement>,
-    val theme: DocumentTheme = DocumentTheme.DEFAULT,
+    val theme: DocumentTheme = DocumentTheme.default,
 ) : MarkdownVisitor<DocBlockElement?, Int>() {
 
     constructor(source: String) : this(parseInternal(tokenizeInternal(source)))

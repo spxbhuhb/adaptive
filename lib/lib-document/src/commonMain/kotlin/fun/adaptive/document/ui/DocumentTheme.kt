@@ -4,12 +4,17 @@ import `fun`.adaptive.document.model.DocListItem
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.instruction.SPixel
+import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 
-class DocumentTheme {
+class DocumentTheme(
+    val baseFontSize : SPixel = 14.sp,
+    val textColor : Color = colors.onSurface
+) {
 
     /**
      * The gap between blocks of content such as paragraphs.
@@ -17,31 +22,38 @@ class DocumentTheme {
     val blockGap = gap { 12.dp }
 
     val h1 = instructionsOf(
-        fontSize { 28.sp }
+        fontSize { 28.sp },
+        textColor(textColor)
     )
 
     val h2 = instructionsOf(
-        fontSize { 24.sp }
+        fontSize { 24.sp },
+        textColor(textColor)
     )
 
     val h3 = instructionsOf(
-        fontSize { 20.sp }
+        fontSize { 20.sp },
+        textColor(textColor)
     )
 
     val h4 = instructionsOf(
-        fontSize { 16.sp }
+        fontSize { 16.sp },
+        textColor(textColor)
     )
 
     val h5 = instructionsOf(
-        fontSize { 12.sp }
+        fontSize { 12.sp },
+        textColor(textColor)
     )
 
     val hN = instructionsOf(
-        fontSize { 12.sp }
+        fontSize { 12.sp },
+        textColor(textColor)
     )
 
     val normal = instructionsOf(
-        fontSize { 14.sp }
+        fontSize { baseFontSize },
+        textColor(textColor)
     )
 
     val bold = instructionsOf(
@@ -90,7 +102,7 @@ class DocumentTheme {
     )
 
     val listBullet = instructionsOf(
-        backgroundColor(colors.onSurface),
+        backgroundColor(textColor),
         width { 5.dp },
         height { 5.dp },
         cornerRadius { 2.5.dp }
@@ -102,7 +114,8 @@ class DocumentTheme {
 
     val listNumber = instructionsOf(
         fontSize { 14.sp },
-        semiBoldFont
+        semiBoldFont,
+        textColor(textColor),
     )
 
     fun listPath(item: DocListItem): String =
@@ -117,7 +130,8 @@ class DocumentTheme {
     val blockFragment = instructionsOf()
 
     companion object {
-        val DEFAULT = DocumentTheme()
+        val default = DocumentTheme()
+        val hint = DocumentTheme(baseFontSize = 12.sp, textColor = colors.onSurfaceVariant)
     }
 
 }
