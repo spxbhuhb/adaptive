@@ -14,12 +14,12 @@ import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
 fun <T> selectInput(
-    viewBackend: SelectInputViewBackend<T>,
+    viewBackend: SingleSelectInputViewBackend<T>,
     @Adaptive
-    _fixme_option: (option: SelectInputViewBackend.SelectItem<T>) -> Unit
+    _fixme_option: (option: AbstractSelectInputViewBackend.SelectItem<T,T>) -> Unit
 ) : AdaptiveFragment {
     val focus = focus()
-    val observed = valueFrom { viewBackend } as SelectInputViewBackend<T> // FIXME this is needed because SelfObservable is a class, not an interface
+    val observed = valueFrom { viewBackend }
 
     decoratedInput(focus, observed) {
         column(instructions()) {
@@ -38,7 +38,7 @@ fun <T> selectInput(
 
 @Adaptive
 fun <T> selectInputItemText(
-    item: SelectInputViewBackend.SelectItem<T>
+    item: AbstractSelectInputViewBackend.SelectItem<T,*>
 ) {
     val observed = valueFrom { item }
 
@@ -52,7 +52,7 @@ fun <T> selectInputItemText(
 
 @Adaptive
 fun <T> selectInputItemIconAndText(
-    item: SelectInputViewBackend.SelectItem<T>
+    item: AbstractSelectInputViewBackend.SelectItem<T,*>
 ) {
     val observed = valueFrom { item }
 
@@ -67,7 +67,7 @@ fun <T> selectInputItemIconAndText(
 
 @Adaptive
 fun <T> selectInputItemCheckbox(
-    item: SelectInputViewBackend.SelectItem<T>
+    item: AbstractSelectInputViewBackend.SelectItem<T,*>
 ) {
     val observed = valueFrom { item }
 

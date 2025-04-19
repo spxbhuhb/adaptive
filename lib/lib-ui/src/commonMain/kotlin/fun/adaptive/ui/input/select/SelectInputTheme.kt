@@ -12,7 +12,8 @@ import `fun`.adaptive.ui.theme.colors
 class SelectInputTheme {
 
     var listContainer = instructionsOf(
-        tabIndex { 0 }
+        tabIndex { 0 },
+        verticalScroll
     )
 
     var surfaceListContainerBase = instructionsOf(
@@ -23,6 +24,11 @@ class SelectInputTheme {
     var surfaceListContainerBaseFocused = instructionsOf(
         listContainer,
         padding(5.dp, 7.dp, 5.dp, 7.dp)
+    )
+
+    var surfaceListContainerDisabled = instructionsOf(
+        padding(6.dp, 8.dp, 6.dp, 8.dp),
+        verticalScroll
     )
 
     var optionContainerBase = instructionsOf(

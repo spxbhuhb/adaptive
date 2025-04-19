@@ -8,7 +8,7 @@ class BooleanInputViewBackend(
     value: Boolean? = null,
     label: String? = null,
     isSecret: Boolean = false
-) : InputViewBackend<Boolean>(
+) : InputViewBackend<Boolean, BooleanInputViewBackend>(
     value, label, isSecret
 ) {
 

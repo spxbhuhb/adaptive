@@ -39,7 +39,7 @@ fun accountEditorAdmin(
 
     val title = if (account == null) Strings.addAccount else Strings.editAccount
 
-    modalEditor(title, hide, { save(form.formValue); hide() }) {
+    modalEditor(title, hide, { save(form.value); hide() }) {
         row {
             localContext(form) {
                 editFields()

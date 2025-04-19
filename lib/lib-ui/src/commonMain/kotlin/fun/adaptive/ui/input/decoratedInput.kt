@@ -3,21 +3,21 @@ package `fun`.adaptive.ui.input
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.traceAll
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.fill
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 
 @Adaptive
 fun <T> decoratedInput(
     focused: Boolean,
-    viewBackend: InputViewBackend<T>,
+    viewBackend: InputViewBackend<T, *>,
     @Adaptive
-    _KT_74337_content: (InputViewBackend<T>) -> Unit
+    _KT_74337_content: (InputViewBackend<T, *>) -> Unit
 ): AdaptiveFragment {
 
-    if (viewBackend.label != null) {
+    if (viewBackend.label?.isNotEmpty() == true) {
         withLabel(focused, viewBackend) { _KT_74337_content(viewBackend) } .. instructions()
     } else {
         _KT_74337_content(viewBackend)
@@ -29,19 +29,17 @@ fun <T> decoratedInput(
 @Adaptive
 private fun <T> withLabel(
     focused: Boolean,
-    viewBackend: InputViewBackend<T>,
+    viewBackend: InputViewBackend<T, *>,
     @Adaptive
-    _KT_74337_content: (InputViewBackend<T>) -> Unit
+    _KT_74337_content: (InputViewBackend<T,*>) -> Unit
 ): AdaptiveFragment {
-
-    fragment().trace = true
-    fragment().tracePatterns = traceAll.patterns
 
     val config = viewBackend.labelConfiguration(focused)
 
     when (config.labelPosition) {
         InputViewBackend.LabelPosition.Left -> {
             row(instructions()) {
+                fill.constrain
                 text(config.text, config.instruction)
                 _KT_74337_content(viewBackend)
             }
@@ -49,6 +47,7 @@ private fun <T> withLabel(
 
         InputViewBackend.LabelPosition.Right -> {
             row(instructions()) {
+                fill.constrainReverse
                 _KT_74337_content(viewBackend)
                 text(config.text, config.instruction)
             }
@@ -56,6 +55,7 @@ private fun <T> withLabel(
 
         InputViewBackend.LabelPosition.Top -> {
             column(instructions()) {
+                fill.constrain
                 text(config.text, config.instruction)
                 _KT_74337_content(viewBackend)
             }
@@ -63,6 +63,7 @@ private fun <T> withLabel(
 
         InputViewBackend.LabelPosition.Bottom -> {
             column(instructions()) {
+                fill.constrainReverse
                 _KT_74337_content(viewBackend)
                 text(config.text, config.instruction)
             }

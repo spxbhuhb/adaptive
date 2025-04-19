@@ -7,15 +7,23 @@ import `fun`.adaptive.adat.api.deepCopy
 import `fun`.adaptive.adat.api.validate
 import `fun`.adaptive.adat.descriptor.InstanceValidationResult
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.general.Observable
+import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.ui.input.InputViewBackend
 import kotlin.reflect.KProperty0
 
 class AdatFormViewBackend<T : AdatClass>(
     initialValue: T,
     var validateFun: AdatFormViewBackend<T>.(it: T) -> Unit = { }
-) : FormViewBackend() {
+) : FormViewBackend(), Observable<T> {
 
-    var formValue: T = initialValue
+    override var value: T = initialValue
+        set(value) {
+            field = value
+            notifyListeners()
+        }
+
+    override val listeners = mutableListOf<ObservableListener<T>>()
 
     val specificValidationResult = mutableListOf<PropertyPath>()
     var descriptorValidationResult = InstanceValidationResult()
@@ -26,7 +34,7 @@ class AdatFormViewBackend<T : AdatClass>(
         validate()
     }
 
-    override fun <T, BT : InputViewBackend<T>> backendFor(
+    override fun <T, BT : InputViewBackend<T,BT>> backendFor(
         binding: AdaptiveStateVariableBinding<T>?,
         newBackendFun: (value: T?, label: String?, secret: Boolean) -> BT
     ): BT {
@@ -35,12 +43,10 @@ class AdatFormViewBackend<T : AdatClass>(
         }
     }
 
-    override fun onInputValueChange(inputBackend: InputViewBackend<*>) {
-        formValue = formValue.deepCopy(AdatChange(inputBackend.path, inputBackend.inputValue))
+    override fun onInputValueChange(inputBackend: InputViewBackend<*,*>) {
+        val newValue = value.deepCopy(AdatChange(inputBackend.path, inputBackend.inputValue))
 
         validate()
-
-        // Update all fields that have constraint validation state changed.
 
         for (backend in inputBackends) {
             if (backend.path in failPaths) {
@@ -49,6 +55,8 @@ class AdatFormViewBackend<T : AdatClass>(
                 if (backend.isInConstraintError) backend.isInConstraintError = false
             }
         }
+
+        value = newValue
     }
 
     fun validate() {
@@ -59,13 +67,13 @@ class AdatFormViewBackend<T : AdatClass>(
         // properties into failPaths.
 
         specificValidationResult.clear()
-        validateFun(formValue)
+        validateFun(value)
         failPaths += specificValidationResult
 
         // Then, run the Adat descriptor-based validation. Add the failed paths
         // to failPaths as well.
 
-        descriptorValidationResult = formValue.validate()
+        descriptorValidationResult = value.validate()
 
         // We have to check and update all properties as it is possible that the change of
         // one property affects another one.
@@ -77,7 +85,7 @@ class AdatFormViewBackend<T : AdatClass>(
         }
     }
 
-    operator fun get(property: KProperty0<*>): InputViewBackend<*>? {
+    operator fun get(property: KProperty0<*>): InputViewBackend<*,*>? {
         val path = listOf(property.name)
         return inputBackends.firstOrNull { it.path == path }
     }

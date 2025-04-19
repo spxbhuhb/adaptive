@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.input.select
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
@@ -11,35 +12,32 @@ import `fun`.adaptive.ui.instruction.event.UIEvent
 import kotlin.properties.Delegates.observable
 import kotlin.reflect.KProperty
 
-class SelectInputViewBackend<T>(
-    value: T? = null,
+abstract class AbstractSelectInputViewBackend<VT, OT>(
+    value: VT? = null,
     label: String? = null,
     isSecret: Boolean = false
-) : InputViewBackend<T>(
+) : InputViewBackend<VT, AbstractSelectInputViewBackend<VT, OT>>(
     value, label, isSecret
 ) {
-    var options by observable(emptyList<T>(), ::notify)
+    var options by observable(emptyList<OT>(), ::notify)
     var isMultiSelect by observable(false, ::notify)
 
-    var toText by observable<(T) -> String>({ it.toString() }, ::notify)
-    var toIcon by observable<(T) -> GraphicsResourceSet>({ Graphics.empty }, ::notify)
+    var toText by observable<(OT) -> String>({ it.toString() }, ::notify)
+    var toIcon by observable<(OT) -> GraphicsResourceSet>({ Graphics.empty }, ::notify)
 
     var listInputTheme: SelectInputTheme = SelectInputTheme.default
-    var withSurfaceContainer : Boolean = false
+    var withSurfaceContainer: Boolean = false
 
-    var items by observable(listOf<SelectItem<T>>(), ::notify)
+    var items by observable(listOf<SelectItem<VT, OT>>(), ::notify)
 
-    val selectedItems = mutableSetOf<SelectItem<T>>()
-    val selectedOptions = mutableSetOf<T>()
+    val selectedItems = mutableSetOf<SelectItem<VT, OT>>()
+    val selectedOptions = mutableSetOf<OT>()
 
-    init {
-        if (value != null) {
-            selectedOptions += value
-        }
-    }
+    fun toggle(item: SelectItem<VT, OT>) {
+        if (isDisabled) return
 
-    fun toggle(item: SelectItem<T>) {
         val option = item.option
+        val oldValue = selectedOptions.toSet()
 
         if (option in selectedOptions) {
             selectedOptions -= option
@@ -55,37 +53,50 @@ class SelectInputViewBackend<T>(
             selectedItems += item
             item.isSelected = true
         }
+
+        updateInputValue(oldValue)
     }
 
-    fun optionListContainerInstructions(focused : Boolean): AdaptiveInstruction =
+    abstract fun updateInputValue(oldValue: Set<OT>)
+
+    fun optionListContainerInstructions(focused: Boolean): AdaptiveInstruction =
         if (withSurfaceContainer) {
-            containerThemeInstructions(focused) + (if (focused) listInputTheme.surfaceListContainerBaseFocused else listInputTheme.surfaceListContainerBase)
+            val base = containerThemeInstructions(focused)
+            when {
+                isDisabled -> base + listInputTheme.surfaceListContainerDisabled
+                focused -> base + listInputTheme.surfaceListContainerBaseFocused
+                else -> base + listInputTheme.surfaceListContainerBase
+            }
         } else {
-            listInputTheme.listContainer
+            if (isDisabled) {
+                emptyInstructions
+            } else {
+                listInputTheme.listContainer
+            }
         }
 
-    fun optionContainerInstructions(item: SelectItem<T>): AdaptiveInstruction =
+    fun optionContainerInstructions(item: SelectItem<VT, OT>): AdaptiveInstruction =
         if (item.isSelected) {
             listInputTheme.optionContainerSelected
         } else {
             listInputTheme.optionContainerBase
         }
 
-    fun optionIconInstructions(item: SelectItem<T>): AdaptiveInstruction {
+    fun optionIconInstructions(item: SelectItem<VT, OT>): AdaptiveInstruction {
         return listInputTheme.optionIcon
     }
 
-    fun optionTextInstructions(item: SelectItem<T>): AdaptiveInstruction {
+    fun optionTextInstructions(item: SelectItem<VT, OT>): AdaptiveInstruction {
         return listInputTheme.optionText
     }
 
-    class SelectItem<T>(
-        val viewBackend: SelectInputViewBackend<T>,
-        option: T,
+    class SelectItem<VT, OT>(
+        val viewBackend: AbstractSelectInputViewBackend<VT, OT>,
+        option: OT,
         selected: Boolean = false
-    ) : SelfObservable<SelectItem<T>>() {
+    ) : SelfObservable<SelectItem<VT, OT>>() {
 
-        var option: T by observable(option, ::notify)
+        var option: OT by observable(option, ::notify)
         var isSelected: Boolean by observable(selected, ::notify)
 
         fun optionContainerInstructions() = viewBackend.optionContainerInstructions(this)
@@ -100,7 +111,7 @@ class SelectInputViewBackend<T>(
             return viewBackend.toText(option)
         }
 
-        fun icon() : GraphicsResourceSet {
+        fun icon(): GraphicsResourceSet {
             return viewBackend.toIcon(option)
         }
     }
@@ -117,7 +128,7 @@ class SelectInputViewBackend<T>(
         super.notify(property, oldValue, newValue)
     }
 
-    fun onKeydown(event : UIEvent) {
+    fun onKeydown(event: UIEvent) {
         if (isMultiSelect) return // waaay too complex to handle right now
         val selected = selectedOptions.firstOrNull()
         val index = options.indexOf(selected)
@@ -128,8 +139,9 @@ class SelectInputViewBackend<T>(
                     toggle(items[index - 1])
                 }
             }
+
             Keys.ARROW_DOWN -> {
-                if (index == -1 && items.isNotEmpty()) {
+                if (index == - 1 && items.isNotEmpty()) {
                     toggle(items.first())
                     return
                 }

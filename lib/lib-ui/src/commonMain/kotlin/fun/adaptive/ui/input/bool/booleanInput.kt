@@ -23,7 +23,7 @@ fun booleanInput(
     viewBackend: BooleanInputViewBackend
 ): AdaptiveFragment {
 
-    val observed = valueFrom { viewBackend } as BooleanInputViewBackend // FIXME selfobserved cast
+    val observed = valueFrom { viewBackend }
     val focus = focus()
     val theme = observed.booleanInputTheme
 

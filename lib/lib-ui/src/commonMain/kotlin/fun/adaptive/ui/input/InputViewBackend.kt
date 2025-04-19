@@ -2,7 +2,8 @@ package `fun`.adaptive.ui.input
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.unsupported
-import `fun`.adaptive.general.SelfObservable
+import `fun`.adaptive.general.Observable
+import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.form.FormViewBackend
 import `fun`.adaptive.ui.instruction.input.Secret
@@ -24,11 +25,19 @@ import kotlin.reflect.KProperty
  *                        mandatory or constrained fields to give feedback before the user touches
  *                        them (or tries to submit the value).
  */
-open class InputViewBackend<T>(
-    value: T? = null,
+@Suppress("EqualsOrHashCode")
+abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
+    value: VT? = null,
     label: String? = null,
     val isSecret: Boolean = false,
-) : SelfObservable<InputViewBackend<T>>() {
+) : Observable<BT> {
+
+    override val listeners = mutableListOf<ObservableListener<BT>>()
+
+    @Suppress("UNCHECKED_CAST")
+    override var value : BT
+        get() = this as BT
+        set(_) = unsupported()
 
     var inputValue by observable(value, ::notify)
 
@@ -41,9 +50,9 @@ open class InputViewBackend<T>(
     var label by observable(label, ::notify)
     open var labelAlignment by observable(PopupAlign.aboveStart, ::notify)
 
-    var isNullable : Boolean = false
-    var onChange: ((T?) -> Unit)? = null
-    var validateFun: ((T?) -> Boolean)? = null
+    var isNullable: Boolean = false
+    var onChange: ((VT?) -> Unit)? = null
+    var validateFun: ((VT?) -> Boolean)? = null
     var isTouched: Boolean = false
 
     var inputTheme = InputTheme.DEFAULT
@@ -101,16 +110,16 @@ open class InputViewBackend<T>(
     }
 
     class LabelConfiguration(
-        val text : String,
+        val text: String,
         val labelPosition: LabelPosition,
-        val instruction : AdaptiveInstruction
+        val instruction: AdaptiveInstruction
     )
 
-    fun labelConfiguration(focused : Boolean) : LabelConfiguration {
+    fun labelConfiguration(focused: Boolean): LabelConfiguration {
         val vertical = labelAlignment.vertical
         val horizontal = labelAlignment.horizontal
 
-        val position : LabelPosition = when (horizontal) {
+        val position: LabelPosition = when (horizontal) {
             OuterAlignment.Before -> LabelPosition.Left
             OuterAlignment.After -> LabelPosition.Right
             else -> {
@@ -124,31 +133,34 @@ open class InputViewBackend<T>(
 
         val instruction = when (position) {
             LabelPosition.Left -> {
-                when(vertical) {
-                    OuterAlignment.Start -> alignSelf.top
-                    OuterAlignment.Center -> alignSelf.center
-                    OuterAlignment.End -> alignSelf.bottom
-                    else  -> unsupported()
-                }
-            }
-            LabelPosition.Right -> {
-                when(vertical) {
+                when (vertical) {
                     OuterAlignment.Start -> alignSelf.top
                     OuterAlignment.Center -> alignSelf.center
                     OuterAlignment.End -> alignSelf.bottom
                     else -> unsupported()
                 }
             }
+
+            LabelPosition.Right -> {
+                when (vertical) {
+                    OuterAlignment.Start -> alignSelf.top
+                    OuterAlignment.Center -> alignSelf.center
+                    OuterAlignment.End -> alignSelf.bottom
+                    else -> unsupported()
+                }
+            }
+
             LabelPosition.Top -> {
-                when(horizontal) {
+                when (horizontal) {
                     OuterAlignment.Start -> alignSelf.start
                     OuterAlignment.Center -> alignSelf.center
                     OuterAlignment.End -> alignSelf.end
                     else -> unsupported()
                 }
             }
+
             LabelPosition.Bottom -> {
-                when(horizontal) {
+                when (horizontal) {
                     OuterAlignment.Start -> alignSelf.start
                     OuterAlignment.Center -> alignSelf.center
                     OuterAlignment.End -> alignSelf.end

@@ -14,6 +14,7 @@ import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputRecipe
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.box
@@ -104,8 +105,8 @@ fun sandboxMain() {
 //                }
 //            }
             box {
-                maxSize .. padding { 16.dp } .. backgrounds.friendlyOpaque
-                //editSomeData()
+                maxSize .. padding { 16.dp } //.. backgrounds.friendlyOpaque
+                selectInputRecipe()
             }
         }
     }

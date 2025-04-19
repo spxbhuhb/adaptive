@@ -31,6 +31,7 @@ import `fun`.adaptive.sandbox.recipe.ui.text.paragraphRecipe
 import `fun`.adaptive.sandbox.recipe.ui.text.textRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeRecipe
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputRecipe
 
 object CookbookFragmentFactory : FoundationFragmentFactory() {
     init {
@@ -68,6 +69,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:input:date", ::dateInputRecipe)
         add("cookbook:recipe:input:double", ::doubleInputRecipe)
         add("cookbook:recipe:input:quick-filter", ::quickFilterRecipe)
+        add("cookbook:recipe:input:select", ::selectInputRecipe)
         add("cookbook:recipe:input:text", ::textInputRecipe)
         add("cookbook:recipe:input:text-area", ::textInputAreaRecipe)
     }

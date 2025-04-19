@@ -3,8 +3,8 @@ package `fun`.adaptive.ui.input
 import `fun`.adaptive.ui.instruction.layout.PopupAlign
 import `fun`.adaptive.ui.label.LabelTheme
 
-open class InputViewBackendBuilder<T>(
-    var inputValue: T?
+abstract class InputViewBackendBuilder<VT, BT : InputViewBackend<VT,BT>>(
+    var inputValue: VT?
 ) {
 
     var isNullable : Boolean? = null
@@ -13,17 +13,14 @@ open class InputViewBackendBuilder<T>(
     var secret: Boolean = false
     var labelAlignment: PopupAlign? = null
     var label: String? = null
-    var onChange: ((T?) -> Unit)? = null
-    var validateFun: ((T?) -> Boolean)? = null
+    var onChange: ((VT?) -> Unit)? = null
+    var validateFun: ((VT?) -> Boolean)? = null
     var inputTheme: InputTheme? = null
     var labelTheme: LabelTheme? = null
 
-    open fun toBackend() =
-        InputViewBackend(inputValue, label, secret).also {
-            setup(it)
-        }
+    abstract fun toBackend() : BT
 
-    fun setup(backend: InputViewBackend<T>) {
+    open fun setup(backend: BT) {
         isNullable?.let { backend.isNullable = it }
         disabled?.let { backend.isDisabled = it }
         invalid?.let { backend.isInConstraintError = it }

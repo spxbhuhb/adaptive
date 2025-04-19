@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.input.number
+package `fun`.adaptive.ui.input.integer
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -8,38 +8,16 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.singleLineTextInput
-import `fun`.adaptive.ui.input.InputContext
-import `fun`.adaptive.ui.input.InputTheme
 import `fun`.adaptive.ui.input.decoratedInput
-import `fun`.adaptive.utility.format
 
 @Adaptive
-fun doubleInput(
-    value: Double,
-    decimals: Int = 2,
-    state: InputContext = InputContext(),
-    theme: InputTheme = InputTheme.DEFAULT,
-    onChange: (Double) -> Unit
-): AdaptiveFragment {
-    doubleOrNullInput(value, decimals, state, theme) { v ->
-        if (v == null) {
-            state.invalid = true
-        } else {
-            onChange(v)
-            state.invalid = false
-        }
-    } .. instructions()
-    return fragment()
-}
-
-@Adaptive
-fun doubleInput2(
-    viewBackend: DoubleInputViewBackend
+fun intInput(
+    viewBackend: IntInputViewBackend
 ): AdaptiveFragment {
 
     val observed = valueFrom { viewBackend }
     val focus = focus()
-    val formatted = observed.inputValue?.format(observed.decimals, hideZeroDecimals = true)
+    val formatted = observed.inputValue?.toString()
 
     decoratedInput(focus, observed) {
         singleLineTextInput(
@@ -52,7 +30,7 @@ fun doubleInput2(
                     return@singleLineTextInput
                 }
 
-                val inputValue = v.toDoubleOrNull()
+                val inputValue = v.toIntOrNull()
 
                 if (inputValue != null) {
                     observed.isInConversionError = false

@@ -4,7 +4,7 @@ import `fun`.adaptive.ui.input.InputViewBackendBuilder
 
 class DoubleInputViewBackendBuilder(
     inputValue: Double?
-) : InputViewBackendBuilder<Double>(inputValue) {
+) : InputViewBackendBuilder<Double, DoubleInputViewBackend>(inputValue) {
 
     var decimals : Int? = null
 

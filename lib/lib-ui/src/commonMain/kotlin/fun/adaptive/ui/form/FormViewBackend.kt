@@ -7,9 +7,9 @@ import `fun`.adaptive.ui.input.InputViewBackend
 
 open class FormViewBackend() {
 
-    val inputBackends = mutableListOf<InputViewBackend<*>>()
+    val inputBackends = mutableListOf<InputViewBackend<*,*>>()
 
-    open fun <T, BT : InputViewBackend<T>> backendFor(
+    open fun <T, BT : InputViewBackend<T,BT>> backendFor(
         binding: AdaptiveStateVariableBinding<T>?,
         newBackendFun: (value: T?, label: String?, secret: Boolean) -> BT
     ): BT {
@@ -38,12 +38,12 @@ open class FormViewBackend() {
         }
     }
 
-    open fun onInputValueChange(inputBackend: InputViewBackend<*>) {
+    open fun onInputValueChange(inputBackend: InputViewBackend<*,*>) {
 
     }
 
     companion object {
-        fun <T, BT : InputViewBackend<T>> AdaptiveFragment.viewBackendFor(
+        fun <T, BT : InputViewBackend<T,BT>> AdaptiveFragment.viewBackendFor(
             binding : AdaptiveStateVariableBinding<T>?,
             newBackendFun: (value: T?, label: String?, secret: Boolean) -> BT
         ) : BT {

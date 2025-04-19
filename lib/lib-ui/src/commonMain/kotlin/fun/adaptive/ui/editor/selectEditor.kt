@@ -7,14 +7,15 @@ import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
-import `fun`.adaptive.ui.input.select.SelectInputViewBackend
+import `fun`.adaptive.ui.input.select.AbstractSelectInputViewBackend
+import `fun`.adaptive.ui.input.select.SingleSelectInputViewBackend
 import `fun`.adaptive.ui.input.select.selectInput
 
 @Adaptive
 fun <T> selectEditor(
     options : List<T>,
     @Adaptive
-    _fixme_itemFun : (SelectInputViewBackend.SelectItem<T>) -> Unit,
+    _fixme_itemFun : (AbstractSelectInputViewBackend.SelectItem<T,T>) -> Unit,
     binding: AdaptiveStateVariableBinding<T>? = null,
     @Suppress("unused")
     @PropertySelector
@@ -23,7 +24,7 @@ fun <T> selectEditor(
 
     selectInput(
         fragment().viewBackendFor(binding) { value, label, isSecret ->
-            SelectInputViewBackend(value, label, isSecret).also {
+            SingleSelectInputViewBackend(value, label, isSecret).also {
                 it.options = options
                 it.withSurfaceContainer = true
             }

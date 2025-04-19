@@ -4,7 +4,7 @@ import `fun`.adaptive.ui.input.InputViewBackendBuilder
 
 class BooleanInputViewBackendBuilder(
     inputValue: Boolean?
-) : InputViewBackendBuilder<Boolean>(inputValue) {
+) : InputViewBackendBuilder<Boolean, BooleanInputViewBackend>(inputValue) {
 
     var booleanInputTheme : BooleanInputTheme? = null
 

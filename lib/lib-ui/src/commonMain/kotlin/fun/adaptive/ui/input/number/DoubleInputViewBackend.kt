@@ -7,7 +7,7 @@ class DoubleInputViewBackend(
     value: Double? = null,
     label: String? = null,
     isSecret: Boolean = false
-) : InputViewBackend<Double>(
+) : InputViewBackend<Double, DoubleInputViewBackend>(
     value, label, isSecret
 ) {
 

@@ -9,7 +9,6 @@ import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.singleLineTextInput
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.InputTheme
-import `fun`.adaptive.ui.input.InputViewBackend
 import `fun`.adaptive.ui.input.decoratedInput
 
 @Adaptive
@@ -35,7 +34,7 @@ fun textInput(
 
 @Adaptive
 fun textInput2(
-    viewBackend: InputViewBackend<String>
+    viewBackend: TextInputViewBackend
 ): AdaptiveFragment {
     val observed = valueFrom { viewBackend }
     val focus = focus()
