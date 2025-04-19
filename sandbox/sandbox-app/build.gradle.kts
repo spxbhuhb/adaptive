@@ -65,6 +65,7 @@ kotlin {
                 implementation(libs.adaptive.grove.runtime)
 
                 implementation(libs.adaptive.iot.lib.core)
+                implementation(libs.adaptive.site.lib.cookbook)
 
                 implementation(libs.kotlinx.coroutines.debug)
             }
