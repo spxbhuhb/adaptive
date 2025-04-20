@@ -50,6 +50,7 @@
     <string name="editAccount">Fiók szerkesztése</string>
     <string name="roles">Szerepkörök</string>
     <string name="addRole">Szerepkör hozzáadása</string>
+    <string name="editRole">Szerepkör szerkesztése</string>
     <string name="context">Környezet</string>
 
     <!-- inspect -->

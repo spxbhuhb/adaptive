@@ -2,6 +2,7 @@ package `fun`.adaptive.ui.form
 
 import `fun`.adaptive.adat.AdatChange
 import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.PropertyPath
 import `fun`.adaptive.adat.api.deepCopy
 import `fun`.adaptive.adat.api.validate
@@ -26,7 +27,7 @@ class AdatFormViewBackend<T : AdatClass>(
 
     override val listeners = mutableListOf<ObservableListener<T>>()
 
-    val specificValidationResult = mutableListOf<PropertyPath>()
+    val specificValidationFails = mutableListOf<PropertyPath>()
     var descriptorValidationResult = InstanceValidationResult()
     val failPaths = mutableSetOf<PropertyPath>()
 
@@ -44,9 +45,12 @@ class AdatFormViewBackend<T : AdatClass>(
         }
     }
 
+    override fun getProperty(companion : AdatCompanion<*>, path : List<String>) =
+        companion.adatMetadata.getPropertyMetadataOrNull(path, instance = value)
+
     override fun <T> getValue(binding: AdaptiveStateVariableBinding<T>, property: AdatPropertyMetadata): T {
         @Suppress("UNCHECKED_CAST")
-        return value.getValue(property.name) as T
+        return (value.getValue(binding.path!!) as T)
     }
 
     override fun onInputValueChange(inputBackend: InputViewBackend<*, *>) {
@@ -72,9 +76,9 @@ class AdatFormViewBackend<T : AdatClass>(
         // First, execute the form-specific validation. This puts paths of failed
         // properties into failPaths.
 
-        specificValidationResult.clear()
+        specificValidationFails.clear()
         validateFun(newValue)
-        failPaths += specificValidationResult
+        failPaths += specificValidationFails
 
         // Then, run the Adat descriptor-based validation. Add the failed paths
         // to failPaths as well.
@@ -103,13 +107,13 @@ class AdatFormViewBackend<T : AdatClass>(
         val touch2 = this[p2]?.isTouched ?: true
 
         if (! dualTouch || (touch1 && touch2)) {
-            specificValidationResult += listOf(p1.name)
-            specificValidationResult += listOf(p2.name)
+            specificValidationFails += listOf(p1.name)
+            specificValidationFails += listOf(p2.name)
         }
     }
 
-    fun isInvalid(touchAll: Boolean): Boolean {
-        val valid = specificValidationResult.isEmpty() && descriptorValidationResult.isValid
+    fun isInvalid(touchAll: Boolean = true): Boolean {
+        val valid = specificValidationFails.isEmpty() && descriptorValidationResult.isValid
         if (touchAll) {
             inputBackends.forEach {
                 it.isTouched = true
@@ -118,5 +122,4 @@ class AdatFormViewBackend<T : AdatClass>(
         }
         return ! valid
     }
-
 }

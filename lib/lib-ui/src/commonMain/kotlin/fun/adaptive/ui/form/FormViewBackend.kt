@@ -1,5 +1,6 @@
 package `fun`.adaptive.ui.form
 
+import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContextOrNull
@@ -7,6 +8,8 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.ui.input.InputViewBackend
 
 open class FormViewBackend() {
+
+    var isFormDisabled : Boolean = false
 
     val inputBackends = mutableListOf<InputViewBackend<*, *>>()
 
@@ -19,7 +22,7 @@ open class FormViewBackend() {
         val companion = binding?.adatCompanion ?: return unbound()
         val path = binding.path?.toList() ?: return unbound()
 
-        val property = companion.adatMetadata.properties.firstOrNull { it.name == path.lastOrNull() } ?: return unbound()
+        val (propertyContainerInstance, propertyMetadata) = getProperty(companion, path) ?: return unbound()
 
         val existing = inputBackends.firstOrNull { it.path == path }
 
@@ -27,17 +30,21 @@ open class FormViewBackend() {
         if (existing != null) return existing as BT
 
         newBackendFun(
-            getValue(binding, property),
+            getValue(binding, propertyMetadata),
             path.lastOrNull(),
-            property.isSecret(companion.adatDescriptors)
+            propertyMetadata.isSecret((propertyContainerInstance?.adatCompanion ?: companion).adatDescriptors)
         ).also {
-            it.isNullable = property.isNullable
+            it.isNullable = propertyMetadata.isNullable
+            it.isFormDisabled = isFormDisabled
             it.formBackend = this
             it.path = path
             inputBackends += it
             return it
         }
     }
+
+    open fun getProperty(companion : AdatCompanion<*>, path : List<String>) =
+        companion.adatMetadata.getPropertyMetadataOrNull(path)
 
     /**
      * This is a tricky proposition. It is not guaranteed that the binding value is correct. If you use a template
@@ -57,12 +64,25 @@ open class FormViewBackend() {
 
     }
 
+    open fun disableAll() {
+        for (input in inputBackends) {
+            isFormDisabled = true
+            input.isFormDisabled = true
+        }
+    }
+
+    open fun enableAll() {
+        for (input in inputBackends) {
+            isFormDisabled = false
+            input.isFormDisabled = false
+        }
+    }
+
     companion object {
         fun <T, BT : InputViewBackend<T, BT>> AdaptiveFragment.viewBackendFor(
             binding: AdaptiveStateVariableBinding<T>?,
             newBackendFun: (value: T?, label: String?, secret: Boolean) -> BT
         ): BT {
-            println("====: ${(firstContextOrNull<FormViewBackend>() as? AdatFormViewBackend<*>)?.value}")
             return firstContextOrNull<FormViewBackend>()?.backendFor(binding, newBackendFun) ?: newBackendFun(null, null, false)
         }
     }

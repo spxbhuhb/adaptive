@@ -4,7 +4,8 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.datetime.dateInput
-import `fun`.adaptive.ui.input.text.textInput
+import `fun`.adaptive.ui.input.text.textInput2
+import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.utility.localDate
@@ -13,12 +14,13 @@ import `fun`.adaptive.utility.localDate
 fun datePickerMain(): AdaptiveFragment {
 
     var date = localDate()
+    val text = textInputBackend("Hello World!") {}
 
     column {
         padding { 16.dp } .. maxHeight .. width { 400.dp } .. verticalScroll
 
         withLabel("Text") {
-            textInput("Hello World!") { }
+            textInput2(text)
         }
 
         withLabel("Date") {

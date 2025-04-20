@@ -5,6 +5,7 @@
 package `fun`.adaptive.adat.metadata
 
 import `fun`.adaptive.adat.TestClass
+import `fun`.adaptive.adat.polymorphic.PolymorphicTestClass
 import `fun`.adaptive.wireformat.fromJson
 import `fun`.adaptive.wireformat.toJson
 import kotlin.test.Test
@@ -16,7 +17,7 @@ class MetadataTest {
     fun basic() {
         val expected = AdatClassMetadata(
             version = 1,
-            name = "fun.adaptive.adat.TestClass",
+            name = "fun.adaptive.adat.metadata.TestClass",
             flags = 0,
             properties = listOf(
                 AdatPropertyMetadata("someInt", 0, 0, "I"),
@@ -29,6 +30,47 @@ class MetadataTest {
         val actual = payload.fromJson(AdatClassMetadata)
 
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun getPropertyMetadataTop() {
+        val metadata = AdatClassMetadata(
+            version = 1,
+            name = "fun.adaptive.adat.metadata.TestClass",
+            flags = 0,
+            properties = listOf(
+                AdatPropertyMetadata("someInt", 0, 0, "I"),
+                AdatPropertyMetadata("someBoolean", 1, 0, "Z"),
+                AdatPropertyMetadata("someIntListSet", 2, 0, "Lkotlin.collections.Set<Lkotlin.collections.List<I>;>;")
+            )
+        )
+
+        assertEquals(
+            null to metadata.properties[0],
+            metadata.getPropertyMetadataOrNull(listOf("someInt"))
+        )
+
+        assertEquals(
+            null to metadata.properties[1],
+            metadata.getPropertyMetadataOrNull(listOf("someBoolean"))
+        )
+
+        assertEquals(
+            metadata to metadata.properties[2],
+            metadata.getPropertyMetadataOrNull(listOf("someIntListSet"), metadata)
+        )
+    }
+
+    @Test
+    fun getPropertyMetadataFirst() {
+        val something = TestClass()
+        val instance = PolymorphicTestClass(something)
+
+        assertEquals(
+            something to TestClass.adatMetadata.properties[0],
+            PolymorphicTestClass.adatMetadata.getPropertyMetadataOrNull(listOf("something", "someInt"), instance)
+        )
+
     }
 
 }

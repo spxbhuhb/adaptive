@@ -11,6 +11,10 @@ import `fun`.adaptive.adat.descriptor.AdatDescriptor
 import `fun`.adaptive.adat.descriptor.AdatDescriptorSet
 import `fun`.adaptive.adat.descriptor.DefaultDescriptorFactory
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
+import `fun`.adaptive.registry.Registry
+import `fun`.adaptive.utility.trimSignature
+import `fun`.adaptive.wireformat.WireFormat
+import `fun`.adaptive.wireformat.WireFormatRegistry
 import `fun`.adaptive.wireformat.fromJson
 
 /**
@@ -58,6 +62,55 @@ class AdatClassMetadata(
 
     operator fun get(propertyName: String): AdatPropertyMetadata =
         properties.first { it.name == propertyName }
+
+    /**
+     * Get a metadata of a property, possibly deep in the instance. This is tricky when handling
+     * polymorphic instances which have no compile time data available.
+     *
+     * In those cases [instance] must be passed, so [getPropertyMetadataOrNull] can figure out
+     * what the property is.
+     *
+     * @return  A pair of the actual Adat instance that contains the property and the metadata
+     *          of the property. This is required (at least for now) because the descriptors
+     *          are stored in the companion, not in the metadata, so checking the descriptors
+     *          cannot be done without the companion. Might be avoided if we clean up the
+     *          descriptors (TODO clean up Adat descriptors).
+     */
+    fun getPropertyMetadataOrNull(
+        propertyPath: List<String>,
+        instance: AdatClass? = null,
+        registry: Registry<WireFormat<*>> = WireFormatRegistry
+    ): Pair<AdatClass?, AdatPropertyMetadata>? {
+        if (properties.isEmpty()) return null
+
+        val lastIndex = propertyPath.lastIndex
+
+        var currentClassMetadata = this
+        var currentInstance = instance
+
+        for (index in propertyPath.indices) {
+            val name = propertyPath[index]
+            val property = currentClassMetadata.properties.find { it.name == name } ?: return null
+
+            if (index == lastIndex) return (currentInstance to property)
+
+            if (property.isAdatClass) {
+                val companion = (registry[property.signature.trimSignature()] as? AdatCompanion<*>) ?: return null
+                currentClassMetadata = companion.adatMetadata
+                if (currentInstance != null) {
+                    currentInstance = (currentInstance.getValue(property.index) as? AdatClass) ?: return null
+                }
+            } else {
+                if (currentInstance == null) return null
+                val sub = currentInstance.getValue(property.index) ?: return null
+                if (sub !is AdatClass) return null
+                currentInstance = sub
+                currentClassMetadata = sub.getMetadata()
+            }
+        }
+
+        return null
+    }
 
     // --------------------------------------------------------------------------------
     // AdatClass overrides

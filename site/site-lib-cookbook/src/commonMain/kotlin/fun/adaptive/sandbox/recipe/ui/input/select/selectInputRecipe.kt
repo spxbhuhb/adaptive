@@ -1,7 +1,6 @@
 package `fun`.adaptive.sandbox.recipe.ui.input.select
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.cookbook.generated.resources.select_input
 import `fun`.adaptive.cookbook.generated.resources.zigbee
 import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.document.ui.direct.markdown
@@ -25,6 +24,7 @@ import `fun`.adaptive.ui.generated.resources.account_box
 import `fun`.adaptive.ui.generated.resources.eco
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.generated.resources.menu_book
+import `fun`.adaptive.ui.generated.resources.select_input
 import `fun`.adaptive.ui.input.select.*
 import `fun`.adaptive.ui.input.select.item.selectInputItemCheckbox
 import `fun`.adaptive.ui.input.select.item.selectInputItemIconAndText

@@ -24,6 +24,10 @@ import kotlin.reflect.KProperty
  *                        This lets the theme decide on user feedback as you typically do not want
  *                        mandatory or constrained fields to give feedback before the user touches
  *                        them (or tries to submit the value).
+ *
+ *  @property  isInputDisabled  True when this specific input is disabled.
+ *
+ *  @property  isFormDisabled   True when the whole form is disabled and in result this input should be disabled as well.
  */
 @Suppress("EqualsOrHashCode")
 abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
@@ -44,7 +48,8 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
     var isInConstraintError by observable(false, ::notify)
     var isInConversionError by observable(false, ::notify)
 
-    var isDisabled by observable(false, ::notify)
+    var isInputDisabled by observable(false, ::notify)
+    var isFormDisabled by observable(false, ::notify)
     var isPopupOpen by observable(false, ::notify)
 
     var label by observable(label, ::notify)
@@ -60,6 +65,9 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
 
     var formBackend: FormViewBackend? = null
     var path: List<String> = emptyList()
+
+    val isDisabled : Boolean
+        get() = isInputDisabled || isFormDisabled
 
     val isInvalid: Boolean
         get() = isInConstraintError || isInConversionError

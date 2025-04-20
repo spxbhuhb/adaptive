@@ -3,6 +3,7 @@
   -->
 
 <resources>
+    <string name="invalidFields">Vannak még érvénytelen mezők.</string>
 
     <string name="home">Nyitólap</string>
     <string name="account">Fiók</string>

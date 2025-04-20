@@ -9,7 +9,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 @Adaptive
 fun wsAppAccountSelf(pane : WsPane<*, AccountSelfController>) : AdaptiveFragment {
 
-    val accountEditorData = fetch { pane.controller.getAccountEditorData() }
+    val accountEditorData = fetch { pane.controller.getAccountEditorData() } ?: AccountEditorData()
 
     accountEditorSelf(accountEditorData) { pane.controller.save(it) }
 

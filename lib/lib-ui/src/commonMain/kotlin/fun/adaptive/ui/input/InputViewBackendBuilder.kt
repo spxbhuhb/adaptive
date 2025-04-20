@@ -22,7 +22,7 @@ abstract class InputViewBackendBuilder<VT, BT : InputViewBackend<VT,BT>>(
 
     open fun setup(backend: BT) {
         isNullable?.let { backend.isNullable = it }
-        disabled?.let { backend.isDisabled = it }
+        disabled?.let { backend.isInputDisabled = it }
         invalid?.let { backend.isInConstraintError = it }
         labelAlignment?.let { backend.labelAlignment = it }
         onChange?.let { backend.onChange = it }

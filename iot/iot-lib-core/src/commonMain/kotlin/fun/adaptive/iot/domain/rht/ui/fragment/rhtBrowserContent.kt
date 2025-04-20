@@ -8,15 +8,17 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.domain.rht.ui.controller.RhtBrowserContentController
 import `fun`.adaptive.iot.domain.rht.ui.controller.RhtWsItem
-import `fun`.adaptive.iot.generated.resources.*
+import `fun`.adaptive.iot.generated.resources.filter
+import `fun`.adaptive.iot.generated.resources.temperatureAndHumidity
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.generated.resources.arrow_right
 import `fun`.adaptive.ui.filter.quickFilter
+import `fun`.adaptive.ui.generated.resources.arrow_right
 import `fun`.adaptive.ui.icon.icon
-import `fun`.adaptive.ui.input.text.textInput
+import `fun`.adaptive.ui.input.text.textInput2
+import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
@@ -55,6 +57,7 @@ fun pageHeader(pane: WsPane<RhtWsItem, RhtBrowserContentController>) {
 
     val spaceFilter = pane.controller.rhtFilter
     val filter = valueFrom { pane.controller.rhtFilter }
+    val search = textInputBackend(spaceFilter.value.search) { onChange = { spaceFilter.value = filter.copy(search = it ?: "") } }
 
     column {
         paddingBottom { 32.dp } .. gap { 24.dp }
@@ -73,8 +76,7 @@ fun pageHeader(pane: WsPane<RhtWsItem, RhtBrowserContentController>) {
                 quickFilter(filter.qf2) { spaceFilter.value = filter.copy(qf2 = filter.qf2.copy(selected = it)) }
             }
 
-            textInput(filter.search) { v -> spaceFilter.value = filter.copy(search = v) } ..
-                inputPlaceholder { Strings.filter } .. maxWidth
+            textInput2(search) .. inputPlaceholder { Strings.filter } .. maxWidth
         }
     }
 }
