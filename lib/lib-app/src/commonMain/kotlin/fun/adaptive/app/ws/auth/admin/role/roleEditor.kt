@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.withLabel
-import `fun`.adaptive.ui.popup.modalEditor
+import `fun`.adaptive.ui.popup.modalForEdit
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.value.item.AvItem
 
@@ -27,7 +27,7 @@ fun roleEditor(
     @Independent
     var copy = copyOf { role ?: AvItem("", AUTH_ROLE, friendlyId = "", spec = RoleSpec()) }
 
-    modalEditor(Strings.addRole, hide, { save(copy); hide() }) {
+    modalForEdit(Strings.addRole, hide, { save(copy); hide() }) {
         row {
             editFields(copy)
         }

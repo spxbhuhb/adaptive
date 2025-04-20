@@ -3,9 +3,9 @@ package `fun`.adaptive.ui.input.select
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.input.InputViewBackendBuilder
 
-abstract class AbstractSelectInputViewBackendBuilder<VT,OT>(
-    inputValue: VT?
-) : InputViewBackendBuilder<VT, AbstractSelectInputViewBackend<VT,OT>>(inputValue) {
+abstract class AbstractSelectInputViewBackendBuilder<SVT,IVT,OT>(
+    inputValue: SVT?
+) : InputViewBackendBuilder<SVT, AbstractSelectInputViewBackend<SVT,IVT,OT>>(inputValue) {
 
     var options : List<OT>? = null
     var multiSelect : Boolean? = null
@@ -16,7 +16,7 @@ abstract class AbstractSelectInputViewBackendBuilder<VT,OT>(
     var listInputTheme: SelectInputTheme? = null
     var withSurfaceContainer: Boolean? = null
 
-    override fun setup(backend : AbstractSelectInputViewBackend<VT,OT>) {
+    override fun setup(backend : AbstractSelectInputViewBackend<SVT,IVT,OT>) {
         super.setup(backend)
         options?.let { backend.options = it }
         multiSelect?.let { backend.isMultiSelect = it }

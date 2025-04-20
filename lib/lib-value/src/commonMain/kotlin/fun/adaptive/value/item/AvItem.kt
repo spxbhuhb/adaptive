@@ -46,6 +46,10 @@ data class AvItem<T>(
         return copy(markersOrNull = markers)
     }
 
+    override fun toString(): String {
+        return name
+    }
+
     companion object {
         inline fun <reified T> Any.asAvItem(): AvItem<T> {
 

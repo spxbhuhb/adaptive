@@ -6,6 +6,7 @@ import `fun`.adaptive.adat.PropertyPath
 import `fun`.adaptive.adat.api.deepCopy
 import `fun`.adaptive.adat.api.validate
 import `fun`.adaptive.adat.descriptor.InstanceValidationResult
+import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.general.ObservableListener
@@ -31,10 +32,10 @@ class AdatFormViewBackend<T : AdatClass>(
 
     init {
         // Initialize `failPaths` so `backendFor` can set `isInConstraintError` if needed.
-        validate()
+        validate(value)
     }
 
-    override fun <T, BT : InputViewBackend<T,BT>> backendFor(
+    override fun <T, BT : InputViewBackend<T, BT>> backendFor(
         binding: AdaptiveStateVariableBinding<T>?,
         newBackendFun: (value: T?, label: String?, secret: Boolean) -> BT
     ): BT {
@@ -43,10 +44,15 @@ class AdatFormViewBackend<T : AdatClass>(
         }
     }
 
-    override fun onInputValueChange(inputBackend: InputViewBackend<*,*>) {
+    override fun <T> getValue(binding: AdaptiveStateVariableBinding<T>, property: AdatPropertyMetadata): T {
+        @Suppress("UNCHECKED_CAST")
+        return value.getValue(property.name) as T
+    }
+
+    override fun onInputValueChange(inputBackend: InputViewBackend<*, *>) {
         val newValue = value.deepCopy(AdatChange(inputBackend.path, inputBackend.inputValue))
 
-        validate()
+        validate(newValue)
 
         for (backend in inputBackends) {
             if (backend.path in failPaths) {
@@ -59,7 +65,7 @@ class AdatFormViewBackend<T : AdatClass>(
         value = newValue
     }
 
-    fun validate() {
+    fun validate(newValue: T) {
 
         failPaths.clear()
 
@@ -67,13 +73,13 @@ class AdatFormViewBackend<T : AdatClass>(
         // properties into failPaths.
 
         specificValidationResult.clear()
-        validateFun(value)
+        validateFun(newValue)
         failPaths += specificValidationResult
 
         // Then, run the Adat descriptor-based validation. Add the failed paths
         // to failPaths as well.
 
-        descriptorValidationResult = value.validate()
+        descriptorValidationResult = newValue.validate()
 
         // We have to check and update all properties as it is possible that the change of
         // one property affects another one.
@@ -85,7 +91,7 @@ class AdatFormViewBackend<T : AdatClass>(
         }
     }
 
-    operator fun get(property: KProperty0<*>): InputViewBackend<*,*>? {
+    operator fun get(property: KProperty0<*>): InputViewBackend<*, *>? {
         val path = listOf(property.name)
         return inputBackends.firstOrNull { it.path == path }
     }

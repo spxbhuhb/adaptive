@@ -1,11 +1,14 @@
 package `fun`.adaptive.ui.input.select
 
-class MultiSelectInputViewBackendBuilder<OT>(
-    inputValue: Set<OT>?
-) : AbstractSelectInputViewBackendBuilder<Set<OT>, OT>(inputValue) {
+import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
+
+class MultiSelectInputViewBackendBuilder<IVT, OT>(
+    inputValue: Set<IVT>?,
+    var mapping : SelectOptionMapping<IVT,OT>
+) : AbstractSelectInputViewBackendBuilder<Set<IVT>, IVT, OT>(inputValue) {
 
     override fun toBackend() =
-        MultiSelectInputViewBackend(inputValue, label, secret).also {
+        MultiSelectInputViewBackend(inputValue, mapping, label, secret).also {
             setup(it)
         }
 

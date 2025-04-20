@@ -1,4 +1,9 @@
 package `fun`.adaptive.ui.input.select
 
-fun <T> selectInputBackend(inputValue: T? = null, builder: SingleSelectInputViewBackendBuilder<T>.() -> Unit = { }) =
-    SingleSelectInputViewBackendBuilder(inputValue).apply(builder).toBackend()
+import `fun`.adaptive.ui.input.select.mapping.IdentityMapping
+
+fun <T> selectInputBackend(
+    inputValue: T? = null,
+    builder: SingleSelectInputViewBackendBuilder<T,T>.() -> Unit = { }
+) =
+    SingleSelectInputViewBackendBuilder(inputValue, IdentityMapping()).apply(builder).toBackend()

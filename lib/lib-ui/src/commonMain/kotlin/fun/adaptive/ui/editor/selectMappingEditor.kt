@@ -9,23 +9,24 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
 import `fun`.adaptive.ui.input.select.AbstractSelectInputViewBackend
 import `fun`.adaptive.ui.input.select.SingleSelectInputViewBackend
-import `fun`.adaptive.ui.input.select.mapping.IdentityMapping
+import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
 import `fun`.adaptive.ui.input.select.selectInput
 
 @Adaptive
-fun <T> selectEditor(
-    options : List<T>,
+fun <VT,OT> selectEditor(
+    options : List<OT>,
+    mapping : SelectOptionMapping<VT,OT>,
     @Adaptive
-    _fixme_itemFun : (AbstractSelectInputViewBackend<T,T,T>.SelectItem) -> Unit,
-    binding: AdaptiveStateVariableBinding<T>? = null,
+    _fixme_itemFun : (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
+    binding: AdaptiveStateVariableBinding<VT>? = null,
     @Suppress("unused")
     @PropertySelector
-    selector: () -> T?
+    selector: () -> VT?
 ) : AdaptiveFragment {
 
     selectInput(
         fragment().viewBackendFor(binding) { value, label, isSecret ->
-            SingleSelectInputViewBackend(value, IdentityMapping(), label, isSecret).also {
+            SingleSelectInputViewBackend(value, mapping, label, isSecret).also {
                 it.options = options
                 it.withSurfaceContainer = true
             }

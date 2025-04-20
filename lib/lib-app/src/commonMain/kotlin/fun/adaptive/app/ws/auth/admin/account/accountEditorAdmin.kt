@@ -10,21 +10,22 @@ import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.lib_app.generated.resources.addAccount
 import `fun`.adaptive.lib_app.generated.resources.editAccount
-import `fun`.adaptive.lib_app.generated.resources.roles
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.datetime.instant
+import `fun`.adaptive.ui.editor.multiSelectMappingEditor
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
+import `fun`.adaptive.ui.input.select.item.selectInputItemCheckbox
+import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.inputLabel
-import `fun`.adaptive.ui.label.withLabel
-import `fun`.adaptive.ui.popup.modalEditor
+import `fun`.adaptive.ui.popup.modalForEdit
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.item.AvItem
 
 @Adaptive
 fun accountEditorAdmin(
@@ -36,14 +37,13 @@ fun accountEditorAdmin(
         expectEquals(it::password, it::passwordConfirm, dualTouch = true)
     }
 
-
     val title = if (account == null) Strings.addAccount else Strings.editAccount
 
-    modalEditor(title, hide, { save(form.value); hide() }) {
+    modalForEdit(title, hide, { save(form.value); hide() }) {
         row {
             localContext(form) {
                 editFields()
-                // roles()
+                roles()
             }
         }
     }
@@ -105,43 +105,17 @@ fun AccountEditorData.roles(roles: Set<AvValueId>) {
 }
 
 @Adaptive
-fun roles(editorData: AccountEditorData) {
+fun roles() {
 
+    val template = AccountEditorData()
     val knownRoles = fetch { getService<AuthRoleApi>(adapter().transport).all() } ?: emptyList()
 
-    var selectedRoles = editorData.roles
-
     column {
-        padding(16.dp) .. gap { 8.dp }
-        width { 320.dp } .. height { 300.dp } .. verticalScroll
-
-        withLabel(Strings.roles) {
-            for (role in knownRoles) {
-                row {
-                    alignItems.startCenter .. gap { 8.dp } .. paddingTop { 8.dp }
-
-                    onClick {
-                        if (role.uuid in selectedRoles) {
-                            editorData.roles(selectedRoles - role.uuid)
-                        } else {
-                            editorData.roles(selectedRoles + role.uuid)
-                        }
-                    }
-
-                    box {
-                        size(24.dp, 24.dp) .. alignItems.center
-                        checkbox(role.uuid in selectedRoles) { v ->
-                            if (v) {
-                                editorData.roles(selectedRoles - role.uuid)
-                            } else {
-                                editorData.roles(selectedRoles + role.uuid)
-                            }
-                        }
-                    }
-
-                    text(role.name) .. noSelect
-                }
-            }
-        }
+        padding { 16.dp } .. width { 300.dp } .. height { 300.dp }
+        multiSelectMappingEditor(knownRoles, AvItemSelectMapping(), { selectInputItemCheckbox(it) }) { template.roles } .. maxSize
     }
+}
+
+class AvItemSelectMapping : SelectOptionMapping<AvValueId, AvItem<*>> {
+    override fun optionToValue(option: AvItem<*>): AvValueId = option.uuid
 }

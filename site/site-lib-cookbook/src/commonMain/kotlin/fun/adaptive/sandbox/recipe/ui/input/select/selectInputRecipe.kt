@@ -26,6 +26,9 @@ import `fun`.adaptive.ui.generated.resources.eco
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.input.select.*
+import `fun`.adaptive.ui.input.select.item.selectInputItemCheckbox
+import `fun`.adaptive.ui.input.select.item.selectInputItemIconAndText
+import `fun`.adaptive.ui.input.select.item.selectInputItemText
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.utility.UUID

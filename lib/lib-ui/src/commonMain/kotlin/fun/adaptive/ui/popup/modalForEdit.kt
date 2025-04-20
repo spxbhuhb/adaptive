@@ -6,7 +6,7 @@ import `fun`.adaptive.ui.wrap.wrapFromBottom
 import `fun`.adaptive.ui.wrap.wrapFromTop
 
 @Adaptive
-fun modalEditor(
+fun modalForEdit(
     title : String,
     hide: () -> Unit,
     save: () -> Unit,

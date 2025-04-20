@@ -8,27 +8,30 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
 import `fun`.adaptive.ui.input.select.AbstractSelectInputViewBackend
-import `fun`.adaptive.ui.input.select.SingleSelectInputViewBackend
-import `fun`.adaptive.ui.input.select.mapping.IdentityMapping
-import `fun`.adaptive.ui.input.select.selectInput
+import `fun`.adaptive.ui.input.select.MultiSelectInputViewBackend
+import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
+import `fun`.adaptive.ui.input.select.multiSelectInput
 
 @Adaptive
-fun <T> selectEditor(
-    options : List<T>,
+fun <VT,OT> multiSelectMappingEditor(
+    options : List<OT>,
+    mapping : SelectOptionMapping<VT,OT>,
     @Adaptive
-    _fixme_itemFun : (AbstractSelectInputViewBackend<T,T,T>.SelectItem) -> Unit,
-    binding: AdaptiveStateVariableBinding<T>? = null,
+    _fixme_itemFun : (AbstractSelectInputViewBackend<Set<VT>,VT,OT>.SelectItem) -> Unit,
+    binding: AdaptiveStateVariableBinding<Set<VT>>? = null,
     @Suppress("unused")
     @PropertySelector
-    selector: () -> T?
+    selector: () -> Set<VT>?
 ) : AdaptiveFragment {
 
-    selectInput(
+    multiSelectInput(
         fragment().viewBackendFor(binding) { value, label, isSecret ->
-            SingleSelectInputViewBackend(value, IdentityMapping(), label, isSecret).also {
-                it.options = options
+            MultiSelectInputViewBackend(value, mapping, label, isSecret).also {
                 it.withSurfaceContainer = true
+                it.isMultiSelect = true
             }
+        }.also {
+            it.options = options
         },
         _fixme_itemFun,
     ) .. instructions()

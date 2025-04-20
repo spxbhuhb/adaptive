@@ -1,19 +1,22 @@
 package `fun`.adaptive.ui.input.select
 
-class SingleSelectInputViewBackend<VT>(
-    value: VT? = null,
+import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
+
+class SingleSelectInputViewBackend<IVT,OT>(
+    value: IVT? = null,
+    mapping : SelectOptionMapping<IVT, OT>,
     label: String? = null,
     isSecret: Boolean = false
-) : AbstractSelectInputViewBackend<VT, VT>(
-    value, label, isSecret
+) : AbstractSelectInputViewBackend<IVT, IVT, OT>(
+    value, mapping, label, isSecret
 ) {
     init {
         if (value != null) {
-            selectedOptions += value
+            selectedValues += value
         }
     }
 
-    override fun updateInputValue(oldValue: Set<VT>) {
-        inputValue = selectedOptions.firstOrNull()
+    override fun updateInputValue(oldValue: Set<IVT>) {
+        inputValue = selectedValues.firstOrNull()
     }
 }
