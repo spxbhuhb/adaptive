@@ -1,12 +1,8 @@
 package `fun`.adaptive.resource.string
 
-import `fun`.adaptive.resource.ResourceEnvironment
-import `fun`.adaptive.resource.ResourceReader
+import `fun`.adaptive.foundation.unsupported
+import `fun`.adaptive.resource.*
 import `fun`.adaptive.resource.avs.AvsReader
-import `fun`.adaptive.resource.defaultResourceEnvironment
-import `fun`.adaptive.resource.defaultResourceReader
-import `fun`.adaptive.resource.ResourceFileSet
-import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.resource.file.FileResource
 
 class StringStoreResourceSet(
@@ -18,28 +14,38 @@ class StringStoreResourceSet(
     resources.toList()
 ) {
 
-    var avsReader = AvsReader.EMPTY
-    var values = emptyArray<String?>()
+    var values = mutableMapOf<ResourceKey,String>()
 
-    fun get(index: Int): String =
-        if (index < 0 || index >= values.size) {
+    @Deprecated("use get(key) instead")
+    fun get(index: Int): String = unsupported()
+
+    fun get(key : ResourceKey)  =
+        values[key] ?:
             error(
                 """
-                    Index $index out of bounds (0..${values.size - 1}). 
+                    Key $key is not in this string store. 
                     Have you called load() during application startup?
                     First path in store: ${files.firstOrNull()?.path}
                 """.trimIndent()
             )
-        } else {
-            values[index] ?: avsReader[index].decodeToString().also { values[index] = it }
-        }
+
+    fun getOrNull(key: ResourceKey) =
+        values[key]
 
     suspend fun load(
         environment: ResourceEnvironment = defaultResourceEnvironment,
         resourceReader: ResourceReader = defaultResourceReader
     ) {
-        avsReader = AvsReader(readAll(environment, resourceReader))
-        values = arrayOfNulls<String>(avsReader.size)
+       for (item in AvsReader(readAll(environment, resourceReader))) {
+           val keySize = item[0].toInt()
+           val key = item.decodeToString(1, keySize + 1)
+
+           val valueOffset = keySize + 1
+           val value = item.decodeToString(valueOffset, item.size)
+
+           values[key] = value
+       }
     }
+
 
 }

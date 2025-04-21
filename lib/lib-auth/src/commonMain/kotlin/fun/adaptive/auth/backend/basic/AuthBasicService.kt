@@ -68,7 +68,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
         ensureHas(securityOfficer)
         ensureValid(signUp)
 
-        val accountValue = AvItem<BasicAccountSpec>(
+        val accountValue = AvItem(
             name = signUp.name,
             type = AuthMarkers.BASIC_ACCOUNT,
             friendlyId = signUp.name,
@@ -99,7 +99,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
 
         if (principalId == null) {
             // in this case we have a security officer for sure as ensure got a null principal
-            return add(principalName, credential !!, principalSpec.roles, accountName, accountSpec)
+            return add(principalName, credential !!, principalSpec.roles, principalName, accountSpec)
         }
 
         val originalPrincipal = valueWorker.item(principalId).withSpec<PrincipalSpec>()
@@ -145,7 +145,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
         accountName: String,
         accountSpec: BasicAccountSpec
     ): AvValueId {
-        val account = AvItem<BasicAccountSpec>(
+        val account = AvItem(
             name = accountName,
             type = AuthMarkers.BASIC_ACCOUNT,
             friendlyId = accountName.split(" ").mapNotNull { it.firstOrNull()?.toString()?.uppercase() }.take(2).joinToString(""),
@@ -190,7 +190,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
         name: String,
         spec: PrincipalSpec
     ) {
-        var copy = currentPrincipal.copy(
+        val copy = currentPrincipal.copy(
             name = name,
             spec = currentPrincipal.spec.copy(
                 activated = spec.activated,
@@ -210,7 +210,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
         name: String,
         spec: BasicAccountSpec
     ) {
-        var copy = currentAccount.copy(
+        val copy = currentAccount.copy(
             name = name,
             spec = currentAccount.spec.copy(email = spec.email)
         )

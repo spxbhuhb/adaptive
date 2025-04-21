@@ -34,7 +34,7 @@ fun accountEditorAdmin(
     save: (AccountEditorData) -> Unit
 ) {
     val form = adatFormBackend(account ?: AccountEditorData()) {
-        expectEquals(it::password, it::passwordConfirm, dualTouch = true)
+        expectEquals(it::password, it::confirmPassword, dualTouch = true)
     }
 
     val title = if (account == null) Strings.addAccount else Strings.editAccount
@@ -61,7 +61,7 @@ fun editFields() {
         textEditor { template.name }
         textEditor { template.email }
         textEditor { template.password }
-        textEditor { template.passwordConfirm }
+        textEditor { template.confirmPassword }
     }
 }
 

@@ -36,6 +36,7 @@ Points of interest:
 * `saveFormButton` is a utility to validate the form and:
   * call a function if valid
   * show a warning snack if invalid
+* field labels are translated automatically
 
 > [!IMPORTANT]
 > 
@@ -60,3 +61,22 @@ Points of interest:
 * `selectMappingEditor`
 * `multiSelectEditor`
 * `multiSelectMappingEditor`
+
+## Label translation
+
+Field labels are translated automatically, assuming:
+
+* there is an `AbstractApplication` context for the fragment
+* a string resource with a key equivalent to the property name exists
+
+The translation goes over the `stringStores` of the application and
+returns with the first string with the proper key.
+
+If there is no such key, the label will be the name of the property.
+
+> 
+> [!NOTE]
+> 
+> This mechanism does not take the module into account. I'll have to clarify this 
+> later, but it's fine for now.
+> 

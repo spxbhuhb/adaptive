@@ -24,7 +24,7 @@ fun accountEditorSelf(
     save: (AccountEditorData) -> Unit
 ) {
     val form = adatFormBackend(account) {
-        expectEquals(it::password, it::passwordConfirm, dualTouch = true)
+        expectEquals(it::password, it::confirmPassword, dualTouch = true)
     }
 
     // This is to prevent Safari overwriting the e-mail field on password change.

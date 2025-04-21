@@ -123,7 +123,7 @@ fun ResourceCompilation.exportToAvs(
     sortedKeys.forEach { writer += fileAndValues.values[it] !!.value }
 
     preparedResourcesPath
-        .resolve(fileAndValues.file.path.toString().replaceAfterLast('.', "avs"))
+        .resolve(fileAndValues.file.path.replaceAfterLast('.', "avs"))
         .write(
             writer.pack(),
             overwrite = true

@@ -32,6 +32,7 @@
     <string name="signUpSignIn">Have an account? **[Sign Ip](/sign-in)**</string>
 
     <string name="accounts">Fiókok</string>
+    <string name="principalName">Fiók név</string>
     <string name="accountName">Fiók név</string>
     <string name="name">Név</string>
     <string name="save">Mentés</string>

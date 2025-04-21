@@ -15,7 +15,7 @@ class AccountEditorData(
     val activated: Boolean = false,
     val locked: Boolean = false,
     val password: Secret = "",
-    val passwordConfirm: Secret = "",
+    val confirmPassword: Secret = "",
     val roles : Set<AvValueId> = emptySet()
 ) {
     override fun descriptor() {
@@ -24,7 +24,7 @@ class AccountEditorData(
             name blank false minLength 5 maxLength 255
             email blank false pattern "^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}\$"
             password secret true
-            passwordConfirm secret true
+            confirmPassword secret true
         }
     }
 }

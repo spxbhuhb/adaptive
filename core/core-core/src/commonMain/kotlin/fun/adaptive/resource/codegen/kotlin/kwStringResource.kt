@@ -25,7 +25,7 @@ fun KwFile.stringResource(
         storeProperty(storePropertyName, resourceSet)
     }
 
-    valueNames.forEachIndexed { index, valueName ->
+    valueNames.forEach { valueName ->
 
         kwProperty(valueName) {
             isVal = true
@@ -33,7 +33,7 @@ fun KwFile.stringResource(
             getter = kwGetter {
                 kwCall(KwKotlinSymbols.get) {
                     dispatchReceiver = kwGetValue(storePropertyName)
-                    kwValueArgument { kwConst(index) }
+                    kwValueArgument { kwConst(valueName) }
                 }
             }
         }

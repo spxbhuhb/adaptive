@@ -52,8 +52,4 @@ class AvsReader(binary: ByteArray) : Collection<ByteArray>, Iterable<ByteArray> 
             get(index++)
     }
 
-    companion object {
-        val EMPTY = AvsReader(AvsWriter().pack())
-    }
-
 }

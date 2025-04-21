@@ -99,8 +99,13 @@ fun ResourceCompilation.mapToValue(
         value = content.content.encodeToByteArray()
     }
 
+    val name = attr.value.encodeToByteArray()
+    require(name.size < 128) { "value names longer than 127 characters are not supported" }
+
+    val nameAndValue = byteArrayOf(name.size.toByte()) + name + value
+
     values[attr.value] = ResourceCompilation.ResourceValue(
         attr.value,
-        value
+        nameAndValue
     )
 }

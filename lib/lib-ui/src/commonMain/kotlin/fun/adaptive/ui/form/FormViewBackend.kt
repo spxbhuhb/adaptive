@@ -5,11 +5,15 @@ import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContextOrNull
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.resource.ResourceKey
+import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.ui.input.InputViewBackend
 
 open class FormViewBackend() {
 
-    var isFormDisabled : Boolean = false
+    var isFormDisabled: Boolean = false
+
+    var application: AbstractApplication<*>? = null
 
     val inputBackends = mutableListOf<InputViewBackend<*, *>>()
 
@@ -31,7 +35,7 @@ open class FormViewBackend() {
 
         newBackendFun(
             getValue(binding, propertyMetadata),
-            path.lastOrNull(),
+            findLabel(binding.targetFragment, path.lastOrNull()),
             propertyMetadata.isSecret((propertyContainerInstance?.adatCompanion ?: companion).adatDescriptors)
         ).also {
             it.isNullable = propertyMetadata.isNullable
@@ -43,7 +47,7 @@ open class FormViewBackend() {
         }
     }
 
-    open fun getProperty(companion : AdatCompanion<*>, path : List<String>) =
+    open fun getProperty(companion: AdatCompanion<*>, path: List<String>) =
         companion.adatMetadata.getPropertyMetadataOrNull(path)
 
     /**
@@ -76,6 +80,19 @@ open class FormViewBackend() {
             isFormDisabled = false
             input.isFormDisabled = false
         }
+    }
+
+    fun findLabel(fragment: AdaptiveFragment, key: ResourceKey?): String? {
+        if (key == null) return null
+
+        val app = application ?: fragment.firstContextOrNull<AbstractApplication<*>>()?.also { application = it } ?: return null
+
+        for (store in app.stringStores) {
+            val label = store.getOrNull(key) ?: continue
+            return label
+        }
+
+        return key
     }
 
     companion object {
