@@ -63,7 +63,7 @@ class CurValUpload : CliktCommand(name = "curval-upload") {
                     val signature = fields[1]
                     val timestamp = Instant.parse(fields[2])
                     val flags = fields[3].toInt()
-                    val sValue = fields[4]
+                    val sValue = if (fields.size > 4) fields[4] else "" // empty string
 
                     val curVal: AvValue? = when (signature) {
                         "D"-> AvDouble(UUID.nil(), timestamp, AvStatus(flags), point, sValue.toDouble())
