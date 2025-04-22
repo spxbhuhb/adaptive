@@ -30,7 +30,7 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.filter.QuickFilterModel
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
-import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
+import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
@@ -66,7 +66,7 @@ class HistoryContentController(
         )
     }
 
-    val splitConfig = storeFor { SplitPaneConfiguration(SplitVisibility.Both, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
+    val splitConfig = storeFor { SplitPaneViewBackend(SplitVisibility.Both, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
 
     val config = storeFor { HistoryContentConfig() }.also { it.addListener(this) }
 

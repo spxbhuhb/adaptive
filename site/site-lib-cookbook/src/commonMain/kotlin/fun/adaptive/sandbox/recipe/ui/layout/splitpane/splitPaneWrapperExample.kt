@@ -1,9 +1,9 @@
-package `fun`.adaptive.sandbox.recipe.ui.layout.wrap
+package `fun`.adaptive.sandbox.recipe.ui.layout.splitpane
 
-import `fun`.adaptive.sandbox.support.example
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.sandbox.support.hardCodedExample
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
@@ -13,71 +13,70 @@ import `fun`.adaptive.ui.wrap.wrapFromRight
 import `fun`.adaptive.ui.wrap.wrapFromTop
 
 @Adaptive
-fun wrapRecipe(): AdaptiveFragment {
+fun splitPaneWrapperExample(): AdaptiveFragment {
 
     val wrapperSize = 8.dp
 
     column {
-        maxSize .. verticalScroll .. horizontalScroll // this makes the examples use their smallest size
         gap { 24.dp }
 
-        example("wrap from left") {
+        hardCodedExample("* `wrapFromLeft` shortcut") {
             wrapFromLeft(wrapperSize, ::leftWrapper) {
                 text("Hello World!")
-            }
+            } .. width { 256.dp }
         }
 
-        example("double wrap from left") {
+        hardCodedExample("* double `wrapFromLeft` shortcut") {
             wrapFromLeft(wrapperSize, ::leftWrapper) {
                 wrapFromLeft(wrapperSize, ::leftWrapper) {
                     text("Hello World!")
                 }
-            }
+            } .. width { 256.dp }
         }
 
-        example("wrap from top") {
+        hardCodedExample("* `wrapFromTop` shortcut") {
             wrapFromTop(wrapperSize, ::topWrapper) {
                 text("Hello World!")
-            }
+            } .. width { 256.dp }
         }
 
-        example("double wrap from top") {
+        hardCodedExample("* double `wrapFromTop` shortcut") {
             wrapFromTop(wrapperSize, ::topWrapper) {
                 wrapFromTop(wrapperSize, ::topWrapper) {
                     text("Hello World!")
                 }
-            }
+            } .. width { 256.dp }
         }
 
-        example("wrap from right") {
+        hardCodedExample("* `wrapFromRight` shortcut") {
             wrapFromRight(wrapperSize, ::rightWrapper) {
                 text("Hello World!")
-            }
+            } .. width { 256.dp }
         }
 
-        example("double wrap from right") {
+        hardCodedExample("* double `wrapFromRight` shortcut") {
             wrapFromRight(wrapperSize, ::rightWrapper) {
                 wrapFromRight(wrapperSize, ::rightWrapper) {
                     text("Hello World!")
                 }
-            }
+            } .. width { 256.dp }
         }
 
-        example("wrap from bottom") {
+        hardCodedExample("* `wrapFromBottom` shortcut") {
             wrapFromBottom(wrapperSize, ::bottomWrapper) {
                 text("Hello World!")
-            }
+            } .. width { 256.dp }
         }
 
-        example("double wrap from bottom") {
+        hardCodedExample("* double `wrapFromBottom` shortcut") {
             wrapFromBottom(wrapperSize, ::bottomWrapper) {
                 wrapFromBottom(wrapperSize, ::bottomWrapper) {
                     text("Hello World!")
                 }
-            }
+            } .. width { 256.dp }
         }
 
-        example("wrap all around") {
+        hardCodedExample("* wrap all around") {
             wrapFromLeft(wrapperSize, ::leftWrapper) {
                 wrapFromTop(wrapperSize, ::topWrapper) {
                     wrapFromRight(wrapperSize, ::rightWrapper) {
@@ -86,7 +85,7 @@ fun wrapRecipe(): AdaptiveFragment {
                         }
                     }
                 }
-            }
+            } .. width { 256.dp }
         }
     }
 

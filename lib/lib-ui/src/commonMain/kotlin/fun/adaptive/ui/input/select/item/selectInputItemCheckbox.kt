@@ -14,8 +14,6 @@ fun <OT> selectInputItemCheckbox(
 ) {
     val observed = valueFrom { item }
 
-    println(observed)
-
     row {
         observed.optionContainerInstructions()
         onClick { observed.toggle() }

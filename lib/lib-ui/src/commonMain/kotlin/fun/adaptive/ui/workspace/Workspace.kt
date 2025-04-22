@@ -15,7 +15,7 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.service.transport.ServiceCallTransport
-import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
+import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.generated.resources.executionError
 import `fun`.adaptive.ui.generated.resources.menu
 import `fun`.adaptive.ui.instruction.event.EventModifier
@@ -103,37 +103,37 @@ open class Workspace(
      * Top contains: top split
      * Bottom contains: bottom split
      */
-    val mainSplit = storeFor { SplitPaneConfiguration(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Vertical) }
+    val mainSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Vertical) }
 
     /**
      * Left contains: bottom left pane
      * Right contains: bottom right pane
      */
-    val bottomSplit = storeFor { SplitPaneConfiguration(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Horizontal) }
+    val bottomSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Horizontal) }
 
     /**
      * Left contains: left split
      * Right contains: center and right split
      */
-    val topSplit = storeFor { SplitPaneConfiguration(SplitVisibility.Second, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
+    val topSplit = storeFor { SplitPaneViewBackend(SplitVisibility.Second, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
 
     /**
      * Top contains: left top pane
      * Bottom contains: left middle pane
      */
-    var leftSplit = storeFor { SplitPaneConfiguration(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
+    var leftSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
 
     /**
      * Left contains: center pane
      * Right contains: right split
      */
-    var centerRightSplit = storeFor { SplitPaneConfiguration(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Horizontal) }
+    var centerRightSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Horizontal) }
 
     /**
      * Top contains: right top pane
      * Bottom contains: right middle pane
      */
-    var rightSplit = storeFor { SplitPaneConfiguration(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
+    var rightSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
 
     // ---------------------------------------------------------------------------------------------
     // Utility
@@ -262,14 +262,14 @@ open class Workspace(
             if (second == null) SplitVisibility.First else SplitVisibility.Both
         }
 
-    fun update(split: Observable<SplitPaneConfiguration>, first: UUID<*>?, second: UUID<*>?) {
+    fun update(split: Observable<SplitPaneViewBackend>, first: UUID<*>?, second: UUID<*>?) {
         val new = visibility(first, second)
         val current = split.value.visibility
         if (current == new) return
         split.value = split.value.copy(visibility = new)
     }
 
-    fun update(split: Observable<SplitPaneConfiguration>, new: SplitVisibility) {
+    fun update(split: Observable<SplitPaneViewBackend>, new: SplitVisibility) {
         val current = split.value.visibility
         if (current == new) return
         split.value = split.value.copy(visibility = new)

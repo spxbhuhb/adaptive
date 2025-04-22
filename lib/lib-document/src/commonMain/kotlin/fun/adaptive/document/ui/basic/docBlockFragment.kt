@@ -6,10 +6,14 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instruction.emptyInstructions
+import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.utility.Url
+import `fun`.adaptive.utility.Url.Companion.parseUrl
 
 
 @Adaptive
-fun docBlockFragment(context : DocRenderContext, element: DocBlockFragment): AdaptiveFragment {
+fun docBlockFragment(context: DocRenderContext, element: DocBlockFragment): AdaptiveFragment {
 
     val style = if (element.style >= 0) {
         context.styles[element.style]
@@ -17,7 +21,22 @@ fun docBlockFragment(context : DocRenderContext, element: DocBlockFragment): Ada
         context.theme.blockFragment
     }
 
-    actualize(element.url.removePrefix("actualize://")) .. style
+    val url = processArguments(element)
+
+    actualize(
+        url.segments.joinToString("/"),
+        *(arrayOf<Any>(emptyInstructions) + url.parameters.values.toTypedArray<Any?>())
+    ) .. style
 
     return fragment()
+}
+
+
+private fun processArguments(element: DocBlockFragment): Url {
+    try {
+        return element.url.parseUrl()
+    } catch (e: Exception) {
+        getLogger("document").error(e)
+        return Url(segments = listOf("aui:text", "actualize error: ${e.message}"))
+    }
 }

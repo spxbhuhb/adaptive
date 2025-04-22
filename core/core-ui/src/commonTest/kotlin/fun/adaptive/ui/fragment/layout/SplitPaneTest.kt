@@ -1,13 +1,9 @@
 package `fun`.adaptive.ui.fragment.layout
 
-import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.color
-import `fun`.adaptive.ui.api.fit
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.position
 import `fun`.adaptive.ui.api.splitPane
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.instruction.dp
@@ -24,7 +20,7 @@ class SplitPaneTest {
         uiTest(0, 0, 400, 200) {
             box {
                 splitPane(
-                    SplitPaneConfiguration(SplitVisibility.Both, SplitMethod.Proportional, 0.5, Orientation.Horizontal, 4.dp),
+                    SplitPaneViewBackend(SplitVisibility.Both, SplitMethod.Proportional, 0.5, Orientation.Horizontal, 4.dp),
                     { text("pane1") },
                     { box(name("hello")) { border(color(0x0)) } },
                     { text("pane2") }

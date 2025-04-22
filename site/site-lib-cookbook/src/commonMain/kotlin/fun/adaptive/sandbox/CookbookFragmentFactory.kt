@@ -20,7 +20,7 @@ import `fun`.adaptive.sandbox.recipe.ui.layout.box.boxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.grid.gridRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.workspaceRecipe
-import `fun`.adaptive.sandbox.recipe.ui.layout.wrap.wrapRecipe
+import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneWrapperExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.popupRecipe
 import `fun`.adaptive.sandbox.recipe.ui.select.selectRecipe
 import `fun`.adaptive.sandbox.recipe.ui.sidebar.sideBarRecipe
@@ -31,7 +31,12 @@ import `fun`.adaptive.sandbox.recipe.ui.text.paragraphRecipe
 import `fun`.adaptive.sandbox.recipe.ui.text.textRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeRecipe
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputCheckboxExample
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputIconAndTextExample
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputTextExample
+import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalExample
 
 object CookbookFragmentFactory : FoundationFragmentFactory() {
     init {
@@ -64,7 +69,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:text", ::textRecipe)
         add("cookbook:recipe:tree", ::treeRecipe)
         add("cookbook:recipe:workspace", ::workspaceRecipe)
-        add("cookbook:recipe:wrap", ::wrapRecipe)
 
         add("cookbook:recipe:input:date", ::dateInputRecipe)
         add("cookbook:recipe:input:double", ::doubleInputRecipe)
@@ -72,5 +76,15 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:input:select", ::selectInputRecipe)
         add("cookbook:recipe:input:text", ::textInputRecipe)
         add("cookbook:recipe:input:text-area", ::textInputAreaRecipe)
+
+        add("cookbook/example/split-pane-proportional", ::splitPaneProportionalExample)
+        add("cookbook/example/split-pane-wrapper", ::splitPaneWrapperExample)
+
+        add("cookbook/example/select-input-text", ::selectInputTextExample)
+        add("cookbook/example/select-input-icon-and-text", ::selectInputIconAndTextExample)
+        add("cookbook/example/select-input-checkbox", ::selectInputCheckboxExample)
+        add("cookbook/example/select-input-playground", ::selectInputPlayground)
+
+
     }
 }

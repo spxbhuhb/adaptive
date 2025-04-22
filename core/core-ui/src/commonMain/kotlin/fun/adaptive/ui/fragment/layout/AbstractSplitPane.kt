@@ -59,7 +59,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         const val ON_CHANGE = 5
     }
 
-    val configuration get() = get<SplitPaneConfiguration>(CONFIGURATION)
+    val configuration get() = get<SplitPaneViewBackend>(CONFIGURATION)
     val pane1Builder get() = get<BoundFragmentFactory>(PANE1_BUILDER)
     val dividerBuilder get() = get<BoundFragmentFactory>(DIVIDER_BUILDER)
     val pane2Builder get() = get<BoundFragmentFactory>(PANE2_BUILDER)

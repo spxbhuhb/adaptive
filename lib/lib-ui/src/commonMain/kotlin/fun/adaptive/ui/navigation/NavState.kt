@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.navigation
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.utility.decodeFromUrl
+import `fun`.adaptive.utility.Url
 import `fun`.adaptive.utility.encodeToUrl
 
 fun navState(vararg segments: String, title: String? = null, fullScreen: Boolean = false) =
@@ -92,36 +92,14 @@ open class NavState(
 
     companion object : AdatCompanion<NavState> {
 
-        private val regex = Regex("(?:https?://)?(?:[a-zA-Z0-9.-]+(?::[0-9]{1,5})?)?([^?#]*)(\\?[^#]*)?(#[^|]*)?(\\|.*)?")
-
-        fun parse(url: String): NavState {
-            val match = regex.matchEntire(url)
-            requireNotNull(match)
-
-            val path = match
-                .groupValues[1]
-                .split('/')
-                .mapNotNull { it.decodeFromUrl().ifEmpty { null } }
-
-            val parameters = match
-                .groupValues[2]
-                .removePrefix("?")
-                .split('&')
-                .mapNotNull { it.decodeFromUrl().ifEmpty { null } }
-                .map { it.split('=', limit = 2) }
-                .associate { it[0].decodeFromUrl() to it[1].decodeFromUrl() }
-
-            val tag = match
-                .groupValues[3]
-                .removePrefix("#")
-                .decodeFromUrl()
-
-            val custom = match
-                .groupValues[4]
-                .removePrefix("|")
-                .decodeFromUrl()
-
-            return NavState(path, parameters, tag, custom)
+        fun parse(url : String): NavState {
+            val url = Url.parse(url)
+            return NavState(
+                url.segments,
+                url.parameters,
+                url.tag,
+                url.custom
+            )
         }
     }
 }

@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.splitPane
-import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
+import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Orientation
@@ -20,7 +20,7 @@ fun wrapFromTop(
 ): AdaptiveFragment {
 
     splitPane(
-        SplitPaneConfiguration(
+        SplitPaneViewBackend(
             SplitVisibility.Both,
             SplitMethod.WrapSecond,
             wrapperSize.value,

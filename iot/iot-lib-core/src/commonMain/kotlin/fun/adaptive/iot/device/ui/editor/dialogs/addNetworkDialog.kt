@@ -7,7 +7,7 @@ import `fun`.adaptive.iot.device.ui.editor.DeviceEditorToolController
 import `fun`.adaptive.iot.generated.resources.addNetwork
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
+import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
@@ -22,7 +22,7 @@ fun addNetworkDialog(
     hide: () -> Unit
 ) {
     // FIXME split store mess
-    val splitConfigStore = storeFor { SplitPaneConfiguration(SplitVisibility.Both, SplitMethod.FixFirst, 200.0, Orientation.Horizontal) }
+    val splitConfigStore = storeFor { SplitPaneViewBackend(SplitVisibility.Both, SplitMethod.FixFirst, 200.0, Orientation.Horizontal) }
     val splitConfig = valueFrom { splitConfigStore }
 
 

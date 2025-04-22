@@ -15,7 +15,7 @@ class Color(
     fun opaque(opacity: Float) = Color(value, opacity)
 
     companion object {
-        fun String.parse(): UInt {
+        private fun String.parse(): UInt {
             val cleanedValue = this.trim().removePrefix("#")
             return when (cleanedValue.length) {
                 3 -> cleanedValue.flatMap { listOf(it, it) }.joinToString("").toUInt(16)

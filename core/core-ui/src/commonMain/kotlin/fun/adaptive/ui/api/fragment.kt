@@ -8,10 +8,9 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.aui
-import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
+import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
 import `fun`.adaptive.ui.fragment.structural.PopupSourceViewBackend
-import `fun`.adaptive.ui.input.InputContext
 
 @AdaptiveExpect(aui)
 fun image(res: ImageResourceSet, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
@@ -127,7 +126,7 @@ fun contextPopup(sourceViewBackend: PopupSourceViewBackend? = null, vararg instr
 
 @AdaptiveExpect(aui)
 fun splitPane(
-    configuration: SplitPaneConfiguration,
+    configuration: SplitPaneViewBackend,
     @Adaptive pane1: () -> Unit,
     @Adaptive divider: () -> Unit,
     @Adaptive pane2: () -> Unit,

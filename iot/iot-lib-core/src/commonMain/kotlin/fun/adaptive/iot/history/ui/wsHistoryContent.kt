@@ -19,7 +19,7 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.settings
 import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.filter.QuickFilterModel
-import `fun`.adaptive.ui.fragment.layout.SplitPaneConfiguration
+import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.instruction.dp
@@ -60,7 +60,7 @@ fun wsHistoryContent(
 fun title(
     pane: WsPane<HistoryBrowserWsItem, HistoryContentController>,
     name: String,
-    splitConfig: SplitPaneConfiguration
+    splitConfig: SplitPaneViewBackend
 ) {
     val controller = pane.controller
 

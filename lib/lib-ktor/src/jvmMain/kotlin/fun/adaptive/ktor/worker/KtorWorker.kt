@@ -185,7 +185,7 @@ class KtorWorker(
             }
 
             val file = File(fileTransport.getDownloadPath(clientId, fileName).toString())
-            println(file)
+
             if (! file.exists()) {
                 call.respond(HttpStatusCode.NotFound)
                 return@get

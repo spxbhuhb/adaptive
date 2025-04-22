@@ -53,7 +53,6 @@ val recipes =
             CbWsRecipeItem("Split Pane", key = "cookbook:recipe:splitpane"),
             CbWsRecipeItem("Tab", key = "cookbook:recipe:tab"),
             CbWsRecipeItem("Workspace", key = "cookbook:recipe:workspace"),
-            CbWsRecipeItem("Wrap", key = "cookbook:recipe:wrap")
         ),
 
         set(

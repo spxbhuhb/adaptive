@@ -20,7 +20,7 @@ import `fun`.adaptive.ui.instruction.layout.SplitVisibility
  *                               layout calculations.
  */
 @Adat
-data class SplitPaneConfiguration(
+data class SplitPaneViewBackend(
     val visibility : SplitVisibility,
     val method : SplitMethod,
     val split : Double,
@@ -37,4 +37,9 @@ data class SplitPaneConfiguration(
             SplitVisibility.None -> copy(visibility = SplitVisibility.First)
 
         }
+
+    companion object {
+        fun splitPaneBackend(visibility: SplitVisibility, method: SplitMethod, split: Double, orientation: Orientation) =
+            SplitPaneViewBackend(visibility, method, split, orientation)
+    }
 }

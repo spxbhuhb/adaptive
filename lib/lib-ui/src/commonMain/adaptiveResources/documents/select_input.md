@@ -1,9 +1,28 @@
+# Select
+
+Select is a rather complex input with many configuration options and uses.
 
 ---
 
-# Details
+## Hard-coded examples
 
-## Variants
+[Select input text example](actualize:///cookbook/example/select-input-text)
+
+[Select input icon and text example](actualize:///cookbook/example/select-input-icon-and-text)
+
+[Select input checkbox example](actualize:///cookbook/example/select-input-checkbox)
+
+---
+            
+## Playground
+
+[Select input playground](actualize:///cookbook/example/select-input-playground)
+
+---
+
+## Details
+
+### Variants
 
 **standalone**
 
@@ -30,7 +49,7 @@ The mapping variants lets you:
 This is very useful in many cases, for example, when you have a list of instances and the value
 is a set of uuids of those instances.
 
-## Item renderers
+### Item renderers
 
 Select fragments lets you pass a render function which is then used to render the options
 of the select.
@@ -41,7 +60,7 @@ Built-in item renderer functions:
 * `selectInputItemIconAndText`
 * `selectInputItemCheckbox`
 
-## Standalone
+### Standalone
 
 Select follows the standard input concept, the state is stored in (depending on the variant):
 
@@ -71,7 +90,7 @@ val backend = multiSelectInputBackend<String> {
 multiSelectInput(backend, ::selectInputItemCheckbox)
 ```
 
-## Editor
+### Editor
 
 ```kotlin
 selectEditor(options, ::selectInputItemCheckbox) { template.selectedOption }
