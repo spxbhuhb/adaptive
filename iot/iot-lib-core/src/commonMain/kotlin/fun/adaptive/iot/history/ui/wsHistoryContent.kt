@@ -24,7 +24,7 @@ import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.splitpane.splitPaneDivider
+import `fun`.adaptive.ui.splitpane.verticalSplitDivider
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textMedium
@@ -48,7 +48,7 @@ fun wsHistoryContent(
         splitPane(
             splitConfig,
             { legendContent(pane) },
-            { splitPaneDivider() },
+            { verticalSplitDivider() },
             { modeContent(mode, pane) }
         ) .. maxSize .. border(colors.lightOutline) .. cornerRadius { 4.dp }
     }

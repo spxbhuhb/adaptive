@@ -10,11 +10,13 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
-import `fun`.adaptive.ui.splitpane.splitPaneDivider
+import `fun`.adaptive.ui.splitpane.SplitPaneTheme
+import `fun`.adaptive.ui.splitpane.verticalSplitDivider
 import `fun`.adaptive.ui.theme.borders
 
 @Adaptive
 fun splitPaneRecipe(): AdaptiveFragment {
+
 
     column {
         gap { 16.dp } .. maxSize .. verticalScroll
@@ -47,7 +49,7 @@ private fun sp(configFun: () -> SplitPaneConfiguration) {
         splitPane(
             config,
             { text("pane1") },
-            { splitPaneDivider() },
+            { verticalSplitDivider(SplitPaneTheme.outline) },
             { text("pane2") }
         ) .. maxSize .. borders.outline .. margin { 16.dp }
 

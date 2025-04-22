@@ -95,7 +95,10 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     // Only a primary down on the divider should start resize.
 
     val dividerInstructions = instructionsOf(
-        onPrimaryDown { handleMoveStart(it.position, it.x, it.y) }
+        onPrimaryDown {
+            handleMoveStart(it.position, it.x, it.y)
+            it.preventDefault() // to stop Safari from selecting text on move
+        }
     )
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {

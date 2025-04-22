@@ -9,6 +9,7 @@ import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.splitpane.SplitPaneTheme
 import `fun`.adaptive.ui.theme.*
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPaneId
@@ -24,29 +25,7 @@ class WorkspaceTheme(
         var DEFAULT = WorkspaceTheme()
     }
 
-    val splitDividerHorizontalVisible = instructionsOf(
-        maxWidth, height { 1.dp }, borderBottom(toolBorderColor)
-    )
-
-    val splitDividerHorizontalOverlay = instructionsOf(
-        maxWidth,
-        height { dividerSize },
-        //zIndex { 300 },
-        paddingVertical { (dividerSize - 1.dp) / 2.dp },
-        cursor.rowResize
-    )
-
-    val splitDividerVerticalVisible = instructionsOf(
-        maxHeight, width { 1.dp }, borderLeft(toolBorderColor)
-    )
-
-    val splitDividerVerticalOverlay = instructionsOf(
-        maxHeight,
-        width { dividerSize },
-        //zIndex { 300 },
-        paddingHorizontal { (dividerSize - 1.dp) / 2.dp },
-        cursor.colResize
-    )
+    var splitPaneTheme = SplitPaneTheme(color = toolBorderColor)
 
     val paneIconColumn = instructionsOf(
         maxHeight,

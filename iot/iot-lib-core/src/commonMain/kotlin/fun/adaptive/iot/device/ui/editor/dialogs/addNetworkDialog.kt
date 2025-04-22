@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.popup.modalCancelSave
 import `fun`.adaptive.ui.popup.modalPopup
-import `fun`.adaptive.ui.splitpane.splitPaneDivider
+import `fun`.adaptive.ui.splitpane.verticalSplitDivider
 
 @Adaptive
 fun addNetworkDialog(
@@ -31,7 +31,7 @@ fun addNetworkDialog(
         splitPane(
             splitConfig,
             { driverList(controller) },
-            { splitPaneDivider() },
+            { verticalSplitDivider() },
             { driverSetup() }
         )
     }
@@ -39,6 +39,7 @@ fun addNetworkDialog(
 
 @Adaptive
 private fun driverList(controller: DeviceEditorToolController) {
+
     column {
         maxSize .. verticalScroll
         for (def in controller.driversDefs()) {

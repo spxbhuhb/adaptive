@@ -11,6 +11,8 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.splitpane.horizontalSplitDivider
+import `fun`.adaptive.ui.splitpane.verticalSplitDivider
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
@@ -45,7 +47,7 @@ fun wsMain(workspace: Workspace) {
     splitPane(
         config,
         { wsTop(workspace) },
-        { wsHorizontalDivider(workspace.theme) },
+        { horizontalSplitDivider(workspace.theme.splitPaneTheme) },
         { wsBottom(workspace) }
     ) .. maxSize
 }
@@ -57,7 +59,7 @@ private fun wsTop(workspace: Workspace) {
     splitPane(
         config,
         { wsLeft(workspace) },
-        { wsVerticalDivider(workspace.theme) },
+        { verticalSplitDivider(workspace.theme.splitPaneTheme) },
         { wsCenterRight(workspace) }
     ) .. maxSize
 }
@@ -69,7 +71,7 @@ private fun wsLeft(workspace: Workspace) {
     splitPane(
         config,
         { wsPane(workspace, WsPanePosition.LeftTop) },
-        { wsHorizontalDivider(workspace.theme) },
+        { horizontalSplitDivider(workspace.theme.splitPaneTheme) },
         { wsPane(workspace, WsPanePosition.LeftMiddle) }
     ) .. maxSize
 }
@@ -81,7 +83,7 @@ private fun wsCenterRight(workspace: Workspace) {
     splitPane(
         config,
         { wsCenterPane(workspace) },
-        { wsVerticalDivider(workspace.theme) },
+        { verticalSplitDivider(workspace.theme.splitPaneTheme) },
         { wsRight(workspace) }
     ) .. maxSize
 }
@@ -93,7 +95,7 @@ private fun wsRight(workspace: Workspace) {
     splitPane(
         config,
         { wsPane(workspace, WsPanePosition.RightTop) },
-        { wsHorizontalDivider(workspace.theme) },
+        { horizontalSplitDivider(workspace.theme.splitPaneTheme) },
         { wsPane(workspace, WsPanePosition.RightMiddle) }
     ) .. maxSize
 }
@@ -105,29 +107,9 @@ private fun wsBottom(workspace: Workspace) {
     splitPane(
         config,
         { wsPane(workspace, WsPanePosition.LeftBottom) },
-        { wsVerticalDivider(workspace.theme) },
+        { verticalSplitDivider(workspace.theme.splitPaneTheme) },
         { wsPane(workspace, WsPanePosition.RightBottom) }
     ) .. maxSize
-}
-
-@Adaptive
-private fun wsHorizontalDivider(theme: WorkspaceTheme) {
-    box {
-        theme.splitDividerHorizontalOverlay
-        box {
-            theme.splitDividerHorizontalVisible
-        }
-    }
-}
-
-@Adaptive
-private fun wsVerticalDivider(theme: WorkspaceTheme) {
-    box {
-        theme.splitDividerVerticalOverlay
-        box {
-            theme.splitDividerVerticalVisible
-        }
-    }
 }
 
 @Adaptive
