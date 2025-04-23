@@ -2,11 +2,12 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.app.BasicBrowserClientApplication.Companion.basicBrowserClient
 import `fun`.adaptive.app.WsBrowserClientApplication.Companion.wsBrowserClient
 import `fun`.adaptive.app.ws.AppMainWsModule
-import `fun`.adaptive.app.ws.WsSandBoxModule
+import `fun`.adaptive.app.ws.SandBoxClientModule
 import `fun`.adaptive.backend.backend
-import `fun`.adaptive.chart.ChartWsModule
+import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.document.app.DocWsModule
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
@@ -24,7 +25,6 @@ import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.generated.resources.folder
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.value.app.ValueClientModule
@@ -36,8 +36,8 @@ import kotlin.random.Random
 fun main() {
     //virtualizedMain()
     //iotMain()
-    //basicAppMain()
-    sandboxMain()
+    basicAppMain()
+    //sandboxMain()
     // iotMain()
 }
 
@@ -46,11 +46,22 @@ fun iotMain() {
         module { LibUiClientModule() }
         module { GroveRuntimeModule() }
         module { ValueClientModule() }
-        module { ChartWsModule() }
+        module { ChartModule() }
         module { DocWsModule() }
         module { IotWsModule() }
         module { AppMainWsModule() }
-        module { WsSandBoxModule }
+        module { SandBoxClientModule() }
+    }
+}
+
+fun basicAppMain() {
+    basicBrowserClient {
+        localTransport = true
+        module { LibUiClientModule() }
+        module { GroveRuntimeModule() }
+        module { ValueClientModule() }
+        module { ChartModule() }
+        module { SandBoxClientModule() }
     }
 }
 

@@ -9,7 +9,7 @@ import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.ClientWorkspace
 
-class BasicAppClientModule<WT : ClientWorkspace> : AppModule<WT>() {
+open class BasicAppClientModule<WT : ClientWorkspace> : AppModule<WT>() {
 
     companion object {
         const val BASIC_CLIENT_FRONTEND_MAIN_KEY: FragmentKey = "app:basic:client:frontend:main"

@@ -1,10 +1,10 @@
-package `fun`.adaptive.chart.ui
+package `fun`.adaptive.sandbox.recipe.chart
 
+import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.chart.calculation.CalculationContext
 import `fun`.adaptive.chart.model.*
 import `fun`.adaptive.chart.normalization.InstantDoubleNormalizer
 import `fun`.adaptive.chart.ui.temporal.temporalHorizontalAxisMarkers
-import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.instruction.emptyInstructions
@@ -24,7 +24,7 @@ val xAxis = ChartAxis<Instant, Double, Unit>(
     size = 49.0,
     offset = 50.0,
     axisLine = true,
-    WsChartContext.BASIC_HORIZONTAL_AXIS,
+    ChartModule.BASIC_HORIZONTAL_AXIS,
     ::temporalHorizontalAxisMarkers
 )
 
@@ -32,7 +32,7 @@ val yAxis = ChartAxis<Instant, Double, Unit>(
     size = 49.0,
     offset = 49.0,
     axisLine = true,
-    WsChartContext.BASIC_VERTICAL_AXIS
+    ChartModule.BASIC_VERTICAL_AXIS
 ) { context, axis, canvasSize ->
 
     val itemsHeight = canvasSize.height - context.plotPadding.bottom
@@ -58,7 +58,7 @@ val yAxis = ChartAxis<Instant, Double, Unit>(
 }
 
 val item1 = ChartItem(
-    WsChartContext.BASIC_LINE_SERIES,
+    ChartModule.BASIC_LINE_SERIES,
     listOf(
         ChartDataPoint(Instant.parse("2024-01-01T12:00:00.0Z"), 0.0),
         ChartDataPoint(Instant.parse("2024-01-01T12:42:00.0Z"), 100.0),
@@ -70,7 +70,7 @@ val item1 = ChartItem(
 )
 
 val item2 = ChartItem(
-    WsChartContext.BASIC_LINE_SERIES,
+    ChartModule.BASIC_LINE_SERIES,
     listOf(
         ChartDataPoint(Instant.parse("2024-01-01T12:00:00.0Z"), 10.0),
         ChartDataPoint(Instant.parse("2024-01-01T13:00:00.0Z"), 80.0),

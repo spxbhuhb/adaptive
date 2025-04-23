@@ -7,6 +7,8 @@ class BasicBrowserClientBuilder {
 
     val modules = mutableListOf<AppModule<ClientWorkspace>>()
 
+    var localTransport : Boolean = false
+
     fun module(moduleFun: () -> AppModule<ClientWorkspace>) {
         modules += moduleFun()
     }

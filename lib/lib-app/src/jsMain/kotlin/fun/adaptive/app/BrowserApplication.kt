@@ -14,6 +14,7 @@ import `fun`.adaptive.runtime.ApplicationNodeType
 import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.service.api.getService
+import `fun`.adaptive.service.transport.LocalServiceCallTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.wireformat.api.Proto
@@ -23,6 +24,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>() {
+
+    var localTransport: Boolean = false
 
     override lateinit var transport: ServiceCallTransport
     override lateinit var backend: BackendAdapter
@@ -41,10 +44,15 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
 
             wireFormatInit()
 
-            transport = webSocketTransport(window.location.origin, wireFormatProvider = Proto)
-                .also { it.start() }
+            transport = if (localTransport) {
+                LocalServiceCallTransport()
+            } else {
+                webSocketTransport(window.location.origin, wireFormatProvider = Proto).also { it.start() }
+            }
 
-            genericSessionOrNull = getService<AuthSessionApi>(transport).getSession()
+            if (! localTransport) {
+                genericSessionOrNull = getService<AuthSessionApi>(transport).getSession()
+            }
 
             backend = backend(transport) { adapter ->
                 backendAdapterInit(adapter)

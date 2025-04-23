@@ -31,7 +31,9 @@ open class BasicBrowserClientApplication(
             builder.buildFun()
 
             if (start) {
-                BasicBrowserClientApplication(*builder.modules.toTypedArray()).main()
+                BasicBrowserClientApplication(*builder.modules.toTypedArray())
+                    .also { it.localTransport = builder.localTransport }
+                    .main()
             }
         }
 

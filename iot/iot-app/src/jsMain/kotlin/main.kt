@@ -9,7 +9,7 @@ import `fun`.adaptive.app.ws.admin.AppAdminWsModule
 import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.app.ws.inspect.AppInspectWsModule
 import `fun`.adaptive.auth.app.AuthClientModule
-import `fun`.adaptive.chart.ChartWsModule
+import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.document.app.DocWsModule
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.iot.app.IotWsModule
@@ -25,7 +25,7 @@ fun main() {
         module { GroveRuntimeModule() }
         module { AuthClientModule() }
         module { ValueClientModule() }
-        module { ChartWsModule() }
+        module { ChartModule() }
         module { DocWsModule() }
         module { IotWsModule() }
         module { SimDriverWsModule() }

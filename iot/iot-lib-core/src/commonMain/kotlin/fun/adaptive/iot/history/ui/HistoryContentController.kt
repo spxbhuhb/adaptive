@@ -1,5 +1,6 @@
 package `fun`.adaptive.iot.history.ui
 
+import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.chart.calculation.CalculationContext
 import `fun`.adaptive.chart.model.ChartAxis
 import `fun`.adaptive.chart.model.ChartDataRange
@@ -7,7 +8,6 @@ import `fun`.adaptive.chart.model.ChartItem
 import `fun`.adaptive.chart.model.ChartRenderContext
 import `fun`.adaptive.chart.ui.temporal.doubleVerticalAxisMarkers
 import `fun`.adaptive.chart.ui.temporal.temporalHorizontalAxisMarkers
-import `fun`.adaptive.chart.ws.model.WsChartContext
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.value.storeFor
@@ -115,7 +115,7 @@ class HistoryContentController(
         size = 49.0,
         offset = 50.0,
         axisLine = true,
-        WsChartContext.BASIC_HORIZONTAL_AXIS,
+        ChartModule.BASIC_HORIZONTAL_AXIS,
         ::temporalHorizontalAxisMarkers
     )
 
@@ -123,7 +123,7 @@ class HistoryContentController(
         size = 49.0,
         offset = 49.0,
         axisLine = true,
-        WsChartContext.BASIC_VERTICAL_AXIS,
+        ChartModule.BASIC_VERTICAL_AXIS,
         { c, a, s -> doubleVerticalAxisMarkers(c, a, s) { it.value } }
     )
 
@@ -182,7 +182,7 @@ class HistoryContentController(
         for (item in itemsToLoad) {
 
             val chartItem = HistoryChartItem(
-                WsChartContext.BASIC_LINE_SERIES,
+                ChartModule.BASIC_LINE_SERIES,
                 emptyList(),
                 availableInstructionSets.removeFirstOrNull() ?: generateNewInstructionSet(),
                 attachment = item,
