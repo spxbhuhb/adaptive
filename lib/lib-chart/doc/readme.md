@@ -22,7 +22,7 @@ Processing steps:
 2. normalize the data by using `ChartItem.normalize`
 3. convert the normalized data into render operations by using `ChartItem.lineTo`
 
-Normalization converts whatever types the chart handles into a `Double` in the `[0, 1)` range. Calculations and
+Normalization converts whatever types the chart handles into a `Double`. Calculations and
 positioning use these normalized values and the drawing fragments convert them back to canvas coordinates.
 
 Dependencies:

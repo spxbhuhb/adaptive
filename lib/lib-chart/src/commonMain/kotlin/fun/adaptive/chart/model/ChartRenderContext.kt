@@ -6,6 +6,16 @@ import `fun`.adaptive.chart.normalization.NullNormalizer
 import `fun`.adaptive.chart.ui.ChartTheme
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 
+/**
+ * @property   range  The data range on axes to show. Used for data normalization and the mark
+ *                    generation. The context goes over all [items] and calculates the range based
+ *                    on the values of points.
+ *
+ * @property   zeroY  The assumed minimum value on the Y axis. If there is an actual data value
+ *                    that is smaller than [zeroY], that data value will be used instead.
+ *                    This property makes it possible to start the chart from zero, instead of the
+ *                    minimum data value.
+ */
 data class ChartRenderContext<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
     val items: List<ChartItem<XT, YT, AT>>,
     val axes: List<ChartAxis<XT, YT, AT>>,

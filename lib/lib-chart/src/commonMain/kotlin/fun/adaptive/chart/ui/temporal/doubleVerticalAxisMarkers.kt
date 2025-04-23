@@ -24,8 +24,8 @@ fun <YT : Comparable<YT>> doubleVerticalAxisMarkers(
     calculateMarkerPositions(
         availableHeight,
         approxLabelSpacing,
-        normalizer.yStart,
-        normalizer.yEnd
+        normalizer.yStart / context.plotSpaceRatio,
+        normalizer.yEnd / context.plotSpaceRatio
     ).map { (offset, value) ->
 
         ChartMarker(

@@ -4,6 +4,7 @@ import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.chart.calculation.CalculationContext
 import `fun`.adaptive.chart.model.*
 import `fun`.adaptive.chart.normalization.InstantDoubleNormalizer
+import `fun`.adaptive.chart.ui.temporal.doubleVerticalAxisMarkers
 import `fun`.adaptive.chart.ui.temporal.temporalHorizontalAxisMarkers
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.actualize
@@ -32,30 +33,9 @@ val yAxis = ChartAxis<Instant, Double, Unit>(
     size = 49.0,
     offset = 49.0,
     axisLine = true,
-    ChartModule.BASIC_VERTICAL_AXIS
-) { context, axis, canvasSize ->
-
-    val itemsHeight = canvasSize.height - context.plotPadding.bottom
-    val count = (itemsHeight / 50).toInt() - 1
-    val step = 1.0 / count
-
-    val normalizer = context.normalizer
-
-    val out = mutableListOf<ChartMarker>()
-
-    for (i in 1 .. count) {
-        val offset = i * step
-        out += ChartMarker(
-            offset = itemsHeight - offset * itemsHeight,
-            tickSize = if (i % 2 == 0) 8.0 else 4.0,
-            labelText = normalizer.denormalizeY(offset)?.format(1),
-            labelOffset = 0.0,
-            guide = true
-        )
-    }
-
-    out
-}
+    ChartModule.BASIC_VERTICAL_AXIS,
+    { c, a, s -> doubleVerticalAxisMarkers(c, a, s) { it } }
+)
 
 val item1 = ChartItem(
     ChartModule.BASIC_LINE_SERIES,
