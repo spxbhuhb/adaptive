@@ -9,6 +9,8 @@ class SimDriverWsModule<WT : AbstractWorkspace> : SimDriverModule<WT>() {
     override fun workspaceInit(workspace: WT, session: Any?) {
         application.iotModule += AioDriverDef(
             driverKey,
+            "aio_driver_sim",
+            driverKey,
             "",
             ""
         )

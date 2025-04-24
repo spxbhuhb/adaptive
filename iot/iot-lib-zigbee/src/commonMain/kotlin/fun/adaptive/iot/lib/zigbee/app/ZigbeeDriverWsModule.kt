@@ -10,6 +10,8 @@ open class ZigbeeDriverWsModule<WT : AbstractWorkspace> : ZigbeeDriverModule<WT>
 
         application.iotModule += AioDriverDef(
             driveKey,
+            "aio_driver_zigbee",
+            driveKey,
             "",
             ""
         )
