@@ -1,6 +1,7 @@
 package `fun`.adaptive.iot.device.ui.editor.dialogs
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.foundation.value.valueFrom
@@ -8,6 +9,7 @@ import `fun`.adaptive.general.Observable
 import `fun`.adaptive.iot.device.network.AioDriverDef
 import `fun`.adaptive.iot.device.ui.editor.DeviceEditorToolController
 import `fun`.adaptive.iot.generated.resources.addNetwork
+import `fun`.adaptive.iot.generated.resources.pleaseSelectFromList
 import `fun`.adaptive.resource.resolve.resolveString
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
@@ -42,7 +44,7 @@ fun addNetworkDialog(
             splitConfig,
             { driverList(controller, selectedDriver) },
             { verticalSplitDivider() },
-            { driverSetup() }
+            { driverSetup(selectedDriver) }
         )
     }
 }
@@ -57,10 +59,11 @@ private fun driverList(
 
     val backend = selectInputMappingBackend<ComponentKey?, AioDriverDef>(
         selected,
-        { it.driverKey }
+        { it.driverKey },
     ) {
-        this.options = controller.driversDefs()
+        options = controller.driversDefs()
         toText = { fragment().resolveString(it.driverNameKey) }
+        // onChange = { selectedDriver.value = it }
         // toIcon = { fragment().resolveGraphics(it.driverIconKey) }
     }
 
@@ -71,6 +74,12 @@ private fun driverList(
 }
 
 @Adaptive
-private fun driverSetup() {
+private fun driverSetup(selectedDriver: Observable<ComponentKey?>) {
+    val driverKey = valueFrom { selectedDriver }
 
+    if (driverKey == null) {
+        text(Strings.pleaseSelectFromList)
+    } else {
+        actualize(driverKey)
+    }
 }

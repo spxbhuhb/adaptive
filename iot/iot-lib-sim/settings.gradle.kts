@@ -24,8 +24,10 @@ dependencyResolutionManagement {
 }
 
 includeBuild("../../core/core-core")
+includeBuild("../../core/core-ui")
 
 includeBuild("../../lib/lib-ktor")
+includeBuild("../../lib/lib-ui")
 includeBuild("../../lib/lib-util")
 includeBuild("../../lib/lib-value")
 

@@ -55,11 +55,14 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.adaptive.core.core)
+            implementation(libs.adaptive.core.ui)
             implementation(libs.adaptive.lib.ktor)
+            implementation(libs.adaptive.lib.ui)
             implementation(libs.adaptive.lib.util)
             implementation(libs.adaptive.lib.value)
             implementation(libs.adaptive.iot.lib.core)
             implementation(libs.adaptive.iot.lib.driver)
+
         }
 
         commonTest.dependencies {

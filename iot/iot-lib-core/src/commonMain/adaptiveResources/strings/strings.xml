@@ -74,6 +74,8 @@
     <string name="addVirtualNetwork">Virtuális hálózat hozzáadása</string>
     <string name="addVirtualController">Virtuális vezérlő hozzáadása</string>
 
+    <string name="pleaseSelectFromList">Please select an item from the list.</string>
+
     <!-- device -->
 
     <string name="points">Adatpontok</string>
