@@ -1,5 +1,6 @@
 package `fun`.adaptive.app
 
+import `fun`.adaptive.auth.model.AuthRole
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
@@ -27,6 +28,7 @@ abstract class ClientApplication<WT : ClientWorkspace> : AbstractApplication<WT>
     open val defaultFontWeight = 300
 
     var genericSessionOrNull : Any? = null
+    var knownRoles : List<AuthRole> = emptyList()
 
     fun moduleInit() {
         modules.forEach { it.application = this }

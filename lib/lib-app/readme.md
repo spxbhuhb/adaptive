@@ -4,7 +4,7 @@
 in a somewhat simple, well-defined way.
 
 Note: you can build applications that use parts of Adaptive without using `lib-app`. It just
-does not worth it IMHO.
+isn't worth it IMHO.
 
 The library is built on three main concepts:
 
@@ -23,8 +23,8 @@ The library is built on three main concepts:
 > [!IMPORTANT]
 > 
 > Server applications use the very same **REACTIVE** foundation as client side applications.
-> Server workers and services are stored in a tree of Adaptive fragments, just as the client
-> UI, there is no technical difference.
+> Server workers and services are stored in a tree of Adaptive fragments (just as the client
+> UI) there is no technical difference.
 > 
 > This approach somewhat blurs the line between clients and servers. You can move functionality
 > easily from one side to another, dependencies permitting.
@@ -89,7 +89,7 @@ fun main() {
 }
 ```
 
-### JS - browser - Workspace based
+### JS - browser - workspace-based
 
 ```kotlin
 fun main() {
@@ -123,6 +123,7 @@ fun main() {
 - create the service transport to the server
   - get a client id from the server
 - get the session from the server (if there is one)
+  - get the list of known roles from the server (if there is a session)
 - create the client backend
   - call `backendAdapterInit` for all modules
   - actualize the main backend fragment

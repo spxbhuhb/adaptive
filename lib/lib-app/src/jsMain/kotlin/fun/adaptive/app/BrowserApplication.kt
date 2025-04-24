@@ -1,5 +1,6 @@
 package `fun`.adaptive.app
 
+import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
@@ -52,6 +53,9 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
 
             if (! localTransport) {
                 genericSessionOrNull = getService<AuthSessionApi>(transport).getSession()
+                if (genericSessionOrNull != null) {
+                    knownRoles = getService<AuthRoleApi>(transport).all()
+                }
             }
 
             backend = backend(transport) { adapter ->

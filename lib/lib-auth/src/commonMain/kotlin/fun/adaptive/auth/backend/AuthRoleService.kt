@@ -6,6 +6,7 @@ package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.auth.context.ensureHas
+import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.worker
@@ -24,7 +25,7 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService> {
     val securityOfficer by lazy { authWorker.securityOfficer }
 
     override suspend fun all(): List<AuthRole> {
-        ensureHas(securityOfficer)
+        ensureLoggedIn()
 
         return valueWorker.queryByMarker(AuthMarkers.ROLE).map {
             it.asAvItem<RoleSpec>()

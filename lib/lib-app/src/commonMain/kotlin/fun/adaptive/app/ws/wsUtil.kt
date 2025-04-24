@@ -8,7 +8,6 @@ import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.model.SingularWsItem
 import `fun`.adaptive.utility.firstInstance
 
