@@ -51,7 +51,7 @@ class IotWsModule<WT : Workspace> : IotModule<WT>() {
         add(WSPANE_DEVICE_TOOL, ::wsDeviceEditorTool)
         add(WSPANE_DEVICE_CONTENT, ::wsDeviceContentPane)
 
-        add(WSPANE_ALARM_TOOL, ::wsAlarmTool)
+        //add(WSPANE_ALARM_TOOL, ::wsAlarmTool)
 
         add(WSPANE_HISTORY_TOOL, ::wsHistoryTool)
         add(WSPANE_HISTORY_CONTENT, ::wsHistoryContent)

@@ -17,7 +17,7 @@ mkdir ./build/app/$2/etc
 cp ./etc/aio.release.properties ./build/app/$2/etc/aio.properties
 
 mkdir ./build/app/$2/lib
-cp ./build/libs/adaptive-iot-app-jvm-$2-all.jar ./build/app/$2/lib
+cp ./build/libs/iot-app-jvm-$2-all.jar ./build/app/$2/lib
 
 mkdir ./build/app/$2/var
 

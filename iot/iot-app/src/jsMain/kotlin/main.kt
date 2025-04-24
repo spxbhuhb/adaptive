@@ -26,7 +26,7 @@ fun main() {
         module { AuthClientModule() }
         module { ValueClientModule() }
         module { ChartModule() }
-        module { DocWsModule() }
+        //module { DocWsModule() }
         module { IotWsModule() }
         module { SimDriverWsModule() }
         module { NodeDriverWsModule() }

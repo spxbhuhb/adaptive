@@ -7,7 +7,7 @@ import `fun`.adaptive.ui.misc.todo
 
 @Adaptive
 fun appHome(): AdaptiveFragment {
-    todo()
+    //todo()
 
     return fragment()
 }

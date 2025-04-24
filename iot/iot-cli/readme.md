@@ -1,7 +1,7 @@
 # IoT CLI utilities
 
 ```shell
-alias aio-cli="java -jar adaptive-iot-cli-jvm-0.25.403-all.jar"
+alias aio-cli="java -jar iot-cli-jvm-0.25.424-all.jar"
 ```
 
 ## CurVal upload

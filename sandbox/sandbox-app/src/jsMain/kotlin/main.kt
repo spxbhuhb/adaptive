@@ -9,6 +9,7 @@ import `fun`.adaptive.app.ws.SandBoxClientModule
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.document.app.DocWsModule
+import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
@@ -19,13 +20,21 @@ import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputRecipe
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
+import `fun`.adaptive.ui.api.scroll
+import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.generated.resources.folder
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.tree.TreeItem
+import `fun`.adaptive.ui.tree.TreeViewModel
+import `fun`.adaptive.ui.tree.TreeViewModel.Companion.defaultSelectedFun
+import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.value.app.ValueClientModule
 import kotlinx.coroutines.CoroutineScope
@@ -36,8 +45,8 @@ import kotlin.random.Random
 fun main() {
     //virtualizedMain()
     //iotMain()
-    basicAppMain()
-    //sandboxMain()
+    //basicAppMain()
+    sandboxMain()
     // iotMain()
 }
 
@@ -105,20 +114,20 @@ fun sandboxMain() {
             //contextMenuMain()
             //datePickerMain()
             //copyStore(Stuff(AioSpaceSpec()))
-//            box(name("outer")) {
-//                maxSize .. padding { 16.dp } .. backgrounds.friendlyOpaque
-//                box(name("300")) {
-//                    width { 200.dp } .. height { 300.dp } .. padding { 16.dp } .. borders.outline .. backgrounds.surface
-//                    box {
-//                        scroll .. maxSize
-//                        tree(TreeViewModel(generate(), context = Unit, selectedFun = ::defaultSelectedFun, openWithSingleClick = true))
-//                    }
-//                }
-//            }
-            box {
-                maxSize .. padding { 16.dp } //.. backgrounds.friendlyOpaque
-                selectInputRecipe()
+            box(name("outer")) {
+                maxSize .. padding { 16.dp } .. backgrounds.friendlyOpaque
+                box(name("300")) {
+                    width { 200.dp } .. height { 300.dp } .. padding { 16.dp } .. borders.outline .. backgrounds.surface
+                    box {
+                        scroll .. maxSize
+                        tree(TreeViewModel(generate(), context = Unit, selectedFun = ::defaultSelectedFun, openWithSingleClick = true))
+                    }
+                }
             }
+//            box {
+//                maxSize .. padding { 16.dp } //.. backgrounds.friendlyOpaque
+//                selectInputRecipe()
+//            }
         }
     }
 }

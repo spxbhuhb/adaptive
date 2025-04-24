@@ -14,7 +14,7 @@ rm -rf ./build/app/$2/*
 rm ./build/app/aio-cli-$2.zip
 
 mkdir ./build/app/$2
-cp ./build/libs/adaptive-iot-cli-jvm-$2-all.jar ./build/app/$2
+cp ./build/libs/iot-cli-jvm-$2-all.jar ./build/app/$2
 
 cd ./build/app/$2
 zip -r ../aio-cli-$2.zip *
