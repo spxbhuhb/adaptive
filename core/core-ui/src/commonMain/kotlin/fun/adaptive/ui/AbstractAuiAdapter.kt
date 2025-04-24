@@ -11,6 +11,7 @@ import `fun`.adaptive.foundation.nonLayoutTopLevelMessage
 import `fun`.adaptive.foundation.nonLayoutTopLevelPath
 import `fun`.adaptive.foundation.opsCheck
 import `fun`.adaptive.resource.ThemeQualifier
+import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.ui.api.normalFont
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawPosition
@@ -59,6 +60,8 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
     var nextId = 1L
 
     override var trace: Array<out Regex> = emptyArray()
+
+    override var application: AbstractApplication<*>? = null
 
     override fun newId(): Long =
         nextId ++

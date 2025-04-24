@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.fragment.AdaptiveSequence
 import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.foundation.testing.TraceEvent
 import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -34,6 +35,10 @@ interface AdaptiveAdapter {
     var trace: Array<out Regex>
 
     val startedAt: Long
+
+    var application : AbstractApplication<*>?
+        get() = null
+        set(v) = unsupported()
 
     fun newId(): Long
 

@@ -136,3 +136,11 @@ fun main() {
   - call `frontendAdapterInit` for all modules
   - call `workspaceInit` for all modules
   - actualize the main frontend fragment
+
+## Access
+
+UI adapters started by an application use the `application` property of the adapter:
+
+```kotlin
+val app = adapter().application // AbstractApplication<*>()
+```

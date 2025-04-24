@@ -76,6 +76,8 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
                 backend = backend
             ) { adapter ->
 
+                adapter.application = this@BrowserApplication
+
                 with(adapter.defaultTextRenderData) {
                     fontName = defaultFontName
                     fontSize = defaultFontSize

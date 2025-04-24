@@ -10,6 +10,7 @@ abstract class AbstractApplication<WT : AbstractWorkspace> {
     abstract val workspace: WT
 
     val stringStores = mutableListOf<StringStoreResourceSet>()
+    val graphicsStores = mutableListOf<StringStoreResourceSet>()
 
     inline fun <reified T> firstContext() = workspace.contexts.firstInstance<T>()
 
