@@ -1,7 +1,7 @@
 package `fun`.adaptive.iot.device.ui.editor
 
 import `fun`.adaptive.iot.app.IotWsModule
-import `fun`.adaptive.iot.device.ui.DeviceItems
+import `fun`.adaptive.iot.app.WsItemTypes
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
@@ -12,7 +12,7 @@ fun wsDeviceEditorContentDef(
 ) {
     val workspace = module.workspace
 
-    workspace.addContentPaneBuilder(DeviceItems.WSIT_DEVICE) { item ->
+    workspace.addContentPaneBuilder(WsItemTypes.WSIT_DEVICE) { item ->
         WsPane(
             UUID(),
             workspace = workspace,

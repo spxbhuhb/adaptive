@@ -27,7 +27,7 @@ import kotlin.time.measureTime
 open class AvValueStore(
     val persistence: AbstractValuePersistence = NoPersistence(),
     private val logger: AdaptiveLogger,
-    private val trace: Boolean = false
+    var trace: Boolean = false
 ) {
 
     private val lock = getLock()
@@ -414,7 +414,7 @@ open class AvValueStore(
      * - rollback **MUST BE HANDLED** by [computeFun], the worker does not guarantee that
      */
     suspend fun <T> execute(timeout: Duration = 5.seconds, computeFun: AvComputeFun<T>): T {
-        val channel = Channel<Any>(Channel.BUFFERED)
+        val channel = Channel<Any?>(Channel.BUFFERED)
 
         val op = AvoComputation<T>().also {
             it.channel = channel

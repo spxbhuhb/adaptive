@@ -1,13 +1,11 @@
-package `fun`.adaptive.iot.point.computed
+package `fun`.adaptive.iot.test
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.iot.point.conversion.CurValConversion
-import `fun`.adaptive.value.item.AvMarker
 
 @Adat
-class AioComputedPointSpec(
-    val dependencyMarker: AvMarker,
+class TestPointSpec(
     override val displayAddress: String = "",
     override val notes: String = "",
     override val conversion: CurValConversion? = null

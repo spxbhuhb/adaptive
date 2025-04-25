@@ -18,9 +18,9 @@ data class AvDouble(
     val value : Double,
 ) : AvValue() {
 
-    constructor(parentId: AvValueId, value: Double) : this(
+    constructor(parentId: AvValueId, value: Double, timestamp : Instant = now()) : this(
         uuid7(),
-        now(),
+        timestamp,
         AvStatus.OK,
         parentId,
         value

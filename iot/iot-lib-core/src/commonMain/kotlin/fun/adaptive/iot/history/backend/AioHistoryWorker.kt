@@ -28,7 +28,7 @@ class AioHistoryWorker : WorkerImpl<AioHistoryWorker> {
         const val CHUNK_SIZE = 1024L * 1024L
     }
 
-    val historyRoot by setting<Path> { "AIO_HISTORY_PATH" }
+    val historyRoot by setting<Path> { "AIO_HISTORY_PATH" } // default Path("./history")
 
     val historyAccessLock = getLock()
 

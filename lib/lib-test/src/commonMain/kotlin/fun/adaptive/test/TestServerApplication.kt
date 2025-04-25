@@ -8,6 +8,12 @@ import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.runtime.*
+import `fun`.adaptive.service.testing.DirectServiceTransport
+import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.wireformat.api.Json
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 class TestServerApplication(
     vararg modules: AppModule<ServerWorkspace>
@@ -24,7 +30,11 @@ class TestServerApplication(
     override val backendMainKey: FragmentKey
         get() = unsupported()
 
-    fun start() {
+    fun start(
+        transport: ServiceCallTransport = DirectServiceTransport(name = "node", wireFormatProvider = Json),
+        dispatcher: CoroutineDispatcher = Dispatchers.Unconfined,
+        scope: CoroutineScope = CoroutineScope(dispatcher)
+    ) : TestServerApplication {
         GlobalRuntimeContext.nodeType = ApplicationNodeType.Server
 
         moduleInit()
@@ -35,7 +45,7 @@ class TestServerApplication(
 
         workspaceInit(workspace)
 
-        backend = backend { adapter ->
+        backend = backend(transport, dispatcher = dispatcher, scope = scope) { adapter ->
             backendAdapterInit(adapter)
 
             localContext(this@TestServerApplication) {
@@ -48,19 +58,18 @@ class TestServerApplication(
                 }
             }
         }
+
+        return this
     }
 
     companion object {
 
-        fun testServer(start: Boolean = true, buildFun: TestServerBuilder.() -> Unit) : TestServerApplication {
+        fun testServer(buildFun: TestServerBuilder.() -> Unit): TestServerApplication {
             val builder = TestServerBuilder()
 
             builder.buildFun()
 
-            TestServerApplication(*builder.modules.toTypedArray()).also {
-                if (start) it.start()
-                return it
-            }
+            return TestServerApplication(*builder.modules.toTypedArray())
         }
 
     }

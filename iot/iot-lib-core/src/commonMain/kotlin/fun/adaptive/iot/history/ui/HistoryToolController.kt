@@ -5,7 +5,7 @@ import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.device.publish.AioDeviceTreePublishApi
-import `fun`.adaptive.iot.device.ui.DeviceItems
+import `fun`.adaptive.iot.app.WsItemTypes
 import `fun`.adaptive.iot.generated.resources.database
 import `fun`.adaptive.iot.generated.resources.historicalData
 import `fun`.adaptive.iot.point.AioPointSpec
@@ -131,7 +131,7 @@ class HistoryToolController(
         val name = if (items.size == 1) first.name else Strings.historicalData
 
         workspace.addContent(
-            HistoryBrowserWsItem(name, DeviceItems.WSIT_HISTORY, this, items),
+            HistoryBrowserWsItem(name, WsItemTypes.WSIT_HISTORY, this, items),
             emptySet()
         )
 
@@ -182,7 +182,7 @@ class HistoryToolController(
             .sortedBy { it.name }
             .map { hisPoint ->
                 val specific = hisPoint.spec as AioPointSpec
-                TreeItem<AvValueId>(
+                TreeItem(
                     Graphics.database,
                     hisPoint.name + " " + specific.displayAddress,
                     hisPoint.uuid,

@@ -3,18 +3,15 @@ package `fun`.adaptive.iot.device
 import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
-import `fun`.adaptive.iot.device.ui.DeviceItems
+import `fun`.adaptive.iot.app.WsItemTypes
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
-import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValueSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.value.util.serviceSubscribe
 import kotlinx.datetime.Clock.System.now
 
 class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
@@ -52,7 +49,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
 
             val item = AvItem<AioDeviceSpec>(
                 name,
-                DeviceItems.WSIT_DEVICE + ":$itemType",
+                WsItemTypes.WSIT_DEVICE + ":$itemType",
                 itemId,
                 now(),
                 AvStatus.OK,

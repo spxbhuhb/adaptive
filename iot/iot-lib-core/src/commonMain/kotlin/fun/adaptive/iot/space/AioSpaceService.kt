@@ -4,7 +4,7 @@ import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.iot.app.IoTValueDomain
-import `fun`.adaptive.iot.device.ui.DeviceItems
+import `fun`.adaptive.iot.app.WsItemTypes
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.*
@@ -33,7 +33,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
 
             val space = AvItem(
                 name,
-                DeviceItems.WSIT_SPACE + ":$spaceType",
+                WsItemTypes.WSIT_SPACE + ":$spaceType",
                 spaceId,
                 now(),
                 AvStatus.OK,

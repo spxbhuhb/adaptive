@@ -22,6 +22,7 @@ import `fun`.adaptive.iot.history.model.AioDoubleHistoryRecord
 import `fun`.adaptive.iot.history.model.AioHistoryQuery
 import `fun`.adaptive.iot.history.ui.chart.DoubleHistoryValueNormalizer
 import `fun`.adaptive.iot.history.ui.model.HistoryContentConfig
+import `fun`.adaptive.iot.history.util.decodeDoubleChunks
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.resource.graphics.Graphics
@@ -41,7 +42,6 @@ import `fun`.adaptive.ui.workspace.logic.WsPaneType
 import `fun`.adaptive.utility.replaceFirst
 import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
 import kotlinx.datetime.*
 import kotlinx.datetime.Clock.System.now
 import kotlin.time.Duration.Companion.minutes
@@ -92,7 +92,7 @@ class HistoryContentController(
 
     val chartItems = storeFor { emptyList<HistoryChartItem>() }
 
-    val instructionSets = mutableListOf<AdaptiveInstructionGroup>(
+    val instructionSets = mutableListOf(
         instructionsOf(stroke(0x1f77b4)), // blue
         instructionsOf(stroke(0xff7f0e)), // orange
         instructionsOf(stroke(0x2ca02c)), // green
@@ -123,14 +123,13 @@ class HistoryContentController(
         size = 49.0,
         offset = 49.0,
         axisLine = true,
-        ChartModule.BASIC_VERTICAL_AXIS,
-        { c, a, s -> doubleVerticalAxisMarkers(c, a, s) { it.value } }
-    )
+        ChartModule.BASIC_VERTICAL_AXIS
+    ) { c, a, s -> doubleVerticalAxisMarkers(c, a, s) { it.value } }
 
-    var chartContext = storeFor { chartRenderContext(emptyList<HistoryChartItem>()) }
+    var chartContext = storeFor { chartRenderContext(emptyList()) }
 
     private fun chartRenderContext(items: List<HistoryChartItem>) =
-        ChartRenderContext<Instant, AioDoubleHistoryRecord, AvItem<*>>(
+        ChartRenderContext(
             items,
             listOf(xAxis, yAxis),
             RawSurrounding(0.0, 0.0, 50.0, 50.0),
@@ -217,31 +216,11 @@ class HistoryContentController(
 
         val out = mutableListOf<AioDoubleHistoryRecord>()
         try {
-            historyService.query(query).decodeChunks(out)
+            historyService.query(query).decodeDoubleChunks(out, start, end)
         } catch (e: Exception) {
             getLogger("aio:history").error("Failed to query history for ${item.uuid}", e)
         }
         return out
-    }
-
-    fun List<ByteArray>.decodeChunks(out: MutableList<AioDoubleHistoryRecord>) {
-        forEach {
-            it.decodeChunk(out)
-        }
-    }
-
-    fun ByteArray.decodeChunk(out: MutableList<AioDoubleHistoryRecord>) {
-        val decoder = ProtoWireFormatDecoder(this)
-
-        val start = config.value.start.atStartOfDayIn(TimeZone.currentSystemDefault())
-        val end = config.value.end.asEndOfDayInDefault()
-
-        for (record in decoder.records) {
-            val record = record.decoder().rawInstance(record, AioDoubleHistoryRecord)
-            if (record.timestamp >= start && record.timestamp < end) {
-                out += record
-            }
-        }
     }
 
     fun generateNewInstructionSet(): AdaptiveInstructionGroup {

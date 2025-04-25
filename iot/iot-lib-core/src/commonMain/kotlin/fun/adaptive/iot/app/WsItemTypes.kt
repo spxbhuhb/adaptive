@@ -1,6 +1,6 @@
-package `fun`.adaptive.iot.device.ui
+package `fun`.adaptive.iot.app
 
-object DeviceItems {
+object WsItemTypes {
     const val WSIT_DEVICE = "aio:device"
     const val WSIT_SPACE = "aio:space"
     const val WSIT_POINT = "aio:point"

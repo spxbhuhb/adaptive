@@ -7,7 +7,7 @@ import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.iot.device.DeviceMarkers
-import `fun`.adaptive.iot.device.ui.DeviceItems
+import `fun`.adaptive.iot.app.WsItemTypes
 import `fun`.adaptive.iot.driver.announcement.AdaNetworkCommissioned
 import `fun`.adaptive.iot.driver.announcement.AioDriverAnnouncementWrapper
 import `fun`.adaptive.iot.driver.api.AioDriverApi
@@ -65,7 +65,7 @@ class TestSupport {
     fun newNetwork(spec : () -> TestNetworkSpec) =
         AvItem(
             name = "test-network",
-            type = DeviceItems.WSIT_DEVICE,
+            type = WsItemTypes.WSIT_DEVICE,
             friendlyId = "test-network",
             markersOrNull = mapOf(DeviceMarkers.NETWORK to null),
             spec = spec()
@@ -74,7 +74,7 @@ class TestSupport {
     fun newController(networkId: AvValueId, spec: () -> TestControllerSpec) =
         AvItem(
             name = "test-controller",
-            type = DeviceItems.WSIT_DEVICE,
+            type = WsItemTypes.WSIT_DEVICE,
             friendlyId = "test-controller",
             parentId = networkId,
             markersOrNull = mapOf(DeviceMarkers.CONTROLLER to null),
@@ -87,7 +87,7 @@ class TestSupport {
 
     suspend fun commissionTestNetwork(): AvItem<TestNetworkSpec> {
         val network = newNetwork { TestNetworkSpec() }
-        AdrCommissionNetwork<TestNetworkSpec>(uuid7(), network.uuid, network).process()
+        AdrCommissionNetwork(uuid7(), network.uuid, network).process()
         getAnnouncement<AdaNetworkCommissioned<TestNetworkSpec>>()
         return network
     }

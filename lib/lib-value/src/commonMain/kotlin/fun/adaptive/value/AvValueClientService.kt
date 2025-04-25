@@ -3,7 +3,6 @@ package `fun`.adaptive.value
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.value.operation.AvValueOperation
-import `fun`.adaptive.runtime.GlobalRuntimeContext
 
 class AvValueClientService : ServiceImpl<AvValueClientService>, AvValueApi {
 
@@ -12,7 +11,6 @@ class AvValueClientService : ServiceImpl<AvValueClientService>, AvValueApi {
     }
 
     override fun mount() {
-        check(GlobalRuntimeContext.isClient)
         worker = adapter !!.firstImpl<AvValueWorker>()
     }
 

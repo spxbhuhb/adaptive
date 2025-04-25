@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.iot.history.AioHistoryService
 import `fun`.adaptive.iot.point.computed.AioPointComputeWorker
 import `fun`.adaptive.iot.space.SpaceMarkers
-import `fun`.adaptive.iot.device.ui.DeviceItems
+import `fun`.adaptive.iot.app.WsItemTypes
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
@@ -52,7 +52,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
 
             val item = AvItem(
                 name,
-                DeviceItems.WSIT_POINT + ":$itemType",
+                WsItemTypes.WSIT_POINT + ":$itemType",
                 itemId,
                 now(),
                 AvStatus.OK,

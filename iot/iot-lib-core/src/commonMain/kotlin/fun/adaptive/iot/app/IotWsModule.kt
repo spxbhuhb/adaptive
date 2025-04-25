@@ -2,11 +2,8 @@ package `fun`.adaptive.iot.app
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
-import `fun`.adaptive.iot.alarm.ui.WSPANE_ALARM_TOOL
-import `fun`.adaptive.iot.alarm.ui.wsAlarmTool
 import `fun`.adaptive.iot.alarm.ui.wsAlarmToolDef
 import `fun`.adaptive.iot.device.DeviceMarkers
-import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceContentPane
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorContentDef
 import `fun`.adaptive.iot.device.ui.editor.wsDeviceEditorTool
@@ -90,7 +87,7 @@ class IotWsModule<WT : Workspace> : IotModule<WT>() {
 
         wsAlarmToolDef()
 
-        addItemConfig(DeviceItems.WSIT_SPACE, Graphics.apartment)
+        addItemConfig(WsItemTypes.WSIT_SPACE, Graphics.apartment)
 
     }
 }

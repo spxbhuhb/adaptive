@@ -16,7 +16,6 @@ import `fun`.adaptive.iot.point.ui.pointSummary
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.localizedSpaceType
-import `fun`.adaptive.iot.device.ui.DeviceItems
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.button
@@ -31,8 +30,6 @@ import `fun`.adaptive.ui.label.withLabel
 import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
-import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem

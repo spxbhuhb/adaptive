@@ -51,6 +51,7 @@ adaptive-lib-chart = { module = "fun.adaptive:lib-chart", version.ref = "adaptiv
 adaptive-lib-graphics = { module = "fun.adaptive:lib-graphics", version.ref = "adaptive" }
 adaptive-lib-ktor = { module = "fun.adaptive:lib-ktor", version.ref = "adaptive" }
 adaptive-lib-document = { module = "fun.adaptive:lib-document", version.ref = "adaptive" }
+adaptive-lib-test = { module = "fun.adaptive:lib-test", version.ref = "adaptive" }
 adaptive-lib-ui = { module = "fun.adaptive:lib-ui", version.ref = "adaptive" }
 adaptive-lib-util = { module = "fun.adaptive:lib-util", version.ref = "adaptive" }
 adaptive-lib-value = { module = "fun.adaptive:lib-value", version.ref = "adaptive" }
