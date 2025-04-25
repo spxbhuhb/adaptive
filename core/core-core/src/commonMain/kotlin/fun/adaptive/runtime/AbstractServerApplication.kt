@@ -1,15 +1,10 @@
-package `fun`.adaptive.app
+package `fun`.adaptive.runtime
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.FragmentKey
-import `fun`.adaptive.runtime.AbstractApplication
-import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.wireformat.WireFormatRegistry
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.coroutineScope
 
-abstract class ServerApplication<WT : AbstractWorkspace> : AbstractApplication<WT>() {
+abstract class AbstractServerApplication<WT : AbstractWorkspace> : AbstractApplication<WT>() {
 
     abstract val backend : BackendAdapter
 

@@ -9,12 +9,13 @@ import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.ApplicationNodeType
 import `fun`.adaptive.runtime.GlobalRuntimeContext
+import `fun`.adaptive.runtime.AbstractServerApplication
 import `fun`.adaptive.runtime.ServerWorkspace
 import kotlinx.coroutines.runBlocking
 
 class JvmServerApplication(
     vararg modules: AppModule<ServerWorkspace>
-) : ServerApplication<ServerWorkspace>() {
+) : AbstractServerApplication<ServerWorkspace>() {
 
     init {
         this.modules += modules

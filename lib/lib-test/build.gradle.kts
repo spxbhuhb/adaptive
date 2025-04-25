@@ -13,8 +13,8 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "lib-app"
-val pomName = "Adaptive Lib Application"
+val baseName = "lib-test"
+val pomName = "Adaptive Lib Test"
 val scmPath = "spxbhuhb/adaptive"
 
 // this is ugly but I don't use JS dependencies anyway, 
@@ -51,13 +51,8 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.adaptive.core.core)
-            implementation(libs.adaptive.core.ui)
-            implementation(libs.adaptive.lib.ktor)
-            implementation(libs.adaptive.lib.auth)
-            implementation(libs.adaptive.lib.ui)
-            implementation(libs.adaptive.lib.graphics)
-            implementation(libs.adaptive.lib.document)
             implementation(libs.adaptive.lib.value)
+            implementation(libs.adaptive.lib.util)
         }
 
         commonTest.dependencies {
