@@ -19,7 +19,7 @@ import kotlin.math.max
 open class BufferWriter(
     val initialBufferSize: Int = 200,
     val additionalBufferSize: Int = 10_000,
-    val maximumBufferSize: Int = 5_000_000 + initialBufferSize
+    val maximumBufferSize: Int = 50_000_000 + initialBufferSize
 ) {
 
     /**
@@ -120,7 +120,7 @@ open class BufferWriter(
     private fun addBuffer(requestedSize: Int = additionalBufferSize) {
         pastBufferByteCount += buffer.size
 
-        check(pastBufferByteCount + requestedSize < maximumBufferSize) { "ProtoBufferWriter buffer overflow" }
+        check(pastBufferByteCount + requestedSize < maximumBufferSize) { "ProtoBufferWriter buffer overflow $pastBufferByteCount + $requestedSize > $maximumBufferSize" }
 
         if (recycle.isNotEmpty()) {
             buffer = recycle.removeLast()

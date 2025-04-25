@@ -30,9 +30,13 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
 
     val valueWorker by worker<AvValueWorker>()
 
-    val sourceMaps = mutableMapOf<AvValueId, MutableMap<AvValueId, Double>>()
+    class ComputedEntry(
+        val sourceValues: MutableMap<AvValueId, Double> = mutableMapOf(),
+        var timestamp: Instant = Instant.DISTANT_PAST,
+        var value: Double = 0.0
+    )
 
-    val timestamps = mutableMapOf<AvValueId, Instant>()
+    val sourceMaps = mutableMapOf<AvValueId, ComputedEntry>()
 
     override suspend fun run() {
         for (value in channel) {
@@ -110,18 +114,22 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
 
         val parentId = incomingValue.parentId ?: return
 
-        val sourceValues = sourceMaps.getOrPut(computedPoint) { mutableMapOf() }
-        sourceValues[parentId] = value
+        val entry = sourceMaps.getOrPut(computedPoint) { ComputedEntry() }
+        entry.sourceValues[parentId] = value
 
-        val timestamp = timestamps.getOrPut(computedPoint) { incomingValue.timestamp }
+        entry.timestamp = max(entry.timestamp, incomingValue.timestamp)
 
-        val resultTimestamp = max(timestamp, incomingValue.timestamp)
-        if (timestamp < incomingValue.timestamp) timestamps[computedPoint] = resultTimestamp
+        val resultValue = entry.sourceValues.values.sum() / entry.sourceValues.size
+        if (resultValue == entry.value) return
 
-        val resultValue = sourceValues.values.sum() / sourceValues.size
+        entry.value = resultValue
 
         val newCurVal = valueWorker.execute {
-            AioPointService().unsafeSetCurVal(this, computedPoint, AvDouble(computedPoint, resultValue, resultTimestamp))
+            AioPointService().unsafeSetCurVal(
+                this,
+                computedPoint,
+                AvDouble(computedPoint, resultValue, entry.timestamp)
+            )
         }
 
         update(newCurVal)

@@ -21,12 +21,23 @@ fun main() {
     )
 }
 
+class Record(
+    val timestamp: Instant,
+    val value: ByteArray
+) : Comparable<Record> {
+    override fun compareTo(other: Record): Int {
+        return timestamp.compareTo(other.timestamp)
+    }
+}
+
 class UploadTextHistory : CliktCommand(name = "upload-text-history") {
 
     private val historyPath by argument("history-path", help = "Path to the textual history")
     private val queuePath by argument("queue-path", help = "Path to the send queue")
 
     lateinit var curValQueue: SenderByteArrayQueue
+
+    val records = mutableListOf<Record>()
 
     override fun run() {
 
@@ -41,6 +52,12 @@ class UploadTextHistory : CliktCommand(name = "upload-text-history") {
         curValQueue.start()
 
         processHistoryDir(Path(historyPath))
+
+        records.sort()
+
+        records.forEach {
+            curValQueue.enqueue(it.value)
+        }
 
         while (! curValQueue.isEmpty) {
             Thread.sleep(1000)
@@ -91,15 +108,15 @@ class UploadTextHistory : CliktCommand(name = "upload-text-history") {
 
             when {
                 valueText == "false" || valueText == "true" -> {
-                    curValQueue.enqueue("$historyId Z $timestamp 0 $valueText".toByteArray())
+                    records += Record(timestamp, "$historyId Z $timestamp 0 $valueText".toByteArray())
                 }
 
                 valueText.toDoubleOrNull() != null -> {
-                    curValQueue.enqueue("$historyId D $timestamp 0 $valueText".toByteArray())
+                    records += Record(timestamp, "$historyId D $timestamp 0 $valueText".toByteArray())
                 }
 
                 else -> {
-                    curValQueue.enqueue("$historyId T $timestamp 0 $valueText".toByteArray())
+                    records += Record(timestamp, "$historyId T $timestamp 0 $valueText".toByteArray())
                 }
             }
         }

@@ -22,7 +22,7 @@ import kotlin.experimental.or
 class ProtoBufferWriter(
     initialBufferSize: Int = 200,
     additionalBufferSize: Int = 10_000,
-    maximumBufferSize: Int = 5_000_000 + initialBufferSize
+    maximumBufferSize: Int = 50_000_000 + initialBufferSize
 ) : BufferWriter(initialBufferSize, additionalBufferSize, maximumBufferSize) {
 
     // ------------------------------------------------------------------------
