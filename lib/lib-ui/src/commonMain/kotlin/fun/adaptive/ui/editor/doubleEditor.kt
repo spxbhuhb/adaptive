@@ -15,7 +15,7 @@ fun doubleEditor(
     binding: AdaptiveStateVariableBinding<Double>? = null,
     @Suppress("unused")
     @PropertySelector
-    selector: () -> Double,
+    selector: () -> Double?,
 ) : AdaptiveFragment {
     doubleInput2(
         fragment().viewBackendFor(binding) { value, label, isSecret ->

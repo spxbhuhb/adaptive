@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.api.firstContextOrNull
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.resource.ResourceKey
 import `fun`.adaptive.runtime.AbstractApplication
+import `fun`.adaptive.ui.editor.instruction.EditorLabel
 import `fun`.adaptive.ui.input.InputViewBackend
 
 open class FormViewBackend() {
@@ -85,7 +86,12 @@ open class FormViewBackend() {
     fun findLabel(fragment: AdaptiveFragment, key: ResourceKey?): String? {
         if (key == null) return null
 
-        val app = application ?: fragment.firstContextOrNull<AbstractApplication<*>>()?.also { application = it } ?: return null
+        val instructed = fragment.instructions.firstInstanceOfOrNull<EditorLabel>()
+        if (instructed != null) return instructed.label
+
+        val app = application
+            ?: fragment.firstContextOrNull<AbstractApplication<*>>()?.also { application = it }
+            ?: return key
 
         for (store in app.stringStores) {
             val label = store.getOrNull(key) ?: continue

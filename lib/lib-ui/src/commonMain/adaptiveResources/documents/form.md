@@ -68,11 +68,20 @@ Field labels are translated automatically, assuming:
 
 * there is an `AbstractApplication` context for the fragment
 * a string resource with a key equivalent to the property name exists
+* there is no `editorLabel` instruction on the fragment
 
 The translation goes over the `stringStores` of the application and
 returns with the first string with the proper key.
 
 If there is no such key, the label will be the name of the property.
+
+### Set a label manually
+
+Use the `editorLabel` instruction:
+
+```kotlin
+doubleEditor { template.layout.top } .. width { 56.dp } .. editorLabel("TOP")
+```
 
 > 
 > [!NOTE]
