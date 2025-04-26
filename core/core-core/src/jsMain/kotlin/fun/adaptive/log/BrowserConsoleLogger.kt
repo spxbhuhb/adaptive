@@ -6,7 +6,7 @@ package `fun`.adaptive.log
 
 import `fun`.adaptive.utility.exitProcessCommon
 
-class BrowserLogger(
+class BrowserConsoleLogger(
     name: String
 ) : AdaptiveLogger() {
 

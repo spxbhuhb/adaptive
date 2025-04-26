@@ -4,5 +4,4 @@
 
 package `fun`.adaptive.log
 
-actual fun getLogger(name: String): AdaptiveLogger =
-    JvmLogger(name)
+expect fun getPlatformLogger(name : String): AdaptiveLogger

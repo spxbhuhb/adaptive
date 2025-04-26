@@ -4,4 +4,8 @@
 
 package `fun`.adaptive.log
 
-expect fun getLogger(name : String): AdaptiveLogger
+var defaultLoggerFactory = LoggerFactory { getPlatformLogger(it) }
+
+fun getLogger(name: String): AdaptiveLogger {
+    return defaultLoggerFactory.getLogger(name)
+}

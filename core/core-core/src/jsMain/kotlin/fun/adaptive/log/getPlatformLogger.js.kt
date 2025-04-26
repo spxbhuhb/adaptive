@@ -4,5 +4,5 @@
 
 package `fun`.adaptive.log
 
-actual fun getLogger(name: String): AdaptiveLogger =
-    BrowserLogger(name)
+actual fun getPlatformLogger(name: String): AdaptiveLogger =
+    BrowserConsoleLogger(name)
