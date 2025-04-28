@@ -12,6 +12,7 @@ object CanvasFragmentFactory : FoundationFragmentFactory() {
     init {
         add("canvas:canvas") { p, i, s -> CanvasCanvas(p.adapter as AuiAdapter, p, i) }
         add("canvas:circle") { p, i, s -> CanvasCircle(p.adapter as CanvasAdapter, p, i) }
+        add("canvas:draw") { p, i, s -> CanvasDraw(p.adapter as CanvasAdapter, p, i) }
         add("canvas:line") { p, i, s -> CanvasLine(p.adapter as CanvasAdapter, p, i) }
         add("canvas:filltext") { p, i, s -> CanvasFillText(p.adapter as CanvasAdapter, p, i) }
         add("canvas:svg") { p, i, s -> CanvasSvg(p.adapter as CanvasAdapter, p, i) }

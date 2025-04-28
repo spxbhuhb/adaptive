@@ -161,5 +161,5 @@ val popupStyles =
         paddingHorizontal { 12.dp } ..
         border(colors.outline, 1.dp) ..
         cornerRadius(4.dp) ..
-        backgroundColor(colors.onSurfaceFriendly.opaque(0.3f)) ..
+        backgroundColor(colors.onSurfaceFriendly.opaque(0.3)) ..
         zIndex { 1000 }

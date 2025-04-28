@@ -48,17 +48,20 @@ class ThemeColors {
 
     val outline = color(0xC5C5C5)
     val lightOutline = color(0xE0E0E0)
-    val overlay = color(0x0, opacity = 0.4f)
-    val lightOverlay = color(0x0, opacity = 0.1f)
+    val overlay = color(0x0, opacity = 0.4)
+    val lightOverlay = color(0x0, opacity = 0.1)
 
     val danger = color(0xEC5453u)
     val onDanger = color(0xFFFFFFu)
 
     val white = color(0xFFFFFF)
+    val black = color(0u)
 
     val reverse = color(0x1E1E1E)
     val onReverse = color(0xFFFFFF)
     val onReverseVariant = color(0xBBBBBB)
 
     val focusColor = color(0x0D6EFD)
+
+    val transparent = color(0x0, 0.0)
 }

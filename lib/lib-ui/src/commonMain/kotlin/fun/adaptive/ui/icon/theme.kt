@@ -101,9 +101,9 @@ class IconTheme(
         noSelect
     )
 
-    val nonHoverBackground = backgroundColor(colors.surface.opaque(0f))
+    val nonHoverBackground = backgroundColor(colors.surface.opaque(0.0))
 
-    val hoverBackground = backgroundColor(colors.reverse.opaque(0.1f))
+    val hoverBackground = backgroundColor(colors.reverse.opaque(0.1))
 
     fun background(hover: Boolean) =
         if (hover) hoverBackground else nonHoverBackground

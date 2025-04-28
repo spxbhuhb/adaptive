@@ -49,7 +49,7 @@ fun basicCanvas() {
         size(402.dp, 402.dp) .. borders.outline
 
         canvas {
-            circle(100.0, 100.0, seconds / 30.0) .. fill(Color(0x00ff00u, 0.3f))
+            circle(100.0, 100.0, seconds / 30.0) .. fill(Color(0x00ff00u, 0.3))
             transform {
                 translate(100.0, 100.0) .. rotate((seconds / 10) * PI / 180, 0.0, 0.0)
                 fillText(0.0, 0.0, "Canvas") .. fill(0xff00ff)

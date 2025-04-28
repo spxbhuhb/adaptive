@@ -5,14 +5,20 @@
 package `fun`.adaptive.graphics.canvas.platform
 
 import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
+import `fun`.adaptive.graphics.canvas.model.gradient.Gradient
 import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
-import `fun`.adaptive.ui.fragment.layout.RawSize
 import `fun`.adaptive.ui.fragment.layout.RawTextMeasurement
 import `fun`.adaptive.ui.instruction.decoration.Color
 
 class TracingCanvas<T : ActualCanvas>(
     val canvas: T
 ) : ActualCanvas {
+
+    override val width: Double
+        get() = canvas.width
+
+    override val height: Double
+        get() = canvas.height
 
     override fun apply(renderData: CanvasRenderData?) {
         println("apply: $renderData")
@@ -64,9 +70,19 @@ class TracingCanvas<T : ActualCanvas>(
         canvas.fillText(x, y, text)
     }
 
+    override fun fillRect(x: Double, y: Double, width: Double, height: Double) {
+        println("fillRect: $x, $y, $width, $height")
+        canvas.fillRect(x, y, width, height)
+    }
+
     override fun line(x1: Double, y1: Double, x2: Double, y2: Double) {
         println("line: $x1, $y1, $x2, $y2")
         canvas.line(x1, y1, x2, y2)
+    }
+
+    override fun image(x: Double, y: Double, width: Double, height: Double, drawFun: ((Int, Int) -> Unit) -> Unit) {
+        println("image: $x, $y, $width, $height")
+        canvas.image(x, y, width, height, drawFun)
     }
 
     override fun transform(t: CanvasTransformInstruction) {
@@ -87,6 +103,11 @@ class TracingCanvas<T : ActualCanvas>(
     override fun setFill(color: Color) {
         println("setFill: $color")
         canvas.setFill(color)
+    }
+
+    override fun setFill(gradient: Gradient) {
+        println("setFill: $gradient")
+        canvas.setFill(gradient)
     }
 
     override fun clear() {

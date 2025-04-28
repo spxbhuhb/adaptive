@@ -44,14 +44,14 @@ class EditorTheme : AbstractTheme() {
         border(colors.onSurfaceAngry, 2.dp),
         padding(left = 15.dp, right = 15.dp),
         textColor(colors.onSurface),
-        backgroundColor(colors.failSurface.opaque(0.05f)),
+        backgroundColor(colors.failSurface.opaque(0.05)),
     )
 
     val invalidNotFocused = base + instructionsOf(
         border(colors.onSurfaceAngry, 1.dp),
         padding(top = 1.dp, left = 16.dp, bottom = 1.dp, right = 16.dp),
         textColor(colors.onSurface),
-        backgroundColor(colors.failSurface.opaque(0.05f)),
+        backgroundColor(colors.failSurface.opaque(0.05)),
     )
 
     val selectTheme = SelectTheme.Companion.DEFAULT

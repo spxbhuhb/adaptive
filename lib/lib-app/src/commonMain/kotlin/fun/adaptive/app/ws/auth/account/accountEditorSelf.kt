@@ -34,7 +34,7 @@ fun accountEditorSelf(
     // I lost a few years of my life by being very-very angry while I figured this out.
 
     val popupState = valueFrom { InputContext() }.also {
-        if (it.value.popupOpen) {
+        if (it.value.isPopupOpen) {
             form.disableAll()
         } else {
             form.enableAll()

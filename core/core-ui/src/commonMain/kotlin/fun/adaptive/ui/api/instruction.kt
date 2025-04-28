@@ -20,8 +20,8 @@ import `fun`.adaptive.ui.instruction.text.*
 // ------------------------------------------------------------------------------------
 
 fun backgroundColor(color: Color) = BackgroundColor(color)
-fun backgroundColor(color: Int, opacity: Float = 1f) = BackgroundColor(Color(color.toUInt(), opacity))
-fun backgroundColor(color: UInt, opacity: Float = 1f) = BackgroundColor(Color(color, opacity))
+fun backgroundColor(color: Int, opacity: Double = 1.0) = BackgroundColor(Color(color.toUInt(), opacity))
+fun backgroundColor(color: UInt, opacity: Double = 1.0) = BackgroundColor(Color(color, opacity))
 
 inline fun backgroundColor(color: () -> Color) = BackgroundColor(color())
 
@@ -37,8 +37,8 @@ fun borderTop(color: Color, width: DPixel = 1.dp) = Border(color, width, null, n
 
 val noBorder = Border(color(0u), 0.dp, null, null, null)
 
-fun color(color: Int, opacity: Float = 1f) = Color(color.toUInt(), opacity)
-fun color(color: UInt, opacity: Float = 1f) = Color(color, opacity)
+fun color(color: Int, opacity: Double = 1.0) = Color(color.toUInt(), opacity)
+fun color(color: UInt, opacity: Double = 1.0) = Color(color, opacity)
 
 inline fun cornerRadius(all : () -> DPixel) = CornerRadius(all())
 fun cornerRadius(all: DPixel) = CornerRadius(all)

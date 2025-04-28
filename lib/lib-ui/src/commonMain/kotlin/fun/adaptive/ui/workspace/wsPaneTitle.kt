@@ -10,7 +10,6 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.hide
 import `fun`.adaptive.ui.generated.resources.remove
 import `fun`.adaptive.ui.icon.actionIcon
-import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.icon.denseVariantIconTheme
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.menu.contextMenu
@@ -35,7 +34,7 @@ fun wsPaneTitle(
         row {
             theme.toolPaneTitleActionContainer
 
-            if (showActions || actionContext.popupOpen) {
+            if (showActions || actionContext.isPopupOpen) {
                 for (action in pane.actions) {
                     if (action is WsPaneMenuAction<*>) {
                         box {

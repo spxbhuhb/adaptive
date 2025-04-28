@@ -2,14 +2,14 @@ package `fun`.adaptive.ui.fragment.structural
 
 interface PopupSourceViewBackend {
 
-    var popupOpen : Boolean
+    var isPopupOpen: Boolean
 
     /**
      * Focus the parent container when the popup loses focus.
      * This is in effect when the user clicks outside the popup.
      */
-    val focusContainerOnPopupFocusOut : Boolean
-    get() = false
+    val focusContainerOnPopupFocusOut: Boolean
+        get() = false
 
     /**
      * Focus on the parent container when the popup is programmatically

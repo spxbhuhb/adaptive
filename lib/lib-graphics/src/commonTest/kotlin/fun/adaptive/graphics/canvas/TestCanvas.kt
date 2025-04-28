@@ -5,6 +5,7 @@
 package `fun`.adaptive.graphics.canvas
 
 import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
+import `fun`.adaptive.graphics.canvas.model.gradient.Gradient
 import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
 import `fun`.adaptive.graphics.canvas.platform.ActualPath
 import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
@@ -14,6 +15,9 @@ import `fun`.adaptive.ui.instruction.decoration.Color
 class TestCanvas : ActualCanvas {
 
     val trace = mutableListOf<String>()
+
+    override val width: Double = Double.NaN
+    override val height: Double = Double.NaN
 
     override fun save(id: Long) {
 
@@ -51,7 +55,15 @@ class TestCanvas : ActualCanvas {
 
     }
 
+    override fun fillRect(x: Double, y: Double, width: Double, height: Double) {
+
+    }
+
     override fun line(x1: Double, y1: Double, x2: Double, y2: Double) {
+
+    }
+
+    override fun image(x: Double, y: Double, width: Double, height: Double, drawFun: ((Int, Int) -> Unit) -> Unit) {
 
     }
 
@@ -68,6 +80,10 @@ class TestCanvas : ActualCanvas {
     }
 
     override fun setFill(color: Color) {
+
+    }
+
+    override fun setFill(gradient: Gradient) {
 
     }
 

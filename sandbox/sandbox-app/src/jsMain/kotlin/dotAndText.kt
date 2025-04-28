@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.theme.colors
 
 @Adaptive
 fun dotAndTextMain() {
-    val guideStroke = stroke(colors.friendly.opaque(0.3f))
+    val guideStroke = stroke(colors.friendly.opaque(0.3))
     box {
         size(422.dp, 422.dp) .. borders.outline .. margin { 10.dp }
 

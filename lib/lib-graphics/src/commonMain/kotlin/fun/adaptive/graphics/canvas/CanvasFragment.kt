@@ -36,6 +36,7 @@ abstract class CanvasFragment(
             // this technique avoids unnecessary updates of render data, when draw is called
             // render data will be updated from the latest set of instructions
             renderData = null
+            canvas.redrawNeeded()
         }
         return true
     }

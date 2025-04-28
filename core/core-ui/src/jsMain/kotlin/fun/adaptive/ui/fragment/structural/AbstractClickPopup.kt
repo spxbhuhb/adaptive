@@ -41,7 +41,7 @@ abstract class AbstractClickPopup(
         if (inside == null && instructions.firstInstanceOfOrNull<PopupAlign>()?.modal != true) {
             super.hide()
 
-            sourceViewBackend?.let { it.popupOpen = false }
+            sourceViewBackend?.let { it.isPopupOpen = false }
 
             if (sourceViewBackend?.focusContainerOnPopupFocusOut == true) {
                 layoutReceiver?.focus()
@@ -74,14 +74,14 @@ abstract class AbstractClickPopup(
     }
 
     override fun show() {
-        sourceViewBackend?.let { it.popupOpen = true }
+        sourceViewBackend?.let { it.isPopupOpen = true }
         super.show()
     }
 
     override fun hide() {
         super.hide()
 
-        sourceViewBackend?.let { it.popupOpen = false }
+        sourceViewBackend?.let { it.isPopupOpen = false }
 
         if (sourceViewBackend?.focusContainerOnPopupClose == true) {
             layoutReceiver?.focus()

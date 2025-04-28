@@ -27,8 +27,8 @@ fun dateInput(
 
     val themeInstructions = when {
         observed.disabled -> theme.disabled
-        observed.invalid -> if (focus || observed.popupOpen) theme.invalidFocused else theme.invalidNotFocused
-        else -> if (focus || observed.popupOpen) theme.focused else theme.enabled
+        observed.invalid -> if (focus || observed.isPopupOpen) theme.invalidFocused else theme.invalidNotFocused
+        else -> if (focus || observed.isPopupOpen) theme.focused else theme.enabled
     }
 
     box(themeInstructions, theme.singleLine, instructions()) {
@@ -40,7 +40,7 @@ fun dateInput(
 
             primaryPopup(state) { hide ->
                 popupAlign.belowStart .. onClick { it.stopPropagation() } .. zIndex { 10000 } .. padding { 4.dp }
-                dropShadow(colors.reverse.opaque(0.1f), 2.dp, 2.dp, 2.dp)
+                dropShadow(colors.reverse.opaque(0.1), 2.dp, 2.dp, 2.dp)
 
                 datePicker(value, hide, onChange)
             }

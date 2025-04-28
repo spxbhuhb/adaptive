@@ -9,32 +9,30 @@ import `fun`.adaptive.app.ws.SandBoxClientModule
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.document.app.DocWsModule
-import `fun`.adaptive.foundation.instruction.name
+import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.iot.app.IotWsModule
+import `fun`.adaptive.iot.common.timestamp
+import `fun`.adaptive.lib.util.log.CollectedLogData
+import `fun`.adaptive.lib.util.log.CollectedLogItem
+import `fun`.adaptive.lib.util.log.CollectingLogger
+import `fun`.adaptive.log.LoggerFactory
+import `fun`.adaptive.log.defaultLoggerFactory
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputRecipe
+import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.scroll
-import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.generated.resources.folder
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.tree.TreeViewModel
-import `fun`.adaptive.ui.tree.TreeViewModel.Companion.defaultSelectedFun
-import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.value.app.ValueClientModule
 import kotlinx.coroutines.CoroutineScope
@@ -90,6 +88,11 @@ fun sandboxMain() {
 //            worker { SnackbarManager() }
         }
 
+        val collectedLogData = CollectedLogData()
+        defaultLoggerFactory = LoggerFactory { CollectingLogger(it, collectedLogData) }
+
+        val rootUiLogger = getLogger("UI root")
+
         browser(
             CanvasFragmentFactory,
             SvgFragmentFactory,
@@ -103,31 +106,52 @@ fun sandboxMain() {
                 fontWeight = 300
             }
 
+            collectedLog(collectedLogData)
+        }
+
+        try {
+            browser(
+                CanvasFragmentFactory,
+                SvgFragmentFactory,
+                LibFragmentFactory,
+                backend = localBackend
+            ) { adapter ->
+
+                with(adapter.defaultTextRenderData) {
+                    fontName = "Open Sans"
+                    fontSize = 16.sp
+                    fontWeight = 300
+                }
+
+
 //            adapter.cookbookCommon()
 //            adapter.groveRuntimeCommon()
 //            adapter.chartCommon()
 
-            //docMain()
-            //chartMain()
-            //svgMain()
-            //treeMain()
-            //contextMenuMain()
-            //datePickerMain()
-            //copyStore(Stuff(AioSpaceSpec()))
-            box(name("outer")) {
-                maxSize .. padding { 16.dp } .. backgrounds.friendlyOpaque
-                box(name("300")) {
-                    width { 200.dp } .. height { 300.dp } .. padding { 16.dp } .. borders.outline .. backgrounds.surface
-                    box {
-                        scroll .. maxSize
-                        tree(TreeViewModel(generate(), context = Unit, selectedFun = ::defaultSelectedFun, openWithSingleClick = true))
-                    }
+                //docMain()
+                //chartMain()
+                //svgMain()
+                //treeMain()
+                //contextMenuMain()
+                //datePickerMain()
+                //copyStore(Stuff(AioSpaceSpec()))
+//            box(name("outer")) {
+//                maxSize .. padding { 16.dp } .. backgrounds.friendlyOpaque
+//                box(name("300")) {
+//                    width { 200.dp } .. height { 300.dp } .. padding { 16.dp } .. borders.outline .. backgrounds.surface
+//                    box {
+//                        scroll .. maxSize
+//                        tree(TreeViewModel(generate(), context = Unit, selectedFun = ::defaultSelectedFun, openWithSingleClick = true))
+//                    }
+//                }
+//            }
+                column {
+                    maxSize .. padding { 16.dp } .. gap { 16.dp }//.. backgrounds.friendlyOpaque
+                    containerPlayground()
                 }
             }
-//            box {
-//                maxSize .. padding { 16.dp } //.. backgrounds.friendlyOpaque
-//                selectInputRecipe()
-//            }
+        } catch (ex: Exception) {
+            rootUiLogger.error(ex)
         }
     }
 }
@@ -155,4 +179,40 @@ private fun generateRandomTree(index: Int, depth: Int, parent: TreeItem<Unit>?):
     }
 
     return item
+}
+
+@Adaptive
+fun collectedLog(data: CollectedLogData) {
+    val observed = valueFrom { data }
+
+    box {
+        maxSize .. zIndex { 100000 } .. noPointerEvents
+        column {
+            height { 400.dp } .. verticalScroll .. alignSelf.bottom .. maxWidth
+            for (item in observed.items) {
+                collectedLogItem(item)
+            }
+        }
+    }
+
+}
+
+
+@Adaptive
+fun collectedLogItem(item: CollectedLogItem) {
+
+    column {
+        row {
+            maxWidth .. gap { 16.dp } .. height { 22.dp }
+
+            timestamp(item.time)
+            text(item.logger)
+            text(item.level)
+            text(item.message)
+        }
+        if (item.exception != null) {
+            text(item.exception)
+        }
+    }
+
 }

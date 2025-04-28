@@ -22,9 +22,9 @@ class CanvasCanvas(
     adapter: AuiAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {
+) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()), ActualCanvasOwner {
 
-    val canvas = ActualBrowserCanvas()
+    override val canvas = ActualBrowserCanvas()
 
     override val receiver: HTMLCanvasElement = canvas.receiver
 
@@ -64,8 +64,9 @@ class CanvasCanvas(
 
     override fun patchInternal() {
         super.patchInternal()
-        if (size.width > 0 && size.height > 0 && isMounted) {
+        if (size.width > 0 && size.height > 0 && isMounted && canvas.shouldRedraw) {
             canvasAdapter.draw()
+            canvas.shouldRedraw = false
         }
     }
 
@@ -101,7 +102,10 @@ class CanvasCanvas(
             }
         }
 
-        canvasAdapter.draw()
+        if (canvas.shouldRedraw) {
+            canvasAdapter.draw()
+            canvas.shouldRedraw = false
+        }
     }
 
 }

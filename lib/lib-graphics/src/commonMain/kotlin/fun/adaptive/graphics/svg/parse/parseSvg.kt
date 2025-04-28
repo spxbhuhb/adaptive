@@ -81,7 +81,7 @@ private fun transform(value: String, instructions: MutableList<AdaptiveInstructi
 }
 
 private fun fill(value: String, instructions: MutableList<AdaptiveInstruction>) {
-    instructions += Fill(Color(value))
+    instructions += Fill(Color.decodeFromHex(value))
 }
 
 private fun d(value: String, instructions: MutableList<AdaptiveInstruction>) {

@@ -130,7 +130,7 @@ private fun item(item: BasicAccountSummary) {
         instant(item.lastLogin) .. maxWidth .. alignSelf.endCenter .. textSmall
 
         box {
-            if (hover || popupState.value.popupOpen) {
+            if (hover || popupState.value.isPopupOpen) {
                 actionIcon(Graphics.edit, Strings.edit)
                 primaryPopup(popupState) { hide ->
                     popupAlign.absoluteCenter(modal = true, 150.dp)

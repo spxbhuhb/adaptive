@@ -5,8 +5,8 @@
 package `fun`.adaptive.graphics.canvas.platform
 
 import `fun`.adaptive.graphics.canvas.instruction.CanvasTransformInstruction
+import `fun`.adaptive.graphics.canvas.model.gradient.Gradient
 import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
-import `fun`.adaptive.ui.fragment.layout.RawSize
 import `fun`.adaptive.ui.fragment.layout.RawTextMeasurement
 import `fun`.adaptive.ui.instruction.decoration.Color
 
@@ -14,6 +14,10 @@ import `fun`.adaptive.ui.instruction.decoration.Color
  * Implemented by bridge classes to connect common code with the actual UI canvas implementation.
  */
 interface ActualCanvas {
+
+    val width : Double
+
+    val height : Double
 
     fun apply(renderData: CanvasRenderData?) {
         if (renderData == null) return
@@ -26,6 +30,8 @@ interface ActualCanvas {
         renderData.decoration?.border?.color?.let { setStroke(it) }
         renderData.text?.color?.let { setFill(it) }
     }
+
+    fun redrawNeeded() { }
 
     /**
      * Draw on the canvas by calling [drawFun]. Implementations may surround [drawFun] with whatever
@@ -82,7 +88,20 @@ interface ActualCanvas {
 
     fun fillText(x: Double, y: Double, text: String)
 
+    fun fillRect(x: Double, y: Double, width: Double, height: Double)
+
     fun line(x1: Double, y1: Double, x2: Double, y2: Double)
+
+    /**
+     * Draw an image by setting RGBA manually.
+     */
+    fun image(
+        x : Double,
+        y : Double,
+        width : Double,
+        height: Double,
+        drawFun : (setFun : (index : Int, value : Int) -> Unit) -> Unit
+    )
 
     /**
      * Add a transform to the canvas.
@@ -97,6 +116,11 @@ interface ActualCanvas {
      * Set the fill style for the canvas.
      */
     fun setFill(color: Color)
+
+    /**
+     * Set the fill style for the canvas to a gradient.
+     */
+    fun setFill(gradient: Gradient)
 
     /**
      * Clear the canvas.

@@ -85,7 +85,7 @@ private fun controls(frame: Frame, controller: SheetViewController) {
 private object ControlStyles {
 
     val controlWidth = 8.dp
-    val borderBackground = backgroundColor { colors.onSurfaceFriendly.opaque(0.2f) }
+    val borderBackground = backgroundColor { colors.onSurfaceFriendly.opaque(0.2) }
 
     val resizeHandle = size(8.dp, 8.dp) .. backgrounds.friendly .. border(colors.onSurfaceFriendly, 1.dp)
 

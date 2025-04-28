@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.graphics.canvas.canvas
 import `fun`.adaptive.graphics.canvas.model.path.PathCommand
+import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
 import `fun`.adaptive.resource.graphics.GraphicsResource
 import `fun`.adaptive.ui.fragment.layout.RawSize
 import `fun`.adaptive.ui.instruction.layout.PopupAlign
@@ -18,6 +19,13 @@ fun canvas(
     @Adaptive content: (size : RawSize) -> Unit
 ) {
     manualImplementation(instructions, content)
+}
+
+@AdaptiveExpect(canvas)
+fun draw(
+    drawFun: ActualCanvas.() -> Unit
+) : AdaptiveFragment {
+    manualImplementation(drawFun)
 }
 
 @AdaptiveExpect(canvas)

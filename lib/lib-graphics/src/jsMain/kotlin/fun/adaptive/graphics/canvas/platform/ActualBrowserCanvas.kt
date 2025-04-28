@@ -5,31 +5,55 @@
 package `fun`.adaptive.graphics.canvas.platform
 
 import `fun`.adaptive.graphics.canvas.instruction.*
+import `fun`.adaptive.graphics.canvas.model.gradient.Gradient
+import `fun`.adaptive.graphics.canvas.model.gradient.LinearGradient
 import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
 import `fun`.adaptive.ui.fragment.AuiText.Companion.measureContext
-import `fun`.adaptive.ui.fragment.layout.RawSize
 import `fun`.adaptive.ui.fragment.layout.RawTextMeasurement
 import `fun`.adaptive.ui.instruction.decoration.Color
 import kotlinx.browser.document
 import kotlinx.browser.window
+import org.khronos.webgl.Uint8ClampedArray
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
+import org.w3c.dom.ImageData
 import kotlin.math.PI
 import kotlin.math.ceil
 import kotlin.math.tan
 
 class ActualBrowserCanvas : ActualCanvas {
 
-    val receiver = (document.createElement("canvas") as HTMLCanvasElement).also {
-        it.style.imageRendering = "crisp-edges"
-    }
+    val receiver = newElement()
+    val receiverContext = newContext(receiver)
 
-    val context = (receiver.getContext("2d") as CanvasRenderingContext2D)
+    val buffer = newElement()
+    val bufferContext = newContext(buffer)
 
     var saveIds = mutableListOf<Long>()
 
+    var shouldRedraw: Boolean = true
+
+    override val width
+        get() = currentWidth
+
+    override val height: Double
+        get() = currentHeight
+
     var currentWidth = 0.0
+
     var currentHeight = 0.0
+
+    override fun redrawNeeded() {
+        shouldRedraw = true
+    }
+
+    fun newElement() =
+        (document.createElement("canvas") as HTMLCanvasElement).also {
+            it.style.imageRendering = "crisp-edges"
+        }
+
+    fun newContext(element: HTMLCanvasElement) =
+        element.getContext("2d") as CanvasRenderingContext2D
 
     fun setSize(width: Double, height: Double) {
         if (width == currentWidth && height == currentHeight) return
@@ -39,28 +63,38 @@ class ActualBrowserCanvas : ActualCanvas {
 
         val scale = window.devicePixelRatio
 
-        receiver.width = (width * scale).toInt()
-        receiver.height = (height * scale).toInt()
+        val scaledWidth = (width * scale).toInt()
+        val scaledHeight = (height * scale).toInt()
 
-        context.scale(scale, scale)
+        receiver.width = scaledWidth
+        receiver.height = scaledHeight
+
+        buffer.width = scaledWidth
+        buffer.height = scaledHeight
+
+        bufferContext.scale(scale, scale)
     }
+
 
     override fun save(id: Long) {
         if (saveIds.lastOrNull() == id) return
         saveIds.add(id)
-        context.save()
+        bufferContext.save()
     }
 
     override fun restore(id: Long) {
         if (saveIds.lastOrNull() != id) return
         saveIds.removeLastOrNull()
-        context.restore()
+        bufferContext.restore()
     }
 
     override fun draw(drawFun: () -> Unit) {
         window.requestAnimationFrame {
             clear()
             drawFun()
+
+            receiverContext.clearRect(0.0, 0.0, receiver.width.toDouble(), receiver.height.toDouble())
+            receiverContext.drawImage(buffer, 0.0, 0.0)
         }
     }
 
@@ -72,9 +106,9 @@ class ActualBrowserCanvas : ActualCanvas {
         endAngle: Double,
         anticlockwise: Boolean
     ) {
-        context.beginPath()
-        context.arc(cx, cy, radius, startAngle, endAngle, anticlockwise)
-        context.fill()
+        bufferContext.beginPath()
+        bufferContext.arc(cx, cy, radius, startAngle, endAngle, anticlockwise)
+        bufferContext.fill()
     }
 
     override fun newPath(): ActualBrowserPath {
@@ -83,72 +117,106 @@ class ActualBrowserCanvas : ActualCanvas {
 
     override fun fill(path: ActualPath) {
         path as ActualBrowserPath
-        context.fill(path.receiver)
+        bufferContext.fill(path.receiver)
     }
 
     override fun stroke(path: ActualPath) {
         path as ActualBrowserPath
-        context.stroke(path.receiver)
+        bufferContext.stroke(path.receiver)
     }
 
     override fun fill() {
-        context.fill()
+        bufferContext.fill()
     }
 
     override fun fillText(x: Double, y: Double, text: String) {
-        context.fillText(text, x, y)
+        bufferContext.fillText(text, x, y)
+    }
+
+    override fun fillRect(x: Double, y: Double, width: Double, height: Double) {
+        bufferContext.fillRect(x, y, width, height)
     }
 
     override fun line(x1: Double, y1: Double, x2: Double, y2: Double) {
-        context.beginPath()
-        context.moveTo(x1, y1)
-        context.lineTo(x2, y2)
-        context.stroke()
+        bufferContext.beginPath()
+        bufferContext.moveTo(x1, y1)
+        bufferContext.lineTo(x2, y2)
+        bufferContext.stroke()
+    }
+
+    // Kotlin/JS version of set(index:Int,value:Byte) does not work for values above 127
+    fun Uint8ClampedArray.set(index: Int, value: Int) {
+        asDynamic()[index] = value
+    }
+
+    override fun image(x: Double, y: Double, width: Double, height: Double, drawFun: ((Int, Int) -> Unit) -> Unit) {
+        val imageData = bufferContext.createImageData(ImageData(width.toInt(), height.toInt()))
+        val data = imageData.data
+
+        drawFun { index, value -> data.set(index, value) }
+
+        bufferContext.putImageData(imageData, x, y)
     }
 
     override fun transform(t: CanvasTransformInstruction) {
         when (t) {
-            is Translate -> context.translate(t.tx, t.ty)
+            is Translate -> bufferContext.translate(t.tx, t.ty)
 
             is Rotate -> {
-                context.translate(- t.cx, - t.cy)
-                context.rotate(t.rotateAngle)
-                context.translate(t.cx, t.cy)
+                bufferContext.translate(- t.cx, - t.cy)
+                bufferContext.rotate(t.rotateAngle)
+                bufferContext.translate(t.cx, t.cy)
             }
 
-            is Scale -> context.scale(t.sx, t.sy)
+            is Scale -> bufferContext.scale(t.sx, t.sy)
 
-            is Matrix -> context.transform(t.a, t.b, t.c, t.d, t.e, t.f)
+            is Matrix -> bufferContext.transform(t.a, t.b, t.c, t.d, t.e, t.f)
 
             is SkewX -> {
                 val rad = t.skewAngle * PI / 180
-                context.transform(1.0, 0.0, tan(rad), 1.0, 0.0, 0.0)
+                bufferContext.transform(1.0, 0.0, tan(rad), 1.0, 0.0, 0.0)
             }
 
             is SkewY -> {
                 val rad = t.skewAngle * PI / 180
-                context.transform(1.0, tan(rad), 0.0, 1.0, 0.0, 0.0)
+                bufferContext.transform(1.0, tan(rad), 0.0, 1.0, 0.0, 0.0)
             }
         }
     }
 
     override fun setFont(font: String) {
-        context.font = font
+        bufferContext.font = font
     }
 
     override fun setStroke(color: Color) {
-        context.strokeStyle = color.hex
+        bufferContext.strokeStyle = color.hex
     }
 
     override fun setFill(color: Color) {
-        context.fillStyle = color.hex
+        bufferContext.fillStyle = color.hex
+    }
+
+    override fun setFill(gradient: Gradient) {
+        when (gradient) {
+            is LinearGradient -> {
+                val canvasGradient = bufferContext.createLinearGradient(
+                    gradient.x0, gradient.y0, gradient.x1, gradient.y1
+                )
+
+                for (stop in gradient.stops) {
+                    canvasGradient.addColorStop(stop.position, stop.color.hex)
+                }
+
+                bufferContext.fillStyle = canvasGradient
+            }
+        }
     }
 
     override fun clear() {
-        context.clearRect(0.0, 0.0, receiver.width.toDouble(), receiver.height.toDouble())
+        bufferContext.clearRect(0.0, 0.0, receiver.width.toDouble(), receiver.height.toDouble())
     }
 
-    override fun measureText(renderData : CanvasRenderData, text: String) : RawTextMeasurement {
+    override fun measureText(renderData: CanvasRenderData, text: String): RawTextMeasurement {
 
         if (text.isEmpty()) {
             return RawTextMeasurement.ZERO
@@ -159,7 +227,7 @@ class ActualBrowserCanvas : ActualCanvas {
             measureContext.font = textRenderData.toCssString(null)
         }
 
-        val metrics = context.measureText(text)
+        val metrics = bufferContext.measureText(text)
 
         // without the 0.05 Firefox and Chrome displays a '...' as they think that there is not enough space
         // I don't really know why that happens, I guess it's some Double rounding issue

@@ -130,8 +130,8 @@ class DatetimeTheme(
         cornerRadius(2.dp)
     )
 
-    val listItemContainerHover = listItemContainerBase + backgroundColor(colors.primary.opaque(0.2f))
-    val listItemContainerSelected = listItemContainerBase + backgroundColor(colors.primary.opaque(0.1f))
+    val listItemContainerHover = listItemContainerBase + backgroundColor(colors.primary.opaque(0.2))
+    val listItemContainerSelected = listItemContainerBase + backgroundColor(colors.primary.opaque(0.1))
 
     fun listItemContainer(hover: Boolean, selected: Boolean) =
         when {

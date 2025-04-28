@@ -23,8 +23,8 @@ fun withLabel(
 
     val themeInstructions = when {
         observed.disabled -> theme.disabled
-        observed.invalid -> if (focus || observed.popupOpen) theme.invalidFocused else theme.invalidNotFocused
-        else -> if (focus || observed.popupOpen) theme.focused else theme.enabled
+        observed.invalid -> if (focus || observed.isPopupOpen) theme.invalidFocused else theme.invalidNotFocused
+        else -> if (focus || observed.isPopupOpen) theme.focused else theme.enabled
     }
 
     column(instructions()) {

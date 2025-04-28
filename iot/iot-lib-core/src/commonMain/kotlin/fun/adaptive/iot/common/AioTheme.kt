@@ -39,7 +39,7 @@ class AioTheme {
         cornerRadius { 10.dp },
         alignItems.startCenter,
         backgrounds.surface,
-        border(colors.outline.opaque(0.5f), 1.dp),
+        border(colors.outline.opaque(0.5), 1.dp),
         marginBottom { 12.dp }
     )
 
@@ -51,7 +51,7 @@ class AioTheme {
         cornerRadius { 10.dp },
         alignItems.startCenter,
         backgrounds.surface,
-        border(colors.outline.opaque(0.5f), 1.dp)
+        border(colors.outline.opaque(0.5), 1.dp)
     )
 
     val itemListIconContainer = instructionsOf(
@@ -104,7 +104,7 @@ class AioTheme {
         }
 
     fun statusBorder(color: Color) =
-        border(color.opaque(0.4f), 1.dp)
+        border(color.opaque(0.4), 1.dp)
 
     val inlineEditorPopup = instructionsOf(
         backgrounds.surfaceVariant,
@@ -126,7 +126,7 @@ class AioTheme {
         cornerRadius { 10.dp },
         alignItems.startCenter,
         backgrounds.surface,
-        border(colors.outline.opaque(0.4f), 1.dp),
+        border(colors.outline.opaque(0.4), 1.dp),
         maxWidth,
         marginBottom { 8.dp }
     )
@@ -140,7 +140,7 @@ class AioTheme {
         cornerRadius { 10.dp },
         alignItems.startCenter,
         backgrounds.surface,
-        border(colors.outline.opaque(0.4f), 1.dp),
+        border(colors.outline.opaque(0.4), 1.dp),
         maxWidth,
     )
 
