@@ -5,6 +5,7 @@ import `fun`.adaptive.document.ui.direct.markdownHint
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
@@ -18,6 +19,7 @@ import `fun`.adaptive.ui.form.AdatFormViewBackend
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.generated.resources.menu_book
+import `fun`.adaptive.ui.input.select.SingleSelectInputViewBackend
 import `fun`.adaptive.ui.input.select.item.selectInputItemCheckbox
 import `fun`.adaptive.ui.input.select.item.selectInputItemIconAndText
 import `fun`.adaptive.ui.input.select.item.selectInputItemText
@@ -58,7 +60,8 @@ class SelectPlaygroundConfig(
     val isInConstraintError: Boolean = false,
     val isDisabled: Boolean = false,
     val isMultiSelect: Boolean = false,
-    val withSurfaceContainer: Boolean = true
+    val withSurfaceContainer: Boolean = false,
+    val withDropdown: Boolean = true
 )
 
 @Adaptive
@@ -96,6 +99,7 @@ fun selectInputPlaygroundForm(
                     booleanEditor { template.isDisabled }
                     booleanEditor { template.isMultiSelect }
                     booleanEditor { template.withSurfaceContainer }
+                    booleanEditor { template.withDropdown }
                 }
 
                 selectEditor(itemRenderers, { selectInputItemCheckbox(it) }) { template.itemRenderer } .. width { 256.dp }
@@ -120,6 +124,7 @@ fun selectInputPlaygroundResult(config: SelectPlaygroundConfig) {
         disabled = config.isDisabled
         label = config.label
         withSurfaceContainer = config.withSurfaceContainer
+        withDropdown = config.withDropdown
         multiSelect = config.isMultiSelect
         toText = { it.text }
         toIcon = { it.icon }
@@ -131,14 +136,30 @@ fun selectInputPlaygroundResult(config: SelectPlaygroundConfig) {
         }
     }
 
-    column {
-        width { 240.dp } .. height { 240.dp }
-        selectInput(backend) {
-            when (config.itemRenderer) {
-                "Text only" -> selectInputItemText(it)
-                "Icon and text" -> selectInputItemIconAndText(it)
-                "Checkbox" -> selectInputItemCheckbox(it)
-            }
-        } .. maxSize
+    if (config.withDropdown) {
+        column {
+            width { 240.dp }
+            actualInput(backend, config) .. maxWidth
+        }
+    } else {
+        column {
+            width { 240.dp } .. height { 240.dp }
+            actualInput(backend, config) .. maxSize
+        }
     }
+}
+
+@Adaptive
+fun actualInput(
+    backend: SingleSelectInputViewBackend<Option, Option>,
+    config: SelectPlaygroundConfig
+): AdaptiveFragment {
+    selectInput(backend) {
+        when (config.itemRenderer) {
+            "Text only" -> selectInputItemText(it)
+            "Icon and text" -> selectInputItemIconAndText(it)
+            "Checkbox" -> selectInputItemCheckbox(it)
+        }
+    } .. instructions()
+    return fragment()
 }

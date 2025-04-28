@@ -75,8 +75,8 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
     fun containerThemeInstructions(focus: Boolean) =
         when {
             isDisabled -> inputTheme.disabled
-            isInvalid && isTouched -> if (focus) inputTheme.invalidFocused else inputTheme.invalidNotFocused
-            else -> if (focus) inputTheme.focused else inputTheme.enabled
+            isInvalid && isTouched -> if (focus || isPopupOpen) inputTheme.invalidFocused else inputTheme.invalidNotFocused
+            else -> if (focus || isPopupOpen) inputTheme.focused else inputTheme.enabled
         }.let {
             if (isSecret) it + Secret() else it
         }

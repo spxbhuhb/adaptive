@@ -40,7 +40,7 @@ fun textInput2(
 
     val observed = valueFrom {
         (viewBackend ?: TextInputViewBackend(value?.invoke() ?: ""))
-            .also { instructions().applyTo(it) }
+            .also { fragment().instructions.applyTo(it) }
     }
 
     val focus = focus()

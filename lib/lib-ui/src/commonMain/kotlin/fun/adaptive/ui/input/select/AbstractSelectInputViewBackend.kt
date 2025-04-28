@@ -5,6 +5,8 @@ import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.fragment.structural.PopupSourceViewBackend
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.input.InputViewBackend
 import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
@@ -20,7 +22,8 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
     isSecret: Boolean = false
 ) : InputViewBackend<SVT, AbstractSelectInputViewBackend<SVT, IVT, OT>>(
     value, label, isSecret
-) {
+), PopupSourceViewBackend {
+
     var options by observable(emptyList<OT>(), ::notify)
     var isMultiSelect by observable(false, ::notify)
 
@@ -29,6 +32,7 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
 
     var listInputTheme: SelectInputTheme = SelectInputTheme.default
     var withSurfaceContainer: Boolean = false
+    var withDropDown: Boolean = false
 
     var items by observable(listOf<SelectItem>(), ::notify)
 
@@ -90,6 +94,10 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
 
     fun optionTextInstructions(item: SelectItem): AdaptiveInstruction {
         return listInputTheme.optionText
+    }
+
+    fun closedDropdownContainerInstructions(focused: Boolean): AdaptiveInstruction {
+        return containerThemeInstructions(focused) + height { inputTheme.inputHeightDp }
     }
 
     inner class SelectItem(

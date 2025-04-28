@@ -21,9 +21,9 @@ abstract class AbstractTheme {
         normalFont
     )
 
-    open val inputCornerRadiusDp = 6.dp
+    open val inputCornerRadiusDp = 4.dp
 
-    open val inputCornerRadius = cornerRadius { 6.dp }
+    open val inputCornerRadius = cornerRadius { inputCornerRadiusDp }
 
     open val paneHeaderHeightDp = 42.dp
 

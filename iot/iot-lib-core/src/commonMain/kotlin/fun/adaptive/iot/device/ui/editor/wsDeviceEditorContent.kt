@@ -4,6 +4,7 @@ import `fun`.adaptive.adat.api.update
 import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.*
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.common.AioTheme
 import `fun`.adaptive.iot.device.AioDeviceSpec
@@ -15,20 +16,23 @@ import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.button.button
-import `fun`.adaptive.ui.input.InputContext
-import `fun`.adaptive.ui.input.text.textInput
+import `fun`.adaptive.ui.editor.textEditor
+import `fun`.adaptive.ui.form.adatFormBackend
+import `fun`.adaptive.ui.input.InputConfig.Companion.inputConfig
+import `fun`.adaptive.ui.input.select.item.selectInputItemText
+import `fun`.adaptive.ui.input.select.selectInput
+import `fun`.adaptive.ui.input.select.selectInputBackend
+import `fun`.adaptive.ui.input.text.textInput2
 import `fun`.adaptive.ui.input.text.textInputArea
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.label.withLabel
-import `fun`.adaptive.ui.select.select
 import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.value.AvNameCacheEntry
 import `fun`.adaptive.ui.value.AvUiList
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.utility.debug
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
@@ -37,6 +41,8 @@ import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentController>): AdaptiveFragment {
 
     val originalItem = copyOf { pane.data }
+
+    val form = adatFormBackend(pane.data)
 
     val editItem = copyOf { pane.data }
     val editSpec = copyOf { pane.data.spec }
@@ -52,13 +58,15 @@ fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentC
         rowTemplate(56.dp, 312.dp, 1.fr)
         gap { 16.dp }
 
-        title(originalItem)
-        actions(pane.controller, originalItem, editItem, editSpec, originalSpace, editSpace)
+        localContext(form) {
+            title(originalItem)
+            actions(pane.controller, originalItem, editItem, editSpec, originalSpace, editSpace)
 
-        editFields(editItem, editSpace, spaceNames) { editSpace = it }
-        editNotes(editSpec)
+            editFields(editItem, editSpace, spaceNames) { editSpace = it }
+            editNotes(editSpec)
 
-        points(originalItem.uuid) .. colSpan(2)
+            points(originalItem.uuid) .. colSpan(2)
+        }
     }
 
     return fragment()
@@ -81,8 +89,8 @@ fun actions(
     originalItem: AvItem<AioDeviceSpec>,
     editItem: AvItem<AioDeviceSpec>,
     editSpec: AioDeviceSpec,
-    originalSpace : AvNameCacheEntry?,
-    editSpace : AvNameCacheEntry?
+    originalSpace: AvNameCacheEntry?,
+    editSpace: AvNameCacheEntry?
 ) {
     button(Strings.save) ..
         alignSelf.end ..
@@ -99,7 +107,7 @@ fun actions(
 
             if (editSpace != originalSpace) {
                 controller.setSpace(editItem.uuid, editSpace !!.item.uuid)
-                editItem.update(editItem::markersOrNull, originalItem.toMutableMarkers().also { it[SpaceMarkers.SPACE_REF] = editSpace.item.uuid})
+                editItem.update(editItem::markersOrNull, originalItem.toMutableMarkers().also { it[SpaceMarkers.SPACE_REF] = editSpace.item.uuid })
             }
 
             if (originalItem.spec != editSpec) {
@@ -112,38 +120,38 @@ fun actions(
 @Adaptive
 private fun editFields(
     editItem: AvItem<AioDeviceSpec>,
-    editSpace : AvNameCacheEntry?,
-    spaceNames : List<AvNameCacheEntry>,
-    updateSpace : (AvNameCacheEntry?) -> Unit
+    editSpace: AvNameCacheEntry?,
+    spaceNames: List<AvNameCacheEntry>,
+    updateSpace: (AvNameCacheEntry?) -> Unit
 ) {
+
+    val backend = selectInputBackend<AvNameCacheEntry> {
+        this.options = spaceNames
+        label = Strings.space
+        toText = { it.names.joinToString(" / ") }
+        withDropdown = true
+        withSurfaceContainer = true
+        //onChange = { updateSpace(it) }
+    }
+
+
     column {
+        width { 400.dp } .. gap { 24.dp }
 
-        gap { 24.dp }
+        textEditor { editItem.friendlyId } .. inputConfig(label = Strings.spxbId, disabled = true)
+        textInput2 { editItem.localizedDeviceType } .. inputConfig(label = Strings.type, disabled = true)
+        textEditor { editItem.name }
 
-        withLabel(Strings.spxbId, InputContext(disabled = true)) { state ->
-            width { 400.dp }
-            textInput(editItem.friendlyId, state) { }
-        }
+        selectInput(backend) { selectInputItemText(it) }
 
-        withLabel(Strings.type, InputContext(disabled = true)) { state ->
-            width { 400.dp }
-            textInput(editItem.localizedDeviceType, state) { }
-        }
 
-        withLabel(Strings.name) {
-            width { 400.dp }
-            textInput(editItem.name) { v ->
-                editItem.update(editItem::name, v)
-            }
-        }
-
-        withLabel(Strings.area) {
-            width { 400.dp }
-
-            select(editSpace, spaceNames) { v -> updateSpace(v) } ..
-                inputPlaceholder { "(no item selected)" } ..
-                toText<AvNameCacheEntry> { v -> v.names.joinToString(" / ") }
-        }
+//        withLabel(Strings.area) {
+//            width { 400.dp }
+//
+//            select(editSpace, spaceNames) { v -> updateSpace(v) } ..
+//                inputPlaceholder { "(no item selected)" } ..
+//                toText<AvNameCacheEntry> { v -> v.names.joinToString(" / ") }
+//        }
     }
 }
 
@@ -159,7 +167,7 @@ private fun editNotes(editSpec: AioDeviceSpec) {
 }
 
 @Adaptive
-private fun points(deviceId : AvValueId) : AdaptiveFragment {
+private fun points(deviceId: AvValueId): AdaptiveFragment {
     val points = valueFrom { AvUiList(adapter(), deviceId, PointMarkers.POINTS) }
 
     withLabel(Strings.points) {
