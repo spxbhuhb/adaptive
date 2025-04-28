@@ -16,7 +16,7 @@
     <string name="signInForgot">**[Forgot password?](/password-reset)**</string>
     <string name="signInButton">Belépés</string>
     <string name="signInSuccess">Sikeres belépés!</string>
-    <string name="singInFail">Nem sikerült a belépés.</string>
+    <string name="singInFail">Hibás felhasználónév és/vagy jelszó.</string>
     <string name="signInSignUp">Don't have an account? **[Sign Up](/sign-up)**</string>
 
     <string name="pwdResetTitle">Reset Password</string>

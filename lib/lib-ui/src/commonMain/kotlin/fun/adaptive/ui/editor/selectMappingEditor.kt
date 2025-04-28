@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
 import `fun`.adaptive.ui.input.select.selectInput
 
 @Adaptive
-fun <VT,OT> selectEditor(
+fun <VT, OT> selectMappingEditor(
     options : List<OT>,
     mapping : SelectOptionMapping<VT,OT>,
     @Adaptive

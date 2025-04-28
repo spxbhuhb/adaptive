@@ -85,7 +85,7 @@ class IotWsModule<WT : Workspace> : IotModule<WT>() {
         wsDeviceEditorToolDef(this@IotWsModule)
         wsDeviceEditorContentDef(this@IotWsModule)
 
-        wsAlarmToolDef()
+        //wsAlarmToolDef()
 
         addItemConfig(WsItemTypes.WSIT_SPACE, Graphics.apartment)
 

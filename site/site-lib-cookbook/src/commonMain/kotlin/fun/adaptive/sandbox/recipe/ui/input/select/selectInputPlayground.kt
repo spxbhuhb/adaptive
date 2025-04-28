@@ -28,7 +28,7 @@ import `fun`.adaptive.ui.instruction.dp
 @Adaptive
 fun selectInputPlayground(): AdaptiveFragment {
 
-    val form = adatFormBackend(SelectRecipeConfig())
+    val form = adatFormBackend(SelectPlaygroundConfig())
     val config = valueFrom { form }
 
     flowBox {
@@ -50,7 +50,7 @@ val itemRenderers = listOf("Text only", "Icon and text", "Checkbox")
 
 
 @Adat
-class SelectRecipeConfig(
+class SelectPlaygroundConfig(
     val dataset: String = datasets.first(),
     val itemRenderer: String = itemRenderers.first(),
     val optionCount: Int = 30,
@@ -63,10 +63,10 @@ class SelectRecipeConfig(
 
 @Adaptive
 fun selectInputPlaygroundForm(
-    form: AdatFormViewBackend<SelectRecipeConfig>
+    form: AdatFormViewBackend<SelectPlaygroundConfig>
 ) {
 
-    val template = SelectRecipeConfig()
+    val template = SelectPlaygroundConfig()
 
     configureForm(form) {
         width { 288.dp }
@@ -106,7 +106,7 @@ fun selectInputPlaygroundForm(
 }
 
 @Adaptive
-fun selectInputPlaygroundResult(config: SelectRecipeConfig) {
+fun selectInputPlaygroundResult(config: SelectPlaygroundConfig) {
 
     val effectiveOptions = when (config.dataset) {
         "Options" -> (1 .. config.optionCount).map { Option("Option $it", Graphics.menu_book) }

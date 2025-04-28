@@ -34,9 +34,15 @@ fun textInput(
 
 @Adaptive
 fun textInput2(
-    viewBackend: TextInputViewBackend
+    viewBackend: TextInputViewBackend? = null,
+    value: (() -> String?)? = null
 ): AdaptiveFragment {
-    val observed = valueFrom { viewBackend }
+
+    val observed = valueFrom {
+        (viewBackend ?: TextInputViewBackend(value?.invoke() ?: ""))
+            .also { instructions().applyTo(it) }
+    }
+
     val focus = focus()
 
     decoratedInput(focus, observed) {

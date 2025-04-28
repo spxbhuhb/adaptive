@@ -77,8 +77,8 @@ val recipes =
             CbWsRecipeItem("Double", key = "cookbook:recipe:input:double"),
             CbWsRecipeItem("Quick Filter", key = "cookbook:recipe:input:quick-filter"),
             CbWsRecipeItem("Select - old", key = "cookbook:recipe:select"),
-            CbWsRecipeItem("Select - new", key = "cookbook:recipe:input:select"),
-            CbWsRecipeItem("Text input", key = "cookbook:recipe:input:text"),
+            CbWsRecipeItem("Select - new", key = "cookbook/input/select/recipe"),
+            CbWsRecipeItem("Text input", key = "cookbook/input/text/recipe"),
             CbWsRecipeItem("Text input area", key = "cookbook:recipe:input:text-area")
         ),
 

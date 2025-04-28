@@ -7,7 +7,6 @@ import `fun`.adaptive.foundation.api.firstContextOrNull
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.resource.ResourceKey
 import `fun`.adaptive.runtime.AbstractApplication
-import `fun`.adaptive.ui.editor.instruction.EditorLabel
 import `fun`.adaptive.ui.input.InputViewBackend
 
 open class FormViewBackend() {
@@ -38,13 +37,20 @@ open class FormViewBackend() {
             getValue(binding, propertyMetadata),
             findLabel(binding.targetFragment, path.lastOrNull()),
             propertyMetadata.isSecret((propertyContainerInstance?.adatCompanion ?: companion).adatDescriptors)
-        ).also {
-            it.isNullable = propertyMetadata.isNullable
-            it.isFormDisabled = isFormDisabled
-            it.formBackend = this
-            it.path = path
-            inputBackends += it
-            return it
+        ).also { backend ->
+
+            backend.isNullable = propertyMetadata.isNullable
+            backend.isFormDisabled = isFormDisabled
+            backend.formBackend = this
+            backend.path = path
+
+            binding.targetFragment.instructions.forEach { instruction ->
+                instruction.applyTo(backend)
+            }
+
+            inputBackends += backend
+
+            return backend
         }
     }
 
@@ -85,9 +91,6 @@ open class FormViewBackend() {
 
     fun findLabel(fragment: AdaptiveFragment, key: ResourceKey?): String? {
         if (key == null) return null
-
-        val instructed = fragment.instructions.firstInstanceOfOrNull<EditorLabel>()
-        if (instructed != null) return instructed.label
 
         val app = application
             ?: fragment.firstContextOrNull<AbstractApplication<*>>()?.also { application = it }

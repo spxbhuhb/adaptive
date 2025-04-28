@@ -6,17 +6,17 @@ Select is a rather complex input with many configuration options and uses.
 
 ## Hard-coded examples
 
-[Select input text example](actualize:///cookbook/example/select-input-text)
+[Select input text example](actualize:///cookbook/input/select/example/text)
 
-[Select input icon and text example](actualize:///cookbook/example/select-input-icon-and-text)
+[Select input icon and text example](actualize:///cookbook/input/select/example/icon-and-text)
 
-[Select input checkbox example](actualize:///cookbook/example/select-input-checkbox)
+[Select input checkbox example](actualize:///cookbook/input/select/example/checkbox)
 
 ---
             
 ## Playground
 
-[Select input playground](actualize:///cookbook/example/select-input-playground)
+[Select input playground](actualize:///cookbook/input/select/playground)
 
 ---
 
@@ -41,7 +41,7 @@ Select is a rather complex input with many configuration options and uses.
 
 ### Mapping
 
-The mapping variants lets you:
+The mapping variants let you:
 
 * use different types for the option list and th select value,
 * provide a mapping function between the two

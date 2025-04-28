@@ -36,6 +36,8 @@ import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputIconAndTextExample
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputTextExample
+import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputPlayground
+import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalExample
 
 object CookbookFragmentFactory : FoundationFragmentFactory() {
@@ -73,18 +75,30 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:input:date", ::dateInputRecipe)
         add("cookbook:recipe:input:double", ::doubleInputRecipe)
         add("cookbook:recipe:input:quick-filter", ::quickFilterRecipe)
-        add("cookbook:recipe:input:select", ::selectInputRecipe)
-        add("cookbook:recipe:input:text", ::textInputRecipe)
         add("cookbook:recipe:input:text-area", ::textInputAreaRecipe)
 
         add("cookbook/example/split-pane-proportional", ::splitPaneProportionalExample)
         add("cookbook/example/split-pane-wrapper", ::splitPaneWrapperExample)
 
-        add("cookbook/example/select-input-text", ::selectInputTextExample)
-        add("cookbook/example/select-input-icon-and-text", ::selectInputIconAndTextExample)
-        add("cookbook/example/select-input-checkbox", ::selectInputCheckboxExample)
-        add("cookbook/example/select-input-playground", ::selectInputPlayground)
+        // ----------------------------------------------------------------------------
+        // Select Input
+        // ----------------------------------------------------------------------------
 
+        add("cookbook/input/select/example/text", ::selectInputTextExample)
+        add("cookbook/input/select/example/icon-and-text", ::selectInputIconAndTextExample)
+        add("cookbook/input/select/example/checkbox", ::selectInputCheckboxExample)
+
+        add("cookbook/input/select/playground", ::selectInputPlayground)
+        add("cookbook/input/select/recipe", ::selectInputRecipe)
+
+        // ----------------------------------------------------------------------------
+        // Text Input
+        // ----------------------------------------------------------------------------
+
+        add("cookbook/input/text/example/simple", ::textInputSimpleExample)
+
+        add("cookbook/input/text/playground", ::textInputPlayground)
+        add("cookbook/input/text/recipe", ::textInputRecipe)
 
     }
 }
