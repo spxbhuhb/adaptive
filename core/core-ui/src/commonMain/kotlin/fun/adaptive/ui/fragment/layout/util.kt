@@ -7,6 +7,7 @@ package `fun`.adaptive.ui.fragment.layout
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.instruction.layout.Alignment
 import `fun`.adaptive.ui.instruction.layout.SizeBase
+import `fun`.adaptive.ui.instruction.toPx
 import kotlin.math.max
 import kotlin.math.min
 
@@ -29,11 +30,23 @@ fun AbstractAuiFragment<*>.computeFinal(proposedWidth: Double, itemsWidth: Doubl
     }
 
     val innerWidth = strategy?.let {
-        min(max(it.widthMin ?: 0.0, unconstrainedInnerWidth), it.widthMax ?: Double.POSITIVE_INFINITY)
+        min(
+            max(
+                it.minWidth?.toPx(uiAdapter) ?: 0.0,
+                unconstrainedInnerWidth
+            ),
+            it.maxWidth?.toPx(uiAdapter) ?: Double.POSITIVE_INFINITY
+        )
     } ?: unconstrainedInnerWidth
 
     val innerHeight = strategy?.let {
-        min(max(it.heightMin ?: 0.0, unconstrainedInnerHeight), it.heightMax ?: Double.POSITIVE_INFINITY)
+        min(
+            max(
+                it.minHeight?.toPx(uiAdapter) ?: 0.0,
+                unconstrainedInnerHeight
+            ),
+            it.maxHeight?.toPx(uiAdapter) ?: Double.POSITIVE_INFINITY
+        )
     } ?: unconstrainedInnerHeight
 
     data.innerWidth = innerWidth

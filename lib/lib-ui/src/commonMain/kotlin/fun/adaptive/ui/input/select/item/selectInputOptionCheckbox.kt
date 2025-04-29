@@ -12,10 +12,11 @@ import `fun`.adaptive.ui.instruction.dp
 fun <OT> selectInputOptionCheckbox(
     item: AbstractSelectInputViewBackend<*,*,OT>.SelectItem
 ) {
+    val hover = hover()
     val observed = valueFrom { item }
 
     row {
-        observed.optionContainerInstructions()
+        observed.optionContainerInstructions(hover)
         onClick { observed.toggle() }
 
         box {

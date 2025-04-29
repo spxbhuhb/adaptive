@@ -12,6 +12,9 @@ import `fun`.adaptive.ui.generated.resources.keyboard_arrow_down
 import `fun`.adaptive.ui.generated.resources.noValueSelected
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.input.decoratedInput
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.layout.SizeBase
+import `fun`.adaptive.ui.instruction.layout.SizeStrategy
 
 @Adaptive
 fun <IT, OT> selectInputDropdown(
@@ -52,7 +55,7 @@ fun <IT, OT> selectInputDropdown(
                     theme.dropdownPopup
 
                     column {
-                        theme.dropdownOptionsContainer
+                        theme.dropdownOptionsContainer .. SizeStrategy(horizontalBase = SizeBase.Content, minWidth = 300.dp)
 
                         onKeydown { event -> observed.onListKeydown(event, hide) }
 

@@ -44,7 +44,7 @@ class ThemeColors {
 
     val selectedSurfaceFocus = color(0xCBDAFE)
     val selectedSurfaceNoFocus = color(0xD7DADF)
-    val hoverSurface = color(0xCBDAFE)
+    val hoverSurface = color(0xE3E9FF)
 
     val outline = color(0xC5C5C5)
     val lightOutline = color(0xE0E0E0)

@@ -6,16 +6,17 @@ package `fun`.adaptive.ui.instruction.layout
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.render.layout
 
 @Adat
 open class SizeStrategy(
-    val verticalBase: SizeBase?,
-    val horizontalBase: SizeBase?,
-    val widthMin: Double? = null,
-    val widthMax: Double? = null,
-    val heightMin: Double? = null,
-    val heightMax: Double? = null
+    val verticalBase: SizeBase? = null,
+    val horizontalBase: SizeBase? = null,
+    val minWidth: DPixel? = null,
+    val maxWidth: DPixel? = null,
+    val minHeight: DPixel? = null,
+    val maxHeight: DPixel? = null
 ) : AdaptiveInstruction {
 
     override fun applyTo(subject: Any) {
@@ -28,10 +29,10 @@ open class SizeStrategy(
         SizeStrategy(
             verticalBase ?: existing?.verticalBase,
             horizontalBase ?: existing?.horizontalBase,
-            widthMin ?: existing?.widthMin,
-            widthMax ?: existing?.widthMax,
-            heightMin ?: existing?.heightMin,
-            heightMax ?: existing?.heightMax
+            minWidth ?: existing?.minWidth,
+            maxWidth ?: existing?.maxWidth,
+            minHeight ?: existing?.minHeight,
+            maxHeight ?: existing?.maxHeight
         )
 
     override fun equals(other: Any?): Boolean {
@@ -40,10 +41,10 @@ open class SizeStrategy(
 
         if (verticalBase != other.verticalBase) return false
         if (horizontalBase != other.horizontalBase) return false
-        if (widthMin != other.widthMin) return false
-        if (widthMax != other.widthMax) return false
-        if (heightMin != other.heightMin) return false
-        if (heightMax != other.heightMax) return false
+        if (minWidth != other.minWidth) return false
+        if (maxWidth != other.maxWidth) return false
+        if (minHeight != other.minHeight) return false
+        if (maxHeight != other.maxHeight) return false
 
         return true
     }
@@ -51,10 +52,10 @@ open class SizeStrategy(
     override fun hashCode(): Int {
         var result = verticalBase?.hashCode() ?: 0
         result = 31 * result + (horizontalBase?.hashCode() ?: 0)
-        result = 31 * result + (widthMin?.hashCode() ?: 0)
-        result = 31 * result + (widthMax?.hashCode() ?: 0)
-        result = 31 * result + (heightMin?.hashCode() ?: 0)
-        result = 31 * result + (heightMax?.hashCode() ?: 0)
+        result = 31 * result + (minWidth?.hashCode() ?: 0)
+        result = 31 * result + (maxWidth?.hashCode() ?: 0)
+        result = 31 * result + (minHeight?.hashCode() ?: 0)
+        result = 31 * result + (maxHeight?.hashCode() ?: 0)
         return result
     }
 

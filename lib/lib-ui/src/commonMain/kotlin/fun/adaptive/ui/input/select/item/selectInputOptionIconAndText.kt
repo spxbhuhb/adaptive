@@ -10,10 +10,11 @@ import `fun`.adaptive.ui.input.select.AbstractSelectInputViewBackend
 fun <OT> selectInputOptionIconAndText(
     item: AbstractSelectInputViewBackend<*,*,OT>.SelectItem
 ) {
+    val hover = hover()
     val observed = valueFrom { item }
 
     row {
-        observed.optionContainerInstructions()
+        observed.optionContainerInstructions(hover)
         onClick { observed.toggle() }
 
         icon(item.icon()) .. observed.optionIconInstructions()

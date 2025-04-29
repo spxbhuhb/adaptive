@@ -91,11 +91,11 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
             }
         }
 
-    fun optionContainerInstructions(item: SelectItem): AdaptiveInstruction =
-        if (item.isSelected) {
-            selectInputTheme.optionContainerSelected
-        } else {
-            selectInputTheme.optionContainerBase
+    fun optionContainerInstructions(item: SelectItem, hover: Boolean): AdaptiveInstruction =
+        when {
+            item.isSelected -> selectInputTheme.optionContainerSelected
+            hover -> selectInputTheme.optionContainerHover
+            else -> selectInputTheme.optionContainerBase
         }
 
     fun dropdownSelectedContainerInstructions(focused: Boolean): AdaptiveInstruction {
@@ -111,7 +111,7 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
         var option: OT by observable(option, ::notify)
         var isSelected: Boolean by observable(selected, ::notify)
 
-        fun optionContainerInstructions() = optionContainerInstructions(this)
+        fun optionContainerInstructions(hover: Boolean) = optionContainerInstructions(this, hover)
         fun optionIconInstructions() = selectInputTheme.optionIcon
         fun optionTextInstructions() = selectInputTheme.optionText
 

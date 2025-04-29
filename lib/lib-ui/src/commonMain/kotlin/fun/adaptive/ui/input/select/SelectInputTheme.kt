@@ -20,7 +20,8 @@ class SelectInputTheme : AbstractTheme() {
 
     var listContainer = instructionsOf(
         tabIndex { 0 },
-        verticalScroll
+        verticalScroll,
+        fillStrategy.resizeToMax
     )
 
     var surfaceListContainerBase = instructionsOf(
@@ -73,6 +74,12 @@ class SelectInputTheme : AbstractTheme() {
         optionContainerBase,
         cornerRadius { 4.dp },
         BackgroundColor(colors.selectedSurfaceFocus)
+    )
+
+    val optionContainerHover = instructionsOf(
+        optionContainerBase,
+        cornerRadius { 4.dp },
+        BackgroundColor(colors.hoverSurface)
     )
 
     var optionIcon = instructionsOf(
