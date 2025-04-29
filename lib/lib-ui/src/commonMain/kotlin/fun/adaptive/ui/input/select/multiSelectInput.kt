@@ -23,7 +23,7 @@ fun <IT,OT> multiSelectInput(
         column(instructions()) {
             viewBackend.optionListContainerInstructions(focus)
 
-            onKeydown { event -> viewBackend.onKeydown(event) }
+            onKeydown { event -> viewBackend.onListKeydown(event) }
 
             for (item in observed.items) {
                 _fixme_option(item)

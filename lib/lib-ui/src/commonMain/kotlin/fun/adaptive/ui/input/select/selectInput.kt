@@ -7,7 +7,6 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.decoratedInput
-import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
 fun <IT, OT> selectInput(
@@ -39,7 +38,7 @@ fun <IT, OT> selectInputList(
     column(instructions()) {
         viewBackend.optionListContainerInstructions(focus)
 
-        onKeydown { event -> viewBackend.onKeydown(event) }
+        onKeydown { event -> viewBackend.onListKeydown(event) }
 
         for (item in viewBackend.items) {
             _fixme_option(item)
@@ -57,9 +56,9 @@ fun <IT, OT> selectInputDropdown(
     _fixme_option: (option: AbstractSelectInputViewBackend<IT, IT, OT>.SelectItem) -> Unit
 ): AdaptiveFragment {
     column(instructions()) {
-        viewBackend.closedDropdownContainerInstructions(focus)
+        viewBackend.dropdownSelectedContainerInstructions(focus)
 
-        onKeydown { event -> viewBackend.onKeydown(event) }
+        onKeydown { event -> viewBackend.onDropdownSelectedKeydown(event) }
 
         box {
             if (viewBackend.selectedItems.isNotEmpty()) {
@@ -67,9 +66,16 @@ fun <IT, OT> selectInputDropdown(
             }
         }
 
-        primaryPopup(viewBackend) {
-            margin { 4.dp }
-            selectInputList(focus, viewBackend, _fixme_option) .. height { 280.dp }
+        primaryPopup(viewBackend) { hide ->
+            column {
+                viewBackend.listInputTheme.dropdownOptionsContainer
+
+                onKeydown { event -> viewBackend.onListKeydown(event, hide) }
+
+                for (item in viewBackend.items) {
+                    _fixme_option(item)
+                }
+            }
         }
     }
 

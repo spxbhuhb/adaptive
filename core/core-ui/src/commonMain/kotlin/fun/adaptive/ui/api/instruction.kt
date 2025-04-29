@@ -8,6 +8,7 @@ import `fun`.adaptive.ui.instruction.decoration.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.*
 import `fun`.adaptive.ui.instruction.input.Disabled
+import `fun`.adaptive.ui.instruction.input.FocusFirst
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.input.Secret
 import `fun`.adaptive.ui.instruction.input.TabIndex
@@ -262,6 +263,7 @@ fun <T> toText(toTextFun: (T) -> String) = ToText(toTextFun)
  */
 inline fun tabIndex(value: () -> Int) = TabIndex(value())
 inline fun inputPlaceholder(valueFun: () -> String) = InputPlaceholder(valueFun())
+val focusFirst = FocusFirst()
 
 @Deprecated("use InputValueBackend.isDisabled")
 val disabled = Disabled()

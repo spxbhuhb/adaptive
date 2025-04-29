@@ -50,7 +50,9 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
 
     var isInputDisabled by observable(false, ::notify)
     var isFormDisabled by observable(false, ::notify)
+
     var isPopupOpen by observable(false, ::notify)
+    var hidePopup : (() -> Unit)? = null
 
     var label by observable(label, ::notify)
     open var labelAlignment by observable(PopupAlign.aboveStart, ::notify)

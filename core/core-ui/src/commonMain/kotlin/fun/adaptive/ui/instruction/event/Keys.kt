@@ -7,6 +7,7 @@ object Keys {
     const val ALT_GRAPH = "AltGraph"
     const val SHIFT = "Shift"
 
+    const val TAB = "Tab"
     const val ESCAPE = "Escape"
     const val ENTER = "Enter"
     const val SPACE = " "

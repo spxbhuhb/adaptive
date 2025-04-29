@@ -93,7 +93,7 @@ inline fun <reified T : AdaptiveInstruction> AdaptiveFragment.firstWith(deep: Bo
  * @param deep Deep search, go down in the fragment tree.
  * @param horizontal When [deep] is true, check a given level first, children second.
  */
-inline fun <reified T : AdaptiveInstruction> AdaptiveFragment.firstOrNullWith(deep: Boolean = true, horizontal: Boolean = true) =
+inline fun <reified T : AdaptiveInstruction> AdaptiveFragment.firstWithOrNull(deep: Boolean = true, horizontal: Boolean = true) =
     firstOrNull(deep, horizontal) { it.instructions.any { i -> i is T } }
 
 /**

@@ -18,6 +18,8 @@ open class ContextMenuTheme(
     open val indent: DPixel = 22.dp,
 ) {
     open val container = instructionsOf(
+        focusFirst,
+        tabIndex { 0 },
         alignItems.startCenter,
         width { 300.dp },
         padding { 6.dp },

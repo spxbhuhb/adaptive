@@ -7,9 +7,12 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.decoration.BackgroundColor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 
 class SelectInputTheme {
+
+    // List
 
     var listContainer = instructionsOf(
         tabIndex { 0 },
@@ -30,6 +33,21 @@ class SelectInputTheme {
         padding(6.dp, 8.dp, 6.dp, 8.dp),
         verticalScroll
     )
+
+    // Dropdown
+
+    val dropdownOptionsContainer = instructionsOf(
+        focusFirst,
+        tabIndex { 0 },
+        alignItems.startCenter,
+        padding(6.dp, 8.dp, 6.dp, 8.dp),
+        cornerRadius { 8.dp },
+        border(colors.onSurface, 0.5.dp),
+        backgrounds.surface,
+        zIndex { 200 }
+    )
+
+    // Options
 
     var optionContainerBase = instructionsOf(
         maxWidth,

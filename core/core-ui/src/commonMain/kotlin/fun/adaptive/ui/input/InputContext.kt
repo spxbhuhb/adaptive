@@ -11,7 +11,9 @@ class InputContext(
 
     var invalid by Delegates.observable(invalid, ::notify)
     var disabled by Delegates.observable(disabled, ::notify)
+
     override var isPopupOpen by Delegates.observable(false, ::notify)
+    override var hidePopup: (() -> Unit)? = null
 
     companion object {
         val DISABLED = InputContext(disabled = true)

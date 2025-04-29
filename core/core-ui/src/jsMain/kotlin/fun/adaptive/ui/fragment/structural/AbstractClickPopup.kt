@@ -2,9 +2,11 @@ package `fun`.adaptive.ui.fragment.structural
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.query.firstOrNull
+import `fun`.adaptive.foundation.query.firstWithOrNull
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractBox
+import `fun`.adaptive.ui.instruction.input.FocusFirst
 import `fun`.adaptive.ui.instruction.layout.PopupAlign
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
@@ -54,7 +56,6 @@ abstract class AbstractClickPopup(
             hide()
         } else {
             show()
-            this.firstOrNull<AbstractBox<HTMLElement, HTMLDivElement>>()?.receiver?.focus()
         }
 
         event.preventDefault()
@@ -74,14 +75,24 @@ abstract class AbstractClickPopup(
     }
 
     override fun show() {
-        sourceViewBackend?.let { it.isPopupOpen = true }
+        sourceViewBackend?.let {
+            it.hidePopup = ::hide
+            it.isPopupOpen = true
+        }
+
         super.show()
+
+        @Suppress("UNCHECKED_CAST")
+        (this.firstWithOrNull<FocusFirst>() as? AbstractAuiFragment<HTMLElement>)?.receiver?.focus()
     }
 
     override fun hide() {
         super.hide()
 
-        sourceViewBackend?.let { it.isPopupOpen = false }
+        sourceViewBackend?.let {
+            it.hidePopup = null
+            it.isPopupOpen = false
+        }
 
         if (sourceViewBackend?.focusContainerOnPopupClose == true) {
             layoutReceiver?.focus()
