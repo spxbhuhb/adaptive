@@ -7,11 +7,7 @@ import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.instruction.decoration.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.*
-import `fun`.adaptive.ui.instruction.input.Disabled
-import `fun`.adaptive.ui.instruction.input.FocusFirst
-import `fun`.adaptive.ui.instruction.input.InputPlaceholder
-import `fun`.adaptive.ui.instruction.input.Secret
-import `fun`.adaptive.ui.instruction.input.TabIndex
+import `fun`.adaptive.ui.instruction.input.*
 import `fun`.adaptive.ui.instruction.layout.*
 import `fun`.adaptive.ui.instruction.navigation.ExternalLink
 import `fun`.adaptive.ui.instruction.text.*
@@ -113,8 +109,10 @@ object fit {
 }
 
 object fill {
-    val constrain = Fill(FillStrategy.Constrain)
-    val constrainReverse = Fill(FillStrategy.ConstrainReverse)
+    val constrain = FillStrategy(constrain = true, reverse = false, resizeToMax = false)
+    val constrainReverse =  FillStrategy(constrain = true, reverse = true, resizeToMax = false)
+    val resizeToMax = FillStrategy(constrain = false, reverse = false, resizeToMax = true)
+    val none = FillStrategy(constrain = false, reverse = false, resizeToMax = false)
 }
 
 val maxSize = MaxSize()

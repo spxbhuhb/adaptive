@@ -7,8 +7,8 @@ package `fun`.adaptive.ui.fragment.layout
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.api.fill
 import `fun`.adaptive.ui.instruction.layout.Alignment
-import `fun`.adaptive.ui.instruction.layout.FillStrategy
 import `fun`.adaptive.ui.instruction.layout.SpaceDistribution
 
 /**
@@ -86,8 +86,8 @@ abstract class AbstractStack<RT, CRT : RT>(
             if (horizontalScroll) h - uiAdapter.scrollBarSize else h
         }
 
-        val fill = data.layout?.fill
-        val items = if (fill == FillStrategy.ConstrainReverse) {
+        val fillStrategy = data.layout?.fill ?: fill.none
+        val items = if (fillStrategy.reverse) {
             layoutItems.reversed()
         } else {
             layoutItems
@@ -97,10 +97,16 @@ abstract class AbstractStack<RT, CRT : RT>(
             item.computeLayout(proposedItemWidth, proposedItemHeight)
             itemsWidth = itemsWidthCalc(itemsWidth, item)
             itemsHeight = itemsHeightCalc(itemsHeight, item)
-            if (fill != null) {
+            if (fillStrategy.constrain) {
                 proposedItemWidth = constrainWidthCalc(proposedItemWidth, item, instructedGap)
                 proposedItemHeight = constrainHeightCalc(proposedItemHeight, item, instructedGap)
             }
+        }
+
+        // ----  resize items if requested sizes of this fragment  --------------------
+
+        if (fillStrategy.resizeToMax) {
+            TODO()
         }
 
         // ----  calculate sizes of this fragment  ------------------------------------

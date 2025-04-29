@@ -127,7 +127,6 @@ fun selectInputPlaygroundResult(config: SelectPlaygroundConfig) {
         disabled = config.isDisabled
         label = config.label
         withSurfaceContainer = config.withSurfaceContainer
-        withDropdown = config.withDropdown
         multiSelect = config.isMultiSelect
         toText = { it.text }
         toIcon = { it.icon }
