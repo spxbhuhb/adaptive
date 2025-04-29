@@ -35,14 +35,35 @@
             color-scheme: light;
         }
 
+        .custom-scrollbar {
+            scrollbar-gutter: stable;
+        }
+
         .custom-scrollbar::-webkit-scrollbar {
-            width: 7px;
-            height: 7px;
+            width: 12px;
+            height: 12px;
         }
 
         .custom-scrollbar::-webkit-scrollbar-thumb {
-            background-color: rgba(0, 0, 0, 0.5);
-            border-radius: 3.5px;
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            border: 3px solid transparent; /* <-- The "gap" width */
+            background-clip: padding-box; /* <-- Makes background shrink inside the border */
+            clip-path: inset(0 round 10px)
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-button {
+            height: 0;
+            width: 0;
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-corner {
+            background: transparent;
         }
 
         * {

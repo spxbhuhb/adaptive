@@ -7,6 +7,7 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.resource.defaultResourceEnvironment
+import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawPosition
@@ -43,9 +44,7 @@ class AuiAdapter(
      */
     val otherRootFragments = mutableListOf<AdaptiveFragment>()
 
-    init {
-        applyCustomScrollBar(rootContainer)
-    }
+    val haveToHackScrollbar = ! GlobalRuntimeContext.platform.isMac
 
     // the order is important here, apply the style first, measure after
     override val scrollBarSize: Double = getScrollbarWidth()
@@ -125,7 +124,9 @@ class AuiAdapter(
             if (it.horizontalScroll) style.overflowX = "auto"
             if (it.verticalScroll) style.overflowY = "auto"
             if (it.horizontalScroll || it.verticalScroll) {
-                style.setProperty("scrollbar-gutter", "stable")
+                if (haveToHackScrollbar) {
+                    applyCustomScrollBar(fragment.receiver)
+                }
             }
         }
     }

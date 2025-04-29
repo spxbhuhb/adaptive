@@ -1,5 +1,6 @@
 package `fun`.adaptive.ui.platform
 
+import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.runtime.getPlatformType
 import kotlinx.browser.document
 import kotlinx.dom.addClass
@@ -14,6 +15,9 @@ fun getScrollbarWidth(): Double {
     inner.style.height = "200px"
 
     val outer = document.createElement("div") as HTMLDivElement
+    if (! GlobalRuntimeContext.platform.isMac) {
+        outer.addClass("custom-scrollbar")
+    }
     outer.style.position = "absolute"
     outer.style.top = "0px"
     outer.style.left = "0px"
@@ -40,6 +44,6 @@ fun getScrollbarWidth(): Double {
 fun applyCustomScrollBar(element : HTMLElement) {
     val platformType = getPlatformType()
     if (!platformType.isMac) {
-        element.addClass(".custom-scrollbar")
+        element.addClass("custom-scrollbar")
     }
 }

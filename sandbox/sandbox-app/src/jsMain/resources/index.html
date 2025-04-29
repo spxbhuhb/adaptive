@@ -9,10 +9,10 @@
     <title>Adaptive</title>
     <link rel="shortcut icon" type="image/png" href="/favicon.png">
 
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <!--    <link rel="preconnect" href="https://fonts.gstatic.com">-->
+    <!--    <link rel="preconnect" href="https://fonts.googleapis.com">-->
+    <!--    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>-->
+    <!--    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">-->
 
     <!--    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&display=block" rel="stylesheet" rel="stylesheet">-->
     <!--    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Mono:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" rel="stylesheet">-->
@@ -20,6 +20,14 @@
     <!--    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Sharp:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"/>-->
 
     <style>
+        @font-face {
+            font-family: 'Open Sans';
+            font-style: normal;
+            font-weight: 300 800;
+            font-display: swap;
+            src: url('/resources/fun.adaptive.ui.generated.resources/fonts/OpenSans_All.woff2') format('woff2');
+        }
+
         body, html {
             height: 100vh;
             width: 100vw;
@@ -30,6 +38,37 @@
 
         :root {
             color-scheme: light;
+        }
+
+        .custom-scrollbar {
+            scrollbar-gutter: stable;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background-color: rgba(0, 0, 0, 0.3);
+            border-radius: 6px;
+            border: 3px solid transparent; /* <-- The "gap" width */
+            background-clip: padding-box; /* <-- Makes background shrink inside the border */
+            clip-path: inset(0 round 10px)
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-button {
+            height: 0;
+            width: 0;
+            background: transparent;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar-corner {
+            background: transparent;
         }
 
         * {
@@ -49,8 +88,13 @@
             overflow: hidden;
             text-overflow: ellipsis;
             user-select: text;
-            -webkit-user-select: auto; /* Safari */
+            -webkit-user-select: text; /* Safari */
             display: inline-block;
+        }
+
+        input::placeholder {
+            font-weight: 300;
+            text-align: center;
         }
     </style>
 </head>
