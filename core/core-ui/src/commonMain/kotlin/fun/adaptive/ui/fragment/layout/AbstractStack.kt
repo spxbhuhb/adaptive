@@ -5,6 +5,7 @@
 package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.log.devInfo
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.api.fill
@@ -51,6 +52,21 @@ abstract class AbstractStack<RT, CRT : RT>(
     abstract fun crossAxisSize(innerWidth: Double, innerHeight: Double): Double
 
     abstract fun AbstractAuiFragment<RT>.place(crossAxisAlignment: Alignment?, crossAxisSize: Double, offset: Double): Double
+
+    abstract fun needResizeToMax(
+        itemsWidth: Double,
+        itemsHeight: Double,
+        proposedWidth: Double,
+        proposedHeight: Double
+    ): Boolean
+
+    abstract fun resizeToMax(
+        itemsWidth: Double,
+        itemsHeight: Double,
+        proposedWidth: Double,
+        proposedHeight: Double,
+        items: List<AbstractAuiFragment<RT>>
+    )
 
     override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
 
@@ -105,8 +121,8 @@ abstract class AbstractStack<RT, CRT : RT>(
 
         // ----  resize items if requested sizes of this fragment  --------------------
 
-        if (fillStrategy.resizeToMax) {
-            TODO()
+        if (fillStrategy.resizeToMax && needResizeToMax(itemsWidth, itemsHeight, proposedWidth, proposedHeight)) {
+            resizeToMax(itemsWidth, itemsHeight, proposedWidth, proposedHeight, items)
         }
 
         // ----  calculate sizes of this fragment  ------------------------------------

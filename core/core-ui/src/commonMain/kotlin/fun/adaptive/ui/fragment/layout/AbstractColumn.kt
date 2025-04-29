@@ -48,6 +48,18 @@ abstract class AbstractColumn<RT, CRT : RT>(
     override fun crossAxisSize(innerWidth: Double, innerHeight: Double): Double =
         innerWidth
 
+    override fun needResizeToMax(itemsWidth: Double, itemsHeight: Double, proposedWidth: Double, proposedHeight: Double): Boolean {
+        return proposedWidth.isInfinite() || itemsWidth > proposedWidth
+    }
+
+    override fun resizeToMax(itemsWidth: Double, itemsHeight: Double, proposedWidth: Double, proposedHeight: Double, items: List<AbstractAuiFragment<RT>>) {
+        for (item in items) {
+            if (item.renderData.finalWidth < itemsWidth) {
+                item.computeLayout(itemsWidth, proposedHeight)
+            }
+        }
+    }
+
     override fun AbstractAuiFragment<RT>.place(crossAxisAlignment: Alignment?, crossAxisSize: Double, offset: Double): Double {
 
         val innerLeft = alignOnAxis(

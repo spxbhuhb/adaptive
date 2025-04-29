@@ -48,6 +48,17 @@ abstract class AbstractRow<RT, CRT : RT>(
     override fun crossAxisSize(innerWidth: Double, innerHeight: Double): Double =
         innerHeight
 
+    override fun needResizeToMax(itemsWidth: Double, itemsHeight: Double, proposedWidth: Double, proposedHeight: Double): Boolean {
+        return proposedHeight.isInfinite() || itemsHeight > proposedHeight
+    }
+
+    override fun resizeToMax(itemsWidth: Double, itemsHeight: Double, proposedWidth: Double, proposedHeight: Double, items: List<AbstractAuiFragment<RT>>) {
+        for (item in items) {
+            if (item.renderData.finalHeight < itemsHeight) {
+                item.computeLayout(proposedWidth, itemsHeight)
+            }
+        }
+    }
 
     override fun AbstractAuiFragment<RT>.place(crossAxisAlignment: Alignment?, crossAxisSize: Double, offset: Double): Double {
 

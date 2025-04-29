@@ -54,8 +54,10 @@ class SelectInputTheme : AbstractTheme() {
     val dropdownOptionsContainer = instructionsOf(
         focusFirst,
         tabIndex { 0 },
+        fill.resizeToMax,
         alignItems.startCenter,
-        padding(6.dp, 8.dp, 6.dp, 8.dp)
+        padding(6.dp, 8.dp, 6.dp, 8.dp),
+        backgrounds.friendlyOpaque
     )
 
     // Options
