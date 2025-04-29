@@ -137,7 +137,7 @@ private fun editFields(
 @Adaptive
 private fun editNotes(editSpec: AioSpaceSpec) {
     withLabel(Strings.note) {
-        maxSize .. fill.constrain
+        maxSize .. fillStrategy.constrain
 
         textInputArea(editSpec.notes) { v ->
             editSpec.update(editSpec::notes, v)
@@ -150,7 +150,7 @@ private fun devices(spaceId : AvValueId) {
     val devices = valueFrom { AvUiList(adapter(), spaceId, SpaceMarkers.SPACE_DEVICES) }
 
     withLabel(Strings.devices) {
-        maxSize .. fill.constrain
+        maxSize .. fillStrategy.constrain
 
         column {
             AioTheme.DEFAULT.itemListContainer
@@ -167,7 +167,7 @@ private fun points(spaceId : AvValueId) {
     val points = valueFrom { AvUiList(adapter(), spaceId, PointMarkers.POINTS) }
 
     withLabel(Strings.points) {
-        maxSize .. fill.constrain
+        maxSize .. fillStrategy.constrain
 
         column {
             AioTheme.DEFAULT.itemListContainer

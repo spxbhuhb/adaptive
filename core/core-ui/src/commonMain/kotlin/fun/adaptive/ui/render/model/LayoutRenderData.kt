@@ -8,7 +8,7 @@ import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.layout.Alignment
 import `fun`.adaptive.ui.instruction.layout.FillStrategy
-import `fun`.adaptive.ui.instruction.layout.Fit
+import `fun`.adaptive.ui.instruction.layout.SizeStrategy
 import `fun`.adaptive.ui.instruction.layout.OverflowBehavior
 
 @Suppress("EqualsOrHashCode")
@@ -24,8 +24,8 @@ class LayoutRenderData(
     var margin: RawSurrounding? = null
     var border: RawSurrounding? = null
 
-    var fit: Fit? = null
-    var fill : FillStrategy? = null
+    var sizeStrategy: SizeStrategy? = null
+    var fillStrategy: FillStrategy? = null
 
     var verticalAlignment: Alignment? = null
     var horizontalAlignment: Alignment? = null
@@ -48,8 +48,8 @@ class LayoutRenderData(
         if (border != other.border) return false
         if (verticalAlignment != other.verticalAlignment) return false
         if (horizontalAlignment != other.horizontalAlignment) return false
-        if (fit != other.fit) return false
-        if (fill != other.fill) return false
+        if (sizeStrategy != other.sizeStrategy) return false
+        if (fillStrategy != other.fillStrategy) return false
         if (fixed != other.fixed) return false
         if (overflow != other.overflow) return false
         if (zIndex != other.zIndex) return false

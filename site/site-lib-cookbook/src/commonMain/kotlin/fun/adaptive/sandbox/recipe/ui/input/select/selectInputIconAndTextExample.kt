@@ -21,7 +21,7 @@ fun selectInputIconAndTextExample() : AdaptiveFragment {
     }
 
     row {
-        fill.constrain .. gap { 16.dp } .. maxWidth
+        fillStrategy.constrain .. gap { 16.dp } .. maxWidth
 
         column {
             width { 240.dp } .. verticalScroll .. backgroundColor(0xffff00, 0.3) .. borders.outline .. padding { 8.dp }

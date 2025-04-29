@@ -35,7 +35,7 @@ fun rhtBrowserContent(pane: WsPane<RhtWsItem, RhtBrowserContentController>): Ada
 
     column {
         maxSize .. padding { 16.dp } .. backgrounds.surfaceVariant
-        fill.constrain
+        fillStrategy.constrain
 
         pageHeader(pane)
         rhtListHeader()

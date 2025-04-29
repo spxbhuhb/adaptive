@@ -18,7 +18,7 @@ fun docList(context: DocRenderContext, list: DocList): AdaptiveFragment {
 
         for (item in list.items) {
             row {
-                maxWidth .. fill.constrain
+                maxWidth .. fillStrategy.constrain
                 label(context, item)
                 docBlock(context, listOf(item.content))
             }

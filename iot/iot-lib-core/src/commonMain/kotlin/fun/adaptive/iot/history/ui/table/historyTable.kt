@@ -15,7 +15,7 @@ fun historyTable(
     val context = valueFrom { controller.chartContext }
 
     column {
-        gap { 4.dp } .. fill.constrain .. padding { 16.dp }
+        gap { 4.dp } .. fillStrategy.constrain .. padding { 16.dp }
 
         when (context.items.size) {
 

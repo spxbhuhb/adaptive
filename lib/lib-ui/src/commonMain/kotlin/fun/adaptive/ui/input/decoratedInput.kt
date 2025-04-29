@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.fill
+import `fun`.adaptive.ui.api.fillStrategy
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 
@@ -39,7 +39,7 @@ private fun <T> withLabel(
     when (config.labelPosition) {
         InputViewBackend.LabelPosition.Left -> {
             row(instructions()) {
-                fill.constrain
+                fillStrategy.constrain
                 text(config.text, config.instruction)
                 _KT_74337_content(viewBackend)
             }
@@ -47,7 +47,7 @@ private fun <T> withLabel(
 
         InputViewBackend.LabelPosition.Right -> {
             row(instructions()) {
-                fill.constrainReverse
+                fillStrategy.constrainReverse
                 _KT_74337_content(viewBackend)
                 text(config.text, config.instruction)
             }
@@ -55,7 +55,7 @@ private fun <T> withLabel(
 
         InputViewBackend.LabelPosition.Top -> {
             column(instructions()) {
-                fill.constrain
+                fillStrategy.constrain
                 text(config.text, config.instruction)
                 _KT_74337_content(viewBackend)
             }
@@ -63,7 +63,7 @@ private fun <T> withLabel(
 
         InputViewBackend.LabelPosition.Bottom -> {
             column(instructions()) {
-                fill.constrainReverse
+                fillStrategy.constrainReverse
                 _KT_74337_content(viewBackend)
                 text(config.text, config.instruction)
             }

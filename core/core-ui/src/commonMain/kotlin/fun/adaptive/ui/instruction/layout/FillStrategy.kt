@@ -29,7 +29,7 @@ open class FillStrategy(
 
     override fun applyTo(subject: Any) {
         layout(subject) {
-            it.fill = this
+            it.fillStrategy = this
         }
     }
 

@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.ui.instruction.layout
 
-enum class FitStrategy {
+enum class SizeBase {
     Container,
     Content
 }

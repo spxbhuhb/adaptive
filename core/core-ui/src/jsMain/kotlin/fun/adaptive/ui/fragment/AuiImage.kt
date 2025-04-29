@@ -9,7 +9,7 @@ import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
-import `fun`.adaptive.ui.instruction.layout.FitStrategy
+import `fun`.adaptive.ui.instruction.layout.SizeBase
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.HTMLImageElement
@@ -57,7 +57,7 @@ open class AuiImage(
         }
 
         if (loaded) {
-            val instructedFit = renderData.layout?.fit
+            val instructedFit = renderData.layout?.sizeStrategy
 
             val naturalWidth = receiver.naturalWidth.toDouble()
             val naturalHeight = receiver.naturalHeight.toDouble()
@@ -100,22 +100,19 @@ open class AuiImage(
             return
         }
 
-        val instructedFit = renderData.layout?.fit
+        val strategy = renderData.layout?.sizeStrategy
 
-        if (instructedFit == null) {
+        if (strategy == null) {
             super.computeLayout(proposedWidth, proposedHeight)
             return
         }
 
-        val horizontalStrategy = instructedFit.horizontalStrategy
-        val verticalStrategy = instructedFit.verticalStrategy
-
-        if (horizontalStrategy == FitStrategy.Container) {
+        if (strategy.horizontalBase == SizeBase.Container) {
             super.computeLayout(proposedWidth, receiver.naturalHeight * proposedWidth / receiver.naturalWidth)
             return
         }
 
-        if (verticalStrategy == FitStrategy.Container) {
+        if (strategy.verticalBase == SizeBase.Container) {
             super.computeLayout(proposedWidth, receiver.naturalHeight * proposedWidth / receiver.naturalWidth)
             return
         }

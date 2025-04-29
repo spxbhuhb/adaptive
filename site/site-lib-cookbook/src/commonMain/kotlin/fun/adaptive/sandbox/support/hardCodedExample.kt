@@ -2,7 +2,7 @@ package `fun`.adaptive.sandbox.support
 
 import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.ui.api.fill
+import `fun`.adaptive.ui.api.fillStrategy
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.row
@@ -16,7 +16,7 @@ fun hardCodedExample(
     _fixme_adaptive_content: () -> Unit
 ) {
     row {
-        fill.constrain .. gap { 16.dp } .. maxWidth
+        fillStrategy.constrain .. gap { 16.dp } .. maxWidth
         _fixme_adaptive_content()
         markdown(markdown)
     }

@@ -14,7 +14,7 @@ class ColorInputTheme {
 
     var inputContainer = instructionsOf(
         gap { 8.dp },
-        fill.constrain,
+        fillStrategy.constrain,
         alignItems.center
     )
 

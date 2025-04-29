@@ -7,7 +7,7 @@ package `fun`.adaptive.ui
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.instruction.DPixel
-import `fun`.adaptive.ui.instruction.layout.FitStrategy
+import `fun`.adaptive.ui.instruction.layout.SizeBase
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.support.statistics.AuiStatistics
 
@@ -130,7 +130,7 @@ abstract class AbstractAuiFragment<RT>(
      */
     open fun patchInstructions() {
 
-        if ( ! haveToPatch(dirtyMask, 1)) return
+        if (! haveToPatch(dirtyMask, 1)) return
 
         renderData = AuiRenderData(uiAdapter, previousRenderData, uiAdapter.themeFor(this), instructions)
 
@@ -177,7 +177,7 @@ abstract class AbstractAuiFragment<RT>(
 
         if (updateBatchId == uiAdapter.updateBatchId) return
 
-        statistics.scheduleUpdate++
+        statistics.scheduleUpdate ++
 
         updateBatchId = uiAdapter.updateBatchId
         uiAdapter.updateBatch += this
@@ -190,7 +190,7 @@ abstract class AbstractAuiFragment<RT>(
      * Sets final width and final height in render data.
      */
     open fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
-        statistics.computeLayout++
+        statistics.computeLayout ++
 
         val data = renderData
         val layout = data.layout
@@ -200,7 +200,7 @@ abstract class AbstractAuiFragment<RT>(
 
         data.finalWidth = when {
             instructedWidth != null -> instructedWidth
-            layout?.fit?.horizontalStrategy == FitStrategy.Container -> proposedWidth
+            layout?.sizeStrategy?.horizontalBase == SizeBase.Container -> proposedWidth
             innerWidth != null -> innerWidth + data.surroundingHorizontal
             proposedWidth.isFinite() -> proposedWidth
             else -> data.surroundingHorizontal
@@ -211,7 +211,7 @@ abstract class AbstractAuiFragment<RT>(
 
         data.finalHeight = when {
             instructedHeight != null -> instructedHeight
-            layout?.fit?.verticalStrategy == FitStrategy.Container -> proposedHeight
+            layout?.sizeStrategy?.verticalBase == SizeBase.Container -> proposedHeight
             innerHeight != null -> innerHeight + data.surroundingVertical
             proposedHeight.isFinite() -> proposedHeight
             else -> data.surroundingVertical
@@ -219,7 +219,7 @@ abstract class AbstractAuiFragment<RT>(
     }
 
     open fun placeLayout(top: Double, left: Double) {
-        statistics.placeLayout++
+        statistics.placeLayout ++
 
         val data = renderData
 
@@ -233,7 +233,7 @@ abstract class AbstractAuiFragment<RT>(
 
     open fun updateLayout(updateId: Long, item: AbstractAuiFragment<*>?) {
         if (updateBatchId == updateId) return
-        statistics.updateLayout++
+        statistics.updateLayout ++
 
         updateBatchId = updateId
 
@@ -275,8 +275,8 @@ abstract class AbstractAuiFragment<RT>(
 
         if (layout == null) return false
 
-        val fixHorizontal = layout.instructedWidth != null || layout.fit?.horizontalStrategy == FitStrategy.Container
-        val fixVertical = layout.instructedHeight != null || layout.fit?.verticalStrategy == FitStrategy.Container
+        val fixHorizontal = layout.instructedWidth != null || layout.sizeStrategy?.horizontalBase == SizeBase.Container
+        val fixVertical = layout.instructedHeight != null || layout.sizeStrategy?.verticalBase == SizeBase.Container
 
         val container = renderData.layoutFragment?.renderData?.container
 
@@ -286,18 +286,18 @@ abstract class AbstractAuiFragment<RT>(
         val result = fixHorizontal && fixVertical && ! alignVertical && ! alignHorizontal
 
         if (result) {
-            statistics.shouldUpdateSelfTrue++
+            statistics.shouldUpdateSelfTrue ++
         } else {
-            statistics.shouldUpdateSelfFalse++
+            statistics.shouldUpdateSelfFalse ++
         }
 
         return result
     }
 
     // FIXME dpValue unnecessarily creates a DPixel class
-    val Double.dpValue : Double
+    val Double.dpValue: Double
         get() = uiAdapter.toDp(this).value
 
-    val DPixel.pixelValue : Double
+    val DPixel.pixelValue: Double
         get() = uiAdapter.toPx(this)
 }

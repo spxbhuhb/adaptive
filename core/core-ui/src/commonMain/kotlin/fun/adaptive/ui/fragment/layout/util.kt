@@ -6,23 +6,35 @@ package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.instruction.layout.Alignment
-import `fun`.adaptive.ui.instruction.layout.FitStrategy
+import `fun`.adaptive.ui.instruction.layout.SizeBase
+import kotlin.math.max
+import kotlin.math.min
 
 fun AbstractAuiFragment<*>.computeFinal(proposedWidth: Double, itemsWidth: Double, proposedHeight: Double, itemsHeight: Double) {
     val data = renderData
     val layout = renderData.layout
 
-    val innerWidth = when {
-        proposedWidth.isFinite() && layout?.fit?.horizontalStrategy == FitStrategy.Container -> proposedWidth - data.surroundingHorizontal
+    val strategy = layout?.sizeStrategy
+
+    val unconstrainedInnerWidth = when {
+        proposedWidth.isFinite() && strategy?.horizontalBase == SizeBase.Container -> proposedWidth - data.surroundingHorizontal
         layout?.instructedWidth != null -> layout.instructedWidth !! - data.surroundingHorizontal
         else -> itemsWidth
     }
 
-    val innerHeight = when {
-        proposedHeight.isFinite() && layout?.fit?.verticalStrategy == FitStrategy.Container -> proposedHeight - data.surroundingVertical
+    val unconstrainedInnerHeight = when {
+        proposedHeight.isFinite() && strategy?.verticalBase == SizeBase.Container -> proposedHeight - data.surroundingVertical
         layout?.instructedHeight != null -> layout.instructedHeight !! - data.surroundingVertical
         else -> itemsHeight
     }
+
+    val innerWidth = strategy?.let {
+        min(max(it.widthMin ?: 0.0, unconstrainedInnerWidth), it.widthMax ?: Double.POSITIVE_INFINITY)
+    } ?: unconstrainedInnerWidth
+
+    val innerHeight = strategy?.let {
+        min(max(it.heightMin ?: 0.0, unconstrainedInnerHeight), it.heightMax ?: Double.POSITIVE_INFINITY)
+    } ?: unconstrainedInnerHeight
 
     data.innerWidth = innerWidth
     data.innerHeight = innerHeight

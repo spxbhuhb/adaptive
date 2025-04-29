@@ -97,18 +97,19 @@ fun height(calc: () -> DPixel) = Height(calc())
 fun width(width: DPixel) = Width(width)
 fun width(calc: () -> DPixel) = Width(calc())
 
-object fit {
-    object container : Fit(FitStrategy.Container, FitStrategy.Container) {
-        val vertical = Fit(verticalStrategy = FitStrategy.Container, horizontalStrategy = null)
-        val horizontal = Fit(verticalStrategy = null, horizontalStrategy = FitStrategy.Container)
+object sizeStrategy {
+    object container : SizeStrategy(SizeBase.Container, SizeBase.Container) {
+        val vertical = SizeStrategy(verticalBase = SizeBase.Container, horizontalBase = null)
+        val horizontal = SizeStrategy(verticalBase = null, horizontalBase = SizeBase.Container)
     }
-    object content : Fit(FitStrategy.Content, FitStrategy.Content) {
-        val vertical = Fit(verticalStrategy = FitStrategy.Content, horizontalStrategy = null)
-        val horizontal = Fit(verticalStrategy = null, horizontalStrategy = FitStrategy.Content)
+
+    object content : SizeStrategy(SizeBase.Content, SizeBase.Content) {
+        val vertical = SizeStrategy(verticalBase = SizeBase.Content, horizontalBase = null)
+        val horizontal = SizeStrategy(verticalBase = null, horizontalBase = SizeBase.Content)
     }
 }
 
-object fill {
+object fillStrategy {
     val constrain = FillStrategy(constrain = true, reverse = false, resizeToMax = false)
     val constrainReverse =  FillStrategy(constrain = true, reverse = true, resizeToMax = false)
     val resizeToMax = FillStrategy(constrain = false, reverse = false, resizeToMax = true)

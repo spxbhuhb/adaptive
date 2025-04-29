@@ -7,7 +7,7 @@ package `fun`.adaptive.ui.fragment.layout
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.api.fill
+import `fun`.adaptive.ui.api.fillStrategy
 import `fun`.adaptive.ui.instruction.layout.Alignment
 import `fun`.adaptive.ui.instruction.layout.SpaceDistribution
 
@@ -53,15 +53,15 @@ abstract class AbstractStack<RT, CRT : RT>(
     abstract fun AbstractAuiFragment<RT>.place(crossAxisAlignment: Alignment?, crossAxisSize: Double, offset: Double): Double
 
     abstract fun needsResizeToMax(
-        itemsWidth: Double,
-        itemsHeight: Double,
+        innerWidth: Double,
+        innerHeight: Double,
         proposedWidth: Double,
         proposedHeight: Double
     ): Boolean
 
     abstract fun resizeToMax(
-        itemsWidth: Double,
-        itemsHeight: Double,
+        innerWidth: Double,
+        innerHeight: Double,
         proposedWidth: Double,
         proposedHeight: Double,
         items: List<AbstractAuiFragment<RT>>
@@ -101,8 +101,8 @@ abstract class AbstractStack<RT, CRT : RT>(
             if (horizontalScroll) h - uiAdapter.scrollBarSize else h
         }
 
-        val fillStrategy = data.layout?.fill ?: fill.none
-        val items = if (fillStrategy.reverse) {
+        val fill = data.layout?.fillStrategy ?: fillStrategy.none
+        val items = if (fill.reverse) {
             layoutItems.reversed()
         } else {
             layoutItems
@@ -112,16 +112,10 @@ abstract class AbstractStack<RT, CRT : RT>(
             item.computeLayout(proposedItemWidth, proposedItemHeight)
             itemsWidth = itemsWidthCalc(itemsWidth, item)
             itemsHeight = itemsHeightCalc(itemsHeight, item)
-            if (fillStrategy.constrain) {
+            if (fill.constrain) {
                 proposedItemWidth = constrainWidthCalc(proposedItemWidth, item, instructedGap)
                 proposedItemHeight = constrainHeightCalc(proposedItemHeight, item, instructedGap)
             }
-        }
-
-        // ----  resize items if requested sizes of this fragment  --------------------
-
-        if (fillStrategy.resizeToMax && needsResizeToMax(itemsWidth, itemsHeight, proposedWidth, proposedHeight)) {
-            resizeToMax(itemsWidth, itemsHeight, proposedWidth, proposedHeight, items)
         }
 
         // ----  calculate sizes of this fragment  ------------------------------------
@@ -130,6 +124,12 @@ abstract class AbstractStack<RT, CRT : RT>(
 
         val innerWidth = data.innerWidth !!
         val innerHeight = data.innerHeight !!
+
+        // ----  resize items if requested  --------------------
+
+        if (fill.resizeToMax && needsResizeToMax(innerWidth, innerHeight, proposedWidth, proposedHeight)) {
+            resizeToMax(innerWidth, innerHeight, proposedWidth, proposedHeight, items)
+        }
 
         // ---- calculate starting offset and gap based on instructions  --------------
 

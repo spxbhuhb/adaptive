@@ -41,7 +41,7 @@ fun wsHistoryContent(
     val splitConfig = valueFrom { pane.controller.splitConfig }
 
     column {
-        maxSize .. padding { 16.dp } .. backgrounds.surface .. fill.constrain
+        maxSize .. padding { 16.dp } .. backgrounds.surface .. fillStrategy.constrain
 
         title(pane, name, splitConfig)
 

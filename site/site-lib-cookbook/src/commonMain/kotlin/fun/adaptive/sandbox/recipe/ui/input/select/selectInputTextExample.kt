@@ -21,7 +21,7 @@ fun selectInputTextExample() : AdaptiveFragment {
     }
 
     row {
-        fill.constrain .. gap { 16.dp } .. maxWidth
+        fillStrategy.constrain .. gap { 16.dp } .. maxWidth
 
         column {
             width { 240.dp }

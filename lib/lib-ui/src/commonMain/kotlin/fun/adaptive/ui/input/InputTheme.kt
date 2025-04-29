@@ -73,7 +73,7 @@ class InputTheme : AbstractTheme() {
     )
 
     val unitContainer = instructionsOf(
-        fill.constrainReverse
+        fillStrategy.constrainReverse
     )
 
     val unitText = instructionsOf(

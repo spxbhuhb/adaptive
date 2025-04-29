@@ -1,11 +1,10 @@
 package `fun`.adaptive.ui.fragment.layout
 
-import `fun`.adaptive.foundation.dumpFragmentTree
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.fit
+import `fun`.adaptive.ui.api.sizeStrategy
 import `fun`.adaptive.ui.api.position
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
@@ -42,7 +41,7 @@ class BoxTest {
     ) {
         uiTest(0, 0, 400, 200) {
             box(C1) {
-                fit.container
+                sizeStrategy.container
                 text("a", F1) .. alignment
             }
         }.also { adapter ->
@@ -81,7 +80,7 @@ class BoxTest {
     ) {
         uiTest(0, 0, 400, 200) {
             box(C1) {
-                fit.container .. alignment
+                sizeStrategy.container .. alignment
                 text("a", F1)
             }
         }.also { adapter ->
@@ -104,7 +103,7 @@ class BoxTest {
     fun changePosition() {
         uiTest(0, 0, 400, 200) {
             box(C1) {
-                fit.container
+                sizeStrategy.container
                 text("a", F1) .. position(100.dp, 100.dp)
             }
         }.also { adapter ->
@@ -123,7 +122,7 @@ class BoxTest {
     fun changeSize() {
         uiTest(0, 0, 400, 200) {
             box(C1) {
-                fit.container
+                sizeStrategy.container
                 text("a", F1) .. size(100.dp, 100.dp)
             }
         }.also { adapter ->
