@@ -48,7 +48,7 @@ abstract class AbstractColumn<RT, CRT : RT>(
     override fun crossAxisSize(innerWidth: Double, innerHeight: Double): Double =
         innerWidth
 
-    override fun needResizeToMax(itemsWidth: Double, itemsHeight: Double, proposedWidth: Double, proposedHeight: Double): Boolean {
+    override fun needsResizeToMax(itemsWidth: Double, itemsHeight: Double, proposedWidth: Double, proposedHeight: Double): Boolean {
         return proposedWidth.isInfinite() || itemsWidth > proposedWidth
     }
 

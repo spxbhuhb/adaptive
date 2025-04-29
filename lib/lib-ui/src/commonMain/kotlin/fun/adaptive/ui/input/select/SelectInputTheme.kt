@@ -56,8 +56,7 @@ class SelectInputTheme : AbstractTheme() {
         tabIndex { 0 },
         fill.resizeToMax,
         alignItems.startCenter,
-        padding(6.dp, 8.dp, 6.dp, 8.dp),
-        backgrounds.friendlyOpaque
+        padding(6.dp, 8.dp, 6.dp, 8.dp)
     )
 
     // Options
