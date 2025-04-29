@@ -1,10 +1,15 @@
 # Select
 
-Select is a rather complex input with many configuration options and uses.
+Select lets the user choose from options.
+
+There are many configuration and rendering options. You can create a dropdown style select, 
+a list of options or something like a choice-group, etc.
 
 ---
 
 ## Hard-coded examples
+
+[Select input dropdown example](actualize:///cookbook/input/select/example/dropdown)
 
 [Select input text example](actualize:///cookbook/input/select/example/text)
 
@@ -26,17 +31,20 @@ Select is a rather complex input with many configuration options and uses.
 
 **standalone**
 
-* `selectInput`
+* `selectInputList`
+* `selectInputDropdown`
 * `multiSelectInput`
 
 **editor**
 
-* `selectEditor`
+* `selectEditorList`
+* `selectEditorDropdown`
 * `multiSelectEditor`
 
 **mapping editor**
 
-* `selectMappingEditor`
+* `selectMappingEditorList`
+* `selectMappingEditorDropdown`
 * `multiSelectMappingEditor`
 
 ### Mapping
@@ -49,16 +57,28 @@ The mapping variants let you:
 This is very useful in many cases, for example, when you have a list of instances and the value
 is a set of uuids of those instances.
 
-### Item renderers
+### Option renderers
 
 Select fragments lets you pass a render function which is then used to render the options
 of the select.
 
 Built-in item renderer functions:
 
-* `selectInputItemText`
-* `selectInputItemIconAndText`
-* `selectInputItemCheckbox`
+* `selectInputOptionText`
+* `selectInputOptionIconAndText`
+* `selectInputOptionCheckbox`
+
+### Value renderers
+
+Dropdown select fragments lets you pass a render function which is then used to render the value
+of the select.
+
+This is different from rendering the options.
+
+Built-in item renderer functions:
+
+* `selectInputValueText`
+* `selectInputValueIconAndText`
 
 ### Standalone
 
@@ -78,7 +98,7 @@ val backend = selectInputBackend<String> {
     toText = { it }
 }
 
-selectInput(backend, ::selectInputItemCheckbox)
+selectInputList(backend, ::selectInputItemCheckbox)
 ```
 
 ```kotlin
@@ -93,9 +113,9 @@ multiSelectInput(backend, ::selectInputItemCheckbox)
 ### Editor
 
 ```kotlin
-selectEditor(options, ::selectInputItemCheckbox) { template.selectedOption }
+selectEditorList(options, ::selectInputItemCheckbox) { template.selectedOption }
 
-selectMappingEditor(options, { it.uuid }, ::selectInputItemCheckbox) { template.selectedOption }
+selectMappingEditorList(options, { it.uuid }, ::selectInputItemCheckbox) { template.selectedOption }
 
 multiSelectEditor(options, ::selectInputItemCheckbox) { template.selectedOption }
 

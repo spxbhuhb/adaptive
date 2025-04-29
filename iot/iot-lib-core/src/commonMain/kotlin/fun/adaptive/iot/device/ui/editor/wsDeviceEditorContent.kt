@@ -19,9 +19,10 @@ import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.input.InputConfig.Companion.inputConfig
-import `fun`.adaptive.ui.input.select.item.selectInputItemText
-import `fun`.adaptive.ui.input.select.selectInput
+import `fun`.adaptive.ui.input.select.item.selectInputOptionText
+import `fun`.adaptive.ui.input.select.item.selectInputValueText
 import `fun`.adaptive.ui.input.select.selectInputBackend
+import `fun`.adaptive.ui.input.select.selectInputDropdown
 import `fun`.adaptive.ui.input.text.textInput2
 import `fun`.adaptive.ui.input.text.textInputArea
 import `fun`.adaptive.ui.instruction.dp
@@ -129,7 +130,6 @@ private fun editFields(
         this.options = spaceNames
         label = Strings.space
         toText = { it.names.joinToString(" / ") }
-        withDropdown = true
         withSurfaceContainer = true
         //onChange = { updateSpace(it) }
     }
@@ -142,8 +142,7 @@ private fun editFields(
         textInput2 { editItem.localizedDeviceType } .. inputConfig(label = Strings.type, disabled = true)
         textEditor { editItem.name }
 
-        selectInput(backend) { selectInputItemText(it) }
-
+        selectInputDropdown(backend, { selectInputOptionText(it) }) { selectInputValueText(it) }
 
 //        withLabel(Strings.area) {
 //            width { 400.dp }

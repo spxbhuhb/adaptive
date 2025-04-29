@@ -5,8 +5,8 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.input.select.item.selectInputItemCheckbox
-import `fun`.adaptive.ui.input.select.selectInput
+import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
+import `fun`.adaptive.ui.input.select.selectInputList
 import `fun`.adaptive.ui.input.select.selectInputBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.utility.UUID
@@ -24,14 +24,14 @@ fun selectInputCheckboxExample() : AdaptiveFragment {
 
         column {
             width { 240.dp } .. verticalScroll .. padding { 8.dp }
-            selectInput(backend, { selectInputItemCheckbox(it) })
+            selectInputList(backend, { selectInputOptionCheckbox(it) })
         }
 
         markdown(
             """
             * "Roles" dataset
-            * checkbox item renderer
-            * manual styling
+            * checkbox option renderer
+            * manual styling, no border
         """.trimIndent()
         )
     }

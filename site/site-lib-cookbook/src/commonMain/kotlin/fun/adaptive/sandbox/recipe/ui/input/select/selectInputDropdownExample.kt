@@ -4,20 +4,23 @@ import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.input.select.item.selectInputOptionText
-import `fun`.adaptive.ui.input.select.selectInputList
+import `fun`.adaptive.ui.generated.resources.menu_book
+import `fun`.adaptive.ui.input.select.item.selectInputOptionIconAndText
+import `fun`.adaptive.ui.input.select.item.selectInputValueIconAndText
 import `fun`.adaptive.ui.input.select.selectInputBackend
+import `fun`.adaptive.ui.input.select.selectInputDropdown
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.utility.UUID
 
 @Adaptive
-fun selectInputTextExample() : AdaptiveFragment {
+fun selectInputDropdownExample() : AdaptiveFragment {
 
     val backend = selectInputBackend<Pair<UUID<Any>, String>> {
-        options = optionsOptions
-        withSurfaceContainer = true
+        this.options = optionsOptions
         toText = { it.second }
+        toIcon = { Graphics.menu_book }
     }
 
     row {
@@ -25,14 +28,14 @@ fun selectInputTextExample() : AdaptiveFragment {
 
         column {
             width { 240.dp }
-            selectInputList(backend, { selectInputOptionText(it) })
+            selectInputDropdown(backend, { selectInputOptionIconAndText(it) }) { selectInputValueIconAndText(it) }
         }
 
         markdown(
             """
-            * "Options" dataset    
-            * text only option renderer
-            * with surface container  
+            * "Options" dataset
+            * icon and text renderers
+            * dropdown variant
         """.trimIndent()
         )
     }

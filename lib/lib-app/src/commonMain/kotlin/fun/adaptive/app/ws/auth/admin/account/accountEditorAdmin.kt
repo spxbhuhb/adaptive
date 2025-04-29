@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.datetime.instant
 import `fun`.adaptive.ui.editor.multiSelectMappingEditor
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
-import `fun`.adaptive.ui.input.select.item.selectInputItemCheckbox
+import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
 import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
@@ -112,7 +112,7 @@ fun roles() {
 
     column {
         padding { 16.dp } .. width { 300.dp } .. height { 300.dp }
-        multiSelectMappingEditor(knownRoles, AvItemSelectMapping(), { selectInputItemCheckbox(it) }) { template.roles } .. maxSize
+        multiSelectMappingEditor(knownRoles, AvItemSelectMapping(), { selectInputOptionCheckbox(it) }) { template.roles } .. maxSize
     }
 }
 

@@ -10,10 +10,10 @@ import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
 import `fun`.adaptive.ui.input.select.AbstractSelectInputViewBackend
 import `fun`.adaptive.ui.input.select.SingleSelectInputViewBackend
 import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
-import `fun`.adaptive.ui.input.select.selectInput
+import `fun`.adaptive.ui.input.select.selectInputList
 
 @Adaptive
-fun <VT, OT> selectMappingEditor(
+fun <VT, OT> selectMappingEditorList(
     options : List<OT>,
     mapping : SelectOptionMapping<VT,OT>,
     @Adaptive
@@ -24,7 +24,7 @@ fun <VT, OT> selectMappingEditor(
     selector: () -> VT?
 ) : AdaptiveFragment {
 
-    selectInput(
+    selectInputList(
         fragment().viewBackendFor(binding) { value, label, isSecret ->
             SingleSelectInputViewBackend(value, mapping, label, isSecret).also {
                 it.options = options

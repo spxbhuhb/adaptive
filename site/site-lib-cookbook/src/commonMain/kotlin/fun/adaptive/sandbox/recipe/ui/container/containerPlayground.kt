@@ -15,10 +15,10 @@ import `fun`.adaptive.sandbox.support.configureForm
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.editor.colorEditor
 import `fun`.adaptive.ui.editor.doubleEditor
-import `fun`.adaptive.ui.editor.selectEditor
+import `fun`.adaptive.ui.editor.selectEditorList
 import `fun`.adaptive.ui.form.AdatFormViewBackend
 import `fun`.adaptive.ui.form.adatFormBackend
-import `fun`.adaptive.ui.input.select.item.selectInputItemCheckbox
+import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.borders
@@ -101,7 +101,7 @@ fun containerPlaygroundForm(
         column {
             gap { 8.dp } .. padding { 16.dp }
 
-            selectEditor(containers, { selectInputItemCheckbox(it) }) { template.container } .. width { 256.dp }
+            selectEditorList(containers, { selectInputOptionCheckbox(it) }) { template.container } .. width { 256.dp }
 
             row {
                 gap { 16.dp }

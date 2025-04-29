@@ -7,11 +7,13 @@ import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.height
+import `fun`.adaptive.ui.api.paddingRight
 import `fun`.adaptive.ui.fragment.structural.AbstractPopup
 import `fun`.adaptive.ui.fragment.structural.PopupSourceViewBackend
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.input.InputViewBackend
 import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
+import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.Keys
 import `fun`.adaptive.ui.instruction.event.UIEvent
 import kotlin.properties.Delegates.observable
@@ -32,16 +34,16 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
     var toText by observable<(OT) -> String>({ it.toString() }, ::notify)
     var toIcon by observable<(OT) -> GraphicsResourceSet>({ Graphics.empty }, ::notify)
 
-    var listInputTheme: SelectInputTheme = SelectInputTheme.default
+    var selectInputTheme: SelectInputTheme = SelectInputTheme.default
     var withSurfaceContainer: Boolean = false
-    var withDropDown: Boolean = false
+    var withDropdown: Boolean = false
 
     var items by observable(listOf<SelectItem>(), ::notify)
 
     val selectedItems = mutableSetOf<SelectItem>()
     val selectedValues = mutableSetOf<IVT>()
 
-    fun toggle(item: SelectItem, closeAfter : Boolean = true) {
+    fun toggle(item: SelectItem, closeAfter: Boolean = true) {
         if (isDisabled) return
 
         val itemValue = item.itemValue
@@ -64,7 +66,7 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
             item.isSelected = true
         }
 
-        if (withDropDown && closeAfter && isPopupOpen) {
+        if (withDropdown && closeAfter && isPopupOpen) {
             hidePopup?.invoke()
         }
 
@@ -77,35 +79,27 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
         if (withSurfaceContainer) {
             val base = containerThemeInstructions(focused)
             when {
-                isDisabled -> base + listInputTheme.surfaceListContainerDisabled
-                focused -> base + listInputTheme.surfaceListContainerBaseFocused
-                else -> base + listInputTheme.surfaceListContainerBase
+                isDisabled -> base + selectInputTheme.surfaceListContainerDisabled
+                focused -> base + selectInputTheme.surfaceListContainerBaseFocused
+                else -> base + selectInputTheme.surfaceListContainerBase
             }
         } else {
             if (isDisabled) {
                 emptyInstructions
             } else {
-                listInputTheme.listContainer
+                selectInputTheme.listContainer
             }
         }
 
     fun optionContainerInstructions(item: SelectItem): AdaptiveInstruction =
         if (item.isSelected) {
-            listInputTheme.optionContainerSelected
+            selectInputTheme.optionContainerSelected
         } else {
-            listInputTheme.optionContainerBase
+            selectInputTheme.optionContainerBase
         }
 
-    fun optionIconInstructions(item: SelectItem): AdaptiveInstruction {
-        return listInputTheme.optionIcon
-    }
-
-    fun optionTextInstructions(item: SelectItem): AdaptiveInstruction {
-        return listInputTheme.optionText
-    }
-
     fun dropdownSelectedContainerInstructions(focused: Boolean): AdaptiveInstruction {
-        return containerThemeInstructions(focused) + height { inputTheme.inputHeightDp }
+        return containerThemeInstructions(focused) + height { inputTheme.inputHeightDp } + paddingRight { 0.dp }
     }
 
     inner class SelectItem(
@@ -118,8 +112,12 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
         var isSelected: Boolean by observable(selected, ::notify)
 
         fun optionContainerInstructions() = optionContainerInstructions(this)
-        fun optionIconInstructions() = optionIconInstructions(this)
-        fun optionTextInstructions() = optionTextInstructions(this)
+        fun optionIconInstructions() = selectInputTheme.optionIcon
+        fun optionTextInstructions() = selectInputTheme.optionText
+
+        fun valueContainerInstructions() = selectInputTheme.valueContainer
+        fun valueIconInstructions() = selectInputTheme.valueIcon
+        fun valueTextInstructions() = selectInputTheme.valueText
 
         fun toggle() {
             this@AbstractSelectInputViewBackend.toggle(this)
@@ -147,7 +145,7 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
         super.notify(property, oldValue, newValue)
     }
 
-    fun onListKeydown(event: UIEvent, close: () -> Unit = {  }) {
+    fun onListKeydown(event: UIEvent, close: () -> Unit = { }) {
         if (isMultiSelect) return // waaay too complex to handle right now
         val selected = selectedValues.firstOrNull()
         val index = items.indexOfFirst { it.itemValue == selected }
@@ -191,7 +189,7 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
         when (event.keyInfo?.key) {
             Keys.ARROW_DOWN -> {
                 event.preventDefault()
-                event.fragment.first<AbstractPopup<*,*>>().show()
+                event.fragment.first<AbstractPopup<*, *>>().show()
             }
         }
     }

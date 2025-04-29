@@ -16,6 +16,7 @@
     <string name="edit">Szerkesztés</string>
     <string name="notSet">nincs megadva</string>
     <string name="copied">Copied</string>
+    <string name="noValueSelected">nincs érték kiválasztva</string>
 
     <string name="copyToClipboard">Copy to clipboard</string>
 

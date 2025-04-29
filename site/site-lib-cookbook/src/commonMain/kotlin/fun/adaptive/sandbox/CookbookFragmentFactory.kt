@@ -32,6 +32,7 @@ import `fun`.adaptive.sandbox.recipe.ui.text.textRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeRecipe
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputCheckboxExample
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputDropdownExample
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputIconAndTextExample
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputRecipe
@@ -84,6 +85,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Select Input
         // ----------------------------------------------------------------------------
 
+        add("cookbook/input/select/example/dropdown", ::selectInputDropdownExample)
         add("cookbook/input/select/example/text", ::selectInputTextExample)
         add("cookbook/input/select/example/icon-and-text", ::selectInputIconAndTextExample)
         add("cookbook/input/select/example/checkbox", ::selectInputCheckboxExample)

@@ -13,18 +13,21 @@ import `fun`.adaptive.sandbox.support.configureForm
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.editor.booleanEditor
 import `fun`.adaptive.ui.editor.intEditor
-import `fun`.adaptive.ui.editor.selectEditor
+import `fun`.adaptive.ui.editor.selectEditorList
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.AdatFormViewBackend
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.input.select.SingleSelectInputViewBackend
-import `fun`.adaptive.ui.input.select.item.selectInputItemCheckbox
-import `fun`.adaptive.ui.input.select.item.selectInputItemIconAndText
-import `fun`.adaptive.ui.input.select.item.selectInputItemText
-import `fun`.adaptive.ui.input.select.selectInput
+import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
+import `fun`.adaptive.ui.input.select.item.selectInputOptionIconAndText
+import `fun`.adaptive.ui.input.select.item.selectInputOptionText
+import `fun`.adaptive.ui.input.select.item.selectInputValueIconAndText
+import `fun`.adaptive.ui.input.select.item.selectInputValueText
+import `fun`.adaptive.ui.input.select.selectInputList
 import `fun`.adaptive.ui.input.select.selectInputBackend
+import `fun`.adaptive.ui.input.select.selectInputDropdown
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
@@ -80,7 +83,7 @@ fun selectInputPlaygroundForm(
             row {
                 gap { 16.dp }
 
-                selectEditor(datasets, { selectInputItemCheckbox(it) }) { template.dataset } .. width { 120.dp }
+                selectEditorList(datasets, { selectInputOptionCheckbox(it) }) { template.dataset } .. width { 120.dp }
 
                 column {
                     gap { 8.dp } .. width { 120.dp }
@@ -102,7 +105,7 @@ fun selectInputPlaygroundForm(
                     booleanEditor { template.withDropdown }
                 }
 
-                selectEditor(itemRenderers, { selectInputItemCheckbox(it) }) { template.itemRenderer } .. width { 256.dp }
+                selectEditorList(itemRenderers, { selectInputOptionCheckbox(it) }) { template.itemRenderer } .. width { 256.dp }
             }
         }
     }
@@ -139,27 +142,55 @@ fun selectInputPlaygroundResult(config: SelectPlaygroundConfig) {
     if (config.withDropdown) {
         column {
             width { 240.dp }
-            actualInput(backend, config) .. maxWidth
+            actualInputDropdown(backend, config) .. maxWidth
         }
     } else {
         column {
             width { 240.dp } .. height { 240.dp }
-            actualInput(backend, config) .. maxSize
+            actualInputList(backend, config) .. maxSize
         }
     }
 }
 
 @Adaptive
-fun actualInput(
+fun actualInputList(
     backend: SingleSelectInputViewBackend<Option, Option>,
     config: SelectPlaygroundConfig
 ): AdaptiveFragment {
-    selectInput(backend) {
-        when (config.itemRenderer) {
-            "Text only" -> selectInputItemText(it)
-            "Icon and text" -> selectInputItemIconAndText(it)
-            "Checkbox" -> selectInputItemCheckbox(it)
+    selectInputList(
+        backend,
+        {
+            when (config.itemRenderer) {
+                "Text only" -> selectInputOptionText(it)
+                "Icon and text" -> selectInputOptionIconAndText(it)
+                "Checkbox" -> selectInputOptionCheckbox(it)
+            }
         }
-    } .. instructions()
+    ) .. instructions()
+    return fragment()
+}
+
+@Adaptive
+fun actualInputDropdown(
+    backend: SingleSelectInputViewBackend<Option, Option>,
+    config: SelectPlaygroundConfig
+): AdaptiveFragment {
+    selectInputDropdown(
+        backend,
+        {
+            when (config.itemRenderer) {
+                "Text only" -> selectInputOptionText(it)
+                "Icon and text" -> selectInputOptionIconAndText(it)
+                "Checkbox" -> selectInputOptionCheckbox(it)
+            }
+        },
+        {
+            when (config.itemRenderer) {
+                "Text only" -> selectInputValueText(it)
+                "Icon and text" -> selectInputValueIconAndText(it)
+                "Checkbox" -> selectInputValueText(it)
+            }
+        }
+    ) .. instructions()
     return fragment()
 }

@@ -1,0 +1,69 @@
+package `fun`.adaptive.ui.input.select
+
+import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instructions
+import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.generated.resources.keyboard_arrow_down
+import `fun`.adaptive.ui.generated.resources.noValueSelected
+import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.input.decoratedInput
+
+@Adaptive
+fun <IT, OT> selectInputDropdown(
+    viewBackend: AbstractSelectInputViewBackend<IT, IT, OT>,
+    @Adaptive
+    _fixme_option: (option: AbstractSelectInputViewBackend<IT, IT, OT>.SelectItem) -> Unit,
+    @Adaptive
+    _fixme_value: (option: AbstractSelectInputViewBackend<IT, IT, OT>.SelectItem) -> Unit
+): AdaptiveFragment {
+
+    val focus = focus()
+    val observed = valueFrom { viewBackend.also { it.withDropdown = true } }
+
+    val theme = viewBackend.selectInputTheme
+
+    decoratedInput(focus, observed) {
+        column(instructions()) {
+            observed.dropdownSelectedContainerInstructions(focus)
+
+            onKeydown { event -> observed.onDropdownSelectedKeydown(event) }
+
+            grid {
+                theme.valueContainer
+
+                box {
+                    if (observed.selectedItems.isNotEmpty()) {
+                        _fixme_value(observed.selectedItems.first())
+                    } else {
+                        text(Strings.noValueSelected) .. theme.noValue
+                    }
+                }
+
+                icon(Graphics.keyboard_arrow_down) .. theme.dropdownIcon
+            }
+
+            if (! observed.isDisabled) {
+                primaryPopup(observed) { hide ->
+                    theme.dropdownPopup
+
+                    column {
+                        theme.dropdownOptionsContainer
+
+                        onKeydown { event -> observed.onListKeydown(event, hide) }
+
+                        for (item in observed.items) {
+                            _fixme_option(item)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    return fragment()
+}

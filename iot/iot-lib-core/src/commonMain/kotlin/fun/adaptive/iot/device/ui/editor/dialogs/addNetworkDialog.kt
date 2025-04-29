@@ -14,8 +14,8 @@ import `fun`.adaptive.resource.resolve.resolveString
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
-import `fun`.adaptive.ui.input.select.item.selectInputItemIconAndText
-import `fun`.adaptive.ui.input.select.selectInput
+import `fun`.adaptive.ui.input.select.item.selectInputOptionIconAndText
+import `fun`.adaptive.ui.input.select.selectInputList
 import `fun`.adaptive.ui.input.select.selectInputMappingBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Orientation
@@ -69,7 +69,7 @@ private fun driverList(
 
     column {
         maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
-        selectInput(backend, { selectInputItemIconAndText(it) })
+        selectInputList(backend, { selectInputOptionIconAndText(it) })
     }
 }
 
