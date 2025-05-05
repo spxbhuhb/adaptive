@@ -77,7 +77,7 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
     val isInvalid: Boolean
         get() = isInConstraintError || isInConversionError
 
-    fun containerThemeInstructions(focus: Boolean) =
+    open fun containerThemeInstructions(focus: Boolean) =
         when {
             isDisabled -> inputTheme.disabled
             isInvalid && isTouched -> if (focus || isPopupOpen) inputTheme.invalidFocused else inputTheme.invalidNotFocused

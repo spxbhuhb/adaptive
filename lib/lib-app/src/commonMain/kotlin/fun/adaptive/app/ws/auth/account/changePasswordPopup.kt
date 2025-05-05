@@ -16,7 +16,7 @@ import `fun`.adaptive.lib_app.generated.resources.saveSuccess
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.instruction.dp

@@ -13,7 +13,6 @@ import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.datetime.instant
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
@@ -25,6 +24,7 @@ import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.input.InputConfig.Companion.inputConfig
 import `fun`.adaptive.ui.input.InputContext
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
@@ -47,7 +47,7 @@ fun wsAppAccountManager(pane: WsPane<*, AccountManagerController>): AdaptiveFrag
 
         wsContentHeader(Strings.accounts) {
             row {
-                gap { 16.dp }
+                gap { 16.dp } .. alignItems.endCenter
 
                 localContext(filterBackend) {
                     textEditor { filter.text } .. width { 200.dp } .. inputConfig(label = "", placeholder = Strings.filter)

@@ -15,9 +15,11 @@ class ThemeIconColors {
     val onPrimaryHover = fill(colors.onPrimaryHover)
 
     val onSelected = fill(colors.onSurface)
+    val onFocusSurface = fill(colors.onFocusSurface)
 
-    val onSuccessSurface = textColor(colors.onSuccessSurface)
-    val onInfoSurface = textColor(colors.onInfoSurface)
-    val onWarningSurface = textColor(colors.onWarningSurface)
-    val onFailSurface = textColor(colors.onFailSurface)
+    val onSuccessSurface = fill(colors.onSuccessSurface)
+    val onInfoSurface = fill(colors.onInfoSurface)
+    val onWarningSurface = fill(colors.onWarningSurface)
+    val onFailSurface = fill(colors.onFailSurface)
+
 }

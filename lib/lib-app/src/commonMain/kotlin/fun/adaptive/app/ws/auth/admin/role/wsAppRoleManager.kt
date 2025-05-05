@@ -15,7 +15,7 @@ import `fun`.adaptive.lib_app.generated.resources.roles
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend

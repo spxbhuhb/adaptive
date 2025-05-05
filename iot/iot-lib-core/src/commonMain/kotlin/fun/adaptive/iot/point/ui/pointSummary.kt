@@ -20,7 +20,7 @@ import `fun`.adaptive.iot.point.isSimulated
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.number.doubleOrNullInput
 import `fun`.adaptive.ui.instruction.dp

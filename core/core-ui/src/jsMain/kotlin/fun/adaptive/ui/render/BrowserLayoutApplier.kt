@@ -12,7 +12,7 @@ object BrowserLayoutApplier : LayoutRenderApplier<HTMLElement>() {
 
     override fun applyPadding(receiver: HTMLElement, padding: RawSurrounding?) {
         if (padding == null) {
-            receiver.style.border = "none"
+            receiver.style.padding = "0"
             return
         }
 
@@ -26,7 +26,7 @@ object BrowserLayoutApplier : LayoutRenderApplier<HTMLElement>() {
 
     override fun applyMargin(receiver: HTMLElement, margin: RawSurrounding?) {
         if (margin == null) {
-            receiver.style.border = "none"
+            receiver.style.margin = "0"
             return
         }
 

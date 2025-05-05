@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.button
+package `fun`.adaptive.ui.input.button
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.Adaptive
@@ -14,14 +14,13 @@ import `fun`.adaptive.ui.snackbar.warningNotification
 
 @Adaptive
 fun <T : AdatClass> saveFormButton(
-    form : AdatFormViewBackend<T>,
+    form: AdatFormViewBackend<T>,
     label: String = Strings.save,
     icon: GraphicsResourceSet? = null,
-    theme : ButtonTheme = ButtonTheme.DEFAULT,
-    invalidFun : (() -> Unit)? = null,
-    saveFun : (T) -> Unit
+    invalidFun: (() -> Unit)? = null,
+    saveFun: (T) -> Unit
 ): AdaptiveFragment {
-    button(label, icon, theme) .. onClick {
+    button(label, icon, ButtonViewBackend(label).also { it.isSubmit = true }) .. onClick {
         if (form.isInvalid(true)) {
             invalidFun?.invoke() ?: {
                 warningNotification(Strings.invalidFields)

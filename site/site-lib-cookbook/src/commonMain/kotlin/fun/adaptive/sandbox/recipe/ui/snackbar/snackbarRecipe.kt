@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.snackbar.*
 

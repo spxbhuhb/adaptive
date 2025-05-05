@@ -8,9 +8,8 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onClose
-import `fun`.adaptive.ui.button.ButtonTheme
-import `fun`.adaptive.ui.button.button
-import `fun`.adaptive.ui.button.dangerButton
+import `fun`.adaptive.ui.input.button.button
+import `fun`.adaptive.ui.input.button.dangerButton
 
 /**
  * An icon button that opens the dialog built by [modalContent] when clicked.
@@ -32,7 +31,7 @@ fun buttonDialog(
 ): AdaptiveFragment {
     var modalOpen = false
 
-    button(label, resource, ButtonTheme.DEFAULT, instructions()) .. onClick { modalOpen = true }
+    button(label, resource) .. instructions() .. onClick { modalOpen = true }
 
     if (modalOpen) {
         deprecatedDialog(title) {
@@ -64,7 +63,7 @@ fun dangerButtonDialog(
 ): AdaptiveFragment {
     var modalOpen = false
 
-    dangerButton(label, icon, ButtonTheme.DEFAULT, instructions()) .. onClick { modalOpen = true }
+    dangerButton(label, icon) .. instructions() .. onClick { modalOpen = true }
 
     if (modalOpen) {
         deprecatedDialog(title) {

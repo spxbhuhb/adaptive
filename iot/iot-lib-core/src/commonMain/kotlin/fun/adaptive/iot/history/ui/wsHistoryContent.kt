@@ -17,7 +17,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.settings
-import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.filter.QuickFilterModel
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.icon.actionIcon

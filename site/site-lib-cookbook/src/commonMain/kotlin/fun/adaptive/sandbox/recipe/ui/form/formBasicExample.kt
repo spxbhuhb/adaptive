@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.sandbox.support.E
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.editor.booleanEditor
 import `fun`.adaptive.ui.editor.doubleEditor
 import `fun`.adaptive.ui.editor.intEditor

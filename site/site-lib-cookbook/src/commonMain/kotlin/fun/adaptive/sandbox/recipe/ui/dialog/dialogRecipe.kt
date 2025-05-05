@@ -19,7 +19,7 @@ import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.dialog.buttonDialog
 import `fun`.adaptive.ui.dialog.deprecatedDialog
 import `fun`.adaptive.ui.dialog.iconDialog

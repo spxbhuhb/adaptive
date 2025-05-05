@@ -23,4 +23,6 @@ class ThemeBackgrounds {
     val infoSurface = backgroundColor(colors.infoSurface)
     val warningSurface = backgroundColor(colors.warningSurface)
     val failSurface = backgroundColor(colors.failSurface)
+
+    val focusSurface = backgroundColor(colors.focusColor)
 }

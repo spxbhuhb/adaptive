@@ -22,9 +22,9 @@ import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
+import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
@@ -74,7 +74,7 @@ fun wsAppSignIn(@Suppress("unused") pane: WsPane<*, *>): AdaptiveFragment {
                 box {
                     marginLeft { 32.dp } .. marginRight { 32.dp } .. marginTop { 16.dp } .. maxSize
 
-                    button(Strings.signInButton) .. maxWidth .. onClick {
+                    submitButton(Strings.signInButton) .. maxWidth .. onClick {
 
                         if (form.isInvalid()) return@onClick
 

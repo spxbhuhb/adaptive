@@ -23,9 +23,11 @@ import `fun`.adaptive.log.LoggerFactory
 import `fun`.adaptive.log.defaultLoggerFactory
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.input.button.buttonRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
@@ -99,6 +101,7 @@ fun sandboxMain() {
             CanvasFragmentFactory,
             SvgFragmentFactory,
             LibFragmentFactory,
+            CookbookFragmentFactory,
             backend = localBackend
         ) { adapter ->
 
@@ -116,6 +119,7 @@ fun sandboxMain() {
                 CanvasFragmentFactory,
                 SvgFragmentFactory,
                 LibFragmentFactory,
+                CookbookFragmentFactory,
                 backend = localBackend
             ) { adapter ->
 
@@ -151,7 +155,8 @@ fun sandboxMain() {
                     maxSize .. padding { 16.dp } .. gap { 16.dp }//.. backgrounds.friendlyOpaque
                     //containerPlayground()
                     //selectInputPlayground()
-                    formBasicExample()
+                    //formBasicExample()
+                    buttonRecipe()
                 }
             }
         } catch (ex: Exception) {

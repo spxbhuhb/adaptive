@@ -62,6 +62,7 @@ class ThemeColors {
     val onReverseVariant = color(0xBBBBBB)
 
     val focusColor = color(0x0D6EFD)
+    val onFocusSurface = color(0xffffffu)
 
     val transparent = color(0x0, 0.0)
 }

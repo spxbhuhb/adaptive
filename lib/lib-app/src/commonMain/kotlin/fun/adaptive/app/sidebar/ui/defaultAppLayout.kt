@@ -1,37 +1,5 @@
 package `fun`.adaptive.app.sidebar.ui
 
-import `fun`.adaptive.auth.api.AuthSessionApi
-import `fun`.adaptive.foundation.*
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.graphics.canvas.api.fill
-import `fun`.adaptive.graphics.svg.api.svg
-import `fun`.adaptive.graphics.svg.api.svgHeight
-import `fun`.adaptive.graphics.svg.api.svgWidth
-import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.generated.resources.power_settings_new
-import `fun`.adaptive.ui.generated.resources.settings
-import `fun`.adaptive.ui.button.button
-import `fun`.adaptive.ui.icon.actionIcon
-import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.navigation.NavState
-import `fun`.adaptive.ui.navigation.sidebar.fullSidebar
-import `fun`.adaptive.ui.navigation.sidebar.theme.fullSidebarTheme
-import `fun`.adaptive.ui.navigation.sidebar.theme.thinSidebarTheme
-import `fun`.adaptive.ui.navigation.sidebar.thinSidebar
-import `fun`.adaptive.ui.platform.media.MediaMetrics
-import `fun`.adaptive.ui.snackbar.SnackbarTheme
-import `fun`.adaptive.ui.snackbar.activeSnackStore
-import `fun`.adaptive.ui.snackbar.snackList
-import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.textColors
-import kotlinx.coroutines.launch
 //
 //@Adaptive
 //fun defaultAppLayout(

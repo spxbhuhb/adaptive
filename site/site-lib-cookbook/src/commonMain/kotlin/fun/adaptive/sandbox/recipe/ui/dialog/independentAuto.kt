@@ -10,7 +10,7 @@ import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr

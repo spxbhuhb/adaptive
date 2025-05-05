@@ -8,9 +8,8 @@ import `fun`.adaptive.lib_app.generated.resources.accountSelf
 import `fun`.adaptive.lib_app.generated.resources.passwordChange
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.button.ButtonTheme
-import `fun`.adaptive.ui.button.button
-import `fun`.adaptive.ui.button.saveFormButton
+import `fun`.adaptive.ui.input.button.button
+import `fun`.adaptive.ui.input.button.saveFormButton
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.input.InputContext
@@ -46,7 +45,7 @@ fun accountEditorSelf(
 
         wsContentHeader(Strings.accountSelf, account.principalId) {
             row {
-                button(Strings.passwordChange, theme = ButtonTheme.noFocus)
+                button(Strings.passwordChange)
                 primaryPopup(popupState) { hide ->
                     PopupTheme.default.inlineEditorPopup .. width { 300.dp }
                     changePasswordPopup(account.principalId !!, hide)

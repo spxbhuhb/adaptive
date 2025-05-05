@@ -3,7 +3,6 @@ package `fun`.adaptive.sandbox
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.sandbox.recipe.demo.goodmorning.goodMorning
 import `fun`.adaptive.sandbox.recipe.demo.markdown.markdownDemoRecipe
-import `fun`.adaptive.sandbox.recipe.ui.button.buttonRecipe
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
@@ -13,6 +12,12 @@ import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.form.formRecipe
 import `fun`.adaptive.sandbox.recipe.ui.icon.iconRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.button.buttonDangerExample
+import `fun`.adaptive.sandbox.recipe.ui.input.button.buttonDisabledExample
+import `fun`.adaptive.sandbox.recipe.ui.input.button.buttonNormalExample
+import `fun`.adaptive.sandbox.recipe.ui.input.button.buttonPlayground
+import `fun`.adaptive.sandbox.recipe.ui.input.button.buttonRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.button.buttonSubmitExample
 import `fun`.adaptive.sandbox.recipe.ui.input.datetime.dateInputRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.number.doubleInputRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.select.*
@@ -78,6 +83,18 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // ----------------------------------------------------------------------------
 
         add("cookbook/form/example/basic", ::formBasicExample)
+
+        // ----------------------------------------------------------------------------
+        // Button
+        // ----------------------------------------------------------------------------
+
+        add("cookbook/input/button/example/normal", ::buttonNormalExample)
+        add("cookbook/input/button/example/disabled", ::buttonDisabledExample)
+        add("cookbook/input/button/example/submit", ::buttonSubmitExample)
+        add("cookbook/input/button/example/danger", ::buttonDangerExample)
+
+        add("cookbook/input/button/playground", ::buttonPlayground)
+        add("cookbook/input/button/recipe", ::buttonRecipe)
 
         // ----------------------------------------------------------------------------
         // Select Input

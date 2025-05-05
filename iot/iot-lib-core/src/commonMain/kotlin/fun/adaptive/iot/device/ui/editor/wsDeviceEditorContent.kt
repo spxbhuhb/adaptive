@@ -15,7 +15,7 @@ import `fun`.adaptive.iot.point.ui.pointSummary
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.input.InputConfig.Companion.inputConfig

@@ -18,7 +18,7 @@ import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.iot.space.ui.localizedSpaceType
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.number.doubleOrNullUnitInput
 import `fun`.adaptive.ui.input.text.textInput

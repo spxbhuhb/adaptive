@@ -57,7 +57,6 @@ val recipes =
 
         set(
             "Basic fragments",
-            CbWsRecipeItem("Button", key = "cookbook:recipe:button"),
             CbWsRecipeItem("Icon", key = "cookbook:recipe:icon"),
             CbWsRecipeItem("SVG", key = "cookbook:recipe:svg"),
             CbWsRecipeItem("Text", key = "cookbook:recipe:text"),
@@ -72,6 +71,7 @@ val recipes =
 
         set(
             "Inputs",
+            CbWsRecipeItem("Button", key = "cookbook/input/button/recipe"),
             CbWsRecipeItem("Checkbox", key = "cookbook:recipe:checkbox"),
             CbWsRecipeItem("Date", key = "cookbook:recipe:input:date"),
             CbWsRecipeItem("Double", key = "cookbook:recipe:input:double"),
