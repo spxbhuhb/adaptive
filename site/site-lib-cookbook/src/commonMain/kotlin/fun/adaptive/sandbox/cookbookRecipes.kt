@@ -83,13 +83,8 @@ val recipes =
         ),
 
         set(
-            "Bound inputs - editors",
-            CbWsRecipeItem("Editor", key = "cookbook:recipe:editor"),
-            CbWsRecipeItem("Form", key = "cookbook:recipe:form")
-        ),
-
-        set(
             "Complex fragments",
+            CbWsRecipeItem("Form", key = "cookbook:recipe:form"),
             CbWsRecipeItem("Canvas", key = "cookbook:recipe:canvas"),
             CbWsRecipeItem("Dialog", key = "cookbook:recipe:dialog"),
             CbWsRecipeItem("Paragraph", key = "cookbook:recipe:paragraph"),

@@ -1,7 +1,5 @@
 package `fun`.adaptive.app.ws.auth.admin.account
 
-import `fun`.adaptive.lib_app.generated.resources.*
-import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.auth.account.AccountEditorData
 import `fun`.adaptive.app.ws.shared.wsContentHeader
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
@@ -11,18 +9,21 @@ import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.button.button
+import `fun`.adaptive.ui.datetime.instant
+import `fun`.adaptive.ui.editor.textEditor
+import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.generated.resources.close
 import `fun`.adaptive.ui.generated.resources.edit
 import `fun`.adaptive.ui.generated.resources.more_vert
 import `fun`.adaptive.ui.generated.resources.notSet
-import `fun`.adaptive.ui.button.button
-import `fun`.adaptive.ui.datetime.instant
-import `fun`.adaptive.ui.editor.editor
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.tableIconTheme
+import `fun`.adaptive.ui.input.InputConfig.Companion.inputConfig
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
@@ -36,7 +37,9 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 @Adaptive
 fun wsAppAccountManager(pane: WsPane<*, AccountManagerController>): AdaptiveFragment {
 
-    val filter = copyOf { AccountFilter() }
+    val filterBackend = valueFrom { adatFormBackend(AccountFilter()) }
+    val filter = filterBackend.inputValue
+
     val items = valueFrom { pane.controller.accounts }
 
     column {
@@ -45,7 +48,10 @@ fun wsAppAccountManager(pane: WsPane<*, AccountManagerController>): AdaptiveFrag
         wsContentHeader(Strings.accounts) {
             row {
                 gap { 16.dp }
-                editor { filter.text } .. width { 200.dp } .. inputPlaceholder { Strings.filter }
+
+                localContext(filterBackend) {
+                    textEditor { filter.text } .. width { 200.dp } .. inputConfig(label = "", placeholder = Strings.filter)
+                }
 
                 row {
                     button(Strings.addAccount)

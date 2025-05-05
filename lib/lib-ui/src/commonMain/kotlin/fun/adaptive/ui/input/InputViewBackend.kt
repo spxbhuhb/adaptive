@@ -6,6 +6,7 @@ import `fun`.adaptive.general.Observable
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.form.FormViewBackend
+import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.input.Secret
 import `fun`.adaptive.ui.instruction.layout.OuterAlignment
 import `fun`.adaptive.ui.instruction.layout.PopupAlign
@@ -57,6 +58,8 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
     var label by observable(label, ::notify)
     open var labelAlignment by observable(PopupAlign.aboveStart, ::notify)
 
+    var placeholder by observable("", ::notify)
+
     var isNullable: Boolean = false
     var onChange: ((VT?) -> Unit)? = null
     var validateFun: ((VT?) -> Boolean)? = null
@@ -81,6 +84,8 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
             else -> if (focus || isPopupOpen) inputTheme.focused else inputTheme.enabled
         }.let {
             if (isSecret) it + Secret() else it
+        }.let {
+            if (placeholder.isNotBlank()) it + InputPlaceholder(placeholder) else it
         }
 
     fun labelThemeInstructions(focus: Boolean) =

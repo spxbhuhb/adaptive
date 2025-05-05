@@ -1,10 +1,5 @@
 package `fun`.adaptive.app.ws.auth.admin.role
 
-import `fun`.adaptive.lib_app.generated.resources.addRole
-import `fun`.adaptive.lib_app.generated.resources.edit
-import `fun`.adaptive.lib_app.generated.resources.filter
-import `fun`.adaptive.lib_app.generated.resources.roles
-import `fun`.adaptive.adat.store.copyOf
 import `fun`.adaptive.app.ws.shared.wsContentHeader
 import `fun`.adaptive.auth.model.RoleSpec
 import `fun`.adaptive.foundation.Adaptive
@@ -13,14 +8,20 @@ import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.lib_app.generated.resources.addRole
+import `fun`.adaptive.lib_app.generated.resources.edit
+import `fun`.adaptive.lib_app.generated.resources.filter
+import `fun`.adaptive.lib_app.generated.resources.roles
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.generated.resources.edit
 import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.checkbox.checkbox
-import `fun`.adaptive.ui.editor.editor
+import `fun`.adaptive.ui.editor.textEditor
+import `fun`.adaptive.ui.form.adatFormBackend
+import `fun`.adaptive.ui.generated.resources.edit
 import `fun`.adaptive.ui.icon.actionIcon
+import `fun`.adaptive.ui.input.InputConfig.Companion.inputConfig
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
@@ -33,7 +34,9 @@ import `fun`.adaptive.value.item.AvItem
 @Adaptive
 fun wsAppRoleManager(pane: WsPane<*, RoleManagerController>): AdaptiveFragment {
 
-    val filter = copyOf { RoleFilter() }
+    val filterBackend = valueFrom { adatFormBackend(RoleFilter()) }
+    val filter = filterBackend.inputValue
+
     val items = valueFrom { pane.controller.roles }
 
     column {
@@ -42,7 +45,7 @@ fun wsAppRoleManager(pane: WsPane<*, RoleManagerController>): AdaptiveFragment {
         wsContentHeader(Strings.roles) {
             row {
                 gap { 16.dp }
-                editor { filter.text } .. width { 200.dp } .. inputPlaceholder { Strings.filter }
+                textEditor { filter.text } .. width { 200.dp } .. inputConfig(label = "", placeholder = Strings.filter)
 
                 row {
                     button(Strings.addRole)

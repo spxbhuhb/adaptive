@@ -23,7 +23,6 @@ object AuiFragmentFactory : FoundationFragmentFactory() {
         add("aui:image") { p, i, s -> AuiImage(p.adapter as AuiAdapter, p, i) }
         add("aui:singlelinetextinput") { p, i, s -> AuiSingleLineTextInput(p.adapter as AuiAdapter, p, i) }
         add("aui:multilinetextinput") { p, i, s -> AuiMultiLineTextInput(p.adapter as AuiAdapter, p, i) }
-        add("aui:boundinput") { p, i, s -> AuiBoundInput(p.adapter as AuiAdapter, p, i) }
         add("aui:row") { p, i, s -> AuiRow(p.adapter as AuiAdapter, p, i) }
         add("aui:text") { p, i, s -> AuiText(p.adapter as AuiAdapter, p, i) }
         add("aui:flowtext") { p, i, s -> AuiFlowText(p.adapter as AuiAdapter, p, i) }

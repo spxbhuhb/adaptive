@@ -8,7 +8,6 @@ import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.dialog.dialogRecipe
-import `fun`.adaptive.sandbox.recipe.ui.editor.editorRecipe
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
@@ -51,7 +50,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:checkbox", ::checkboxRecipe)
         add("cookbook:recipe:codefence", ::codeFenceRecipe)
         add("cookbook:recipe:dialog", ::dialogRecipe)
-        add("cookbook:recipe:editor", ::editorRecipe)
         add("cookbook:recipe:event", ::eventRecipe)
         add("cookbook:recipe:form", ::formRecipe)
         add("cookbook:recipe:grid", ::gridRecipe)

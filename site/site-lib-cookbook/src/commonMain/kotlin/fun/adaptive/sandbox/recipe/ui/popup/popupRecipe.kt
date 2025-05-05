@@ -2,21 +2,29 @@ package `fun`.adaptive.sandbox.recipe.ui.popup/*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.cookbook.generated.resources.hoverForPopup
 import `fun`.adaptive.cookbook.generated.resources.leftClickForPopup
 import `fun`.adaptive.cookbook.generated.resources.popupContent
 import `fun`.adaptive.cookbook.generated.resources.rightClickForPopup
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instructions
+import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.checkbox.checkbox
-import `fun`.adaptive.ui.editor.editor
+import `fun`.adaptive.ui.editor.booleanEditor
+import `fun`.adaptive.ui.editor.doubleEditor
+import `fun`.adaptive.ui.form.AdatFormViewBackend
+import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.layout.PopupAlign
 import `fun`.adaptive.ui.instruction.layout.PopupAlign.Companion.absoluteCenter
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textSmall
@@ -65,60 +73,83 @@ fun popupRecipe(): AdaptiveFragment {
     return fragment()
 }
 
+@Adat
+class PopupPlaygroundConfig(
+    val popupWidth: Double = Double.NaN,
+    val popupHeight: Double = Double.NaN,
+    val maxWidth: Boolean = false,
+    val maxHeight: Boolean = false,
+    val alignment: PopupAlign = popupAlign.aboveBefore
+) {
+    fun toInstructions(): AdaptiveInstructionGroup {
+        return instructionsOf(
+            makeSizeInstructions(popupWidth, popupHeight, maxWidth, maxHeight),
+        )
+    }
+
+    fun makeSizeInstructions(width: Double, height: Double, mw: Boolean, mh: Boolean): AdaptiveInstructionGroup {
+        val out = mutableListOf<AdaptiveInstruction>()
+
+        when {
+            mw -> out += `fun`.adaptive.ui.api.maxWidth
+            ! width.isNaN() -> out += width(width.dp)
+        }
+
+        when {
+            mh -> out += `fun`.adaptive.ui.api.maxHeight
+            ! height.isNaN() -> out += height(height.dp)
+        }
+
+        return AdaptiveInstructionGroup(out)
+    }
+}
+
+fun AdatFormViewBackend<PopupPlaygroundConfig>.setAlignment(alignment: PopupAlign) {
+    inputValue = inputValue.copy(alignment = alignment)
+}
+
 @Adaptive
-fun alignment(
-    vararg instructions: AdaptiveInstruction,
-): AdaptiveFragment {
-    var alignment = popupAlign.aboveBefore
+fun alignment(): AdaptiveFragment {
 
-    var popupWidth = Double.NaN
-    var popupHeight = Double.NaN
-    var maxWidth = false
-    var maxHeight = false
-
-    var popupSize = makeSizeInstructions(popupWidth, popupHeight, maxWidth, maxHeight)
-
+    val formBackend = valueFrom { adatFormBackend(PopupPlaygroundConfig()) }
+    val config = formBackend.inputValue
+    val alignment = config.alignment
+    
     box(instructions()) {
         size(400.dp, 400.dp) .. padding { 8.dp } .. border(colors.onSurfaceFriendly, 8.dp)
 
-        checkbox(alignment == popupAlign.aboveBefore) { alignment = popupAlign.aboveBefore }
-        checkbox(alignment == popupAlign.aboveStart) { alignment = popupAlign.aboveStart } .. marginLeft { 48.dp }
-        checkbox(alignment == popupAlign.aboveCenter) { alignment = popupAlign.aboveCenter } .. alignSelf.topCenter
-        checkbox(alignment == popupAlign.aboveEnd) { alignment = popupAlign.aboveEnd } .. alignSelf.end .. marginRight { 48.dp }
-        checkbox(alignment == popupAlign.aboveAfter) { alignment = popupAlign.aboveAfter } .. alignSelf.end
+        checkbox(alignment == popupAlign.aboveBefore) { formBackend.setAlignment(popupAlign.aboveBefore) }
+        checkbox(alignment == popupAlign.aboveStart) { formBackend.setAlignment(popupAlign.aboveStart) } .. marginLeft { 48.dp }
+        checkbox(alignment == popupAlign.aboveCenter) { formBackend.setAlignment(popupAlign.aboveCenter) } .. alignSelf.topCenter
+        checkbox(alignment == popupAlign.aboveEnd) { formBackend.setAlignment(popupAlign.aboveEnd) } .. alignSelf.end .. marginRight { 48.dp }
+        checkbox(alignment == popupAlign.aboveAfter) { formBackend.setAlignment(popupAlign.aboveAfter) } .. alignSelf.end
 
-        checkbox(alignment == popupAlign.belowBefore) { alignment = popupAlign.belowBefore } .. alignSelf.bottomStart
-        checkbox(alignment == popupAlign.belowStart) { alignment = popupAlign.belowStart } .. alignSelf.bottomStart .. marginLeft { 48.dp }
-        checkbox(alignment == popupAlign.belowCenter) { alignment = popupAlign.belowCenter } .. alignSelf.bottomCenter
-        checkbox(alignment == popupAlign.belowEnd) { alignment = popupAlign.belowEnd } .. alignSelf.bottomEnd .. marginRight { 48.dp }
-        checkbox(alignment == popupAlign.belowAfter) { alignment = popupAlign.belowAfter } .. alignSelf.bottomEnd
+        checkbox(alignment == popupAlign.belowBefore) { formBackend.setAlignment(popupAlign.belowBefore) } .. alignSelf.bottomStart
+        checkbox(alignment == popupAlign.belowStart) { formBackend.setAlignment(popupAlign.belowStart) } .. alignSelf.bottomStart .. marginLeft { 48.dp }
+        checkbox(alignment == popupAlign.belowCenter) { formBackend.setAlignment(popupAlign.belowCenter) } .. alignSelf.bottomCenter
+        checkbox(alignment == popupAlign.belowEnd) { formBackend.setAlignment(popupAlign.belowEnd) } .. alignSelf.bottomEnd .. marginRight { 48.dp }
+        checkbox(alignment == popupAlign.belowAfter) { formBackend.setAlignment(popupAlign.belowAfter) } .. alignSelf.bottomEnd
 
-        checkbox(alignment == popupAlign.beforeTop) { alignment = popupAlign.beforeTop } .. alignSelf.startTop .. marginTop { 48.dp }
-        checkbox(alignment == popupAlign.beforeCenter) { alignment = popupAlign.beforeCenter } .. alignSelf.startCenter
-        checkbox(alignment == popupAlign.beforeBottom) { alignment = popupAlign.beforeBottom } .. alignSelf.startBottom .. marginBottom { 48.dp }
+        checkbox(alignment == popupAlign.beforeTop) { formBackend.setAlignment(popupAlign.beforeTop) } .. alignSelf.startTop .. marginTop { 48.dp }
+        checkbox(alignment == popupAlign.beforeCenter) { formBackend.setAlignment(popupAlign.beforeCenter) } .. alignSelf.startCenter
+        checkbox(alignment == popupAlign.beforeBottom) { formBackend.setAlignment(popupAlign.beforeBottom) } .. alignSelf.startBottom .. marginBottom { 48.dp }
 
-        checkbox(alignment == popupAlign.afterTop) { alignment = popupAlign.afterTop } .. alignSelf.endTop .. marginTop { 48.dp }
-        checkbox(alignment == popupAlign.afterCenter) { alignment = popupAlign.afterCenter } .. alignSelf.endCenter
-        checkbox(alignment == popupAlign.afterBottom) { alignment = popupAlign.afterBottom } .. alignSelf.endBottom .. marginBottom { 48.dp }
+        checkbox(alignment == popupAlign.afterTop) { formBackend.setAlignment(popupAlign.afterTop) } .. alignSelf.endTop .. marginTop { 48.dp }
+        checkbox(alignment == popupAlign.afterCenter) { formBackend.setAlignment(popupAlign.afterCenter) } .. alignSelf.endCenter
+        checkbox(alignment == popupAlign.afterBottom) { formBackend.setAlignment(popupAlign.afterBottom) } .. alignSelf.endBottom .. marginBottom { 48.dp }
 
-        row {
-            position(64.dp, 64.dp) .. gap { 16.dp }
-            column {
-                text("Width") .. textSmall
-                editor { popupWidth } .. width { 96.dp }
-                row {
-                    paddingTop { 8.dp } .. gap { 8.dp } .. alignItems.center
-                    editor { maxWidth }
-                    text("max") .. textSmall
+        localContext(formBackend) {
+            row {
+                position(64.dp, 64.dp) .. gap { 16.dp }
+                column {
+                    width { 96.dp }
+                    doubleEditor { config.popupWidth }
+                    booleanEditor { config.maxWidth }
                 }
-            }
-            column {
-                text("Height") .. textSmall
-                editor { popupHeight } .. width { 96.dp }
-                row {
-                    paddingTop { 8.dp } .. gap { 8.dp } .. alignItems.center
-                    editor { maxHeight }
-                    text("max") .. textSmall
+                column {
+                    width { 96.dp }
+                    doubleEditor { config.popupHeight }
+                    booleanEditor { config.maxHeight }
                 }
             }
         }
@@ -127,7 +158,7 @@ fun alignment(
         text("alignment FLIPS when there is not enough space") .. alignSelf.center .. textSmall .. boldFont .. marginTop { 32.dp }
 
         hoverPopup {
-            popupStyles .. alignment .. popupSize
+            popupStyles .. alignment .. formBackend.inputValue.toInstructions()
 
             // this makes it possible to edit values even when the popup is centered
             // for most popups this might be a bad idea
@@ -138,22 +169,6 @@ fun alignment(
     }
 
     return fragment()
-}
-
-fun makeSizeInstructions(width: Double, height: Double, mw: Boolean, mh: Boolean): AdaptiveInstructionGroup {
-    val out = mutableListOf<AdaptiveInstruction>()
-
-    when {
-        mw -> out += maxWidth
-        ! width.isNaN() -> out += width(width.dp)
-    }
-
-    when {
-        mh -> out += maxHeight
-        ! height.isNaN() -> out += height(height.dp)
-    }
-
-    return AdaptiveInstructionGroup(out)
 }
 
 val popupStyles =
