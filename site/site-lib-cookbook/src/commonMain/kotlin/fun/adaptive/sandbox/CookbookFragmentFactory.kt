@@ -27,7 +27,6 @@ import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneWrapperExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.workspaceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.popup.popupRecipe
-import `fun`.adaptive.sandbox.recipe.ui.select.selectRecipe
 import `fun`.adaptive.sandbox.recipe.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.sandbox.recipe.ui.snackbar.snackbarRecipe
 import `fun`.adaptive.sandbox.recipe.ui.svg.svgRecipe
@@ -57,7 +56,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:markdown:demo", ::markdownDemoRecipe)
         add("cookbook:recipe:paragraph", ::paragraphRecipe)
         add("cookbook:recipe:popup", ::popupRecipe)
-        add("cookbook:recipe:select", ::selectRecipe)
         add("cookbook:recipe:sidebar", ::sideBarRecipe)
         add("cookbook:recipe:snackbar", ::snackbarRecipe)
         add("cookbook:recipe:splitpane", ::splitPaneRecipe)
