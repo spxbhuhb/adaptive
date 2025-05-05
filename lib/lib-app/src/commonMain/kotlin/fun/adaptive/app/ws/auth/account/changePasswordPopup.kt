@@ -74,8 +74,8 @@ fun changePasswordPopup(
 
                 service.addCredential(
                     principalId,
-                    Credential(CredentialType.PASSWORD, form.value.newPassword, now()),
-                    Credential(CredentialType.PASSWORD, form.value.currentPassword, now())
+                    Credential(CredentialType.PASSWORD, form.inputValue.newPassword, now()),
+                    Credential(CredentialType.PASSWORD, form.inputValue.currentPassword, now())
                 )
 
                 successNotification(Strings.saveSuccess)

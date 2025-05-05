@@ -9,6 +9,7 @@ import `fun`.adaptive.adat.api.validate
 import `fun`.adaptive.adat.descriptor.InstanceValidationResult
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.ui.input.InputViewBackend
@@ -17,15 +18,19 @@ import kotlin.reflect.KProperty0
 class AdatFormViewBackend<T : AdatClass>(
     initialValue: T,
     var validateFun: AdatFormViewBackend<T>.(it: T) -> Unit = { }
-) : FormViewBackend(), Observable<T> {
+) : FormViewBackend(), Observable<AdatFormViewBackend<T>> {
 
-    override var value: T = initialValue
+    var inputValue: T = initialValue
         set(value) {
             field = value
             notifyListeners()
         }
 
-    override val listeners = mutableListOf<ObservableListener<T>>()
+    override var value: AdatFormViewBackend<T>
+        get() = this
+        set(_) = unsupported()
+
+    override val listeners = mutableListOf<ObservableListener<AdatFormViewBackend<T>>>()
 
     val specificValidationFails = mutableListOf<PropertyPath>()
     var descriptorValidationResult = InstanceValidationResult()
@@ -33,7 +38,7 @@ class AdatFormViewBackend<T : AdatClass>(
 
     init {
         // Initialize `failPaths` so `backendFor` can set `isInConstraintError` if needed.
-        validate(value)
+        validate(inputValue)
     }
 
     override fun <T, BT : InputViewBackend<T, BT>> backendFor(
@@ -45,16 +50,16 @@ class AdatFormViewBackend<T : AdatClass>(
         }
     }
 
-    override fun getProperty(companion : AdatCompanion<*>, path : List<String>) =
-        companion.adatMetadata.getPropertyMetadataOrNull(path, instance = value)
+    override fun getProperty(companion: AdatCompanion<*>, path: List<String>) =
+        companion.adatMetadata.getPropertyMetadataOrNull(path, instance = inputValue)
 
     override fun <T> getValue(binding: AdaptiveStateVariableBinding<T>, property: AdatPropertyMetadata): T {
         @Suppress("UNCHECKED_CAST")
-        return (value.getValue(binding.path!!) as T)
+        return (inputValue.getValue(binding.path !!) as T)
     }
 
     override fun onInputValueChange(inputBackend: InputViewBackend<*, *>) {
-        val newValue = value.deepCopy(AdatChange(inputBackend.path, inputBackend.inputValue))
+        val newValue = inputValue.deepCopy(AdatChange(inputBackend.path, inputBackend.inputValue))
 
         validate(newValue)
 
@@ -66,7 +71,7 @@ class AdatFormViewBackend<T : AdatClass>(
             }
         }
 
-        value = newValue
+        inputValue = newValue
     }
 
     fun validate(newValue: T) {
@@ -112,8 +117,18 @@ class AdatFormViewBackend<T : AdatClass>(
         }
     }
 
+    fun isValid(touchAll: Boolean = true) = ! isInvalid(touchAll)
+
     fun isInvalid(touchAll: Boolean = true): Boolean {
-        val valid = specificValidationFails.isEmpty() && descriptorValidationResult.isValid
+
+        var inputError = false
+
+        for (backend in inputBackends) {
+            if (backend.isInvalid) inputError = true
+        }
+
+        val valid = ! inputError && specificValidationFails.isEmpty() && descriptorValidationResult.isValid
+
         if (touchAll) {
             inputBackends.forEach {
                 it.isTouched = true

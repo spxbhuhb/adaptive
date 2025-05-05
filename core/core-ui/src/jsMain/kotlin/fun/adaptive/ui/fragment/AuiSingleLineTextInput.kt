@@ -67,10 +67,7 @@ open class AuiSingleLineTextInput(
         if (isInit) {
             receiver.addEventListener("input", {
                 if (receiver.value != value) {
-                    if (validate?.invoke(value, receiver.value) == false) {
-                        receiver.value = value ?: ""
-                    } else {
-                        value = receiver.value
+                    if (validate?.invoke(value, receiver.value) != false) {
                         onChange(receiver.value)
                     }
                 }

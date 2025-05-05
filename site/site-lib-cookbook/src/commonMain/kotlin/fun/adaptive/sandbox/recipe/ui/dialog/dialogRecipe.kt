@@ -23,15 +23,15 @@ import `fun`.adaptive.ui.button.button
 import `fun`.adaptive.ui.dialog.buttonDialog
 import `fun`.adaptive.ui.dialog.deprecatedDialog
 import `fun`.adaptive.ui.dialog.iconDialog
-import `fun`.adaptive.ui.editor.editor
+import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.textColors
 
 @Adaptive
-fun dialogRecipe() : AdaptiveFragment {
+fun dialogRecipe(): AdaptiveFragment {
 
     column {
-        gap { 16.dp } 
+        gap { 16.dp }
 
         dialogBasic()
 
@@ -78,13 +78,11 @@ private fun dialogBasic() {
 
 @Adaptive
 private fun dialogContent(close: () -> Unit) {
-    var data = ""
-
     grid {
         colTemplate(200.dp, 400.dp) .. rowTemplate(44.dp, 100.dp) .. padding { 32.dp }
 
         text("Data:") .. alignSelf.startCenter
-        editor { data }
+        textInput("") {  }
 
         button("Save", Graphics.check) .. gridCol(2) .. alignSelf.endBottom ..
             onClick {

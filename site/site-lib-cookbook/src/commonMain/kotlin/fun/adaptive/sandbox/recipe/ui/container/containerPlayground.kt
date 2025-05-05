@@ -10,7 +10,6 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
-import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.sandbox.support.configureForm
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.editor.colorEditor
@@ -28,12 +27,11 @@ import `fun`.adaptive.ui.theme.colors
 fun containerPlayground(): AdaptiveFragment {
 
     val form = adatFormBackend(PlaygroundConfig())
-    val config = valueFrom { form }
 
     flowBox {
         gap { 16.dp }
         containerPlaygroundForm(form)
-        containerPlaygroundResult(config)
+        containerPlaygroundResult(form.inputValue)
     }
 
     return fragment()

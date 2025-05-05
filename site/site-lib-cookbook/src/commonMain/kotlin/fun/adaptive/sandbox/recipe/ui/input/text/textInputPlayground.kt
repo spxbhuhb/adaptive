@@ -18,13 +18,12 @@ import `fun`.adaptive.ui.instruction.dp
 @Adaptive
 fun textInputPlayground(): AdaptiveFragment {
 
-    val form = adatFormBackend(TextPlaygroundConfig())
-    val config = valueFrom { form }
+    val form = valueFrom { adatFormBackend(TextPlaygroundConfig()) }
 
     flowBox {
         gap { 16.dp }
         textInputPlaygroundForm(form)
-        textInputPlaygroundResult(config)
+        textInputPlaygroundResult(form.inputValue)
     }
 
     return fragment()

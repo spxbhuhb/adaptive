@@ -107,6 +107,10 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
             formBackend?.onInputValueChange(this)
         }
 
+        if (property.name == ::isInConversionError.name) {
+            formBackend?.onInputValueChange(this)
+        }
+
         super.notify(property, oldValue, newValue)
     }
 

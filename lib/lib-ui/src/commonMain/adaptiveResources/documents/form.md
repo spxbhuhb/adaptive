@@ -2,10 +2,20 @@
 
 You can build forms with standalone inputs or with editors.
 
-Standalone input based forms may be useful in special situations, check the documentation
-of inputs about them.
+---
 
-Editor based forms offer an easy way to create a from for an Adat class:
+## Hard-coded examples
+
+[Basic form example](actualize:///cookbook/form/example/basic)
+
+---
+
+## Details
+
+Standalone input-based forms may be useful in special situations, check [Input](input.md)
+for more information about them.
+
+Editor-based forms offer an easy way to create a from for an Adat class:
 
 ```kotlin
 @Adaptive
@@ -75,6 +85,13 @@ returns with the first string with the proper key.
 
 If there is no such key, the label will be the name of the property.
 
+>
+> [!NOTE]
+>
+> This mechanism does not take the module into account. I'll have to clarify this
+> later, but it's fine for now.
+>
+
 ### Set a label manually
 
 Use the `editorLabel` instruction:
@@ -83,9 +100,25 @@ Use the `editorLabel` instruction:
 doubleEditor { template.layout.top } .. width { 56.dp } .. editorLabel("TOP")
 ```
 
-> 
-> [!NOTE]
-> 
-> This mechanism does not take the module into account. I'll have to clarify this 
-> later, but it's fine for now.
-> 
+### Check data validity
+
+Use the `isValid` or the `isInvalid` function of the form backend:
+
+```kotlin
+button("Save") .. onClick {
+    if (form.isInvalid()) {
+        warningNotification("Form is not valid!")
+        return@onClick
+    }
+    infoNotification("Saved!")
+}
+```
+
+`isValid` and `isInvalid`:
+
+- checks:
+  - `Adat` class constraints
+  - editor input error (for example, text in a number input)
+- both have a parameter `touchAll` with default `true`
+- `touchAll` decorates all invalid fields
+- see [Input](input.md) for more details about validation and `touchAll`

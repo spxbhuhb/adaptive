@@ -37,6 +37,7 @@ fun booleanInput(
 
             onKeydown { event ->
                 if (event.keyInfo?.key == Keys.SPACE) {
+                    event.preventDefault()
                     observed.inputValue = (observed.inputValue != true)
                 }
             }

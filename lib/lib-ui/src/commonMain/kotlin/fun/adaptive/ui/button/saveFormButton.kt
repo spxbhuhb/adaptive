@@ -27,7 +27,7 @@ fun <T : AdatClass> saveFormButton(
                 warningNotification(Strings.invalidFields)
             }
         } else {
-            saveFun(form.value)
+            saveFun(form.inputValue)
         }
     }
     return fragment()

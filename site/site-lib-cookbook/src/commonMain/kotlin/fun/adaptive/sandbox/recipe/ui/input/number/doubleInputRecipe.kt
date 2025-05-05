@@ -1,6 +1,5 @@
 package `fun`.adaptive.sandbox.recipe.ui.input.number
 
-import `fun`.adaptive.cookbook.generated.resources.double_input
 import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.document.ui.direct.hr
@@ -10,6 +9,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.resource.document.Documents
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.generated.resources.double_input
 import `fun`.adaptive.ui.input.number.doubleInput
 import `fun`.adaptive.ui.input.number.doubleOrNullInput
 import `fun`.adaptive.ui.input.number.doubleOrNullUnitInput

@@ -1,5 +1,6 @@
 package `fun`.adaptive.sandbox
 
+import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.sandbox.recipe.demo.goodmorning.goodMorning
 import `fun`.adaptive.sandbox.recipe.demo.markdown.markdownDemoRecipe
 import `fun`.adaptive.sandbox.recipe.ui.button.buttonRecipe
@@ -10,17 +11,22 @@ import `fun`.adaptive.sandbox.recipe.ui.dialog.dialogRecipe
 import `fun`.adaptive.sandbox.recipe.ui.editor.editorRecipe
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
+import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.form.formRecipe
 import `fun`.adaptive.sandbox.recipe.ui.icon.iconRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.datetime.dateInputRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.number.doubleInputRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.select.*
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputPlayground
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.box.boxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.grid.gridRecipe
+import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneRecipe
-import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.workspaceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneWrapperExample
+import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.workspaceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.popup.popupRecipe
 import `fun`.adaptive.sandbox.recipe.ui.select.selectRecipe
 import `fun`.adaptive.sandbox.recipe.ui.sidebar.sideBarRecipe
@@ -30,16 +36,6 @@ import `fun`.adaptive.sandbox.recipe.ui.tab.tabRecipe
 import `fun`.adaptive.sandbox.recipe.ui.text.paragraphRecipe
 import `fun`.adaptive.sandbox.recipe.ui.text.textRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeRecipe
-import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputCheckboxExample
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputDropdownExample
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputIconAndTextExample
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputRecipe
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputTextExample
-import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputPlayground
-import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
-import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalExample
 
 object CookbookFragmentFactory : FoundationFragmentFactory() {
     init {
@@ -80,6 +76,12 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
 
         add("cookbook/example/split-pane-proportional", ::splitPaneProportionalExample)
         add("cookbook/example/split-pane-wrapper", ::splitPaneWrapperExample)
+
+        // ----------------------------------------------------------------------------
+        // Form
+        // ----------------------------------------------------------------------------
+
+        add("cookbook/form/example/basic", ::formBasicExample)
 
         // ----------------------------------------------------------------------------
         // Select Input

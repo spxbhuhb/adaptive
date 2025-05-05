@@ -32,7 +32,6 @@ import `fun`.adaptive.ui.platform.input.findActualInputValue
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.textColors
-import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.utility.debug
 import kotlinx.coroutines.launch
@@ -83,9 +82,9 @@ fun wsAppSignIn(@Suppress("unused") pane: WsPane<*, *>): AdaptiveFragment {
                         // event, see https://stackoverflow.com/questions/35049555/chrome-autofill-autocomplete-no-value-for-password
 
                         val actualSignIn = BasicSignIn(
-                            form.value.accountName,
+                            form.inputValue.accountName,
                             findActualInputValue(signInFragment, "signInPassword"),
-                            form.value.remember
+                            form.inputValue.remember
                         )
 
                         adapter().scope.launch {

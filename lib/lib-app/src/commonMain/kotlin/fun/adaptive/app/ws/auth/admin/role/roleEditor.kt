@@ -29,7 +29,7 @@ fun roleEditor(
     @Independent
     val form = adatFormBackend(role ?: template)
 
-    modalForEdit(title, hide, { save(form.value); hide() }) {
+    modalForEdit(title, hide, { save(form.inputValue); hide() }) {
         column {
             width { 400.dp } .. padding { 16.dp } .. gap { 8.dp } .. borderRight(colors.lightOutline)
 

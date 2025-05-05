@@ -25,6 +25,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
+import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
@@ -149,7 +150,8 @@ fun sandboxMain() {
                 column {
                     maxSize .. padding { 16.dp } .. gap { 16.dp }//.. backgrounds.friendlyOpaque
                     //containerPlayground()
-                    selectInputPlayground()
+                    //selectInputPlayground()
+                    formBasicExample()
                 }
             }
         } catch (ex: Exception) {

@@ -34,13 +34,12 @@ import kotlin.math.min
 @Adaptive
 fun selectInputPlayground(): AdaptiveFragment {
 
-    val form = adatFormBackend(SelectPlaygroundConfig())
-    val config = valueFrom { form }
+    val form = valueFrom { adatFormBackend(SelectPlaygroundConfig()) }
 
     flowBox {
         gap { 16.dp }
         selectInputPlaygroundForm(form)
-        selectInputPlaygroundResult(config)
+        selectInputPlaygroundResult(form.inputValue)
     }
 
     return fragment()
