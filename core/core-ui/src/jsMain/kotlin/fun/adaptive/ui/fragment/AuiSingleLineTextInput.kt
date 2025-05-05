@@ -31,9 +31,6 @@ open class AuiSingleLineTextInput(
     private var value: String?
         by stateVariable()
 
-    private val validate: ((String?,String) -> Boolean)?
-        by stateVariable()
-
     private val onChange: (String) -> Unit
         by stateVariable()
 
@@ -65,13 +62,7 @@ open class AuiSingleLineTextInput(
         }
 
         if (isInit) {
-            receiver.addEventListener("input", {
-                if (receiver.value != value) {
-                    if (validate?.invoke(value, receiver.value) != false) {
-                        onChange(receiver.value)
-                    }
-                }
-            })
+            receiver.addEventListener("input", { onChange(receiver.value) })
         }
     }
 

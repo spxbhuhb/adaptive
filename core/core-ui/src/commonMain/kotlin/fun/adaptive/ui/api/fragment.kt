@@ -20,10 +20,9 @@ fun image(res: ImageResourceSet, vararg instructions: AdaptiveInstruction): Adap
 @AdaptiveExpect(aui)
 fun singleLineTextInput(
     value: String?,
-    validate: ((currentValue : String?, inputValue: String) -> Boolean)? = null,
-    onChange: (newValue: String) -> Unit,
+    onChange: (newValue: String) -> Unit
 ): AdaptiveFragment {
-    manualImplementation(value, validate, onChange)
+    manualImplementation(value, onChange)
 }
 
 @AdaptiveExpect(aui)
