@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.onKeydown
+import `fun`.adaptive.ui.api.onMove
 import `fun`.adaptive.ui.input.decoratedInput
 
 @Adaptive
@@ -25,6 +26,7 @@ fun <IT, OT> selectInputList(
         column(instructions()) {
             observed.optionListContainerInstructions(focus)
 
+            onMove { observed.onPointerMove() }
             onKeydown { event -> observed.onListKeydown(event) }
 
             for (item in observed.items) {

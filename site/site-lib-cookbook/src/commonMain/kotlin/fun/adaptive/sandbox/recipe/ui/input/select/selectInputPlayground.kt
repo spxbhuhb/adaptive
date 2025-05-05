@@ -29,6 +29,7 @@ import `fun`.adaptive.ui.input.select.selectInputList
 import `fun`.adaptive.ui.input.select.selectInputBackend
 import `fun`.adaptive.ui.input.select.selectInputDropdown
 import `fun`.adaptive.ui.instruction.dp
+import kotlin.math.min
 
 @Adaptive
 fun selectInputPlayground(): AdaptiveFragment {
@@ -59,6 +60,7 @@ class SelectPlaygroundConfig(
     val dataset: String = datasets.first(),
     val itemRenderer: String = itemRenderers.first(),
     val optionCount: Int = 30,
+    val selectItem: Int? = null,
     val label: String? = null,
     val isInConstraintError: Boolean = false,
     val isDisabled: Boolean = false,
@@ -107,6 +109,12 @@ fun selectInputPlaygroundForm(
 
                 selectEditorList(itemRenderers, { selectInputOptionCheckbox(it) }) { template.itemRenderer } .. width { 256.dp }
             }
+
+            column {
+                gap { 8.dp } .. width { 120.dp }
+                intEditor { template.selectItem }
+                markdownHint("pre-select the item with this index")
+            }
         }
     }
 
@@ -122,7 +130,9 @@ fun selectInputPlaygroundResult(config: SelectPlaygroundConfig) {
         else -> emptyList()
     }
 
-    val backend = selectInputBackend<Option> {
+    val selectedItem = config.selectItem?.let { effectiveOptions[min(it, effectiveOptions.size - 1)] }
+
+    val backend = selectInputBackend(selectedItem) {
         options = effectiveOptions
         disabled = config.isDisabled
         label = config.label

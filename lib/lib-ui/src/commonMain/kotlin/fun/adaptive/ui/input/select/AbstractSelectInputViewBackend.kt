@@ -16,6 +16,7 @@ import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.Keys
 import `fun`.adaptive.ui.instruction.event.UIEvent
+import `fun`.adaptive.ui.instruction.layout.Alignment
 import kotlin.properties.Delegates.observable
 import kotlin.reflect.KProperty
 
@@ -43,6 +44,20 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
     val selectedItems = mutableSetOf<SelectItem>()
     val selectedValues = mutableSetOf<IVT>()
 
+    /**
+     * Dropdown open, initial list display and keyboard navigation uses [scrollAlignment]
+     * to position the selected item correctly and with a good user experience.
+     * When opening, the selected item should be centered, when using up/down keys, it
+     * should be scrolled into view from top/bottom.
+     */
+    var scrollAlignment = Alignment.Center
+
+    /**
+     * When the user uses keyboard navigation, the hover background should be hidden.
+     * When the mouse moves, the hover background should be shown.
+     */
+    var showHover by observable(true, ::notify)
+
     fun toggle(item: SelectItem, closeAfter: Boolean = true) {
         if (isDisabled) return
 
@@ -50,7 +65,7 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
         val oldValue = selectedItems.map { it.itemValue }.toSet()
 
         if (itemValue in selectedValues) {
-            if (isNullable) {
+            if (isNullable || isMultiSelect) {
                 selectedValues -= itemValue
                 selectedItems -= item
                 item.isSelected = false
@@ -68,6 +83,10 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
 
         if (withDropdown && closeAfter && isPopupOpen) {
             hidePopup?.invoke()
+        }
+
+        if (!showHover) { // switch off hover when keyboard navigation is used
+            items.forEach { if (it.isHovered) it.notifyListeners() }
         }
 
         updateInputValue(oldValue)
@@ -94,7 +113,7 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
     fun optionContainerInstructions(item: SelectItem, hover: Boolean): AdaptiveInstruction =
         when {
             item.isSelected -> selectInputTheme.optionContainerSelected
-            hover -> selectInputTheme.optionContainerHover
+            showHover && hover -> selectInputTheme.optionContainerHover
             else -> selectInputTheme.optionContainerBase
         }
 
@@ -110,6 +129,15 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
 
         var option: OT by observable(option, ::notify)
         var isSelected: Boolean by observable(selected, ::notify)
+
+        /**
+         * True when the pointer hovers over the item, false otherwise. Items set this
+         * to support switching off the hover whenever keyboard navigation is used.
+         */
+        var isHovered: Boolean = false
+
+        val scrollAlignment: Alignment
+            get() = this@AbstractSelectInputViewBackend.scrollAlignment
 
         fun optionContainerInstructions(hover: Boolean) = optionContainerInstructions(this, hover)
         fun optionIconInstructions() = selectInputTheme.optionIcon
@@ -142,6 +170,9 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
                 }
             }
         }
+        if (property.name == ::isPopupOpen.name) {
+            if (oldValue == false && newValue == true) scrollAlignment = Alignment.Center
+        }
         super.notify(property, oldValue, newValue)
     }
 
@@ -156,15 +187,22 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
 
                 if (items.isEmpty()) return
 
+                scrollAlignment = Alignment.Start
+                showHover = false
+
                 if (index > 0) {
                     toggle(items[index - 1], closeAfter = false)
                 } else {
                     toggle(items.last(), closeAfter = false)
                 }
+
             }
 
             Keys.ARROW_DOWN -> {
                 event.preventDefault()
+
+                scrollAlignment = Alignment.End
+                showHover = false
 
                 if (index == - 1 && items.isNotEmpty()) {
                     toggle(items.first(), closeAfter = false)
@@ -183,6 +221,12 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
             }
         }
 
+    }
+
+    fun onPointerMove() {
+        if (! showHover) {
+            showHover = true
+        }
     }
 
     fun onDropdownSelectedKeydown(event: UIEvent) {

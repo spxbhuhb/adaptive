@@ -140,3 +140,8 @@ fun splitPane(
 fun paragraph(paragraph: Paragraph): AdaptiveFragment {
     manualImplementation(paragraph)
 }
+
+@AdaptiveExpect(aui)
+fun afterPatchBatch(once : Boolean = true, task: (declaringFragment : AdaptiveFragment) -> Unit) {
+    manualImplementation(once, task)
+}

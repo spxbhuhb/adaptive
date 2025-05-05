@@ -13,6 +13,7 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.support.scroll.scrollIntoView
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.utility.localDate
 import kotlinx.datetime.*
@@ -207,6 +208,10 @@ private fun listRow(label: String, theme: DatetimeTheme, selected: Boolean, onSe
         }
 
         text(label) .. theme.listItemText(hover, selected)
+    }
+
+    if (selected) {
+        afterPatchBatch { scrollIntoView(it) }
     }
 
     return fragment()

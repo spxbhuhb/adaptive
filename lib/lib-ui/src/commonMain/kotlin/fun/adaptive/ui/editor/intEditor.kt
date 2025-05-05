@@ -15,7 +15,7 @@ fun intEditor(
     binding: AdaptiveStateVariableBinding<Int>? = null,
     @Suppress("unused")
     @PropertySelector
-    selector: () -> Int,
+    selector: () -> Int?,
 ) : AdaptiveFragment {
     intInput(
         fragment().viewBackendFor(binding) { value, label, isSecret ->

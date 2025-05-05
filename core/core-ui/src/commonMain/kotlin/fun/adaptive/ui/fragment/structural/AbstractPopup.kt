@@ -55,7 +55,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
         get() = positioningRenderData?.finalHeight
 
     open val positioningAbsolutePosition: RawPosition?
-        get() = renderData.layoutFragment?.absolutePosition
+        get() = renderData.layoutFragment?.absoluteViewportPosition
 
     open val positioningRawFrame: RawFrame?
         get() = positioningRenderData?.rawFrame

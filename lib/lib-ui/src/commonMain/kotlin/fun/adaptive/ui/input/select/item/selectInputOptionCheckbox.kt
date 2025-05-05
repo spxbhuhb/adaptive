@@ -7,6 +7,7 @@ import `fun`.adaptive.ui.checkbox.CheckboxTheme
 import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.input.select.AbstractSelectInputViewBackend
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.support.scroll.scrollIntoView
 
 @Adaptive
 fun <OT> selectInputOptionCheckbox(
@@ -14,6 +15,7 @@ fun <OT> selectInputOptionCheckbox(
 ) {
     val hover = hover()
     val observed = valueFrom { item }
+    if (hover) item.isHovered = hover
 
     row {
         observed.optionContainerInstructions(hover)
@@ -24,5 +26,9 @@ fun <OT> selectInputOptionCheckbox(
             checkbox(observed.isSelected, theme = CheckboxTheme.small) {  }
         }
         text(observed) .. observed.optionTextInstructions()
+    }
+
+    if (observed.isSelected) {
+        afterPatchBatch { scrollIntoView(it, item.scrollAlignment) }
     }
 }

@@ -31,21 +31,34 @@ a list of options or something like a choice-group, etc.
 
 **standalone**
 
-* `selectInputList`
 * `selectInputDropdown`
-* `multiSelectInput`
+* `selectInputList`
+* `multiSelectInputList`
 
 **editor**
 
-* `selectEditorList`
 * `selectEditorDropdown`
-* `multiSelectEditor`
+* `selectEditorList`
+* `multiSelectEditorList`
 
 **mapping editor**
 
-* `selectMappingEditorList`
 * `selectMappingEditorDropdown`
-* `multiSelectMappingEditor`
+* `selectMappingEditorList`
+* `multiSelectMappingEditorList`
+
+### Keyboard navigation
+
+All single-select variants:
+
+- `Up` selects previous item (wraps to first if at last)
+- `Down` selects next item (wraps to last if at first)
+
+Dropdown variant:
+
+- `Down` opens the dropdown if closed
+- `Escape` closes the dropdown
+- `Enter` closes the dropdown
 
 ### Mapping
 
@@ -54,7 +67,7 @@ The mapping variants let you:
 * use different types for the option list and th select value,
 * provide a mapping function between the two
 
-This is very useful in many cases, for example, when you have a list of instances and the value
+This is handy in many cases, for example, when you have a list of instances and the value
 is a set of uuids of those instances.
 
 ### Option renderers
@@ -87,7 +100,7 @@ Select follows the standard input concept, the state is stored in (depending on 
 - `SingleSelectInputViewBackend`
 - `MultiSelectInputViewBackend`
 
-For standalone selects, create the backend with one of:
+For standalone select, create the backend with one of:
 
 - `selectInputBackend`
 - `multiSelectInputBackend`
@@ -107,7 +120,7 @@ val backend = multiSelectInputBackend<String> {
     toText = { it }
 }
 
-multiSelectInput(backend, ::selectInputItemCheckbox)
+multiSelectInputList(backend, ::selectInputItemCheckbox)
 ```
 
 ### Editor
@@ -117,9 +130,9 @@ selectEditorList(options, ::selectInputItemCheckbox) { template.selectedOption }
 
 selectMappingEditorList(options, { it.uuid }, ::selectInputItemCheckbox) { template.selectedOption }
 
-multiSelectEditor(options, ::selectInputItemCheckbox) { template.selectedOption }
+multiSelectEditorList(options, ::selectInputItemCheckbox) { template.selectedOption }
 
-multiSelectMappingEditor(options, { it.uuid }, ::selectInputItemCheckbox) { template.selectedOption }
+multiSelectMappingEditorList(options, { it.uuid }, ::selectInputItemCheckbox) { template.selectedOption }
 ```
 
 You can check the recipe in the cookbook for more detailed examples.

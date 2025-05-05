@@ -10,10 +10,10 @@ import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
 import `fun`.adaptive.ui.input.select.AbstractSelectInputViewBackend
 import `fun`.adaptive.ui.input.select.MultiSelectInputViewBackend
 import `fun`.adaptive.ui.input.select.mapping.IdentityMapping
-import `fun`.adaptive.ui.input.select.multiSelectInput
+import `fun`.adaptive.ui.input.select.multiSelectInputList
 
 @Adaptive
-fun <T> multiSelectEditor(
+fun <T> multiSelectEditorList(
     options : List<T>,
     @Adaptive
     _fixme_itemFun : (AbstractSelectInputViewBackend<Set<T>,T,T>.SelectItem) -> Unit,
@@ -23,7 +23,7 @@ fun <T> multiSelectEditor(
     selector: () -> Set<T>?
 ) : AdaptiveFragment {
 
-    multiSelectInput(
+    multiSelectInputList(
         fragment().viewBackendFor(binding) { value, label, isSecret ->
             MultiSelectInputViewBackend(value, IdentityMapping(), label, isSecret).also {
                 it.withSurfaceContainer = true

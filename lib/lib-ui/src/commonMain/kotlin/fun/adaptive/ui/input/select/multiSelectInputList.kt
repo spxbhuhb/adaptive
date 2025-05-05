@@ -8,10 +8,11 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.onKeydown
+import `fun`.adaptive.ui.api.onMove
 import `fun`.adaptive.ui.input.decoratedInput
 
 @Adaptive
-fun <IT,OT> multiSelectInput(
+fun <IT,OT> multiSelectInputList(
     viewBackend: MultiSelectInputViewBackend<IT,OT>,
     @Adaptive
     _fixme_option: (option: AbstractSelectInputViewBackend<Set<IT>,IT,OT>.SelectItem) -> Unit
@@ -23,6 +24,7 @@ fun <IT,OT> multiSelectInput(
         column(instructions()) {
             viewBackend.optionListContainerInstructions(focus)
 
+            onMove { observed.onPointerMove() }
             onKeydown { event -> viewBackend.onListKeydown(event) }
 
             for (item in observed.items) {

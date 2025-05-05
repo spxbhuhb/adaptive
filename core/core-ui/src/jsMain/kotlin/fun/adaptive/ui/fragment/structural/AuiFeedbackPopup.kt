@@ -27,7 +27,7 @@ class AuiFeedbackPopup(
 
     override val positioningFinalWidth: Double = positioningRenderData.finalWidth
     override val positioningFinalHeight: Double = positioningRenderData.finalHeight
-    override val positioningAbsolutePosition: RawPosition = parentLayout.absolutePosition
+    override val positioningAbsolutePosition: RawPosition = parentLayout.absoluteViewportPosition
     override val positioningRawFrame: RawFrame = positioningRenderData.rawFrame
 
     override val content: BoundFragmentFactory

@@ -57,6 +57,7 @@ fun <IT, OT> selectInputDropdown(
                     column {
                         theme.dropdownOptionsContainer .. SizeStrategy(horizontalBase = SizeBase.Content, minWidth = 300.dp)
 
+                        onMove { observed.onPointerMove() }
                         onKeydown { event -> observed.onListKeydown(event, hide) }
 
                         for (item in observed.items) {

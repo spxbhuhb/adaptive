@@ -14,6 +14,7 @@ import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
+import `fun`.adaptive.ui.instruction.layout.Alignment
 import `fun`.adaptive.ui.platform.NavSupport
 import `fun`.adaptive.ui.platform.ResizeObserver
 import `fun`.adaptive.ui.platform.applyCustomScrollBar
@@ -171,9 +172,6 @@ class AuiAdapter(
     override fun toPx(sPixel: SPixel): Double =
         sPixel.value
 
-    val SPixel.pxs
-        get() = "${value}px"
-
     // ------------------------------------------------------------------------------
     // Media metrics support
     // ------------------------------------------------------------------------------
@@ -217,15 +215,61 @@ class AuiAdapter(
     // Scroll support
     // ------------------------------------------------------------------------------
 
-    override fun scrollPosition(fragment: AbstractAuiFragment<HTMLElement>) : RawPosition {
-        val receiver = fragment.receiver
+    override fun scrollPosition(fragment: AdaptiveFragment): RawPosition? {
+        val receiver = expectUiFragment<HTMLElement>(fragment)?.receiver ?: return null
         return RawPosition(receiver.scrollTop, receiver.scrollLeft)
     }
 
-    override fun scrollTo(fragment: AbstractAuiFragment<HTMLElement>, position: RawPosition) {
-        val receiver = fragment.receiver
+    override fun scrollTo(fragment: AdaptiveFragment, position: RawPosition) {
+        val receiver = expectUiFragment<HTMLElement>(fragment)?.receiver ?: return
         receiver.scrollTo(position.top, position.left)
     }
+
+    override fun scrollIntoView(fragment: AdaptiveFragment, alignment: Alignment) {
+        val fragment = expectUiFragment<HTMLElement>(fragment) ?: return
+
+        val (layoutContainer, position) = scrollState(fragment)
+        if (position == null) return
+
+        val layoutRenderData = layoutContainer?.renderData ?: return
+        val viewportWidth = layoutRenderData.finalWidth
+        val viewportHeight = layoutRenderData.finalHeight
+
+        val layoutScrollPosition = scrollPosition(layoutContainer) ?: RawPosition(0.0, 0.0)
+
+        val elementWidth = fragment.renderData.finalWidth
+        val elementHeight = fragment.renderData.finalHeight
+
+        val top = position.top
+        val left = position.left
+
+        val isVerticallyVisible = top >= layoutScrollPosition.top &&
+            (top + elementHeight) <= (layoutScrollPosition.top + viewportHeight)
+        val isHorizontallyVisible = left >= layoutScrollPosition.left &&
+            (left + elementWidth) <= (layoutScrollPosition.left + viewportWidth)
+
+        if (! isVerticallyVisible || ! isHorizontallyVisible) {
+
+            val targetTop = if (elementHeight > viewportHeight) {
+                top
+            } else {
+                when (alignment) {
+                    Alignment.Start -> top - layoutRenderData.surroundingVertical
+                    Alignment.Center -> top + elementHeight / 2 - viewportHeight / 2
+                    Alignment.End -> top + elementHeight - viewportHeight + layoutRenderData.surroundingVertical
+                }
+            }
+
+            val targetLeft = if (elementWidth <= viewportWidth) {
+                left + elementWidth / 2 - viewportWidth / 2
+            } else {
+                left
+            }
+
+            layoutContainer.receiver.scrollTo(targetLeft, targetTop)
+        }
+    }
+
 
     // ------------------------------------------------------------------------------
     // Nav Support

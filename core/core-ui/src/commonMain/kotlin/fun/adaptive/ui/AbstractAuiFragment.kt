@@ -68,7 +68,7 @@ abstract class AbstractAuiFragment<RT>(
      * root fragment. Traverses up on layout parents and summarises
      * the positions.
      */
-    val absolutePosition: RawPosition
+    val absoluteViewportPosition: RawPosition
         get() {
             var top = renderData.finalTop
             var left = renderData.finalLeft
@@ -77,7 +77,7 @@ abstract class AbstractAuiFragment<RT>(
 
             while (currentContainer != null) {
                 val currentRenderData = currentContainer.renderData
-                val scrollPosition = uiAdapter.scrollPosition(currentContainer as AbstractAuiFragment<RT>)
+                val scrollPosition = uiAdapter.scrollPosition(currentContainer)!!
                 top += currentRenderData.finalTop - scrollPosition.top
                 left += currentRenderData.finalLeft - scrollPosition.left
                 currentContainer = currentRenderData.layoutFragment

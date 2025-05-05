@@ -12,6 +12,7 @@ import `fun`.adaptive.ui.fragment.structural.AuiHoverPopup
 import `fun`.adaptive.ui.fragment.structural.AuiPrimaryPopup
 import `fun`.adaptive.ui.fragment.structural.AuiContextPopup
 import `fun`.adaptive.ui.fragment.structural.AuiDialogPopup
+import `fun`.adaptive.ui.fragment.util.AuiAfterPatchBatch
 
 object AuiFragmentFactory : FoundationFragmentFactory() {
     init {
@@ -36,6 +37,7 @@ object AuiFragmentFactory : FoundationFragmentFactory() {
         add("aui:dialogpopup") { p, i, s -> AuiDialogPopup(p.adapter as AuiAdapter, p) }
         add("aui:splitpane") { p, i, s -> AuiSplitPane(p.adapter as AuiAdapter, p, i) }
         add("aui:paragraph") { p, i, s -> AuiParagraph(p.adapter as AuiAdapter, p, i) }
-        add("aui:manuallayout") { p, i, s -> AuiManualLayout(p.adapter as AuiAdapter, p, i)}
+        add("aui:manuallayout") { p, i, s -> AuiManualLayout(p.adapter as AuiAdapter, p, i) }
+        add("aui:afterpatchbatch") { p, i, s -> AuiAfterPatchBatch(p.adapter as AuiAdapter, p, i) }
     }
 }

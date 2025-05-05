@@ -5,11 +5,15 @@
 package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.FragmentTask
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.nonLayoutTopLevelMessage
 import `fun`.adaptive.foundation.nonLayoutTopLevelPath
 import `fun`.adaptive.foundation.opsCheck
+import `fun`.adaptive.log.expectNotNull
+import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.resource.ThemeQualifier
 import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.ui.api.normalFont
@@ -19,11 +23,13 @@ import `fun`.adaptive.ui.fragment.structural.AuiLoop
 import `fun`.adaptive.ui.fragment.structural.AuiSelect
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.layout.Alignment
 import `fun`.adaptive.ui.platform.media.MediaMetrics
 import `fun`.adaptive.ui.platform.media.MediaMetricsProducer
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.render.model.TextRenderData
 import `fun`.adaptive.ui.support.navigation.AbstractNavSupport
+import `fun`.adaptive.utility.trimSignature
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -74,6 +80,8 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
         get() = Dispatchers.Main
 
     override val scope = CoroutineScope(dispatcher)
+
+    val logger = getLogger(this.typeSignature().trimSignature().substringAfterLast('.'))
 
     open val scrollBarSize: Double = 0.0
 
@@ -132,6 +140,12 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
      */
     abstract fun removeActual(itemReceiver: RT)
 
+    val afterPatchBatchTasks = mutableListOf<FragmentTask>()
+
+    fun addAfterPatchBatchTask(task: FragmentTask) {
+        afterPatchBatchTasks += task
+    }
+
     override fun closePatchBatch() {
         val updateId = ++ updateBatchId
         updateBatchId ++
@@ -142,6 +156,9 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
 
         updateBatch.clear()
         afterClosePatchBatch?.invoke(this)
+
+        afterPatchBatchTasks.forEach { it.execute() }
+        afterPatchBatchTasks.clear()
     }
 
     /**
@@ -212,12 +229,53 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
     // Scroll support
     // ------------------------------------------------------------------------------
 
-    open fun scrollPosition(fragment: AbstractAuiFragment<RT>) : RawPosition {
+
+    /**
+     * Get the scroll position of the fragment in the nearest scrollable
+     * layout container.
+     */
+    fun scrollState(fragment : AbstractAuiFragment<RT>) : Pair<AbstractContainer<RT,CRT>?,RawPosition?> {
+        val renderData = fragment.renderData
+
+        var top = renderData.finalTop
+        var left = renderData.finalLeft
+
+        var currentContainer = renderData.layoutFragment
+
+        while (currentContainer != null) {
+            val currentRenderData = currentContainer.renderData
+            val v = currentRenderData.container?.verticalScroll ?: false
+            val h = currentRenderData.container?.horizontalScroll ?: false
+
+            if (v || h) {
+                @Suppress("UNCHECKED_CAST")
+                return (currentContainer as AbstractContainer<RT,CRT> to RawPosition(top, left))
+            }
+
+            val scrollPosition = scrollPosition(currentContainer)!!
+            top += currentRenderData.finalTop - scrollPosition.top
+            left += currentRenderData.finalLeft - scrollPosition.left
+            currentContainer = currentRenderData.layoutFragment
+        }
+
+        return null to RawPosition(top, left)
+    }
+
+    open fun scrollPosition(fragment: AdaptiveFragment): RawPosition? {
         throw UnsupportedOperationException("scrollPosition($fragment)")
     }
 
-    open fun scrollTo(fragment: AbstractAuiFragment<RT>, position: RawPosition) {
+    open fun scrollTo(fragment: AdaptiveFragment, position: RawPosition) {
         throw UnsupportedOperationException("scrollTo($fragment, $position)")
+    }
+
+    open fun scrollIntoView(fragment: AdaptiveFragment, alignment: Alignment) {
+        throw UnsupportedOperationException("scrollIntoView($fragment)")
+    }
+
+    inline fun <reified RT> expectUiFragment(fragment: AdaptiveFragment): AbstractAuiFragment<RT>? {
+        @Suppress("UNCHECKED_CAST")
+        return expectNotNull(logger, fragment as? AbstractAuiFragment<RT>) { "Fragment is not an AuiFragment: ${fragment.typeSignature()}" }
     }
 
     // ------------------------------------------------------------------------------
