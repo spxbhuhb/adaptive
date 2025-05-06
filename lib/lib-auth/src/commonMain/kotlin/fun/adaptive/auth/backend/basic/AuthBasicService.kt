@@ -99,7 +99,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
 
         if (principalId == null) {
             // in this case we have a security officer for sure as ensure got a null principal
-            return add(principalName, credential !!, principalSpec.roles, principalName, accountSpec)
+            return add(principalName, credential !!, principalSpec.roles, accountName, accountSpec)
         }
 
         val originalPrincipal = valueWorker.item(principalId).withSpec<PrincipalSpec>()
