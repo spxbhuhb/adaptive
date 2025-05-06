@@ -9,7 +9,7 @@ import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.document.app.DocServerModule
 import `fun`.adaptive.iot.lib.zigbee.app.ZigbeeDriverModule
-import `fun`.adaptive.iot.node.app.NodeDriverModule
+import `fun`.adaptive.iot.node.app.SpxbDriverModule
 import `fun`.adaptive.iot.sim.app.SimDriverModule
 import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.lib.util.app.UtilServerModule
@@ -35,7 +35,7 @@ fun main() {
         module { DocServerModule() }
         module { IotServerModule() }
         module { SimDriverModule() }
-        module { NodeDriverModule() }
+        module { SpxbDriverModule() }
         module { ZigbeeDriverModule() }
         module { KtorJvmServerModule() }
         module { BasicAppServerModule() }

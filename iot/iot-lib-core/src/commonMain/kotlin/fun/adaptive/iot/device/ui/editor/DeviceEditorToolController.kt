@@ -1,7 +1,9 @@
 package `fun`.adaptive.iot.device.ui.editor
 
+import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.iot.app.IotModule.Companion.iotModule
 import `fun`.adaptive.iot.device.DeviceMarkers
+import `fun`.adaptive.iot.device.network.AioDriverDef
 import `fun`.adaptive.iot.device.ui.AbstractDeviceToolController
 import `fun`.adaptive.iot.device.ui.DeviceTreeModel
 import `fun`.adaptive.iot.device.virtual.AioVirtualDeviceSpec
@@ -13,6 +15,7 @@ import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.iot.point.sim.AioSimPointSpec
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
+import `fun`.adaptive.ui.form.AdatFormViewBackend
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
@@ -24,6 +27,16 @@ class DeviceEditorToolController(
 ) : AbstractDeviceToolController(workspace) {
 
     val pointService = getService<AioPointApi>(transport)
+
+    /**
+     * For add and edit the selected driver definition.
+     */
+    val selectedDriverDef = storeFor<AioDriverDef?> { null }
+
+    /**
+     * The current network configuration form.
+     */
+    var networkConfigForm: AdatFormViewBackend<*>? = null
 
     override fun selectedFun(viewModel: DeviceTreeModel, treeItem: TreeItem<AvValueId>, modifiers: Set<EventModifier>) {
         val item = valueTreeStore[treeItem.data] ?: return

@@ -5,7 +5,7 @@ import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.iot.point.conversion.CurValConversion
 
 @Adat
-class NodePointSpec(
+class SpxbPointSpec(
     override val displayAddress: String = "",
     override val notes: String = "",
     override val conversion: CurValConversion? = null

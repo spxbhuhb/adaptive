@@ -61,7 +61,7 @@ fun wsAppSignIn(@Suppress("unused") pane: WsPane<*, *>): AdaptiveFragment {
 
                 h2(Strings.signInSubTitle)
 
-                textEditor { template.accountName }
+                textEditor { template.accountName } .. focusFirst
                 textEditor { template.password } .. name("signInPassword")
 
                 box {

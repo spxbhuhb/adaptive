@@ -13,7 +13,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "iot-lib-node"
+val baseName = "iot-lib-spxb"
 val pomName = "Adaptive IoT Node Network Library"
 val scmPath = "spxbhuhb/adaptive"
 
@@ -55,7 +55,10 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.adaptive.core.core)
+            implementation(libs.adaptive.core.ui)
             implementation(libs.adaptive.lib.ktor)
+            implementation(libs.adaptive.lib.ui)
+            implementation(libs.adaptive.lib.document)
             implementation(libs.adaptive.lib.util)
             implementation(libs.adaptive.lib.value)
             implementation(libs.adaptive.iot.lib.core)

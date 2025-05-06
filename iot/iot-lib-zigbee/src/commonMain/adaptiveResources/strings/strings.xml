@@ -3,5 +3,8 @@
   -->
 
 <resources>
-    <string name="aio_driver_zigbee">ZigBee</string>
+    <string name="aio_driver_zigbee">ZigBee hálózat</string>
+    <string name="aio_driver_zigbee_description">A ZigBee szabványnak megfelelő, rádión keresztül kommunikáló eszközök hálózata. Ehhez a hálózathoz szükség van egy ZigBee USB eszközre, amely lehetővé
+        teszi a számítógép csatlakozását a hálózathoz.
+    </string>
 </resources>

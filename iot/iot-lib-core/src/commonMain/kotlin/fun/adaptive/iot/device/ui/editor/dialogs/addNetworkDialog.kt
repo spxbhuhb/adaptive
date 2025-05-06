@@ -3,20 +3,22 @@ package `fun`.adaptive.iot.device.ui.editor.dialogs
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.general.Observable
 import `fun`.adaptive.iot.device.network.AioDriverDef
 import `fun`.adaptive.iot.device.ui.editor.DeviceEditorToolController
+import `fun`.adaptive.iot.generated.resources.account_tree
 import `fun`.adaptive.iot.generated.resources.addNetwork
 import `fun`.adaptive.iot.generated.resources.pleaseSelectFromList
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.resolve.resolveString
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.input.select.item.selectInputOptionIconAndText
+import `fun`.adaptive.ui.input.select.selectInputBackend
 import `fun`.adaptive.ui.input.select.selectInputList
-import `fun`.adaptive.ui.input.select.selectInputMappingBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
@@ -25,7 +27,9 @@ import `fun`.adaptive.ui.popup.modalCancelSave
 import `fun`.adaptive.ui.popup.modalPopup
 import `fun`.adaptive.ui.splitpane.verticalSplitDivider
 import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.utility.ComponentKey
+import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.theme.textColors
+import `fun`.adaptive.ui.theme.textMedium
 
 @Adaptive
 fun addNetworkDialog(
@@ -36,50 +40,50 @@ fun addNetworkDialog(
     val splitConfigStore = storeFor { SplitPaneViewBackend(SplitVisibility.Both, SplitMethod.FixFirst, 200.0, Orientation.Horizontal) }
     val splitConfig = valueFrom { splitConfigStore }
 
-    val selectedDriver = storeFor<ComponentKey?> { null }
-
     modalPopup(Strings.addNetwork, hide, { modalCancelSave(hide) { } }) {
-        size(600.dp, 400.dp)
+        size(800.dp, 600.dp)
         splitPane(
             splitConfig,
-            { driverList(controller, selectedDriver) },
+            { driverList(controller) },
             { verticalSplitDivider() },
-            { driverSetup(selectedDriver) }
-        )
+            { driverSetup(controller) }
+        ) .. borderTop(colors.lightOutline)
     }
 }
 
 @Adaptive
 private fun driverList(
-    controller: DeviceEditorToolController,
-    selectedDriver: Observable<ComponentKey?>
+    controller: DeviceEditorToolController
 ) {
 
-    val selected = valueFrom { selectedDriver }
-
-    val backend = selectInputMappingBackend<ComponentKey?, AioDriverDef>(
-        selected,
-        { it.driverKey },
+    val backend = selectInputBackend(
+        controller.selectedDriverDef.value
     ) {
         options = controller.driversDefs()
         toText = { fragment().resolveString(it.driverNameKey) }
-        // onChange = { selectedDriver.value = it }
-        // toIcon = { fragment().resolveGraphics(it.driverIconKey) }
+        onChange = { controller.selectedDriverDef.value = it }
+        //toIcon = { fragment().resolveGraphics(it.driverIconKey) }
+        toIcon = { Graphics.account_tree }
     }
 
     column {
-        maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
+        maxSize .. verticalScroll .. padding { 8.dp } .. backgrounds.surface
         selectInputList(backend, { selectInputOptionIconAndText(it) })
     }
 }
 
 @Adaptive
-private fun driverSetup(selectedDriver: Observable<ComponentKey?>) {
-    val driverKey = valueFrom { selectedDriver }
+private fun driverSetup(
+    controller: DeviceEditorToolController
+) {
+    val selectedDriverDef = valueFrom { controller.selectedDriverDef }
 
-    if (driverKey == null) {
-        text(Strings.pleaseSelectFromList)
+    if (selectedDriverDef == null) {
+        text(Strings.pleaseSelectFromList) .. alignSelf.center .. textColors.onSurfaceMedium .. textMedium
     } else {
-        actualize(driverKey)
+        column {
+            maxSize .. verticalScroll .. padding { 16.dp }
+            actualize(selectedDriverDef.newNetworkKey, emptyInstructions, controller)
+        }
     }
 }

@@ -7,6 +7,7 @@ import `fun`.adaptive.runtime.AbstractWorkspace
 open class SimClientModule<WT : AbstractWorkspace> : SimDriverModule<WT>() {
 
     val networkConfigKey = "aio:driver:sim:config"
+
     override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {
         add(networkConfigKey, ::simNetworkConfig)
     }

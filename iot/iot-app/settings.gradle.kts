@@ -34,6 +34,6 @@ includeBuild("../../lib/lib-chart")
 includeBuild("../../lib/lib-value")
 
 includeBuild("../../iot/iot-lib-core")
-includeBuild("../../iot/iot-lib-node")
+includeBuild("../../iot/iot-lib-spxb")
 includeBuild("../../iot/iot-lib-sim")
 includeBuild("../../iot/iot-lib-zigbee")

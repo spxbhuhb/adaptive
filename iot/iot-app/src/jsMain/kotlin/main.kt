@@ -10,11 +10,10 @@ import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.app.ws.inspect.AppInspectWsModule
 import `fun`.adaptive.auth.app.AuthClientModule
 import `fun`.adaptive.chart.app.ChartModule
-import `fun`.adaptive.document.app.DocWsModule
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.iot.app.IotWsModule
 import `fun`.adaptive.iot.lib.zigbee.app.ZigbeeDriverWsModule
-import `fun`.adaptive.iot.node.app.NodeDriverWsModule
+import `fun`.adaptive.iot.node.app.SpxbDriverWsModule
 import `fun`.adaptive.iot.sim.app.SimDriverWsModule
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.value.app.ValueClientModule
@@ -29,7 +28,7 @@ fun main() {
         //module { DocWsModule() }
         module { IotWsModule() }
         module { SimDriverWsModule() }
-        module { NodeDriverWsModule() }
+        module { SpxbDriverWsModule() }
         module { ZigbeeDriverWsModule() }
         module { AppAdminWsModule() }
         module { AppInspectWsModule() }

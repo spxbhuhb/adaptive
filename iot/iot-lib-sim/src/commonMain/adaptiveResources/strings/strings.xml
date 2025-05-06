@@ -3,5 +3,6 @@
   -->
 
 <resources>
-    <string name="aio_driver_sim">Szimuláció</string>
+    <string name="aio_driver_sim">Szimulált hálózat</string>
+    <string name="aio_sim_driver_description">Szimulált hálózat teszteléshez, próbálkozáshoz.</string>
 </resources>

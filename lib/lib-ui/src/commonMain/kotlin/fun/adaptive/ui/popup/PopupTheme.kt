@@ -57,11 +57,11 @@ class PopupTheme {
 
     val modalButtons = instructionsOf(
         maxWidth,
-        alignItems.end,
+        alignItems.endCenter,
         borderTop(colors.lightOutline),
         paddingVertical { 12.dp },
-        paddingRight { 16.dp },
-        gap { 12.dp },
+        paddingRight { 13.dp },
+        gap { 8.dp },
         height { modalButtonsHeight }
     )
 

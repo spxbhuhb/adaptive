@@ -7,6 +7,7 @@ import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.generated.resources.cancel
 import `fun`.adaptive.ui.generated.resources.save
 import `fun`.adaptive.ui.input.button.button
+import `fun`.adaptive.ui.input.button.submitButton
 
 @Adaptive
 fun modalCancelSave(hide: () -> Unit, theme : PopupTheme = PopupTheme.default, save: () -> Unit) {
@@ -14,6 +15,6 @@ fun modalCancelSave(hide: () -> Unit, theme : PopupTheme = PopupTheme.default, s
         theme.modalButtons
 
         button(Strings.cancel) .. onClick { hide() }
-        button(Strings.save) .. onClick { save() }
+        submitButton(Strings.save) .. onClick { save(); hide(); }
     }
 }

@@ -4,7 +4,7 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.iot.device.AioDeviceSpec
 
 @Adat
-class NodeNetworkSpec(
+class SpxbControllerSpec(
     override val enabled: Boolean = true,
     override val notes: String = "",
     override val manufacturer: String? = null,

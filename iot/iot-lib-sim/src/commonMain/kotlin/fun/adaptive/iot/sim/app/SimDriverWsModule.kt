@@ -11,8 +11,8 @@ class SimDriverWsModule<WT : AbstractWorkspace> : SimClientModule<WT>() {
             driverKey,
             "aio_driver_sim",
             driverKey,
-            "",
-            ""
+            networkConfigKey,
+            networkConfigKey
         )
     }
 
