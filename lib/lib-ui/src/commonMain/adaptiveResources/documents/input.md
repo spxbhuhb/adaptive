@@ -161,3 +161,14 @@ use changes the value or the `isInvalid` function of a form backend is called wi
 
 This mechanism ensures that an empty form does not show all fields as invalid before the user
 has even started to edit them.
+
+## Focus
+
+All inputs are focusable. Use the `focusFirst` instruction to focus on a given
+input first.
+
+>
+> [!NOTE]
+>
+> I think `focusFirst` works only for singleLineTextInput for now. I'll add it to others as well.
+> 

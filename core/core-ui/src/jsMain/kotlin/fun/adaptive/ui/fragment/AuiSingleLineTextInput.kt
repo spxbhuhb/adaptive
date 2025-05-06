@@ -5,11 +5,13 @@ package `fun`.adaptive.ui.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.FragmentTask
 import `fun`.adaptive.foundation.instruction.get
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.api.disabled
 import `fun`.adaptive.ui.aui
+import `fun`.adaptive.ui.instruction.input.FocusFirst
 import `fun`.adaptive.ui.instruction.input.InputPlaceholder
 import `fun`.adaptive.ui.instruction.input.MaxLength
 import `fun`.adaptive.ui.instruction.input.Secret
@@ -63,6 +65,14 @@ open class AuiSingleLineTextInput(
 
         if (isInit) {
             receiver.addEventListener("input", { onChange(receiver.value) })
+        }
+    }
+
+    override fun mount() {
+        val hasBeenMounted = hasBeenMounted
+        super.mount()
+        if (! hasBeenMounted && instructions.firstInstanceOfOrNull<FocusFirst>() != null) {
+            uiAdapter.addAfterPatchBatchTask(FragmentTask(this, { receiver.focus() }))
         }
     }
 
