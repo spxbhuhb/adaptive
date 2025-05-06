@@ -108,15 +108,17 @@ abstract class AbstractContainer<RT, CRT : RT>(
         // If this container is initializing, the order is surely OK.
         // In this case we can skip finding the insert position.
 
-        if (isInit) {
+        if (! hasBeenMounted) {
             layoutItems += itemFragment
             return
         }
 
-        val layoutSibling = findClosestMatchingFragmentUpward(itemFragment) { it is AbstractAuiFragment<*> }
+        val layoutSibling = findClosestMatchingFragmentUpward(itemFragment) {
+            it is AbstractAuiFragment<*> && ! it.isStructural
+        }
 
         if (layoutSibling == null) {
-            layoutItems += itemFragment
+            layoutItems.add(0, itemFragment)
         } else {
             @Suppress("UNCHECKED_CAST")
             addAfterSibling(itemFragment, layoutSibling as AbstractAuiFragment<RT>)
@@ -129,22 +131,14 @@ abstract class AbstractContainer<RT, CRT : RT>(
     ): AdaptiveFragment? {
         var current: AdaptiveFragment? = start
 
-        while (start !== this) {
+        while (current !== this) {
             val parent = current?.parent ?: return null
             val index = parent.children.indexOf(current)
 
             // Check previous siblings and their descendants (depth-first)
             for (i in index - 1 downTo 0) {
-                val child = parent.children[i]
-                if (predicate(child)) return child
-
-                val match = findInSubtree(child, predicate)
+                val match = findInSubtree(parent.children[i], predicate)
                 if (match != null) return match
-            }
-
-            // Check the parent itself
-            if (predicate(parent)) {
-                return parent
             }
 
             // Move up to the parent
@@ -157,8 +151,9 @@ abstract class AbstractContainer<RT, CRT : RT>(
     // Depth-first search within a subtree
     fun findInSubtree(node: AdaptiveFragment, predicate: (AdaptiveFragment) -> Boolean): AdaptiveFragment? {
         if (predicate(node)) return node
-        for (child in node.children) {
-            val result = findInSubtree(child, predicate)
+        val children = node.children
+        for (index in children.lastIndex downTo 0) {
+            val result = findInSubtree(children[index], predicate)
             if (result != null) return result
         }
         return null

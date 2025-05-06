@@ -28,7 +28,10 @@ abstract class AdaptiveFragment(
 ) {
     companion object {
         const val MOUNTED_MASK = 0x01
-        const val DETACHED_MASK = 0x02
+        const val HAS_BEEN_MOUNTED_MASK = 0x02
+        const val MOUNT_MASK = 0x03
+
+        const val DETACHED_MASK = 0x04
 
         @JvmStatic
         protected fun stateSize() : Int {
@@ -46,11 +49,14 @@ abstract class AdaptiveFragment(
         get() = (flags and MOUNTED_MASK) != 0
         set(v) {
             if (v) {
-                flags = flags or MOUNTED_MASK
+                flags = flags or MOUNT_MASK // sets MOUNTED and HAS_BEEN_MOUNTED
             } else {
-                flags = flags and MOUNTED_MASK.inv()
+                flags = flags and MOUNTED_MASK.inv() // keep HAS_BEEN_MOUNTED
             }
         }
+
+    val hasBeenMounted: Boolean
+        get() = (flags and HAS_BEEN_MOUNTED_MASK) != 0
 
     var isDetached: Boolean
         get() = (flags and DETACHED_MASK) != 0
