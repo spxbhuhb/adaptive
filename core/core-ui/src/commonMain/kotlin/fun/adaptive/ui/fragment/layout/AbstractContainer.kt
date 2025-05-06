@@ -87,7 +87,7 @@ abstract class AbstractContainer<RT, CRT : RT>(
                 }
 
                 false -> {
-                    layoutItems += itemFragment
+                    addIndirect(itemFragment)
                 }
 
                 null -> {
@@ -97,6 +97,79 @@ abstract class AbstractContainer<RT, CRT : RT>(
             }
 
             addActualScheduleUpdate(itemFragment)
+        }
+    }
+
+    fun addIndirect(itemFragment: AbstractAuiFragment<RT>) {
+        // We have to find out the previous layout sibling of the fragment, as we have
+        // to insert after that item. The fragment may have any number of structural
+        // and independent parents, so finding the previous layout sibling is not trivial.
+
+        // If this container is initializing, the order is surely OK.
+        // In this case we can skip finding the insert position.
+
+        if (isInit) {
+            layoutItems += itemFragment
+            return
+        }
+
+        val layoutSibling = findClosestMatchingFragmentUpward(itemFragment) { it is AbstractAuiFragment<*> }
+
+        if (layoutSibling == null) {
+            layoutItems += itemFragment
+        } else {
+            @Suppress("UNCHECKED_CAST")
+            addAfterSibling(itemFragment, layoutSibling as AbstractAuiFragment<RT>)
+        }
+    }
+
+    fun findClosestMatchingFragmentUpward(
+        start: AdaptiveFragment,
+        predicate: (AdaptiveFragment) -> Boolean
+    ): AdaptiveFragment? {
+        var current: AdaptiveFragment? = start
+
+        while (start !== this) {
+            val parent = current?.parent ?: return null
+            val index = parent.children.indexOf(current)
+
+            // Check previous siblings and their descendants (depth-first)
+            for (i in index - 1 downTo 0) {
+                val child = parent.children[i]
+                if (predicate(child)) return child
+
+                val match = findInSubtree(child, predicate)
+                if (match != null) return match
+            }
+
+            // Check the parent itself
+            if (predicate(parent)) {
+                return parent
+            }
+
+            // Move up to the parent
+            current = parent
+        }
+
+        return null
+    }
+
+    // Depth-first search within a subtree
+    fun findInSubtree(node: AdaptiveFragment, predicate: (AdaptiveFragment) -> Boolean): AdaptiveFragment? {
+        if (predicate(node)) return node
+        for (child in node.children) {
+            val result = findInSubtree(child, predicate)
+            if (result != null) return result
+        }
+        return null
+    }
+
+    fun addAfterSibling(itemFragment: AbstractAuiFragment<RT>, sibling: AbstractAuiFragment<RT>) {
+        val index = layoutItems.indexOf(sibling)
+        if (index == - 1) {
+            layoutItems += itemFragment
+        } else {
+            layoutItems.add(index + 1, itemFragment)
         }
     }
 
