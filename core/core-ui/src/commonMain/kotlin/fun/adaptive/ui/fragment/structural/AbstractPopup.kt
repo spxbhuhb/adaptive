@@ -134,6 +134,10 @@ abstract class AbstractPopup<RT, CRT : RT>(
         }
     }
 
+    override fun unmount() {
+        active = false
+    }
+
     open fun patchContent(fragment: AdaptiveFragment) {
         fragment.setStateVariable(index = 1, value = ::hide)
     }
@@ -145,6 +149,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
     }
 
     open fun hide() {
+        if (! active) return
         active = false
         patchInternal()
     }
@@ -174,7 +179,7 @@ abstract class AbstractPopup<RT, CRT : RT>(
             maxHeight?.let { layoutFinalHeight } ?: Double.POSITIVE_INFINITY,
         )
 
-        var alignment = instructions.lastInstanceOfOrNull<PopupAlign>() ?: popupAlign.belowStart
+        val alignment = instructions.lastInstanceOfOrNull<PopupAlign>() ?: popupAlign.belowStart
 
         if (alignment.absolute) {
             absolutePosition(alignment, overlay, container)
