@@ -135,7 +135,10 @@ abstract class AbstractPopup<RT, CRT : RT>(
     }
 
     override fun unmount() {
-        active = false
+        if (active) { // TODO clean up AbstractPopup unmount, without this check it tries to remove the receiver twice
+            active = false
+            super.unmount()
+        }
     }
 
     open fun patchContent(fragment: AdaptiveFragment) {
