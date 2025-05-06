@@ -33,19 +33,16 @@ open class FoundationActualize(
 
         if (fragment.declarationIndex != 0) invalidIndex(fragment.declarationIndex)
 
-        val closureMask = fragment.getCreateClosureDirtyMask()
 
-        if (haveToPatch(closureMask, 1 shl 2)) {
-            for (value in safeExternalState.indices) {
-                fragment.setStateVariable(value, safeExternalState[value])
-            }
+        for (value in safeExternalState.indices) {
+            fragment.setStateVariable(value, safeExternalState[value])
         }
     }
 
     override fun genPatchInternal(): Boolean {
 
         if (haveToPatch(getThisClosureDirtyMask(), 1 shl 1)) {
-            if (lastKey == key) return true // no need to patch
+            if (lastKey == key) return true // no need to replace the fragment
 
             lastKey = key
             throwChildrenAway()
@@ -59,5 +56,4 @@ open class FoundationActualize(
 
         return true
     }
-
 }
