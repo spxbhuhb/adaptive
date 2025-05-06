@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.button.button
-import `fun`.adaptive.ui.input.button.buttonInputBackend
+import `fun`.adaptive.ui.input.button.buttonBackend
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
@@ -17,7 +17,7 @@ fun buttonDisabledExample(): AdaptiveFragment {
 
         column {
             width { 240.dp }
-            button("Disabled", viewBackend = buttonInputBackend { disabled = true })
+            button("Disabled", viewBackend = buttonBackend { disabled = true })
         }
 
         markdown(

@@ -8,9 +8,10 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 
 @Adaptive
 fun submitButton(
-    label: String,
-    icon: GraphicsResourceSet? = null
+    label: String? = null,
+    icon: GraphicsResourceSet? = null,
+    viewBackend: ButtonViewBackend? = null
 ): AdaptiveFragment {
-    button(label, icon, ButtonViewBackend(label).also { it.isSubmit = true }) .. instructions()
+    button(label, icon, (viewBackend ?: ButtonViewBackend(label)).also { it.isSubmit = true }) .. instructions()
     return fragment()
 }

@@ -158,7 +158,7 @@ class ButtonTheme : AbstractTheme() {
 
     val disabledIcon = instructionsOf(
         iconBase,
-        iconColors.onSurface
+        iconColors.onSurfaceVariant
     )
 
     val focusDangerIcon = instructionsOf(

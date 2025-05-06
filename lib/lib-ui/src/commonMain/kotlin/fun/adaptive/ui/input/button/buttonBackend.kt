@@ -1,4 +1,4 @@
 package `fun`.adaptive.ui.input.button
 
-fun buttonInputBackend(builder: ButtonViewBackendBuilder.() -> Unit = { }) =
+fun buttonBackend(builder: ButtonViewBackendBuilder.() -> Unit = { }) =
     ButtonViewBackendBuilder().apply(builder).toBackend()

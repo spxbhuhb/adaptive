@@ -5,7 +5,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.snackbar.infoNotification
@@ -18,12 +17,13 @@ fun buttonSubmitExample(): AdaptiveFragment {
 
         column {
             width { 240.dp }
-            submitButton("Submit") .. onClick { infoNotification("Submit clicked!") }
+            submitButton("Submit") .. onClick { infoNotification("Submit clicked!") } .. width { 160.dp }
         }
 
         markdown(
             """
             * `submitButton` variant
+            * 160.dp width
         """.trimIndent()
         )
     }

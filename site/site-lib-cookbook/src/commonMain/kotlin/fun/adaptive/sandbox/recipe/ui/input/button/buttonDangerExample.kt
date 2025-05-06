@@ -4,6 +4,8 @@ import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.lib_app.generated.resources.lock
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.button.dangerButton
 import `fun`.adaptive.ui.instruction.dp
@@ -17,12 +19,13 @@ fun buttonDangerExample(): AdaptiveFragment {
 
         column {
             width { 240.dp }
-            dangerButton("Danger") .. onClick { failNotification("Danger submit clicked!") }
+            dangerButton("Danger", Graphics.lock) .. onClick { failNotification("Danger submit clicked!") }
         }
 
         markdown(
             """
             * `dangerButton` variant
+            * with icon and text
         """.trimIndent()
         )
     }

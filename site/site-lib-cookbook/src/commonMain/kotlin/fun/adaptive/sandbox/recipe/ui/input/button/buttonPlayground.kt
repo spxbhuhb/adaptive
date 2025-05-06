@@ -1,208 +1,95 @@
 package `fun`.adaptive.sandbox.recipe.ui.input.button
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.document.ui.direct.markdownHint
+import `fun`.adaptive.cookbook.generated.resources.lock
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instructions
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.nop
 import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.log.devInfo
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.sandbox.recipe.ui.input.select.networkOptions
-import `fun`.adaptive.sandbox.recipe.ui.input.select.roleOptions
 import `fun`.adaptive.sandbox.support.configureForm
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.editor.booleanEditor
-import `fun`.adaptive.ui.editor.intEditor
+import `fun`.adaptive.ui.editor.doubleEditor
 import `fun`.adaptive.ui.editor.selectEditorList
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.AdatFormViewBackend
 import `fun`.adaptive.ui.form.adatFormBackend
-import `fun`.adaptive.ui.generated.resources.empty
-import `fun`.adaptive.ui.generated.resources.menu_book
-import `fun`.adaptive.ui.input.select.SingleSelectInputViewBackend
+import `fun`.adaptive.ui.generated.resources.account_circle
+import `fun`.adaptive.ui.generated.resources.check
+import `fun`.adaptive.ui.input.button.button
+import `fun`.adaptive.ui.input.button.buttonBackend
+import `fun`.adaptive.ui.input.button.dangerButton
+import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
-import `fun`.adaptive.ui.input.select.item.selectInputOptionIconAndText
-import `fun`.adaptive.ui.input.select.item.selectInputOptionText
-import `fun`.adaptive.ui.input.select.item.selectInputValueIconAndText
-import `fun`.adaptive.ui.input.select.item.selectInputValueText
-import `fun`.adaptive.ui.input.select.selectInputList
-import `fun`.adaptive.ui.input.select.selectInputBackend
-import `fun`.adaptive.ui.input.select.selectInputDropdown
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.misc.todo
-import kotlin.math.min
 
 @Adaptive
 fun buttonPlayground(): AdaptiveFragment {
 
-    todo()
+    val form = valueFrom { adatFormBackend(ButtonPlaygroundConfig()) }
 
-//    val form = valueFrom { adatFormBackend(ButtonPlaygroundConfig()) }
-//
-//    flowBox {
-//        gap { 16.dp }
-//        selectInputPlaygroundForm(form)
-//        selectInputPlaygroundResult(form.inputValue)
-//    }
+    flowBox {
+        gap { 16.dp }
+        buttonPlaygroundForm(form)
+        buttonPlaygroundResult(form.inputValue)
+    }
 
     return fragment()
 }
 
-class Option(
-    val text: String,
-    val icon: GraphicsResourceSet
-)
-
-val datasets = listOf("Options", "Networks", "Roles")
-val itemRenderers = listOf("Text only", "Icon and text", "Checkbox")
+val variants = listOf("button", "submitButton", "dangerButton")
+val icons = listOf("lock", "check", "account_circle")
 
 @Adat
 class ButtonPlaygroundConfig(
-    val dataset: String = datasets.first(),
-    val itemRenderer: String = itemRenderers.first(),
-    val optionCount: Int = 30,
-    val selectItem: Int? = null,
-    val label: String? = null,
-    val isInConstraintError: Boolean = false,
-    val isDisabled: Boolean = false,
-    val isMultiSelect: Boolean = false,
-    val withSurfaceContainer: Boolean = false,
-    val withDropdown: Boolean = true
+    val variant: String = variants.first(),
+    val label: String? = "Hello",
+    val icon: String? = icons.first(),
+    val disabled: Boolean = false,
+    val width: Double? = null
 )
 
 @Adaptive
-fun selectInputPlaygroundForm(
+fun buttonPlaygroundForm(
     form: AdatFormViewBackend<ButtonPlaygroundConfig>
 ) {
 
     val template = ButtonPlaygroundConfig()
 
     configureForm(form) {
-        width { 288.dp }
-
         column {
-            gap { 16.dp } .. padding { 16.dp }
+            width { 288.dp } .. gap { 16.dp } .. padding { 16.dp }
 
-            row {
-                gap { 16.dp }
-
-                selectEditorList(datasets, { selectInputOptionCheckbox(it) }) { template.dataset } .. width { 120.dp }
-
-                column {
-                    gap { 8.dp } .. width { 120.dp }
-                    intEditor { template.optionCount }
-                    markdownHint("300ish is fine, at 1000 it starts to be slow in Safari")
-                }
-            }
-
-            column {
-                gap { 8.dp } .. width { 256.dp }
-                textEditor { template.label }
-
-                column { // this column does not use gap, so boolean options look nice
-                    maxWidth
-                    booleanEditor { template.isInConstraintError }
-                    booleanEditor { template.isDisabled }
-                    booleanEditor { template.isMultiSelect }
-                    booleanEditor { template.withSurfaceContainer }
-                    booleanEditor { template.withDropdown }
-                }
-
-                selectEditorList(itemRenderers, { selectInputOptionCheckbox(it) }) { template.itemRenderer } .. width { 256.dp }
-            }
-
-            column {
-                gap { 8.dp } .. width { 120.dp }
-                intEditor { template.selectItem }
-                markdownHint("pre-select the item with this index")
-            }
-        }
-    }
-
-}
-
-@Adaptive
-fun selectInputPlaygroundResult(config: ButtonPlaygroundConfig) {
-
-    val effectiveOptions = when (config.dataset) {
-        "Options" -> (1 .. config.optionCount).map { Option("Option $it", Graphics.menu_book) }
-        "Networks" -> networkOptions.map { Option(it.first, it.second) }
-        "Roles" -> roleOptions.map { Option(it.second, Graphics.empty) }
-        else -> emptyList()
-    }
-
-    val selectedItem = config.selectItem?.let { effectiveOptions[min(it, effectiveOptions.size - 1)] }
-
-    val backend = selectInputBackend(selectedItem) {
-        options = effectiveOptions
-        disabled = config.isDisabled
-        label = config.label
-        withSurfaceContainer = config.withSurfaceContainer
-        multiSelect = config.isMultiSelect
-        toText = { it.text }
-        toIcon = { it.icon }
-        validateFun = { ! config.isInConstraintError }
-    }.also {
-        if (config.isInConstraintError) {
-            it.isInConstraintError = true
-            it.isTouched = true
-        }
-    }
-
-    if (config.withDropdown) {
-        column {
-            width { 240.dp }
-            actualInputDropdown(backend, config) .. maxWidth
-        }
-    } else {
-        column {
-            width { 240.dp } .. height { 240.dp }
-            actualInputList(backend, config) .. maxSize
+            selectEditorList(variants, { selectInputOptionCheckbox(it) }) { template.variant }
+            selectEditorList(icons, { selectInputOptionCheckbox(it) }) { template.icon }
+            textEditor { template.label }
+            doubleEditor { template.width }
+            booleanEditor { template.disabled }
         }
     }
 }
 
 @Adaptive
-fun actualInputList(
-    backend: SingleSelectInputViewBackend<Option, Option>,
-    config: ButtonPlaygroundConfig
-): AdaptiveFragment {
-    selectInputList(
-        backend,
-        {
-            when (config.itemRenderer) {
-                "Text only" -> selectInputOptionText(it)
-                "Icon and text" -> selectInputOptionIconAndText(it)
-                "Checkbox" -> selectInputOptionCheckbox(it)
-            }
-        }
-    ) .. instructions()
-    return fragment()
-}
+fun buttonPlaygroundResult(config: ButtonPlaygroundConfig) {
 
-@Adaptive
-fun actualInputDropdown(
-    backend: SingleSelectInputViewBackend<Option, Option>,
-    config: ButtonPlaygroundConfig
-): AdaptiveFragment {
-    selectInputDropdown(
-        backend,
-        {
-            when (config.itemRenderer) {
-                "Text only" -> selectInputOptionText(it)
-                "Icon and text" -> selectInputOptionIconAndText(it)
-                "Checkbox" -> selectInputOptionCheckbox(it)
-            }
-        },
-        {
-            when (config.itemRenderer) {
-                "Text only" -> selectInputValueText(it)
-                "Icon and text" -> selectInputValueIconAndText(it)
-                "Checkbox" -> selectInputValueText(it)
-            }
-        }
-    ) .. instructions()
-    return fragment()
+    val icon = when (config.icon) {
+        "lock" -> Graphics.lock
+        "check" -> Graphics.check
+        "account_circle" -> Graphics.account_circle
+        else -> null
+    }
+
+    val width : AdaptiveInstruction = if (config.width != null) width { config.width.dp } else nop
+
+    val backend = buttonBackend { disabled = config.disabled }
+
+    when (config.variant) {
+        "button" -> button(config.label, icon, backend) .. width .. onClick { devInfo("button clicked") }
+        "submitButton" -> submitButton(config.label, icon, backend) .. width .. onClick { devInfo("submitButton clicked") }
+        "dangerButton" -> dangerButton(config.label, icon, backend) .. width .. onClick { devInfo("dangerButton clicked") }
+    }
 }
