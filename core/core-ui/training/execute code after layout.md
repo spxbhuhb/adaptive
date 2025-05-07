@@ -3,17 +3,17 @@ language: kotlin
 tags: [ui, layout, fragment, callback]
 ---
 
-### Problem
+## Objective
 In an Adaptive UI fragment, execute some code after the first layout.
 
-### Solution
+## Solution
 ```kotlin
 afterPatchBatch { declaringFragment ->
     // code to execute
 }
 ```
 
-### Explanation
+## Explanation
 Layout updates are executed by `AbstractAuiAdapter.closePatchBatch` when the
 patch batch is processed.
 
@@ -23,17 +23,17 @@ The `afterPatchBatch` fragment schedules the parameter function to run by
 `afterPatchBatch` parameter `once` is `true` by default, meaning that the code
 will be executed only once, after the first layout.
 
-### Problem
+## Objective
 In an Adaptive UI fragment, execute some code after each layout update.
 
-### Solution
+## Solution
 ```kotlin
 afterPatchBatch(once = false) { declaringFragment ->
     // code to execute
 }
 ```
 
-### Explanation
+## Explanation
 Layout updates are executed by `AbstractAuiAdapter.closePatchBatch` when the
 patch batch is processed.
 

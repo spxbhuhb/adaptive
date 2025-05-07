@@ -3,15 +3,15 @@ language: kotlin
 tags: [ui, layout, fragment, scroll]
 ---
 
-### Problem
+## Objective
 Scroll a fragment into view when it is displayed.
 
-### Solution
+## Solution
 ```kotlin
 afterPatchBatch { scrollIntoView(it) }
 ```
 
-### Explanation
+## Explanation
 `afterPatchBatch` executes the code passed to it when the first layout of the fragment
 has been done.
 
@@ -27,6 +27,3 @@ if (condition) {
     afterPatchBatch { scrollIntoView(it) }
 }
 ```
-
-### Explanation
-The condition van select

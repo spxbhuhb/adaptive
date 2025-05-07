@@ -3,10 +3,10 @@ language: kotlin
 tags: [log]
 ---
 
-### Problem
+## Objective
 Log a warning into an `AdativeLogger` called `logger` when a value is null.
 
-### Solution
+## Solution
 ```kotlin
 expectNotNull(logger, value) { "$value should not be null" }
 ```

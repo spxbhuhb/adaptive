@@ -66,3 +66,34 @@ shorthand("iot-app", "jvmRun", "iot-jvm")
 
 // If you add a shorthand, and it does not start the jvm/js double-check the project
 // name, typically that's what's wrong.
+
+
+tasks.register<Copy>("collectGuides") {
+    group = "training"
+
+    val destinationDir = File(rootDir, "build/adaptive/guides")
+    into(destinationDir)
+
+    // Clear the destination directory before copying
+    doFirst {
+        if (destinationDir.exists()) {
+            destinationDir.deleteRecursively()
+        }
+        destinationDir.mkdirs()
+    }
+
+    // Collect all *_guide.md files from training dirs in subprojects
+    gradle.includedBuilds.forEach { build ->
+        val trainingDir = File(build.projectDir, "training")
+        if (trainingDir.exists()) {
+            from(trainingDir) {
+                include("**/*_guide.md")
+                eachFile {
+                    path = name
+                }
+            }
+        }
+    }
+
+    includeEmptyDirs = false
+}
