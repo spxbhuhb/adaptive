@@ -10,7 +10,6 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.lib_app.generated.resources.addRole
 import `fun`.adaptive.lib_app.generated.resources.edit
-import `fun`.adaptive.lib_app.generated.resources.filter
 import `fun`.adaptive.lib_app.generated.resources.roles
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -20,6 +19,7 @@ import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.generated.resources.edit
+import `fun`.adaptive.ui.generated.resources.filterPlaceholder
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.input.InputConfig.Companion.inputConfig
 import `fun`.adaptive.ui.input.InputContext
@@ -45,7 +45,7 @@ fun wsAppRoleManager(pane: WsPane<*, RoleManagerController>): AdaptiveFragment {
         wsContentHeader(Strings.roles) {
             row {
                 gap { 16.dp }
-                textEditor { filter.text } .. width { 200.dp } .. inputConfig(label = "", placeholder = Strings.filter)
+                textEditor { filter.text } .. width { 200.dp } .. inputConfig(label = "", placeholder = Strings.filterPlaceholder)
 
                 row {
                     button(Strings.addRole)

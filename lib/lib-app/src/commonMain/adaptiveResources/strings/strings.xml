@@ -3,13 +3,11 @@
   -->
 
 <resources>
-    <string name="email">e-mail</string>
-    <string name="password">jelszó</string>
-    <string name="noTechnicalInfo">Nincs több információ</string>
-    <string name="invalidFields">Érvénytelen mezők.</string>
-    <string name="filter">szűrés</string>
 
-    <!-- auth -->
+    <string name="administration">Adminisztráció</string>
+
+    <!-- sign-in -->
+
     <string name="signInTitle">Üdvözlünk!</string>
     <string name="signInSubTitle">Lépj be a folytatáshoz.</string>
     <string name="signInRemember">Remember me</string>
@@ -31,29 +29,40 @@
     <string name="signUpFail">Sign-up error.</string>
     <string name="signUpSignIn">Have an account? **[Sign Ip](/sign-in)**</string>
 
+    <!-- account -->
+
     <string name="accounts">Fiókok</string>
-    <string name="principalName">Fiók név</string>
-    <string name="accountName">Fiók név</string>
-    <string name="name">Név</string>
-    <string name="save">Mentés</string>
-    <string name="saveSuccess">Sikeres mentés.</string>
-    <string name="saveFail">Nem sikerült a mentés.</string>
-    <string name="passwordChange">Jelszó változtatás</string>
     <string name="accountSelf">Saját fiók</string>
 
+    <string name="addAccount">Fiók hozzáadása</string>
+    <string name="editAccount">Fiók szerkesztése</string>
+
+    <string name="principalName">Fiók név</string>
+    <string name="accountName">Fiók név</string>
+    <string name="email">e-mail</string>
+    <string name="password">jelszó</string>
+
+    <string name="passwordChange">Jelszó változtatás</string>
     <string name="currentPassword">Jelenlegi jelszó</string>
     <string name="newPassword">Új jelszó</string>
     <string name="confirmPassword">Megerősítés</string>
 
-    <!-- admin -->
-    <string name="administration">Adminisztráció</string>
-    <string name="addAccount">Fiók hozzáadása</string>
-    <string name="editAccount">Fiók szerkesztése</string>
+    <!-- role -->
+
     <string name="roles">Szerepkörök</string>
     <string name="addRole">Szerepkör hozzáadása</string>
     <string name="editRole">Szerepkör szerkesztése</string>
     <string name="context">Környezet</string>
 
     <!-- inspect -->
+
     <string name="devTools">Fejlesztői eszközök</string>
+
+    <!-- system settings -->
+
+    <string name="appSystemSettings">Rendszer</string>
+
+    <!-- misc -->
+    <string name="noTechnicalInfo">Nincs több információ</string>
+
 </resources>

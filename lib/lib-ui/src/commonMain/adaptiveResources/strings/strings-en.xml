@@ -4,6 +4,8 @@
 
 <resources>
     <string name="invalidFields">Vannak még érvénytelen mezők.</string>
+    <string name="saveSuccess">Sikeres mentés.</string>
+    <string name="saveFail">Hiba, nem sikerült a mentés.</string>
 
     <string name="home">Nyitólap</string>
     <string name="account">Fiók</string>
@@ -17,6 +19,8 @@
     <string name="notSet">nincs megadva</string>
     <string name="copied">Copied</string>
     <string name="noValueSelected">nincs érték kiválasztva</string>
+    <string name="filterPlaceholder">szűrés</string>
+    <string name="settings">beállítások</string>
 
     <string name="copyToClipboard">Copy to clipboard</string>
 

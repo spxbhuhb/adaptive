@@ -11,14 +11,14 @@ import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.lib_app.generated.resources.passwordChange
-import `fun`.adaptive.lib_app.generated.resources.save
-import `fun`.adaptive.lib_app.generated.resources.saveSuccess
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
+import `fun`.adaptive.ui.generated.resources.save
+import `fun`.adaptive.ui.generated.resources.saveSuccess
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.snackbar.successNotification

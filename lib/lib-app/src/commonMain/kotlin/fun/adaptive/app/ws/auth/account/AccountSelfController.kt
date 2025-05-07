@@ -1,6 +1,5 @@
 package `fun`.adaptive.app.ws.auth.account
 
-import `fun`.adaptive.lib_app.generated.resources.saveSuccess
 import `fun`.adaptive.auth.api.AuthPrincipalApi
 import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.app.AuthAppContext
@@ -10,6 +9,7 @@ import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
+import `fun`.adaptive.ui.generated.resources.saveSuccess
 import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController

@@ -18,6 +18,7 @@ import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.generated.resources.close
 import `fun`.adaptive.ui.generated.resources.edit
+import `fun`.adaptive.ui.generated.resources.filterPlaceholder
 import `fun`.adaptive.ui.generated.resources.more_vert
 import `fun`.adaptive.ui.generated.resources.notSet
 import `fun`.adaptive.ui.icon.actionIcon
@@ -50,7 +51,7 @@ fun wsAppAccountManager(pane: WsPane<*, AccountManagerController>): AdaptiveFrag
                 gap { 16.dp } .. alignItems.endCenter
 
                 localContext(filterBackend) {
-                    textEditor { filter.text } .. width { 200.dp } .. inputConfig(label = "", placeholder = Strings.filter)
+                    textEditor { filter.text } .. width { 200.dp } .. inputConfig(label = "", placeholder = Strings.filterPlaceholder)
                 }
 
                 row {

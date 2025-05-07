@@ -3,6 +3,9 @@
   -->
 
 <resources>
+    <string name="saveSuccess">Sikeres mentés.</string>
+    <string name="saveFail">Hiba, nem sikerült a mentés.</string>
+
     <string name="invalidFields">Vannak még érvénytelen mezők.</string>
 
     <string name="home">Nyitólap</string>
@@ -17,6 +20,8 @@
     <string name="notSet">nincs megadva</string>
     <string name="copied">másolva</string>
     <string name="noValueSelected">nincs érték kiválasztva</string>
+    <string name="filterPlaceholder">szűrés</string>
+    <string name="settings">beállítások</string>
 
     <string name="executionError">Hiba a művelet végrehajtása közben.</string>
 

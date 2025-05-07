@@ -8,7 +8,6 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.iot.generated.resources.downloadReport
 import `fun`.adaptive.iot.generated.resources.historicalData
 import `fun`.adaptive.iot.generated.resources.noname
-import `fun`.adaptive.iot.generated.resources.settings
 import `fun`.adaptive.iot.history.ui.HistoryContentController.Mode
 import `fun`.adaptive.iot.history.ui.chart.historyChart
 import `fun`.adaptive.iot.history.ui.settings.historySettings

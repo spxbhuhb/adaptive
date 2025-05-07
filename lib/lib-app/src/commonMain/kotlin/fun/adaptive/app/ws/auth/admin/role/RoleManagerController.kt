@@ -1,12 +1,12 @@
 package `fun`.adaptive.app.ws.auth.admin.role
 
-import `fun`.adaptive.lib_app.generated.resources.saveFail
-import `fun`.adaptive.lib_app.generated.resources.saveSuccess
 import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.auth.model.RoleSpec
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
+import `fun`.adaptive.ui.generated.resources.saveFail
+import `fun`.adaptive.ui.generated.resources.saveSuccess
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
 import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.local.AvLocalItemList

@@ -18,22 +18,22 @@ class PropertiesBuilder {
     infix fun Int.default(value: Int): Int = this
 
     @AdatDescriptorName("StringDefault")
-    infix fun String.default(value: String): String = this
+    infix fun String?.default(value: String): String? = this
 
     @AdatDescriptorName("StringBlank")
-    infix fun String.blank(allowBlank: Boolean): String = this
+    infix fun String?.blank(allowBlank: Boolean): String? = this
 
     @AdatDescriptorName("StringSecret")
-    infix fun String.secret(isSecret: Boolean): String = this
+    infix fun String?.secret(isSecret: Boolean): String? = this
 
     @AdatDescriptorName("StringMinLength")
-    infix fun String.minLength(minLength: Int): String = this
+    infix fun String?.minLength(minLength: Int): String? = this
 
     @AdatDescriptorName("StringMaxLength")
-    infix fun String.maxLength(maxLength: Int): String = this
+    infix fun String?.maxLength(maxLength: Int): String? = this
 
     @AdatDescriptorName("StringPattern")
-    infix fun String.pattern(pattern: String): String = this
+    infix fun String?.pattern(pattern: String): String? = this
 
     @AdatDescriptorName("Hidden")
     infix fun <A> A.hidden(value: Boolean): A = this
