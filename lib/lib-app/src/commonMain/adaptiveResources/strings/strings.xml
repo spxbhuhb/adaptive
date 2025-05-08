@@ -58,10 +58,6 @@
 
     <string name="devTools">Fejlesztői eszközök</string>
 
-    <!-- system settings -->
-
-    <string name="appSystemSettings">Rendszer</string>
-
     <!-- misc -->
     <string name="noTechnicalInfo">Nincs több információ</string>
 

@@ -1,8 +1,8 @@
-package `fun`.adaptive.app.system.ws
+package `fun`.adaptive.iot.node.ui.admin
 
-import `fun`.adaptive.app.system.app.AppSystemWsModule
 import `fun`.adaptive.app.ws.addAdminItem
-import `fun`.adaptive.lib_app.generated.resources.appSystemSettings
+import `fun`.adaptive.iot.node.app.SpxbDriverWsModule
+import `fun`.adaptive.iot_lib_spxb.generated.resources.systemSettings
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.generated.resources.settings
@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
 fun Workspace.wsAppSystemSettingsDef(
-    module: AppSystemWsModule<*>
+    module: SpxbDriverWsModule<*>
 ) {
 
     addAdminItem(module.SYSTEM_SETTINGS_ITEM)
@@ -21,12 +21,12 @@ fun Workspace.wsAppSystemSettingsDef(
         WsPane(
             UUID(),
             workspace = this,
-            Strings.appSystemSettings,
+            Strings.systemSettings,
             Graphics.settings,
             WsPanePosition.Center,
             module.SYSTEM_SETTINGS_KEY,
             module.SYSTEM_SETTINGS_ITEM,
-            SystemSettingsController(module)
+            AppSystemSettingsController(module)
         )
     }
 

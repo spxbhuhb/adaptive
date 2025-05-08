@@ -56,6 +56,7 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.adaptive.core.core)
             implementation(libs.adaptive.core.ui)
+            implementation(libs.adaptive.lib.app)
             implementation(libs.adaptive.lib.ktor)
             implementation(libs.adaptive.lib.ui)
             implementation(libs.adaptive.lib.document)
