@@ -51,7 +51,7 @@ AbstractApplication
 │   └── JvmServerApplication
 ├── ClientApplication
 │   └── BrowserApplication
-|       ├── BasicBrowserClientApplication
+│       ├── BasicBrowserClientApplication
 │       └── WsBrowserClientApplication
 ```
 
