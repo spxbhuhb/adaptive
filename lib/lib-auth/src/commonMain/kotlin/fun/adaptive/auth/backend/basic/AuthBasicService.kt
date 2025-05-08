@@ -24,7 +24,7 @@ import `fun`.adaptive.value.store.AvComputeContext
 import `fun`.adaptive.value.util.serviceSubscribe
 import kotlinx.datetime.Clock.System.now
 
-class AuthBasicService : ServiceImpl<AuthBasicService>, AuthBasicApi {
+class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
 
     val authWorker by worker<AuthWorker>()
     val valueWorker by worker<AvValueWorker>()

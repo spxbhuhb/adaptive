@@ -5,6 +5,7 @@
 package `fun`.adaptive.kotlin.service.ir.util
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
+import `fun`.adaptive.kotlin.service.ir.ServicesPluginContext
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.builders.declarations.IrClassBuilder
@@ -16,6 +17,7 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrDelegatingConstructorCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrInstanceInitializerCallImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrAnonymousInitializerSymbolImpl
 import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
+import org.jetbrains.kotlin.ir.types.defaultType
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.constructors
@@ -23,20 +25,6 @@ import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.name.SpecialNames
 
 interface IrClassBaseBuilder : AbstractIrBuilder {
-
-    fun buildClassBase(customizer: IrClassBuilder.() -> Unit) =
-        irFactory.buildClass {
-            startOffset = SYNTHETIC_OFFSET
-            endOffset = SYNTHETIC_OFFSET
-            origin = IrDeclarationOrigin.DEFINED
-            kind = ClassKind.CLASS
-            modality = Modality.FINAL
-            customizer()
-        }.also {
-            it.thisReceiver()
-            constructor(it)
-            initializer(it)
-        }
 
     fun constructor(klass: IrClass): IrConstructor =
 
@@ -46,13 +34,15 @@ interface IrClassBaseBuilder : AbstractIrBuilder {
         }.apply {
             parent = klass
 
+            val safeContext = pluginContext as ServicesPluginContext
+
             body = irFactory.createBlockBody(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET).apply {
 
                 statements += IrDelegatingConstructorCallImpl(
                     SYNTHETIC_OFFSET,
                     SYNTHETIC_OFFSET,
-                    irBuiltIns.anyType,
-                    irBuiltIns.anyClass.constructors.first(),
+                    safeContext.serviceImplType,
+                    safeContext.serviceImplConstructor,
                     typeArgumentsCount = 0
                 )
 

@@ -18,7 +18,7 @@ import `fun`.adaptive.iot.driver.request.AdrWritePoint
 import `fun`.adaptive.iot.driver.request.AioDriverRequest
 import `fun`.adaptive.iot.point.AioPointSpec
 
-class AioDriverService<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec> : ServiceImpl<AioDriverService<NT,CT,PT>>, AioDriverApi {
+class AioDriverService<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec> : ServiceImpl<AioDriverService<NT, CT, PT>>(), AioDriverApi {
 
     companion object {
         lateinit var worker : AioDriverWorker<*,*,*>

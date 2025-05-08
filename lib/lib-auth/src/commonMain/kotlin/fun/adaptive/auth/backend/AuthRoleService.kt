@@ -18,7 +18,7 @@ import `fun`.adaptive.value.item.AvItem
 import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.value.util.serviceSubscribe
 
-class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService> {
+class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
 
     val valueWorker by worker<AvValueWorker>()
     val authWorker by worker<AuthWorker>()

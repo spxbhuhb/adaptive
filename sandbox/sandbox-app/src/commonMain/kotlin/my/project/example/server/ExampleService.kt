@@ -8,7 +8,7 @@ import my.project.example.model.ExampleData
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 
-class ExampleService : ServiceImpl<ExampleService>, ExampleApi {
+class ExampleService : ServiceImpl<ExampleService>(), ExampleApi {
 
     companion object {
         var lock = getLock()

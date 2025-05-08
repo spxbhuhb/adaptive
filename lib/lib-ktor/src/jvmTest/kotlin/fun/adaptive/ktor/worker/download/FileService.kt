@@ -4,7 +4,7 @@ import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.api.getDownloadPath
 import `fun`.adaptive.utility.write
 
-class FileService : ServiceImpl<FileService>, FileApi {
+class FileService : ServiceImpl<FileService>(), FileApi {
 
     override suspend fun download(): String {
         val path = getDownloadPath("a.txt")

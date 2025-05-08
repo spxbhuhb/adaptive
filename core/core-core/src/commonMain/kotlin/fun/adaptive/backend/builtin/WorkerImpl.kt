@@ -10,7 +10,7 @@ import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-interface WorkerImpl<T : WorkerImpl<T>> : BackendFragmentImpl {
+abstract class WorkerImpl<T : WorkerImpl<T>> : BackendFragmentImpl() {
 
     // FIXME scope change in adaptive worker (this does not respect the change)
     val isActive: Boolean
@@ -19,21 +19,22 @@ interface WorkerImpl<T : WorkerImpl<T>> : BackendFragmentImpl {
     val scope: CoroutineScope
         get() = (fragment as BackendWorker).scope
 
-    suspend fun run()
+    open suspend fun run() = Unit
 
-}
-
-/**
- * Launches a function in the scope of this worker.
- */
-fun WorkerImpl<*>.launch(function: suspend CoroutineScope.() -> Unit) {
-    scope.launch {
-        try {
-            function(this)
-        } catch (_: CancellationException) {
-            scope.ensureActive()
-        } catch (ex: Exception) {
-            logger.error(ex)
+    /**
+     * Launches a function in the scope of this worker.
+     */
+    open fun launch(function: suspend CoroutineScope.() -> Unit) {
+        scope.launch {
+            try {
+                function(this)
+            } catch (_: CancellationException) {
+                scope.ensureActive()
+            } catch (ex: Exception) {
+                logger.error(ex)
+            }
         }
     }
 }
+
+

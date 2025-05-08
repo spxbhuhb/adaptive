@@ -23,7 +23,7 @@ import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
 import `fun`.adaptive.value.store.AvComputeContext
 import kotlinx.datetime.Clock.System.now
 
-class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService> {
+class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>() {
 
     val valueWorker by worker<AvValueWorker>()
     val authWorker by worker<AuthWorker>()

@@ -29,7 +29,7 @@ interface NumberApi {
     suspend fun ensureEven(i: Int, illegal: Boolean)
 }
 
-class NumberService : NumberApi, ServiceImpl<NumberService> {
+class NumberService : NumberApi, ServiceImpl<NumberService>() {
 
     override suspend fun ensureEven(i: Int, illegal: Boolean) {
         publicAccess()

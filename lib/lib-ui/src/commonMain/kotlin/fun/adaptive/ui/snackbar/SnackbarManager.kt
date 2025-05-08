@@ -1,10 +1,9 @@
 package `fun`.adaptive.ui.snackbar
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
-import `fun`.adaptive.backend.builtin.launch
 import kotlinx.coroutines.delay
 
-class SnackbarManager : WorkerImpl<SnackbarManager> {
+class SnackbarManager : WorkerImpl<SnackbarManager>() {
 
     override suspend fun run() {
         for (snack in pendingSnackChannel) {

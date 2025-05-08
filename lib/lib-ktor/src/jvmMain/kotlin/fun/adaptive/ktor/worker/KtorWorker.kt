@@ -32,7 +32,7 @@ import java.util.concurrent.TimeUnit
 
 class KtorWorker(
     port: Int = 8080
-) : WorkerImpl<KtorWorker> {
+) : WorkerImpl<KtorWorker>() {
 
     val port by setting<Int> { "KTOR_PORT" } default port
     val wireFormat by setting<String> { "KTOR_WIREFORMAT" } default "json"

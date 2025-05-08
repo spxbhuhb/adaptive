@@ -17,7 +17,7 @@ import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.firstItemOrNull
 import `fun`.adaptive.value.item.AvItem
 
-class AuthWorker : WorkerImpl<AuthWorker> {
+class AuthWorker : WorkerImpl<AuthWorker>() {
 
     lateinit var securityOfficer: AvValueId
 

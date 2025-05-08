@@ -14,7 +14,7 @@ import `fun`.adaptive.value.local.AvMarkedValueId
 import `fun`.adaptive.value.local.AvMarkedValueSubscriptionResult
 import `fun`.adaptive.value.util.serviceSubscribe
 
-class RhtPublishService : ServiceImpl<RhtPublishService>, RhtPublishApi {
+class RhtPublishService : ServiceImpl<RhtPublishService>(), RhtPublishApi {
 
     companion object {
         lateinit var worker: AvValueWorker

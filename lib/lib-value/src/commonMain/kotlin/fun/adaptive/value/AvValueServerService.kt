@@ -6,7 +6,7 @@ import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.operation.AvValueOperation
 
-class AvValueServerService(): ServiceImpl<AvValueServerService>, AvValueApi {
+class AvValueServerService() : ServiceImpl<AvValueServerService>(), AvValueApi {
 
     companion object {
         lateinit var worker: AvValueWorker

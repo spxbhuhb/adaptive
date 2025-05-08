@@ -14,6 +14,7 @@ import `fun`.adaptive.kotlin.service.Strings
 import `fun`.adaptive.kotlin.wireformat.WireFormatCache
 import org.jetbrains.kotlin.backend.common.extensions.IrPluginContext
 import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.util.constructors
 
 class ServicesPluginContext(
     irContext: IrPluginContext,
@@ -23,6 +24,8 @@ class ServicesPluginContext(
     val serviceConsumerClass = ClassIds.SERVICE_CONSUMER.classSymbol()
 
     val serviceImplClass = ClassIds.SERVICE_IMPL.classSymbol()
+    val serviceImplType = serviceImplClass.defaultType
+    val serviceImplConstructor = serviceImplClass.constructors.first()
     val serviceImplNewInstance = serviceImplClass.functionByName { Strings.NEW_INSTANCE }
     val serviceImplFragment = serviceImplClass.property { Strings.FRAGMENT }
 

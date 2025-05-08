@@ -16,7 +16,7 @@ class ProcessWorker(
     val environment: Map<String, String> = emptyMap(),
     val workingDirectory: String? = null,
     val wireFormat: String,
-) : WorkerImpl<ProcessWorker> {
+) : WorkerImpl<ProcessWorker>() {
 
     override suspend fun run() {
 

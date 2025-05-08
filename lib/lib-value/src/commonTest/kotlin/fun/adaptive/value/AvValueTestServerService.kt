@@ -5,7 +5,7 @@ import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.value.operation.AvValueOperation
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 
-class AvValueTestServerService : ServiceImpl<AvValueTestServerService>, AvValueApi {
+class AvValueTestServerService : ServiceImpl<AvValueTestServerService>(), AvValueApi {
 
     val worker
         get() = safeAdapter.firstImpl<AvValueWorker>()

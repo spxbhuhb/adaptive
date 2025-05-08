@@ -17,7 +17,7 @@ interface TestService {
 
 val testServiceConsumer = getService<TestService>(TestServiceTransport(TestServiceImpl()))
 
-class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl> {
+class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl>() {
 
     override var serviceCallTransport: ServiceCallTransport
         get() = serviceContext.transport

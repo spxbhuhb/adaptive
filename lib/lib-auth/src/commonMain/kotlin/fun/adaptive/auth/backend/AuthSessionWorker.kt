@@ -18,7 +18,7 @@ import `fun`.adaptive.utility.vmNowSecond
 import kotlinx.coroutines.delay
 import kotlin.coroutines.cancellation.CancellationException
 
-class AuthSessionWorker : WorkerImpl<AuthSessionWorker>, ServiceSessionProvider {
+class AuthSessionWorker : WorkerImpl<AuthSessionWorker>(), ServiceSessionProvider {
 
     val lock = getLock()
 

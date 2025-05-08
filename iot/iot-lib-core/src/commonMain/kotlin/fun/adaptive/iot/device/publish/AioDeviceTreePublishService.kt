@@ -11,7 +11,7 @@ import `fun`.adaptive.value.AvValueSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.util.serviceSubscribe
 
-class AioDeviceTreePublishService : AioDeviceTreePublishApi, ServiceImpl<AioDeviceTreePublishService> {
+class AioDeviceTreePublishService : AioDeviceTreePublishApi, ServiceImpl<AioDeviceTreePublishService>() {
 
     companion object {
         lateinit var worker: AvValueWorker

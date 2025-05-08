@@ -21,7 +21,7 @@ import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.value.store.AvComputeContext
 import kotlinx.datetime.Clock.System.now
 
-class AioPointService : AioPointApi, ServiceImpl<AioPointService> {
+class AioPointService : AioPointApi, ServiceImpl<AioPointService>() {
 
     companion object {
         lateinit var valueWorker: AvValueWorker

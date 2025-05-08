@@ -13,7 +13,7 @@ import `fun`.adaptive.value.item.AvItem
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
-abstract class AbstractProtocolWorker<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec> : WorkerImpl<AbstractProtocolWorker<*, *, *>> {
+abstract class AbstractProtocolWorker<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec> : WorkerImpl<AbstractProtocolWorker<*, *, *>>() {
 
     protected val taskQueue = Channel<DriverTask<NT, CT, PT>>()
 

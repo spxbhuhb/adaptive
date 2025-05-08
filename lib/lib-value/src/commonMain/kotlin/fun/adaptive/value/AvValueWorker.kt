@@ -16,7 +16,7 @@ open class AvValueWorker(
     val domain: AvValueDomain,
     val persistence: AbstractValuePersistence = NoPersistence(),
     val trace: Boolean = false
-) : WorkerImpl<AvValueWorker> {
+) : WorkerImpl<AvValueWorker>() {
 
     val store
         get() = checkNotNull(storeOrNull) { "Store is not initialized" }

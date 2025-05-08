@@ -20,7 +20,7 @@ import `fun`.adaptive.value.store.AvComputeContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.datetime.Instant
 
-class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker> {
+class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker>() {
 
     companion object {
         suspend fun update(curVal: AvValue?) = curVal?.let { channel.send(curVal) }

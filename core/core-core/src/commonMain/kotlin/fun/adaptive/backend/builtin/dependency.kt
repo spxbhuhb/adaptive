@@ -4,26 +4,10 @@
 
 package `fun`.adaptive.backend.builtin
 
+import `fun`.adaptive.backend.BackendFragment
 import `fun`.adaptive.foundation.query.single
 import `fun`.adaptive.foundation.query.singleOrNull
-import `fun`.adaptive.backend.BackendFragment
 
-/**
- * Finds the store of the given type [T].
- *
- * Throws exception when:
- *
- * - the fragment is not part of an adaptive backend
- * - there is no store of the given type
- * - there is more than one store of the given type
- */
-inline fun <reified T : StoreImpl<T>> BackendFragmentImpl.store(): Lazy<T> =
-    lazy {
-        checkNotNull(adapter) { "this implementation is not part of an adaptive backend" }
-            .single { it is BackendFragment && it.impl is T }
-            .let { (it as BackendFragment) }
-            .impl as T
-    }
 
 /**
  * Finds the service of the given type [T].

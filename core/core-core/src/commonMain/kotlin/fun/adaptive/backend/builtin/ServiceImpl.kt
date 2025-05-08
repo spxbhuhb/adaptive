@@ -13,7 +13,7 @@ import `fun`.adaptive.utility.manualOrPlugin
 import `fun`.adaptive.utility.pluginGenerated
 import `fun`.adaptive.wireformat.WireFormatDecoder
 
-interface ServiceImpl<T : ServiceImpl<T>> : ServiceBase, BackendFragmentImpl {
+abstract class ServiceImpl<T : ServiceImpl<T>> : BackendFragmentImpl(), ServiceBase {
 
     /**
      *  The transport from [serviceContext].
@@ -27,14 +27,14 @@ interface ServiceImpl<T : ServiceImpl<T>> : ServiceBase, BackendFragmentImpl {
     /**
      * Context of a service call. Set by `dispatch` when the call goes through it.
      */
-    val serviceContext: ServiceContext
+    open val serviceContext: ServiceContext
         get() = manualOrPlugin("serviceContext")
 
     /**
      * The internal version of this service implementation. The context is [ServiceContext] with
      * `UUID.NIL` context id.
      */
-    val internal: T
+    open val internal: T
         get() = newInstance(ServiceContext(transport = LocalServiceCallTransport(), UUID.nil()))
 
     /**
@@ -42,13 +42,13 @@ interface ServiceImpl<T : ServiceImpl<T>> : ServiceBase, BackendFragmentImpl {
      */
     operator fun invoke(context: ServiceContext): T = newInstance(context)
 
-    fun newInstance(serviceContext: ServiceContext): T =
+    open fun newInstance(serviceContext: ServiceContext): T =
         manualOrPlugin("newInstance")
 
     /**
      * Called by the generated dispatch when the requested function name is unknown.
      */
-    fun unknownFunction(funName: String): Nothing {
+    open fun unknownFunction(funName: String): Nothing {
         throw IllegalStateException("unknown function: $funName")
     }
 
@@ -56,7 +56,7 @@ interface ServiceImpl<T : ServiceImpl<T>> : ServiceBase, BackendFragmentImpl {
      * Called by service transports to execute a service call. Actual code of this function is generated
      * by the plugin.
      */
-    suspend fun dispatch(funName: String, payload: WireFormatDecoder<*>): ByteArray {
+    open suspend fun dispatch(funName: String, payload: WireFormatDecoder<*>): ByteArray {
         pluginGenerated()
     }
 

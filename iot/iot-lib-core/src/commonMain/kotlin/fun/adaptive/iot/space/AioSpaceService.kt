@@ -13,7 +13,7 @@ import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
 import kotlinx.datetime.Clock.System.now
 
-class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService> {
+class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService>() {
 
     companion object {
         lateinit var worker: AvValueWorker

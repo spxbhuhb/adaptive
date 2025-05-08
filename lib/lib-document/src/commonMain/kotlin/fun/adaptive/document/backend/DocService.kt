@@ -11,7 +11,7 @@ import `fun`.adaptive.value.AvValueSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.util.serviceSubscribe
 
-class DocService : ServiceImpl<DocService>, DocApi {
+class DocService : ServiceImpl<DocService>(), DocApi {
 
     companion object {
         lateinit var worker: AvValueWorker

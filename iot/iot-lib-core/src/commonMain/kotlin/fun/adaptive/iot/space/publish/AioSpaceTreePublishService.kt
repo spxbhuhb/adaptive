@@ -9,7 +9,7 @@ import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.util.serviceSubscribe
 
-class AioSpaceTreePublishService : AioSpaceTreePublishApi, ServiceImpl<AioSpaceTreePublishService> {
+class AioSpaceTreePublishService : AioSpaceTreePublishApi, ServiceImpl<AioSpaceTreePublishService>() {
 
     companion object {
         lateinit var worker: AvValueWorker

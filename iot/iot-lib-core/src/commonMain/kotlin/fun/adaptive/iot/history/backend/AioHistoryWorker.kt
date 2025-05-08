@@ -21,7 +21,7 @@ import kotlinx.io.files.Path
 import kotlin.js.JsName
 import kotlin.time.Duration.Companion.minutes
 
-class AioHistoryWorker : WorkerImpl<AioHistoryWorker> {
+class AioHistoryWorker : WorkerImpl<AioHistoryWorker>() {
 
     companion object {
         const val META_NAME = "meta.json"

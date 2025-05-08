@@ -14,7 +14,7 @@ import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
 import kotlinx.datetime.Clock.System.now
 
-class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService> {
+class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService>() {
 
     companion object {
         lateinit var worker: AvValueWorker

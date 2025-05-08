@@ -9,21 +9,21 @@ import `fun`.adaptive.backend.BackendFragment
 import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.utility.manualOrPlugin
 
-interface BackendFragmentImpl {
+abstract class BackendFragmentImpl {
 
     /**
      * Fragment of the adaptive backend if the implementation belongs to one. Replaced
      * by the plugin with a field initialized to `null`. Set by the backend builder
      * functions such as `store`, `service` and `worker`.
      */
-    var fragment : BackendFragment?
+    open var fragment: BackendFragment?
         get() = manualOrPlugin("backendAdapter")
         set(value) = manualOrPlugin("backendAdapter", value)
 
     /**
      * Adapter of the adaptive backend if the fragment is part of one.
      */
-    val adapter : BackendAdapter?
+    open val adapter: BackendAdapter?
         get() = fragment?.adapter as? BackendAdapter
 
     /**
@@ -31,7 +31,7 @@ interface BackendFragmentImpl {
      *
      * @throws IllegalStateException The implementation is not part of an adaptive backend.
      */
-    val safeAdapter : BackendAdapter
+    open val safeAdapter: BackendAdapter
         get() = checkNotNull(adapter) { "this implementation is not part of an adaptive backend" }
 
     /**
@@ -39,7 +39,7 @@ interface BackendFragmentImpl {
      * backend. Replaced by the plugin with a field initialized to
      * `adapter.getLogger(classFqName)`.
      */
-    var logger : AdaptiveLogger
+    open var logger: AdaptiveLogger
         get() = manualOrPlugin("logger")
         set(value) = manualOrPlugin("logger", value)
 
@@ -50,7 +50,7 @@ interface BackendFragmentImpl {
      * try to use a dependency retrieved by `store`, `service` or `worker` the call
      * might throw an exception.
      */
-    fun create() = Unit
+    open fun create() = Unit
 
     /**
      * Called when the fragment that contains this implementation is mounted by
@@ -59,7 +59,7 @@ interface BackendFragmentImpl {
      * dependencies in mount, but it might be possible that the dependencies are not
      * mounted yet.
      */
-    fun mount() = Unit
+    open fun mount() = Unit
 
     /**
      * Called when the fragment that contains this implementation is unmounted by
@@ -67,5 +67,5 @@ interface BackendFragmentImpl {
      * can use dependencies in unmount, but it might be possible that the dependencies
      * are already unmounted.
      */
-    fun unmount() = Unit
+    open fun unmount() = Unit
 }

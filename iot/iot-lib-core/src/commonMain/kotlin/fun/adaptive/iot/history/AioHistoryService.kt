@@ -20,7 +20,7 @@ import `fun`.adaptive.value.builtin.AvConvertedDouble
 import `fun`.adaptive.value.builtin.AvDouble
 import kotlinx.datetime.Instant
 
-class AioHistoryService : ServiceImpl<AioHistoryService>, AioHistoryApi {
+class AioHistoryService : ServiceImpl<AioHistoryService>(), AioHistoryApi {
 
     companion object {
         lateinit var valueWorker: AvValueWorker

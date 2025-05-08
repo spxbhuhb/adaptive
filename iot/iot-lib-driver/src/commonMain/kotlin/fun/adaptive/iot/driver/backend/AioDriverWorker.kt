@@ -23,7 +23,7 @@ class AioDriverWorker<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec>
     val networkSpecClass: KClass<NT>,
     val controllerSpecClass: KClass<CT>,
     val pointSpecClass: KClass<PT>
-) : WorkerImpl<AioDriverWorker<*, *, *>> {
+) : WorkerImpl<AioDriverWorker<*, *, *>>() {
 
     val valueWorker by worker<AvValueWorker>()
 

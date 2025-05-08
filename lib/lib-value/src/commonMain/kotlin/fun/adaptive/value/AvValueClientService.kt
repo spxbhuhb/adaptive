@@ -4,7 +4,7 @@ import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.value.operation.AvValueOperation
 
-class AvValueClientService : ServiceImpl<AvValueClientService>, AvValueApi {
+class AvValueClientService : ServiceImpl<AvValueClientService>(), AvValueApi {
 
     companion object {
         lateinit var worker: AvValueWorker

@@ -22,7 +22,7 @@ import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock.System.now
 import kotlin.math.abs
 
-class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService> {
+class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
 
     val valueWorker by worker<AvValueWorker>()
     val sessionWorker by worker<AuthSessionWorker>()

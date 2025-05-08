@@ -23,7 +23,7 @@ interface DuplexApi {
     suspend fun process(value: String): String
 }
 
-class DuplexService : DuplexApi, ServiceImpl<DuplexService> {
+class DuplexService : DuplexApi, ServiceImpl<DuplexService>() {
 
     override suspend fun process(value: String): String {
         if (value.length > 4) {

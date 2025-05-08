@@ -2,7 +2,7 @@ package `fun`.adaptive.sandbox.app.echo
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
 
-class EchoService : ServiceImpl<EchoService>, EchoApi {
+class EchoService : ServiceImpl<EchoService>(), EchoApi {
 
     override suspend fun send(message: String): String {
         return message.reversed()
