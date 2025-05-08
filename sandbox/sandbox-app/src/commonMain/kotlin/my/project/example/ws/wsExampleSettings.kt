@@ -1,4 +1,4 @@
-package `fun`.adaptive.example.ws
+package my.project.example.ws
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment

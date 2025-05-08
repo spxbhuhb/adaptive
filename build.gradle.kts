@@ -87,7 +87,7 @@ tasks.register<Copy>("collectGuides") {
         val trainingDir = File(build.projectDir, "training")
         if (trainingDir.exists()) {
             from(trainingDir) {
-                include("**/*_guide.md")
+                include("**/*")
                 eachFile {
                     path = name
                 }

@@ -1,6 +1,6 @@
-package `fun`.adaptive.example.ws
+package my.project.example.ws
 
-import `fun`.adaptive.example.app.ExampleWsModule
+import my.project.example.app.ExampleWsModule
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.generated.resources.settings

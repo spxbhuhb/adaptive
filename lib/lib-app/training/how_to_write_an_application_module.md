@@ -1,13 +1,13 @@
 ---
-language: kotlin
+title: How to Write an Application Module
 tags: [lib-app, application, module, ui, server, workspace]
-title: Application Module Definition
+type: procedural
 ---
 
 # Summary
 
 This guide defines the classes needed to implement an application module named
-`example` under the package `fun.adaptive`. It supports:
+`example` under the package `my.project`. It supports:
 
 - Adat class registration (e.g., `ExampleData`)
 - Application-wide resources (e.g., string stores)
@@ -32,7 +32,7 @@ Define and implement the core module classes for:
 
 ## 1. Shared Module Definition
 
-**File**: `src/commonMain/kotlin/fun/adaptive/example/app/ExampleModule.kt`
+**File**: `src/commonMain/kotlin/my/project/example/app/ExampleModule.kt`
 
 ### Purpose
 
@@ -41,10 +41,10 @@ Defines shared behavior for client and server, including wire-format and resourc
 ### Code
 
 ```kotlin
-package `fun`.adaptive.example.app
+package my.project.example.app
 
-import `fun`.adaptive.example.model.ExampleData
-import `fun`.adaptive.example.generated.resources.commonMainStringsStringStore0
+import my.project.example.model.ExampleData
+import my.project.example.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.wireformat.WireFormatRegistry
@@ -68,7 +68,7 @@ open class ExampleModule<WT : AbstractWorkspace> : AppModule<WT>() {
 This class sets up wire formats for Adat-based serialization and application resources. 
 Both server and client modules extend it to ensure consistent behavior across environments.
 
-`fun.adaptive.example.generated.resoures` is the package for generated resources. It can be set
+`my.project.example.generated.resoures` is the package for generated resources. It can be set
 in `build.gradle.kts`. If a `Gradle` module contains more than one application module, only one 
 should add the resources as they are typically shared between all application modules in the
 same `Gradle` module.
@@ -76,7 +76,7 @@ same `Gradle` module.
 ```kotlin
 adaptive {
     resources {
-        packageOfResources = "fun.adaptive.example.generated.resources"
+        packageOfResources = "my.project.example.generated.resources"
     }
 }
 ```
@@ -85,7 +85,7 @@ adaptive {
 
 ## 2. Server-Side Module Definition
 
-**File**: `src/commonMain/kotlin/fun/adaptive/example/app/ExampleServerModule.kt`
+**File**: `src/commonMain/kotlin/my/project/example/app/ExampleServerModule.kt`
 
 ### Purpose
 
@@ -94,10 +94,10 @@ Initializes server-only components like services and workers.
 ### Code
 
 ```kotlin
-package `fun`.adaptive.example.app
+package my.project.example.app
 
-import `fun`.adaptive.example.server.ExampleService
-import `fun`.adaptive.example.server.ExampleWorker
+import my.project.example.server.ExampleService
+import my.project.example.server.ExampleWorker
 import `fun`.adaptive.runtime.ServerWorkspace
 
 class ExampleServerModule<WT : ServerWorkspace> : ExampleModule<WT>() {
@@ -119,7 +119,7 @@ This class handles back-end-specific registration. It ensures that services (lik
 
 ## 3. Workspace-Based UI Module
 
-**File**: `src/commonMain/kotlin/fun/adaptive/example/app/ExampleWsModule.kt`
+**File**: `src/commonMain/kotlin/my/project/example/app/ExampleWsModule.kt`
 
 ### Purpose
 
@@ -128,10 +128,10 @@ Initializes the UI fragments and workspace panes available in the client applica
 ### Code
 
 ```kotlin
-package `fun`.adaptive.example.app
+package my.project.example.app
 
-import `fun`.adaptive.example.ws.wsExampleSettings
-import `fun`.adaptive.example.ws.wsExampleSettingsDef
+import my.project.example.ws.wsExampleSettings
+import my.project.example.ws.wsExampleSettingsDef
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.ui.workspace.Workspace
 
@@ -171,8 +171,12 @@ fragment name with `Def` added.
 ## Server side (JVM)
 
 ```kotlin
-jvmServer {
-    module { ExampleServerModule() }
+import my.project.example.app.ExampleServerModule
+
+fun main() {
+    jvmServer {
+        module { ExampleServerModule() }
+    }
 }
 ```
 
@@ -185,8 +189,12 @@ jvmServer {
 ## Client side (browser)
 
 ```kotlin
-wsBrowserClient {
-    module { ExampleWsModule() }
+import my.project.example.app.ExampleClientModule
+
+fun main() {
+    wsBrowserClient {
+        module { ExampleWsModule() }
+    }
 }
 ```
 
@@ -209,7 +217,7 @@ wsBrowserClient {
 
 # See also
 
-[Application Module Directory Structure Guide](application_module_directory_structure_guide.md)
+[What is an Application](what_is_an_application.md)
 
 ---
 

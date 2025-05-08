@@ -18,6 +18,7 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.LocalServiceCallTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineScope
@@ -26,6 +27,7 @@ import kotlinx.coroutines.launch
 
 abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>() {
 
+    var wireFormatProvider : WireFormatProvider = Proto
     var localTransport: Boolean = false
 
     override lateinit var transport: ServiceCallTransport
@@ -48,7 +50,7 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
             transport = if (localTransport) {
                 LocalServiceCallTransport()
             } else {
-                webSocketTransport(window.location.origin, wireFormatProvider = Proto).also { it.start() }
+                webSocketTransport(window.location.origin, wireFormatProvider).also { it.start() }
             }
 
             if (! localTransport) {

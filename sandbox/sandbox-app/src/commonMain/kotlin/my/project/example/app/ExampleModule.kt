@@ -1,4 +1,4 @@
-package `fun`.adaptive.example.app
+package my.project.example.app
 
 import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule

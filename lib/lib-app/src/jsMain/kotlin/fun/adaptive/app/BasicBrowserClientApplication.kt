@@ -32,7 +32,10 @@ open class BasicBrowserClientApplication(
 
             if (start) {
                 BasicBrowserClientApplication(*builder.modules.toTypedArray())
-                    .also { it.localTransport = builder.localTransport }
+                    .also {
+                        it.wireFormatProvider = builder.wireFormatProvider
+                        it.localTransport = builder.localTransport
+                    }
                     .main()
             }
         }

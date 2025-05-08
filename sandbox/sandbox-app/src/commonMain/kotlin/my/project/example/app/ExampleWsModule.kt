@@ -1,7 +1,7 @@
-package `fun`.adaptive.example.app
+package my.project.example.app
 
-import `fun`.adaptive.example.ws.wsExampleSettings
-import `fun`.adaptive.example.ws.wsExampleSettingsDef
+import my.project.example.ws.wsExampleSettings
+import my.project.example.ws.wsExampleSettingsDef
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.resource.graphics.Graphics
