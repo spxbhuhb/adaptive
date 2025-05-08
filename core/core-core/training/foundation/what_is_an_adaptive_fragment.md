@@ -202,7 +202,7 @@ fun t2(time : Instant) {
 > variables can change, just not because of the other variables used to calculate them.
 >
 > You can change them explicitly (if they are declared as `var`) or they can change
-> automatically if they have a [producer](../foundation/producer.md).
+> automatically if they have a [producer](what_is_a_producer.md).
 >
 
 ## Lifecycle
@@ -216,12 +216,12 @@ Fragments follow a defined lifecycle:
       2. call `genPatchInternal` to set internal state variables
    2. call `genBuild` to create child fragments
 3. call `mount`
-   1. call `parent.addActual` to put the fragment into the [actual UI](../internals/actual-ui.md) tree (if there is one)
+   1. call `parent.addActual` to put the fragment into the actual UI tree (if there is one)
    2. call `child.mount` to put the child fragments into the actual UI
 4. ... life goes on ...
 5. call `unmount`
    1. call `child.unmount` to remove the child fragments from the actual UI
-   2. call `parent.removeActual` to remove the fragment from the [actual UI](../internals/actual-ui.md) tree (if there is one)
+   2. call `parent.removeActual` to remove the fragment from the actual UI tree (if there is one)
 6. call `dispose`
    1. call `child.dispose` to dispose all descendant fragments
    2. remove all producers by calling `removeProducer` on it

@@ -45,7 +45,7 @@ These features are especially useful for managing interactive, multi-user enviro
 # Usage Example
 
 ```kotlin
-class HelloService : HelloServiceApi, ServiceImpl<HelloService> {
+class HelloService : HelloServiceApi, ServiceImpl<HelloService>() {
 
     override suspend fun hello(myName: String): String {
         publicAccess()
@@ -72,8 +72,8 @@ In this example:
 
 # See Also
 
-[Write a service](write_a_service.md)
-[Service Transport](services_transport.md)
+[How to Write a Service](how_to_write_a_service.md)
+[What Is a Service Transport](what_is_a_service_transport.md)
 
 # Conclusion
 

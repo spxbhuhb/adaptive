@@ -144,7 +144,7 @@ import `fun`.adaptive.example.model.ExampleData
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 
-class ExampleService : ServiceImpl<ExampleService>, ExampleApi {
+class ExampleService : ServiceImpl<ExampleService>(), ExampleApi {
     
     companion object {
         var lock = getLock()
@@ -169,7 +169,7 @@ class ExampleService : ServiceImpl<ExampleService>, ExampleApi {
 Service providers implement a service API. They are standard server-side fragments that extend `ServiceImpl`.
 
 A new service implementation instance is created for each service call. This might seem a bit of overkill, but it
-makes the handling of the [service context](services_context_guide.md) very straightforward.
+makes the handling of the [service context](what_is_a_service_context.md) very straightforward.
 
 This example uses the companion to store the data protected by a lock. Synchronizing data access is
 critical as there may be many implementations running at the same time. Here we use a simple lock, but you can
@@ -188,7 +188,7 @@ There are many `ensure*` functions, check the `lib-auth` for more information ab
 > no matter how you change it with `saveExampleData`.
 >
 > ```kotlin
-> class ExampleService : ServiceImpl<ExampleService>, ExampleApi {
+> class ExampleService : ServiceImpl<ExampleService>(), ExampleApi {
 >     
 >    val data = ExampleData("abc", 12, emptyList())
 > 
@@ -254,7 +254,7 @@ interface NumberApi {
 
 // ----  SERVER SIDE  --------
 
-class NumberService : NumberApi, ServiceImpl<NumberService> {
+class NumberService : NumberApi, ServiceImpl<NumberService>() {
 
   override suspend fun ensureEven(i : Int, illegal : Boolean) {
     publicAccess()
@@ -281,7 +281,7 @@ suspend fun checkNumber(i : Int, illegal : Boolean) : String {
 
 ### Explanation
 
-Exception handling depends on the transport implementation, see [Service Transport](services_transport_guide.md).
+Exception handling depends on the transport implementation, see [Service Transport](what_is_a_service_transport.md).
 
 With the Ktor implementation, server-side exceptions are thrown on the client-side according to these rules.
 
@@ -369,8 +369,8 @@ You can call client-side service functions from the server if:
 
 # See Also
 
-- [What is a Service Context](what_is_a_service_context.md)
-- [Service Transport](services_transport_guide.md)
+- [What Is a Service Context](what_is_a_service_context.md)
+- [What Is Service Transport](what_is_a_service_transport.md)
 
 # Conclusion
 
