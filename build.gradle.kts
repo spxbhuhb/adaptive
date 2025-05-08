@@ -68,10 +68,10 @@ shorthand("iot-app", "jvmRun", "iot-jvm")
 // name, typically that's what's wrong.
 
 
-tasks.register<Copy>("collectGuides") {
+tasks.register<Copy>("collectTrainingDocuments") {
     group = "training"
 
-    val destinationDir = File(rootDir, "build/adaptive/guides")
+    val destinationDir = File(rootDir, "build/adaptive/training")
     into(destinationDir)
 
     // Clear the destination directory before copying
@@ -96,4 +96,15 @@ tasks.register<Copy>("collectGuides") {
     }
 
     includeEmptyDirs = false
+}
+
+tasks.register<Zip>("zipTrainingDocuments") {
+    group = "training"
+    dependsOn("collectTrainingDocuments")
+
+    val guidesDir = File(rootDir, "build/adaptive/training")
+    from(guidesDir)
+
+    destinationDirectory.set(File(rootDir, "build/adaptive"))
+    archiveFileName.set("training.zip")
 }
