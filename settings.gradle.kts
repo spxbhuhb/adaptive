@@ -37,3 +37,5 @@ includeBuild("sandbox/sandbox-app")
 
 includeBuild("site/site-app")
 includeBuild("site/site-lib-cookbook")
+
+includeBuild("supervisor/supervisor-app")
