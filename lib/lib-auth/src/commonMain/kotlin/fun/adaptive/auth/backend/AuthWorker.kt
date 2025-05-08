@@ -9,8 +9,6 @@ import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.backend.builtin.WorkerImpl
-import `fun`.adaptive.backend.builtin.worker
-import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.backend.query.firstImplOrNull
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker

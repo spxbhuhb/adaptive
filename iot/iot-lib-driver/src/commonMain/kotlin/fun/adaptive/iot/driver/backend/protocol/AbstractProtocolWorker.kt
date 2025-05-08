@@ -2,7 +2,6 @@ package `fun`.adaptive.iot.driver.backend.protocol
 
 import `fun`.adaptive.adat.encodeToJsonByteArray
 import `fun`.adaptive.backend.builtin.WorkerImpl
-import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.driver.announcement.AioDriverAnnouncement
 import `fun`.adaptive.iot.driver.announcement.AioDriverAnnouncementWrapper

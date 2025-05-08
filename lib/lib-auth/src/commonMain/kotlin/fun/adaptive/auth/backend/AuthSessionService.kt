@@ -9,7 +9,6 @@ import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.utility.use

@@ -1,7 +1,6 @@
 package `fun`.adaptive.iot.point.computed
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
-import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.chart.model.ChartDataRange.Companion.max
 import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.history.AioHistoryService

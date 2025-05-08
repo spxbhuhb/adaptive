@@ -14,7 +14,6 @@ import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.auth.model.basic.BasicSignUp
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.lib.util.error.requirement
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.item.AvItem

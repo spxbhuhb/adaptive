@@ -9,7 +9,6 @@ import `fun`.adaptive.auth.context.ensureHas
 import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueSubscriptionId

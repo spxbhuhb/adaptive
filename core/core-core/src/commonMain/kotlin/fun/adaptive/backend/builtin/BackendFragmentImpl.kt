@@ -6,6 +6,7 @@ package `fun`.adaptive.backend.builtin
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.BackendFragment
+import `fun`.adaptive.foundation.query.single
 import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.utility.manualOrPlugin
 
@@ -68,4 +69,21 @@ abstract class BackendFragmentImpl {
      * are already unmounted.
      */
     open fun unmount() = Unit
+
+    /**
+     * Finds the worker of the given type [T].
+     *
+     * Throws exception when:
+     *
+     * - the fragment is not part of an adaptive backend
+     * - there is no worker of the given type
+     * - there is more than one worker of the given type
+     */
+    inline fun <reified T : WorkerImpl<T>> worker(crossinline filterFun: (T) -> Boolean = { true }): Lazy<T> =
+        lazy {
+            checkNotNull(adapter) { "this implementation is not part of an adaptive backend" }
+                .single { f -> f is BackendFragment && f.impl.let { it is T && filterFun(it) } }
+                .let { (it as BackendFragment) }
+                .impl as T
+        }
 }

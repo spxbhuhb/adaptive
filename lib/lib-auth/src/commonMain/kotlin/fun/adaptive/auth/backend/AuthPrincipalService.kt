@@ -11,7 +11,6 @@ import `fun`.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD_RESET_KEY
 import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.lib.util.error.requirement
 import `fun`.adaptive.utility.UUID.Companion.uuid7

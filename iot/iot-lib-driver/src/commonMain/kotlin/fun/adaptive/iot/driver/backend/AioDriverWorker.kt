@@ -3,7 +3,6 @@ package `fun`.adaptive.iot.driver.backend
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.encodeToJsonString
 import `fun`.adaptive.backend.builtin.WorkerImpl
-import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.iot.device.AioDeviceSpec
 import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.iot.driver.request.*
