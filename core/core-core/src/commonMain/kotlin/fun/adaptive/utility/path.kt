@@ -8,6 +8,8 @@ import `fun`.adaptive.resource.platform.getResourceReader
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
+import `fun`.adaptive.wireformat.json.JsonBufferReader
+import `fun`.adaptive.wireformat.json.elements.JsonElement
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
@@ -39,6 +41,10 @@ fun Path.write(bytes: ByteArray, append: Boolean = false, overwrite: Boolean = f
             }
         }
     }
+}
+
+fun Path.writeJson(json: JsonElement, append: Boolean = false, overwrite: Boolean = false, useTemporaryFile: Boolean = false) {
+    write(json.toString().encodeToByteArray(), append = append, overwrite = overwrite, useTemporaryFile = useTemporaryFile)
 }
 
 /**
@@ -115,7 +121,32 @@ fun Path.read(): ByteArray =
 fun Path.readString(): String =
     SystemFileSystem.source(this).buffered().use { it.readString() }
 
-fun <A> Path.load(wireFormatProvider: WireFormatProvider, wireFormat: AdatClassWireFormat<A>): A =
+/**
+ * Read the content of the file at [this] path and parse it into a low-level
+ * JSON object structure.
+ *
+ * @return  the decoded JSON or null if the file is empty
+ *
+ * @throws  IllegalArgumentException  if the JSON is invalid
+ */
+fun Path.readJson() : JsonElement? =
+    read().let {
+        if (it.isEmpty()) {
+            null
+        } else {
+            JsonBufferReader(it).read()
+        }
+    }
+
+/**
+ * Read the content of the file at [this] path and decode it with [wireFormatProvider]
+ * into an instance of [A].
+ *
+ * @return  the decoded JSON or null if the file is empty
+ *
+ * @throws  IllegalArgumentException  if the JSON is invalid
+ */
+fun <A> Path.readAdat(wireFormatProvider: WireFormatProvider, wireFormat: AdatClassWireFormat<A>): A =
     wireFormatProvider.decoder(this.read()).asInstance(wireFormat)
 
 // ------------------------------------------------------------------------------------

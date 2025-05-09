@@ -29,7 +29,7 @@ class JsonFormatTest {
     @Test
     fun testPrettyString_Array() {
 
-        val jsonArray = JsonArray().apply { items += listOf(JsonNumber("1"), JsonString("two"), JsonBoolean(false)) }
+        val jsonArray = JsonArray().apply { this.value += listOf(JsonNumber("1"), JsonString("two"), JsonBoolean(false)) }
 
         val expected = """
             [
@@ -46,7 +46,7 @@ class JsonFormatTest {
     fun testPrettyString_Object() {
 
         val jsonObject = JsonObject().apply {
-            entries +=
+            value +=
                 mapOf(
                     "key1" to JsonNumber("123"),
                     "key2" to JsonString("value"),
@@ -69,12 +69,12 @@ class JsonFormatTest {
     fun testPrettyString_NestedStructure() {
 
         val jsonObject = JsonObject().apply {
-            entries += mapOf(
+            value += mapOf(
                 "array" to JsonArray().apply {
-                    items +=
+                    this.value +=
                         listOf(
                             JsonNumber("1"),
-                            JsonObject().apply { entries += mapOf("nestedKey" to JsonString("nestedValue")) }
+                            JsonObject().apply { this.value += mapOf("nestedKey" to JsonString("nestedValue")) }
                         )
                 },
                 "boolean" to JsonBoolean(true)
