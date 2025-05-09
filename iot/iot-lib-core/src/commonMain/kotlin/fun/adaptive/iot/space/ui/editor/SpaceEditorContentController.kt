@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
 
 class SpaceEditorContentController(
     override val workspace: Workspace
@@ -30,10 +30,10 @@ class SpaceEditorContentController(
     }
 
     override fun load(pane: WsPaneType<AvValue<AioSpaceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<AvValue<AioSpaceSpec>> {
-        val spaceItem = item.asAvItem<AioSpaceSpec>()
+        val spaceItem = item.asAvValue<AioSpaceSpec>()
         return pane.copy(
             name = item.name,
-            data = spaceItem.asAvItem(),
+            data = spaceItem.asAvValue(),
             icon = iconFor(spaceItem)
         )
     }

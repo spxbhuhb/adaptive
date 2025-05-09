@@ -3,8 +3,8 @@ package `fun`.adaptive.value.local
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.foundation.unsupported
-import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValueWorker
 import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
 
@@ -28,8 +28,7 @@ open class AvLocalItem<V : Any>(
     override var value: AvValue<V>? = null
         set(_) = unsupported()
 
-    override fun process(value: AvValue2) {
-        if (value !is AvValue<*>) return
+    override fun process(value: AvValue<*>) {
         if (! specClass.isInstance(value.spec)) return
 
         @Suppress("UNCHECKED_CAST")

@@ -18,7 +18,7 @@ import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import `fun`.adaptive.value.store.AvComputeContext
 import kotlinx.datetime.Clock.System.now
 
@@ -35,7 +35,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         ensureHas(securityOfficer)
 
         return valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).map {
-            it.asAvItem<PrincipalSpec>()
+            it.asAvValue<PrincipalSpec>()
         }
     }
 
@@ -135,7 +135,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     override suspend fun getOrNull(principalId: AuthPrincipalId): AuthPrincipal? {
         ensurePrincipalOrHas(principalId, securityOfficer)
 
-        return valueWorker[principalId.cast()]?.asAvItem<PrincipalSpec>()
+        return valueWorker[principalId.cast()]?.asAvValue<PrincipalSpec>()
     }
 
     override suspend fun activate(principalId: AuthPrincipalId, credential: Credential, key: Credential) {
@@ -211,7 +211,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         updateFun: (PrincipalSpec) -> PrincipalSpec
     ) {
         valueWorker.update<AvValue2>(principalId) { item ->
-            item.asAvItem<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
+            item.asAvValue<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
         }
     }
 

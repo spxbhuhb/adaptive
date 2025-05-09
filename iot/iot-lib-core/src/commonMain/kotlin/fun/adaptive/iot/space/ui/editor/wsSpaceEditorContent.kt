@@ -32,7 +32,7 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import `fun`.adaptive.ui.value.AvUiList
 
 @Adaptive
@@ -156,7 +156,7 @@ private fun devices(spaceId : AvValueId) {
             AioTheme.DEFAULT.itemListContainer
 
             for (device in devices) {
-                deviceSummary(device.asAvItem())
+                deviceSummary(device.asAvValue())
             }
         }
     }
@@ -173,7 +173,7 @@ private fun points(spaceId : AvValueId) {
             AioTheme.DEFAULT.itemListContainer
 
             for (point in points) {
-                pointSummary(point.asAvItem())
+                pointSummary(point.asAvValue())
             }
         }
     }

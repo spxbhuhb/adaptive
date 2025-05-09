@@ -1,9 +1,7 @@
 package `fun`.adaptive.value
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
-import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.withSpec
-import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.value.persistence.NoPersistence
@@ -45,18 +43,18 @@ open class AvValueWorker(
     // Queue operations
     // --------------------------------------------------------------------------------
 
-    fun queueAdd(value: AvValue2) {
+    fun queueAdd(value: AvValue<*>) {
         store.queue(AvoAdd(value))
     }
 
-    fun queueAddAll(vararg values: AvValue2) =
+    fun queueAddAll(vararg values: AvValue<*>) =
         store.queue(AvoTransaction(values.map { AvoAdd(it) }))
 
-    fun queueUpdate(value: AvValue2) {
+    fun queueUpdate(value: AvValue<*>) {
         store.queue(AvoUpdate(value))
     }
 
-    fun queueAddOrUpdate(value: AvValue2) {
+    fun queueAddOrUpdate(value: AvValue<*>) {
         store.queue(AvoAddOrUpdate(value))
     }
 
@@ -100,33 +98,14 @@ open class AvValueWorker(
      *
      * Behaviour:
      *
-     * - calls [execute], all behaviour of [execute] applies
+     * - calls [execute], all behavior of [execute] applies
      */
-    suspend inline fun <reified T : AvValue2> update(
+    suspend inline fun <reified T : Any> update(
         valueId: AvValueId,
         timeout: Duration = 5.seconds,
-        noinline updateFun: (T) -> T
+        noinline updateFun: (AvValue<T>) -> AvValue<T>
     ) {
         store.executeUpdate(valueId, timeout, T::class, updateFun)
-    }
-
-    /**
-     * Executes an update on an item with id [valueId]:
-     *
-     * - fetches the value
-     * - calls [updateFun]
-     * - replaces the original value with the return value of [updateFun]
-     *
-     * Behaviour:
-     *
-     * - calls [execute], all behaviour of [execute] applies
-     */
-    suspend inline fun updateItem(
-        valueId: AvValueId,
-        timeout: Duration = 5.seconds,
-        noinline updateFun: (AvValue<*>) -> AvValue<*>
-    ) {
-        store.executeUpdate(valueId, timeout, AvValue::class, updateFun)
     }
 
     // --------------------------------------------------------------------------------
@@ -152,47 +131,25 @@ open class AvValueWorker(
     fun subscriptionCount(valueId: AvValueId): Int =
         store.subscriptionCount(valueId)
 
-    operator fun get(valueId: AvValueId): AvValue2? =
-        store[valueId]
+    fun get(valueId: AvValueId): AvValue<*> =
+        store.get(valueId)
 
-    inline fun <reified T> markerVal(itemId: AvValueId, marker: AvMarker) =
-        store.getMarkerValue(itemId, marker) as T
+    fun getOrNull(valueId: AvValueId): AvValue<*>? =
+        store.getOrNull(valueId)
 
-    inline fun <reified T> markerValOrNull(itemId: AvValueId, marker: AvMarker) =
-        store.getMarkerValue(itemId, marker) as T?
-
-    fun item(valueId: AvValueId): AvValue<*> =
-        checkNotNull(get(valueId)) { "item $valueId not found" } as AvValue<*>
-
-    fun itemOrNull(valueId: AvValueId): AvValue<*>? =
-        get(valueId)?.let { it as AvValue<*> }
-
-    fun ref(valueId: AvValueId, refMarker: AvMarker) =
-        checkNotNull(refOrNull(valueId, refMarker)) { "Marker $refMarker not found for value $valueId" }
+    fun ref(valueId: AvValueId, refLabel: AvRefLabel) =
+        store.ref(valueId, refLabel)
 
     fun refOrNull(valueId: AvValueId, refMarker: AvMarker) =
-        store.item(valueId).markersOrNull?.get(refMarker)
+        store.refOrNull(valueId, refMarker)
 
-    fun refValList(valueId: AvValueId, refListMarker: AvMarker): List<AvValue2> =
-        store.refValList(valueId, refListMarker)
+    inline fun <reified T : Any> refList(valueId: AvValueId, refListMarker: AvMarker): List<AvValue<T>> =
+        store.refList(valueId, refListMarker).map { it.withSpec(T::class) }
 
-    inline fun <reified T : Any> refItemList(valueId: AvValueId, refListMarker: AvMarker): List<AvValue<T>> =
-        store.refValList(valueId, refListMarker).map { it.withSpec(T::class) }
-
-    // FIXME move this down into the store to avoid locking twice
-    inline fun <reified T : Any> refItem(valueId: AvValueId, refMarker: AvMarker) =
-        store.refItem(store.item(valueId), refMarker).withSpec<T>()
-
-    inline fun <reified T : Any> refItem(item: AvValue<*>, refMarker: AvMarker) =
-        store.refItem(item, refMarker).withSpec<T>()
-
-    inline fun <reified T : Any> refItemOrNull(item: AvValue<*>, refMarker: AvMarker) =
-        store.refItemOrNull(item, refMarker)?.withSpec<T>()
-
-    fun queryByMarker(marker: AvMarker): List<AvValue2> =
+    fun queryByMarker(marker: AvMarker): List<AvValue<*>> =
         store.queryByMarker(marker)
 
-    fun query(filterFun: (AvValue2) -> Boolean): List<AvValue2> =
+    fun query(filterFun: (AvValue<*>) -> Boolean): List<AvValue<*>> =
         store.query(filterFun)
 
 }

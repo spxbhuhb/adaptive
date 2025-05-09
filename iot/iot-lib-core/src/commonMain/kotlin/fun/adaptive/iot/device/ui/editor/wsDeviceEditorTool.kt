@@ -26,7 +26,7 @@ import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
 
 @Adaptive
 fun wsDeviceEditorTool(pane: WsPane<Unit, DeviceEditorToolController>): AdaptiveFragment {
@@ -90,7 +90,7 @@ private fun menu(viewModel: DeviceTreeModel, treeItem: TreeItem<AvValueId>): Lis
     val controller = viewModel.context
     val itemId = treeItem.data
 
-    val item = controller.valueTreeStore[itemId]?.asAvItem<AioDeviceSpec>()
+    val item = controller.valueTreeStore[itemId]?.asAvValue<AioDeviceSpec>()
     val markers = controller.valueTreeStore[itemId]?.markers?.keys ?: emptySet<DeviceMarkers>()
     val virtual = (item?.spec?.virtual == true)
 

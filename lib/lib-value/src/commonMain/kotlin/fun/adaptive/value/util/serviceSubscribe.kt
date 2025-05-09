@@ -2,7 +2,6 @@ package `fun`.adaptive.value.util
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.item.AvMarker
 
 fun ServiceImpl<*>.serviceSubscribe(
     worker: AvValueWorker,

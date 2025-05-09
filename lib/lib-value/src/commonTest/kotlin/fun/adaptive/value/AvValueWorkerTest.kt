@@ -1,17 +1,12 @@
 package `fun`.adaptive.value
 
-import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.item.AvMarkerMap
-import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.value.item.AvRefList
-import `fun`.adaptive.value.builtin.AvString
-import `fun`.adaptive.value.operation.AvValueOperation
-import `fun`.adaptive.value.operation.AvoAddOrUpdate
-import `fun`.adaptive.value.operation.AvoMarkerRemove
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.waitFor
+import `fun`.adaptive.value.operation.AvValueOperation
+import `fun`.adaptive.value.operation.AvoAddOrUpdate
+import `fun`.adaptive.value.operation.AvoMarkerRemove
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,7 +17,6 @@ import kotlinx.datetime.Instant
 import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -34,37 +28,37 @@ class AvValueWorkerTest {
     @JsName("shouldUpdateValuesWithNewerTimestamp")
     fun `should update values when newer timestamp is received`() = test { worker ->
         val valueId = AvValueId()
-        val oldValue = AvString(valueId, Instant.parse("2023-01-01T12:00:00Z"), AvStatus.OK, null, "OldValue")
-        val newValue = AvString(valueId, Instant.parse("2023-01-01T12:01:00Z"), AvStatus.OK, null, "NewValue")
+        val oldValue = avString("OldValue", Instant.parse("2023-01-01T12:00:00Z"), valueId)
+        val newValue = avString("NewValue", Instant.parse("2023-01-01T12:01:00Z"), valueId)
 
         worker.queueAdd(oldValue)
         worker.queueUpdate(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
 
-        assertEquals(newValue, worker[valueId])
+        assertEquals(newValue, worker.get(valueId))
     }
 
     @Test
     @JsName("shouldNotUpdateValuesWithOlderTimestamp")
     fun `should not update values when older timestamp is received`() = test { worker ->
         val valueId = AvValueId()
-        val oldValue = AvString(valueId, Instant.parse("2023-01-01T12:01:00Z"), AvStatus.OK, null, "OldValue")
-        val newValue = AvString(valueId, Instant.parse("2023-01-01T12:00:00Z"), AvStatus.OK, null, "NewValue")
+        val oldValue = avString("OldValue", Instant.parse("2023-01-01T12:01:00Z"), valueId)
+        val newValue = avString("NewValue", Instant.parse("2023-01-01T12:00:00Z"), valueId)
 
         worker.queueAdd(oldValue)
         worker.queueUpdate(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
 
-        assertEquals(oldValue, worker[valueId])
+        assertEquals(oldValue, worker.get(valueId))
     }
 
     @Test
     @JsName("shouldSubscribeAndReceiveInitialValues")
     fun `should subscribe and receive initial values`() = test { worker ->
         val valueId = AvValueId()
-        val initialValue = AvString(valueId, Instant.parse("2023-01-01T12:00:00Z"), AvStatus.OK, null, "InitialValue")
+        val initialValue = avString("InitialValue", Instant.parse("2023-01-01T12:00:00Z"), valueId)
         worker.queueAdd(initialValue)
 
         val channel = Channel<AvValueOperation>(1)
@@ -86,7 +80,7 @@ class AvValueWorkerTest {
 
         worker.subscribe(listOf(subscription))
 
-        val newValue = AvString(valueId, Instant.parse("2023-01-01T12:01:00Z"), AvStatus.OK, null, "NewValue")
+        val newValue = avString("NewValue", Instant.parse("2023-01-01T12:01:00Z"), valueId)
         worker.queueAdd(newValue)
 
         val received = channel.receive()
@@ -106,7 +100,7 @@ class AvValueWorkerTest {
 
         worker.subscribe(listOf(subscription1, subscription2))
 
-        val newValue = AvString(valueId, Instant.parse("2023-01-01T12:02:00Z"), AvStatus.OK, null, "MultiSubscriberValue")
+        val newValue = avString("MultiSubscriberValue", Instant.parse("2023-01-01T12:02:00Z"), valueId)
         worker.queueAdd(newValue)
 
         assertEquals(newValue, (channel1.receive() as AvoAddOrUpdate).value)
@@ -123,7 +117,7 @@ class AvValueWorkerTest {
         worker.subscribe(subscription)
         worker.unsubscribe(subscription.uuid)
 
-        val newValue = AvString(valueId, Instant.parse("2023-01-01T12:03:00Z"), AvStatus.OK, null, "AfterUnsubscribe")
+        val newValue = avString("AfterUnsubscribe", Instant.parse("2023-01-01T12:03:00Z"), valueId)
         worker.queueAdd(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
@@ -131,14 +125,15 @@ class AvValueWorkerTest {
         assertTrue(channel.isEmpty)
     }
 
-    fun addSensor(worker: AvValueWorker, markers: AvMarkerMap): AvValue<*> {
-        val item = AvValue<Unit>(
+    fun addSensor(worker: AvValueWorker, markers: Set<AvMarker>? = null, refs: Map<AvRefLabel, AvValueId>? = null): AvValue<*> {
+        val item = AvValue(
             name = "Temp Sensor",
             type = "sensor",
             uuid = uuid7(),
             timestamp = Instant.parse("2023-01-01T12:00:00Z"),
-            status = AvStatus.OK,
+            statusOrNull = null,
             friendlyId = "1",
+            refsOrNull = refs,
             markersOrNull = markers,
             parentId = null,
             spec = Unit
@@ -153,7 +148,7 @@ class AvValueWorkerTest {
     @JsName("shouldReturnValuesMatchingMarkerQuery")
     fun `should return values matching the marker query`() = test { worker ->
         val marker = "temperature"
-        val item = addSensor(worker, mapOf(marker to uuid7()))
+        val item = addSensor(worker, setOf(marker))
 
         val result = worker.queryByMarker(marker)
 
@@ -164,7 +159,7 @@ class AvValueWorkerTest {
     @JsName("shouldNotReturnValuesIfMarkerQueryDoesNotMatch")
     fun `should not return values if the marker query does not match any values`() = test { worker ->
         val marker = "temperature"
-        addSensor(worker, mapOf("humidity" to uuid7()))
+        addSensor(worker, setOf("other-marker"))
 
         val result = worker.queryByMarker(marker)
 
@@ -175,8 +170,8 @@ class AvValueWorkerTest {
     @JsName("shouldReturnMultipleValuesIfMarkersMatch")
     fun `should return multiple values if multiple markers match`() = test { worker ->
         val marker = "temperature"
-        val item1 = addSensor(worker, mapOf(marker to uuid7()))
-        val item2 = addSensor(worker, mapOf(marker to uuid7()))
+        val item1 = addSensor(worker, setOf(marker))
+        val item2 = addSensor(worker, setOf(marker))
 
         val result = worker.queryByMarker(marker)
 
@@ -187,21 +182,21 @@ class AvValueWorkerTest {
     @JsName("shouldNotifySubscribersOnNewMarker")
     fun `should notify marker-based subscriptions when a new marker is added`() = test { worker ->
         val marker = "temperature"
-        val initialItem = addSensor(worker, mapOf(marker to uuid7()))
+        val initialItem = addSensor(worker, setOf("other-marker"))
 
         val channel = Channel<AvValueOperation>(1)
         val subscription = AvChannelSubscription(uuid4(), condition(marker), channel)
 
         worker.subscribe(listOf(subscription))
 
-        val newValue = initialItem.copyWith(marker, AvRefList(initialItem.uuid, marker, emptyList()))
+        val newValue = initialItem.copy(markersOrNull = setOf(marker))
 
         worker.queueUpdate(newValue)
 
         val received = channel.receive()
         check(received is AvoAddOrUpdate)
         assertEquals(newValue.uuid, received.value.uuid)
-        assertNotEquals(newValue.markers, (received.value as AvValue<*>).markers)
+        assertEquals(newValue.markers, received.value.markers)
     }
 
     @Test
@@ -209,7 +204,7 @@ class AvValueWorkerTest {
     fun `should notify marker-based subscriptions when a marker is removed`() = test { worker ->
         val marker = "temperature"
 
-        val initialItem = addSensor(worker, mapOf(marker to uuid7()))
+        val initialItem = addSensor(worker, markers = setOf(marker))
         val newValue = initialItem.copy(markersOrNull = null)
 
         val channel = Channel<AvValueOperation>(1)

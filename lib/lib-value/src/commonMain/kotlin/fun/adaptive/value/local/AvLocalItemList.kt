@@ -27,8 +27,7 @@ open class AvLocalItemList<V : Any>(
 
     private val itemMap = mutableMapOf<AvValueId, AvValue<V>>()
 
-    override fun process(value: AvValue2) {
-        if (value !is AvValue<*>) return
+    override fun process(value: AvValue<*>) {
         if (! specClass.isInstance(value.spec)) return
 
         @Suppress("UNCHECKED_CAST")

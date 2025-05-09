@@ -9,12 +9,13 @@ import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.utility.safeSuspendCall
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.builtin.AvConvertedDouble
 import `fun`.adaptive.value.builtin.AvDouble
-import `fun`.adaptive.value.AvValue.Companion.asAvItemOrNull
+import `fun`.adaptive.value.AvValue.Companion.asAvValueOrNull
 import `fun`.adaptive.value.store.AvComputeContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.datetime.Instant
@@ -60,15 +61,13 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker>() {
     }
 
     fun AvComputeContext.collectDependents(
-        value: AvValue2,
+        value: AvValue<*>,
         pointsToCompute: MutableList<AvValueId>
     ): AvValue2? {
-
-        val point = itemOrNull(value.parentId) ?: return null
+        val point = getOrNull(value.parentId) ?: return null
 
         // point container may be a controller or a space
-
-        val container = itemOrNull(point.parentId) ?: return null
+        val container = getOrNull(point.parentId) ?: return null
         val containerMarkers = container.markersOrNull ?: return null
 
         // find out the space id this computation should work with
@@ -85,14 +84,14 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker>() {
 
         // here we have a space id for this value, let's get the space
 
-        val space = itemOrNull(spaceId) ?: return null
+        val space = getOrNull(spaceId) ?: return null
         val spacePointIds = safeItemIds(space.markersOrNull?.get(PointMarkers.POINTS))
 
         // We have a safe list of space point ids, let's try to find a point which
         // is interested in this value.
 
         for (spacePointId in spacePointIds) {
-            val spacePoint = itemOrNull(spacePointId)?.asAvItemOrNull<AioComputedPointSpec>() ?: continue
+            val spacePoint = getOrNull(spacePointId)?.asAvValueOrNull<AioComputedPointSpec>() ?: continue
 
             val dependencyMarker = spacePoint.spec.dependencyMarker
             if (dependencyMarker !in point.markers) continue

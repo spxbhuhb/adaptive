@@ -13,9 +13,9 @@ import `fun`.adaptive.iot.history.model.AioHistoryQuery
 import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.runtime.GlobalRuntimeContext
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.builtin.AvBoolean
 import `fun`.adaptive.value.builtin.AvConvertedDouble
 import `fun`.adaptive.value.builtin.AvDouble
 import kotlinx.datetime.Instant
@@ -26,28 +26,30 @@ class AioHistoryService : ServiceImpl<AioHistoryService>(), AioHistoryApi {
         lateinit var valueWorker: AvValueWorker
         lateinit var historyWorker: AioHistoryWorker
 
-        fun append(curValue: AvValue2) {
+        fun append(curValue: AvValue<*>) {
             val safeParentId = checkNotNull(curValue.parentId) { "parentId is null in $curValue" }
             val point = valueWorker.item(safeParentId)
             if (PointMarkers.HIS !in point.markers) return
 
-            when (curValue) {
+            val spec = curValue.spec
+
+            when (spec) {
                 is AvConvertedDouble -> historyWorker.append(
                     point.uuid.cast(), curValue.timestamp,
                     AioDoubleHistoryRecord.typeSignature(),
                     AioDoubleHistoryRecord(curValue.timestamp, curValue.originalValue, curValue.convertedValue, curValue.status.flags).encodeToProtoByteArray()
                 )
 
-                is AvDouble -> historyWorker.append(
+                is Double -> historyWorker.append(
                     point.uuid.cast(), curValue.timestamp,
                     AioDoubleHistoryRecord.typeSignature(),
-                    AioDoubleHistoryRecord(curValue.timestamp, curValue.value, curValue.value, curValue.status.flags).encodeToProtoByteArray()
+                    AioDoubleHistoryRecord(curValue.timestamp, spec, spec, curValue.status.flags).encodeToProtoByteArray()
                 )
 
-                is AvBoolean -> historyWorker.append(
+                is Boolean -> historyWorker.append(
                     point.uuid.cast(), curValue.timestamp,
                     AioBooleanHistoryRecord.typeSignature(),
-                    AioBooleanHistoryRecord(curValue.timestamp, curValue.value, curValue.value, curValue.status.flags).encodeToProtoByteArray()
+                    AioBooleanHistoryRecord(curValue.timestamp, spec, spec, curValue.status.flags).encodeToProtoByteArray()
                 )
             }
         }

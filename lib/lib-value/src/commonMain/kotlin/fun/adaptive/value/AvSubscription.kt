@@ -1,6 +1,5 @@
 package `fun`.adaptive.value
 
-import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.operation.AvValueOperation
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
 import `fun`.adaptive.value.operation.AvoMarkerRemove
@@ -16,7 +15,7 @@ abstract class AvSubscription(
 
     val transaction = mutableListOf<AvValueOperation>()
 
-    fun add(value: AvValue2) {
+    fun add(value: AvValue<*>) {
         transaction.add(AvoAddOrUpdate(value))
     }
 

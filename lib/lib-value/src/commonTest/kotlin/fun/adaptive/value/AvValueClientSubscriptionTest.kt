@@ -3,8 +3,6 @@ package `fun`.adaptive.value
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.TestSupport.Companion.avValueTest
-import `fun`.adaptive.value.builtin.AvString
-import `fun`.adaptive.value.item.AvStatus
 import kotlinx.datetime.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -17,16 +15,16 @@ class AvValueClientSubscriptionTest {
         val time = Instant.parse("2023-01-01T12:00:00Z")
 
         val valueId = AvValueId()
-        val value = AvString(valueId, time, AvStatus.OK, null, "Value")
+        val value = avString("Value", time, valueId)
 
         val subscription = AvClientSubscription(uuid4(), condition(valueId), serverTransport, serverBackend.scope)
 
         serverWorker.subscribe(listOf(subscription))
         serverWorker.queueAdd(value)
 
-        waitForReal(1.seconds) { clientWorker[valueId] != null }
+        waitForReal(1.seconds) { clientWorker.getOrNull(valueId) != null }
 
-        assertEquals(clientWorker[valueId], value)
+        assertEquals(clientWorker.get(valueId), value)
     }
 
     @Test
@@ -34,7 +32,7 @@ class AvValueClientSubscriptionTest {
         val time = Instant.parse("2023-01-01T12:00:00Z")
 
         val valueId = AvValueId()
-        val value = AvString(valueId, time, AvStatus.OK, null, "Value")
+        val value = avString("Value", time, valueId)
 
         val subscription = AvClientSubscription(uuid4(), condition(valueId), serverTransport, serverBackend.scope)
 

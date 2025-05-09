@@ -16,7 +16,7 @@ import `fun`.adaptive.utility.vmNowSecond
 import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock.System.now
 import kotlin.math.abs
@@ -134,7 +134,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
     ) {
 
         // FIXME check credential expiration
-        val principal = valueWorker.item(principalId).asAvItem<PrincipalSpec>()
+        val principal = valueWorker.item(principalId).asAvValue<PrincipalSpec>()
 
         val validCredentials = if (checkCredentials) {
             val credentialList = valueWorker.markerVal<CredentialList>(principal.uuid, AuthMarkers.CREDENTIAL_LIST)
@@ -220,7 +220,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
     }
 
     private fun getPrincipalByName(name: String): AuthPrincipal? {
-        return valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).firstOrNull { it.name == name }?.asAvItem()
+        return valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).firstOrNull { it.name == name }?.asAvValue()
     }
 
     private suspend fun updateSpec(
@@ -228,7 +228,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
         updateFun: (PrincipalSpec) -> PrincipalSpec
     ) {
         valueWorker.update<AvValue2>(principalId) { item ->
-            item.asAvItem<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
+            item.asAvValue<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
         }
     }
 

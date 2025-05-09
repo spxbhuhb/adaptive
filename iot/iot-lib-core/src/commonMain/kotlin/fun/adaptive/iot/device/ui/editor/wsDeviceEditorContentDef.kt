@@ -5,7 +5,7 @@ import `fun`.adaptive.iot.app.WsItemTypes
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
 
 fun wsDeviceEditorContentDef(
     module: IotWsModule<*>
@@ -21,7 +21,7 @@ fun wsDeviceEditorContentDef(
             WsPanePosition.Center,
             module.WSPANE_DEVICE_CONTENT,
             controller = DeviceEditorContentController(workspace),
-            data = item.asAvItem()
+            data = item.asAvValue()
         )
     }
 }

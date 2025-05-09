@@ -1,9 +1,9 @@
 package `fun`.adaptive.value.operation
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.value.AvValue2
+import `fun`.adaptive.value.AvValue
 
 @Adat
 class AvoAdd(
-    val value: AvValue2
+    val value: AvValue<*>
 ) : AvValueOperation()

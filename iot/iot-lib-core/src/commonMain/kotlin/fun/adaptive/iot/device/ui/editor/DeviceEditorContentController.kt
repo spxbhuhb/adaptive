@@ -20,7 +20,7 @@ import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
 
 class DeviceEditorContentController(
     override val workspace: Workspace
@@ -43,7 +43,7 @@ class DeviceEditorContentController(
     }
 
     override fun load(pane: WsPaneType<AvValue<AioDeviceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<AvValue<AioDeviceSpec>> {
-        val deviceItem = item.asAvItem<AioDeviceSpec>()
+        val deviceItem = item.asAvValue<AioDeviceSpec>()
 
         return pane.copy(
             name = item.name,

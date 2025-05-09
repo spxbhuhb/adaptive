@@ -36,7 +36,7 @@ import `fun`.adaptive.ui.value.AvUiList
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
 
 @Adaptive
 fun wsDeviceContentPane(pane: WsPane<AvValue<AioDeviceSpec>, DeviceEditorContentController>): AdaptiveFragment {
@@ -176,7 +176,7 @@ private fun points(deviceId: AvValueId): AdaptiveFragment {
             AioTheme.DEFAULT.itemListContainer
 
             for (point in points) {
-                pointSummary(point.asAvItem())
+                pointSummary(point.asAvValue())
             }
         }
     }

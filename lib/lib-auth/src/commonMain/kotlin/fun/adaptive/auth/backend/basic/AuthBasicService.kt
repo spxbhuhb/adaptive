@@ -17,7 +17,7 @@ import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.lib.util.error.requirement
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.store.AvComputeContext
 import `fun`.adaptive.value.util.serviceSubscribe
@@ -36,8 +36,8 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
         val principals = valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).associateBy { it.uuid }
 
         return accounts.mapNotNull { account ->
-            principals[account.parentId]?.asAvItem<PrincipalSpec>()?.let {
-                BasicAccountSummary(it, account.asAvItem<BasicAccountSpec>())
+            principals[account.parentId]?.asAvValue<PrincipalSpec>()?.let {
+                BasicAccountSummary(it, account.asAvValue<BasicAccountSpec>())
             }
         }
     }
@@ -171,8 +171,8 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
         accountName: String,
         accountSpec: BasicAccountSpec
     ) {
-        val originalPrincipal = item<PrincipalSpec>(principalId)
-        val originalAccount = refItem<BasicAccountSpec>(originalPrincipal, AuthMarkers.ACCOUNT_REF)
+        val originalPrincipal = get<PrincipalSpec>(principalId)
+        val originalAccount = ref<BasicAccountSpec>(originalPrincipal, AuthMarkers.ACCOUNT_REF)
 
         val uniqueName = valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).none {
             it.name == principalName && it.uuid != principalId

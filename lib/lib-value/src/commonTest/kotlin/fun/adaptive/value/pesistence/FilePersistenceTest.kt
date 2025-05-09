@@ -1,11 +1,10 @@
 package `fun`.adaptive.value.pesistence
 
-import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.value.AvValue2
-import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.builtin.AvString
-import `fun`.adaptive.value.persistence.FilePersistence
 import `fun`.adaptive.utility.*
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.avString
+import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.datetime.Clock.System.now
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -19,10 +18,10 @@ class FilePersistenceTest {
     @JsName("testSaveAndLoadValue")
     fun `test save and load value`() {
         val testRoot = clearedTestPath()
-        val map = mutableMapOf<AvValueId, AvValue2>()
+        val map = mutableMapOf<AvValueId, AvValue<*>>()
         val persistence = FilePersistence(testRoot, 2)
 
-        val value = AvString(UUID("48852c46-8e5a-40a1-a9c8-e757c6f58200"), now(), AvStatus.OK, null, "TestData")
+        val value = avString("TestData", now(), UUID("48852c46-8e5a-40a1-a9c8-e757c6f58200"))
         persistence.saveValue(value)
 
         val savedFile = persistence.store.pathFor(value.uuid)
@@ -37,7 +36,7 @@ class FilePersistenceTest {
     @JsName("testLoadValueWithInvalidData")
     fun `test load value with invalid data`() {
         val testRoot = clearedTestPath()
-        val map = mutableMapOf<AvValueId, AvValue2>()
+        val map = mutableMapOf<AvValueId, AvValue<*>>()
         val persistence = FilePersistence(testRoot, 2)
 
         val invalidFileDir = testRoot.resolve("00/82").ensure()
@@ -50,11 +49,11 @@ class FilePersistenceTest {
     @JsName("testLoadMultipleValues")
     fun `test load multiple values`() {
         val testRoot = clearedTestPath()
-        val map = mutableMapOf<AvValueId, AvValue2>()
+        val map = mutableMapOf<AvValueId, AvValue<*>>()
         val persistence = FilePersistence(testRoot, 2)
 
-        val value1 = AvString(UUID("48852c46-8e5a-40a1-a9c8-e757c6f58200"), now(), AvStatus.OK, null, "Data1")
-        val value2 = AvString(UUID("123e4567-e89b-12d3-a456-426614174000"), now(), AvStatus.OK, null, "Data2")
+        val value1 = avString("Data1", now(), UUID("48852c46-8e5a-40a1-a9c8-e757c6f58200"))
+        val value2 = avString("Data2", now(), UUID("123e4567-e89b-12d3-a456-426614174000"))
 
         persistence.saveValue(value1)
         persistence.saveValue(value2)

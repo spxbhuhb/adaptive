@@ -14,7 +14,7 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import `fun`.adaptive.value.util.serviceSubscribe
 
 class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
@@ -27,7 +27,7 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
         ensureLoggedIn()
 
         return valueWorker.queryByMarker(AuthMarkers.ROLE).map {
-            it.asAvItem<RoleSpec>()
+            it.asAvValue<RoleSpec>()
         }
     }
 
@@ -64,7 +64,7 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
 
     private suspend fun update(roleId: AvValueId, name: String, spec: RoleSpec) {
         valueWorker.update<AvValue<*>>(roleId) { item ->
-            item.asAvItem<RoleSpec>().copy(name = name, spec = spec)
+            item.asAvValue<RoleSpec>().copy(name = name, spec = spec)
         }
     }
 

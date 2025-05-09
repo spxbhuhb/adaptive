@@ -1,13 +1,8 @@
 package `fun`.adaptive.value.local
 
 import `fun`.adaptive.foundation.unsupported
-import `fun`.adaptive.value.AvValue2
-import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue.Companion.withSpec
-import `fun`.adaptive.value.item.AvRefList
-import `fun`.adaptive.value.item.AvMarker
 import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
 
@@ -74,14 +69,14 @@ abstract class AvLocalTree<ST : Any, TI>(
         topRefresh = false
     }
 
-    override fun process(value: AvValue2) {
-        when (value) {
-            is AvValue<*> -> process(value)
-            is AvRefList -> process(value)
-        }
-    }
+//    override fun process(value: AvValue<*>) {
+//        when (value) {
+//            is AvValue<*> -> process(value)
+//            is AvRefList -> process(value)
+//        }
+//    }
 
-    private fun process(item: AvValue<*>) {
+    private fun process3(item: AvValue<*>) {
         val node = nodeMap.getOrPut(item.uuid) { Node() }
 
         val avItem = item.withSpec(specClass)
@@ -105,16 +100,16 @@ abstract class AvLocalTree<ST : Any, TI>(
         }
     }
 
-    private fun process(list: AvRefList) {
-        when (list.markerName) {
+    private fun process2(list: AvValue<List<AvValueId>>) {
+        when (list.name) {
             childListMarker -> {
-                val node = nodeMap.getOrPut(list.parentId) { Node() }
-                node.childIds = list.refs
+                val node = nodeMap.getOrPut(list.parentId !!) { Node() }
+                node.childIds = list.spec
                 childRefresh += node
             }
 
             topListMarker -> {
-                topIds = list.refs
+                topIds = list.spec
                 topRefresh = true
             }
         }

@@ -12,10 +12,9 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.value.AvValue2
-import `fun`.adaptive.value.builtin.AvBoolean
-import `fun`.adaptive.value.builtin.AvDouble
-import `fun`.adaptive.value.builtin.AvString
-import `fun`.adaptive.value.item.AvStatus
+import `fun`.adaptive.value.avBoolean
+import `fun`.adaptive.value.avDouble
+import `fun`.adaptive.value.avString
 import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
@@ -61,14 +60,13 @@ class CurValUpload : CliktCommand(name = "curval-upload") {
                     val point = UUID<AvValue2>(fields[0])
                     val signature = fields[1]
                     val timestamp = Instant.parse(fields[2])
-                    val flags = fields[3].toInt()
+                    val flags = fields[3].split(";").toSet().ifEmpty { null }
                     val sValue = if (fields.size > 4) fields[4] else "" // empty string
 
                     val curVal: AvValue2? = when (signature) {
-                        "D"-> AvDouble(UUID.nil(), timestamp, AvStatus(flags), point, sValue.toDouble())
-                        "I" -> AvDouble(UUID.nil(), timestamp, AvStatus(flags), point, sValue.toDouble())
-                        "Z" -> AvBoolean(UUID.nil(), timestamp, AvStatus(flags), point, sValue.toBoolean())
-                        "T" -> AvString(UUID.nil(), timestamp, AvStatus(flags), point, sValue)
+                        "D", "I" -> avDouble(sValue.toDouble(), timestamp = timestamp, parentId = point, status = flags)
+                        "Z" -> avBoolean(sValue.toBoolean(), timestamp = timestamp, parentId = point, status = flags)
+                        "T" -> avString(sValue, timestamp = timestamp, parentId = point, status = flags)
                         else -> {
                             logger.warning("Unknown signature in message (dropped): $message")
                             null

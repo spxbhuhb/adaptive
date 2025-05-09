@@ -5,7 +5,7 @@ import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.log.getLogger
-import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -27,13 +27,13 @@ class AioSpaceTest {
     fun `adding a space`() = test { worker ->
         val spaceId: AvValueId = addSpace(worker, "Building 1", "1", SpaceMarkers.BUILDING)
 
-        val space = worker.item(spaceId).asAvItem<AioSpaceSpec>()
+        val space = worker.item(spaceId).asAvValue<AioSpaceSpec>()
         assertNotNull(space)
 
         assertNotNull(SpaceMarkers.SPACE in space.markers)
         assertTrue(SpaceMarkers.BUILDING in space.markers)
 
-        val spaceFromQuery = worker.query { it is AvValue<*> && SpaceMarkers.BUILDING in it.markers }.firstOrNull()?.asAvItem<AioSpaceSpec>()
+        val spaceFromQuery = worker.query { it is AvValue<*> && SpaceMarkers.BUILDING in it.markers }.firstOrNull()?.asAvValue<AioSpaceSpec>()
         assertNotNull(spaceFromQuery)
         assertEquals(space, spaceFromQuery)
 
