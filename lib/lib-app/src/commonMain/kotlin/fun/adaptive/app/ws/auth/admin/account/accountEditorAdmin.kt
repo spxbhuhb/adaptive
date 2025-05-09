@@ -25,7 +25,7 @@ import `fun`.adaptive.ui.label.inputLabel
 import `fun`.adaptive.ui.popup.modalForEdit
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 @Adaptive
 fun accountEditorAdmin(
@@ -116,6 +116,6 @@ fun roles() {
     }
 }
 
-class AvItemSelectMapping : SelectOptionMapping<AvValueId, AvItem<*>> {
-    override fun optionToValue(option: AvItem<*>): AvValueId = option.uuid
+class AvItemSelectMapping : SelectOptionMapping<AvValueId, AvValue<*>> {
+    override fun optionToValue(option: AvValue<*>): AvValueId = option.uuid
 }

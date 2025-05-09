@@ -8,7 +8,7 @@ import `fun`.adaptive.iot.app.WsItemTypes
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
 import kotlinx.datetime.Clock.System.now
@@ -27,11 +27,11 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService>() {
     override suspend fun add(name: String, spaceType: AvMarker, parentId: AvValueId?): AvValueId {
         ensureLoggedIn()
 
-        val spaceId = uuid7<AvValue>()
+        val spaceId = uuid7<AvValue2>()
 
         worker.execute {
 
-            val space = AvItem(
+            val space = AvValue(
                 name,
                 WsItemTypes.WSIT_SPACE + ":$spaceType",
                 spaceId,
@@ -85,7 +85,7 @@ class AioSpaceService : AioSpaceApi, ServiceImpl<AioSpaceService>() {
     override suspend fun setSpecSpec(valueId: AvValueId, spec : AioSpaceSpec) {
         ensureLoggedIn()
 
-        return worker.update<AvItem<AioSpaceSpec>>(valueId) {
+        return worker.update<AvValue<AioSpaceSpec>>(valueId) {
             it.copy(timestamp = now(), spec = spec)
         }
     }

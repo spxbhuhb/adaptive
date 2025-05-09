@@ -24,14 +24,14 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.value.builtin.AvDouble
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.ui.value.AvUiList
 import `fun`.adaptive.ui.value.AvUiValue
 import `fun`.adaptive.ui.value.iconFor
 
 @Adaptive
 fun rhtListItem(
-    item: AvItem<*>,
+    item: AvValue<*>,
     theme : AioTheme = AioTheme.DEFAULT
 ) : AdaptiveFragment {
 

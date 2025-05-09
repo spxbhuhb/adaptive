@@ -90,6 +90,6 @@ abstract class AvAbstractStore<V>(
 
     open fun onCommit() = Unit
 
-    abstract fun process(value: AvValue)
+    abstract fun process(value: AvValue2)
 
 }

@@ -35,11 +35,11 @@ import `fun`.adaptive.ui.value.AvNameCacheEntry
 import `fun`.adaptive.ui.value.AvUiList
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue.Companion.asAvItem
 
 @Adaptive
-fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentController>): AdaptiveFragment {
+fun wsDeviceContentPane(pane: WsPane<AvValue<AioDeviceSpec>, DeviceEditorContentController>): AdaptiveFragment {
 
     val originalItem = copyOf { pane.data }
 
@@ -75,7 +75,7 @@ fun wsDeviceContentPane(pane: WsPane<AvItem<AioDeviceSpec>, DeviceEditorContentC
 
 @Adaptive
 fun title(
-    item: AvItem<AioDeviceSpec>,
+    item: AvValue<AioDeviceSpec>,
 ) {
     column {
         paddingBottom { 32.dp }
@@ -87,8 +87,8 @@ fun title(
 @Adaptive
 fun actions(
     controller: DeviceEditorContentController,
-    originalItem: AvItem<AioDeviceSpec>,
-    editItem: AvItem<AioDeviceSpec>,
+    originalItem: AvValue<AioDeviceSpec>,
+    editItem: AvValue<AioDeviceSpec>,
     editSpec: AioDeviceSpec,
     originalSpace: AvNameCacheEntry?,
     editSpace: AvNameCacheEntry?
@@ -120,7 +120,7 @@ fun actions(
 
 @Adaptive
 private fun editFields(
-    editItem: AvItem<AioDeviceSpec>,
+    editItem: AvValue<AioDeviceSpec>,
     editSpace: AvNameCacheEntry?,
     spaceNames: List<AvNameCacheEntry>,
     updateSpace: (AvNameCacheEntry?) -> Unit

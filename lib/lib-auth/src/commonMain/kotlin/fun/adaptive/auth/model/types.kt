@@ -1,10 +1,10 @@
 package `fun`.adaptive.auth.model
 
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
-typealias AuthPrincipal = AvItem<PrincipalSpec>
-typealias AuthRole = AvItem<RoleSpec>
+typealias AuthPrincipal = AvValue<PrincipalSpec>
+typealias AuthRole = AvValue<RoleSpec>
 
 typealias AuthPrincipalId = AvValueId
 typealias AuthRoleId = AvValueId

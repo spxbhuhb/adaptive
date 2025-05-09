@@ -1,11 +1,11 @@
 package `fun`.adaptive.iot.space
 
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.log.getLogger
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvItem
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -33,7 +33,7 @@ class AioSpaceTest {
         assertNotNull(SpaceMarkers.SPACE in space.markers)
         assertTrue(SpaceMarkers.BUILDING in space.markers)
 
-        val spaceFromQuery = worker.query { it is AvItem<*> && SpaceMarkers.BUILDING in it.markers }.firstOrNull()?.asAvItem<AioSpaceSpec>()
+        val spaceFromQuery = worker.query { it is AvValue<*> && SpaceMarkers.BUILDING in it.markers }.firstOrNull()?.asAvItem<AioSpaceSpec>()
         assertNotNull(spaceFromQuery)
         assertEquals(space, spaceFromQuery)
 

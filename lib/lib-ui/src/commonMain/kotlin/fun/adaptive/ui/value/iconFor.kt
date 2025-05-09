@@ -3,10 +3,10 @@ package `fun`.adaptive.ui.value
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.generated.resources.empty
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 
-fun iconFor(item: AvItem<*>): GraphicsResourceSet {
+fun iconFor(item: AvValue<*>): GraphicsResourceSet {
 
     val byType = iconCache[item.type]
     if (byType != null) return byType

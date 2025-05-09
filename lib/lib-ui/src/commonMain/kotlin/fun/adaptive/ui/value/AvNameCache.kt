@@ -7,7 +7,7 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.operation.*
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +30,7 @@ class AvNameCache(
             notifyListeners()
         }
 
-    private val itemMap = mutableMapOf<AvValueId, AvItem<*>>()
+    private val itemMap = mutableMapOf<AvValueId, AvValue<*>>()
 
     val localWorker = adapter.firstImpl<AvValueWorker>()
     val remoteService = getService<AvValueApi>(transport)
@@ -90,12 +90,12 @@ class AvNameCache(
         }
     }
 
-    fun process(value: AvValue) {
-        check(value is AvItem<*>)
+    fun process(value: AvValue2) {
+        check(value is AvValue<*>)
         itemMap[value.uuid] = value
     }
 
-    fun pathNames(item : AvItem<*>): List<String> {
+    fun pathNames(item: AvValue<*>): List<String> {
         var parentId = item.parentId
         val names = mutableListOf<String>(item.name)
 

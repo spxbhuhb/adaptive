@@ -2,7 +2,7 @@ package `fun`.adaptive.document.ws.browser
 
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 fun WsPane<DocBrowserWsItem, *>.subDocuments(): List<AvValueId> {
     val browserItem = this.data
@@ -10,7 +10,7 @@ fun WsPane<DocBrowserWsItem, *>.subDocuments(): List<AvValueId> {
     return toolController.valueTreeStore.getSubItems(browserItem.item.uuid)
 }
 
-fun WsPane<DocBrowserWsItem, *>.getDocument(spaceId: AvValueId): AvItem<*>? {
+fun WsPane<DocBrowserWsItem, *>.getDocument(spaceId: AvValueId): AvValue<*>? {
     val toolController = this.data.config.controller
     return toolController.valueTreeStore[spaceId]
 }

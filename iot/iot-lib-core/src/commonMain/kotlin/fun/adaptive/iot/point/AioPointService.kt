@@ -12,10 +12,10 @@ import `fun`.adaptive.iot.app.WsItemTypes
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.value.store.AvComputeContext
@@ -41,7 +41,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService>() {
     ): AvValueId {
         ensureLoggedIn()
 
-        val itemId = markers?.get("migratedId")?.cast() ?: uuid7<AvValue>()
+        val itemId = markers?.get("migratedId")?.cast() ?: uuid7<AvValue2>()
 
         val itemMarkers = markers?.toMutableMap() ?: mutableMapOf()
 
@@ -50,7 +50,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService>() {
 
         valueWorker.execute {
 
-            val item = AvItem(
+            val item = AvValue(
                 name,
                 WsItemTypes.WSIT_POINT + ":$itemType",
                 itemId,
@@ -97,12 +97,12 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService>() {
     override suspend fun setSpec(valueId: AvValueId, spec: AioPointSpec) {
         ensureLoggedIn()
 
-        return valueWorker.update<AvItem<AioPointSpec>>(valueId) {
+        return valueWorker.update<AvValue<AioPointSpec>>(valueId) {
             it.copy(timestamp = now(), spec = spec)
         }
     }
 
-    override suspend fun setCurVal(curVal: AvValue) {
+    override suspend fun setCurVal(curVal: AvValue2) {
         ensureLoggedIn()
 
         val pointId = checkNotNull(curVal.parentId)
@@ -120,7 +120,7 @@ class AioPointService : AioPointApi, ServiceImpl<AioPointService>() {
         AioHistoryService.append(newCurVal)
     }
 
-    internal fun unsafeSetCurVal(context: AvComputeContext, pointId: AvValueId, curVal: AvValue): AvValue {
+    internal fun unsafeSetCurVal(context: AvComputeContext, pointId: AvValueId, curVal: AvValue2): AvValue2 {
         val point = context.item<AioPointSpec>(pointId)
         val originalCurValId = point.markers[PointMarkers.CUR_VAL]
         val curValId = originalCurValId ?: uuid7()

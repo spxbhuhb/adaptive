@@ -4,7 +4,7 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
 
@@ -17,7 +17,7 @@ open class AvLocalItemList<V : Any>(
     publisher: AvPublisher,
     scope: CoroutineScope,
     localWorker: AvValueWorker
-) : AvAbstractStore<List<AvItem<V>>>(publisher, scope, localWorker) {
+) : AvAbstractStore<List<AvValue<V>>>(publisher, scope, localWorker) {
 
     constructor(
         specClass: KClass<V>,
@@ -25,19 +25,19 @@ open class AvLocalItemList<V : Any>(
         backend: BackendAdapter
     ) : this(specClass, publisher, backend.scope, backend.firstImpl<AvValueWorker>())
 
-    private val itemMap = mutableMapOf<AvValueId, AvItem<V>>()
+    private val itemMap = mutableMapOf<AvValueId, AvValue<V>>()
 
-    override fun process(value: AvValue) {
-        if (value !is AvItem<*>) return
+    override fun process(value: AvValue2) {
+        if (value !is AvValue<*>) return
         if (! specClass.isInstance(value.spec)) return
 
         @Suppress("UNCHECKED_CAST")
-        itemMap[value.uuid] = value as AvItem<V>
+        itemMap[value.uuid] = value as AvValue<V>
 
         notifyListeners()
     }
 
-    override var value: List<AvItem<V>>
+    override var value: List<AvValue<V>>
         get() = itemMap.values.toList()
         set(_) = unsupported()
 

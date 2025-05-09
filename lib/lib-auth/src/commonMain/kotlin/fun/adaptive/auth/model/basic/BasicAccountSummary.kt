@@ -7,7 +7,7 @@ import `fun`.adaptive.auth.model.AuthRoleId
 import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import kotlinx.datetime.Instant
 
 @Adat
@@ -30,7 +30,7 @@ class BasicAccountSummary(
         }
     }
 
-    constructor(principal: AvItem<PrincipalSpec>, account: AvItem<BasicAccountSpec>) : this(
+    constructor(principal: AvValue<PrincipalSpec>, account: AvValue<BasicAccountSpec>) : this(
         accountId = account.uuid,
         principalId = principal.uuid,
         login = principal.name,

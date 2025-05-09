@@ -2,13 +2,13 @@ package `fun`.adaptive.iot.domain.rht.ui.controller
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.model.NamedItem
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 @Adat
 class RhtWsItem(
     override val name: String,
     val toolController: RhtBrowserToolController,
-    val avItem: AvItem<*>
+    val avItem: AvValue<*>
 ) : NamedItem() {
 
     override val type

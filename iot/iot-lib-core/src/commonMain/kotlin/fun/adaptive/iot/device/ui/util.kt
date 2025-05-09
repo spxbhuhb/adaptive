@@ -7,9 +7,9 @@ import `fun`.adaptive.iot.generated.resources.controller
 import `fun`.adaptive.iot.generated.resources.device
 import `fun`.adaptive.iot.generated.resources.network
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
-val AvItem<AioDeviceSpec>.localizedDeviceType: String
+val AvValue<AioDeviceSpec>.localizedDeviceType: String
     get() = when (this.type.substringAfterLast(':')) {
         DeviceMarkers.CONTROLLER -> Strings.controller
         DeviceMarkers.NETWORK -> Strings.network

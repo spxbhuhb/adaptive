@@ -1,7 +1,7 @@
 package `fun`.adaptive.value.pesistence
 
 import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.builtin.AvString
 import `fun`.adaptive.value.persistence.FilePersistence
@@ -19,7 +19,7 @@ class FilePersistenceTest {
     @JsName("testSaveAndLoadValue")
     fun `test save and load value`() {
         val testRoot = clearedTestPath()
-        val map = mutableMapOf<AvValueId, AvValue>()
+        val map = mutableMapOf<AvValueId, AvValue2>()
         val persistence = FilePersistence(testRoot, 2)
 
         val value = AvString(UUID("48852c46-8e5a-40a1-a9c8-e757c6f58200"), now(), AvStatus.OK, null, "TestData")
@@ -37,7 +37,7 @@ class FilePersistenceTest {
     @JsName("testLoadValueWithInvalidData")
     fun `test load value with invalid data`() {
         val testRoot = clearedTestPath()
-        val map = mutableMapOf<AvValueId, AvValue>()
+        val map = mutableMapOf<AvValueId, AvValue2>()
         val persistence = FilePersistence(testRoot, 2)
 
         val invalidFileDir = testRoot.resolve("00/82").ensure()
@@ -50,7 +50,7 @@ class FilePersistenceTest {
     @JsName("testLoadMultipleValues")
     fun `test load multiple values`() {
         val testRoot = clearedTestPath()
-        val map = mutableMapOf<AvValueId, AvValue>()
+        val map = mutableMapOf<AvValueId, AvValue2>()
         val persistence = FilePersistence(testRoot, 2)
 
         val value1 = AvString(UUID("48852c46-8e5a-40a1-a9c8-e757c6f58200"), now(), AvStatus.OK, null, "Data1")

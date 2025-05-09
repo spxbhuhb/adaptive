@@ -1,8 +1,8 @@
 package `fun`.adaptive.value.item
 
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 
-abstract class AvMarkerValue : AvValue() {
+abstract class AvMarkerValue : AvValue2() {
 
     abstract val markerName: String
 

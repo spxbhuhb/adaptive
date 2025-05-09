@@ -1,11 +1,11 @@
 package `fun`.adaptive.value.local
 
 import `fun`.adaptive.foundation.unsupported
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.withSpec
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.item.AvMarker
 import kotlinx.coroutines.CoroutineScope
@@ -30,7 +30,7 @@ abstract class AvLocalTree<ST : Any, TI>(
     private val nodeMap = mutableMapOf<AvValueId, Node<ST, TI>>()
 
     class Node<ST, TI>(
-        var avItem: AvItem<ST>? = null,
+        var avItem: AvValue<ST>? = null,
         var childIds: List<AvValueId>? = null,
         var treeItem: TI? = null
     )
@@ -41,9 +41,9 @@ abstract class AvLocalTree<ST : Any, TI>(
     val size
         get() = nodeMap.size
 
-    abstract fun newTreeItem(item: AvItem<ST>, parentNode : Node<ST,TI>?): TI
+    abstract fun newTreeItem(item: AvValue<ST>, parentNode: Node<ST, TI>?): TI
 
-    abstract fun updateTreeItem(item: AvItem<ST>, treeItem: TI)
+    abstract fun updateTreeItem(item: AvValue<ST>, treeItem: TI)
 
     abstract fun updateChildren(treeItem: TI, children: List<TI>)
 
@@ -74,14 +74,14 @@ abstract class AvLocalTree<ST : Any, TI>(
         topRefresh = false
     }
 
-    override fun process(value: AvValue) {
+    override fun process(value: AvValue2) {
         when (value) {
-            is AvItem<*> -> process(value)
+            is AvValue<*> -> process(value)
             is AvRefList -> process(value)
         }
     }
 
-    private fun process(item: AvItem<*>) {
+    private fun process(item: AvValue<*>) {
         val node = nodeMap.getOrPut(item.uuid) { Node() }
 
         val avItem = item.withSpec(specClass)
@@ -154,10 +154,10 @@ abstract class AvLocalTree<ST : Any, TI>(
      * First item of the list is the topmost item without a
      * parent.
      */
-    fun pathNames(value : AvItem<*>): List<String> {
+    fun pathNames(value: AvValue<*>): List<String> {
         val names = mutableListOf<String>()
 
-        var current: AvItem<*>? = value
+        var current: AvValue<*>? = value
         while (current != null) {
             names.add(current.name)
             current = current.parentId?.let { this[it] }

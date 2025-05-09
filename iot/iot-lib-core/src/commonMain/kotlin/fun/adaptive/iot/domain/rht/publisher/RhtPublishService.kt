@@ -8,7 +8,7 @@ import `fun`.adaptive.iot.haystack.PhScienceMarkers
 import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.local.AvMarkedValueId
 import `fun`.adaptive.value.local.AvMarkedValueSubscriptionResult
@@ -47,11 +47,11 @@ class RhtPublishService : ServiceImpl<RhtPublishService>(), RhtPublishApi {
 
     private fun rhtMapPoint(
         spaceId : AvValueId,
-        point: AvValue,
+        point: AvValue2,
         conditions: MutableList<AvSubscribeCondition>,
         mapping: MutableMap<AvValueId, MutableList<AvMarkedValueId>>
     ) {
-        if (point !is AvItem<*>) return
+        if (point !is AvValue<*>) return
         val markers = point.markersOrNull ?: return
         val curValRef = markers[PointMarkers.CUR_VAL] ?: return
 

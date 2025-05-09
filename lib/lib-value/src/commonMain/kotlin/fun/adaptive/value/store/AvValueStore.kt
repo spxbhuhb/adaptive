@@ -6,7 +6,7 @@ import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvMarkerValue
@@ -34,7 +34,7 @@ open class AvValueStore(
 
     private val operations = Channel<AvValueOperation>(Channel.UNLIMITED)
 
-    private val values = mutableMapOf<AvValueId, AvValue>()
+    private val values = mutableMapOf<AvValueId, AvValue2>()
 
     private val subscriptions = mutableMapOf<AvValueSubscriptionId, AvSubscription>()
 
@@ -181,7 +181,7 @@ open class AvValueStore(
         }
     }
 
-    private fun indexAndNotify(original: AvValue?, value: AvValue, operation: AvValueOperation, commitSet: MutableSet<AvSubscription>) {
+    private fun indexAndNotify(original: AvValue2?, value: AvValue2, operation: AvValueOperation, commitSet: MutableSet<AvSubscription>) {
         index(original, value, commitSet)
         notify(value, commitSet)
         operation.success()
@@ -191,7 +191,7 @@ open class AvValueStore(
     // Notification (for remove marker check indexing also)
     // --------------------------------------------------------------------------------
 
-    fun notify(value: AvValue, commitSet: MutableSet<AvSubscription>) {
+    fun notify(value: AvValue2, commitSet: MutableSet<AvSubscription>) {
         valueIdSubscriptions[value.uuid]?.forEach {
             add(it, value, commitSet)
         }
@@ -199,20 +199,20 @@ open class AvValueStore(
         notifyByMarker(value, commitSet)
     }
 
-    fun notifyByMarker(value: AvValue, commitSet: MutableSet<AvSubscription>) {
+    fun notifyByMarker(value: AvValue2, commitSet: MutableSet<AvSubscription>) {
         when (value) {
-            is AvItem<*> -> value.markersOrNull?.forEach { marker -> notifyByMarker(marker.key, value, commitSet) }
+            is AvValue<*> -> value.markersOrNull?.forEach { marker -> notifyByMarker(marker.key, value, commitSet) }
             is AvMarkerValue -> notifyByMarker(value.markerName, value, commitSet)
         }
     }
 
-    fun notifyByMarker(markerName: String, value: AvValue, commitSet: MutableSet<AvSubscription>) {
+    fun notifyByMarker(markerName: String, value: AvValue2, commitSet: MutableSet<AvSubscription>) {
         markerSubscriptions[markerName]?.forEach {
             it.ifApplicable(value) { add(it.subscription, value, commitSet) }
         }
     }
 
-    private fun add(subscription: AvSubscription, value: AvValue, commitSet: MutableSet<AvSubscription>) {
+    private fun add(subscription: AvSubscription, value: AvValue2, commitSet: MutableSet<AvSubscription>) {
         try {
             subscription.add(value)
             commitSet.add(subscription)
@@ -239,13 +239,13 @@ open class AvValueStore(
     // Indexing and remove marker notification
     // --------------------------------------------------------------------------------
 
-    private fun index(original: AvValue?, value: AvValue, commitSet: MutableSet<AvSubscription>) {
+    private fun index(original: AvValue2?, value: AvValue2, commitSet: MutableSet<AvSubscription>) {
         when (value) {
 
-            is AvItem<*> -> {
+            is AvValue<*> -> {
                 index(
                     value,
-                    (original as? AvItem<*>)?.markers?.keys ?: emptySet(),
+                    (original as? AvValue<*>)?.markers?.keys ?: emptySet(),
                     value.markers.keys,
                     commitSet
                 )
@@ -258,7 +258,7 @@ open class AvValueStore(
     }
 
     private fun index(
-        value: AvValue,
+        value: AvValue2,
         originalMarkers: Set<String>,
         markers: Set<String>,
         commitSet: MutableSet<AvSubscription>
@@ -296,8 +296,8 @@ open class AvValueStore(
         }
     }
 
-    private inline fun MarkerSubscriptionEntry.ifApplicable(value: AvValue, block: () -> Unit) {
-        if (itemOnly && value !is AvItem<*>) return
+    private inline fun MarkerSubscriptionEntry.ifApplicable(value: AvValue2, block: () -> Unit) {
+        if (itemOnly && value !is AvValue<*>) return
         block()
     }
 
@@ -435,7 +435,7 @@ open class AvValueStore(
         }
     }
 
-    suspend fun <T : AvValue> executeUpdate(
+    suspend fun <T : AvValue2> executeUpdate(
         valueId: AvValueId,
         timeout: Duration,
         kClass: KClass<T>,
@@ -496,38 +496,38 @@ open class AvValueStore(
 
     internal fun unsafeGetMarkerValue(valueId: AvValueId, marker: AvMarker): AvMarkerValue? =
         values[valueId]?.let { item ->
-            item as AvItem<*>
+            item as AvValue<*>
             item.markersOrNull?.get(marker)?.let { markerValue ->
                 values[markerValue]
             }
         } as AvMarkerValue?
 
-    internal fun unsafeGetMarkerValue(item: AvItem<*>, marker: AvMarker): AvMarkerValue? =
+    internal fun unsafeGetMarkerValue(item: AvValue<*>, marker: AvMarker): AvMarkerValue? =
         item.markersOrNull?.get(marker)?.let { markerValue ->
             values[markerValue] as AvMarkerValue?
         }
 
-    internal fun unsafeQueryByMarker(marker: AvMarker): List<AvValue> =
+    internal fun unsafeQueryByMarker(marker: AvMarker): List<AvValue2> =
         markerIndices[marker]?.mapNotNull { values[it] } ?: emptyList()
 
-    internal fun unsafeForEachByMarker(marker: AvMarker, block: (AvValue) -> Unit) {
+    internal fun unsafeForEachByMarker(marker: AvMarker, block: (AvValue2) -> Unit) {
         markerIndices[marker]?.forEach { block(values[it] !!) }
     }
 
-    internal fun unsafeForEachItemByMarker(marker: AvMarker, block: (AvItem<*>) -> Unit) {
+    internal fun unsafeForEachItemByMarker(marker: AvMarker, block: (AvValue<*>) -> Unit) {
         markerIndices[marker]?.forEach {
-            val value = values[it] as? AvItem<*>
+            val value = values[it] as? AvValue<*>
             if (value != null) block(value)
         }
     }
 
-    internal fun unsafeItem(itemId: AvValueId): AvItem<*> =
-        values[itemId] as AvItem<*>
+    internal fun unsafeItem(itemId: AvValueId): AvValue<*> =
+        values[itemId] as AvValue<*>
 
-    internal fun unsafeItemOrNull(itemId: AvValueId?): AvItem<*>? =
-        itemId?.let { safeItemId -> values[safeItemId]?.let { it as AvItem<*> } }
+    internal fun unsafeItemOrNull(itemId: AvValueId?): AvValue<*>? =
+        itemId?.let { safeItemId -> values[safeItemId]?.let { it as AvValue<*> } }
 
-    internal fun unsafeValueOrNull(valueId: AvValueId?): AvValue? =
+    internal fun unsafeValueOrNull(valueId: AvValueId?): AvValue2? =
         valueId?.let { values[valueId] }
 
 
@@ -535,33 +535,33 @@ open class AvValueStore(
     // Query
     // --------------------------------------------------------------------------------
 
-    operator fun get(valueId: AvValueId): AvValue? =
+    operator fun get(valueId: AvValueId): AvValue2? =
         lock.use {
             values[valueId]
         }
 
-    fun item(valueId: AvValueId): AvItem<*> =
-        get(valueId) as AvItem<*>
+    fun item(valueId: AvValueId): AvValue<*> =
+        get(valueId) as AvValue<*>
 
     fun getMarkerValue(itemId: AvValueId, marker: AvMarker): AvMarkerValue? =
         lock.use {
             unsafeGetMarkerValue(itemId, marker)
         }
 
-    fun getMarkerValue(item: AvItem<*>, marker: AvMarker): AvMarkerValue? =
+    fun getMarkerValue(item: AvValue<*>, marker: AvMarker): AvMarkerValue? =
         lock.use {
             unsafeGetMarkerValue(item, marker)
         }
 
-    fun refItem(item : AvItem<*>, refMarker : AvMarker) : AvItem<*> =
+    fun refItem(item: AvValue<*>, refMarker: AvMarker): AvValue<*> =
         refItemOrNull(item, refMarker) ?: throw NoSuchElementException("Marker $refMarker not found in ${item.uuid}")
 
-    fun refItemOrNull(item : AvItem<*>, refMarker : AvMarker) : AvItem<*>? =
-        item.markersOrNull?.get(refMarker)?.let { values[it] as? AvItem<*> }
+    fun refItemOrNull(item: AvValue<*>, refMarker: AvMarker): AvValue<*>? =
+        item.markersOrNull?.get(refMarker)?.let { values[it] as? AvValue<*> }
 
-    fun refValList(itemId: AvValueId, refListMarker: AvMarker) : List<AvValue> {
+    fun refValList(itemId: AvValueId, refListMarker: AvMarker): List<AvValue2> {
         return lock.use {
-            val item = values[itemId] as? AvItem<*> ?: throw NoSuchElementException("Item $itemId not found")
+            val item = values[itemId] as? AvValue<*> ?: throw NoSuchElementException("Item $itemId not found")
             val refListId = item.markersOrNull?.get(refListMarker) ?: return emptyList()
             val refList = values[refListId] as? AvRefList ?: throw IllegalStateException("$refListMarker of $item is not an AvValueIdList")
             refList.refs.map {
@@ -570,12 +570,12 @@ open class AvValueStore(
         }
     }
 
-    fun query(filterFun: (AvValue) -> Boolean): List<AvValue> =
+    fun query(filterFun: (AvValue2) -> Boolean): List<AvValue2> =
         lock.use {
             values.values.filter(filterFun)
         }
 
-    fun queryByMarker(marker: AvMarker): List<AvValue> =
+    fun queryByMarker(marker: AvMarker): List<AvValue2> =
         lock.use {
             markerIndices[marker]?.mapNotNull { values[it] } ?: emptyList()
         }

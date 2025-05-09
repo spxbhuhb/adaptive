@@ -17,14 +17,14 @@ import `fun`.adaptive.ui.editor.booleanEditor
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 @Adaptive
 fun simNetworkConfig(
     controller: DeviceEditorToolController
 ): AdaptiveFragment {
 
-    val template = AvItem(
+    val template = AvValue(
         Strings.aio_driver_sim,
         DeviceMarkers.DEVICE,
         friendlyId = Strings.aio_driver_sim,

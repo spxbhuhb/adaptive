@@ -33,21 +33,21 @@ import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.format
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.builtin.AvConvertedDouble
 import `fun`.adaptive.value.builtin.AvDouble
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.ui.value.AvUiValue
 import kotlinx.datetime.Clock.System.now
 
 @Adaptive
 fun pointSummary(
-    point: AvItem<AioPointSpec>?,
+    point: AvValue<AioPointSpec>?,
     theme: AioTheme = AioTheme.DEFAULT
 ) {
     val observed = valueFrom { InputContext() }
-    val pointValue = valueFrom { AvUiValue<AvValue>(adapter(), point?.markers[PointMarkers.CUR_VAL]) }
+    val pointValue = valueFrom { AvUiValue<AvValue2>(adapter(), point?.markers[PointMarkers.CUR_VAL]) }
     val textualValue = extractValue(pointValue)
 
     grid {
@@ -72,7 +72,7 @@ fun pointSummary(
 
 }
 
-fun extractValue(pointValue: AvValue?): String {
+fun extractValue(pointValue: AvValue2?): String {
     when (pointValue) {
         is AvDouble -> return pointValue.value.format(1)
         is AvConvertedDouble -> return pointValue.convertedValue.format(1)
@@ -83,7 +83,7 @@ fun extractValue(pointValue: AvValue?): String {
 
 @Adaptive
 fun setValuePopup(
-    point: AvItem<AioPointSpec>,
+    point: AvValue<AioPointSpec>,
     pointValue: AvDouble?,
     state: InputContext,
     hide: () -> Unit

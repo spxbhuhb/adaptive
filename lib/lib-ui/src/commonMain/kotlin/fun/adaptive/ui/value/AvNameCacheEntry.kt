@@ -1,8 +1,8 @@
 package `fun`.adaptive.ui.value
 
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 class AvNameCacheEntry(
-    val item: AvItem<*>,
+    val item: AvValue<*>,
     val names: List<String>
 )

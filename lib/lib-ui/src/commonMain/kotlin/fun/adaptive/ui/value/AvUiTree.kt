@@ -5,7 +5,7 @@ import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.local.AvLocalTree
 import `fun`.adaptive.value.local.AvPublisher
@@ -20,8 +20,8 @@ class AvUiTree<ST : Any>(
 ) : AvLocalTree<ST,TreeItem<AvValueId>>(
     publisher, backend.scope, backend.firstImpl<AvValueWorker>()
 ) {
-    
-    override fun newTreeItem(item: AvItem<ST>, parentNode: Node<ST, TreeItem<AvValueId>>?): TreeItem<AvValueId> =
+
+    override fun newTreeItem(item: AvValue<ST>, parentNode: Node<ST, TreeItem<AvValueId>>?): TreeItem<AvValueId> =
 
         TreeItem(
             iconFor(item),
@@ -30,7 +30,7 @@ class AvUiTree<ST : Any>(
             parent = parentNode?.treeItem,
         )
 
-    override fun updateTreeItem(item: AvItem<ST>, treeItem: TreeItem<AvValueId>) {
+    override fun updateTreeItem(item: AvValue<ST>, treeItem: TreeItem<AvValueId>) {
         treeItem.title = item.name // treeItem is observable
     }
 

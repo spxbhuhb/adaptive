@@ -8,7 +8,7 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.generated.resources.saveFail
 import `fun`.adaptive.ui.generated.resources.saveSuccess
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.local.AvLocalItemList
 
 class RoleManagerController(
@@ -19,7 +19,7 @@ class RoleManagerController(
 
     val roles = AvLocalItemList<RoleSpec>(RoleSpec::class, service, workspace.backend)
 
-    fun save(data: AvItem<RoleSpec>, add: Boolean) {
+    fun save(data: AvValue<RoleSpec>, add: Boolean) {
         remote(Strings.saveSuccess, Strings.saveFail) {
             service.save(
                 if (add) null else data.uuid,

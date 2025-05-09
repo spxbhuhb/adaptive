@@ -8,7 +8,7 @@ import `fun`.adaptive.iot.driver.request.AdrStartControllerDiscovery
 import `fun`.adaptive.iot.driver.test.task.CommissionController
 import `fun`.adaptive.iot.driver.test.task.CommissionNetwork
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.store.AvComputeContext
 
 class TestProtocolPlugin : AioProtocolPlugin<TestNetworkSpec, TestControllerSpec, TestPointSpec>() {
@@ -22,17 +22,17 @@ class TestProtocolPlugin : AioProtocolPlugin<TestNetworkSpec, TestControllerSpec
         protocolWorker = driverWorker.safeAdapter.firstImpl<FifoProtocolWorker<TestNetworkSpec, TestControllerSpec, TestPointSpec>>()
     }
 
-    override fun commissionNetwork(cc: AvComputeContext, original: AvItem<TestNetworkSpec>?, new: AvItem<TestNetworkSpec>) {
+    override fun commissionNetwork(cc: AvComputeContext, original: AvValue<TestNetworkSpec>?, new: AvValue<TestNetworkSpec>) {
         cc += new
         protocolWorker += CommissionNetwork(new)
     }
 
-    override fun commissionController(cc: AvComputeContext, original: AvItem<TestControllerSpec>?, new: AvItem<TestControllerSpec>) {
+    override fun commissionController(cc: AvComputeContext, original: AvValue<TestControllerSpec>?, new: AvValue<TestControllerSpec>) {
         cc += new
         protocolWorker += CommissionController(new)
     }
 
-    override fun commissionPoint(cc: AvComputeContext, original: AvItem<TestPointSpec>?, new: AvItem<TestPointSpec>) {
+    override fun commissionPoint(cc: AvComputeContext, original: AvValue<TestPointSpec>?, new: AvValue<TestPointSpec>) {
         cc += new
     }
 

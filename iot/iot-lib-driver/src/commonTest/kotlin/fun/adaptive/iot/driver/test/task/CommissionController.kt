@@ -6,11 +6,11 @@ import `fun`.adaptive.iot.driver.backend.protocol.AbstractProtocolWorker
 import `fun`.adaptive.iot.driver.backend.task.DriverTask
 import `fun`.adaptive.iot.point.AioPointSpec
 import `fun`.adaptive.utility.UUID.Companion.uuid7
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import kotlinx.coroutines.channels.Channel
 
 class CommissionController<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec>(
-    val item: AvItem<CT>
+    val item: AvValue<CT>
 ) : DriverTask<NT, CT, PT>() {
 
     override val responseChannel = Channel<Any>()

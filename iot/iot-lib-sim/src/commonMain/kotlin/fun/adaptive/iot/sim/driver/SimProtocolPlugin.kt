@@ -9,7 +9,7 @@ import `fun`.adaptive.iot.sim.spec.SimControllerSpec
 import `fun`.adaptive.iot.sim.spec.SimNetworkSpec
 import `fun`.adaptive.iot.sim.spec.SimPointSpec
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.store.AvComputeContext
 
 class SimProtocolPlugin : AioProtocolPlugin<SimNetworkSpec, SimControllerSpec, SimPointSpec>() {
@@ -23,15 +23,15 @@ class SimProtocolPlugin : AioProtocolPlugin<SimNetworkSpec, SimControllerSpec, S
         simWorker = driverWorker.safeAdapter.firstImpl<FifoProtocolWorker<SimNetworkSpec, SimControllerSpec, SimPointSpec>>()
     }
 
-    override fun commissionNetwork(cc: AvComputeContext, original: AvItem<SimNetworkSpec>?, new: AvItem<SimNetworkSpec>) {
+    override fun commissionNetwork(cc: AvComputeContext, original: AvValue<SimNetworkSpec>?, new: AvValue<SimNetworkSpec>) {
         cc += new
     }
 
-    override fun commissionController(cc: AvComputeContext, original: AvItem<SimControllerSpec>?, new: AvItem<SimControllerSpec>) {
+    override fun commissionController(cc: AvComputeContext, original: AvValue<SimControllerSpec>?, new: AvValue<SimControllerSpec>) {
         cc += new
     }
 
-    override fun commissionPoint(cc: AvComputeContext, original: AvItem<SimPointSpec>?, new: AvItem<SimPointSpec>) {
+    override fun commissionPoint(cc: AvComputeContext, original: AvValue<SimPointSpec>?, new: AvValue<SimPointSpec>) {
         cc += new
     }
 

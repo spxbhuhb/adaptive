@@ -13,10 +13,10 @@ import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.vmNowSecond
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvItem
 import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock.System.now
 import kotlin.math.abs
@@ -227,7 +227,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
         principalId: AvValueId,
         updateFun: (PrincipalSpec) -> PrincipalSpec
     ) {
-        valueWorker.update<AvValue>(principalId) { item ->
+        valueWorker.update<AvValue2>(principalId) { item ->
             item.asAvItem<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
         }
     }

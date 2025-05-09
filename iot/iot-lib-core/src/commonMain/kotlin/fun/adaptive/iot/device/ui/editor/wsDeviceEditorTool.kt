@@ -26,7 +26,7 @@ import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.asAvItem
 
 @Adaptive
 fun wsDeviceEditorTool(pane: WsPane<Unit, DeviceEditorToolController>): AdaptiveFragment {

@@ -1,10 +1,10 @@
 package `fun`.adaptive.value
 
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvMarker
 
-fun AvValueWorker.firstItem(marker: AvMarker, condition: (AvItem<*>) -> Boolean) =
-    queryByMarker(marker).filterIsInstance<AvItem<*>>().first(condition)
+fun AvValueWorker.firstItem(marker: AvMarker, condition: (AvValue<*>) -> Boolean) =
+    queryByMarker(marker).filterIsInstance<AvValue<*>>().first(condition)
 
-fun AvValueWorker.firstItemOrNull(marker: AvMarker, condition: (AvItem<*>) -> Boolean) =
-    queryByMarker(marker).filterIsInstance<AvItem<*>>().firstOrNull(condition)
+fun AvValueWorker.firstItemOrNull(marker: AvMarker, condition: (AvValue<*>) -> Boolean) =
+    queryByMarker(marker).filterIsInstance<AvValue<*>>().firstOrNull(condition)

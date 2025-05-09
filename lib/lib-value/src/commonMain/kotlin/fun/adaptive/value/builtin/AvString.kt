@@ -2,7 +2,7 @@ package `fun`.adaptive.value.builtin
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.value.item.AvStatus
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.model.NamedItemType
 import kotlinx.datetime.Instant
@@ -14,7 +14,7 @@ class AvString(
     override val status: AvStatus,
     override val parentId: AvValueId?,
     val value : String
-) : AvValue() {
+) : AvValue2() {
 
     override val name: String
         get() = "String"

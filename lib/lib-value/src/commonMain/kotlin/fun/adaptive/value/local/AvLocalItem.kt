@@ -4,7 +4,7 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
 
@@ -17,7 +17,7 @@ open class AvLocalItem<V : Any>(
     publisher: AvPublisher,
     scope: CoroutineScope,
     localWorker: AvValueWorker
-) : AvAbstractStore<AvItem<V>?>(publisher, scope, localWorker) {
+) : AvAbstractStore<AvValue<V>?>(publisher, scope, localWorker) {
 
     constructor(
         publisher: AvPublisher,
@@ -25,15 +25,15 @@ open class AvLocalItem<V : Any>(
         backend: BackendAdapter,
     ) : this(specClass, publisher, backend.scope, backend.firstImpl<AvValueWorker>())
 
-    override var value: AvItem<V>? = null
+    override var value: AvValue<V>? = null
         set(_) = unsupported()
 
-    override fun process(value: AvValue) {
-        if (value !is AvItem<*>) return
+    override fun process(value: AvValue2) {
+        if (value !is AvValue<*>) return
         if (! specClass.isInstance(value.spec)) return
 
         @Suppress("UNCHECKED_CAST")
-        this.value = value as AvItem<V>
+        this.value = value as AvValue<V>
 
         notifyListeners()
     }

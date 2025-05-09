@@ -19,12 +19,12 @@ import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue.Companion.asAvItem
 
 class DeviceEditorContentController(
     override val workspace: Workspace
-) : WsPaneController<AvItem<AioDeviceSpec>>() {
+) : WsPaneController<AvValue<AioDeviceSpec>>() {
 
     val spaceService = getService<AioSpaceApi>(transport)
     val deviceService = getService<AioDeviceApi>(transport)
@@ -38,11 +38,11 @@ class DeviceEditorContentController(
         it.start()
     }
 
-    override fun accepts(pane: WsPaneType<AvItem<AioDeviceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
-        return (item is AvItem<*>) && (DeviceMarkers.DEVICE in item.markers)
+    override fun accepts(pane: WsPaneType<AvValue<AioDeviceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
+        return (item is AvValue<*>) && (DeviceMarkers.DEVICE in item.markers)
     }
 
-    override fun load(pane: WsPaneType<AvItem<AioDeviceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<AvItem<AioDeviceSpec>> {
+    override fun load(pane: WsPaneType<AvValue<AioDeviceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<AvValue<AioDeviceSpec>> {
         val deviceItem = item.asAvItem<AioDeviceSpec>()
 
         return pane.copy(

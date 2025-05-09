@@ -13,7 +13,7 @@ import `fun`.adaptive.iot.history.model.AioHistoryQuery
 import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.runtime.GlobalRuntimeContext
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.builtin.AvBoolean
 import `fun`.adaptive.value.builtin.AvConvertedDouble
@@ -26,7 +26,7 @@ class AioHistoryService : ServiceImpl<AioHistoryService>(), AioHistoryApi {
         lateinit var valueWorker: AvValueWorker
         lateinit var historyWorker: AioHistoryWorker
 
-        fun append(curValue: AvValue) {
+        fun append(curValue: AvValue2) {
             val safeParentId = checkNotNull(curValue.parentId) { "parentId is null in $curValue" }
             val point = valueWorker.item(safeParentId)
             if (PointMarkers.HIS !in point.markers) return

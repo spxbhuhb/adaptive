@@ -41,7 +41,7 @@ import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
 import `fun`.adaptive.utility.replaceFirst
 import `fun`.adaptive.utility.secureRandom
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import kotlinx.datetime.*
 import kotlinx.datetime.Clock.System.now
 import kotlin.time.Duration.Companion.minutes
@@ -111,7 +111,7 @@ class HistoryContentController(
         instructionsOf(stroke(0xc49c94))  // light brown
     )
 
-    val xAxis = ChartAxis<Instant, AioDoubleHistoryRecord, AvItem<*>>(
+    val xAxis = ChartAxis<Instant, AioDoubleHistoryRecord, AvValue<*>>(
         size = 49.0,
         offset = 50.0,
         axisLine = true,
@@ -119,7 +119,7 @@ class HistoryContentController(
         ::temporalHorizontalAxisMarkers
     )
 
-    val yAxis = ChartAxis<Instant, AioDoubleHistoryRecord, AvItem<*>>(
+    val yAxis = ChartAxis<Instant, AioDoubleHistoryRecord, AvValue<*>>(
         size = 49.0,
         offset = 49.0,
         axisLine = true,
@@ -162,7 +162,7 @@ class HistoryContentController(
         }
 
         val newChartItems = mutableListOf<HistoryChartItem>()
-        val itemsToLoad = mutableListOf<AvItem<*>>()
+        val itemsToLoad = mutableListOf<AvValue<*>>()
         val usedInstructionSets = mutableSetOf<AdaptiveInstructionGroup>()
 
         for (avItem in browserItem.items) {
@@ -208,7 +208,7 @@ class HistoryContentController(
         chartContext.value = chartRenderContext(newChartItems)
     }
 
-    suspend fun query(item: AvItem<*>): List<AioDoubleHistoryRecord> {
+    suspend fun query(item: AvValue<*>): List<AioDoubleHistoryRecord> {
         val start = config.value.start.atStartOfDayIn(TimeZone.currentSystemDefault())
         val end = config.value.end.asEndOfDayInDefault()
 
@@ -228,13 +228,13 @@ class HistoryContentController(
     }
 
     fun multiTableColumns(
-        context: ChartRenderContext<Instant, AioDoubleHistoryRecord, AvItem<*>>
-    ): Pair<List<Instant?>, List<ChartItem<Instant, AioDoubleHistoryRecord, AvItem<*>>>> {
+        context: ChartRenderContext<Instant, AioDoubleHistoryRecord, AvValue<*>>
+    ): Pair<List<Instant?>, List<ChartItem<Instant, AioDoubleHistoryRecord, AvValue<*>>>> {
 
         val iStart = context.range?.xStart ?: now()
         val iEnd = context.range?.xEnd ?: now()
 
-        val cc = CalculationContext<Instant, AioDoubleHistoryRecord, AvItem<*>>(
+        val cc = CalculationContext<Instant, AioDoubleHistoryRecord, AvValue<*>>(
             iStart,
             iEnd,
             context.normalizer.normalizedInterval(now(), now() + 15.minutes),

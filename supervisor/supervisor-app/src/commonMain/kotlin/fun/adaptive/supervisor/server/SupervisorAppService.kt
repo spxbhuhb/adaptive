@@ -11,7 +11,7 @@ import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.util.serviceSubscribe
 
@@ -37,7 +37,7 @@ class SupervisorAppService : ServiceImpl<SupervisorAppService>(), SupervisorAppA
     ) {
         ensureLoggedIn()
 
-        val roleValue = AvItem(
+        val roleValue = AvValue(
             name = name,
             type = AUTH_ROLE,
             parentId = null,

@@ -7,7 +7,7 @@ import `fun`.adaptive.iot.generated.resources.down
 import `fun`.adaptive.iot.generated.resources.ok
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.filter.QuickFilterModel
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 data class RhtFilter(
     val search : String = "",
@@ -15,10 +15,10 @@ data class RhtFilter(
     val qf2 : QuickFilterModel<String> = QuickFilterModel(Strings.all, listOf(Strings.all, Strings.ok, Strings.alarm), { it })
 ) {
 
-    fun filter(items : List<AvItem<*>>) : List<AvItem<*>> =
+    fun filter(items: List<AvValue<*>>): List<AvValue<*>> =
         items.filter { matches(it) }
 
-    fun matches(item : AvItem<*>) : Boolean {
+    fun matches(item: AvValue<*>): Boolean {
 
         when (qf1.selected) {
             Strings.active -> if (!item.status.isActive) return false

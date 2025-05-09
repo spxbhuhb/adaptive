@@ -1,7 +1,7 @@
 package `fun`.adaptive.iot.point
 
 import `fun`.adaptive.service.ServiceApi
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvMarker
 
@@ -24,6 +24,6 @@ interface AioPointApi {
 
     suspend fun setSpec(valueId: AvValueId, spec : AioPointSpec)
 
-    suspend fun setCurVal(curVal : AvValue)
+    suspend fun setCurVal(curVal: AvValue2)
 
 }

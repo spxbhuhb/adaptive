@@ -4,7 +4,6 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.parameters.arguments.argument
 import `fun`.adaptive.auth.api.AuthSessionApi
-import `fun`.adaptive.auth.backend.AuthSessionService
 import `fun`.adaptive.iot.point.AioPointApi
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.lib.util.bytearray.ListenerByteArrayQueue
@@ -12,7 +11,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.ensure
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.builtin.AvBoolean
 import `fun`.adaptive.value.builtin.AvDouble
 import `fun`.adaptive.value.builtin.AvString
@@ -59,13 +58,13 @@ class CurValUpload : CliktCommand(name = "curval-upload") {
 
                     val fields = message.trim().split(" ")
 
-                    val point = UUID<AvValue>(fields[0])
+                    val point = UUID<AvValue2>(fields[0])
                     val signature = fields[1]
                     val timestamp = Instant.parse(fields[2])
                     val flags = fields[3].toInt()
                     val sValue = if (fields.size > 4) fields[4] else "" // empty string
 
-                    val curVal: AvValue? = when (signature) {
+                    val curVal: AvValue2? = when (signature) {
                         "D"-> AvDouble(UUID.nil(), timestamp, AvStatus(flags), point, sValue.toDouble())
                         "I" -> AvDouble(UUID.nil(), timestamp, AvStatus(flags), point, sValue.toDouble())
                         "Z" -> AvBoolean(UUID.nil(), timestamp, AvStatus(flags), point, sValue.toBoolean())

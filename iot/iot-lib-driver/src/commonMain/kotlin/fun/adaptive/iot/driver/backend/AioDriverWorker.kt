@@ -11,8 +11,8 @@ import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.lib.util.bytearray.ByteArrayQueue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.withSpec
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue.Companion.withSpec
 import kotlinx.io.files.Path
 import kotlin.reflect.KClass
 
@@ -156,7 +156,7 @@ class AioDriverWorker<NT : AioDeviceSpec, CT : AioDeviceSpec, PT : AioPointSpec>
 
     }
 
-    fun controllerAndPoint(pointId : AvValueId) : Pair<AvItem<CT>, AvItem<PT>> {
+    fun controllerAndPoint(pointId: AvValueId): Pair<AvValue<CT>, AvValue<PT>> {
         val point = valueWorker.item(pointId).withSpec(pointSpecClass)
         val controllerId = checkNotNull(point.parentId) { "point ${point.uuid} has no parent controller" }
         val controller = valueWorker.item(controllerId).withSpec(controllerSpecClass)

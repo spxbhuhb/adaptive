@@ -9,18 +9,18 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.value.AvUiTree
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import kotlinx.datetime.Instant
 
 fun historyColor(
-    item : ChartItem<Instant, AioDoubleHistoryRecord, AvItem<*>>
+    item: ChartItem<Instant, AioDoubleHistoryRecord, AvValue<*>>
 ) =
     item.instructions.firstInstanceOfOrNull<Stroke>()?.color ?: colors.onSurface
 
 
 fun historyName(
     pane : WsPane<HistoryBrowserWsItem, HistoryContentController>,
-    item : ChartItem<Instant, AioDoubleHistoryRecord, AvItem<*>>
+    item: ChartItem<Instant, AioDoubleHistoryRecord, AvValue<*>>
 ) : String =
     historyName(
         pane.data.controller,
@@ -29,7 +29,7 @@ fun historyName(
 
 fun historyName(
     toolController : HistoryToolController,
-    valueColumn : ChartItem<Instant, AioDoubleHistoryRecord, AvItem<*>>
+    valueColumn: ChartItem<Instant, AioDoubleHistoryRecord, AvValue<*>>
 ): String {
     val item = valueColumn.attachment ?: return Strings.noname
     val itemName = item.name
@@ -47,13 +47,13 @@ fun historyName(
 
 fun historyPathNames(
     toolController : HistoryToolController,
-    item : AvItem<*>
+    item: AvValue<*>
 ): List<String> {
 
     val parentId = item.parentId ?: return emptyList()
 
-    var space: AvItem<*>? = toolController.spaceTreeStore[parentId]
-    var device: AvItem<*>? = toolController.deviceTreeStore[parentId]
+    var space: AvValue<*>? = toolController.spaceTreeStore[parentId]
+    var device: AvValue<*>? = toolController.deviceTreeStore[parentId]
 
     when {
         space != null -> collect(space, toolController.spaceTreeStore)
@@ -64,7 +64,7 @@ fun historyPathNames(
     }
 }
 
-private fun collect(start : AvItem<*>?, tree: AvUiTree<*>) : List<String> {
+private fun collect(start: AvValue<*>?, tree: AvUiTree<*>): List<String> {
     val names = mutableListOf<String>()
     var item = start
 

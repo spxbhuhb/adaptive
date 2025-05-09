@@ -19,14 +19,14 @@ import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 @Adaptive
 fun spxbNetworkConfig(
     controller: DeviceEditorToolController
 ): AdaptiveFragment {
 
-    val template = AvItem(
+    val template = AvValue(
         Strings.aio_driver_spxb,
         DeviceMarkers.DEVICE,
         friendlyId = Strings.aio_driver_spxb,

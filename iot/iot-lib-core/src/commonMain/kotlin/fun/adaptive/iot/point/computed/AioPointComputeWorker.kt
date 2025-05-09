@@ -9,12 +9,12 @@ import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.iot.space.AioSpaceSpec
 import `fun`.adaptive.iot.space.SpaceMarkers
 import `fun`.adaptive.utility.safeSuspendCall
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.builtin.AvConvertedDouble
 import `fun`.adaptive.value.builtin.AvDouble
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItemOrNull
+import `fun`.adaptive.value.AvValue.Companion.asAvItemOrNull
 import `fun`.adaptive.value.store.AvComputeContext
 import kotlinx.coroutines.channels.Channel
 import kotlinx.datetime.Instant
@@ -22,9 +22,9 @@ import kotlinx.datetime.Instant
 class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker>() {
 
     companion object {
-        suspend fun update(curVal: AvValue?) = curVal?.let { channel.send(curVal) }
+        suspend fun update(curVal: AvValue2?) = curVal?.let { channel.send(curVal) }
 
-        private val channel = Channel<AvValue>(Channel.UNLIMITED)
+        private val channel = Channel<AvValue2>(Channel.UNLIMITED)
     }
 
     val valueWorker by worker<AvValueWorker>()
@@ -60,9 +60,9 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker>() {
     }
 
     fun AvComputeContext.collectDependents(
-        value: AvValue,
+        value: AvValue2,
         pointsToCompute: MutableList<AvValueId>
-    ): AvValue? {
+    ): AvValue2? {
 
         val point = itemOrNull(value.parentId) ?: return null
 
@@ -103,7 +103,7 @@ class AioPointComputeWorker : WorkerImpl<AioPointComputeWorker>() {
         return space
     }
 
-    suspend fun computePoint(computedPoint: AvValueId, incomingValue: AvValue) {
+    suspend fun computePoint(computedPoint: AvValueId, incomingValue: AvValue2) {
 
         val value = when (incomingValue) {
             is AvConvertedDouble -> incomingValue.convertedValue

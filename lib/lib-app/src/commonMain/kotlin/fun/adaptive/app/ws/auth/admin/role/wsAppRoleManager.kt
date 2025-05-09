@@ -29,7 +29,7 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.WorkspaceTheme
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 @Adaptive
 fun wsAppRoleManager(pane: WsPane<*, RoleManagerController>): AdaptiveFragment {
@@ -67,7 +67,7 @@ fun wsAppRoleManager(pane: WsPane<*, RoleManagerController>): AdaptiveFragment {
 
 @Adaptive
 private fun items(
-    items: List<AvItem<RoleSpec>>?,
+    items: List<AvValue<RoleSpec>>?,
     emptyFilter: Boolean
 ) {
     column {
@@ -83,7 +83,7 @@ private fun items(
 }
 
 @Adaptive
-private fun item(item: AvItem<RoleSpec>) {
+private fun item(item: AvValue<RoleSpec>) {
     val hover = hover()
     val popupState = InputContext()
 

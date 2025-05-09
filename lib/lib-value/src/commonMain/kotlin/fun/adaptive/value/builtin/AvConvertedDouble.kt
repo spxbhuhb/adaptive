@@ -3,7 +3,7 @@ package `fun`.adaptive.value.builtin
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.utility.UUID.Companion.uuid7
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.item.AvStatus
 import kotlinx.datetime.Clock.System.now
@@ -17,7 +17,7 @@ data class AvConvertedDouble(
     override val parentId: AvValueId?,
     val originalValue: Double,
     val convertedValue: Double,
-) : AvValue() {
+) : AvValue2() {
 
     constructor(parentId: AvValueId, sourceValue: Double, value: Double) : this(
         uuid7(),

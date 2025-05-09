@@ -12,11 +12,11 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.normalFont
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 @Adaptive
 fun deviceSummary(
-    device: AvItem<AioDeviceSpec>?,
+    device: AvValue<AioDeviceSpec>?,
     theme: AioTheme = AioTheme.DEFAULT
 ) {
 

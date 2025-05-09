@@ -3,10 +3,10 @@ package `fun`.adaptive.value.store
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.p04
 import `fun`.adaptive.value.AvSubscription
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.withSpec
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.item.AvRefList
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
@@ -16,24 +16,24 @@ class AvComputeContext(
     val commitSet: MutableSet<AvSubscription>
 ) {
 
-    operator fun plusAssign(value: AvValue) {
+    operator fun plusAssign(value: AvValue2) {
         store.addOrUpdate(AvoAddOrUpdate(value), commitSet)
     }
 
-    operator fun get(valueId: AvValueId): AvValue? =
+    operator fun get(valueId: AvValueId): AvValue2? =
         store.unsafeValueOrNull(valueId)
 
-    inline fun <reified T : Any> item(valueId: AvValueId): AvItem<T> =
+    inline fun <reified T : Any> item(valueId: AvValueId): AvValue<T> =
         checkNotNull(itemOrNull(valueId)) { "cannot find item for $valueId" }.withSpec<T>()
 
-    fun itemOrNull(valueId: AvValueId?): AvItem<*>? =
+    fun itemOrNull(valueId: AvValueId?): AvValue<*>? =
         valueId?.let { store.unsafeItem(valueId) }
 
-    inline fun <reified T : Any> refItem(item: AvItem<*>, refMarker: AvMarker): AvItem<T> =
+    inline fun <reified T : Any> refItem(item: AvValue<*>, refMarker: AvMarker): AvValue<T> =
         checkNotNull(refItemOrNull(item, refMarker)) { "cannot find ref item for marker $refMarker in item $item" }
             .withSpec<T>()
 
-    fun refItemOrNull(item: AvItem<*>, refMarker: AvMarker): AvItem<*>? =
+    fun refItemOrNull(item: AvValue<*>, refMarker: AvMarker): AvValue<*>? =
         item.markersOrNull?.get(refMarker)?.let { store.unsafeItem(it) }
 
     fun nextFriendlyId(marker: AvMarker, prefix: String): String {
@@ -47,7 +47,7 @@ class AvComputeContext(
         return "$prefix${(max + 1).p04}"
     }
 
-    fun queryByMarker(marker: AvMarker): List<AvValue> =
+    fun queryByMarker(marker: AvMarker): List<AvValue2> =
         store.unsafeQueryByMarker(marker)
 
     @Suppress("unused") // used for debugging
@@ -68,13 +68,13 @@ class AvComputeContext(
     fun internalGetMarkerVal(itemId: AvValueId, marker: AvMarker) =
         store.unsafeGetMarkerValue(itemId, marker)
 
-    inline fun <reified T> markerVal(item: AvItem<*>, marker: AvMarker) =
+    inline fun <reified T> markerVal(item: AvValue<*>, marker: AvMarker) =
         internalGetMarkerVal(item, marker) as T
 
-    inline fun <reified T> markerValOrNull(item: AvItem<*>, marker: AvMarker) =
+    inline fun <reified T> markerValOrNull(item: AvValue<*>, marker: AvMarker) =
         internalGetMarkerVal(item, marker) as T?
 
-    fun internalGetMarkerVal(item: AvItem<*>, marker: AvMarker) =
+    fun internalGetMarkerVal(item: AvValue<*>, marker: AvMarker) =
         store.unsafeGetMarkerValue(item, marker)
 
     fun getContainingList(

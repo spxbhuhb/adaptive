@@ -6,11 +6,11 @@ import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.foundation.unsupported
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.withSpec
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.local.AvAbstractStore
 import `fun`.adaptive.value.local.AvPublisher
 
@@ -23,15 +23,15 @@ class BasicAccountSummaryStore(
     backend.firstImpl<AvValueWorker>()
 ) {
     private class Entry(
-        val principal: AvItem<PrincipalSpec>?,
-        val account: AvItem<BasicAccountSpec>?
+        val principal: AvValue<PrincipalSpec>?,
+        val account: AvValue<BasicAccountSpec>?
     )
 
     private val entryMap = mutableMapOf<AvValueId, Entry>()
     private val summaryMap = mutableMapOf<AvValueId, BasicAccountSummary>()
 
-    override fun process(value: AvValue) {
-        if (value !is AvItem<*>) return
+    override fun process(value: AvValue2) {
+        if (value !is AvValue<*>) return
 
         val principalId: AvValueId
         val original: Entry?

@@ -6,10 +6,10 @@ import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.iot.app.WsItemTypes
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid7
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.item.AvStatus
 import kotlinx.datetime.Clock.System.now
@@ -34,7 +34,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService>() {
     ): AvValueId {
         ensureLoggedIn()
 
-        val itemId = markers?.get("migratedId")?.cast() ?: uuid7<AvValue>()
+        val itemId = markers?.get("migratedId")?.cast() ?: uuid7<AvValue2>()
 
         val itemMarkers = markers?.toMutableMap() ?: mutableMapOf()
 
@@ -47,7 +47,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService>() {
 
         worker.execute {
 
-            val item = AvItem<AioDeviceSpec>(
+            val item = AvValue<AioDeviceSpec>(
                 name,
                 WsItemTypes.WSIT_DEVICE + ":$itemType",
                 itemId,
@@ -98,7 +98,7 @@ class AioDeviceService : AioDeviceApi, ServiceImpl<AioDeviceService>() {
     override suspend fun setSpec(valueId: AvValueId, spec: AioDeviceSpec) {
         ensureLoggedIn()
 
-        return worker.update<AvItem<AioDeviceSpec>>(valueId) {
+        return worker.update<AvValue<AioDeviceSpec>>(valueId) {
             it.copy(timestamp = now(), spec = spec)
         }
     }

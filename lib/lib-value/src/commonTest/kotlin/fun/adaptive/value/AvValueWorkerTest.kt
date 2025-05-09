@@ -1,6 +1,6 @@
 package `fun`.adaptive.value
 
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvMarkerMap
 import `fun`.adaptive.value.item.AvStatus
 import `fun`.adaptive.value.item.AvRefList
@@ -131,8 +131,8 @@ class AvValueWorkerTest {
         assertTrue(channel.isEmpty)
     }
 
-    fun addSensor(worker: AvValueWorker, markers: AvMarkerMap): AvItem<*> {
-        val item = AvItem<Unit>(
+    fun addSensor(worker: AvValueWorker, markers: AvMarkerMap): AvValue<*> {
+        val item = AvValue<Unit>(
             name = "Temp Sensor",
             type = "sensor",
             uuid = uuid7(),
@@ -201,7 +201,7 @@ class AvValueWorkerTest {
         val received = channel.receive()
         check(received is AvoAddOrUpdate)
         assertEquals(newValue.uuid, received.value.uuid)
-        assertNotEquals(newValue.markers, (received.value as AvItem<*>).markers)
+        assertNotEquals(newValue.markers, (received.value as AvValue<*>).markers)
     }
 
     @Test

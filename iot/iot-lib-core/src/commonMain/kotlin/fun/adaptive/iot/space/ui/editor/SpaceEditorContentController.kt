@@ -16,20 +16,20 @@ import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue.Companion.asAvItem
 
 class SpaceEditorContentController(
     override val workspace: Workspace
-) : WsPaneController<AvItem<AioSpaceSpec>>() {
+) : WsPaneController<AvValue<AioSpaceSpec>>() {
 
     val spaceService = getService<AioSpaceApi>(transport)
 
-    override fun accepts(pane: WsPaneType<AvItem<AioSpaceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
-        return (item is AvItem<*>) && (SpaceMarkers.SPACE in item.markers)
+    override fun accepts(pane: WsPaneType<AvValue<AioSpaceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
+        return (item is AvValue<*>) && (SpaceMarkers.SPACE in item.markers)
     }
 
-    override fun load(pane: WsPaneType<AvItem<AioSpaceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<AvItem<AioSpaceSpec>> {
+    override fun load(pane: WsPaneType<AvValue<AioSpaceSpec>>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<AvValue<AioSpaceSpec>> {
         val spaceItem = item.asAvItem<AioSpaceSpec>()
         return pane.copy(
             name = item.name,

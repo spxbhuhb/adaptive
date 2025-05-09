@@ -14,11 +14,11 @@ import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.lib.util.error.requirement
 import `fun`.adaptive.utility.UUID.Companion.uuid7
-import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue.Companion.asAvItem
 import `fun`.adaptive.value.store.AvComputeContext
 import kotlinx.datetime.Clock.System.now
 
@@ -54,10 +54,10 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         spec: PrincipalSpec,
         credentialType: String,
         credentialSecret: String?,
-        account: AvItem<*>? = null
+        account: AvValue<*>? = null
     ): AvValueId {
 
-        val credentialListId = uuid7<AvValue>()
+        val credentialListId = uuid7<AvValue2>()
 
         val markersOrNull = mutableMapOf(
             AuthMarkers.PRINCIPAL to null,
@@ -68,7 +68,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
             markersOrNull[AuthMarkers.ACCOUNT_REF] = account.uuid
         }
 
-        val principalValue = AvItem(
+        val principalValue = AvValue(
             name = name,
             type = AUTH_PRINCIPAL,
             parentId = null,
@@ -210,7 +210,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         principalId: AvValueId,
         updateFun: (PrincipalSpec) -> PrincipalSpec
     ) {
-        valueWorker.update<AvValue>(principalId) { item ->
+        valueWorker.update<AvValue2>(principalId) { item ->
             item.asAvItem<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
         }
     }

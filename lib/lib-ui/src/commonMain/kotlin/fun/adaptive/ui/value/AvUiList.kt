@@ -10,7 +10,7 @@ import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.item.AvRefList
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.operation.*
 import kotlinx.coroutines.CoroutineScope
@@ -23,9 +23,9 @@ class AvUiList(
     adapter: AdaptiveAdapter,
     val valueId: AvValueId,
     val listMarker: AvMarker
-) : AbstractObservable<List<AvItem<*>>>() {
+) : AbstractObservable<List<AvValue<*>>>() {
 
-    override var value: List<AvItem<*>>
+    override var value: List<AvValue<*>>
         get() = list.mapNotNull { valueMap[it] }.sortedBy { it.friendlyId }
         set(_) = unsupported()
 
@@ -36,7 +36,7 @@ class AvUiList(
     private var listId: AvValueId? = null
     private var list = emptyList<AvValueId>()
 
-    private val valueMap = mutableMapOf<AvValueId, AvItem<*>>()
+    private val valueMap = mutableMapOf<AvValueId, AvValue<*>>()
 
     val localWorker = backend.firstImpl<AvValueWorker>()
     val remoteService = getService<AvValueApi>(transport)
@@ -50,7 +50,7 @@ class AvUiList(
 
     var isRunning = false
 
-    override fun addListener(listener: ObservableListener<List<AvItem<*>>>) {
+    override fun addListener(listener: ObservableListener<List<AvValue<*>>>) {
         if (listeners.isEmpty()) {
             start()
             renew()
@@ -58,7 +58,7 @@ class AvUiList(
         super.addListener(listener)
     }
 
-    override fun removeListener(listener: ObservableListener<List<AvItem<*>>>) {
+    override fun removeListener(listener: ObservableListener<List<AvValue<*>>>) {
         super.removeListener(listener)
         if (listeners.isEmpty()) {
             renewLocal(null)
@@ -94,16 +94,16 @@ class AvUiList(
         }
     }
 
-    fun process(value: AvValue) {
+    fun process(value: AvValue2) {
         when (value.uuid) {
             valueId -> processValue(value)
             listId -> processList(value)
-            else -> valueMap[value.uuid] = value as AvItem<*>
+            else -> valueMap[value.uuid] = value as AvValue<*>
         }
     }
 
-    fun processValue(value: AvValue) {
-        value as AvItem<*>
+    fun processValue(value: AvValue2) {
+        value as AvValue<*>
         val listId = value.markers[listMarker]
 
         if (listId != this.listId) {
@@ -113,7 +113,7 @@ class AvUiList(
         }
     }
 
-    fun processList(value: AvValue) {
+    fun processList(value: AvValue2) {
         value as AvRefList
         if (value.uuid == listId && list != value.refs) {
             list = value.refs

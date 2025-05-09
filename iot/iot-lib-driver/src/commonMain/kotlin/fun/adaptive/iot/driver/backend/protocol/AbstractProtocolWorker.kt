@@ -8,7 +8,7 @@ import `fun`.adaptive.iot.driver.announcement.AioDriverAnnouncementWrapper
 import `fun`.adaptive.iot.driver.backend.AioDriverWorker
 import `fun`.adaptive.iot.driver.backend.task.DriverTask
 import `fun`.adaptive.iot.point.AioPointSpec
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 
@@ -18,7 +18,7 @@ abstract class AbstractProtocolWorker<NT : AioDeviceSpec, CT : AioDeviceSpec, PT
 
     abstract val comm: AbstractProtocolComm<NT, CT, PT>
 
-    var networkOrNull: AvItem<NT>? = null
+    var networkOrNull: AvValue<NT>? = null
 
     val driverWorker by worker<AioDriverWorker<*, *, *>>()
 

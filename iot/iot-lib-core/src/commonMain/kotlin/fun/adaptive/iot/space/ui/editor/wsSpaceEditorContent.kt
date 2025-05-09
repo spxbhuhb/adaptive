@@ -31,12 +31,12 @@ import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue.Companion.asAvItem
 import `fun`.adaptive.ui.value.AvUiList
 
 @Adaptive
-fun wsSpaceContentPane(pane: WsPane<AvItem<AioSpaceSpec>, SpaceEditorContentController>): AdaptiveFragment {
+fun wsSpaceContentPane(pane: WsPane<AvValue<AioSpaceSpec>, SpaceEditorContentController>): AdaptiveFragment {
 
     val originalItem = copyOf { pane.data }
 
@@ -64,7 +64,7 @@ fun wsSpaceContentPane(pane: WsPane<AvItem<AioSpaceSpec>, SpaceEditorContentCont
 
 @Adaptive
 fun title(
-    item: AvItem<AioSpaceSpec>,
+    item: AvValue<AioSpaceSpec>,
 ) {
     column {
         paddingBottom { 32.dp }
@@ -76,8 +76,8 @@ fun title(
 @Adaptive
 fun actions(
     controller: SpaceEditorContentController,
-    originalItem: AvItem<AioSpaceSpec>,
-    editItem: AvItem<AioSpaceSpec>,
+    originalItem: AvValue<AioSpaceSpec>,
+    editItem: AvValue<AioSpaceSpec>,
     editSpec: AioSpaceSpec
 ) {
     button(Strings.save) ..
@@ -100,7 +100,7 @@ fun actions(
 
 @Adaptive
 private fun editFields(
-    editItem: AvItem<AioSpaceSpec>,
+    editItem: AvValue<AioSpaceSpec>,
     editSpec: AioSpaceSpec
 ) {
     column {

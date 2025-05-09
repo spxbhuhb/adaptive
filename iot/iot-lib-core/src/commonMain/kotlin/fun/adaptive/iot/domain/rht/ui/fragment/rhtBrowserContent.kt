@@ -25,7 +25,7 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.value.AvUiList
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 @Adaptive
 fun rhtBrowserContent(pane: WsPane<RhtWsItem, RhtBrowserContentController>): AdaptiveFragment {
@@ -83,7 +83,7 @@ fun pageHeader(pane: WsPane<RhtWsItem, RhtBrowserContentController>) {
 
 
 @Adaptive
-fun listItem(space: AvItem<*>) {
+fun listItem(space: AvValue<*>) {
     row {
         height { 56.dp } .. maxWidth
         rhtListItem(space)

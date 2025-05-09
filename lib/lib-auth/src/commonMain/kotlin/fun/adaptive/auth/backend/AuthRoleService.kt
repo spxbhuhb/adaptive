@@ -13,8 +13,8 @@ import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue.Companion.asAvItem
 import `fun`.adaptive.value.util.serviceSubscribe
 
 class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
@@ -45,7 +45,7 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
 
     private suspend fun add(name: String, spec: RoleSpec) {
 
-        val roleValue = AvItem(
+        val roleValue = AvValue(
             name = name,
             type = AUTH_ROLE,
             parentId = null,
@@ -63,7 +63,7 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
     }
 
     private suspend fun update(roleId: AvValueId, name: String, spec: RoleSpec) {
-        valueWorker.update<AvItem<*>>(roleId) { item ->
+        valueWorker.update<AvValue<*>>(roleId) { item ->
             item.asAvItem<RoleSpec>().copy(name = name, spec = spec)
         }
     }

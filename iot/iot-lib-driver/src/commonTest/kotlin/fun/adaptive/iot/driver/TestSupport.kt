@@ -27,7 +27,7 @@ import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.utility.resolve
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.wireformat.api.Json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -63,7 +63,7 @@ class TestSupport {
     val driverService by lazy { getService<AioDriverApi>(nodeTransport) }
 
     fun newNetwork(spec : () -> TestNetworkSpec) =
-        AvItem(
+        AvValue(
             name = "test-network",
             type = WsItemTypes.WSIT_DEVICE,
             friendlyId = "test-network",
@@ -72,7 +72,7 @@ class TestSupport {
         )
 
     fun newController(networkId: AvValueId, spec: () -> TestControllerSpec) =
-        AvItem(
+        AvValue(
             name = "test-controller",
             type = WsItemTypes.WSIT_DEVICE,
             friendlyId = "test-controller",
@@ -85,7 +85,7 @@ class TestSupport {
         driverService.process(this)
     }
 
-    suspend fun commissionTestNetwork(): AvItem<TestNetworkSpec> {
+    suspend fun commissionTestNetwork(): AvValue<TestNetworkSpec> {
         val network = newNetwork { TestNetworkSpec() }
         AdrCommissionNetwork(uuid7(), network.uuid, network).process()
         getAnnouncement<AdaNetworkCommissioned<TestNetworkSpec>>()

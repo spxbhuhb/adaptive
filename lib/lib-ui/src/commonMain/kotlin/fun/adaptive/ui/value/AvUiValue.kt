@@ -16,14 +16,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlin.reflect.KClass
 
-class AvUiValue<T : AvValue>(
+class AvUiValue<T : AvValue2>(
     adapter: AdaptiveAdapter,
     val valueId: AvValueId?,
     val kClass : KClass<T>
 ) : AbstractObservable<T?>() {
 
     companion object {
-        inline operator fun <reified T : AvValue> invoke(
+        inline operator fun <reified T : AvValue2> invoke(
             adapter: AdaptiveAdapter,
             valueId: AvValueId?
         ) : AvUiValue<T> = AvUiValue(adapter, valueId, T::class)
@@ -91,7 +91,7 @@ class AvUiValue<T : AvValue>(
         }
     }
 
-    fun process(value: AvValue) {
+    fun process(value: AvValue2) {
         if (kClass.isInstance(value)) {
             @Suppress("UNCHECKED_CAST")
             this.value = value as T

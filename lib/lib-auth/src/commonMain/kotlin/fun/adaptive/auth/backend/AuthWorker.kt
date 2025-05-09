@@ -13,7 +13,7 @@ import `fun`.adaptive.backend.query.firstImplOrNull
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.firstItemOrNull
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 class AuthWorker : WorkerImpl<AuthWorker>() {
 
@@ -32,7 +32,7 @@ class AuthWorker : WorkerImpl<AuthWorker>() {
 
         if (soRole == null) {
             valueWorker.queueAdd(
-                AvItem(
+                AvValue(
                     name = AuthMarkers.SECURITY_OFFICER,
                     type = AUTH_ROLE,
                     parentId = null,
@@ -63,7 +63,7 @@ class AuthWorker : WorkerImpl<AuthWorker>() {
         
         if (soPrincipal == null) {
             val account = safeAdapter.firstImplOrNull<AuthBasicService>()?.let {
-                AvItem<BasicAccountSpec>(
+                AvValue<BasicAccountSpec>(
                     name = "Security Officer",
                     type = AuthMarkers.BASIC_ACCOUNT,
                     friendlyId = "Security Officer",

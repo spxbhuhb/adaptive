@@ -14,16 +14,16 @@ import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.popup.modalForEdit
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 @Adaptive
 fun roleEditor(
-    role: AvItem<RoleSpec>? = null,
+    role: AvValue<RoleSpec>? = null,
     hide: () -> Unit,
-    save: (AvItem<RoleSpec>) -> Unit
+    save: (AvValue<RoleSpec>) -> Unit
 ) {
 
-    val template = AvItem("", AUTH_ROLE, friendlyId = "", spec = RoleSpec())
+    val template = AvValue("", AUTH_ROLE, friendlyId = "", spec = RoleSpec())
     val title = if (role == null) Strings.addRole else Strings.editRole
 
     @Independent

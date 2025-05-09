@@ -24,7 +24,7 @@ import `fun`.adaptive.ui.value.AvUiTree
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.item.AvItem
+import `fun`.adaptive.value.AvValue
 
 class HistoryToolController(
     override val workspace: Workspace
@@ -117,8 +117,8 @@ class HistoryToolController(
         TreeViewModel.defaultSelectedFun(viewModel, treeItem, modifiers)
 
         val items = viewModel.selection.map { selectedItem ->
-            val attachment = selectedItem.attachment as? AvItem<*>
-            attachment?.let { listOf(it) } ?: selectedItem.children.mapNotNull { it.attachment as? AvItem<*> }
+            val attachment = selectedItem.attachment as? AvValue<*>
+            attachment?.let { listOf(it) } ?: selectedItem.children.mapNotNull { it.attachment as? AvValue<*> }
         }.flatten()
 
         val points = items.filter { PointMarkers.HIS in it.markers }
@@ -144,7 +144,7 @@ class HistoryToolController(
     fun patchTree() {
         val tops = if (mode == Mode.SPACE) spacesTop.value else devicesTop.value
 
-        val hisParentMap = mutableMapOf<AvValueId, MutableList<AvItem<*>>>()
+        val hisParentMap = mutableMapOf<AvValueId, MutableList<AvValue<*>>>()
 
         for (hisItem in hisItems.value.value) {
             val parentId = hisItem.item.parentId ?: continue
@@ -161,7 +161,7 @@ class HistoryToolController(
         }
     }
 
-    fun patch(treeItem: TreeItem<AvValueId>, hisParentMap: MutableMap<AvValueId, MutableList<AvItem<*>>>): TreeItem<AvValueId> {
+    fun patch(treeItem: TreeItem<AvValueId>, hisParentMap: MutableMap<AvValueId, MutableList<AvValue<*>>>): TreeItem<AvValueId> {
         val hisPoints = hisParentMap[treeItem.data]
 
         // mapNotNull filters out the points which we will add in the next step

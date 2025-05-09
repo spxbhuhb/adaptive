@@ -16,9 +16,9 @@ import `fun`.adaptive.auth.model.basic.BasicSignUp
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.lib.util.error.requirement
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.item.AvItem
-import `fun`.adaptive.value.item.AvItem.Companion.asAvItem
-import `fun`.adaptive.value.item.AvItem.Companion.withSpec
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValue.Companion.asAvItem
+import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.store.AvComputeContext
 import `fun`.adaptive.value.util.serviceSubscribe
 import kotlinx.datetime.Clock.System.now
@@ -67,7 +67,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
         ensureHas(securityOfficer)
         ensureValid(signUp)
 
-        val accountValue = AvItem(
+        val accountValue = AvValue(
             name = signUp.name,
             type = AuthMarkers.BASIC_ACCOUNT,
             friendlyId = signUp.name,
@@ -144,7 +144,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
         accountName: String,
         accountSpec: BasicAccountSpec
     ): AvValueId {
-        val account = AvItem(
+        val account = AvValue(
             name = accountName,
             type = AuthMarkers.BASIC_ACCOUNT,
             friendlyId = accountName.split(" ").mapNotNull { it.firstOrNull()?.toString()?.uppercase() }.take(2).joinToString(""),
@@ -185,7 +185,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
     }
 
     private fun AvComputeContext.update(
-        currentPrincipal: AvItem<PrincipalSpec>,
+        currentPrincipal: AvValue<PrincipalSpec>,
         name: String,
         spec: PrincipalSpec
     ) {
@@ -205,7 +205,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
     }
 
     private fun AvComputeContext.update(
-        currentAccount: AvItem<BasicAccountSpec>,
+        currentAccount: AvValue<BasicAccountSpec>,
         name: String,
         spec: BasicAccountSpec
     ) {
@@ -220,7 +220,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
     }
 
     private fun AvComputeContext.update(
-        currentPrincipal: AvItem<PrincipalSpec>,
+        currentPrincipal: AvValue<PrincipalSpec>,
         credential: Credential?
     ) {
         if (credential == null) return
