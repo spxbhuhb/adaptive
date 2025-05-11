@@ -9,7 +9,7 @@ import `fun`.adaptive.markdown.compiler.parseInternal
 import `fun`.adaptive.markdown.compiler.tokenizeInternal
 import `fun`.adaptive.markdown.model.*
 
-class MarkdownToDocTransform(
+class MarkdownToDocVisitor(
     val ast: List<MarkdownElement>,
     val theme: DocumentTheme = DocumentTheme.default,
 ) : MarkdownVisitor<DocBlockElement?, Int>() {

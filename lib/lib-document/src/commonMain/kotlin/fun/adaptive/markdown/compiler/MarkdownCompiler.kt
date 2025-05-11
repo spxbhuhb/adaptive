@@ -3,8 +3,8 @@ package `fun`.adaptive.markdown.compiler
 import `fun`.adaptive.document.model.DocDocument
 import `fun`.adaptive.document.ui.DocumentTheme
 import `fun`.adaptive.markdown.model.MarkdownElement
-import `fun`.adaptive.markdown.transform.MarkdownAstDumpTransform.Companion.dump
-import `fun`.adaptive.markdown.transform.MarkdownToDocTransform
+import `fun`.adaptive.markdown.transform.MarkdownAstDumpVisitor.Companion.dump
+import `fun`.adaptive.markdown.transform.MarkdownToDocVisitor
 
 object MarkdownCompiler {
 
@@ -15,7 +15,7 @@ object MarkdownCompiler {
         parseInternal(tokens)
 
     fun compile(source : String, theme : DocumentTheme) : DocDocument =
-        MarkdownToDocTransform(ast(source), theme).transform()
+        MarkdownToDocVisitor(ast(source), theme).transform()
 
     fun ast(source : String) =
         parseInternal(tokenizeInternal(source))
