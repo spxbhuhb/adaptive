@@ -5,6 +5,8 @@
 package `fun`.adaptive.wireformat.json.elements
 
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.wireformat.json.visitor.JsonTransformer
+import `fun`.adaptive.wireformat.json.visitor.JsonVisitor
 
 class JsonString(val value: String) : JsonElement() {
 
@@ -16,6 +18,14 @@ class JsonString(val value: String) : JsonElement() {
 
     override fun <T> asUuid(): UUID<T> {
         return UUID(value)
+    }
+
+    override fun <R, D> accept(visitor: JsonVisitor<R, D>, data: D): R {
+        return visitor.visitString(this, data)
+    }
+
+    override fun <D> transform(transformer: JsonTransformer<D>, data: D): JsonElement {
+        return transformer.visitString(this, data)
     }
 
     override fun toString(): String {

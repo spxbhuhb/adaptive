@@ -186,12 +186,12 @@ class JsonBufferReader(
 
         when {
             c is JsonArray -> {
-                c.items += this
+                c.value += this
                 valueExpected = false
             }
 
             c is JsonObject -> {
-                c.entries[requireNotNull(fieldName) { "missing field name at $currentPosition" }] = this
+                c.value[requireNotNull(fieldName) { "missing field name at $currentPosition" }] = this
                 fieldName = null
                 valueExpected = false
             }

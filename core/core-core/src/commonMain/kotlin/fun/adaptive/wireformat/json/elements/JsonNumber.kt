@@ -4,7 +4,14 @@
 
 package `fun`.adaptive.wireformat.json.elements
 
+import `fun`.adaptive.wireformat.json.visitor.JsonTransformer
+import `fun`.adaptive.wireformat.json.visitor.JsonVisitor
+
 class JsonNumber(val value: String) : JsonElement() {
+
+    constructor(value: Number) : this(
+        value.toString()
+    )
 
     override val asInt
         get() = value.toInt()
@@ -35,6 +42,14 @@ class JsonNumber(val value: String) : JsonElement() {
 
     override val asULong
         get() = value.toULong()
+
+    override fun <R, D> accept(visitor: JsonVisitor<R, D>, data: D): R {
+        return visitor.visitNumber(this, data)
+    }
+
+    override fun <D> transform(transformer: JsonTransformer<D>, data: D): JsonElement {
+        return transformer.visitNumber(this, data)
+    }
 
     override fun toString(): String {
         return value

@@ -15,8 +15,8 @@ class JsonReaderTest {
     fun basic() {
         val root = JsonBufferReader("""{"i" : 12}""".encodeToByteArray()).read()
         assertTrue(root is JsonObject)
-        assertEquals(1, root.entries.size)
-        assertEquals(12, root.entries["i"]!!.asInt)
+        assertEquals(1, root.value.size)
+        assertEquals(12, root.value["i"]!!.asInt)
     }
 
     @Test
@@ -35,7 +35,7 @@ class JsonReaderTest {
     fun test(source : String, expected: String) {
         val root = JsonBufferReader(source.encodeToByteArray()).read()
         assertTrue(root is JsonObject)
-        assertEquals(1, root.entries.size)
-        assertEquals(expected, root.entries["s"]!!.asString)
+        assertEquals(1, root.value.size)
+        assertEquals(expected, root.value["s"]!!.asString)
     }
 }

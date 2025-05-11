@@ -22,17 +22,14 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     val map: MutableMap<String, JsonElement>?
 
     constructor(wireFormat: ByteArray, offset: Int = 0, length: Int = wireFormat.size) {
-        root = if (length == 0) {
-            JsonElement()
-        } else {
-            JsonBufferReader(wireFormat, offset, length).read()
-        }
-        map = (root as? JsonObject)?.entries
+        require(wireFormat.isNotEmpty()) { "data to decode is empty" }
+        root = JsonBufferReader(wireFormat, offset, length).read()
+        map = (root as? JsonObject)?.value
     }
 
     constructor(root: JsonElement) {
         this.root = root
-        map = (root as? JsonObject)?.entries
+        map = (root as? JsonObject)?.value
     }
 
     fun get(fieldName: String): JsonElement =
@@ -194,7 +191,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawBooleanArray(source: JsonElement): BooleanArray {
         source as JsonArray
-        return source.items.map { it.asBoolean }.toBooleanArray()
+        return source.value.map { it.asBoolean }.toBooleanArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -209,7 +206,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawIntArray(source: JsonElement): IntArray {
         source as JsonArray
-        return source.items.map { it.asInt }.toIntArray()
+        return source.value.map { it.asInt }.toIntArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -224,7 +221,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawShortArray(source: JsonElement): ShortArray {
         source as JsonArray
-        return source.items.map { it.asShort }.toShortArray()
+        return source.value.map { it.asShort }.toShortArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -239,7 +236,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawByteArray(source: JsonElement): ByteArray {
         source as JsonArray
-        return source.items.map { it.asByte }.toByteArray()
+        return source.value.map { it.asByte }.toByteArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -254,7 +251,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawLongArray(source: JsonElement): LongArray {
         source as JsonArray
-        return source.items.map { it.asLong }.toLongArray()
+        return source.value.map { it.asLong }.toLongArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -269,7 +266,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawFloatArray(source: JsonElement): FloatArray {
         source as JsonArray
-        return source.items.map { it.asFloat }.toFloatArray()
+        return source.value.map { it.asFloat }.toFloatArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -284,7 +281,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawDoubleArray(source: JsonElement): DoubleArray {
         source as JsonArray
-        return source.items.map { it.asDouble }.toDoubleArray()
+        return source.value.map { it.asDouble }.toDoubleArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -299,7 +296,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawCharArray(source: JsonElement): CharArray {
         source as JsonArray
-        return source.items.map { it.asChar }.toCharArray()
+        return source.value.map { it.asChar }.toCharArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -411,7 +408,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawUIntArray(source: JsonElement): UIntArray {
         source as JsonArray
-        return source.items.map { it.asUInt }.toUIntArray()
+        return source.value.map { it.asUInt }.toUIntArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -426,7 +423,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawUShortArray(source: JsonElement): UShortArray {
         source as JsonArray
-        return source.items.map { it.asUShort }.toUShortArray()
+        return source.value.map { it.asUShort }.toUShortArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -441,7 +438,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawUByteArray(source: JsonElement): UByteArray {
         source as JsonArray
-        return source.items.map { it.asUByte }.toUByteArray()
+        return source.value.map { it.asUByte }.toUByteArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -456,7 +453,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun rawULongArray(source: JsonElement): ULongArray {
         source as JsonArray
-        return source.items.map { it.asULong }.toULongArray()
+        return source.value.map { it.asULong }.toULongArray()
     }
 
     // -----------------------------------------------------------------------------------------
@@ -491,10 +488,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
     override fun <T> rawPolymorphic(source: JsonElement): T {
         check(source is JsonArray) { "invalid polymorphic format: not an array" }
-        check(source.items.size == 2) { "invalid polymorphic format: items.size != 2" }
+        check(source.value.size == 2) { "invalid polymorphic format: items.size != 2" }
 
-        val wireFormatName = source.items.first().asString
-        val data = source.items[1]
+        val wireFormatName = source.value.first().asString
+        val data = source.value[1]
 
         @Suppress("UNCHECKED_CAST")
         val wireFormat = WireFormatRegistry[wireFormatName] as? WireFormat<T>
@@ -534,10 +531,10 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
         typeArgument1: WireFormatTypeArgument<T1>,
         typeArgument2: WireFormatTypeArgument<T2>
     ): Pair<T1?, T2?> {
-        require(source is JsonArray && source.items.size == 2) { "wrong pair format (must be array with 2 items)" }
+        require(source is JsonArray && source.value.size == 2) { "wrong pair format (must be array with 2 items)" }
 
-        val first = source.items[0]
-        val second = source.items[1]
+        val first = source.value[0]
+        val second = source.value[1]
 
         val firstValue = if (first is JsonNull) null else decodeOrPolymorphic(first, typeArgument1)
         val secondValue = if (second is JsonNull) null else decodeOrPolymorphic(second, typeArgument2)
@@ -562,7 +559,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
         val nullable = typeArgument.nullable
 
-        for (element in source.items) {
+        for (element in source.value) {
             if (element is JsonNull) {
                 check(nullable) { "null item in a non-nullable collection" }
                 result += null
@@ -586,7 +583,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
         val a = getOrNull(fieldName) ?: return null
         require(a is JsonArray) { "field $fieldName is not an array" }
 
-        for (element in a.items) {
+        for (element in a.value) {
             result += item(element)
         }
 

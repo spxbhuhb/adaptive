@@ -30,7 +30,7 @@ class JsonFormat(
             is JsonBoolean -> builder.append(element.toString())
 
             is JsonArray -> {
-                if (element.items.isEmpty()) {
+                if (element.value.isEmpty()) {
                     builder.append("[]")
                     return
                 }
@@ -39,12 +39,12 @@ class JsonFormat(
 
                 val itemIndent = indent + indentIncrement
 
-                for ((index, item) in element.items.withIndex()) {
+                for ((index, item) in element.value.withIndex()) {
 
                     builder.append(itemIndent)
                     prettyString(builder, item, itemIndent)
 
-                    if (index < element.items.size - 1) {
+                    if (index < element.value.size - 1) {
                         builder.append(',')
                     }
 
@@ -55,7 +55,7 @@ class JsonFormat(
             }
 
             is JsonObject -> {
-                val entries = element.entries.toList()
+                val entries = element.value.toList()
 
                 if (entries.isEmpty()) {
                     builder.append("{}")
