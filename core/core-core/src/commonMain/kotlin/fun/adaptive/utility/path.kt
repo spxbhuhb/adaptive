@@ -187,6 +187,17 @@ fun Path.ensure(vararg sub: String): Path {
 }
 
 /**
+ * Check if a directory is empty (no files or subdirectories) or if a file size is 0.
+ */
+fun Path.isEmpty() : Boolean {
+    if (isDirectory) {
+        return list().firstOrNull { it.name != "." && it.name != ".." } == null
+    } else {
+        return (SystemFileSystem.metadataOrNull(this)?.size ?: 0L) == 0L
+    }
+}
+
+/**
  * Call [process] for all files in `this` directory and for all files
  * in all subdirectories of `this` (recursively).
  *

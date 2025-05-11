@@ -4,7 +4,8 @@
 
 package `fun`.adaptive.markdown.model
 
-import `fun`.adaptive.markdown.compiler.MarkdownVisitor
+import `fun`.adaptive.markdown.visitor.MarkdownTransformer
+import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 
 class MarkdownParagraph(
     val children: MutableList<MarkdownElement>,
@@ -15,7 +16,17 @@ class MarkdownParagraph(
         return visitor.visitParagraph(this, data)
     }
 
+    override fun <D> transform(transformer: MarkdownTransformer<D>, data: D): MarkdownElement {
+        return transformer.visitParagraph(this, data)
+    }
+
     override fun <D> acceptChildren(visitor: MarkdownVisitor<Unit, D>, data: D) {
         children.forEach { it.accept(visitor, data) }
+    }
+
+    override fun <D> transformChildren(transformer: MarkdownTransformer<D>, data: D) {
+        for (i in children.indices) {
+            children[i] = children[i].transform(transformer, data)
+        }
     }
 }

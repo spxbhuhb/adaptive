@@ -1,11 +1,15 @@
 package `fun`.adaptive.markdown.compiler
 
 import `fun`.adaptive.markdown.model.MarkdownElement
+import `fun`.adaptive.markdown.model.MarkdownHeader
 import `fun`.adaptive.markdown.model.MarkdownInline
 import `fun`.adaptive.markdown.model.MarkdownList
 import `fun`.adaptive.markdown.model.MarkdownListItem
 import `fun`.adaptive.markdown.model.MarkdownParagraph
 import `fun`.adaptive.markdown.model.MarkdownQuote
+
+fun header1(content: () -> String) =
+    MarkdownHeader(1, mutableListOf(MarkdownInline(content(), bold = false, italic = false)))
 
 fun paragraph(content: () -> String) =
     MarkdownParagraph(mutableListOf(MarkdownInline(content(), bold = false, italic = false)), false)

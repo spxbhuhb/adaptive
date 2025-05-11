@@ -4,8 +4,8 @@
 
 package `fun`.adaptive.markdown.model
 
-import `fun`.adaptive.markdown.compiler.MarkdownVisitor
-
+import `fun`.adaptive.markdown.visitor.MarkdownTransformer
+import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 /**
  * @credit  2010-2024 JetBrains s.r.o. and Kotlin Programming Language contributors.
  *          The visitor/transformer concept (and function docs) comes from the Kotlin compiler.
@@ -22,6 +22,16 @@ abstract class MarkdownElement {
      */
     abstract fun <R, D> accept(visitor: MarkdownVisitor<R, D>, data: D): R
 
+
+    /**
+     * Runs the provided [transformer] on the Doc subtree with the root at this node.
+     *
+     * @param transformer The transformer to use.
+     * @param data An arbitrary context to pass to each invocation of [transformer]'s methods.
+     * @return The transformed node.
+     */
+    abstract fun <D> transform(transformer: MarkdownTransformer<D>, data: D): MarkdownElement
+
     /**
      * Runs the provided [visitor] on subtrees with roots in this node's children.
      *
@@ -36,4 +46,17 @@ abstract class MarkdownElement {
      */
     open fun <D> acceptChildren(visitor: MarkdownVisitor<Unit, D>, data: D) = Unit
 
+    /**
+     * Recursively transforms this node's children *in place* using [transformer].
+     *
+     * Basically, executes `this.child = this.child.transform(transformer, data)` for each child of this node.
+     *
+     * Does **not** run [transformer] on this node itself.
+     *
+     * @param transformer The transformer to use for transforming the children.
+     * @param data An arbitrary context to pass to each invocation of [transformer]'s methods.
+     */
+    open fun <D> transformChildren(transformer: MarkdownTransformer<D>, data: D) {
+
+    }
 }

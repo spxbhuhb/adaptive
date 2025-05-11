@@ -4,7 +4,7 @@ import `fun`.adaptive.document.model.*
 import `fun`.adaptive.document.ui.DocumentTheme
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
-import `fun`.adaptive.markdown.compiler.MarkdownVisitor
+import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 import `fun`.adaptive.markdown.compiler.parseInternal
 import `fun`.adaptive.markdown.compiler.tokenizeInternal
 import `fun`.adaptive.markdown.model.*

@@ -4,7 +4,8 @@
 
 package `fun`.adaptive.markdown.model
 
-import `fun`.adaptive.markdown.compiler.MarkdownVisitor
+import `fun`.adaptive.markdown.visitor.MarkdownTransformer
+import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 
 class MarkdownInline(
     val text: String,
@@ -20,5 +21,10 @@ class MarkdownInline(
     override fun <R, D> accept(visitor: MarkdownVisitor<R, D>, data: D): R {
         return visitor.visitInline(this, data)
     }
+
+    override fun <D> transform(transformer: MarkdownTransformer<D>, data: D): MarkdownElement {
+        return transformer.visitInline(this, data)
+    }
+
 
 }

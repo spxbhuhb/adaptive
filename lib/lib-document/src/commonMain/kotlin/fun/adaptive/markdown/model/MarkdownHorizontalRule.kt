@@ -4,7 +4,8 @@
 
 package `fun`.adaptive.markdown.model
 
-import `fun`.adaptive.markdown.compiler.MarkdownVisitor
+import `fun`.adaptive.markdown.visitor.MarkdownTransformer
+import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 
 class MarkdownHorizontalRule : MarkdownElement() {
 
@@ -25,5 +26,9 @@ class MarkdownHorizontalRule : MarkdownElement() {
 
     override fun <R, D> accept(visitor: MarkdownVisitor<R, D>, data: D): R {
         return visitor.visitHorizontalRule(this, data)
+    }
+
+    override fun <D> transform(transformer: MarkdownTransformer<D>, data: D): MarkdownElement {
+        return transformer.visitHorizontalRule(this, data)
     }
 }

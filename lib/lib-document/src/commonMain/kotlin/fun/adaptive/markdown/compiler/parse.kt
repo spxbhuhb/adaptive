@@ -258,7 +258,7 @@ private fun CompileContext.list(token: MarkdownToken, start: Int): Int {
 
 private fun CompileContext.quote(token: MarkdownToken, start: Int): Int {
 
-    + MarkdownQuote(parseInternal(tokenizeInternal(token.text)))
+    + MarkdownQuote(parseInternal(tokenizeInternal(token.text)).toMutableList())
 
     return start + 1
 }

@@ -177,7 +177,7 @@ fun Char.isNewLine() =
 val Char.isWhiteSpace
     get() = isSpace() || isNewLine()
 
-fun String.encodeToUrl(): String {
+fun String.encodeToUrl(noPlus : Boolean = false): String {
     var result = ""
     for (byte in encodeToByteArray()) {
         val unsignedByte = byte.toInt() and 0xFF
@@ -186,7 +186,7 @@ fun String.encodeToUrl(): String {
             in 0x30 .. 0x39 -> result += unsignedByte.toChar() // 0-9
             in 0x41 .. 0x5A -> result += unsignedByte.toChar()  // A-Z
             in 0x61 .. 0x7A -> result += unsignedByte.toChar() // a-z
-            0x20 -> result += '+'
+            0x20 -> result += if (noPlus) "%20" else '+'
             0x2D -> result += '-' // -
             0x2E -> result += '.' // .
             0x5F -> result += '_' // _

@@ -1,6 +1,6 @@
 package `fun`.adaptive.markdown.transform
 
-import `fun`.adaptive.markdown.compiler.MarkdownVisitor
+import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 import `fun`.adaptive.markdown.model.*
 import `fun`.adaptive.markdown.compiler.parseInternal
 import `fun`.adaptive.markdown.compiler.tokenizeInternal

@@ -9,6 +9,7 @@ includeBuild("core/core-gradle-plugin")
 includeBuild("core/core-ui")
 
 includeBuild("grove/grove-app")
+includeBuild("grove/grove-doc")
 includeBuild("grove/grove-lib")
 includeBuild("grove/grove-runtime")
 

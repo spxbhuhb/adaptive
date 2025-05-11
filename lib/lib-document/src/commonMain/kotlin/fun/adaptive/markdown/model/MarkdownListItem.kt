@@ -4,12 +4,13 @@
 
 package `fun`.adaptive.markdown.model
 
-import `fun`.adaptive.markdown.compiler.MarkdownVisitor
+import `fun`.adaptive.markdown.visitor.MarkdownTransformer
+import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 
 class MarkdownListItem(
     val bullet: Boolean,
     val level: Int,
-    val content : MarkdownElement,
+    var content : MarkdownElement,
     var subList: MarkdownList? = null,
 ) : MarkdownElement() {
 
@@ -17,9 +18,18 @@ class MarkdownListItem(
         return visitor.visitListItem(this, data)
     }
 
+    override fun <D> transform(transformer: MarkdownTransformer<D>, data: D): MarkdownElement {
+        return transformer.visitListItem(this, data)
+    }
+
     override fun <D> acceptChildren(visitor: MarkdownVisitor<Unit, D>, data: D) {
         content.accept(visitor, data)
         subList?.accept(visitor, data)
+    }
+
+    override fun <D> transformChildren(transformer: MarkdownTransformer<D>, data: D) {
+        content = content.transform(transformer, data)
+        subList?.let { subList = it.transform(transformer, data) as MarkdownList }
     }
 
 

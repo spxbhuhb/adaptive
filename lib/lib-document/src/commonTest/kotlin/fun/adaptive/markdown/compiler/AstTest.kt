@@ -24,7 +24,7 @@ class AstTest {
     fun header1() {
         val source = "# Header"
         val expected = listOf(
-            MarkdownHeader(1, listOf(MarkdownInline("Header", bold = false, italic = false)))
+            MarkdownHeader(1, mutableListOf(MarkdownInline("Header", bold = false, italic = false)))
         )
         val actual = ast(source)
         assertEquals(expected.dump(), actual.dump())
@@ -34,7 +34,7 @@ class AstTest {
     fun header4() {
         val source = "#### Header"
         val expected = listOf(
-            MarkdownHeader(4, listOf(MarkdownInline("Header", bold = false, italic = false)))
+            MarkdownHeader(4, mutableListOf(MarkdownInline("Header", bold = false, italic = false)))
         )
         val actual = ast(source)
         assertEquals(expected.dump(), actual.dump())
@@ -265,7 +265,7 @@ class AstTest {
         val source = ">This is a quote\n>and another quote"
         val expected = listOf(
             MarkdownQuote(
-                listOf(
+                mutableListOf(
                     MarkdownParagraph(
                         mutableListOf(
                             MarkdownInline("This is a quote", false, italic = false),
@@ -380,6 +380,29 @@ class AstTest {
             }
         }
     }
+
+    @Test
+    fun link() {
+        val source = "[IntelliJ IDEA](https://www.jetbrains.com/idea/)"
+
+        source assertEquals {
+            + link { "[IntelliJ IDEA](https://www.jetbrains.com/idea/)" }
+        }
+    }
+
+    @Test
+    fun linkAfterHeader() {
+        val source = """
+            # Header
+            [Some Doc](guide://)
+            """.trimIndent()
+
+        source assertEquals {
+            + header1 { "Header" }
+            + link { "[Some Doc](guide://)" }
+        }
+    }
+
 
     @Test
     fun imageLink() {
