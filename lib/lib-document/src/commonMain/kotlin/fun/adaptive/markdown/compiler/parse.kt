@@ -84,10 +84,8 @@ private fun CompileContext.inline(start: Int, children: MutableList<MarkdownElem
     var bold = false
     var italic = false
 
-    fun style(token: MarkdownToken) {
-        val text = token.text
-
-        if (text == activeStyle) {
+    fun style(text: String) {
+        if (text == activeStyle || (text.length == 3 && activeStyle?.length == 3)) {
             activeStyle = null
             bold = false
             italic = false
@@ -122,6 +120,23 @@ private fun CompileContext.inline(start: Int, children: MutableList<MarkdownElem
         }
     }
 
+    fun mergeStyles(token : MarkdownToken) : String {
+        if (index == end) return token.text
+        val next = tokens[index]
+        if (token.type == MarkdownTokenType.Asterisks) {
+            if (next.type == MarkdownTokenType.Underscores) {
+                index++
+                return token.text + next.text
+            }
+        } else {
+            if (next.type == MarkdownTokenType.Asterisks) {
+                index++
+                return token.text + next.text
+            }
+        }
+        return token.text
+    }
+
     while (index < end) {
         val token = tokens[index ++]
 
@@ -132,7 +147,7 @@ private fun CompileContext.inline(start: Int, children: MutableList<MarkdownElem
             }
 
             MarkdownTokenType.Asterisks, MarkdownTokenType.Underscores -> {
-                style(token)
+                style(mergeStyles(token))
             }
 
             MarkdownTokenType.CodeSpan -> {

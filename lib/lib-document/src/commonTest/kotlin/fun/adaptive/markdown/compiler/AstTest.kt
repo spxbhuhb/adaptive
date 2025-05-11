@@ -5,7 +5,7 @@
 package `fun`.adaptive.markdown.compiler
 
 import `fun`.adaptive.markdown.model.*
-import `fun`.adaptive.markdown.transform.MarkdownAstDumpTransform.Companion.dump
+import `fun`.adaptive.markdown.transform.MarkdownAstDumpVisitor.Companion.dump
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -196,11 +196,63 @@ class AstTest {
     }
 
     @Test
-    fun boldText() {
+    fun boldTextAsterisk() {
         val source = "**bold text**"
         val expected = listOf(
             MarkdownParagraph(
                 mutableListOf(MarkdownInline("bold text", true, italic = false)),
+                false
+            )
+        )
+        val actual = ast(source)
+        assertEquals(expected.dump(), actual.dump())
+    }
+
+    @Test
+    fun boldTextUnderscore() {
+        val source = "__bold text__"
+        val expected = listOf(
+            MarkdownParagraph(
+                mutableListOf(MarkdownInline("bold text", true, italic = false)),
+                false
+            )
+        )
+        val actual = ast(source)
+        assertEquals(expected.dump(), actual.dump())
+    }
+
+    @Test
+    fun italicTextAsterisk() {
+        val source = "*italic text*"
+        val expected = listOf(
+            MarkdownParagraph(
+                mutableListOf(MarkdownInline("italic text", false, italic = true)),
+                false
+            )
+        )
+        val actual = ast(source)
+        assertEquals(expected.dump(), actual.dump())
+    }
+
+    @Test
+    fun italicTextUnderscore() {
+        val source = "_italic text_"
+        val expected = listOf(
+            MarkdownParagraph(
+                mutableListOf(MarkdownInline("italic text", false, italic = true)),
+                false
+            )
+        )
+        val actual = ast(source)
+        assertEquals(expected.dump(), actual.dump())
+    }
+
+    @Test
+    fun boldAndItalicText() {
+        val source = "**_bold italic_**"
+        val expected = listOf(
+            MarkdownParagraph(
+                mutableListOf(MarkdownInline("bold italic", true, italic = true)),
                 false
             )
         )

@@ -5,7 +5,7 @@
 package `fun`.adaptive.transform
 
 import `fun`.adaptive.document.processing.DocDumpVisitor.Companion.dump
-import `fun`.adaptive.markdown.transform.MarkdownToDocTransform
+import `fun`.adaptive.markdown.transform.MarkdownToDocVisitor
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -17,7 +17,7 @@ class MarkdownToDocTransformTest {
     infix fun String.assertEqualsDump(expected: DocBuilder.() -> Unit) =
         assertEquals(
             DocBuilder().apply { expected() }.entries.joinToString("\n") { it.dump() },
-            MarkdownToDocTransform(this).transform().blocks.joinToString("\n") { it.dump() }
+            MarkdownToDocVisitor(this).transform().blocks.joinToString("\n") { it.dump() }
         )
 
     @Test
