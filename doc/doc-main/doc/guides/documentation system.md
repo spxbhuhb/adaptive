@@ -49,7 +49,7 @@ Shorthands are Markdown links in the following format:
 4. Name resolution rules:
    1. Names are case-insensitive and trimmed. 
    2. If there is a question mark at the end of the name, it is removed.
-   3. If a name cannot be found but ends with a `s`, the name without the `s` is tried.
+   3. If a name cannot be found and seems to be a plural, the non-plural version will be tried (see [PluralHandler](class://))
 
 ### Definitions
 

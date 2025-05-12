@@ -1,10 +1,9 @@
-# WireFormat
+# Introduction to Wireformat
 
-A simple serialization library for Kotlin. Its main purpose is to provide serialization 
-for [services](../service/README). It is optimized for handling function calls.
+[Wireformat](def://) provides serialization for [services](def://) and [adat classes](def://). 
 
-WireFormat supports [JSON](https://json.org) and [Protobuf](https://protobuf.dev) out of the box, Protobuf being the
-default, JSON is provided for the faint-hearted.
+WireFormat supports [JSON](https://json.org) and [Protocol Buffers](https://protobuf.dev) out of the box, 
+protobuf being the default, JSON is provided for the faint-hearted.
 
 WireFormat is not meant to be coded manually:
 

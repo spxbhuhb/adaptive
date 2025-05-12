@@ -74,6 +74,7 @@ We'll see how it turns out. I've put in the work, and I'll continue to do so in 
 * bcrypt (by Damien Miller, public domain)
 * [Rails](https://github.com/rails/rails)
   * contributing guidelines
+* [irregular-plurals](https://github.com/sindresorhus) (by Sindre Sorhus, MIT license)
 
 **Inspiration**
 

@@ -10,6 +10,7 @@ class MarkdownResolveTransform(
     val mdPath: Path
 ) : MarkdownTransformerVoid() {
 
+    @Suppress("RegExpRedundantEscape") // it is NOT redundant
     val inlineLinkRegex = "\\[([^\\[]+)\\]\\(([^)]+)\\)".toRegex()
 
     override fun visitInline(inline: MarkdownInline): MarkdownInline {
@@ -54,7 +55,10 @@ class MarkdownResolveTransform(
 
     fun pathOrNull(name: String, collection: Map<String, List<Path>>): String? {
         val normalizedName = compilation.normalizedName(name)
-        val paths = collection[normalizedName] ?: collection[normalizedName.removeSuffix("s")]
+
+        val paths = collection[normalizedName] ?: collection[PluralHandler.lastWordToSingular(normalizedName)]
+
+
         if (paths != null) {
             if (paths.size != 1) {
                 compilation.warn("Multiple resolutions for $name, in $mdPath", paths)
