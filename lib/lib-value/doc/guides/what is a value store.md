@@ -2,8 +2,7 @@
 
 Value stores are generic data containers that store [values](def://).
 
-Each value is an instance of the [AvValue](class://) class. And can store
-domain-specific data in the `spec` property of the class.
+Each value is an instance of the [AvValue](class://) class.
 
 ## Value access
 

@@ -108,7 +108,7 @@ private fun menu(viewModel: DeviceTreeModel, treeItem: TreeItem<AvValueId>): Lis
 
     out += MenuSeparator<AioDeviceEditOperation>()
 
-    val subDevices = controller.valueTreeStore.getParentSubItems(itemId)
+    val subDevices = controller.valueTreeStore.getSiblingIds(itemId)
 
     out += MenuItem<AioDeviceEditOperation>(
         Graphics.arrow_drop_up, Strings.moveUp, AioDeviceEditOperation.MoveUp,

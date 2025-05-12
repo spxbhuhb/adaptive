@@ -15,18 +15,17 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
     val specClass: KClass<SPEC>,
 ) : AvValueSubscriber<List<TREE_ITEM>>(subscribeFun, backend) {
 
-    abstract val topListMarker: AvMarker
-    abstract val childListMarker: AvMarker
+    abstract val parentRefLabel: AvMarker
 
     /**
      * List of the top-most tree items. The items should have a list
      * of their own children, set by [updateChildren].
      */
     override var value: List<TREE_ITEM>
-        get() = topIds.mapNotNull { nodeMap[it]?.treeItem }
+        get() = tops.mapNotNull { nodeMap[it.key]?.treeItem }
         set(_) = unsupported()
 
-    private var topIds = emptyList<AvValueId>()
+    private var tops = mutableMapOf<AvValueId, AvValue<SPEC>>()
 
     private val nodeMap = mutableMapOf<AvValueId, Node<SPEC, TREE_ITEM>>()
 
@@ -51,22 +50,23 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
     operator fun get(valueId: AvValueId) = nodeMap[valueId]?.value
 
     /**
-     * The sub items list that contains [childId]. This is the value of the
-     * sub items marker from the parent node or the top items list if
-     * [childId] is a top node.
+     * The list that contains [childId]. This is the value of the
+     * child reference list or the top value id list if [childId] is a top
+     * node.
      */
-//    fun getParentSubItems(childId: AvValueId): List<AvValueId> {
-//        val aioItem = nodeMap[childId]?.value ?: return emptyList()
-//        if (aioItem.parentId == null) return topIds
-//        val parent = nodeMap[aioItem.parentId] ?: return emptyList()
-//        return parent.childIds ?: emptyList()
-//    }
+    fun getSiblingIds(childId: AvValueId): List<AvValueId> {
+        val value = nodeMap[childId]?.value ?: return emptyList()
+        val parentId = value.refIdOrNull(parentRefLabel)
+        if (parentId == null) return tops.keys.toList()
+        val parent = nodeMap[parentId] ?: return emptyList()
+        return parent.childIds ?: emptyList()
+    }
 
     /**
-     * The sub items list of [childId].
+     * List of child IDs.
      */
-    fun getSubItems(childId: AvValueId): List<AvValueId> {
-        return nodeMap[childId]?.childIds ?: return emptyList()
+    fun getChildrenIds(parentId: AvValueId): List<AvValueId> {
+        return nodeMap[parentId]?.childIds ?: return emptyList()
     }
 
     override fun onCommit() {
@@ -75,50 +75,46 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
         topRefresh = false
     }
 
-//    override fun process(value: AvValue<*>) {
-//        when (value) {
-//            is AvValue<*> -> process(value)
-//            is AvRefList -> process(value)
-//        }
-//    }
-
-    private fun process3(item: AvValue<*>) {
-//        val node = nodeMap.getOrPut(item.uuid) { Node() }
-//
-//        val avItem = item.withSpec(specClass)
-//        node.value = avItem
-//
-//        val parentId = item.parentId
-//        val treeItem = node.treeItem
-//
-//        if (treeItem == null) {
-//            val parentNode = parentId?.let { nodeMap[it] }
-//
-//            node.treeItem = newTreeItem(avItem, parentNode)
-//
-//            if (parentNode != null) {
-//                childRefresh += parentNode
-//            } else {
-//                topRefresh = true
-//            }
-//        } else {
-//           updateTreeItem(avItem, treeItem)
-//        }
+    override fun process(value: AvValue<*>) {
+        when (value.spec) {
+            is AvRefListSpec -> processChildList(value, value.spec)
+            is AvValue<*> -> processNode(value.withSpec(specClass))
+        }
     }
 
-    private fun process2(list: AvValue<List<AvValueId>>) {
-//        when (list.name) {
-//            childListMarker -> {
-//                val node = nodeMap.getOrPut(list.parentId !!) { Node() }
-//                node.childIds = list.spec
-//                childRefresh += node
-//            }
-//
-//            topListMarker -> {
-//                topIds = list.spec
-//                topRefresh = true
-//            }
-//        }
+    private fun processNode(value: AvValue<SPEC>) {
+        val node = nodeMap.getOrPut(value.uuid) { Node() }
+
+        node.value = value
+
+        val parentId = value.refIdOrNull(parentRefLabel)
+        if (parentId != null) {
+            tops.remove(value.uuid)
+        } else {
+            tops.put(value.uuid, value)
+        }
+
+        val treeItem = node.treeItem
+
+        if (treeItem == null) {
+            val parentNode = parentId?.let { nodeMap[it] }
+
+            node.treeItem = newTreeItem(value, parentNode)
+
+            if (parentNode != null) {
+                childRefresh += parentNode
+            } else {
+                topRefresh = true
+            }
+        } else {
+            updateTreeItem(value, treeItem)
+        }
+    }
+
+    private fun processChildList(list: AvValue<*>, spec: AvRefListSpec) {
+        val node = nodeMap.getOrPut(list.refIdOrNull(parentRefLabel) !!) { Node() }
+        node.childIds = spec.refs
+        childRefresh += node
     }
 
     /**
@@ -157,13 +153,13 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
      */
     fun pathNames(value: AvValue<*>): List<String> {
         val names = mutableListOf<String>()
-//
-//        var current: AvValue<*>? = value
-//        while (current != null) {
-//            names.add(current.name)
-//            current = current.parentId?.let { this[it] }
-//        }
-//
+
+        var current: AvValue<*>? = value
+        while (current != null) {
+            names.add(current.name ?: "")
+            current = current.refIdOrNull(parentRefLabel)?.let { this[it] }
+        }
+
         return names.reversed()
     }
 }

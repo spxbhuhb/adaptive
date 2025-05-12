@@ -2,6 +2,9 @@
 
 A value is an arbitrary piece of data stored in a [value store](def://).
 
-Each value is represented by an instance of the [AvValue](class://) class
+Each value is an instance of the [AvValue](class://) class.
 
-For more information see: [What is a value store](guide://).
+# See also
+
+- [What is a value](guide://)
+- [What is a value store](guide://)

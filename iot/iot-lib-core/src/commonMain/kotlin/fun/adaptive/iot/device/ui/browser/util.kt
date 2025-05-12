@@ -7,7 +7,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 fun WsPane<DeviceBrowserWsItem, *>.subDevices(): List<AvValueId> {
     val browserItem = this.data
     val toolController = browserItem.config.controller
-    return toolController.valueTreeStore.getSubItems(browserItem.item.uuid)
+    return toolController.valueTreeStore.getChildrenIds(browserItem.item.uuid)
 }
 
 fun WsPane<DeviceBrowserWsItem, *>.getDevice(deviceId: AvValueId): AvValue<*>? {

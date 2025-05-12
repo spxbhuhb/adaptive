@@ -96,7 +96,7 @@ private fun menu(viewModel: SpaceTreeModel, treeItem: TreeItem<AvValueId>): List
 
     out += MenuSeparator()
 
-    val subSpaces = controller.valueTreeStore.getParentSubItems(itemId)
+    val subSpaces = controller.valueTreeStore.getSiblingIds(itemId)
 
     out += MenuItem(
         Graphics.arrow_drop_up, Strings.moveUp, AioSpaceEditOperation.MoveUp,

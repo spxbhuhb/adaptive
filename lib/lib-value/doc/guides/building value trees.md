@@ -1,9 +1,10 @@
 # Building value trees
 
-[Values](def://) in a [value store](def://) can be organized into value trees. This relies on the
-proper uses of markers and on the [AvRefListSpec](class://) class.
+[Values](def://) in a [value store](def://) can be organized into value trees.
 
-To build a value tree, you need to designate two markers and two reference labels:
+This relies on the proper uses of [markers](def://) and on the [AvRefListSpec](class://) class.
+
+To build a value tree, you need to designate two markers and two [reference labels](def://):
 
 Markers:
 
@@ -23,7 +24,7 @@ In this case:
 
 - the `space` marker marks all nodes of the tree
 - the `sub-spaces` marker marks [values](def://) that contain an [AvRefListSpec](class://)
-- the `parentSpace` reference label references the parent node
-- the `subSpaces` reference label points to the [value](def://) which contains an [AvRefListSpec](class://)
+- the `parentSpaceRef` reference label references the parent node
+- the `subSpaceRefs` reference label points to the [value](def://) which contains an [AvRefListSpec](class://)
 
 [Value Tree Test](example://)
