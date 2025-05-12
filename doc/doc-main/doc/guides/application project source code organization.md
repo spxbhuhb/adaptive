@@ -1,8 +1,7 @@
 # Source code organization
 
-Adaptive is a Kotlin/Multiplatform application development system. Applications built with Adaptive
-typically use Gradle as its build system. Adaptive projects use the standard directory structure of a
-Kotlin/Multiplatform project with some additions.
+Applications built with Adaptive typically use Gradle as its build system. Adaptive 
+projects use the standard directory structure of a Kotlin/Multiplatform project with some additions.
 
 The following directory structure demonstrates the usual convention of a single-module
 Adaptive project focusing on JVM and browser platforms.

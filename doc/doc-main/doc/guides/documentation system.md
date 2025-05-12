@@ -6,8 +6,8 @@ This document describes the documentation system of Adaptive and the documentati
 
 ### Directory structure
 
-1. The top level documentation (such as this one) is in the `doc` directory of the repository.
-2. Source module (such as `core-core`, `lib-app`) documentation is in the `doc` directory of the given module.
+1. Top level documentation (such as this one) is in the [doc-main](def://) subproject.
+2. [Subproject](def://) documentation is in the `doc` directory of the given subproject.
 
 `doc` directories may contain these subdirectories:
 
@@ -24,11 +24,16 @@ This was a design decision for multiple reasons:
 - I want to force myself to call things what they are,
 - I hate when an import is ambiguous.
 
-### General rules
+### Example code
 
 1. **DO NOT** put Kotlin code fences into Markdown.
-2. Put example code into `commonTest` and reference it with the `[ClassName](class://)` shorthand.
-3. When you do not have time to finish up all the documentation use `[explanation about what to write](todo://)`
+2. Example code that can be placed inside the module shall be in the `commonTest/example` directory.
+3. Example code that cannot be placed inside the module shall be in the `doc-example`
+4. Reference example code with the `[FileName](example://)` shorthand.
+
+### Todos
+
+When you do not have time to finish up all the documentation use `[explanation about what to write](todo://)`
 
 ### Shorthands
 

@@ -8,6 +8,9 @@ includeBuild("core/core-kotlin-plugin")
 includeBuild("core/core-gradle-plugin")
 includeBuild("core/core-ui")
 
+includeBuild("doc/doc-example")
+includeBuild("doc/doc-main")
+
 includeBuild("grove/grove-app")
 includeBuild("grove/grove-doc")
 includeBuild("grove/grove-lib")
