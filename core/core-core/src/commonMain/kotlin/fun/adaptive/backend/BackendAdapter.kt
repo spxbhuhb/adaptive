@@ -50,7 +50,7 @@ open class BackendAdapter(
 
     // TODO implement cache synchronization
 
-    val serviceCache = mutableMapOf<String, BackendService>()
+    private val serviceCache = mutableMapOf<String, BackendService>()
 
     val lock = getLock()
 
@@ -117,6 +117,22 @@ open class BackendAdapter(
     }
 
     override fun get(serviceName: String, context: ServiceContext): ServiceImpl<*>? =
-        serviceCache[serviceName]?.newInstance(context)
+        lock.use {
+            serviceCache[serviceName]?.newInstance(context)
+        }
+
+    fun addBackendService(service: BackendService) {
+        lock.use {
+            println("$this addService: ${service.serviceImpl !!.serviceName}")
+            serviceCache[service.serviceImpl !!.serviceName] = service
+        }
+    }
+
+    fun removeBackendService(serviceName: String) {
+        lock.use {
+            println("$this removeService: ${serviceName}")
+            serviceCache.remove(serviceName)
+        }
+    }
 
 }

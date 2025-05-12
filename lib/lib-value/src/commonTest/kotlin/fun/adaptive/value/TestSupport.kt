@@ -4,9 +4,12 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.backend.query.firstImplOrNull
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
+import `fun`.adaptive.utility.vmNowMicro
 import `fun`.adaptive.utility.waitFor
+import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.wireformat.api.Json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +21,8 @@ import kotlin.time.Duration.Companion.seconds
 
 class TestSupport {
 
-    val clientTransport = DirectServiceTransport(name = "client", wireFormatProvider = Json) //.also { it.trace = true; it.transportLog.enableFine() }
-    val serverTransport = DirectServiceTransport(name = "server", wireFormatProvider = Json) //.also { it.trace = true; it.transportLog.enableFine() }
+    val clientTransport = DirectServiceTransport(name = "client", wireFormatProvider = Json).also { it.trace = true; it.transportLog.enableFine() }
+    val serverTransport = DirectServiceTransport(name = "server", wireFormatProvider = Json).also { it.trace = true; it.transportLog.enableFine() }
 
     init {
         clientTransport.peerTransport = serverTransport
@@ -36,7 +39,7 @@ class TestSupport {
     val clientWorker
         get() = clientBackend.firstImpl<AvValueWorker>()
 
-    suspend fun waitForIdle(duration : Duration = 1.seconds, block : suspend () -> Unit = {}) {
+    suspend fun waitForIdle(duration: Duration = 1.seconds, block: suspend () -> Unit = {}) {
         block()
         waitFor(duration) { serverWorker.isIdle && clientWorker.isIdle }
     }
@@ -47,6 +50,8 @@ class TestSupport {
         fun valueTest(timeout: Duration = 10.seconds, testFun: suspend TestSupport.() -> Unit) =
 
             runTest(timeout = timeout) {
+                val now = vmNowMicro()
+                println("start $now")
                 with(TestSupport()) {
 
                     // Switch to a coroutine context that is NOT a test context. The test context
@@ -60,14 +65,17 @@ class TestSupport {
                     val clientScope = CoroutineScope(clientDispatcher)
 
                     serverBackend = backend(serverTransport, dispatcher = serverDispatcher, scope = serverScope) {
-                        worker { AvValueWorker("general", proxy = false) }
+                        worker { AvValueWorker("general", proxy = false, trace = true) }
                         service { AvValueTestServerService() }
                     }
 
                     clientBackend = backend(clientTransport, dispatcher = clientDispatcher, scope = clientScope) {
-                        worker { AvValueWorker("general", proxy = true) }
+                        worker { AvValueWorker("general", proxy = true, trace = true) }
                         service { AvValueTestClientService() }
                     }
+
+                    waitForReal(5.seconds) { serverBackend.firstImplOrNull<AvValueTestServerService>() != null }
+                    waitForReal(5.seconds) { clientBackend.firstImplOrNull<AvValueTestClientService>() != null }
 
                     withContext(clientDispatcher) {
                         testFun()
@@ -76,6 +84,7 @@ class TestSupport {
                     clientBackend.stop()
                     serverBackend.stop()
                 }
+                println("end $now")
             }
     }
 }

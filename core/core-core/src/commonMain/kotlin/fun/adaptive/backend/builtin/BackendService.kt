@@ -34,7 +34,7 @@ class BackendService(
 
         serviceImpl?.let {
             it.mount()
-            backendAdapter.serviceCache[it.serviceName] = this
+            backendAdapter.addBackendService(this)
         }
 
         if (trace) trace("after-Mount")
@@ -45,7 +45,7 @@ class BackendService(
 
         checkNotNull(serviceImpl) { "inconsistent backend state innerUnmount with a null implementation" }
             .let {
-                backendAdapter.serviceCache.remove(it.serviceName)
+                backendAdapter.removeBackendService(it.serviceName)
             }
         impl = null
 

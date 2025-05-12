@@ -44,6 +44,7 @@ abstract class AvValueSubscriber<V>(
     var job: Job? = null
 
     override fun addListener(listener: ObservableListener<V>) {
+        // TODO refactor the subscriber pattern so that add/remove/add listeners don't need to be synchronized'
         if (job == null) {
             onStart()
             job = scope.launch { supervisorScope { run() } }
@@ -85,7 +86,7 @@ abstract class AvValueSubscriber<V>(
             getLogger("AvValueSubscriber").error(ex)
         } finally {
             localWorker.unsubscribe(subscriptionId)
-            scope.launch { supervisorScope { unsubscribe(subscriptionId) } }
+            scope.launch { supervisorScope { unsubscribe(subscriptionId); job = null } }
         }
     }
 
@@ -114,6 +115,5 @@ abstract class AvValueSubscriber<V>(
     fun stop() {
         listeners.clear()
         job?.cancel()
-        job = null
     }
 }

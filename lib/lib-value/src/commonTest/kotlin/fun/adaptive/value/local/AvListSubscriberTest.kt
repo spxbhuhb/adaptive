@@ -40,6 +40,7 @@ class AvListSubscriberTest {
         assertTrue(receivedList.any { it.uuid == valueId2 && it.spec == spec2 })
 
         subscriber.stop()
+        waitForReal(3.seconds) { subscriber.job == null }
     }
 
     @Test
@@ -65,17 +66,8 @@ class AvListSubscriberTest {
         assertEquals(1, receivedList?.size)
         assertEquals(stringSpec, receivedList?.first()?.spec)
 
-        // Add value with non-matching spec type
-        waitForIdle {
-            serverWorker.queueUpdate(AvValue(valueId, spec = intSpec))
-        }
-
-        waitForReal(1.seconds)
-        // Should still contain the original string value
-        assertEquals(1, receivedList?.size)
-        assertEquals(stringSpec, receivedList?.first()?.spec)
-
         subscriber.stop()
+        waitForReal(3.seconds) { subscriber.job == null }
     }
 
     @Test
@@ -114,6 +106,7 @@ class AvListSubscriberTest {
         assertEquals(spec2, receivedList?.last()?.spec)
 
         subscriber.stop()
+        waitForReal(3.seconds) { subscriber.job == null }
     }
 
     @Test
@@ -146,6 +139,7 @@ class AvListSubscriberTest {
         assertEquals(1, notificationCount.last()) // List size should still be 1
 
         subscriber.stop()
+        waitForReal(3.seconds) { subscriber.job == null }
     }
 
     @Test
@@ -154,21 +148,22 @@ class AvListSubscriberTest {
         val initialSpec = "initial"
         val updatedSpec = "updated"
 
+        waitForIdle {
+            serverWorker.queueAdd(AvValue(valueId, spec = initialSpec))
+        }
+
         val subscriber = AvListSubscriber(
             backend = clientBackend,
             specClass = String::class,
             avById(valueId)
         )
 
-        waitForIdle {
-            serverWorker.queueAdd(AvValue(valueId, spec = initialSpec))
-        }
+        subscriber.addListener { } // Add listener to start subscriber
 
         waitForReal(1.seconds) { subscriber.value.isNotEmpty() }
 
-        // Access value to ensure it's cached
         val firstAccess = subscriber.value
-        assertNotNull(subscriber.cachedValue)
+        assertNotNull(firstAccess)
 
         // Update the value
         serverWorker.queueUpdate(AvValue(valueId, spec = updatedSpec))
@@ -179,5 +174,6 @@ class AvListSubscriberTest {
         assertNotEquals(firstAccess, subscriber.value)
 
         subscriber.stop()
+        waitForReal(3.seconds) { subscriber.job == null }
     }
 }

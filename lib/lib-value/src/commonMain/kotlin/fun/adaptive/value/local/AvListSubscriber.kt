@@ -36,7 +36,6 @@ open class AvListSubscriber<SPEC : Any>(
         { service, id -> conditions.toList().also { service.subscribe(it) } }, backend, specClass, transform
     )
 
-
     private val itemMap = mutableMapOf<AvValueId, AvValue<SPEC>>()
 
     override fun process(value: AvValue<*>) {
@@ -53,6 +52,6 @@ open class AvListSubscriber<SPEC : Any>(
         get() = cachedValue ?: (transform?.invoke(itemMap) ?: itemMap.values.toList()).also { cachedValue = it }
         set(_) = unsupported()
 
-    var cachedValue: List<AvValue<SPEC>>? = null
+    private var cachedValue: List<AvValue<SPEC>>? = null
 
 }
