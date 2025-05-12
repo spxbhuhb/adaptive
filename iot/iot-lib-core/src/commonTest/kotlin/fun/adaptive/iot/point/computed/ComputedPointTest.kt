@@ -73,7 +73,7 @@ class ComputedPointTest {
             if (PointMarkers.CUR_VAL !in point.markers) return@waitFor false
             val curVal = serverValueWorker[point.markers[PointMarkers.CUR_VAL] !!]
             assertIs<AvDouble>(curVal)
-            curVal.timestamp >= timestamp
+            curVal.lastChange >= timestamp
         }
     }
 
@@ -83,7 +83,7 @@ class ComputedPointTest {
 
         assertIs<AvDouble>(newCurVal)
         assertEquals(expected, newCurVal.value)
-        assertEquals(timestamp, newCurVal.timestamp)
+        assertEquals(timestamp, newCurVal.lastChange)
     }
 
 }

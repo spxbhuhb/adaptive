@@ -23,7 +23,7 @@ class AvValueServerService() : ServiceImpl<AvValueServerService>(), AvValueApi {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun subscribe(conditions: List<AvSubscribeCondition>): AvValueSubscriptionId {
+    override suspend fun subscribe(conditions: List<AvSubscribeCondition>): AvSubscriptionId {
         authCheck()
 
         val subscription = AvClientSubscription(
@@ -38,7 +38,7 @@ class AvValueServerService() : ServiceImpl<AvValueServerService>(), AvValueApi {
         return subscription.uuid
     }
 
-    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+    override suspend fun unsubscribe(subscriptionId: AvSubscriptionId) {
         authCheck()
 
         worker.unsubscribe(subscriptionId)

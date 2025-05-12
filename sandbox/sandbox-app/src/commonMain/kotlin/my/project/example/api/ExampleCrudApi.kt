@@ -4,7 +4,7 @@ import my.project.example.model.ExampleData
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValueSubscriptionId
+import `fun`.adaptive.value.AvSubscriptionId
 import `fun`.adaptive.value.item.AvMarker
 
 @ServiceApi
@@ -24,14 +24,14 @@ interface ExampleCrudApi {
     suspend fun delete(id: AvValueId)
 
     suspend fun subscribeAll(
-        subscriptionId: AvValueSubscriptionId
+        subscriptionId: AvSubscriptionId
     ): List<AvSubscribeCondition>
 
     suspend fun subscribeOne(
-        subscriptionId: AvValueSubscriptionId,
+        subscriptionId: AvSubscriptionId,
         valueId: AvValueId
     ): List<AvSubscribeCondition>
 
-    suspend fun unsubscribe(id: AvValueSubscriptionId)
+    suspend fun unsubscribe(id: AvSubscriptionId)
 
 }

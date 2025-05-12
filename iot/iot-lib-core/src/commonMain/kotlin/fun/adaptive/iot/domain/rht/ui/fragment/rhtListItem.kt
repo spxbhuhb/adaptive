@@ -64,7 +64,7 @@ fun rhtListItem(
             alarmIcon(item.status.flags)
         }
 
-        timestamp(item.timestamp) .. textSmall .. alignSelf.center .. maxWidth
+        timestamp(item.lastChange) .. textSmall .. alignSelf.center .. maxWidth
 
         box {
             maxSize .. alignItems.center

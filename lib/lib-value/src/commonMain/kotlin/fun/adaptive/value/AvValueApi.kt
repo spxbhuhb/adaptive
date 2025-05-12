@@ -8,8 +8,8 @@ interface AvValueApi {
 
     suspend fun process(operation: AvValueOperation)
 
-    suspend fun subscribe(conditions: List<AvSubscribeCondition> = emptyList()): AvValueSubscriptionId
+    suspend fun subscribe(conditions: List<AvSubscribeCondition> = emptyList()): AvSubscriptionId
 
-    suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId)
+    suspend fun unsubscribe(subscriptionId: AvSubscriptionId)
 
 }

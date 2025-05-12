@@ -5,7 +5,7 @@ import `fun`.adaptive.value.*
 
 fun ServiceImpl<*>.serviceSubscribe(
     worker: AvValueWorker,
-    subscriptionId: AvValueSubscriptionId,
+    subscriptionId: AvSubscriptionId,
     valueId: AvValueId,
 ): List<AvSubscribeCondition> {
 
@@ -25,7 +25,7 @@ fun ServiceImpl<*>.serviceSubscribe(
 
 fun ServiceImpl<*>.serviceSubscribe(
     worker: AvValueWorker,
-    subscriptionId: AvValueSubscriptionId,
+    subscriptionId: AvSubscriptionId,
     vararg markers: AvMarker
 ): List<AvSubscribeCondition> {
 
@@ -45,7 +45,7 @@ fun ServiceImpl<*>.serviceSubscribe(
 
 fun ServiceImpl<*>.serviceSubscribe(
     worker: AvValueWorker,
-    subscriptionId: AvValueSubscriptionId,
+    subscriptionId: AvSubscriptionId,
     conditions: List<AvSubscribeCondition>
 ): List<AvSubscribeCondition> {
 

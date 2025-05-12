@@ -16,14 +16,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlin.reflect.KClass
 
-class AvUiValue<T : AvValue2>(
+class AvUiValue<T : AvValue<T>>(
     adapter: AdaptiveAdapter,
     val valueId: AvValueId?,
     val kClass : KClass<T>
 ) : AbstractObservable<T?>() {
 
     companion object {
-        inline operator fun <reified T : AvValue2> invoke(
+        inline operator fun <reified T : AvValue<T>> invoke(
             adapter: AdaptiveAdapter,
             valueId: AvValueId?
         ) : AvUiValue<T> = AvUiValue(adapter, valueId, T::class)
@@ -42,8 +42,8 @@ class AvUiValue<T : AvValue2>(
     val localWorker = backend.firstImpl<AvValueWorker>()
     val remoteService = getService<AvValueApi>(transport)
 
-    var remoteSubscriptionId: AvValueSubscriptionId? = null
-    var localSubscriptionId: AvValueSubscriptionId? = null
+    var remoteSubscriptionId: AvSubscriptionId? = null
+    var localSubscriptionId: AvSubscriptionId? = null
 
     val updates = Channel<AvValueOperation>(Channel.UNLIMITED)
 
@@ -91,8 +91,8 @@ class AvUiValue<T : AvValue2>(
         }
     }
 
-    fun process(value: AvValue2) {
-        if (kClass.isInstance(value)) {
+    fun process(value: AvValue<*>) {
+        if (kClass.isInstance(value.spec)) {
             @Suppress("UNCHECKED_CAST")
             this.value = value as T
         } else {

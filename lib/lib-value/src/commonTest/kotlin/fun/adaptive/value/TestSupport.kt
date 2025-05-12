@@ -6,6 +6,7 @@ import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
+import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.wireformat.api.Json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -17,8 +18,8 @@ import kotlin.time.Duration.Companion.seconds
 
 class TestSupport {
 
-    val clientTransport = DirectServiceTransport(name = "client", wireFormatProvider = Json) // .also { it.trace = true; it.transportLog.enableFine() }
-    val serverTransport = DirectServiceTransport(name = "server", wireFormatProvider = Json) // .also { it.trace = true; it.transportLog.enableFine() }
+    val clientTransport = DirectServiceTransport(name = "client", wireFormatProvider = Json) //.also { it.trace = true; it.transportLog.enableFine() }
+    val serverTransport = DirectServiceTransport(name = "server", wireFormatProvider = Json) //.also { it.trace = true; it.transportLog.enableFine() }
 
     init {
         clientTransport.peerTransport = serverTransport
@@ -35,10 +36,15 @@ class TestSupport {
     val clientWorker
         get() = clientBackend.firstImpl<AvValueWorker>()
 
+    suspend fun waitForIdle(duration : Duration = 1.seconds, block : suspend () -> Unit = {}) {
+        block()
+        waitFor(duration) { serverWorker.isIdle && clientWorker.isIdle }
+    }
+
     companion object {
 
         @OptIn(ExperimentalCoroutinesApi::class)
-        fun avValueTest(timeout: Duration = 10.seconds, testFun: suspend TestSupport.() -> Unit) =
+        fun valueTest(timeout: Duration = 10.seconds, testFun: suspend TestSupport.() -> Unit) =
 
             runTest(timeout = timeout) {
                 with(TestSupport()) {
@@ -54,12 +60,12 @@ class TestSupport {
                     val clientScope = CoroutineScope(clientDispatcher)
 
                     serverBackend = backend(serverTransport, dispatcher = serverDispatcher, scope = serverScope) {
-                        worker { AvValueWorker("general") }
+                        worker { AvValueWorker("general", proxy = false) }
                         service { AvValueTestServerService() }
                     }
 
                     clientBackend = backend(clientTransport, dispatcher = clientDispatcher, scope = clientScope) {
-                        worker { AvValueWorker("general") }
+                        worker { AvValueWorker("general", proxy = true) }
                         service { AvValueTestClientService() }
                     }
 

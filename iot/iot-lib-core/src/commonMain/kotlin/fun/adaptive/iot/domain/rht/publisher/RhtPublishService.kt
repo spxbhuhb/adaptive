@@ -9,7 +9,6 @@ import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.local.AvMarkedValueId
 import `fun`.adaptive.value.local.AvMarkedValueSubscriptionResult
 import `fun`.adaptive.value.util.serviceSubscribe
@@ -26,7 +25,7 @@ class RhtPublishService : ServiceImpl<RhtPublishService>(), RhtPublishApi {
     }
 
     override suspend fun subscribe(
-        subscriptionId: AvValueSubscriptionId,
+        subscriptionId: AvSubscriptionId,
         spaceIds: List<AvValueId>
     ): AvMarkedValueSubscriptionResult {
         ensureLoggedIn()
@@ -67,7 +66,7 @@ class RhtPublishService : ServiceImpl<RhtPublishService>(), RhtPublishApi {
         conditions += AvSubscribeCondition(curValRef)
     }
 
-    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+    override suspend fun unsubscribe(subscriptionId: AvSubscriptionId) {
         ensureLoggedIn()
 
         worker.unsubscribe(subscriptionId)

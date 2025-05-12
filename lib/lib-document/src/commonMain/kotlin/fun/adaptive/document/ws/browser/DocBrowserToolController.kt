@@ -16,7 +16,7 @@ class DocBrowserToolController(
         val aioItem = valueTreeStore[treeItem.data] ?: return
 
         val browserItem = DocBrowserWsItem(
-            aioItem.name,
+            aioItem.name ?: "",
             config.itemType,
             config,
             aioItem

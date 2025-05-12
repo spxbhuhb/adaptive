@@ -8,15 +8,17 @@ import `fun`.adaptive.value.AvValue
 
 fun iconFor(item: AvValue<*>): GraphicsResourceSet {
 
-    val byType = iconCache[item.type]
-    if (byType != null) return byType
+    TODO()
 
-    for (marker in item.markers.keys) {
-        val icon = iconCache[marker]
-        if (icon != null) {
-            return icon
-        }
-    }
+//    val byType = iconCache[item.type]
+//    if (byType != null) return byType
+//
+//    for (marker in item.markers.keys) {
+//        val icon = iconCache[marker]
+//        if (icon != null) {
+//            return icon
+//        }
+//    }
 
     return Graphics.empty
 }

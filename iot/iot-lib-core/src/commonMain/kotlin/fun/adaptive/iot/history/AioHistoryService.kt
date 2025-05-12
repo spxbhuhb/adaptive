@@ -14,10 +14,8 @@ import `fun`.adaptive.iot.point.PointMarkers
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.builtin.AvConvertedDouble
-import `fun`.adaptive.value.builtin.AvDouble
 import kotlinx.datetime.Instant
 
 class AioHistoryService : ServiceImpl<AioHistoryService>(), AioHistoryApi {
@@ -35,21 +33,21 @@ class AioHistoryService : ServiceImpl<AioHistoryService>(), AioHistoryApi {
 
             when (spec) {
                 is AvConvertedDouble -> historyWorker.append(
-                    point.uuid.cast(), curValue.timestamp,
+                    point.uuid.cast(), curValue.lastChange,
                     AioDoubleHistoryRecord.typeSignature(),
-                    AioDoubleHistoryRecord(curValue.timestamp, curValue.originalValue, curValue.convertedValue, curValue.status.flags).encodeToProtoByteArray()
+                    AioDoubleHistoryRecord(curValue.lastChange, curValue.originalValue, curValue.convertedValue, curValue.status.flags).encodeToProtoByteArray()
                 )
 
                 is Double -> historyWorker.append(
-                    point.uuid.cast(), curValue.timestamp,
+                    point.uuid.cast(), curValue.lastChange,
                     AioDoubleHistoryRecord.typeSignature(),
-                    AioDoubleHistoryRecord(curValue.timestamp, spec, spec, curValue.status.flags).encodeToProtoByteArray()
+                    AioDoubleHistoryRecord(curValue.lastChange, spec, spec, curValue.status.flags).encodeToProtoByteArray()
                 )
 
                 is Boolean -> historyWorker.append(
-                    point.uuid.cast(), curValue.timestamp,
+                    point.uuid.cast(), curValue.lastChange,
                     AioBooleanHistoryRecord.typeSignature(),
-                    AioBooleanHistoryRecord(curValue.timestamp, spec, spec, curValue.status.flags).encodeToProtoByteArray()
+                    AioBooleanHistoryRecord(curValue.lastChange, spec, spec, curValue.status.flags).encodeToProtoByteArray()
                 )
             }
         }

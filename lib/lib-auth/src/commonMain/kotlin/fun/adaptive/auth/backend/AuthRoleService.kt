@@ -11,7 +11,7 @@ import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValueSubscriptionId
+import `fun`.adaptive.value.AvSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.asAvValue
@@ -68,12 +68,12 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
         }
     }
 
-    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
+    override suspend fun subscribe(subscriptionId: AvSubscriptionId): List<AvSubscribeCondition> {
         ensureHas(securityOfficer)
         return serviceSubscribe(valueWorker, subscriptionId, AuthMarkers.ROLE)
     }
 
-    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+    override suspend fun unsubscribe(subscriptionId: AvSubscriptionId) {
         ensureHas(securityOfficer)
         valueWorker.unsubscribe(subscriptionId)
     }

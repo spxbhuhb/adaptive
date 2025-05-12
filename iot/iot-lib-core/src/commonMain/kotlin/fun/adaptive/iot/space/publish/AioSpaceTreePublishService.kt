@@ -20,7 +20,7 @@ class AioSpaceTreePublishService : AioSpaceTreePublishApi, ServiceImpl<AioSpaceT
         worker = safeAdapter.firstImpl<AvValueWorker> { it.domain == IoTValueDomain }
     }
 
-    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
+    override suspend fun subscribe(subscriptionId: AvSubscriptionId): List<AvSubscribeCondition> {
         ensureLoggedIn()
 
         return serviceSubscribe(
@@ -32,7 +32,7 @@ class AioSpaceTreePublishService : AioSpaceTreePublishApi, ServiceImpl<AioSpaceT
         )
     }
 
-    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+    override suspend fun unsubscribe(subscriptionId: AvSubscriptionId) {
         ensureLoggedIn()
 
         worker.unsubscribe(subscriptionId)

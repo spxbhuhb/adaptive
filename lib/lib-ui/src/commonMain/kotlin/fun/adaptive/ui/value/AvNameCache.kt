@@ -8,7 +8,6 @@ import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.item.AvMarker
 import `fun`.adaptive.value.operation.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -20,7 +19,8 @@ class AvNameCache(
     adapter: BackendAdapter,
     transport: ServiceCallTransport,
     val scope: CoroutineScope,
-    itemMarker: AvMarker
+    itemMarker: AvMarker,
+    val parentRefLabel : AvRefLabel
 ) : AbstractObservable<List<AvNameCacheEntry>>() {
 
 
@@ -41,8 +41,8 @@ class AvNameCache(
         AvSubscribeCondition(marker = itemMarker, itemOnly = true)
     )
 
-    var remoteSubscriptionId: AvValueSubscriptionId? = null
-    val localSubscriptionId: AvValueSubscriptionId = UUID.Companion.uuid4()
+    var remoteSubscriptionId: AvSubscriptionId? = null
+    val localSubscriptionId: AvSubscriptionId = UUID.Companion.uuid4()
 
     val updates = Channel<AvValueOperation>(Channel.UNLIMITED)
 
@@ -90,19 +90,18 @@ class AvNameCache(
         }
     }
 
-    fun process(value: AvValue2) {
-        check(value is AvValue<*>)
+    fun process(value: AvValue<*>) {
         itemMap[value.uuid] = value
     }
 
-    fun pathNames(item: AvValue<*>): List<String> {
-        var parentId = item.parentId
-        val names = mutableListOf<String>(item.name)
+    fun pathNames(value: AvValue<*>): List<String> {
+        var parentId = value.refIdOrNull(parentRefLabel)
+        val names = mutableListOf(value.name ?: "?")
 
         while (parentId != null) {
             val parent = itemMap[parentId] ?: return names.reversed()
-            names += parent.name
-            parentId = parent.parentId
+            names += parent.name ?: "?"
+            parentId = parent.refIdOrNull(parentRefLabel)
         }
 
         return names.reversed()

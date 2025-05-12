@@ -4,15 +4,15 @@ import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.supervisor.model.AppSpec
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValueSubscriptionId
+import `fun`.adaptive.value.AvSubscriptionId
 import `fun`.adaptive.value.item.AvMarker
 
 @ServiceApi
 interface SupervisorAppApi {
 
-    suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition>
+    suspend fun subscribe(subscriptionId: AvSubscriptionId): List<AvSubscribeCondition>
 
-    suspend fun unsubscribe(id: AvValueSubscriptionId)
+    suspend fun unsubscribe(id: AvSubscriptionId)
 
     suspend fun save(
         name: String,

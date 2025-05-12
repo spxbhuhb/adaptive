@@ -1,12 +1,12 @@
 package `fun`.adaptive.value.local
 
 import `fun`.adaptive.value.AvSubscribeCondition
-import `fun`.adaptive.value.AvValueSubscriptionId
+import `fun`.adaptive.value.AvSubscriptionId
 
 interface AvPublisher {
 
-    suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition>
+    suspend fun subscribe(subscriptionId: AvSubscriptionId): List<AvSubscribeCondition>
 
-    suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId)
+    suspend fun unsubscribe(subscriptionId: AvSubscriptionId)
 
 }

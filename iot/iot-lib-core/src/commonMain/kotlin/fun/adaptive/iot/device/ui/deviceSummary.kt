@@ -28,7 +28,7 @@ fun deviceSummary(
         } else {
             text(device.friendlyId) .. normalFont
             text(device.name)
-            timestamp(device.timestamp)
+            timestamp(device.lastChange)
             status(device.status) .. alignSelf.endCenter
         }
     }

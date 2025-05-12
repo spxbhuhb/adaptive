@@ -2,7 +2,7 @@ package `fun`.adaptive.value
 
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.waitForReal
-import `fun`.adaptive.value.TestSupport.Companion.avValueTest
+import `fun`.adaptive.value.TestSupport.Companion.valueTest
 import kotlinx.datetime.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -11,11 +11,11 @@ import kotlin.time.Duration.Companion.seconds
 class AvValueClientSubscriptionTest {
 
     @Test
-    fun basic() = avValueTest {
+    fun basic() = valueTest {
         val time = Instant.parse("2023-01-01T12:00:00Z")
 
         val valueId = AvValueId()
-        val value = avString("Value", time, valueId)
+        val value = AvValue(valueId, time, spec = "Value")
 
         val subscription = AvClientSubscription(uuid4(), condition(valueId), serverTransport, serverBackend.scope)
 
@@ -28,11 +28,11 @@ class AvValueClientSubscriptionTest {
     }
 
     @Test
-    fun connectionBreak() = avValueTest {
+    fun connectionBreak() = valueTest {
         val time = Instant.parse("2023-01-01T12:00:00Z")
 
         val valueId = AvValueId()
-        val value = avString("Value", time, valueId)
+        val value = AvValue(valueId, time, spec = "Value")
 
         val subscription = AvClientSubscription(uuid4(), condition(valueId), serverTransport, serverBackend.scope)
 

@@ -4,7 +4,7 @@ import `fun`.adaptive.value.operation.AvValueOperation
 import kotlinx.coroutines.channels.Channel
 
 class AvChannelSubscription(
-    uuid: AvValueSubscriptionId,
+    uuid: AvSubscriptionId,
     conditions: List<AvSubscribeCondition>,
     val channel: Channel<AvValueOperation>
 ) : AvSubscription(uuid, conditions) {

@@ -42,12 +42,12 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
         }
     }
 
-    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
+    override suspend fun subscribe(subscriptionId: AvSubscriptionId): List<AvSubscribeCondition> {
         ensureHas(securityOfficer)
         return serviceSubscribe(valueWorker, subscriptionId, AuthMarkers.BASIC_ACCOUNT, AuthMarkers.PRINCIPAL)
     }
 
-    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+    override suspend fun unsubscribe(subscriptionId: AvSubscriptionId) {
         ensureHas(securityOfficer)
         valueWorker.unsubscribe(subscriptionId)
     }

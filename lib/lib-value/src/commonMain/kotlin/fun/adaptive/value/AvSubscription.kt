@@ -7,7 +7,7 @@ import `fun`.adaptive.value.operation.AvoTransaction
 import `fun`.adaptive.value.store.AvValueStore
 
 abstract class AvSubscription(
-    val uuid: AvValueSubscriptionId,
+    val uuid: AvSubscriptionId,
     val conditions: List<AvSubscribeCondition>
 ) {
 

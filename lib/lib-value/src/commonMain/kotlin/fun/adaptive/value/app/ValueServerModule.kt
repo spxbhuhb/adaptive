@@ -19,7 +19,7 @@ class ValueServerModule<WT : ServerWorkspace>(
         AvValueServerService.authCheck = authCheck
 
         + AvValueServerService()
-        + AvValueWorker(domain, persistence)
+        + AvValueWorker(domain, proxy = false, persistence)
     }
 
 }

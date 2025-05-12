@@ -1,12 +1,12 @@
 package `fun`.adaptive.value.ui
 
-import `fun`.adaptive.value.TestSupport.Companion.avValueTest
+import `fun`.adaptive.value.TestSupport.Companion.valueTest
 import kotlin.test.Test
 
 class AvUiTreeTest {
 
     @Test
-    fun basic() = avValueTest {
+    fun basic() = valueTest {
 // FIXME this was a test in `iot`, space is not in the `value` module, so a mock should be made
 //        var tops = emptyList<TreeItem<AvValueId>>()
 //

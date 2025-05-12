@@ -58,7 +58,7 @@ fun pointSummary(
         } else {
             text(point.name) .. noSelect
             text(textualValue) .. alignSelf.endCenter .. semiBoldFont
-            timestamp(point.timestamp) .. noSelect .. textMedium .. alignSelf.endCenter
+            timestamp(point.lastChange) .. noSelect .. textMedium .. alignSelf.endCenter
             status(point.status) .. alignSelf.endCenter
         }
 

@@ -9,7 +9,7 @@ import `fun`.adaptive.supervisor.model.AppSpec
 import `fun`.adaptive.supervisor.model.SupervisorMarkers
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValueSubscriptionId
+import `fun`.adaptive.value.AvSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.item.AvMarker
@@ -19,12 +19,12 @@ class SupervisorAppService : ServiceImpl<SupervisorAppService>(), SupervisorAppA
 
     val valueWorker by worker<AvValueWorker> { it.domain == "general" }
 
-    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
+    override suspend fun subscribe(subscriptionId: AvSubscriptionId): List<AvSubscribeCondition> {
         ensureLoggedIn()
         return serviceSubscribe(valueWorker, subscriptionId, SupervisorMarkers.APPLICATION)
     }
 
-    override suspend fun unsubscribe(id: AvValueSubscriptionId) {
+    override suspend fun unsubscribe(id: AvSubscriptionId) {
         ensureLoggedIn()
         valueWorker.unsubscribe(id)
     }

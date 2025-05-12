@@ -10,7 +10,7 @@ import `fun`.adaptive.value.AvValueWorker
 @Adaptive
 fun valueClientBackend(domain: AvValueDomain) {
 
-    worker { AvValueWorker(domain) }
+    worker { AvValueWorker(domain, proxy = true) }
     service { AvValueClientService() }
 
 }

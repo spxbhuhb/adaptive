@@ -12,6 +12,7 @@ import kotlin.time.Duration.Companion.seconds
 
 open class AvValueWorker(
     val domain: AvValueDomain,
+    val proxy: Boolean,
     val persistence: AbstractValuePersistence = NoPersistence(),
     val trace: Boolean = false
 ) : WorkerImpl<AvValueWorker>() {
@@ -25,7 +26,7 @@ open class AvValueWorker(
         get() = storeOrNull?.isIdle != false
 
     override fun mount() {
-        storeOrNull = AvValueStore(persistence, logger, trace)
+        storeOrNull = AvValueStore(persistence, proxy, logger, trace)
         super.mount()
     }
 
@@ -120,7 +121,7 @@ open class AvValueWorker(
         store.subscribe(subscriptions)
     }
 
-    fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+    fun unsubscribe(subscriptionId: AvSubscriptionId) {
         store.unsubscribe(subscriptionId)
     }
 

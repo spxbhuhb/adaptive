@@ -8,7 +8,7 @@ import `fun`.adaptive.auth.model.basic.BasicSignUp
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValueSubscriptionId
+import `fun`.adaptive.value.AvSubscriptionId
 import `fun`.adaptive.value.local.AvPublisher
 
 @ServiceApi
@@ -23,9 +23,9 @@ interface AuthBasicApi : AvPublisher {
      * Subscribe for principals and accounts. Whenever one of
      * these changes, the change will be sent to the client.
      */
-    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition>
+    override suspend fun subscribe(subscriptionId: AvSubscriptionId): List<AvSubscribeCondition>
 
-    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId)
+    override suspend fun unsubscribe(subscriptionId: AvSubscriptionId)
 
     /**
      * Get the account that belongs to the caller or null if the caller is not logged in.

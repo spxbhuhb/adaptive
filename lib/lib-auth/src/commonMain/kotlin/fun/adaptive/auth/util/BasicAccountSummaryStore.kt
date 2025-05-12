@@ -11,13 +11,13 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.withSpec
-import `fun`.adaptive.value.local.AvAbstractStore
+import `fun`.adaptive.value.local.AvValueSubscriber
 import `fun`.adaptive.value.local.AvPublisher
 
 class BasicAccountSummaryStore(
     publisher: AvPublisher,
     backend: BackendAdapter
-) : AvAbstractStore<List<BasicAccountSummary>>(
+) : AvValueSubscriber<List<BasicAccountSummary>>(
     publisher,
     backend.scope,
     backend.firstImpl<AvValueWorker>()

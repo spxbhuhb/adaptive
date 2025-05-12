@@ -1,6 +1,6 @@
-# Protobuf
+# Protobuf implementation details
 
-## Null Values
+## Null values
 
 Null values are encoded as booleans with `true` value, but the field number is increased by 20000.
 
@@ -18,9 +18,9 @@ message A {
 When decoding, the decoder first checks if there is a record with the increased number, if so returns with `null`.
 Otherwise, checks the record with the original field number (and throws an exception if not found).
 
-## Standalone Values
+## Standalone values
 
-Standalone values (function return values and items of collections) are encoded with field number `1` or field number
+Standalone values (function returns and items of collections) are encoded with field number `1` or field number
 `20001` in case of nullable values.
 
 ## Collections

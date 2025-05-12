@@ -19,7 +19,7 @@ import kotlinx.coroutines.launch
  * closes the connection.
  */
 class AvClientSubscription(
-    uuid: AvValueSubscriptionId,
+    uuid: AvSubscriptionId,
     conditions: List<AvSubscribeCondition>,
     transport: ServiceCallTransport,
     scope: CoroutineScope,

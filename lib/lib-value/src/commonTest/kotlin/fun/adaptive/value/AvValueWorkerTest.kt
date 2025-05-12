@@ -28,8 +28,8 @@ class AvValueWorkerTest {
     @JsName("shouldUpdateValuesWithNewerTimestamp")
     fun `should update values when newer timestamp is received`() = test { worker ->
         val valueId = AvValueId()
-        val oldValue = avString("OldValue", Instant.parse("2023-01-01T12:00:00Z"), valueId)
-        val newValue = avString("NewValue", Instant.parse("2023-01-01T12:01:00Z"), valueId)
+        val oldValue = AvValue(valueId, Instant.parse("2023-01-01T12:00:00Z"), spec = "OldValue")
+        val newValue = AvValue(valueId, revision = 2L, lastChange = Instant.parse("2023-01-01T12:01:00Z"), spec = "NewValue")
 
         worker.queueAdd(oldValue)
         worker.queueUpdate(newValue)
@@ -43,8 +43,8 @@ class AvValueWorkerTest {
     @JsName("shouldNotUpdateValuesWithOlderTimestamp")
     fun `should not update values when older timestamp is received`() = test { worker ->
         val valueId = AvValueId()
-        val oldValue = avString("OldValue", Instant.parse("2023-01-01T12:01:00Z"), valueId)
-        val newValue = avString("NewValue", Instant.parse("2023-01-01T12:00:00Z"), valueId)
+        val oldValue = AvValue(valueId, Instant.parse("2023-01-01T12:01:00Z"), spec = "OldValue")
+        val newValue = AvValue(valueId,  Instant.parse("2023-01-01T12:00:00Z"), spec = "NewValue")
 
         worker.queueAdd(oldValue)
         worker.queueUpdate(newValue)
@@ -58,7 +58,7 @@ class AvValueWorkerTest {
     @JsName("shouldSubscribeAndReceiveInitialValues")
     fun `should subscribe and receive initial values`() = test { worker ->
         val valueId = AvValueId()
-        val initialValue = avString("InitialValue", Instant.parse("2023-01-01T12:00:00Z"), valueId)
+        val initialValue = AvValue(valueId, Instant.parse("2023-01-01T12:00:00Z"), spec = "InitialValue")
         worker.queueAdd(initialValue)
 
         val channel = Channel<AvValueOperation>(1)
@@ -80,7 +80,7 @@ class AvValueWorkerTest {
 
         worker.subscribe(listOf(subscription))
 
-        val newValue = avString("NewValue", Instant.parse("2023-01-01T12:01:00Z"), valueId)
+        val newValue = AvValue(valueId, Instant.parse("2023-01-01T12:01:00Z"), spec = "NewValue")
         worker.queueAdd(newValue)
 
         val received = channel.receive()
@@ -100,7 +100,7 @@ class AvValueWorkerTest {
 
         worker.subscribe(listOf(subscription1, subscription2))
 
-        val newValue = avString("MultiSubscriberValue", Instant.parse("2023-01-01T12:02:00Z"), valueId)
+        val newValue = AvValue(valueId, Instant.parse("2023-01-01T12:02:00Z"), spec = "MultiSubscriberValue")
         worker.queueAdd(newValue)
 
         assertEquals(newValue, (channel1.receive() as AvoAddOrUpdate).value)
@@ -117,7 +117,7 @@ class AvValueWorkerTest {
         worker.subscribe(subscription)
         worker.unsubscribe(subscription.uuid)
 
-        val newValue = avString("AfterUnsubscribe", Instant.parse("2023-01-01T12:03:00Z"), valueId)
+        val newValue = AvValue(valueId, Instant.parse("2023-01-01T12:03:00Z"), spec = "AfterUnsubscribe")
         worker.queueAdd(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
@@ -128,14 +128,11 @@ class AvValueWorkerTest {
     fun addSensor(worker: AvValueWorker, markers: Set<AvMarker>? = null, refs: Map<AvRefLabel, AvValueId>? = null): AvValue<*> {
         val item = AvValue(
             name = "Temp Sensor",
-            type = "sensor",
             uuid = uuid7(),
-            timestamp = Instant.parse("2023-01-01T12:00:00Z"),
-            statusOrNull = null,
+            lastChange = Instant.parse("2023-01-01T12:00:00Z"),
             friendlyId = "1",
             refsOrNull = refs,
             markersOrNull = markers,
-            parentId = null,
             spec = Unit
         )
 
@@ -224,7 +221,7 @@ class AvValueWorkerTest {
 
     fun test(timeout: Duration = 10.seconds, testFun: suspend (worker: AvValueWorker) -> Unit) =
         runTest(timeout = timeout) {
-            val worker = AvValueWorker("general")
+            val worker = AvValueWorker("general", proxy = false)
             worker.logger = getLogger("worker")
             val dispatcher = Dispatchers.Unconfined
             val scope = CoroutineScope(dispatcher)

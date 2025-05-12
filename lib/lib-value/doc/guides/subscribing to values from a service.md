@@ -1,23 +1,9 @@
----
-title: How to Subscribe to Values from a Service
-tags: [ value, service, subscribe ]
-type: conceptual
----
-
-# Summary
-
-This guide shows how to subscribe to values stored in a value store from a service implementation.
-
-# Objective
-
-Demonstrate various ways to subscribe to values from a service.
-
-# Key Concepts
+# Subscribing from a service
 
 Clients use subscriptions to receive updates when values are changed. To subscribe, the client typically
 calls a service function with in turn calls the value worker's `subscribe` function.
 
-The `lib-value` module provides a few variants of `serverSubscribe` to make this easier.
+[lib-value](def://) provides a few variants of `serverSubscribe` to make this easier.
 
 The general pattern is to:
 

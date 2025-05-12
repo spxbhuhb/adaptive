@@ -7,7 +7,7 @@ import `fun`.adaptive.iot.app.IoTValueDomain
 import `fun`.adaptive.iot.device.DeviceMarkers
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.value.AvSubscribeCondition
-import `fun`.adaptive.value.AvValueSubscriptionId
+import `fun`.adaptive.value.AvSubscriptionId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.util.serviceSubscribe
 
@@ -22,7 +22,7 @@ class AioDeviceTreePublishService : AioDeviceTreePublishApi, ServiceImpl<AioDevi
         worker = safeAdapter.firstImpl<AvValueWorker> { it.domain == IoTValueDomain }
     }
 
-    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
+    override suspend fun subscribe(subscriptionId: AvSubscriptionId): List<AvSubscribeCondition> {
         ensureLoggedIn()
 
         return serviceSubscribe(
@@ -34,7 +34,7 @@ class AioDeviceTreePublishService : AioDeviceTreePublishApi, ServiceImpl<AioDevi
         )
     }
 
-    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+    override suspend fun unsubscribe(subscriptionId: AvSubscriptionId) {
         ensureLoggedIn()
 
         worker.unsubscribe(subscriptionId)

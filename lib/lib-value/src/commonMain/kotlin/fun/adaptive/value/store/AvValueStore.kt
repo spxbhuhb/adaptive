@@ -6,7 +6,6 @@ import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.value.persistence.NoPersistence
@@ -16,13 +15,19 @@ import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withTimeout
+import kotlinx.datetime.Clock.System.now
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.measureTime
 
+/**
+ * @property  proxy  When true, this store is a proxy, probably on the client side and
+ *                   should not increase revisions and/or perform authorization checks.
+ */
 open class AvValueStore(
     val persistence: AbstractValuePersistence = NoPersistence(),
+    val proxy : Boolean,
     private val logger: AdaptiveLogger,
     var trace: Boolean = false
 ) {
@@ -33,7 +38,7 @@ open class AvValueStore(
 
     private val values = mutableMapOf<AvValueId, AvValue<*>>()
 
-    private val subscriptions = mutableMapOf<AvValueSubscriptionId, AvSubscription>()
+    private val subscriptions = mutableMapOf<AvSubscriptionId, AvSubscription>()
 
     private val valueIdSubscriptions = mutableMapOf<AvValueId, MutableList<AvSubscription>>()
 
@@ -43,7 +48,7 @@ open class AvValueStore(
 
     @OptIn(ExperimentalCoroutinesApi::class)
     val isIdle: Boolean
-        get() = operations.isEmpty
+        get() = lock.use { operations.isEmpty }
 
     class MarkerSubscriptionEntry(
         val subscription: AvSubscription,
@@ -119,39 +124,38 @@ open class AvValueStore(
 
     internal fun add(operation: AvoAdd, commitSet: MutableSet<AvSubscription>) {
         val value = operation.value
-
-        val original = values.put(value.uuid, value)
+        val original = values[value.uuid]
 
         if (original != null) {
-            original.let { values[it.uuid] = it } // rollback the replacement
             operation.fail("value with id ${value.uuid} already exists")
             return
         }
 
-        persistence.saveValue(value)
-        indexAndNotify(original, value, operation, commitSet)
+        put(original, value, operation, commitSet, 1L)
     }
 
     internal fun update(operation: AvoUpdate, commitSet: MutableSet<AvSubscription>) {
         val value = operation.value
-        val original = values.put(value.uuid, value)
+        val original = values[value.uuid]
 
-        if (original == null || original.timestamp > value.timestamp) {
-            original?.let { values[it.uuid] = it } // rollback the replacement
+        if (original == null) {
             operation.fail("value with id ${value.uuid} does not exists")
             return
         }
 
-        persistence.saveValue(value)
-        indexAndNotify(original, value, operation, commitSet)
+        if (original.lastChange > value.lastChange) {
+            operation.fail("outdated update for ${value.uuid}")
+            return
+        }
+
+
+        put(original, value, operation, commitSet, original.revision + 1L)
     }
 
     internal fun addOrUpdate(operation: AvoAddOrUpdate, commitSet: MutableSet<AvSubscription>) {
         val value = operation.value
-        val original = values.put(value.uuid, value)
-
-        persistence.saveValue(value)
-        indexAndNotify(original, value, operation, commitSet)
+        val original = values[value.uuid]
+        put(original, value, operation, commitSet, original?.revision?.let { it + 1L } ?: 1L)
     }
 
     internal fun transaction(transaction: AvoTransaction, commitSet: MutableSet<AvSubscription>) {
@@ -178,9 +182,23 @@ open class AvValueStore(
         }
     }
 
-    private fun indexAndNotify(original: AvValue<*>?, value: AvValue<*>, operation: AvValueOperation, commitSet: MutableSet<AvSubscription>) {
-        index(original, value, commitSet)
-        notify(value, commitSet)
+    private fun put(
+        original: AvValue<*>?,
+        value: AvValue<*>,
+        operation: AvValueOperation,
+        commitSet: MutableSet<AvSubscription>,
+        revision: Long
+    ) {
+        val new = if (proxy) {
+            value
+        } else {
+            value.copy(revision = revision)
+        }
+
+        values[value.uuid] = new
+        persistence.saveValue(new)
+        index(original, new, commitSet)
+        notify(new, commitSet)
         operation.success()
     }
 
@@ -197,10 +215,9 @@ open class AvValueStore(
     }
 
     fun notifyByMarker(value: AvValue<*>, commitSet: MutableSet<AvSubscription>) {
-        if (value.type == AvRefListType) {
-            notifyByMarker(value.name, value, commitSet)
-        } else {
-            value.markersOrNull?.forEach { marker -> notifyByMarker(marker, value, commitSet) }
+        val markers = value.markersOrNull ?: return
+        for (marker in markers) {
+            notifyByMarker(marker, value, commitSet)
         }
     }
 
@@ -238,16 +255,12 @@ open class AvValueStore(
     // --------------------------------------------------------------------------------
 
     private fun index(original: AvValue<*>?, value: AvValue<*>, commitSet: MutableSet<AvSubscription>) {
-        if (value.type == AvRefListType) {
-            markerIndices.getOrPut(value.name) { mutableSetOf() }.add(value.uuid)
-        } else {
-            index(
-                value,
-                original?.markers ?: emptySet(),
-                value.markers,
-                commitSet
-            )
-        }
+        index(
+            value,
+            original?.markers ?: emptySet(),
+            value.markers,
+            commitSet
+        )
     }
 
     private fun index(
@@ -352,13 +365,13 @@ open class AvValueStore(
         }
     }
 
-    fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
+    fun unsubscribe(subscriptionId: AvSubscriptionId) {
         lock.use {
             unsafeUnsubscribe(subscriptionId)
         }
     }
 
-    private fun unsafeUnsubscribe(subscriptionId: AvValueSubscriptionId) {
+    private fun unsafeUnsubscribe(subscriptionId: AvSubscriptionId) {
         subscriptions.remove(subscriptionId)?.let { subscription ->
 
             for (condition in subscription.conditions) {
@@ -547,12 +560,12 @@ open class AvValueStore(
             val refList = values[refListId]
 
             checkNotNull(refList) { "Value with id $refListId does not exist (referenced by $valueId through $refName)" }
-            check(refList.type == AvRefListType) { "Value with id $refListId is not a ref list" }
 
-            @Suppress("UNCHECKED_CAST") // we check for refList type above
-            val spec = refList.spec as List<AvValueId>
+            val spec = refList.spec
 
-            spec.map {
+            check(spec is AvRefListSpec) { "Value with id $refListId is not a ref list" }
+
+            spec.refs.map {
                 checkNotNull(values[it]) { "Value with id $it does not exist, referring value: $valueId, refName: $refName, refList: $refListId" }
             }
         }

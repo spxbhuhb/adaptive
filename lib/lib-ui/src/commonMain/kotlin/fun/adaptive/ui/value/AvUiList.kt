@@ -9,15 +9,12 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.item.AvRefList
-import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.item.AvMarker
+import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.operation.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
-import kotlin.collections.plusAssign
 
 class AvUiList(
     adapter: AdaptiveAdapter,
@@ -41,8 +38,8 @@ class AvUiList(
     val localWorker = backend.firstImpl<AvValueWorker>()
     val remoteService = getService<AvValueApi>(transport)
 
-    var remoteSubscriptionId: AvValueSubscriptionId? = null
-    var localSubscriptionId: AvValueSubscriptionId? = null
+    var remoteSubscriptionId: AvSubscriptionId? = null
+    var localSubscriptionId: AvSubscriptionId? = null
 
     val updates = Channel<AvValueOperation>(Channel.UNLIMITED)
 
@@ -94,17 +91,16 @@ class AvUiList(
         }
     }
 
-    fun process(value: AvValue2) {
+    fun process(value: AvValue<*>) {
         when (value.uuid) {
             valueId -> processValue(value)
-            listId -> processList(value)
-            else -> valueMap[value.uuid] = value as AvValue<*>
+            listId -> processList(value.withSpec())
+            else -> valueMap[value.uuid] = value
         }
     }
 
-    fun processValue(value: AvValue2) {
-        value as AvValue<*>
-        val listId = value.markers[listMarker]
+    fun processValue(value: AvValue<*>) {
+        val listId = value.refIdOrNull(listMarker)
 
         if (listId != this.listId) {
             this.listId = listId
@@ -113,10 +109,9 @@ class AvUiList(
         }
     }
 
-    fun processList(value: AvValue2) {
-        value as AvRefList
+    fun processList(value: AvValue<AvRefListSpec>) {
         if (value.uuid == listId && list != value.refs) {
-            list = value.refs
+            list = value.spec.refs
             renew()
         }
     }
