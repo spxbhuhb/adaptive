@@ -18,6 +18,7 @@ val noPublishBuilds = listOf(
     "doc-example",
     "doc-main",
     "grove-app",
+    "grove-host",
     "sandbox-app",
     "sandbox-app-echo",
     "site-app",

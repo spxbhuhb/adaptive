@@ -13,6 +13,7 @@ includeBuild("doc/doc-main")
 
 includeBuild("grove/grove-app")
 includeBuild("grove/grove-doc")
+includeBuild("grove/grove-host")
 includeBuild("grove/grove-lib")
 includeBuild("grove/grove-runtime")
 
@@ -33,5 +34,3 @@ includeBuild("sandbox/sandbox-app")
 
 includeBuild("site/site-app")
 includeBuild("site/site-lib-cookbook")
-
-includeBuild("supervisor/supervisor-app")
