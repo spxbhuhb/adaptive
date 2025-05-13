@@ -156,9 +156,8 @@ class AvValue<T>(
 //        return copy(markersOrNull = markers)
 //    }
 
-    override fun toString(): String {
-        return name ?: friendlyId ?: uuid.toString()
-    }
+    val nameLike
+        get() = name ?: friendlyId ?: uuid.toShort()
 
     companion object {
 

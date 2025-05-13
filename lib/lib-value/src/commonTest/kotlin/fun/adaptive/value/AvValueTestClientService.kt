@@ -10,7 +10,10 @@ class AvValueTestClientService : ServiceImpl<AvValueTestClientService>(), AvValu
         adapter !!.firstImpl<AvValueWorker>().queue(operation)
     }
 
-    override suspend fun subscribe(conditions: List<AvSubscribeCondition>): AvSubscriptionId {
+    override suspend fun subscribe(
+        conditions: List<AvSubscribeCondition>,
+        subscriptionId : AvSubscriptionId?
+    ): AvSubscriptionId {
         throw UnsupportedOperationException()
     }
 

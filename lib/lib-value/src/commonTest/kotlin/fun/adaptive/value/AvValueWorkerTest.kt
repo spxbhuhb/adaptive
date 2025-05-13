@@ -13,12 +13,14 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Instant
+import kotlinx.datetime.Clock.System.now
 import kotlin.js.JsName
+import kotlin.math.exp
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -28,37 +30,37 @@ class AvValueWorkerTest {
     @JsName("shouldUpdateValuesWithNewerTimestamp")
     fun `should update values when newer timestamp is received`() = test { worker ->
         val valueId = AvValueId()
-        val oldValue = AvValue(valueId, Instant.parse("2023-01-01T12:00:00Z"), spec = "OldValue")
-        val newValue = AvValue(valueId, revision = 2L, lastChange = Instant.parse("2023-01-01T12:01:00Z"), spec = "NewValue")
+        val oldValue = AvValue(valueId, spec = "OldValue")
+        val newValue = AvValue(valueId, revision = 2L, lastChange = now().plus(1.seconds), spec = "NewValue")
 
         worker.queueAdd(oldValue)
         worker.queueUpdate(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
 
-        assertEquals(newValue, worker.get(valueId))
+        assertEquals(newValue, worker.get<String>(valueId))
     }
 
     @Test
-    @JsName("shouldNotUpdateValuesWithOlderTimestamp")
-    fun `should not update values when older timestamp is received`() = test { worker ->
+    @JsName("shouldNotUpdateValuesWithOlderRevision")
+    fun `should not update values when older revision is received`() = test { worker ->
         val valueId = AvValueId()
-        val oldValue = AvValue(valueId, Instant.parse("2023-01-01T12:01:00Z"), spec = "OldValue")
-        val newValue = AvValue(valueId,  Instant.parse("2023-01-01T12:00:00Z"), spec = "NewValue")
+        val oldValue = AvValue(valueId, spec = "OldValue")
+        val newValue = AvValue(valueId, revision = 0L, spec = "NewValue")
 
         worker.queueAdd(oldValue)
         worker.queueUpdate(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
 
-        assertEquals(oldValue, worker.get(valueId))
+        assertEquals(oldValue, worker.get<String>(valueId))
     }
 
     @Test
     @JsName("shouldSubscribeAndReceiveInitialValues")
     fun `should subscribe and receive initial values`() = test { worker ->
         val valueId = AvValueId()
-        val initialValue = AvValue(valueId, Instant.parse("2023-01-01T12:00:00Z"), spec = "InitialValue")
+        val initialValue = AvValue(valueId, spec = "InitialValue")
         worker.queueAdd(initialValue)
 
         val channel = Channel<AvValueOperation>(1)
@@ -80,7 +82,7 @@ class AvValueWorkerTest {
 
         worker.subscribe(listOf(subscription))
 
-        val newValue = AvValue(valueId, Instant.parse("2023-01-01T12:01:00Z"), spec = "NewValue")
+        val newValue = AvValue(valueId, spec = "NewValue")
         worker.queueAdd(newValue)
 
         val received = channel.receive()
@@ -100,7 +102,7 @@ class AvValueWorkerTest {
 
         worker.subscribe(listOf(subscription1, subscription2))
 
-        val newValue = AvValue(valueId, Instant.parse("2023-01-01T12:02:00Z"), spec = "MultiSubscriberValue")
+        val newValue = AvValue(valueId, spec = "MultiSubscriberValue")
         worker.queueAdd(newValue)
 
         assertEquals(newValue, (channel1.receive() as AvoAddOrUpdate).value)
@@ -117,7 +119,7 @@ class AvValueWorkerTest {
         worker.subscribe(subscription)
         worker.unsubscribe(subscription.uuid)
 
-        val newValue = AvValue(valueId, Instant.parse("2023-01-01T12:03:00Z"), spec = "AfterUnsubscribe")
+        val newValue = AvValue(valueId, spec = "AfterUnsubscribe")
         worker.queueAdd(newValue)
 
         waitFor(1.seconds) { worker.isIdle }
@@ -129,7 +131,6 @@ class AvValueWorkerTest {
         val item = AvValue(
             name = "Temp Sensor",
             uuid = uuid7(),
-            lastChange = Instant.parse("2023-01-01T12:00:00Z"),
             friendlyId = "1",
             refsOrNull = refs,
             markersOrNull = markers,
@@ -147,9 +148,9 @@ class AvValueWorkerTest {
         val marker = "temperature"
         val item = addSensor(worker, setOf(marker))
 
-        val result = worker.queryByMarker(marker)
+        val result = worker.queryByMarker(marker).single()
 
-        assertEquals(listOf(item), result)
+        assertEquals(item, result)
     }
 
     @Test
@@ -170,9 +171,12 @@ class AvValueWorkerTest {
         val item1 = addSensor(worker, setOf(marker))
         val item2 = addSensor(worker, setOf(marker))
 
-        val result = worker.queryByMarker(marker)
+        val result = worker.queryByMarker(marker).sortedBy { it.uuid }
 
-        assertEquals(setOf(item1, item2), result.toSet())
+        val expected = listOf(item1, item2).sortedBy { it.uuid }
+
+        assertEquals(expected[0], result[0])
+        assertEquals(expected[1], result[1])
     }
 
     @Test
@@ -186,7 +190,7 @@ class AvValueWorkerTest {
 
         worker.subscribe(listOf(subscription))
 
-        val newValue = initialItem.copy(markersOrNull = setOf(marker))
+        val newValue = initialItem.copy(revision = 2L, markersOrNull = setOf(marker))
 
         worker.queueUpdate(newValue)
 
@@ -202,7 +206,7 @@ class AvValueWorkerTest {
         val marker = "temperature"
 
         val initialItem = addSensor(worker, markers = setOf(marker))
-        val newValue = initialItem.copy(markersOrNull = null)
+        val newValue = initialItem.copy(revision = 2L, markersOrNull = null)
 
         val channel = Channel<AvValueOperation>(1)
         val subscription = AvChannelSubscription(uuid4(), condition(marker), channel)
@@ -233,4 +237,13 @@ class AvValueWorkerTest {
 
             testFun(worker)
         }
+
+    fun assertEquals(expected: AvValue<*>, actual: AvValue<*>) {
+        assertEquals(expected.uuid, actual.uuid)
+        assertEquals(expected.friendlyId, actual.friendlyId)
+        assertEquals(expected.name, actual.name)
+        assertEquals(expected.refsOrNull, actual.refsOrNull)
+        assertEquals(expected.markersOrNull, actual.markersOrNull)
+        assertEquals(expected.spec, actual.spec)
+    }
 }

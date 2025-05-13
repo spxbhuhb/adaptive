@@ -14,10 +14,13 @@ class AvValueTestServerService : ServiceImpl<AvValueTestServerService>(), AvValu
         worker.queue(operation)
     }
 
-    override suspend fun subscribe(conditions: List<AvSubscribeCondition>): AvSubscriptionId {
+    override suspend fun subscribe(
+        conditions: List<AvSubscribeCondition>,
+        subscriptionId : AvSubscriptionId?
+    ): AvSubscriptionId {
 
         val subscription = AvClientSubscription(
-            uuid4(),
+            subscriptionId ?: uuid4(),
             conditions,
             serviceContext.transport,
             safeAdapter.scope

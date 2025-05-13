@@ -13,7 +13,6 @@ import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.vmNowSecond
-import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.AvValue.Companion.asAvValue
@@ -134,12 +133,12 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
     ) {
 
         // FIXME check credential expiration
-        val principal = valueWorker.item(principalId).asAvValue<PrincipalSpec>()
+        val principal = valueWorker.get<PrincipalSpec>(principalId)
 
         val validCredentials = if (checkCredentials) {
-            val credentialList = valueWorker.markerVal<CredentialList>(principal.uuid, AuthMarkers.CREDENTIAL_LIST)
+            val credentialList = valueWorker.ref<CredentialSet>(principal.uuid, AuthMarkers.CREDENTIAL_LIST)
 
-            val credential = credentialList.credentials.firstOrNull { it.type == credentialType }
+            val credential = credentialList.spec.firstOrNull { it.type == credentialType }
                 ?: throw AuthenticationFail(AuthenticationResult.NoCredential)
 
             BCrypt.checkpw(password, credential.value)
@@ -227,8 +226,8 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
         principalId: AvValueId,
         updateFun: (PrincipalSpec) -> PrincipalSpec
     ) {
-        valueWorker.update<AvValue2>(principalId) { item ->
-            item.asAvValue<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
+        valueWorker.update<PrincipalSpec>(principalId) {
+            it.copy(spec = updateFun(it.spec))
         }
     }
 

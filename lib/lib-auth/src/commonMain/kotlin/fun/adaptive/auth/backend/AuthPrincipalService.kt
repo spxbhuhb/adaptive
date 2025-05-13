@@ -14,7 +14,6 @@ import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.lib.util.error.requirement
 import `fun`.adaptive.utility.UUID.Companion.uuid7
-import `fun`.adaptive.value.AvValue2
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.AvValue
@@ -57,23 +56,21 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         account: AvValue<*>? = null
     ): AvValueId {
 
-        val credentialListId = uuid7<AvValue2>()
+        val credentialListId = uuid7<AvValue<*>>()
 
-        val markersOrNull = mutableMapOf(
-            AuthMarkers.PRINCIPAL to null,
+        val refs = mutableMapOf(
             AuthMarkers.CREDENTIAL_LIST to credentialListId
         )
 
         if (account != null) {
-            markersOrNull[AuthMarkers.ACCOUNT_REF] = account.uuid
+            refs[AuthRefLabels.ACCOUNT_REF] = account.uuid
         }
 
         val principalValue = AvValue(
             name = name,
-            type = AUTH_PRINCIPAL,
-            parentId = null,
-            markersOrNull = markersOrNull,
             friendlyId = name,
+            markersOrNull = setOf(AuthMarkers.PRINCIPAL),
+            refsOrNull = refs,
             spec = spec
         )
 
@@ -87,11 +84,10 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
             )
         }
 
-        val credentialListValue = CredentialList(
+        val credentialListValue = AvValue(
             uuid = credentialListId,
-            parentId = principalValue.uuid,
-            type = AUTH_CREDENTIAL_LIST,
-            credentials = credentials
+            markersOrNull = setOf(AuthMarkers.CREDENTIAL_LIST),
+            spec = credentials
         )
 
         valueWorker.execute {
@@ -102,7 +98,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
             this += credentialListValue
 
             if (account != null) {
-                this += account.copy(parentId = principalValue.uuid)
+                this += account.copy(refsOrNull = mapOf(AuthRefLabels.PRINCIPAL_REF to principalValue.uuid))
             }
         }
 
@@ -135,7 +131,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     override suspend fun getOrNull(principalId: AuthPrincipalId): AuthPrincipal? {
         ensurePrincipalOrHas(principalId, securityOfficer)
 
-        return valueWorker[principalId.cast()]?.asAvValue<PrincipalSpec>()
+        return valueWorker.getOrNull(principalId)?.asAvValue<PrincipalSpec>()
     }
 
     override suspend fun activate(principalId: AuthPrincipalId, credential: Credential, key: Credential) {
@@ -202,16 +198,16 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         principalId: AvValueId,
         updateFun: (MutableSet<Credential>) -> Set<Credential>
     ) {
-        val credentialList = markerVal<CredentialList>(principalId.cast(), AuthMarkers.CREDENTIAL_LIST)
-        this += credentialList.copy(timestamp = now(), credentials = updateFun(credentialList.credentials.toMutableSet()))
+        val credentialList = ref<Set<Credential>>(principalId, AuthMarkers.CREDENTIAL_LIST)
+        this += credentialList.copy(spec = updateFun(credentialList.spec.toMutableSet()))
     }
 
     private suspend fun updateSpec(
         principalId: AvValueId,
         updateFun: (PrincipalSpec) -> PrincipalSpec
     ) {
-        valueWorker.update<AvValue2>(principalId) { item ->
-            item.asAvValue<PrincipalSpec>().let { it.copy(spec = updateFun(it.spec)) }
+        valueWorker.update<PrincipalSpec>(principalId) {
+            it.copy(spec = updateFun(it.spec))
         }
     }
 

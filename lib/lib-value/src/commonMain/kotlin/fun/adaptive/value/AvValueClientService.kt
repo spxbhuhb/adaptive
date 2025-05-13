@@ -18,7 +18,10 @@ class AvValueClientService : ServiceImpl<AvValueClientService>(), AvValueApi {
         worker.queue(operation)
     }
 
-    override suspend fun subscribe(conditions: List<AvSubscribeCondition>): AvSubscriptionId {
+    override suspend fun subscribe(
+        conditions: List<AvSubscribeCondition>,
+        subscriptionId: AvSubscriptionId?
+    ): AvSubscriptionId {
         throw UnsupportedOperationException()
     }
 

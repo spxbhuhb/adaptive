@@ -38,7 +38,7 @@ class AccountSelfController(
         return AccountEditorData(
             principal.uuid,
             account.accountId,
-            principalName = principal.name,
+            principalName = principal.name ?: "",
             name = account.name,
             email = account.email,
             activated = principal.spec.activated,

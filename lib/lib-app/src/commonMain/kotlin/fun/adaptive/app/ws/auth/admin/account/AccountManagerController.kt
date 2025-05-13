@@ -21,7 +21,7 @@ class AccountManagerController(
 
     val authBasic = getService<AuthBasicApi>(transport)
 
-    val accounts = BasicAccountSummaryStore(authBasic, workspace.backend)
+    val accounts = BasicAccountSummaryStore(workspace.backend)
 
     fun save(data: AccountEditorData) {
         remote(Strings.saveSuccess, Strings.saveFail) {

@@ -36,9 +36,16 @@ Name is an optional string that can be changed by the user.
 ## Last change and revision
 
 Time of the last change and the revision of the value is stored in the
-`lastChange` and `revision` properties of [AvValue](class://).
+[lastChange](property://AvValue) and the [revision](property://AvValue)
+properties of [AvValue](class://).
 
 These are managed automatically by the [value store](def://).
+
+The store rejects updates with a revision lower than the revision
+currently in the store.
+
+The store always increased the revision by 1, the revision received
+in the value is used only for sanity-check.
 
 If you want to store domain-specific last change information (the last time
 there was a communication with a device, for example), you have

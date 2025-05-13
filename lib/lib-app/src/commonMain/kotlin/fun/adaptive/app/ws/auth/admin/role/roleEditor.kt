@@ -23,7 +23,7 @@ fun roleEditor(
     save: (AvValue<RoleSpec>) -> Unit
 ) {
 
-    val template = AvValue("", AUTH_ROLE, friendlyId = "", spec = RoleSpec())
+    val template = AvValue(spec = RoleSpec())
     val title = if (role == null) Strings.addRole else Strings.editRole
 
     @Independent

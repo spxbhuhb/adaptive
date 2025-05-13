@@ -47,9 +47,7 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
 
         val roleValue = AvValue(
             name = name,
-            type = AUTH_ROLE,
-            parentId = null,
-            markersOrNull = mutableMapOf(AuthMarkers.ROLE to null),
+            markersOrNull = setOf(AuthMarkers.ROLE),
             friendlyId = name,
             spec = spec
         )
@@ -63,8 +61,8 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
     }
 
     private suspend fun update(roleId: AvValueId, name: String, spec: RoleSpec) {
-        valueWorker.update<AvValue<*>>(roleId) { item ->
-            item.asAvValue<RoleSpec>().copy(name = name, spec = spec)
+        valueWorker.update<RoleSpec>(roleId) {
+            it.copy(name = name, spec = spec)
         }
     }
 

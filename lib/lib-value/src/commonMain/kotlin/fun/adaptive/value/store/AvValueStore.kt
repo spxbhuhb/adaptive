@@ -140,11 +140,13 @@ open class AvValueStore(
 
         if (original == null) {
             operation.fail("value with id ${value.uuid} does not exists")
+            logger.warning("value with id ${value.uuid} does not exists")
             return
         }
 
-        if (original.lastChange > value.lastChange) {
+        if (original.revision > value.revision) {
             operation.fail("outdated update for ${value.uuid}")
+            logger.warning("outdated update for ${value.uuid}")
             return
         }
 
@@ -192,7 +194,7 @@ open class AvValueStore(
         val new = if (proxy) {
             value
         } else {
-            value.copy(revision = revision)
+            value.copy(lastChange = now(), revision = revision)
         }
 
         values[value.uuid] = new
@@ -545,12 +547,12 @@ open class AvValueStore(
             unsafeRefOrNull(unsafeGet(valueId), refLabel)
         }
 
-    fun AvValue<*>.ref(refLabel: AvRefLabel): AvValue<*> =
-        refOrNull(refLabel) ?: throw NoSuchElementException("Reference with label $refLabel not found for value ${this.uuid}.")
+    fun ref(value: AvValue<*>, refLabel: AvRefLabel): AvValue<*> =
+        refOrNull(value, refLabel) ?: throw NoSuchElementException("Reference with label $refLabel not found for value ${value.uuid}.")
 
-    fun AvValue<*>.refOrNull(refLabel: AvRefLabel): AvValue<*>? =
+    fun refOrNull(value: AvValue<*>, refLabel: AvRefLabel): AvValue<*>? =
         lock.use {
-            unsafeRefOrNull(this, refLabel)
+            unsafeRefOrNull(value, refLabel)
         }
 
     fun refList(valueId: AvValueId, refName: AvRefLabel): List<AvValue<*>> {

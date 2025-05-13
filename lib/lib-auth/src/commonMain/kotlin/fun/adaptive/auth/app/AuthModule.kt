@@ -9,7 +9,6 @@ abstract class AuthModule<WT : AbstractWorkspace> : AppModule<WT>() {
 
     override fun wireFormatInit(registry: WireFormatRegistry) = with(registry) {
         + AccessDenied
-        + CredentialList
         + AuthHistoryEntry
         + AuthenticationFail
         + AuthenticationResult

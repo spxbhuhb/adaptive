@@ -196,11 +196,20 @@ class UUID<T> : Comparable<UUID<T>> {
     }
 
     /**
-     * The first 6 character of the UUID as a string.
+     * The first 6 characters of the UUID as a string.
      */
     fun toShort(): String {
         val chars = CharArray(6)
         digits(msbm shr 8, chars, 0, 6)
+        return chars.concatToString()
+    }
+
+    /**
+     * The last 6 characters of the UUID as a string.
+     */
+    fun toShortEnd(): String {
+        val chars = CharArray(6)
+        digits(lsbl and 0xffffff, chars, 0, 6)
         return chars.concatToString()
     }
 

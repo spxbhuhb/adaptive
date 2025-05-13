@@ -123,14 +123,12 @@ open class BackendAdapter(
 
     fun addBackendService(service: BackendService) {
         lock.use {
-            println("$this addService: ${service.serviceImpl !!.serviceName}")
             serviceCache[service.serviceImpl !!.serviceName] = service
         }
     }
 
     fun removeBackendService(serviceName: String) {
         lock.use {
-            println("$this removeService: ${serviceName}")
             serviceCache.remove(serviceName)
         }
     }

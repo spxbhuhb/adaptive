@@ -2,6 +2,7 @@ package `fun`.adaptive.document.ws.browser
 
 import `fun`.adaptive.document.api.DocApi
 import `fun`.adaptive.document.value.DocMarkers
+import `fun`.adaptive.document.value.DocRefLabels
 import `fun`.adaptive.document.ws.DocTreeModel
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
@@ -11,6 +12,7 @@ import `fun`.adaptive.ui.value.AvUiTree
 import `fun`.adaptive.ui.workspace.Workspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.avByMarker
 
 abstract class AbstractDocToolController(
     override val workspace: Workspace
@@ -26,11 +28,10 @@ abstract class AbstractDocToolController(
     )
 
     val valueTreeStore = AvUiTree(
-        service,
         workspace.backend,
         Any::class,
-        DocMarkers.TOP_DOCUMENTS,
-        DocMarkers.SUB_DOCUMENTS
+        DocRefLabels.DOCUMENT_PARENT,
+        avByMarker(DocMarkers.DOCUMENT)
     )
 
     fun start() {

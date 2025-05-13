@@ -126,7 +126,7 @@ class AvSingleSubscriberTest {
         
         // Another update
         val finalSpec = "final"
-        serverWorker.queueUpdate(AvValue(valueId, spec = finalSpec))
+        serverWorker.queueUpdate(AvValue(valueId, revision = 2L, spec = finalSpec))
         
         waitForReal(1.seconds) { subscriber.value?.revision == 3L }
         

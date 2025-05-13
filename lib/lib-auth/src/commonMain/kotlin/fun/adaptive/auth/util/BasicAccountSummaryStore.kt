@@ -1,27 +1,32 @@
 package `fun`.adaptive.auth.util
 
+import `fun`.adaptive.auth.model.AuthMarkers
+import `fun`.adaptive.auth.model.AuthRefLabels
 import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.backend.BackendAdapter
-import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.foundation.unsupported
-import `fun`.adaptive.value.AvValue2
-import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.withSpec
+import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.avByMarker
 import `fun`.adaptive.value.local.AvValueSubscriber
-import `fun`.adaptive.value.local.AvPublisher
 
 class BasicAccountSummaryStore(
-    publisher: AvPublisher,
     backend: BackendAdapter
 ) : AvValueSubscriber<List<BasicAccountSummary>>(
-    publisher,
-    backend.scope,
-    backend.firstImpl<AvValueWorker>()
+    { s, id -> markers.also { s.subscribe(it, id) } },
+    backend,
 ) {
+
+    companion object {
+        val markers = listOf(
+            avByMarker(AuthMarkers.BASIC_ACCOUNT),
+            avByMarker(AuthMarkers.PRINCIPAL)
+        )
+    }
+
     private class Entry(
         val principal: AvValue<PrincipalSpec>?,
         val account: AvValue<BasicAccountSpec>?
@@ -30,9 +35,7 @@ class BasicAccountSummaryStore(
     private val entryMap = mutableMapOf<AvValueId, Entry>()
     private val summaryMap = mutableMapOf<AvValueId, BasicAccountSummary>()
 
-    override fun process(value: AvValue2) {
-        if (value !is AvValue<*>) return
-
+    override fun process(value: AvValue<*>) {
         val principalId: AvValueId
         val original: Entry?
         val new: Entry
@@ -45,7 +48,7 @@ class BasicAccountSummaryStore(
             }
 
             is BasicAccountSpec -> {
-                principalId = value.parentId ?: return
+                principalId = value.refIdOrNull(AuthRefLabels.PRINCIPAL_REF) ?: return
                 original = entryMap[principalId]
                 new = Entry(original?.principal, value.withSpec<BasicAccountSpec>())
             }

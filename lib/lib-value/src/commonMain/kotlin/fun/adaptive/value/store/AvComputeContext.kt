@@ -25,6 +25,13 @@ class AvComputeContext(
     fun getOrNull(valueId: AvValueId?): AvValue<*>? =
         store.unsafeGetOrNull(valueId)
 
+    inline fun <reified T : Any> ref(valueId: AvValueId, refMarker: AvMarker): AvValue<T> =
+        checkNotNull(refOrNull(valueId, refMarker)) { "cannot find ref item for marker $refMarker in item $valueId" }
+            .withSpec<T>()
+
+    fun refOrNull(valueId: AvValueId, refMarker: AvMarker): AvValue<*>? =
+        store.unsafeRefOrNull(valueId, refMarker)
+
     inline fun <reified T : Any> ref(value: AvValue<*>, refMarker: AvMarker): AvValue<T> =
         checkNotNull(refOrNull(value, refMarker)) { "cannot find ref item for marker $refMarker in item ${value.uuid}" }
             .withSpec<T>()

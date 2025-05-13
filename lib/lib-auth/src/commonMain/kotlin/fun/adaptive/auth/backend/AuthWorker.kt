@@ -28,19 +28,13 @@ class AuthWorker : WorkerImpl<AuthWorker>() {
     }
 
     fun getOrCreateSoRole() {
-        val soRole = valueWorker.firstItemOrNull(AuthMarkers.ROLE) { AuthMarkers.SECURITY_OFFICER in it }
+        val soRole = valueWorker.firstItemOrNull(AuthMarkers.ROLE) { AuthMarkers.SECURITY_OFFICER in it.markers }
 
         if (soRole == null) {
             valueWorker.queueAdd(
                 AvValue(
                     name = AuthMarkers.SECURITY_OFFICER,
-                    type = AUTH_ROLE,
-                    parentId = null,
-                    markersOrNull = mutableMapOf(
-                        AuthMarkers.ROLE to null,
-                        AuthMarkers.SECURITY_OFFICER to null
-                    ),
-                    friendlyId = AuthMarkers.SECURITY_OFFICER,
+                    markersOrNull = setOf(AuthMarkers.ROLE, AuthMarkers.SECURITY_OFFICER),
                     spec = RoleSpec()
                 ).also {
                     securityOfficer = it.uuid
@@ -60,15 +54,14 @@ class AuthWorker : WorkerImpl<AuthWorker>() {
         val soPrincipal = valueWorker.firstItemOrNull(AuthMarkers.PRINCIPAL) {
             securityOfficer in ((it.spec as? PrincipalSpec)?.roles ?: emptySet())
         }
-        
+
         if (soPrincipal == null) {
+
             val account = safeAdapter.firstImplOrNull<AuthBasicService>()?.let {
-                AvValue<BasicAccountSpec>(
+                AvValue(
                     name = "Security Officer",
-                    type = AuthMarkers.BASIC_ACCOUNT,
-                    friendlyId = "Security Officer",
-                    spec = BasicAccountSpec(email = "so@localhost"),
-                    markersOrNull = mutableMapOf(AuthMarkers.BASIC_ACCOUNT to null)
+                    markersOrNull = setOf(AuthMarkers.BASIC_ACCOUNT),
+                    spec = BasicAccountSpec(email = "so@localhost")
                 )
             }
 

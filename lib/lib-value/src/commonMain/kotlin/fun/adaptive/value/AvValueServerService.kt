@@ -23,11 +23,14 @@ class AvValueServerService() : ServiceImpl<AvValueServerService>(), AvValueApi {
         throw UnsupportedOperationException()
     }
 
-    override suspend fun subscribe(conditions: List<AvSubscribeCondition>): AvSubscriptionId {
+    override suspend fun subscribe(
+        conditions: List<AvSubscribeCondition>,
+        subscriptionId: AvSubscriptionId?
+    ): AvSubscriptionId {
         authCheck()
 
         val subscription = AvClientSubscription(
-            uuid4(),
+            subscriptionId ?: uuid4(),
             conditions,
             serviceContext.transport,
             safeAdapter.scope

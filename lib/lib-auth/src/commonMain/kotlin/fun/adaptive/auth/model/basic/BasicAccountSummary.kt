@@ -33,8 +33,8 @@ class BasicAccountSummary(
     constructor(principal: AvValue<PrincipalSpec>, account: AvValue<BasicAccountSpec>) : this(
         accountId = account.uuid,
         principalId = principal.uuid,
-        login = principal.name,
-        name = account.name,
+        login = principal.nameLike,
+        name = account.nameLike,
         email = account.spec.email,
         activated = principal.spec.activated,
         locked = principal.spec.locked,

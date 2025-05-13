@@ -13,7 +13,7 @@ data class RoleFilter(
     fun matches(item: AvValue<RoleSpec>): Boolean =
         (
             text.isEmpty()
-                || item.name.contains(text, ignoreCase = true)
+                || item.name?.contains(text, ignoreCase = true) == true
                 || item.spec.context?.contains(text, ignoreCase = true) == true
             )
 }

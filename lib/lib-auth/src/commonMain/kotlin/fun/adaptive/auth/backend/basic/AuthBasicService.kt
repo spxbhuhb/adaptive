@@ -6,8 +6,9 @@ import `fun`.adaptive.auth.app.AuthModule
 import `fun`.adaptive.auth.backend.*
 import `fun`.adaptive.auth.context.*
 import `fun`.adaptive.auth.model.AuthMarkers
+import `fun`.adaptive.auth.model.AuthRefLabels
 import `fun`.adaptive.auth.model.Credential
-import `fun`.adaptive.auth.model.CredentialList
+import `fun`.adaptive.auth.model.CredentialSet
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD
 import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
@@ -36,7 +37,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
         val principals = valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).associateBy { it.uuid }
 
         return accounts.mapNotNull { account ->
-            principals[account.parentId]?.asAvValue<PrincipalSpec>()?.let {
+            principals[account.refIdOrNull(AuthRefLabels.PRINCIPAL_REF)]?.asAvValue<PrincipalSpec>()?.let {
                 BasicAccountSummary(it, account.asAvValue<BasicAccountSpec>())
             }
         }
@@ -57,8 +58,8 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
 
         val principalId = serviceContext.getPrincipalIdOrNull() ?: return null
 
-        val principal = valueWorker.item(principalId).withSpec<PrincipalSpec>()
-        val account = valueWorker.refItem<BasicAccountSpec>(principal, AuthMarkers.ACCOUNT_REF)
+        val principal = valueWorker.get<PrincipalSpec>(principalId)
+        val account = valueWorker.ref<BasicAccountSpec>(principal, AuthRefLabels.ACCOUNT_REF)
 
         return BasicAccountSummary(principal, account)
     }
@@ -69,8 +70,8 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
 
         val accountValue = AvValue(
             name = signUp.name,
-            type = AuthMarkers.BASIC_ACCOUNT,
             friendlyId = signUp.name,
+            markersOrNull = setOf(AuthMarkers.BASIC_ACCOUNT),
             spec = BasicAccountSpec(
                 email = signUp.email
             )
@@ -101,8 +102,8 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
             return add(principalName, credential !!, principalSpec.roles, accountName, accountSpec)
         }
 
-        val originalPrincipal = valueWorker.item(principalId).withSpec<PrincipalSpec>()
-        val originalAccount = valueWorker.refItem<BasicAccountSpec>(principalId, AuthMarkers.ACCOUNT_REF)
+        val originalPrincipal = valueWorker.get<PrincipalSpec>(principalId)
+        val originalAccount = valueWorker.ref<BasicAccountSpec>(principalId, AuthRefLabels.ACCOUNT_REF)
 
         // credential, e-mail and login name change of own account requires the call to supply valid credentials
 
@@ -144,12 +145,12 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
         accountName: String,
         accountSpec: BasicAccountSpec
     ): AvValueId {
+
         val account = AvValue(
             name = accountName,
-            type = AuthMarkers.BASIC_ACCOUNT,
             friendlyId = accountName.split(" ").mapNotNull { it.firstOrNull()?.toString()?.uppercase() }.take(2).joinToString(""),
-            spec = accountSpec,
-            markersOrNull = mutableMapOf(AuthMarkers.BASIC_ACCOUNT to null)
+            markersOrNull = setOf(AuthMarkers.BASIC_ACCOUNT),
+            spec = accountSpec
         )
 
         getPrincipalService(securityOfficer).addPrincipal(
@@ -172,7 +173,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
         accountSpec: BasicAccountSpec
     ) {
         val originalPrincipal = get<PrincipalSpec>(principalId)
-        val originalAccount = ref<BasicAccountSpec>(originalPrincipal, AuthMarkers.ACCOUNT_REF)
+        val originalAccount = ref<BasicAccountSpec>(originalPrincipal, AuthRefLabels.ACCOUNT_REF)
 
         val uniqueName = valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).none {
             it.name == principalName && it.uuid != principalId
@@ -225,13 +226,13 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
     ) {
         if (credential == null) return
 
-        val credentialList = markerVal<CredentialList>(currentPrincipal, AuthMarkers.CREDENTIAL_LIST)
+        val credentialList = ref<CredentialSet>(currentPrincipal, AuthMarkers.CREDENTIAL_LIST)
 
-        val newSet = credentialList.credentials.toMutableSet()
+        val newSet = credentialList.spec.toMutableSet()
         newSet.removeAll { it.type == credential.type }
         newSet.add(credential.hash())
 
-        this += credentialList.copy(timestamp = now(), credentials = newSet)
+        this += credentialList.copy(spec = newSet)
     }
 
 }

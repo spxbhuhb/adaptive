@@ -1,6 +1,7 @@
 package `fun`.adaptive.value
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.value.persistence.AbstractValuePersistence
@@ -26,6 +27,7 @@ open class AvValueWorker(
         get() = storeOrNull?.isIdle != false
 
     override fun mount() {
+        logger = getLogger("AvValueWorker($domain)")
         storeOrNull = AvValueStore(persistence, proxy, logger, trace)
         super.mount()
     }
@@ -135,20 +137,26 @@ open class AvValueWorker(
     fun subscriptionCount(valueId: AvValueId): Int =
         store.subscriptionCount(valueId)
 
-    fun get(valueId: AvValueId): AvValue<*> =
-        store.get(valueId)
+    inline fun <reified SPEC : Any> get(valueId: AvValueId): AvValue<SPEC> =
+        store.get(valueId).withSpec<SPEC>()
 
-    fun getOrNull(valueId: AvValueId): AvValue<*>? =
-        store.getOrNull(valueId)
+    inline fun <reified SPEC : Any> getOrNull(valueId: AvValueId): AvValue<SPEC>? =
+        store.getOrNull(valueId)?.withSpec<SPEC>()
 
-    fun ref(valueId: AvValueId, refLabel: AvRefLabel) =
-        store.ref(valueId, refLabel)
+    inline fun <reified SPEC : Any> ref(valueId: AvValueId, refLabel: AvRefLabel) =
+        store.ref(valueId, refLabel).withSpec<SPEC>()
 
-    fun refOrNull(valueId: AvValueId, refMarker: AvMarker) =
-        store.refOrNull(valueId, refMarker)
+    inline fun <reified SPEC : Any> refOrNull(valueId: AvValueId, refMarker: AvMarker) =
+        store.refOrNull(valueId, refMarker)?.withSpec<SPEC>()
 
-    inline fun <reified T : Any> refList(valueId: AvValueId, refListMarker: AvMarker): List<AvValue<T>> =
-        store.refList(valueId, refListMarker).map { it.withSpec(T::class) }
+    inline fun <reified SPEC : Any> ref(value: AvValue<*>, refLabel: AvRefLabel) =
+        store.ref(value, refLabel).withSpec<SPEC>()
+
+    inline fun <reified SPEC : Any> refOrNull(value: AvValue<*>, refMarker: AvMarker) =
+        store.refOrNull(value, refMarker)?.withSpec<SPEC>()
+
+    inline fun <reified SPEC : Any> refList(valueId: AvValueId, refListMarker: AvMarker): List<AvValue<SPEC>> =
+        store.refList(valueId, refListMarker).map { it.withSpec(SPEC::class) }
 
     fun queryByMarker(marker: AvMarker): List<AvValue<*>> =
         store.queryByMarker(marker)
