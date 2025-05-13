@@ -2,10 +2,10 @@ package `fun`.adaptive.supervisor.api
 
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.supervisor.model.AppSpec
+import `fun`.adaptive.value.AvMarker
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvSubscriptionId
-import `fun`.adaptive.value.item.AvMarker
 
 @ServiceApi
 interface SupervisorAppApi {

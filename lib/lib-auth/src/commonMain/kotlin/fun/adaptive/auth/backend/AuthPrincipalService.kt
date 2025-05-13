@@ -131,7 +131,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     override suspend fun getOrNull(principalId: AuthPrincipalId): AuthPrincipal? {
         ensurePrincipalOrHas(principalId, securityOfficer)
 
-        return valueWorker.getOrNull(principalId)?.asAvValue<PrincipalSpec>()
+        return valueWorker.getOrNull<PrincipalSpec>(principalId)
     }
 
     override suspend fun activate(principalId: AuthPrincipalId, credential: Credential, key: Credential) {

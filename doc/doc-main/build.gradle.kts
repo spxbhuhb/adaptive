@@ -1,1 +1,4 @@
-// intentionally left empty, this file is here so we can call doc-main an Adaptive subproject
+// placeholders to make the overall tasks work
+tasks.register("clean") { group = "build" }
+tasks.register("build") { group = "build" }
+tasks.register("jvmTest") { group = "verification" }

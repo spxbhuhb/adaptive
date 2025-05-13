@@ -158,7 +158,7 @@ class KtorWorker(
     fun Routing.jsAppFiles() {
         staticFiles("/", File(staticResourcesPath)) {
             this.default("index.html")
-            preCompressed(CompressedFileType.GZIP, CompressedFileType.BROTLI)
+            preCompressed(CompressedFileType.BROTLI, CompressedFileType.GZIP)
         }
     }
 

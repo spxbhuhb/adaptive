@@ -8,6 +8,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
+import kotlin.js.JsName
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AvTreeSubscriberTest {
@@ -50,6 +51,7 @@ class AvTreeSubscriberTest {
     )
 
     @Test
+    @JsName("shouldBuildTreeStructureFromValues")
     fun `should build tree structure from values`() = valueTest {
         // Create value IDs
         val rootId = AvValueId()
@@ -113,6 +115,7 @@ class AvTreeSubscriberTest {
     }
 
     @Test
+    @JsName("shouldUpdateExistingTreeItems")
     fun `should update existing tree items`() = valueTest {
         val rootId = AvValueId()
 
@@ -151,6 +154,7 @@ class AvTreeSubscriberTest {
     }
 
     @Test
+    @JsName("shouldHandleNodeRemoval")
     fun `should handle node removal`() = valueTest {
         val rootId = AvValueId()
         val child1Id = AvValueId()

@@ -12,7 +12,7 @@ class AuthWorkerTest {
 
     @Test
     fun checkSecurityOfficerIsCreated() = authTest {
-        val soRole = valueWorker.firstItem(AuthMarkers.ROLE) { AuthMarkers.SECURITY_OFFICER in it }
+        val soRole = valueWorker.firstItem(AuthMarkers.ROLE) { AuthMarkers.SECURITY_OFFICER in it.markers }
         assertEquals(authWorker.securityOfficer, soRole.uuid)
 
         val soPrincipal = valueWorker.firstItemOrNull(AuthMarkers.PRINCIPAL) { it.name == "so" }

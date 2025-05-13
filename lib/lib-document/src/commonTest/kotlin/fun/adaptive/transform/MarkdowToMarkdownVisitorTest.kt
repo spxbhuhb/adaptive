@@ -2,8 +2,8 @@ package `fun`.adaptive.transform
 
 import `fun`.adaptive.markdown.compiler.parseInternal
 import `fun`.adaptive.markdown.compiler.tokenizeInternal
-import `fun`.adaptive.markdown.transform.MarkdownAstDumpVisitor.Companion.dump
 import `fun`.adaptive.markdown.transform.MarkdownToMarkdownVisitor.Companion.toMarkdown
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -14,6 +14,7 @@ class MarkdownToMarkdownVisitorTest {
     }
 
     @Test
+    @JsName("testHeaders")
     fun `test headers`() {
         val inputs = listOf(
             "# Header 1",
@@ -27,6 +28,7 @@ class MarkdownToMarkdownVisitorTest {
     }
 
     @Test
+    @JsName("testInlineFormatting")
     fun `test inline formatting`() {
         val tests = mapOf(
             "**bold text**" to "**bold text**",
@@ -42,6 +44,7 @@ class MarkdownToMarkdownVisitorTest {
     }
 
     @Test
+    @JsName("testLists")
     fun `test lists`() {
         val input = """
             * Item 1
@@ -55,6 +58,7 @@ class MarkdownToMarkdownVisitorTest {
     }
 
     @Test
+    @JsName("testNumberedLists")
     fun `test numbered lists`() {
         val input = """
             1. First item
@@ -76,6 +80,7 @@ class MarkdownToMarkdownVisitorTest {
     }
 
     @Test
+    @JsName("testCodeFence")
     fun `test code fence`() {
         val input = """
             ```kotlin
@@ -89,6 +94,7 @@ class MarkdownToMarkdownVisitorTest {
     }
 
     @Test
+    @JsName("testBlockquotes")
     fun `test blockquotes`() {
         val input = """
             > This is a quote
@@ -102,6 +108,7 @@ class MarkdownToMarkdownVisitorTest {
     }
 
     @Test
+    @JsName("testNestedBlockquotes")
     fun `test nested blockquotes`() {
         val input = """
             > This is a quote
@@ -113,12 +120,14 @@ class MarkdownToMarkdownVisitorTest {
     }
 
     @Test
+    @JsName("testHorizontalRule")
     fun `test horizontal rule`() {
         val input = "---"
         assertEquals(input, input.parseAndRegenerate().trim())
     }
 
     @Test
+    @JsName("testComplexDocument")
     fun `test complex document`() {
         val input = """
             # Main Header
@@ -149,6 +158,7 @@ class MarkdownToMarkdownVisitorTest {
     }
 
     @Test
+    @JsName("testParagraphs")
     fun `test paragraphs`() {
         val input = """
             First paragraph
@@ -171,6 +181,7 @@ class MarkdownToMarkdownVisitorTest {
     }
 
     @Test
+    @JsName("testMixedNestedLists")
     fun `test mixed nested lists`() {
         val input = """
             * Bullet item
@@ -192,6 +203,7 @@ class MarkdownToMarkdownVisitorTest {
     }
 
     @Test
+    @JsName("testReferenceLinks")
     fun `test reference links`() {
         val input = """
             [reference link][ref1]

@@ -10,10 +10,19 @@ class GroveDocCompiler(
 ) {
 
     fun compile() {
+        collect()
+        process()
+    }
+
+    fun collect() {
         val fileCollector = compilation.fileCollector
 
         fileCollector.collectFiles(compilation.inPath)
         fileCollector.reportCollisions()
+    }
+
+    fun process() {
+        val fileCollector = compilation.fileCollector
 
         process(fileCollector.definitions)
         process(fileCollector.guides)

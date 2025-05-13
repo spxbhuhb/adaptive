@@ -1,18 +1,12 @@
 package `fun`.adaptive.supervisor.server
 
 import `fun`.adaptive.auth.context.ensureLoggedIn
-import `fun`.adaptive.auth.model.AUTH_ROLE
 import `fun`.adaptive.auth.model.AuthMarkers
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.supervisor.api.SupervisorAppApi
 import `fun`.adaptive.supervisor.model.AppSpec
 import `fun`.adaptive.supervisor.model.SupervisorMarkers
-import `fun`.adaptive.value.AvSubscribeCondition
-import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.AvSubscriptionId
-import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.item.AvMarker
+import `fun`.adaptive.value.*
 import `fun`.adaptive.value.util.serviceSubscribe
 
 class SupervisorAppService : ServiceImpl<SupervisorAppService>(), SupervisorAppApi {
@@ -39,9 +33,7 @@ class SupervisorAppService : ServiceImpl<SupervisorAppService>(), SupervisorAppA
 
         val roleValue = AvValue(
             name = name,
-            type = AUTH_ROLE,
-            parentId = null,
-            markersOrNull = mutableMapOf(AuthMarkers.ROLE to null),
+            markersOrNull = setOf(AuthMarkers.ROLE),
             friendlyId = name,
             spec = spec
         )

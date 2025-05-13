@@ -450,7 +450,7 @@ open class AvValueStore(
     ) {
         execute(timeout) {
             val value = checkNotNull(values[valueId]) { "Value with id $valueId does not exist" }
-            check(kClass.isInstance(value)) { "Value with id $valueId is not of type ${kClass.simpleName}" }
+            check(kClass.isInstance(value.spec)) { "Value with id $valueId is not of type ${kClass.simpleName}" }
 
             @Suppress("UNCHECKED_CAST")
             this += updateFun(value as AvValue<T>)

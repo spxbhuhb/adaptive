@@ -6,6 +6,7 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.TestSupport.Companion.valueTest
 import `fun`.adaptive.value.avById
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlin.js.JsName
 import kotlin.test.*
 import kotlin.time.Duration.Companion.seconds
 
@@ -13,6 +14,7 @@ import kotlin.time.Duration.Companion.seconds
 class AvListSubscriberTest {
 
     @Test
+    @JsName("shouldCollectAndMaintainListOfMatchingValues")
     fun `should collect and maintain list of matching values`() = valueTest {
         val valueId1 = AvValueId()
         val valueId2 = AvValueId()
@@ -44,6 +46,7 @@ class AvListSubscriberTest {
     }
 
     @Test
+    @JsName("shouldIgnoreValuesWithNonMatchingSpecType")
     fun `should ignore values with non-matching spec type`() = valueTest {
         val valueId = AvValueId()
         val stringSpec = "test"
@@ -71,6 +74,7 @@ class AvListSubscriberTest {
     }
 
     @Test
+    @JsName("shouldApplyTransformFunctionToValues")
     fun `should apply transform function to values`() = valueTest {
         val valueId1 = AvValueId()
         val valueId2 = AvValueId()
@@ -110,6 +114,7 @@ class AvListSubscriberTest {
     }
 
     @Test
+    @JsName("shouldNotifyListenersOnValueUpdates")
     fun `should notify listeners on value updates`() = valueTest {
         val valueId = AvValueId()
         val initialSpec = "initial"
@@ -143,6 +148,7 @@ class AvListSubscriberTest {
     }
 
     @Test
+    @JsName("shouldClearCachedValueOnUpdates")
     fun `should clear cached value on updates`() = valueTest {
         val valueId = AvValueId()
         val initialSpec = "initial"

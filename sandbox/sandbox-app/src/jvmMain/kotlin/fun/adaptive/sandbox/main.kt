@@ -6,7 +6,6 @@ import `fun`.adaptive.auth.app.AuthServerModule
 import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
-import `fun`.adaptive.iot.app.IotServerModule
 import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.lib.util.app.UtilServerModule
 import `fun`.adaptive.utility.ensure
@@ -28,7 +27,6 @@ fun main() {
         module { UtilServerModule() }
         module { ValueServerModule("general",  { ensureLoggedIn() }, FilePersistence(Path("./var/values").ensure(), 2)) }
         module { AuthServerModule() }
-        module { IotServerModule() }
         module { KtorJvmServerModule() }
         module { BasicAppServerModule() }
     }

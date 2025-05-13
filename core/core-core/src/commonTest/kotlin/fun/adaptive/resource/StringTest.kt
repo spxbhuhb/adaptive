@@ -24,8 +24,8 @@ class StringTest {
         val v2 = "456"
 
         val writer = AvsWriter()
-        writer += v1.encodeToByteArray()
-        writer += v2.encodeToByteArray()
+        writer += byteArrayOf(2) + "v1".encodeToByteArray() + v1.encodeToByteArray()
+        writer += byteArrayOf(2) + "v2".encodeToByteArray() + v2.encodeToByteArray()
         val binary = writer.pack()
 
         val reader = TestResourceReader { binary }
@@ -45,8 +45,10 @@ val commonStrings =
         FileResource("strings/common-hu-HU.avs", setOf(LanguageQualifier("hu"), RegionQualifier("HU")))
     )
 
+@Suppress("UnusedReceiverParameter")
 val Strings.v1
-    get() = commonStrings.get(0)
+    get() = commonStrings.get("v1")
 
+@Suppress("UnusedReceiverParameter")
 val Strings.v2
-    get() = commonStrings.get(1)
+    get() = commonStrings.get("v2")

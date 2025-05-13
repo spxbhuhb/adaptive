@@ -7,7 +7,7 @@ val jsTasks = listOf(
 )
 
 val noJsBuilds = listOf(
-    "core-gradle-plugin", "core-kotlin-plugin"
+    "core-gradle-plugin", "core-kotlin-plugin", "doc-main"
 )
 
 val publishTasks = listOf(
@@ -15,6 +15,8 @@ val publishTasks = listOf(
 )
 
 val noPublishBuilds = listOf(
+    "doc-example",
+    "doc-main",
     "grove-app",
     "sandbox-app",
     "sandbox-app-echo",

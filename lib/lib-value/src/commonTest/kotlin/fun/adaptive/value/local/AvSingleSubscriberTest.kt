@@ -7,6 +7,7 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.TestSupport.Companion.valueTest
 import `fun`.adaptive.value.avById
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.seconds
@@ -15,6 +16,7 @@ import kotlin.time.Duration.Companion.seconds
 class AvSingleSubscriberTest {
 
     @Test
+    @JsName("subscriberShouldReceiveAndProcessValueUpdates")
     fun `subscriber should receive and process matching value updates`() = valueTest {
         val valueId = AvValueId()
         val initialSpec = "initial"
@@ -48,6 +50,7 @@ class AvSingleSubscriberTest {
     }
 
     @Test
+    @JsName("subscriberShouldIgnoreValuesWithNonMatchingSpecType")
     fun `subscriber should ignore values with non-matching spec type`() = valueTest {
         val valueId = AvValueId()
         val stringSpec = "test string"
@@ -83,6 +86,7 @@ class AvSingleSubscriberTest {
     }
 
     @Test
+    @JsName("subscriberShouldNotifyListenersOfValueChanges")
     fun `subscriber should notify listeners of value changes`() = valueTest {
         val valueId = AvValueId()
         val initialSpec = "initial"

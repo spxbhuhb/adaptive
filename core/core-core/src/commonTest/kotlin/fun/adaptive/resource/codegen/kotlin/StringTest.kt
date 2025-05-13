@@ -71,19 +71,19 @@ class StringTest {
             )
     
         val Strings.v1
-            get() = commonStrings.get(0)
+            get() = commonStrings.get("v1")
 
         val Strings.v2
-            get() = commonStrings.get(1)
+            get() = commonStrings.get("v2")
     """.trimIndent()
 
     val chunkedSource = """
        import `fun`.adaptive.resource.string.Strings
 
        val Strings.v3
-           get() = commonStrings.get(0)
+           get() = commonStrings.get("v3")
 
        val Strings.v4
-           get() = commonStrings.get(1)
+           get() = commonStrings.get("v4")
     """.trimIndent()
 }

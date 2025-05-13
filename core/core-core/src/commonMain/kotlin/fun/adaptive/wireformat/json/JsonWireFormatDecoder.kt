@@ -18,17 +18,24 @@ import kotlin.enums.EnumEntries
 @OptIn(ExperimentalUnsignedTypes::class)
 class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
 
-    val root: JsonElement
+    val root
+        get() = checkNotNull(rootOrNull) { "the JSON is empty" }
+
+    val rootOrNull: JsonElement?
     val map: MutableMap<String, JsonElement>?
 
     constructor(wireFormat: ByteArray, offset: Int = 0, length: Int = wireFormat.size) {
-        require(wireFormat.isNotEmpty()) { "data to decode is empty" }
-        root = JsonBufferReader(wireFormat, offset, length).read()
-        map = (root as? JsonObject)?.value
+        if (wireFormat.isEmpty()) {
+            rootOrNull = null
+            map = null
+        } else {
+            rootOrNull = JsonBufferReader(wireFormat, offset, length).read()
+            map = (root as? JsonObject)?.value
+        }
     }
 
     constructor(root: JsonElement) {
-        this.root = root
+        rootOrNull = root
         map = (root as? JsonObject)?.value
     }
 
@@ -471,7 +478,7 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     }
 
     override fun <T> asInstance(wireFormat: WireFormat<T>): T =
-        rawInstance(root, wireFormat)
+        rawInstance(checkNotNull(root) { "the JSON is empty" }, wireFormat)
 
     override fun <T> asInstanceOrNull(wireFormat: WireFormat<T>): T? =
         if (root is JsonNull) null else rawInstance(root, wireFormat)

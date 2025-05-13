@@ -14,8 +14,6 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
-import `fun`.adaptive.iot.app.IotWsModule
-import `fun`.adaptive.iot.common.timestamp
 import `fun`.adaptive.lib.util.log.CollectedLogData
 import `fun`.adaptive.lib.util.log.CollectedLogItem
 import `fun`.adaptive.lib.util.log.CollectingLogger
@@ -25,10 +23,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
-import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.input.button.buttonRecipe
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
@@ -59,7 +54,6 @@ fun iotMain() {
         module { ValueClientModule() }
         module { ChartModule() }
         module { DocWsModule() }
-        module { IotWsModule() }
         module { AppMainWsModule() }
         module { SandBoxClientModule() }
     }
@@ -214,7 +208,7 @@ fun collectedLogItem(item: CollectedLogItem) {
         row {
             maxWidth .. gap { 16.dp } .. height { 22.dp }
 
-            timestamp(item.time)
+            text(item.time)
             text(item.logger)
             text(item.level)
             text(item.message)

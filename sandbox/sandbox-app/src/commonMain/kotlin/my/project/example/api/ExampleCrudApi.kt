@@ -2,10 +2,10 @@ package my.project.example.api
 
 import my.project.example.model.ExampleData
 import `fun`.adaptive.service.ServiceApi
+import `fun`.adaptive.value.AvMarker
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvSubscriptionId
-import `fun`.adaptive.value.item.AvMarker
 
 @ServiceApi
 interface ExampleCrudApi {

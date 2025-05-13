@@ -12,8 +12,9 @@ class TestServerApplicationTest {
     @Test
     fun basic() {
         testServer {
-            adhoc { AvValueWorker("test") }
+            adhoc { AvValueWorker("test", proxy = false) }
         }.also {
+            it.start()
             assertEquals("test", it.backend.firstImpl<AvValueWorker>().domain)
         }
     }
@@ -23,6 +24,7 @@ class TestServerApplicationTest {
         testServer {
             module { ValueServerModule("test", { }) }
         }.also {
+            it.start()
             assertEquals("test", it.backend.firstImpl<AvValueWorker>().domain)
         }
     }

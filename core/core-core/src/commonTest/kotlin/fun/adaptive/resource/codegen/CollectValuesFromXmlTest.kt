@@ -26,14 +26,16 @@ class CollectValuesFromXmlTest {
 
             assertTrue(resourceCompilation.reports.isEmpty())
             assertEquals(4, values.size)
+
             assertTrue(values.containsKey("key1"))
             assertTrue(values.containsKey("key2"))
             assertTrue(values.containsKey("key3"))
             assertTrue(values.containsKey("key4"))
-            assertEquals("Value1", values["key1"] !!.value.decodeToString())
-            assertEquals("Value2", values["key2"] !!.value.decodeToString())
-            assertEquals("", values["key3"] !!.value.decodeToString())
-            assertEquals("", values["key4"] !!.value.decodeToString())
+
+            assertEquals("key1" to "Value1", values["key1"] !!.value.decompose())
+            assertEquals("key2" to "Value2", values["key2"] !!.value.decompose())
+            assertEquals("key3" to "", values["key3"] !!.value.decompose())
+            assertEquals("key4" to "", values["key4"] !!.value.decompose())
         }
     }
 
@@ -84,8 +86,22 @@ class CollectValuesFromXmlTest {
             assertTrue(resourceCompilation.reports.isNotEmpty()) // Expect warnings or errors due to duplicate keys
             assertEquals(1, values.size)
             assertTrue(values.containsKey("key1"))
-            assertEquals("Value1", values["key1"] !!.value.decodeToString()) // The first value should be preserved
+
+            val (key, value) = values["key1"] !!.value.decompose()
+
+            assertEquals("key1", key) // The first value should be preserved
+            assertEquals("Value1", value) // The first value should be preserved
         }
+    }
+
+    fun ByteArray.decompose(): Pair<String, String> {
+        val keySize = this[0].toInt()
+        val key = this.decodeToString(1, keySize + 1)
+
+        val valueOffset = keySize + 1
+        val value = this.decodeToString(valueOffset, this.size)
+
+        return key to value
     }
 
     fun test(xmlContent: () -> String): Pair<ResourceCompilation, Map<String, ResourceCompilation.ResourceValue>>? {

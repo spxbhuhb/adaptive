@@ -3,6 +3,7 @@ package `fun`.adaptive.grove.doc
 import `fun`.adaptive.log.LogLevel
 import `fun`.adaptive.utility.*
 import kotlinx.io.files.Path
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -28,12 +29,14 @@ class GroveDocCompilerTest {
     }
 
     @Test
+    @JsName("testCompilationWithEmptyDirectory")
     fun `test compilation with empty directory`() = compilerTest(clearedTestPath()) {
         assertTrue(compilation.notifications.isEmpty())
         assertTrue(outPath.isEmpty())
     }
 
     @Test
+    @JsName("testProcessingSingleMarkdownFile")
     fun `test processing single markdown file`() = compilerTest(clearedTestPath()) {
         val content = "# Test Header\nTest content"
         guidePath.resolve("test.md").write(content)
@@ -53,6 +56,7 @@ class GroveDocCompilerTest {
     }
 
     @Test
+    @JsName("testProcessingMultipleFilesInCollection")
     fun `test processing multiple files in collection`() = compilerTest(clearedTestPath()) {
         val file1 = guidePath.resolve("test1.md")
         val file2 = guidePath.resolve("test2.md")
@@ -67,13 +71,14 @@ class GroveDocCompilerTest {
     }
 
     @Test
+    @JsName("testMarkdownTransformation")
     fun `test markdown transformation`() = compilerTest(clearedTestPath()) {
         val content = """
             # Test Header
             [Some Doc](guide://)
             """.trimIndent()
 
-        val testFile = inPath.resolve("test.md")
+        val testFile = guidePath.resolve("test.md")
         testFile.write(content)
 
         val someDocFile = guidePath.resolve("some doc.md")
@@ -90,15 +95,16 @@ class GroveDocCompilerTest {
     }
 
     @Test
+    @JsName("testFileCollectorReportsCollisions")
     fun `test file collector reports collisions`() = compilerTest(clearedTestPath()) {
         // Create two files with the same normalized name
-        val file1 = inPath.resolve("a").ensure().resolve("test.md")
-        val file2 = inPath.resolve("b").ensure().resolve("TEST.md")
+        val file1 = guidePath.resolve("a").ensure().resolve("test.md")
+        val file2 = guidePath.resolve("b").ensure().resolve("TEST.md")
 
         file1.write("Content 1")
         file2.write("Content 2")
 
-        compiler.compile()
+        compiler.collect()
 
         assertTrue(compiler.compilation.notifications.any {
             it.level == LogLevel.Warning && it.message.contains("collision")
