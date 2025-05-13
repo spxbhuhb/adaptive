@@ -15,7 +15,7 @@ This document describes the documentation system of Adaptive and the documentati
 2. `guides`
 3. `internals`
 
-All file names related to documentation **MUST BE UNIQUE** through the whole repository. 
+All non-class file names related to documentation **SHALL** be unique through the whole repository. 
 This includes file names, class names, everything.
 
 This was a design decision for multiple reasons:
@@ -27,9 +27,10 @@ This was a design decision for multiple reasons:
 ### Example code
 
 1. **DO NOT** put Kotlin code fences into Markdown.
-2. Example code that can be placed inside the module shall be in the `commonTest/example` directory.
-3. Example code that cannot be placed inside the module shall be in the `doc-example`
-4. Reference example code with the `[FileName](example://)` shorthand.
+2. Example code that can be placed inside the module shall be in `commonTest`.
+3. Example code that cannot be placed inside the module shall be in [doc-example](def://)
+4. Reference full file examples with the `[FileName](example://)` shorthand.
+5. Reference function examples with the `[FunctionName](example://file-name)` shorthand
 
 ### Todos
 
@@ -37,19 +38,47 @@ When you do not have time to finish up all the documentation use `[explanation a
 
 ### Shorthands
 
+The documentation **SHALL** use shorthands whenever possible.
+
 Shorthands are Markdown links in the following format:
 
 ```markdown
-[name](type://)
+[name](type://scope)
 ```
 
-1. The documentation **SHALL** use shorthands whenever possible.
-2. The documentation system resolves these shorthands by the `name` and `type`.
-3. There must be nothing after `://`
-4. Name resolution rules:
-   1. Names are case-insensitive and trimmed. 
-   2. If there is a question mark at the end of the name, it is removed.
-   3. If a name cannot be found and seems to be a plural, the non-plural version will be tried (see [PluralHandler](class://))
+Code shorthand is a shorthand that references to a class, function or property.
+
+Examples of code shorthands:
+
+```markdown
+[AvValue](class://)
+[AvTestSubscriberTest](example://)
+[getSiblingIds](fun://AvComputeContext)
+[spec](property://AvValue)
+```
+
+Non-code shorthand is a shorthand that references to a Markdown file or an image.
+
+Examples of non-code shorthands:
+
+```markdown
+[value](def://)
+[what is a value](guide://)
+[markers](guide://what is a value)
+[some image](image://)
+```
+
+The documentation system resolves these shorthands by the `name`, `type` and `scope`.
+
+- When there is no scope:
+  - the name determines the file referenced by the shorthand.
+- When there is a scope:
+  - the scope determines the file referenced by the shorthand.
+
+For non-code shorthands the following heuristics are applied during resolution:
+   1. Names and scopes are converted to lowercase and trimmed. 
+   2. If there is a question mark at the end, it is removed.
+   3. If the target cannot be found and the name or scope seems to be a plural, the non-plural version will be tried (see [PluralHandler](class://))
 
 ### Definitions
 
@@ -67,14 +96,11 @@ When referencing a definition from the documentation, use the following format:
 [Name of the definition](def://)
 ```
 
-The `def://` link tells the documentation building system to look up the definition by name.
-
 ### Guides
 
 1. Put all [guides](def://) into the `guides` directory.
 2. One file per guide.
 3. The name of the file is the name of the guide.
-4. You can use images in guides.
 
 These are longer documents, explaining concepts, use cases, code patterns in detail.
 
@@ -84,13 +110,50 @@ When referencing a guide from the documentation, use the following format:
 [Name of the guide](guide://)
 ```
 
-### Other shorthands
+To reference a section in a guide, use the scoped format:
 
-The documentation system supports these lookups in addition to `def://` and `guide://`:
+```markdown
+[Section](guide://Name of the guide)
+```
 
-- `[AdaptiveFragment](class://)` a link to a class (on GitHub)
-- `[jsonTransformExample](example://)` example code (replaced with a code fence)
-- `[Some picture](image://)` link to the image file
+### Images
+
+1. Put the images to the `guides` directory.
+2. The name of the file is the name of the image.
+
+```markdown
+[Some picture](image://)
+```
+
+### Classes, properties and functions
+
+When referencing a class, a property or a function, use these formats:
+
+```markdown
+[FileName](class://)
+[functionName](fun://FileName)
+[propertyName](property://FileName)
+```
+
+To reference classes that do not have a unique name, pass the fully qualified
+file name in the scope:
+
+```markdown
+[FileName](class://my.example.util)
+[functionName](fun://my.example.util)
+[propertyName](property://my.example.util)
+```
+
+### Inline code
+
+To include inline example code, use one of these formats:
+
+```markdown
+[FileName](example://)
+[functionName](example://FileName)
+```
+
+The example code will be included as a code fence.
 
 ## Compilation
 
@@ -106,15 +169,3 @@ The output directory contains **ALL** the compiled documentation in one director
 > This might change in the future, but I would like to avoid a semantic directory
 > structure because it is a pain to manage. Most probably I'll just use a value
 > store and put all the files into it.
-
-### Shorthand resolution
-
-Shorthands (such as `[guides](def://)`) are resolved by the documentation compiler.
-
-There are two different resolution methods:
-
-1. Close for `def`, `guide` and `image`.
-2. Far for `class`.
-
-The difference is that close resolution simply puts the name of the file into
-the Markdown link, while far resolution points somewhere deep into the project.

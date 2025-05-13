@@ -55,6 +55,9 @@ open class AvValueWorker(
         store.queue(AvoUpdate(value))
     }
 
+    fun queueUpdateAll(vararg values: AvValue<*>) =
+        store.queue(AvoTransaction(values.map { AvoUpdate(it) }))
+
     fun queueAddOrUpdate(value: AvValue<*>) {
         store.queue(AvoAddOrUpdate(value))
     }

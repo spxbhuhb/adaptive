@@ -16,6 +16,19 @@ Reference labels:
 - one for referencing the parent node
 - one for referencing the [value](def://) that contains the list of children references
 
+## Order of children
+
+This coding pattern maintains the order of the children. The [refs](property://AvRefListSpec) property
+of [AvRefListSpec](class://) is list, so order is kept.
+
+[AvComputeContext](class://) offers convenience functions to manage children lists:
+
+- [getSiblingIds](fun://AvComputeContext)
+- [addChild](fun://AvComputeContext)
+- [removeChild](fun://AvComputeContext)
+- [moveUp](fun://AvComputeContext)
+- [moveDown](fun://AvComputeContext)
+
 ## Example
 
 For example, let's assume we want to build a tree of spaces that represent a building.
@@ -23,8 +36,10 @@ For example, let's assume we want to build a tree of spaces that represent a bui
 In this case:
 
 - the `space` marker marks all nodes of the tree
-- the `sub-spaces` marker marks [values](def://) that contain an [AvRefListSpec](class://)
-- the `parentSpaceRef` reference label references the parent node
-- the `subSpaceRefs` reference label points to the [value](def://) which contains an [AvRefListSpec](class://)
+- the `space-children` marker marks [values](def://) that contain an [AvRefListSpec](class://)
+- the `spaceParentRef` reference label references the parent node
+- the `spaceChildrenRef` reference label points to the [value](def://) which contains an [AvRefListSpec](class://)
 
-[Value Tree Test](example://)
+This test case uses different markers and reference labels, but the concept is the same.
+
+- [AvTreeSubscriberTest](example://)

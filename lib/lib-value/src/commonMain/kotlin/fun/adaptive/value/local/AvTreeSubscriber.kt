@@ -4,6 +4,7 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue.Companion.withSpec
+import `fun`.adaptive.value.local.AvListSubscriber
 import kotlin.reflect.KClass
 
 /**
@@ -14,6 +15,14 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
     backend: BackendAdapter,
     val specClass: KClass<SPEC>,
 ) : AvValueSubscriber<List<TREE_ITEM>>(subscribeFun, backend) {
+
+    constructor(
+        backend: BackendAdapter,
+        specClass: KClass<SPEC>,
+        vararg conditions: AvSubscribeCondition
+    ) : this(
+        { service, id -> conditions.toList().also { service.subscribe(it) } }, backend, specClass
+    )
 
     abstract val parentRefLabel: AvMarker
 
@@ -73,12 +82,14 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
         refresh()
         childRefresh.clear()
         topRefresh = false
+        notifyListeners()
     }
 
     override fun process(value: AvValue<*>) {
-        when (value.spec) {
-            is AvRefListSpec -> processChildList(value, value.spec)
-            is AvValue<*> -> processNode(value.withSpec(specClass))
+        if (value.spec is AvRefListSpec) {
+            processChildList(value, value.spec)
+        } else {
+            processNode(value.withSpec(specClass))
         }
     }
 

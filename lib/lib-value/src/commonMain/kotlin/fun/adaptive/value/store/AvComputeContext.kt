@@ -2,6 +2,8 @@ package `fun`.adaptive.value.store
 
 import `fun`.adaptive.utility.p04
 import `fun`.adaptive.value.AvMarker
+import `fun`.adaptive.value.AvRefLabel
+import `fun`.adaptive.value.AvRefListSpec
 import `fun`.adaptive.value.AvSubscription
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.withSpec
@@ -47,22 +49,26 @@ class AvComputeContext(
     @Suppress("unused") // used for debugging
     fun dump(): String = store.dump()
 
-//    fun getContainingList(
-//        childId: AvValueId,
-//        childListMarker: AvMarker, topListMarker: AvMarker
-//    ): AvRefList? {
-//        val parentId = store.unsafeItem(childId).parentId
-//
-//        val original: AvRefList?
-//
-//        if (parentId == null) {
-//            original = queryByMarker(topListMarker).firstOrNull() as? AvRefList
-//        } else {
-//            original = markerVal(parentId, childListMarker)
-//        }
-//
-//        return original
-//    }
+    fun getSiblingIds(
+        childId: AvValueId,
+        parentRefLabel : AvRefLabel,
+        childListMarker: AvMarker,
+        topListMarker: AvMarker? = null
+    ): List<AvValueId> {
+        val parentId = store.unsafeGet(childId).refIdOrNull(parentRefLabel)
+
+        val listValue: AvValue<*>?
+
+        if (parentId == null) {
+            if (topListMarker == null) return emptyList()
+            listValue = queryByMarker(topListMarker).firstOrNull()
+        } else {
+            listValue = store.unsafeRefOrNull(parentId, childListMarker)
+        }
+
+        return listValue?.spec?.let { (it as AvRefListSpec).refs } ?: emptyList()
+    }
+
 //
 //    fun addTopList(
 //        spaceId: AvValueId,
