@@ -1,4 +1,4 @@
-package `fun`.adaptive.sandbox.app.echo
+package `fun`.adaptive.sandbox.app.echo.api
 
 import `fun`.adaptive.service.ServiceApi
 

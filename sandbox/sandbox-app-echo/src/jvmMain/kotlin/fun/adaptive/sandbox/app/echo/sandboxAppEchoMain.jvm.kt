@@ -6,6 +6,7 @@ import `fun`.adaptive.auth.app.NoAuthServerModule
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.ktor.KtorJvmServerModule
+import `fun`.adaptive.sandbox.app.echo.app.EchoServerModule
 
 fun main() {
 

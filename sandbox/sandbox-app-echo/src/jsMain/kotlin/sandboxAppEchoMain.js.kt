@@ -5,10 +5,11 @@
 import `fun`.adaptive.app.BasicBrowserClientApplication.Companion.basicBrowserClient
 import `fun`.adaptive.app.client.basic.BasicAppClientModule
 import `fun`.adaptive.auth.app.NoAuthClientModule
+import `fun`.adaptive.sandbox.app.echo.app.EchoClientModule
 
 fun main() {
     basicBrowserClient {
         module { NoAuthClientModule() }
-        module { BasicAppClientModule() }
+        module { EchoClientModule() }
     }
 }
