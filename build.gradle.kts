@@ -7,7 +7,7 @@ val jsTasks = listOf(
 )
 
 val noJsBuilds = listOf(
-    "core-gradle-plugin", "core-kotlin-plugin", "iot-cli"
+    "core-gradle-plugin", "core-kotlin-plugin"
 )
 
 val publishTasks = listOf(
@@ -16,8 +16,6 @@ val publishTasks = listOf(
 
 val noPublishBuilds = listOf(
     "grove-app",
-    "iot-app",
-    "iot-cli",
     "sandbox-app",
     "sandbox-app-echo",
     "site-app",
@@ -61,8 +59,6 @@ shorthand("sandbox-app", "jsBrowserDevelopmentRun", "sandbox-js")
 shorthand("sandbox-app", "jvmRun", "sandbox-jvm")
 shorthand("site-app", "jsBrowserDevelopmentRun", "site-js")
 shorthand("site-app", "jvmRun", "site-jvm")
-shorthand("iot-app", "jsBrowserDevelopmentRun", "iot-js")
-shorthand("iot-app", "jvmRun", "iot-jvm")
 
 // If you add a shorthand, and it does not start the jvm/js double-check the project
 // name, typically that's what's wrong.

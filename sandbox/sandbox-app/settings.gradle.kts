@@ -24,8 +24,6 @@ includeBuild("../../core/core-ui")
 includeBuild("../../grove/grove-lib")
 includeBuild("../../grove/grove-runtime")
 
-includeBuild("../../iot/iot-lib-core")
-
 includeBuild("../../lib/lib-app")
 includeBuild("../../lib/lib-ktor")
 includeBuild("../../lib/lib-auth")

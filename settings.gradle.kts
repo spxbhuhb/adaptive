@@ -28,14 +28,6 @@ includeBuild("lib/lib-ui")
 includeBuild("lib/lib-util")
 includeBuild("lib/lib-value")
 
-includeBuild("iot/iot-app")
-includeBuild("iot/iot-cli")
-includeBuild("iot/iot-lib-core")
-includeBuild("iot/iot-lib-driver")
-includeBuild("iot/iot-lib-spxb")
-includeBuild("iot/iot-lib-sim")
-includeBuild("iot/iot-lib-zigbee")
-
 includeBuild("sandbox/sandbox-app-echo")
 includeBuild("sandbox/sandbox-app")
 

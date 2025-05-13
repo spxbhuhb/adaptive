@@ -1,8 +1,0 @@
-<!--
-  ~ Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
-  -->
-
-<resources>
-    <string name="aio_driver_sim">Szimulált hálózat</string>
-    <string name="aio_sim_driver_description">Szimulált hálózat teszteléshez, próbálkozáshoz.</string>
-</resources>
