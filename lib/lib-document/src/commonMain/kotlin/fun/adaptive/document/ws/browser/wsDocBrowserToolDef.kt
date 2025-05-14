@@ -9,13 +9,13 @@ import `fun`.adaptive.ui.generated.resources.collapseAll
 import `fun`.adaptive.ui.generated.resources.expandAll
 import `fun`.adaptive.ui.generated.resources.unfold_less
 import `fun`.adaptive.ui.generated.resources.unfold_more
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPaneAction
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-fun Workspace.wsDocBrowserToolDef(module: DocWsModule<*>) {
+fun MultiPaneWorkspace.wsDocBrowserToolDef(module: DocWsModule<*>) {
 
     val config = DocBrowserConfig(
         Strings.documentation,

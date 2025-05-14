@@ -4,14 +4,14 @@ import `fun`.adaptive.lib_app.generated.resources.devTools
 import `fun`.adaptive.lib_app.generated.resources.pest_control
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
 
-fun Workspace.wsAppInspectToolDef(module: AppInspectWsModule<*>) {
+fun MultiPaneWorkspace.wsAppInspectToolDef(module: AppInspectWsModule<*>) {
 
     + WsPane(
         UUID(),

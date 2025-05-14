@@ -5,7 +5,6 @@ import `fun`.adaptive.app.client.basic.BasicAppClientModule
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.ClientWorkspace
-import `fun`.adaptive.ui.workspace.Workspace
 
 open class BasicBrowserClientApplication(
     vararg modules: AppModule<ClientWorkspace>

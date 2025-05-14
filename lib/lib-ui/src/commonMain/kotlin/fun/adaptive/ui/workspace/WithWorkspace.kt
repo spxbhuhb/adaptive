@@ -5,7 +5,7 @@ import `fun`.adaptive.ui.snackbar.successNotification
 
 interface WithWorkspace {
 
-    val workspace: Workspace
+    val workspace: MultiPaneWorkspace
 
     fun io(suspendFun: suspend () -> Unit) = workspace.io(suspendFun)
 

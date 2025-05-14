@@ -5,11 +5,11 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.ui.misc.todo
-import `fun`.adaptive.ui.workspace.Workspace
 
 @Adaptive
-fun basicClientFrontendMain(application: ClientApplication<Workspace>): AdaptiveFragment {
+fun basicClientFrontendMain(application: ClientApplication<ClientWorkspace>): AdaptiveFragment {
 
     localContext(application.workspace) {
         todo("override the app frontend fragment key")

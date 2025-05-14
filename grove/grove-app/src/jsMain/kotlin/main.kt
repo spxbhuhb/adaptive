@@ -16,8 +16,7 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.wsFull
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -61,7 +60,7 @@ fun main() {
     }
 }
 
-private fun buildWorkspace(): Workspace {
+private fun buildWorkspace(): MultiPaneWorkspace {
     TODO()
 //    val workspace = Workspace()
 //

@@ -21,7 +21,7 @@ import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
-import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.workspace.model.WsPane
 

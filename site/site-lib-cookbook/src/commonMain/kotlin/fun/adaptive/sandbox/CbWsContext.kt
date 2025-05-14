@@ -1,11 +1,11 @@
 package `fun`.adaptive.sandbox
 
 import `fun`.adaptive.foundation.value.storeFor
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.model.WsContext
 
 class CbWsContext(
-    override val workspace: Workspace
+    override val workspace: MultiPaneWorkspace
 ) : WsContext {
 
     val activeRecipeKey = storeFor<String?> { null }

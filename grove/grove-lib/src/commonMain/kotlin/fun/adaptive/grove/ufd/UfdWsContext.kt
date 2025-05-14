@@ -10,11 +10,11 @@ import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.model.WsContext
 
 class UfdWsContext(
-    override val workspace: Workspace
+    override val workspace: MultiPaneWorkspace
 ) : WsContext {
 
     val palette = storeFor {

@@ -3,7 +3,7 @@ package `fun`.adaptive.grove.apm
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.grove.generated.resources.folder
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
@@ -13,7 +13,7 @@ fun AdaptiveAdapter.groveApmCommon() {
     fragmentFactory += arrayOf(ApmPaneFactory)
 }
 
-fun Workspace.groveApmCommon() {
+fun MultiPaneWorkspace.groveApmCommon() {
 
     contexts += ApmWsContext(this)
 

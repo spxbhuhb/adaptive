@@ -4,12 +4,12 @@ import my.project.example.app.ExampleWsModule
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.generated.resources.settings
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-fun Workspace.wsExampleSettingsDef(
+fun MultiPaneWorkspace.wsExampleSettingsDef(
     module: ExampleWsModule<*>
 ) {
     addContentPaneBuilder(module.EXAMPLE_SETTINGS_KEY) {

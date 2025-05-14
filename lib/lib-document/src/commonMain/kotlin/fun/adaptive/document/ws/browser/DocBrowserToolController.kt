@@ -4,11 +4,11 @@ import `fun`.adaptive.document.ws.DocTreeModel
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.value.AvValueId
 
 class DocBrowserToolController(
-    workspace: Workspace,
+    workspace: MultiPaneWorkspace,
     val config: DocBrowserConfig
 ) : AbstractDocToolController(workspace) {
 

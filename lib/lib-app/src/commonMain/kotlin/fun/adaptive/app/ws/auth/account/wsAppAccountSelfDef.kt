@@ -6,13 +6,13 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.generated.resources.account
 import `fun`.adaptive.ui.generated.resources.account_circle
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.WsSideBarAction
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-fun Workspace.wsAppAccountSelfDef(
+fun MultiPaneWorkspace.wsAppAccountSelfDef(
     module: AppAuthWsModule<*>
 ) {
 

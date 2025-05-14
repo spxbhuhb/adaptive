@@ -6,11 +6,11 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.snackbar.snackContainer
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.wsFull
 
 @Adaptive
-fun wsAppFrontendMain(application: ClientApplication<Workspace>): AdaptiveFragment {
+fun wsAppFrontendMain(application: ClientApplication<MultiPaneWorkspace>): AdaptiveFragment {
 
     localContext(application.workspace) {
         wsFull(application.workspace)

@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 
 @Adaptive
-fun wsFull(workspace: Workspace) {
+fun wsFull(workspace: MultiPaneWorkspace) {
     val isFullScreen = valueFrom { workspace.isFullScreen }
 
     grid {
@@ -41,7 +41,7 @@ fun wsFull(workspace: Workspace) {
 }
 
 @Adaptive
-fun wsMain(workspace: Workspace) {
+fun wsMain(workspace: MultiPaneWorkspace) {
     val config = valueFrom { workspace.mainSplit }
 
     splitPane(
@@ -53,7 +53,7 @@ fun wsMain(workspace: Workspace) {
 }
 
 @Adaptive
-private fun wsTop(workspace: Workspace) {
+private fun wsTop(workspace: MultiPaneWorkspace) {
     val config = valueFrom { workspace.topSplit }
 
     splitPane(
@@ -65,7 +65,7 @@ private fun wsTop(workspace: Workspace) {
 }
 
 @Adaptive
-private fun wsLeft(workspace: Workspace) {
+private fun wsLeft(workspace: MultiPaneWorkspace) {
     val config = valueFrom { workspace.leftSplit }
 
     splitPane(
@@ -77,7 +77,7 @@ private fun wsLeft(workspace: Workspace) {
 }
 
 @Adaptive
-private fun wsCenterRight(workspace: Workspace) {
+private fun wsCenterRight(workspace: MultiPaneWorkspace) {
     val config = valueFrom { workspace.centerRightSplit }
 
     splitPane(
@@ -89,7 +89,7 @@ private fun wsCenterRight(workspace: Workspace) {
 }
 
 @Adaptive
-private fun wsRight(workspace: Workspace) {
+private fun wsRight(workspace: MultiPaneWorkspace) {
     val config = valueFrom { workspace.rightSplit }
 
     splitPane(
@@ -101,7 +101,7 @@ private fun wsRight(workspace: Workspace) {
 }
 
 @Adaptive
-private fun wsBottom(workspace: Workspace) {
+private fun wsBottom(workspace: MultiPaneWorkspace) {
     val config = valueFrom { workspace.bottomSplit }
 
     splitPane(
@@ -113,7 +113,7 @@ private fun wsBottom(workspace: Workspace) {
 }
 
 @Adaptive
-private fun wsPane(workspace: Workspace, position: WsPanePosition): AdaptiveFragment {
+private fun wsPane(workspace: MultiPaneWorkspace, position: WsPanePosition): AdaptiveFragment {
 
     val paneUuid = valueFrom {
         when (position) {
@@ -172,7 +172,7 @@ private fun wsPaneContent(pane: WsPane<*, *>) {
 @Adaptive
 fun wsSideBarIcons(
     left: Boolean,
-    workspace: Workspace
+    workspace: MultiPaneWorkspace
 ) {
 
     val theme = workspace.theme
@@ -208,7 +208,7 @@ fun wsSideBarIcons(
 @Adaptive
 private fun wsSideBarIcon(
     action: AbstractSideBarAction,
-    workspace: Workspace
+    workspace: MultiPaneWorkspace
 ) {
 
     val hover = hover()

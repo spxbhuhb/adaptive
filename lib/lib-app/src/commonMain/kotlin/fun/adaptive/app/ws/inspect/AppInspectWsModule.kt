@@ -3,9 +3,9 @@ package `fun`.adaptive.app.ws.inspect
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 
-class AppInspectWsModule<WT : Workspace> : AppModule<WT>() {
+class AppInspectWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
 
     val INSPECT_TOOL_KEY: FragmentKey
         get() = "app:ws:inspect:tool"

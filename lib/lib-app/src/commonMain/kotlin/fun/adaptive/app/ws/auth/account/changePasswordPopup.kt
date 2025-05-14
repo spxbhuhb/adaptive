@@ -22,7 +22,7 @@ import `fun`.adaptive.ui.generated.resources.saveSuccess
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.snackbar.successNotification
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.value.AvValueId
 import kotlinx.datetime.Clock.System.now
 
@@ -50,7 +50,7 @@ fun changePasswordPopup(
     val form = adatFormBackend(template) {
         expectEquals(it::newPassword, it::confirmPassword, true)
     }
-    val workspace = fragment().firstContext<Workspace>()
+    val workspace = fragment().firstContext<MultiPaneWorkspace>()
 
     column {
         gap { 16.dp }

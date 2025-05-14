@@ -4,12 +4,12 @@ import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.ui.tab.TabContainer
 import `fun`.adaptive.ui.tab.TabPane
 import `fun`.adaptive.ui.tab.TabPaneAction
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.utility.UUID
 
 class WsContentPaneGroup(
     val uuid: UUID<WsContentPaneGroup>,
-    val workspace: Workspace,
+    val workspace: MultiPaneWorkspace,
     firstPane: WsPane<*, *>
 ) {
     /**

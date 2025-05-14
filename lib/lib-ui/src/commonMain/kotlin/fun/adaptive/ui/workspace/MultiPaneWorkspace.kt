@@ -30,7 +30,7 @@ import `fun`.adaptive.utility.firstInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-open class Workspace(
+open class MultiPaneWorkspace(
     backend: BackendAdapter,
     scope: CoroutineScope = backend.scope,
     transport: ServiceCallTransport = backend.transport
@@ -38,7 +38,7 @@ open class Workspace(
 
     companion object {
         inline fun <reified T> AdaptiveFragment.wsContext() =
-            firstContext<Workspace>().contexts.firstInstance<T>()
+            firstContext<MultiPaneWorkspace>().contexts.firstInstance<T>()
 
         const val WS_CENTER_PANE = "lib:ws:center"
         const val WSPANE_EMPTY = "lib:ws:nocontent"

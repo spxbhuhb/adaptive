@@ -1,12 +1,12 @@
 package `fun`.adaptive.ui.workspace.model
 
 import `fun`.adaptive.model.NamedItem
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import kotlinx.coroutines.launch
 
 interface WsContext {
 
-    val workspace: Workspace
+    val workspace: MultiPaneWorkspace
 
     fun pane(key: String) =
         workspace.toolPanes.first { it.key == key }

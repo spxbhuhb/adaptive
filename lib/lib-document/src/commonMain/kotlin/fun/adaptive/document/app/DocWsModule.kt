@@ -10,10 +10,10 @@ import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.generated.resources.menu_book
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import kotlin.collections.plusAssign
 
-class DocWsModule<WT : Workspace> : AppModule<WT>() {
+class DocWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
 
     val WSIT_DOC_ITEM: NamedItemType
         get() = "doc:document"

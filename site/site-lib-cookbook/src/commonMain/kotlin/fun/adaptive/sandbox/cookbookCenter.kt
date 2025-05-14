@@ -9,7 +9,7 @@ import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive

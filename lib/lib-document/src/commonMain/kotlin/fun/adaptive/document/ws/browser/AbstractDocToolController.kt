@@ -9,13 +9,13 @@ import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewModel
 import `fun`.adaptive.ui.value.AvUiTree
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.avByMarker
 
 abstract class AbstractDocToolController(
-    override val workspace: Workspace
+    override val workspace: MultiPaneWorkspace
 ) : WsPaneController<Unit>() {
 
     val service = getService<DocApi>(workspace.transport)

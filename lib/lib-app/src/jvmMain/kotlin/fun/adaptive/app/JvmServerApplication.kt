@@ -12,7 +12,6 @@ import `fun`.adaptive.runtime.ApplicationNodeType
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.runtime.AbstractServerApplication
 import `fun`.adaptive.runtime.ServerWorkspace
-import `fun`.adaptive.ui.workspace.Workspace
 import kotlinx.coroutines.runBlocking
 
 class JvmServerApplication(

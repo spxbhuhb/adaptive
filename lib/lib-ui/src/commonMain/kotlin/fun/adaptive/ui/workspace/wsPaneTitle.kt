@@ -23,7 +23,7 @@ fun wsPaneTitle(
     theme: WorkspaceTheme
 ) {
 
-    val workspace = fragment().findContext<Workspace>() !!
+    val workspace = fragment().findContext<MultiPaneWorkspace>() !!
     val actionContext = valueFrom { InputContext() }
 
     row {

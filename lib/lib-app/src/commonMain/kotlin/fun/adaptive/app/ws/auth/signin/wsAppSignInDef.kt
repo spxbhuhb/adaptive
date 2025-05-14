@@ -8,7 +8,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.ui.generated.resources.account_circle
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
 import `fun`.adaptive.ui.workspace.model.SingularWsItem
 import `fun`.adaptive.ui.workspace.model.WsPane
@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 
-fun Workspace.wsAppSignInDef(
+fun MultiPaneWorkspace.wsAppSignInDef(
     application: AbstractApplication<*>,
     module : AppAuthWsModule<*>,
     item : SingularWsItem

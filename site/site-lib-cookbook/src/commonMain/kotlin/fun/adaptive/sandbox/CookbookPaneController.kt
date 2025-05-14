@@ -5,10 +5,10 @@ import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
 import `fun`.adaptive.model.NamedItem
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 
 internal class CookbookPaneController(
-    override val workspace: Workspace,
+    override val workspace: MultiPaneWorkspace,
     val context: CbWsContext,
 ) : WsPaneController<NamedItem>() {
 

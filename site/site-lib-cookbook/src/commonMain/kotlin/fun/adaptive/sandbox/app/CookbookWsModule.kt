@@ -6,13 +6,13 @@ import `fun`.adaptive.cookbook.generated.resources.flatware
 import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.WorkspaceRecipePaneFragmentFactory
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-class CookbookWsModule<WT : Workspace> : CookbookModule<WT>() {
+class CookbookWsModule<WT : MultiPaneWorkspace> : CookbookModule<WT>() {
 
     override fun frontendAdapterInit(adapter : AdaptiveAdapter)= with(adapter) {
         + CookbookFragmentFactory

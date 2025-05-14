@@ -3,9 +3,9 @@ package `fun`.adaptive.site
 import `fun`.adaptive.app.ws.wsAppMain
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 
-class SiteWsModule<WT : Workspace>() : AppModule<WT>() {
+class SiteWsModule<WT : MultiPaneWorkspace>() : AppModule<WT>() {
 
     override fun resourceInit() {
         //application.stringStores += commonMainStringsStringStore0

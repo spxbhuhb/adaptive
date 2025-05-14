@@ -6,7 +6,7 @@ import `fun`.adaptive.grove.ufd.logic.UfdWsContentController
 import `fun`.adaptive.grove.ufd.model.UfdWsContentPaneData
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
@@ -16,7 +16,7 @@ fun AdaptiveAdapter.groveUfdCommon() {
     fragmentFactory += arrayOf(UfdPaneFactory)
 }
 
-fun Workspace.groveUfdCommon() {
+fun MultiPaneWorkspace.groveUfdCommon() {
     contexts += UfdWsContext(this)
 
     toolPanes += WsPane(

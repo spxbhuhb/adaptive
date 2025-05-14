@@ -7,12 +7,12 @@ import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.model.SingularWsItem
 import `fun`.adaptive.utility.firstInstance
 
 val AdaptiveFragment.wsApplication
-    get() = this.firstContext<ClientApplication<Workspace>>()
+    get() = this.firstContext<ClientApplication<MultiPaneWorkspace>>()
 
 fun AdaptiveFragment.wsAddContent(item: NamedItem, modifiers: Set<EventModifier> = emptySet()) {
     wsApplication.workspace.addContent(item, modifiers)
@@ -21,6 +21,6 @@ fun AdaptiveFragment.wsAddContent(item: NamedItem, modifiers: Set<EventModifier>
 val AbstractApplication<*>.wsAppMain
     get() = modules.firstInstance<AppMainWsModule<*>>()
 
-fun Workspace.addAdminItem(item : SingularWsItem) {
+fun MultiPaneWorkspace.addAdminItem(item : SingularWsItem) {
     contexts.firstInstance<AppAdminWsModule<*>>().adminItems += item
 }

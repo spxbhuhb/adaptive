@@ -9,7 +9,7 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.generated.resources.eco
 import `fun`.adaptive.ui.generated.resources.home
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.WsSideBarAction
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
 import `fun`.adaptive.ui.workspace.model.SingularWsItem
@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
 import `fun`.adaptive.utility.UUID
 
-class AppMainWsModule<WT : Workspace> : AppModule<WT>() {
+class AppMainWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
 
     val FRONTEND_MAIN_KEY: FragmentKey = "app:ws:frontend:main"
     val BACKEND_MAIN_KEY: FragmentKey = "app:ws:backend:main"
@@ -43,7 +43,7 @@ class AppMainWsModule<WT : Workspace> : AppModule<WT>() {
         wsAppHomePaneDef()
     }
 
-    fun Workspace.wsAppHomePaneDef() {
+    fun MultiPaneWorkspace.wsAppHomePaneDef() {
 
         addContentPaneBuilder(HOME_CONTENT_KEY) {
             WsPane(

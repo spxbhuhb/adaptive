@@ -11,7 +11,7 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.generated.resources.saveSuccess
 import `fun`.adaptive.ui.snackbar.successNotification
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
 import `fun`.adaptive.ui.workspace.model.SingularWsItem
 import `fun`.adaptive.utility.firstInstance
@@ -19,7 +19,7 @@ import `fun`.adaptive.value.AvValueId
 import kotlinx.datetime.Clock.System.now
 
 class AccountSelfController(
-    workspace : Workspace,
+    workspace : MultiPaneWorkspace,
     item : SingularWsItem
 ) : WsSingularPaneController(workspace, item) {
 

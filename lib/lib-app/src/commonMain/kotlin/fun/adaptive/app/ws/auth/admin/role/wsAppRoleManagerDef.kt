@@ -6,12 +6,12 @@ import `fun`.adaptive.app.ws.addAdminItem
 import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
 
-fun Workspace.wsAppRoleManagerDef(
+fun MultiPaneWorkspace.wsAppRoleManagerDef(
     module: AppAuthWsModule<*>
 ) {
 

@@ -5,7 +5,7 @@ import `fun`.adaptive.grove.apm.groveApmCommon
 import `fun`.adaptive.grove.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.grove.sheet.groveSheetCommon
 import `fun`.adaptive.grove.ufd.groveUfdCommon
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 
 suspend fun groveCommon() {
     groveRuntimeCommon()
@@ -20,7 +20,7 @@ fun AdaptiveAdapter.groveCommon() {
     groveUfdCommon()
 }
 
-fun Workspace.groveCommon() {
+fun MultiPaneWorkspace.groveCommon() {
     groveApmCommon()
     groveRuntimeCommon()
     groveSheetCommon()

@@ -15,8 +15,8 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.workspace.*
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.DEFAULT
-import `fun`.adaptive.ui.workspace.Workspace
-import `fun`.adaptive.ui.workspace.Workspace.Companion.wsContext
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
@@ -29,7 +29,7 @@ class Context {
 @Adaptive
 fun workspaceRecipe(): AdaptiveFragment {
 
-    val workspace = Workspace(adapter().backend)
+    val workspace = MultiPaneWorkspace(adapter().backend)
     workspace.contexts += Context()
     initPanes(workspace)
 
@@ -67,7 +67,7 @@ object WorkspaceRecipePaneFragmentFactory : FoundationFragmentFactory() {
     }
 }
 
-fun initPanes(workspace: Workspace) {
+fun initPanes(workspace: MultiPaneWorkspace) {
     workspace.toolPanes.addAll(
         listOf(
             WsPane(

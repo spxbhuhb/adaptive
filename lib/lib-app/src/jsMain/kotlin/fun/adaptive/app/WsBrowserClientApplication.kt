@@ -5,11 +5,11 @@ import `fun`.adaptive.app.ws.wsAppMain
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 
 open class WsBrowserClientApplication(
-    vararg modules: AppModule<Workspace>
-) : BrowserApplication<Workspace>() {
+    vararg modules: AppModule<MultiPaneWorkspace>
+) : BrowserApplication<MultiPaneWorkspace>() {
 
     init {
         this.modules += modules
@@ -23,7 +23,7 @@ open class WsBrowserClientApplication(
 
     override fun buildWorkspace() {
 
-        workspace = Workspace(backend)
+        workspace = MultiPaneWorkspace(backend)
         workspace.applicationOrNull = this
 
         workspaceInit(workspace)
@@ -39,8 +39,8 @@ open class WsBrowserClientApplication(
 
 
     companion object {
-        fun wsBrowserClient(start: Boolean = true, buildFun: ApplicationBuilder<Workspace>.() -> Unit) {
-            val builder = ApplicationBuilder<Workspace>()
+        fun wsBrowserClient(start: Boolean = true, buildFun: ApplicationBuilder<MultiPaneWorkspace>.() -> Unit) {
+            val builder = ApplicationBuilder<MultiPaneWorkspace>()
 
             builder.buildFun()
 

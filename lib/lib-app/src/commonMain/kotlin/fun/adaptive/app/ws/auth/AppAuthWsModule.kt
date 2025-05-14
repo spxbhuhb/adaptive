@@ -20,10 +20,10 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.model.SingularWsItem
 
-class AppAuthWsModule<WT : Workspace> : AuthBasicClientModule<WT>() {
+class AppAuthWsModule<WT : MultiPaneWorkspace> : AuthBasicClientModule<WT>() {
 
     val SIGN_IN_KEY: FragmentKey = "app:ws:auth:sign-in"
     val SIGN_IN_ITEM by lazy { SingularWsItem(Strings.signInTitle, SIGN_IN_KEY) }

@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 
 @Adaptive
-fun wsCenterPane(workspace: Workspace): AdaptiveFragment {
+fun wsCenterPane(workspace: MultiPaneWorkspace): AdaptiveFragment {
 
     val groups = valueFrom { workspace.contentPaneGroups }
 

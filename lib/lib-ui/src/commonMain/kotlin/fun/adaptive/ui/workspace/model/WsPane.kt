@@ -5,13 +5,13 @@ import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.workspace.AbstractSideBarAction
-import `fun`.adaptive.ui.workspace.Workspace
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
 import `fun`.adaptive.ui.workspace.logic.WsPaneType
 
 data class WsPane<D, C : WsPaneController<D>>(
     val uuid: WsPaneId,
-    override val workspace: Workspace,
+    override val workspace: MultiPaneWorkspace,
     override val name: String,
     override val icon: GraphicsResourceSet,
     override val position: WsPanePosition,
@@ -36,6 +36,6 @@ data class WsPane<D, C : WsPaneController<D>>(
     override val pane: WsPane<*, *>
         get() = this
 
-    override val actionFun: (Workspace) -> Unit = { it.toggle(this) }
+    override val actionFun: (MultiPaneWorkspace) -> Unit = { it.toggle(this) }
 
 }
