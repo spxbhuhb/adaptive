@@ -48,7 +48,7 @@ it may act as a placeholder, while in other cases it is a sophisticated implemen
 state and UI context management.
 
 The [application workspace](def://) is stored in the [workspace](property://AbstractApplication) 
-property of [AbstractApplication](def://),
+property of [AbstractApplication](class://).
 
 The [application workspace](def://) can be whatever class you decide, but typically these are used:
 
@@ -72,9 +72,9 @@ AbstractWorkspace
 │    └──  Workspace
 ```
 
-## Module
+## Application Module
 
-A module groups the components of a feature together. Applications are typically built
+An [application module](def://) groups the components of a feature together. Applications are typically built
 by adding modules to the application.
 
 Source code of modules is typically organized into a directory structure like this
@@ -93,7 +93,7 @@ src/commonMain/kotlin/my/project
 
 - `example` is the top-level directory of the module.
 - `api` contains service API interface definitions.
-- `app` contains the application module definition classes, see [Writing an Application Module](write_an_application_module.md).
+- `app` contains the application module definition classes, see [How to write an application module](guide://).
 - `model` contains the data model of the module, typically Adat classes and enumerations.
 - `server` contains server fragment implementations.
 - `ui` contains UI fragments that are workspace-independent.

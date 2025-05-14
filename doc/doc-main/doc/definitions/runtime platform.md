@@ -7,4 +7,4 @@ for a compiled application.
 
 The [PlatformType](class://) enumeration class lists the supported platform types.
 
-The [getPlatformType](fun://) function returns with the [PlatformType](class://) of the current [runtime platform](def://).
+The [getPlatformType](function://) function returns with the [PlatformType](class://) of the current [runtime platform](def://).

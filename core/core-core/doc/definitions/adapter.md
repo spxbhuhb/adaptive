@@ -1,7 +1,7 @@
 # Adapter
 
-Adapters are managers of [fragment](def://) trees, as such they are fundamental for
-the working of any Adaptive application.
+Adapters are managers of [fragment trees](def://), as such they are fundamental for
+the working of any Adaptive [application](def://).
 
 In the case of UI adapters, they act as a bridge between the low-level, platform-dependent UI
 and the abstract, Adaptive [fragment](def://) based UI.

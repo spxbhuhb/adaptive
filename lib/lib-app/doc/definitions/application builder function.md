@@ -9,6 +9,6 @@ context for the application building.
 ## See also
 
 - [What is an application](guide://)
-- [jvmServer](fun://JvmServerapplication)
-- [basicBrowserClient](fun://BasicBrowserClientApplication)
-- [wsBrowserClient](fun://WsBrowserClientApplication)
+- [jvmServer](function://JvmServerapplication)
+- [basicBrowserClient](function://BasicBrowserClientApplication)
+- [wsBrowserClient](function://WsBrowserClientApplication)

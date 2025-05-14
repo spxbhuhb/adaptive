@@ -14,11 +14,13 @@ class GroveDocCompilerTest {
         val inPath = testPath.resolve("in").ensure()
         val defPath = inPath.resolve("definitions").ensure()
         val guidePath = inPath.resolve("guides").ensure()
-        val outPath = testPath.resolve("out").ensure()
+        val separated = testPath.resolve("out/separated").ensure()
+        val merged = testPath.resolve("out/merged.md")
 
         val compilation = GroveDocCompilation().also {
             it.inPath = inPath
-            it.outPath = outPath
+            it.outPathSeparated = separated
+            it.outPathMerged = merged
         }
 
         val compiler = GroveDocCompiler(compilation)
@@ -32,7 +34,7 @@ class GroveDocCompilerTest {
     @JsName("testCompilationWithEmptyDirectory")
     fun `test compilation with empty directory`() = compilerTest(clearedTestPath()) {
         assertTrue(compilation.notifications.isEmpty())
-        assertTrue(outPath.isEmpty())
+        assertTrue(separated.isEmpty())
     }
 
     @Test
@@ -50,7 +52,7 @@ class GroveDocCompilerTest {
             Test content
         """.trimIndent()
 
-        val outMdPath = outPath.resolve("test.md")
+        val outMdPath = separated.resolve("test.md")
         assertTrue(outMdPath.exists())
         assertEquals(expected, outMdPath.readString())
     }
@@ -66,8 +68,8 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        assertTrue(outPath.resolve("test1.md").exists())
-        assertTrue(outPath.resolve("test2.md").exists())
+        assertTrue(separated.resolve("test1.md").exists())
+        assertTrue(separated.resolve("test2.md").exists())
     }
 
     @Test
@@ -86,7 +88,7 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        val outputPath = outPath.resolve("test.md")
+        val outputPath = separated.resolve("test.md")
         assertTrue(outputPath.exists())
 
         val processedContent = outputPath.readString()

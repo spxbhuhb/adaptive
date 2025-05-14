@@ -53,7 +53,7 @@ Examples of code shorthands:
 ```markdown
 [AvValue](class://)
 [AvTestSubscriberTest](example://)
-[getSiblingIds](fun://AvComputeContext)
+[getSiblingIds](function://AvComputeContext)
 [spec](property://AvValue)
 ```
 
@@ -131,7 +131,7 @@ When referencing a class, a property or a function, use these formats:
 
 ```markdown
 [FileName](class://)
-[functionName](fun://FileName)
+[functionName](function://FileName)
 [propertyName](property://FileName)
 ```
 
@@ -140,7 +140,7 @@ file name in the scope:
 
 ```markdown
 [FileName](class://my.example.util)
-[functionName](fun://my.example.util)
+[functionName](function://my.example.util)
 [propertyName](property://my.example.util)
 ```
 

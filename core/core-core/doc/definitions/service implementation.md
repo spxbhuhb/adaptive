@@ -8,6 +8,8 @@ access checks, request validation, etc.
 
 ## See Also
 
+- [backend](def://)
+- [backend fragment implementation](def://)
 - [How to write a service](doc://)
 - [ServiceApi](class://)
 - [ServiceImpl](class://)

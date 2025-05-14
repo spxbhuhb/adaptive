@@ -1,6 +1,6 @@
 # Adat metadata
 
-Data that describes an [adat class].
+Data that describes an [adat class](def://).
 
 ## See also
 

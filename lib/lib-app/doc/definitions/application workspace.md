@@ -7,7 +7,7 @@ Each [application](def://) (server and client) has an [application workspace](de
 
 In basic clients [applications](def://), it may be a simple placeholder (an instance of [ClientWorkspace](class://),
 for example), while in other cases it may be a sophisticated implementation with full state and UI context management
-(an instance of [Workspace](class://), for example).
+(an instance of [MultiPaneWorkspace](class://), for example).
 
 ## See also
 
@@ -16,4 +16,4 @@ for example), while in other cases it may be a sophisticated implementation with
 - [AbstractWorkspace](class://)
 - [ServerWorkspace](class://)
 - [ClientWorkspace](class://)
-- [Workspace](class://)
+- [MultiPaneWorkspace](class://)

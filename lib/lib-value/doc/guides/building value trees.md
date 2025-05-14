@@ -23,11 +23,11 @@ of [AvRefListSpec](class://) is list, so order is kept.
 
 [AvComputeContext](class://) offers convenience functions to manage children lists:
 
-- [getSiblingIds](fun://AvComputeContext)
-- [addChild](fun://AvComputeContext)
-- [removeChild](fun://AvComputeContext)
-- [moveUp](fun://AvComputeContext)
-- [moveDown](fun://AvComputeContext)
+- [getSiblingIds](function://AvComputeContext)
+- [addChild](function://AvComputeContext)
+- [removeChild](function://AvComputeContext)
+- [moveUp](function://AvComputeContext)
+- [moveDown](function://AvComputeContext)
 
 ## Example
 

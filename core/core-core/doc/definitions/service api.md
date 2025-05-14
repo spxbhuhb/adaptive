@@ -2,10 +2,16 @@
 
 A service API defines:
 
-- functions provided by a service
+- functions provided by a [service](def://)
 - what arguments those functions expect
 - what value they return with
 
-In Adaptive, service APIs are modeled with Kotlin interfaces annotated with the "@ServiceApi" annotation.
+In Adaptive, service APIs are modeled with Kotlin interfaces annotated with the [ServiceApi](class://) annotation.
 
-For more information see: [How to write a service](doc://).
+## See also
+
+- [service](def://)
+- [backend](def://)
+- [backend fragment implementation](def://)
+- [server application](def://)
+- [How to write a service](guide://).

@@ -2,6 +2,7 @@ package `fun`.adaptive.grove.doc
 
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.ensure
+import `fun`.adaptive.utility.resolve
 import kotlinx.io.files.Path
 
 fun main(args: Array<String>) {
@@ -12,7 +13,8 @@ fun main(args: Array<String>) {
 
     val compilation = GroveDocCompilation().also {
         it.inPath = inPath
-        it.outPath = outPath
+        it.outPathSeparated = outPath.resolve("separated").ensure()
+        it.outPathMerged = outPath.resolve("merged.md")
     }
 
     GroveDocCompiler(compilation).compile()

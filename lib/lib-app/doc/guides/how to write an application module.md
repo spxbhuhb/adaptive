@@ -1,12 +1,12 @@
 # How to write an application module
 
-This guide defines the classes needed to implement an application module named
+This guide defines the classes needed to implement an [application module](def://) named
 `example` under the package `my.project`. It supports:
 
-- Adat class registration (e.g., `ExampleData`)
-- Application-wide resources (e.g., string stores)
-- Server-side services and workers
-- Workspace-based UI for the client side
+- [Adat class](def://) registration (e.g., `ExampleData`)
+- Application-wide [resources](def://) (e.g., string stores)
+- Server-side [services](def://) and [workers](def://)
+- [Multi-pane workspace](def://) UI for the client side
 
 These modules establish a reusable base for apps built using the Adaptive platform.
 

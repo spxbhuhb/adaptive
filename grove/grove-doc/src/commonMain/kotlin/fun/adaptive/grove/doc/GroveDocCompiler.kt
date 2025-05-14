@@ -5,7 +5,8 @@ import `fun`.adaptive.markdown.transform.MarkdownToMarkdownVisitor.Companion.toM
 import `fun`.adaptive.utility.readString
 import kotlinx.io.files.Path
 
-class GroveDocCompiler(
+class
+GroveDocCompiler(
     val compilation: GroveDocCompilation
 ) {
 
@@ -24,25 +25,25 @@ class GroveDocCompiler(
     fun process() {
         val fileCollector = compilation.fileCollector
 
-        process(fileCollector.definitions)
-        process(fileCollector.guides)
+        process("definition", fileCollector.definitions)
+        process("guide", fileCollector.guides)
 
         for (path in fileCollector.uncategorized) {
-            process(path)
+            process("uncategorized", path)
         }
     }
 
-    fun process(collection: MutableMap<String, MutableList<Path>>) {
+    fun process(type: String, collection: MutableMap<String, MutableList<Path>>) {
         for ((_, paths) in collection) {
-            paths.forEach(::process)
+            paths.forEach { process(type, it) }
         }
     }
 
-    fun process(path: Path) {
+    fun process(type: String, path: Path) {
         val inAst = MarkdownCompiler.ast(path.readString())
         val transform = MarkdownResolveTransform(compilation, path)
         val outAst = inAst.map { it.transform(transform, null) }
-        compilation.output(path.name, outAst.toMarkdown())
+        compilation.output(type, path, outAst.toMarkdown())
     }
 
 }

@@ -1,14 +1,13 @@
 # Application module definition
 
-Application module definitions describe the features offered by an [application module](def://).
+[Application module definitions](def://) are classes that define and register features offered by [application modules](def://).
+They are descendants of the [AppModule](class://) class and are typically instantiated in an [application entry function](def://).
 
-They are typically placed in the `app` directory of the module.
+These include [adat classes](def://), [resources](def://), [fragments](def://), [backend fragment implementations](def://)
+contained in the module.
 
-The typical application module setup is a set of classes placed in the `app` directory
-of the module source code.
+## See also
 
-For example, the setup of an application module named `Sample` would be:
-
-- `SampleModule` - base module setup, extends [AppModule](class://)
-- `SampleClientModule` - basic client setup, extends `SampleModule`
-- `SampleWsModule` - workspace-based client
+- [What is an application](guide://)
+- [How to write an application module](guide://)
+- [AppModule](class://)
