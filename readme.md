@@ -1,5 +1,3 @@
-Adaptive is a Consolidated Application Platform for Kotlin Multiplatform.
-
 Turning an idea into a working software application is a long and treacherous journey.
 
 Today’s development landscape often feels like a jungle—dense, confusing, full of hidden 
@@ -11,7 +9,9 @@ So instead of hacking my way through the underbrush, I decided to fly over it. K
 is the engine, Adaptive is the airplane. With it, I can go wherever I want—fast, focused and without
 getting lost in the jungle.
 
-Adaptive is a personal project, built to support my own work and ideas around application 
+Adaptive is a Consolidated Application Platform for Kotlin Multiplatform.
+
+This is a personal project, built to support my own work and ideas around application 
 development using Kotlin Multiplatform. It reflects my preferences, priorities and experiments 
 in building a more coherent, streamlined development experience.
 
