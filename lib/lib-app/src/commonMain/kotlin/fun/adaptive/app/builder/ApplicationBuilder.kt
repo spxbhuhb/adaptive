@@ -1,18 +1,19 @@
-package `fun`.adaptive.app
+package `fun`.adaptive.app.builder
 
+import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.api.Proto
 
-class BasicBrowserClientBuilder {
-
-    val modules = mutableListOf<AppModule<ClientWorkspace>>()
+class ApplicationBuilder<WT : AbstractWorkspace> {
 
     var wireFormatProvider : WireFormatProvider = Proto
+
     var localTransport : Boolean = false
 
-    fun module(moduleFun: () -> AppModule<ClientWorkspace>) {
+    val modules = mutableListOf<AppModule<WT>>()
+
+    fun module(moduleFun: () -> AppModule<WT>) {
         modules += moduleFun()
     }
 

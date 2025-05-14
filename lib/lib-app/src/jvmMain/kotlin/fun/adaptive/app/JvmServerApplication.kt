@@ -1,5 +1,6 @@
 package `fun`.adaptive.app
 
+import `fun`.adaptive.app.builder.ApplicationBuilder
 import `fun`.adaptive.app.server.BasicAppServerModule
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
@@ -11,6 +12,7 @@ import `fun`.adaptive.runtime.ApplicationNodeType
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.runtime.AbstractServerApplication
 import `fun`.adaptive.runtime.ServerWorkspace
+import `fun`.adaptive.ui.workspace.Workspace
 import kotlinx.coroutines.runBlocking
 
 class JvmServerApplication(
@@ -62,8 +64,8 @@ class JvmServerApplication(
 
     companion object {
 
-        fun jvmServer(start: Boolean = true, buildFun: JvmServerBuilder.() -> Unit) {
-            val builder = JvmServerBuilder()
+        fun jvmServer(start: Boolean = true, buildFun: ApplicationBuilder<ServerWorkspace>.() -> Unit) {
+            val builder = ApplicationBuilder<ServerWorkspace>()
 
             builder.buildFun()
 

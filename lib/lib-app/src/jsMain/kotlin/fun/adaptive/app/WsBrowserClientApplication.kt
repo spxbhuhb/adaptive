@@ -1,5 +1,6 @@
 package `fun`.adaptive.app
 
+import `fun`.adaptive.app.builder.ApplicationBuilder
 import `fun`.adaptive.app.ws.wsAppMain
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
@@ -38,8 +39,8 @@ open class WsBrowserClientApplication(
 
 
     companion object {
-        fun wsBrowserClient(start: Boolean = true, buildFun: WsBrowserClientBuilder.() -> Unit) {
-            val builder = WsBrowserClientBuilder()
+        fun wsBrowserClient(start: Boolean = true, buildFun: ApplicationBuilder<Workspace>.() -> Unit) {
+            val builder = ApplicationBuilder<Workspace>()
 
             builder.buildFun()
 

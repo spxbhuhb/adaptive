@@ -1,23 +1,23 @@
 # What is an application
 
-`lib-app` provides a framework for client and server applications in a somewhat simple, well-defined way.
+[lib-app](def://) provides a framework for client and server [applications](def://) in a somewhat simple, well-defined way.
 
 Note: you can build applications that use Adaptive without using `lib-app`. It is a convenience library
 that handles most of the common application building steps.
 
-The library is built on three main concepts:
+[lib-app] uses three main concepts:
 
-- application
-- module
-- workspace
+- [application](def://)
+- [application module](def://)
+- [application workspace](def://)
 
 ## Application
 
-An application:
+An [application](def://):
 
 - in this context means a client or a server, regardless of the actual platform the application runs,
-- it is composed of modules,
-- has exactly one workspace, which contains the application’s contexts.
+- it is composed of [application modules](def://),
+- has exactly one [application workspace](def://).
 
 > [!IMPORTANT]
 > 
@@ -41,19 +41,20 @@ AbstractApplication
 │       └── WsBrowserClientApplication
 ```
 
-## Workspace
+## Application workspace
 
-Each application has a workspace. In basic client applications, it may act as a placeholder, 
-while in other cases it is a sophisticated implementation with full state and UI context management.
+Each [application](def://) has an [application workspace](def://). In basic client applications,
+it may act as a placeholder, while in other cases it is a sophisticated implementation with full
+state and UI context management.
 
-A workspace:
+The [application workspace](def://) is stored in the [workspace](property://AbstractApplication) 
+property of [AbstractApplication](def://),
 
-- is stored in the `AbstractApplication.workspace` property
-- for workspace-based applications is the central point of application state and behavior
-- is whatever class you decide, but
-  - `ServerWorkspace` is typical for servers
-  - `ClientWorkspace` is a basic workspace for clients without actual workspace support (a placeholder basically)
-  - `Workspace` is a complex, IntelliJ like UI workspace implementation
+The [application workspace](def://) can be whatever class you decide, but typically these are used:
+
+- `ServerWorkspace` server [applications](def://)
+- `ClientWorkspace` for clients without actual workspace support (a placeholder basically)
+- `Workspace` is a complex, IntelliJ like UI workspace implementation
 
 > [!Note]
 > 

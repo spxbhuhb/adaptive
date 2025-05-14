@@ -1,9 +1,11 @@
 package `fun`.adaptive.app
 
+import `fun`.adaptive.app.builder.ApplicationBuilder
 import `fun`.adaptive.app.client.basic.BasicAppClientModule
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.ClientWorkspace
+import `fun`.adaptive.ui.workspace.Workspace
 
 open class BasicBrowserClientApplication(
     vararg modules: AppModule<ClientWorkspace>
@@ -25,8 +27,8 @@ open class BasicBrowserClientApplication(
 
     companion object {
 
-        fun basicBrowserClient(start: Boolean = true, buildFun: BasicBrowserClientBuilder.() -> Unit) {
-            val builder = BasicBrowserClientBuilder()
+        fun basicBrowserClient(start: Boolean = true, buildFun: ApplicationBuilder<ClientWorkspace>.() -> Unit) {
+            val builder = ApplicationBuilder<ClientWorkspace>()
 
             builder.buildFun()
 

@@ -2,7 +2,7 @@
 
 A [value](def://) is an instance of the [AvValue](class://), typically stored in a [value store](def://).
 
-[AvValue](def://) consists of two parts:
+[AvValue](class://) consists of two parts:
 
 - common data all values have such as `id`, `name` or `revision`,
 - domain-specific data in the `spec` property of the class.
