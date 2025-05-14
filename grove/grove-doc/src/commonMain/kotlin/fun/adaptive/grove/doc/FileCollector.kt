@@ -64,7 +64,6 @@ internal class FileCollector(
         collection.getOrPut(compilation.normalizedName(name)) { mutableListOf() }.add(path)
     }
 
-
     fun reportCollisions() {
         for ((key, value) in definitions) {
             checkCollision(key, value)
@@ -80,4 +79,61 @@ internal class FileCollector(
         }
     }
 
+    /**
+     * Look up the code in [ktFiles]. If the code is not found, return null.
+     *
+     * @param  scheme  The scheme of the code, one of "class", "function" or "property".
+     * @param  name    Name of the class, function or property to find.
+     * @param  scope   The fully qualified path to the name or the simple name of the class
+     *                 if it is unique in the project.
+     */
+    fun lookupCode(scheme: String, name: String, scope: String?): Path? {
+        val lcName = name.lowercase()
+
+        when (scheme) {
+
+            "class" -> {
+                if (scope == null) {
+                    return ktFiles[lcName]?.firstOrNull()
+                } else {
+                    return ktFiles[lcName]?.firstOrNull { isInScope(it, scope) }
+                }
+            }
+
+            "function", "property" -> {
+
+                if (scope == null) {
+                    compilation.warn("Missing scope for $scheme $name")
+                    return null
+                }
+
+                val files = ktFiles[scope.lowercase()]
+
+                if (files == null) {
+                    compilation.warn("Cannot find scope $scope for $scheme $name")
+                    return null
+                }
+
+                if (files.size != 1) {
+                    compilation.warn("Multiple scopes found for $scheme $name")
+                    return null
+                }
+
+                return files.first()
+            }
+
+            else -> return null
+        }
+    }
+
+    private fun isInScope(path: Path, scope: String): Boolean {
+        val normalizedScope = scope.replace('/', '.')
+
+        val normalizedPath = path.toString().removeSuffix(path.name)
+            .replace('/', '.').replace('\\', '.').trim('.')
+
+        return normalizedPath.endsWith(normalizedScope)
+    }
+
 }
+

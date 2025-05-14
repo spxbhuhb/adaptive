@@ -2,6 +2,7 @@ package `fun`.adaptive.grove.doc
 
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
 import `fun`.adaptive.markdown.transform.MarkdownToMarkdownVisitor.Companion.toMarkdown
+import `fun`.adaptive.utility.absolute
 import `fun`.adaptive.utility.readString
 import kotlinx.io.files.Path
 
@@ -9,6 +10,10 @@ class
 GroveDocCompiler(
     val compilation: GroveDocCompilation
 ) {
+
+    init {
+        compilation.inPathAbsolute = compilation.inPath.absolute().toString().replace('\\', '/')
+    }
 
     fun compile() {
         collect()
@@ -41,9 +46,16 @@ GroveDocCompiler(
 
     fun process(type: String, path: Path) {
         val inAst = MarkdownCompiler.ast(path.readString())
-        val transform = MarkdownResolveTransform(compilation, path)
-        val outAst = inAst.map { it.transform(transform, null) }
-        compilation.output(type, path, outAst.toMarkdown())
+
+        val trainingTransform = MarkdownResolveTransform(compilation, path, training = true)
+        val trainingOutAst = inAst.map { it.transform(trainingTransform, null) }
+
+        compilation.outputTraining(type, path, trainingOutAst.toMarkdown())
+
+        val humanReadableTransform = MarkdownResolveTransform(compilation, path, training = false)
+        val humanReadableOutAst = inAst.map { it.transform(humanReadableTransform, null) }
+
+        compilation.outputHumanReadable(type, path, humanReadableOutAst.toMarkdown())
     }
 
 }

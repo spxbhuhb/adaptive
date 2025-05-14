@@ -8,11 +8,17 @@ import kotlinx.io.files.Path
 
 class GroveDocCompilation {
 
+    var baseUrl: String = "https://github.com/spxbhuhb/adaptive/tree/main"
+
     lateinit var inPath : Path
-    lateinit var outPathSeparated : Path
-    lateinit var outPathMerged : Path
+    lateinit var inPathAbsolute: String
+    lateinit var outPathAITraining: Path
+    lateinit var outPathHumanReadable: Path
+    lateinit var outPathAIMerged: Path
 
     var notifications = mutableListOf<GroveDocNotification>()
+
+    var reportedLinks = mutableSetOf<Link>()
 
     internal val fileCollector = FileCollector(this)
 
@@ -27,12 +33,14 @@ class GroveDocCompilation {
             .trimEnd('?')
             .lowercase()
 
-    fun output(type : String,  path : Path, content : String) {
-        outPathSeparated.resolve(path.name).write(content)
+    fun outputHumanReadable(type: String, path: Path, content: String) {
+        outPathHumanReadable.resolve(path.name).write(content)
+    }
 
-        val contentWithHeader = "<!-- name: ${path.name} -->\n<!-- type: $type -->\n\n$content\n\n"
-
-        outPathMerged.append(contentWithHeader.encodeToByteArray())
+    fun outputTraining(type: String, path: Path, content: String) {
+        val contentWithHeader = "<!-- name: ${path.name} -->\n<!-- type: $type -->\n\n$content\n\n".encodeToByteArray()
+        outPathAITraining.resolve(path.name).write(contentWithHeader)
+        outPathAIMerged.append(contentWithHeader)
     }
 
 }

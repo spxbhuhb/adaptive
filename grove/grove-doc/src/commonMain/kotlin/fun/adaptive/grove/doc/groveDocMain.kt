@@ -13,8 +13,9 @@ fun main(args: Array<String>) {
 
     val compilation = GroveDocCompilation().also {
         it.inPath = inPath
-        it.outPathSeparated = outPath.resolve("separated").ensure()
-        it.outPathMerged = outPath.resolve("merged.md")
+        it.outPathHumanReadable = outPath.resolve("human-readable").ensure()
+        it.outPathAITraining = outPath.resolve("training").ensure()
+        it.outPathAIMerged = outPath.resolve("training-merged.md")
     }
 
     GroveDocCompiler(compilation).compile()

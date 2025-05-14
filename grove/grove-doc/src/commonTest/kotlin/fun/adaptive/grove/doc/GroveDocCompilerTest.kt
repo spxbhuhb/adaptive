@@ -14,13 +14,15 @@ class GroveDocCompilerTest {
         val inPath = testPath.resolve("in").ensure()
         val defPath = inPath.resolve("definitions").ensure()
         val guidePath = inPath.resolve("guides").ensure()
-        val separated = testPath.resolve("out/separated").ensure()
-        val merged = testPath.resolve("out/merged.md")
+        val humanReadable = testPath.resolve("out/human-readable").ensure()
+        val training = testPath.resolve("out/training").ensure()
+        val merged = testPath.resolve("out/training-merged.md")
 
         val compilation = GroveDocCompilation().also {
             it.inPath = inPath
-            it.outPathSeparated = separated
-            it.outPathMerged = merged
+            it.outPathHumanReadable = humanReadable
+            it.outPathAITraining = training
+            it.outPathAIMerged = merged
         }
 
         val compiler = GroveDocCompiler(compilation)
@@ -34,7 +36,8 @@ class GroveDocCompilerTest {
     @JsName("testCompilationWithEmptyDirectory")
     fun `test compilation with empty directory`() = compilerTest(clearedTestPath()) {
         assertTrue(compilation.notifications.isEmpty())
-        assertTrue(separated.isEmpty())
+        assertTrue(training.isEmpty())
+        assertTrue(humanReadable.isEmpty())
     }
 
     @Test
@@ -46,15 +49,29 @@ class GroveDocCompilerTest {
         compiler.compile()
 
         // the compilation reformats the MD file
-        val expected = """
+        val expectedHumanReadable = """
             # Test Header
 
             Test content
         """.trimIndent()
 
-        val outMdPath = separated.resolve("test.md")
+        val expectedTraining = """
+            <!-- name: test.md -->
+            <!-- type: guide -->
+
+            # Test Header
+
+            Test content
+
+
+        """.trimIndent()
+
+        val outMdPath = humanReadable.resolve("test.md")
+        val trainingPath = training.resolve("test.md")
         assertTrue(outMdPath.exists())
-        assertEquals(expected, outMdPath.readString())
+        assertTrue(trainingPath.exists())
+        assertEquals(expectedHumanReadable, outMdPath.readString())
+        assertEquals(expectedTraining, trainingPath.readString())
     }
 
     @Test
@@ -68,8 +85,10 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        assertTrue(separated.resolve("test1.md").exists())
-        assertTrue(separated.resolve("test2.md").exists())
+        assertTrue(training.resolve("test1.md").exists())
+        assertTrue(training.resolve("test2.md").exists())
+        assertTrue(humanReadable.resolve("test1.md").exists())
+        assertTrue(humanReadable.resolve("test2.md").exists())
     }
 
     @Test
@@ -88,12 +107,17 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        val outputPath = separated.resolve("test.md")
-        assertTrue(outputPath.exists())
+        val trainingPath = training.resolve("test.md")
+        val humanReadablePath = humanReadable.resolve("test.md")
+        assertTrue(trainingPath.exists())
+        assertTrue(humanReadablePath.exists())
 
-        val processedContent = outputPath.readString()
-        assertTrue(processedContent.contains("# Test Header"))
-        assertTrue(processedContent.contains("[Some Doc](some%20doc.md)"))
+        val processedTrainingContent = trainingPath.readString()
+        val processedHumanContent = humanReadablePath.readString()
+        assertTrue(processedTrainingContent.contains("# Test Header"))
+        assertTrue(processedTrainingContent.contains("[Some Doc](guide://)"))
+        assertTrue(processedHumanContent.contains("# Test Header"))
+        assertTrue(processedHumanContent.contains("[Some Doc](some%20doc.md)"))
     }
 
     @Test
@@ -111,5 +135,14 @@ class GroveDocCompilerTest {
         assertTrue(compiler.compilation.notifications.any {
             it.level == LogLevel.Warning && it.message.contains("collision")
         })
+    }
+
+    @Test
+    @JsName("adhocTest")
+    fun `adhoc test`() = compilerTest(clearedTestPath()) {
+        val content = "[acl](property://AvValue)"
+        guidePath.resolve("test.md").write(content)
+
+        compiler.compile()
     }
 }

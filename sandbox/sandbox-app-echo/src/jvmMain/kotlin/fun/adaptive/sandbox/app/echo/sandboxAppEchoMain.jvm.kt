@@ -13,7 +13,7 @@ fun main() {
     settings {
         inline(
             "KTOR_PORT" to 8080,
-            "KTOR_WIREFORMAT" to "proto"
+            "KTOR_WIREFORMAT" to "json"
         )
     }
 

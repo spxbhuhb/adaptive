@@ -1,6 +1,6 @@
 # Application
 
-An [application](def://) is a runnable program that is either a [server application](def://)
+An application is a runnable program that is either a [server application](def://)
 or a [client application](def://).
 
 # See also

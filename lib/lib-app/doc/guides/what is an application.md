@@ -31,19 +31,16 @@ An [application](def://):
 
 Application classes (Android/iOS is not ready yet, but will follow the same concept):
 
-```text
-AbstractApplication
-├── ServerApplication
-│   └── JvmServerApplication
-├── ClientApplication
-│   └── BrowserApplication
-│       ├── BasicBrowserClientApplication
-│       └── WsBrowserClientApplication
-```
+- [AbstractApplication](class://)
+  - [ServerApplication](class://)
+    - [JvmServerApplication](class://)
+  - [ClientApplication](class://)
+    - [BasicBrowserClientApplication](class://)
+    - [WsBrowserClientApplication](class://)
 
 ## Application workspace
 
-Each [application](def://) has an [application workspace](def://). In basic client applications,
+Each [application](def://) has an [application workspace](def://). In basic [client applications](def://),
 it may act as a placeholder, while in other cases it is a sophisticated implementation with full
 state and UI context management.
 
@@ -52,30 +49,15 @@ property of [AbstractApplication](class://).
 
 The [application workspace](def://) can be whatever class you decide, but typically these are used:
 
-- `ServerWorkspace` server [applications](def://)
-- `ClientWorkspace` for clients without actual workspace support (a placeholder basically)
-- `Workspace` is a complex, IntelliJ like UI workspace implementation
-
-> [!Note]
-> 
-> In the context of Adaptive workspace-based UI typically means the IntelliJ like UI workspace which
-> provides sophisticated workspace features such as tools, tabbed content groups, etc.
-> 
-> You actually don't have to use it, Adaptive works perfectly fine without it. The
-> `sandbox-app-echo` project in the `sandbox` directory shows how to start such a UI.
-> 
-
-```text
-AbstractWorkspace
-├──  ServerWorkspace
-├──  ClientWorkspace
-│    └──  Workspace
-```
+- [AbstractWorkspace](class://)
+  - [ServerWorkspace](class://) for [server applications](def://)
+  - [ClientWorkspace](class://) for basic [client applications](def://)
+    - [MultiPaneWorkspace](class://) for complex, IntelliJ like, multi-pane workspace [client applications](def://)
 
 ## Application Module
 
-An [application module](def://) groups the components of a feature together. Applications are typically built
-by adding modules to the application.
+An [application module](def://) groups the components of a feature together. [Applications](def://) are typically built
+by adding modules to the [application](def://).
 
 Source code of modules is typically organized into a directory structure like this
 (assuming the module name is `example` and it is in the `my.project` package).
@@ -203,69 +185,8 @@ class ExampleWorker : WorkerImpl<ExampleWorker> {
 }
 ```
 
-# Usage Example
-
-## Server Side
-
-```kotlin
-package my.project
-
-import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
-import `fun`.adaptive.app.server.BasicAppServerModule
-import `fun`.adaptive.auth.app.NoAuthServerModule
-import `fun`.adaptive.backend.setting.dsl.inline
-import `fun`.adaptive.backend.setting.dsl.propertyFile
-import `fun`.adaptive.backend.setting.dsl.settings
-import `fun`.adaptive.ktor.KtorJvmServerModule
-
-fun main() {
-
-    settings {    
-        inline(
-            "KTOR_PORT" to 8080,
-            "KTOR_WIREFORMAT" to "json",
-        )
-        propertyFile { "./etc/my.project.properties" }
-        environment()
-    }
-
-    jvmServer {
-        module { NoAuthServerModule() } // no authentication
-        module { KtorJvmServerModule() }
-        module { BasicAppServerModule() }
-    }
-}
-```
-
-This application entry point:
-
-- loads the application configuration according to the `settings` block
-- uses JSON for client-server communication (default is `proto`)
-- creates a `JvmServerApplication` and adds modules according to the `jvmServer` block
-- starts the server application (which in turn will start Ktor as `KtorJvmServerModule` is added)
-
-## Client Side (browser, no workspace)
-
-```kotlin
-import `fun`.adaptive.app.BasicBrowserClientApplication.Companion.basicBrowserClient
-import `fun`.adaptive.app.client.basic.BasicAppClientModule
-import `fun`.adaptive.auth.app.NoAuthClientModule
-import `fun`.adaptive.wireformat.api.Json
-
-fun main() {
-    basicBrowserClient {
-        wireFormatProvider = Json
-        module { NoAuthClientModule() }
-        module { BasicAppClientModule() }
-    }
-}
-```
-
-This application entry point:
-
-- starts a basic browser application (without workspace support)
-- uses JSON for client-server communication (default is `proto`)
-
 # See Also
 
-- [How to write an application module](guide://).
+- [How to write a basic application](guide://)
+- [How to write a workspace-based application](guide://)
+- [How to write an application module](guide://)
