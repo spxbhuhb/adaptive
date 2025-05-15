@@ -5,6 +5,7 @@ import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.utility.resolve
 import kotlinx.io.files.Path
 import kotlin.test.*
+import kotlin.js.JsName
 
 class FileCollectorTest {
 
@@ -31,6 +32,7 @@ class FileCollectorTest {
     }
 
     @Test
+    @JsName("testClassLookupWithoutScope")
     fun `test class lookup without scope`() = fileCollectorTest(clearedTestPath()) { compilation, collector ->
         val result = collector.lookupCode("class", "MyClass", null)
         assertNotNull(result)
@@ -38,6 +40,7 @@ class FileCollectorTest {
     }
 
     @Test
+    @JsName("testClassLookupWithScope")
     fun `test class lookup with scope`()  = fileCollectorTest(clearedTestPath()) { compilation, collector ->
         val result = collector.lookupCode(
             "class",
@@ -52,12 +55,14 @@ class FileCollectorTest {
     }
 
     @Test
+    @JsName("testClassLookupWithNonExistentClass")
     fun `test class lookup with non-existent class`() = fileCollectorTest(clearedTestPath()) { compilation, collector ->
         val result = collector.lookupCode("class", "NonExistentClass", null)
         assertNull(result)
     }
 
     @Test
+    @JsName("testFunctionLookupWithoutScope")
     fun `test function lookup without scope`() = fileCollectorTest(clearedTestPath()) { compilation, collector ->
         val result = collector.lookupCode("function", "myFunction", null)
         assertNull(result)
@@ -66,6 +71,7 @@ class FileCollectorTest {
     }
 
     @Test
+    @JsName("testFunctionLookupWithValidScope")
     fun `test function lookup with valid scope`() = fileCollectorTest(clearedTestPath()) { compilation, collector ->
         val result = collector.lookupCode("function", "myFunction", "MyScope")
         assertNotNull(result)
@@ -76,6 +82,7 @@ class FileCollectorTest {
     }
 
     @Test
+    @JsName("testFunctionLookupWithInvalidScope")
     fun `test function lookup with invalid scope`() = fileCollectorTest(clearedTestPath()) { compilation, collector ->
         val result = collector.lookupCode("function", "myFunction", "NonExistentScope")
         assertNull(result)
@@ -84,6 +91,7 @@ class FileCollectorTest {
     }
 
     @Test
+    @JsName("testPropertyLookupWithValidScope")
     fun `test property lookup with valid scope`() = fileCollectorTest(clearedTestPath()) { compilation, collector ->
         val result = collector.lookupCode("property", "myProperty", "MyScope")
         assertNotNull(result)
@@ -94,6 +102,7 @@ class FileCollectorTest {
     }
 
     @Test
+    @JsName("testLookupWithInvalidScheme")
     fun `test lookup with invalid scheme`() = fileCollectorTest(clearedTestPath()) { compilation, collector ->
         val result = collector.lookupCode("invalid", "name", "scope")
         assertNull(result)

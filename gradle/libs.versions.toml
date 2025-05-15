@@ -2,7 +2,7 @@
 
 ios-support = "none"
 
-adaptive = "0.25.409-SNAPSHOT"
+adaptive = "0.25.515"
 agp = "8.2.0"
 android-compileSdk = "34"
 android-minSdk = "26"
@@ -13,18 +13,14 @@ androidx-constraintlayout = "2.1.4"
 androidx-core-ktx = "1.13.0"
 androidx-espresso-core = "3.5.1"
 androidx-test-junit = "1.1.5"
-brotli4j="1.15.0"
-clikt="5.0.3"
-coroutines = "1.7.3"
+brotli4j = "1.16.0"
+coroutines = "1.8.1"
 datetime = "0.4.0"
-exposed = "0.41.1"
 gradle-download-plugin = "5.5.0"
 gradle-maven-publish = "0.29.0"
-h2 = "2.1.214"
-hikaricp = "3.4.2"
 javamail = "1.6.2"
 junit = "4.13.2"
-junit-bom = "5.8.0"
+junit-bom = "5.9.1"
 kctfork = "0.7.0"
 kotlin = "2.1.20"
 kotlin-wrappers = "1.0.0-pre.760"
@@ -56,12 +52,6 @@ adaptive-lib-ui = { module = "fun.adaptive:lib-ui", version.ref = "adaptive" }
 adaptive-lib-util = { module = "fun.adaptive:lib-util", version.ref = "adaptive" }
 adaptive-lib-value = { module = "fun.adaptive:lib-value", version.ref = "adaptive" }
 
-adaptive-iot-lib-core = { module = "fun.adaptive:iot-lib-core", version.ref = "adaptive" }
-adaptive-iot-lib-driver = { module = "fun.adaptive:iot-lib-driver", version.ref = "adaptive" }
-adaptive-iot-lib-spxb = { module = "fun.adaptive:iot-lib-spxb", version.ref = "adaptive" }
-adaptive-iot-lib-sim = { module = "fun.adaptive:iot-lib-sim", version.ref = "adaptive" }
-adaptive-iot-lib-zigbee = { module = "fun.adaptive:iot-lib-zigbee", version.ref = "adaptive" }
-
 adaptive-site-lib-cookbook = { module = "fun.adaptive:site-lib-cookbook", version.ref = "adaptive" }
 
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
@@ -78,14 +68,6 @@ brotli4j-macos = { module = "com.aayushatharva.brotli4j:native-osx-x86_64", vers
 brotli4j-macos-aarch64 = { module = "com.aayushatharva.brotli4j:native-osx-aarch64", version.ref = "brotli4j" }
 brotli4j-windows = { module = "com.aayushatharva.brotli4j:native-windows-x86_64", version.ref = "brotli4j" }
 
-clikt = { module = "com.github.ajalt.clikt:clikt", version.ref = "clikt" }
-
-exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposed" }
-exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposed" }
-exposed-kotlin-datetime = { module = "org.jetbrains.exposed:exposed-kotlin-datetime", version.ref = "exposed" }
-
-h2database = { module = "com.h2database:h2", version.ref = "h2" }
-hikaricp = { module = "com.zaxxer:HikariCP", version.ref = "hikaricp" }
 javamail = { module = "com.sun.mail:javax.mail", version.ref = "javamail" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit-bom" }
@@ -115,7 +97,6 @@ ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "kto
 ktor-client-websockets = { module = "io.ktor:ktor-client-websockets", version.ref = "ktor" }
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
 ktor-server-netty = { module = "io.ktor:ktor-server-netty", version.ref = "ktor" }
-ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktor" }
 ktor-server-websockets = { module = "io.ktor:ktor-server-websockets", version.ref = "ktor" }
 ktor-server-forwardedheaders = { module = "io.ktor:ktor-server-forwarded-header", version.ref = "ktor" }
 
@@ -132,12 +113,10 @@ subethamail = { module = "org.subethamail:subethasmtp", version.ref = "subethama
 [plugins]
 
 adaptive = { id = "fun.adaptive", version.ref = "adaptive" }
-androidApplication = { id = "com.android.application", version.ref = "agp" }
 androidLibrary = { id = "com.android.library", version.ref = "agp" }
 download = { id = "de.undercouch.download", version.ref = "gradle-download-plugin" }
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
-ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
 shadow = { id = "com.github.johnrengelman.shadow", version.ref = "shadow" }
 pluginPublish = { id = "com.gradle.plugin-publish", version.ref = "plugin-publish" }
 gradleMavenPublish = { id = "com.vanniktech.maven.publish", version.ref = "gradle-maven-publish" }
