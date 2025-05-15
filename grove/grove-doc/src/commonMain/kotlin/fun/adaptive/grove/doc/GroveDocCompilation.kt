@@ -1,20 +1,29 @@
 package `fun`.adaptive.grove.doc
 
 import `fun`.adaptive.log.LogLevel
+import `fun`.adaptive.utility.absolute
 import `fun`.adaptive.utility.append
+import `fun`.adaptive.utility.ensure
 import `fun`.adaptive.utility.resolve
 import `fun`.adaptive.utility.write
 import kotlinx.io.files.Path
 
-class GroveDocCompilation {
+class GroveDocCompilation(
+    val inPath: Path,
+    val outPath: Path,
+    val baseUrl: String = "https://github.com/spxbhuhb/adaptive/tree/main"
+) {
 
-    var baseUrl: String = "https://github.com/spxbhuhb/adaptive/tree/main"
+    val inPathAbsolute: String = inPath.absolute().toString().replace('\\', '/')
 
-    lateinit var inPath : Path
-    lateinit var inPathAbsolute: String
-    lateinit var outPathAITraining: Path
-    lateinit var outPathHumanReadable: Path
-    lateinit var outPathAIMerged: Path
+    val outPathHumanReadable: Path = outPath.resolve("human-readable").ensure()
+
+    val outPathTrainingSeparated: Path = outPath.resolve("separated").ensure()
+    val outPathTrainingMerged: Path = outPath.resolve("merged").ensure()
+
+    val outPathTrainingDef: Path = outPathTrainingMerged.resolve("def.md")
+    val outPathTrainingQa: Path = outPathTrainingMerged.resolve("qa.md")
+    val outPathTrainingGuide: Path = outPathTrainingMerged.resolve("guide.md")
 
     var notifications = mutableListOf<GroveDocNotification>()
 
@@ -39,8 +48,13 @@ class GroveDocCompilation {
 
     fun outputTraining(type: String, path: Path, content: String) {
         val contentWithHeader = "<!-- name: ${path.name} -->\n<!-- type: $type -->\n\n$content\n\n".encodeToByteArray()
-        outPathAITraining.resolve(path.name).write(contentWithHeader)
-        outPathAIMerged.append(contentWithHeader)
+        outPathTrainingSeparated.resolve(path.name).write(contentWithHeader)
+
+        when (type) {
+            "definition" -> outPathTrainingDef.append(contentWithHeader)
+            "guide" -> outPathTrainingGuide.append(contentWithHeader)
+            "qa" -> outPathTrainingQa.append(contentWithHeader)
+        }
     }
 
 }

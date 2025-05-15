@@ -11,12 +11,10 @@ fun main(args: Array<String>) {
     val inPath = Path(args[0])
     val outPath = Path(args[1]).ensure()
 
-    val compilation = GroveDocCompilation().also {
-        it.inPath = inPath
-        it.outPathHumanReadable = outPath.resolve("human-readable").ensure()
-        it.outPathAITraining = outPath.resolve("training").ensure()
-        it.outPathAIMerged = outPath.resolve("training-merged.md")
-    }
+    val compilation = GroveDocCompilation(
+        inPath,
+        outPath
+    )
 
     GroveDocCompiler(compilation).compile()
 

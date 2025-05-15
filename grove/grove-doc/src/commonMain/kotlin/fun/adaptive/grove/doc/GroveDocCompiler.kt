@@ -11,9 +11,8 @@ GroveDocCompiler(
     val compilation: GroveDocCompilation
 ) {
 
-    init {
-        compilation.inPathAbsolute = compilation.inPath.absolute().toString().replace('\\', '/')
-    }
+    val notifications
+        get() = compilation.notifications
 
     fun compile() {
         collect()
@@ -32,6 +31,7 @@ GroveDocCompiler(
 
         process("definition", fileCollector.definitions)
         process("guide", fileCollector.guides)
+        process("qa", fileCollector.qa)
 
         for (path in fileCollector.uncategorized) {
             process("uncategorized", path)

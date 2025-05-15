@@ -14,10 +14,12 @@ internal class FileCollector(
 
     val definitions = mutableMapOf<String, MutableList<Path>>()
     val guides = mutableMapOf<String, MutableList<Path>>()
+    val qa = mutableMapOf<String, MutableList<Path>>()
     val uncategorized = mutableListOf<Path>()
 
     var inDefinitions = false
     var inGuides = false
+    var inQa = false
 
     fun collectFiles(root: Path) {
         for (path in root.list()) {
@@ -45,6 +47,11 @@ internal class FileCollector(
                 collectFiles(path)
                 inGuides = false
             }
+            "qa" -> {
+                inQa = true
+                collectFiles(path)
+                inQa = false
+            }
             else -> collectFiles(path)
         }
     }
@@ -54,14 +61,21 @@ internal class FileCollector(
             name.endsWith(".md") -> when {
                 inDefinitions -> putFile(definitions, name, path)
                 inGuides -> putFile(guides, name, path)
+                inQa -> putFile(qa, name, path)
                 //else -> uncategorized.add(path)
             }
-            name.endsWith(".kt") -> putFile(ktFiles, name, path)
+            name.endsWith(".kt") -> putFile(ktFiles, name, path, normalize = false)
         }
     }
 
-    private fun putFile(collection : MutableMap<String, MutableList<Path>>, name : String, path : Path) {
-        collection.getOrPut(compilation.normalizedName(name)) { mutableListOf() }.add(path)
+    private fun putFile(
+        collection : MutableMap<String, MutableList<Path>>,
+        name : String,
+        path : Path,
+        normalize : Boolean = true
+    ) {
+        val putName = if (normalize) compilation.normalizedName(name) else name.substringBeforeLast('.')
+        collection.getOrPut(putName) { mutableListOf() }.add(path)
     }
 
     fun reportCollisions() {
@@ -88,15 +102,13 @@ internal class FileCollector(
      *                 if it is unique in the project.
      */
     fun lookupCode(scheme: String, name: String, scope: String?): Path? {
-        val lcName = name.lowercase()
-
         when (scheme) {
 
             "class" -> {
                 if (scope == null) {
-                    return ktFiles[lcName]?.firstOrNull()
+                    return ktFiles[name]?.firstOrNull()
                 } else {
-                    return ktFiles[lcName]?.firstOrNull { isInScope(it, scope) }
+                    return ktFiles[name]?.firstOrNull { isInScope(it, scope) }
                 }
             }
 
@@ -107,7 +119,7 @@ internal class FileCollector(
                     return null
                 }
 
-                val files = ktFiles[scope.lowercase()]
+                val files = ktFiles[scope]
 
                 if (files == null) {
                     compilation.warn("Cannot find scope $scope for $scheme $name")

@@ -12,18 +12,14 @@ class GroveDocCompilerTest {
 
     class TestSupport(testPath: Path) {
         val inPath = testPath.resolve("in").ensure()
-        val defPath = inPath.resolve("definitions").ensure()
         val guidePath = inPath.resolve("guides").ensure()
         val humanReadable = testPath.resolve("out/human-readable").ensure()
-        val training = testPath.resolve("out/training").ensure()
-        val merged = testPath.resolve("out/training-merged.md")
+        val training = testPath.resolve("out/training/separated").ensure()
 
-        val compilation = GroveDocCompilation().also {
-            it.inPath = inPath
-            it.outPathHumanReadable = humanReadable
-            it.outPathAITraining = training
-            it.outPathAIMerged = merged
-        }
+        val compilation = GroveDocCompilation(
+            inPath = inPath,
+            outPath = testPath.resolve("out")
+        )
 
         val compiler = GroveDocCompiler(compilation)
     }
@@ -67,7 +63,7 @@ class GroveDocCompilerTest {
         """.trimIndent()
 
         val outMdPath = humanReadable.resolve("test.md")
-        val trainingPath = training.resolve("test.md")
+        val trainingPath = compilation.outPathTrainingSeparated.resolve("test.md")
         assertTrue(outMdPath.exists())
         assertTrue(trainingPath.exists())
         assertEquals(expectedHumanReadable, outMdPath.readString())
@@ -85,8 +81,8 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        assertTrue(training.resolve("test1.md").exists())
-        assertTrue(training.resolve("test2.md").exists())
+        assertTrue(compilation.outPathTrainingSeparated.resolve("test1.md").exists())
+        assertTrue(compilation.outPathTrainingSeparated.resolve("test2.md").exists())
         assertTrue(humanReadable.resolve("test1.md").exists())
         assertTrue(humanReadable.resolve("test2.md").exists())
     }
@@ -107,7 +103,7 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        val trainingPath = training.resolve("test.md")
+        val trainingPath = compilation.outPathTrainingSeparated.resolve("test.md")
         val humanReadablePath = humanReadable.resolve("test.md")
         assertTrue(trainingPath.exists())
         assertTrue(humanReadablePath.exists())
@@ -141,8 +137,10 @@ class GroveDocCompilerTest {
     @JsName("adhocTest")
     fun `adhoc test`() = compilerTest(clearedTestPath()) {
         val content = "[acl](property://AvValue)"
+        inPath.resolve("AvValue.kt").write("class AvValue(val value: Int)")
         guidePath.resolve("test.md").write(content)
 
         compiler.compile()
+        assertTrue(compiler.notifications.isEmpty())
     }
 }
