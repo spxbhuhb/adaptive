@@ -1,25 +1,5 @@
 package `fun`.adaptive.ktor.worker.download
 
-import `fun`.adaptive.backend.BackendAdapter
-import `fun`.adaptive.backend.backend
-import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.setting.dsl.inline
-import `fun`.adaptive.backend.setting.dsl.settings
-import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
-import `fun`.adaptive.ktor.api.webSocketTransport
-import `fun`.adaptive.ktor.ktor
-import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.service.testing.TestServiceTransport
-import `fun`.adaptive.utility.clearedTestPath
-import `fun`.adaptive.utility.ensure
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import kotlinx.coroutines.runBlocking
-import kotlinx.io.files.Path
-import org.junit.Test
-import kotlin.test.assertEquals
-
 class DownloadTest {
 
 // FIXME KTOR download test - needs a session service

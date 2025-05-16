@@ -4,6 +4,9 @@ import com.tschuchort.compiletesting.JvmCompilationResult
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.KotlinCompilation.ExitCode
 import com.tschuchort.compiletesting.SourceFile
+import `fun`.adaptive.file.clearedTestPath
+import `fun`.adaptive.file.read
+import `fun`.adaptive.file.resolve
 import `fun`.adaptive.resource.*
 import `fun`.adaptive.resource.document.Documents
 import `fun`.adaptive.resource.file.FileResource

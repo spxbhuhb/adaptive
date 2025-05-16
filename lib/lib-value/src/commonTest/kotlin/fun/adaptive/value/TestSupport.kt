@@ -3,7 +3,7 @@ package `fun`.adaptive.value
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.backend.builtin.workerImpl
 import `fun`.adaptive.backend.query.firstImplOrNull
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
@@ -65,12 +65,12 @@ class TestSupport {
                     val clientScope = CoroutineScope(clientDispatcher)
 
                     serverBackend = backend(serverTransport, dispatcher = serverDispatcher, scope = serverScope) {
-                        worker { AvValueWorker("server", proxy = false, trace = true) }
+                        workerImpl { AvValueWorker("server", proxy = false, trace = true) }
                         service { AvValueTestServerService() }
                     }
 
                     clientBackend = backend(clientTransport, dispatcher = clientDispatcher, scope = clientScope) {
-                        worker { AvValueWorker("client", proxy = true, trace = true) }
+                        workerImpl { AvValueWorker("client", proxy = true, trace = true) }
                         service { AvValueTestClientService() }
                     }
 

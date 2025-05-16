@@ -1,14 +1,12 @@
 package `fun`.adaptive.value
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.backend.query.firstImpl
-import `fun`.adaptive.value.operation.AvValueOperation
 import `fun`.adaptive.utility.UUID.Companion.uuid4
+import `fun`.adaptive.value.operation.AvValueOperation
 
 class AvValueTestServerService : ServiceImpl<AvValueTestServerService>(), AvValueApi {
 
-    val worker
-        get() = safeAdapter.firstImpl<AvValueWorker>()
+    val worker by workerImpl<AvValueWorker>()
 
     override suspend fun process(operation: AvValueOperation) {
         worker.queue(operation)

@@ -5,8 +5,8 @@ import `fun`.adaptive.resource.ResourceFileSet
 import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.resource.ThemeQualifier
 import `fun`.adaptive.runtime.GlobalRuntimeContext
-import `fun`.adaptive.utility.resolve
-import `fun`.adaptive.utility.testPath
+import `fun`.adaptive.file.resolve
+import `fun`.adaptive.file.testPath
 import kotlinx.io.files.Path
 import kotlin.js.JsName
 import kotlin.test.Test

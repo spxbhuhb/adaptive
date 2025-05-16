@@ -3,9 +3,8 @@
  */
 package `fun`.adaptive.xlsx
 
-import `fun`.adaptive.runtime.getPlatformType
-import `fun`.adaptive.utility.clearedTestPath
-import `fun`.adaptive.utility.resolve
+import `fun`.adaptive.file.clearedTestPath
+import `fun`.adaptive.file.resolve
 import `fun`.adaptive.xlsx.conf.XlsxConfiguration
 import `fun`.adaptive.xlsx.model.XlsxDocument
 import kotlinx.coroutines.test.runTest

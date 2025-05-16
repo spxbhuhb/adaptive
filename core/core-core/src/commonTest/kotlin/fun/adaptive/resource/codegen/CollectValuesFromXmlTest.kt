@@ -1,8 +1,8 @@
 package `fun`.adaptive.resource.codegen
 
 import `fun`.adaptive.runtime.GlobalRuntimeContext
-import `fun`.adaptive.utility.resolve
-import `fun`.adaptive.utility.testPath
+import `fun`.adaptive.file.resolve
+import `fun`.adaptive.file.testPath
 import kotlinx.io.files.Path
 import kotlin.test.Test
 import kotlin.test.assertEquals

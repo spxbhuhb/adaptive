@@ -1,23 +1,12 @@
 package `fun`.adaptive.value
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.foundation.query.firstImpl
-import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.operation.AvValueOperation
 
-class AvValueServerService() : ServiceImpl<AvValueServerService>(), AvValueApi {
+class AvValueServerService : ServiceImpl<AvValueServerService>(), AvValueApi {
 
-    companion object {
-        lateinit var worker: AvValueWorker
-        lateinit var domain: AvValueDomain
-        lateinit var authCheck : ServiceImpl<*>.() -> Unit
-    }
-
-    override fun mount() {
-        check(GlobalRuntimeContext.isServer)
-        worker = safeAdapter.firstImpl<AvValueWorker> { it.domain == domain }
-    }
+    val worker by workerImpl<AvValueWorker>()
 
     override suspend fun process(operation: AvValueOperation) {
         throw UnsupportedOperationException()
@@ -27,7 +16,6 @@ class AvValueServerService() : ServiceImpl<AvValueServerService>(), AvValueApi {
         conditions: List<AvSubscribeCondition>,
         subscriptionId: AvSubscriptionId?
     ): AvSubscriptionId {
-        authCheck()
 
         val subscription = AvClientSubscription(
             subscriptionId ?: uuid4(),
@@ -42,8 +30,6 @@ class AvValueServerService() : ServiceImpl<AvValueServerService>(), AvValueApi {
     }
 
     override suspend fun unsubscribe(subscriptionId: AvSubscriptionId) {
-        authCheck()
-
         worker.unsubscribe(subscriptionId)
     }
 

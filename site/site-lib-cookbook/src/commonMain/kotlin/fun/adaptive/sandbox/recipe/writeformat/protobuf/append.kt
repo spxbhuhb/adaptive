@@ -2,6 +2,11 @@ package `fun`.adaptive.sandbox.recipe.writeformat.protobuf
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.encodeToProtoByteArray
+import `fun`.adaptive.file.append
+import `fun`.adaptive.file.clearedTestPath
+import `fun`.adaptive.file.read
+import `fun`.adaptive.file.resolve
+import `fun`.adaptive.file.write
 import `fun`.adaptive.utility.*
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
 import kotlinx.datetime.Clock.System.now

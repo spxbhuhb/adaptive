@@ -1,6 +1,10 @@
 package `fun`.adaptive.wireformat.json.visitor
 
-import `fun`.adaptive.utility.*
+import `fun`.adaptive.file.clearedTestPath
+import `fun`.adaptive.file.readJson
+import `fun`.adaptive.file.resolve
+import `fun`.adaptive.file.write
+import `fun`.adaptive.file.writeJson
 import `fun`.adaptive.wireformat.json.elements.JsonElement
 import `fun`.adaptive.wireformat.json.elements.JsonNumber
 import `fun`.adaptive.wireformat.json.elements.JsonObject

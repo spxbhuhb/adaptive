@@ -19,9 +19,11 @@ import `fun`.adaptive.value.util.serviceSubscribe
 
 class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
 
-    val valueWorker by worker<AvValueWorker>()
-    val authWorker by worker<AuthWorker>()
-    val securityOfficer by lazy { authWorker.securityOfficer }
+    val valueWorker by workerImpl<AvValueWorker>()
+    val authWorker by workerImpl<AuthWorker>()
+
+    val securityOfficer
+        get() = authWorker.securityOfficer
 
     override suspend fun all(): List<AuthRole> {
         ensureLoggedIn()

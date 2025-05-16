@@ -29,6 +29,12 @@ open class ServiceContext(
     val session: ServiceSession
         get() = checkNotNull(sessionOrNull) { "missing or invalid session" }
 
+    val sessionId : ServiceSessionId
+        get() = checkNotNull(sessionIdOrNull) { "missing or invalid session" }
+
+    val sessionIdOrNull : ServiceSessionId?
+        get() = sessionOrNull?.uuid
+
     private val lock = getLock()
 
     var disconnect = false

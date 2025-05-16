@@ -1,8 +1,8 @@
 package `fun`.adaptive.lib.util.path
 
-import `fun`.adaptive.utility.absolute
-import `fun`.adaptive.utility.list
-import `fun`.adaptive.utility.read
+import `fun`.adaptive.file.absolute
+import `fun`.adaptive.file.list
+import `fun`.adaptive.file.read
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 

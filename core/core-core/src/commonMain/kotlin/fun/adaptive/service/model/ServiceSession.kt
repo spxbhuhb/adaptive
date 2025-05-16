@@ -1,11 +1,12 @@
 package `fun`.adaptive.service.model
 
+import `fun`.adaptive.service.ServiceSessionId
 import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.utility.UUID
 
 interface ServiceSession {
 
-    val uuid: UUID<*>
+    val uuid: ServiceSessionId
 
     val principalOrNull: UUID<*>?
 

@@ -5,30 +5,25 @@ import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.app.AuthModule
 import `fun`.adaptive.auth.backend.*
 import `fun`.adaptive.auth.context.*
-import `fun`.adaptive.auth.model.AuthMarkers
-import `fun`.adaptive.auth.model.AuthRefLabels
-import `fun`.adaptive.auth.model.Credential
-import `fun`.adaptive.auth.model.CredentialSet
+import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD
-import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.auth.model.basic.BasicSignUp
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.lib.util.error.requirement
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.asAvValue
-import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.store.AvComputeContext
 import `fun`.adaptive.value.util.serviceSubscribe
-import kotlinx.datetime.Clock.System.now
 
 class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
 
-    val authWorker by worker<AuthWorker>()
-    val valueWorker by worker<AvValueWorker>()
-    val securityOfficer by lazy { authWorker.securityOfficer }
+    val authWorker by workerImpl<AuthWorker>()
+    val valueWorker by workerImpl<AvValueWorker>()
+
+    val securityOfficer
+        get() = authWorker.securityOfficer
 
     override suspend fun accounts(): List<BasicAccountSummary> {
         ensureHas(securityOfficer)

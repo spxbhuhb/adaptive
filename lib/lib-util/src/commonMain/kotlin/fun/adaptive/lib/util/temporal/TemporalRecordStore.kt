@@ -6,9 +6,9 @@ import `fun`.adaptive.lib.util.temporal.model.TemporalChunkHeader
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexEntry
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.UUID.Companion.monotonicUuid7
-import `fun`.adaptive.utility.append
-import `fun`.adaptive.utility.read
-import `fun`.adaptive.utility.resolve
+import `fun`.adaptive.file.append
+import `fun`.adaptive.file.read
+import `fun`.adaptive.file.resolve
 import kotlinx.datetime.Instant
 import kotlinx.io.buffered
 import kotlinx.io.files.Path

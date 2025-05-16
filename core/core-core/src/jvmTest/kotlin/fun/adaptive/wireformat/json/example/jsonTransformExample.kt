@@ -1,7 +1,7 @@
 package `fun`.adaptive.wireformat.json.example
 
-import `fun`.adaptive.utility.readJson
-import `fun`.adaptive.utility.writeJson
+import `fun`.adaptive.file.readJson
+import `fun`.adaptive.file.writeJson
 import kotlinx.io.files.Path
 
 fun main(argv: Array<String>) {

@@ -1,9 +1,9 @@
 package `fun`.adaptive.lib.util.path
 
 import `fun`.adaptive.runtime.GlobalRuntimeContext
-import `fun`.adaptive.utility.clearedTestPath
-import `fun`.adaptive.utility.ensure
-import `fun`.adaptive.utility.write
+import `fun`.adaptive.file.clearedTestPath
+import `fun`.adaptive.file.ensure
+import `fun`.adaptive.file.write
 import kotlinx.io.files.Path
 import kotlin.test.Test
 import kotlin.test.assertEquals

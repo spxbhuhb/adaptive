@@ -11,7 +11,7 @@ import `fun`.adaptive.value.util.serviceSubscribe
 
 class GhAppService : ServiceImpl<GhAppService>(), GhAppApi {
 
-    val valueWorker by worker<AvValueWorker> { it.domain == "general" }
+    val valueWorker by workerImpl<AvValueWorker>()
 
     override suspend fun subscribe(subscriptionId: AvSubscriptionId): List<AvSubscribeCondition> {
         ensureLoggedIn()

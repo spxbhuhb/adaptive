@@ -1,4 +1,4 @@
-package `fun`.adaptive.utility
+package `fun`.adaptive.file
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
@@ -6,6 +6,7 @@ import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.resource.defaultResourceReader
 import `fun`.adaptive.resource.platform.getResourceReader
 import `fun`.adaptive.runtime.GlobalRuntimeContext
+import `fun`.adaptive.utility.DangerousApi
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.json.JsonBufferReader
@@ -129,7 +130,7 @@ fun Path.readString(): String =
  *
  * @throws  IllegalArgumentException  if the JSON is invalid
  */
-fun Path.readJson() : JsonElement? =
+fun Path.readJson(): JsonElement? =
     read().let {
         if (it.isEmpty()) {
             null
@@ -150,12 +151,19 @@ fun <A> Path.readAdat(wireFormatProvider: WireFormatProvider, wireFormat: AdatCl
     wireFormatProvider.decoder(this.read()).asInstance(wireFormat)
 
 // ------------------------------------------------------------------------------------
+// Metadata
+// ------------------------------------------------------------------------------------
+
+val Path.metadata
+    get() = defaultResourceReader.sizeAndLastModified(this)
+
+// ------------------------------------------------------------------------------------
 // Utility
 // ------------------------------------------------------------------------------------
 
 fun Path.exists() = SystemFileSystem.exists(this)
 
-fun Path.delete() = SystemFileSystem.delete(this)
+fun Path.delete(mustExists: Boolean = true) = SystemFileSystem.delete(this, mustExists)
 
 @DangerousApi("deletes all directories and files in this path recursively")
 fun Path.deleteRecursively() {
@@ -189,7 +197,7 @@ fun Path.ensure(vararg sub: String): Path {
 /**
  * Check if a directory is empty (no files or subdirectories) or if a file size is 0.
  */
-fun Path.isEmpty() : Boolean {
+fun Path.isEmpty(): Boolean {
     if (isDirectory) {
         return list().firstOrNull { it.name != "." && it.name != ".." } == null
     } else {
@@ -355,7 +363,7 @@ val testPath = Path("./build/adaptive/test/${GlobalRuntimeContext.platform.name}
  */
 @CallSiteName
 @OptIn(DangerousApi::class) // this is fine, confined into testPath
-fun clearedTestPath(callSiteName: String = "unknown", vararg scope : String): Path {
+fun clearedTestPath(callSiteName: String = "unknown", vararg scope: String): Path {
 
     check(".." !in callSiteName) { "'..' is not allowed in the path: $callSiteName" }
 

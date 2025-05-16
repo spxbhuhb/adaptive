@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.xlsx
 
-import `fun`.adaptive.utility.write
+import `fun`.adaptive.file.write
 import `fun`.adaptive.xlsx.model.XlsxDocument
 import kotlinx.io.files.Path
 

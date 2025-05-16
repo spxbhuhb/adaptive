@@ -1,18 +1,11 @@
 package `fun`.adaptive.value
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.value.operation.AvValueOperation
 
 class AvValueClientService : ServiceImpl<AvValueClientService>(), AvValueApi {
 
-    companion object {
-        lateinit var worker: AvValueWorker
-    }
-
-    override fun mount() {
-        worker = adapter !!.firstImpl<AvValueWorker>()
-    }
+    val worker by workerImpl<AvValueWorker>()
 
     override suspend fun process(operation: AvValueOperation) {
         worker.queue(operation)

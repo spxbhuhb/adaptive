@@ -7,6 +7,7 @@ typealias AvValueDomain = String
 typealias AvValueId = UUID<AvValue<*>>
 typealias AvSubscriptionId = UUID<AvSubscription>
 typealias AvComputeFun<T> = AvComputeContext.() -> T
+typealias AvPrincipalId = AvValueId
 
 typealias FriendlyItemId = String
 typealias AvMarker = String

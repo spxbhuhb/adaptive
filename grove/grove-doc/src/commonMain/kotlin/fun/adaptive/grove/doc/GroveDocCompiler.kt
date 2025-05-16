@@ -2,8 +2,7 @@ package `fun`.adaptive.grove.doc
 
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
 import `fun`.adaptive.markdown.transform.MarkdownToMarkdownVisitor.Companion.toMarkdown
-import `fun`.adaptive.utility.absolute
-import `fun`.adaptive.utility.readString
+import `fun`.adaptive.file.readString
 import kotlinx.io.files.Path
 
 class

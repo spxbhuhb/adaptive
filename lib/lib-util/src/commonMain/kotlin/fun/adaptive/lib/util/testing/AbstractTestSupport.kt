@@ -6,7 +6,7 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.builtin.worker
+import `fun`.adaptive.backend.builtin.workerImpl
 import `fun`.adaptive.foundation.query.firstOrNull
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.api.Json
@@ -70,7 +70,7 @@ abstract class AbstractTestSupport(
 
         serverBackend = backend(serverTransport, dispatcher = serverDispatcher, scope = serverScope) {
             for (worker in serverWorkers) {
-                worker { worker }
+                workerImpl { worker }
             }
             for (service in serverServices) {
                 service { service }
@@ -79,7 +79,7 @@ abstract class AbstractTestSupport(
 
         clientBackend = backend(clientTransport, dispatcher = clientDispatcher, scope = clientScope) {
             for (worker in clientWorkers) {
-                worker { worker }
+                workerImpl { worker }
             }
             for (service in clientServices) {
                 service { service }

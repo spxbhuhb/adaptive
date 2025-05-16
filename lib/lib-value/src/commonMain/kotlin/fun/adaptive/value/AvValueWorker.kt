@@ -2,6 +2,7 @@ package `fun`.adaptive.value
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.service.model.ServiceSession
 import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.value.persistence.AbstractValuePersistence
@@ -164,4 +165,33 @@ open class AvValueWorker(
     fun query(filterFun: (AvValue<*>) -> Boolean): List<AvValue<*>> =
         store.query(filterFun)
 
+    // --------------------------------------------------------------------------------
+    // Authorization
+    // --------------------------------------------------------------------------------
+
+    fun ensureBlobCreateAccess(session: ServiceSession, valueId: AvValueId) {
+
+    }
+
+    // --------------------------------------------------------------------------------
+    // Marker operations
+    // --------------------------------------------------------------------------------
+
+    /**
+     * Add a marker to a given value.
+     *
+     * Calls [execute] to add the marker.
+     *
+     * @param  exclusive  When true, the call fails if the marker is already on the value,
+     *                    default is false.
+     */
+    suspend fun addMarker(valueId: AvValueId, marker: AvMarker, exclusive : Boolean = false) {
+        execute {
+            val value = get<Any>(valueId)
+            if (exclusive) {
+                check(marker !in value.markers) { "Marker $marker is already on value $valueId" }
+            }
+            this += value.copy(markersOrNull = value.markers + marker)
+        }
+    }
 }

@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.doc
 
-import `fun`.adaptive.utility.isDirectory
-import `fun`.adaptive.utility.list
+import `fun`.adaptive.file.isDirectory
+import `fun`.adaptive.file.list
 import kotlinx.io.files.Path
 
 internal class FileCollector(
@@ -104,7 +104,7 @@ internal class FileCollector(
     fun lookupCode(scheme: String, name: String, scope: String?): Path? {
         when (scheme) {
 
-            "class" -> {
+            "class", "example" -> {
                 if (scope == null) {
                     return ktFiles[name]?.firstOrNull()
                 } else {

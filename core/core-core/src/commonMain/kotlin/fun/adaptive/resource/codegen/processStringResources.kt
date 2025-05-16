@@ -8,11 +8,11 @@ import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.resource.avs.AvsWriter
 import `fun`.adaptive.resource.codegen.ResourceCompilation.FileAndValues
 import `fun`.adaptive.resource.codegen.kotlin.stringResource
-import `fun`.adaptive.utility.delete
-import `fun`.adaptive.utility.readString
-import `fun`.adaptive.utility.resolve
+import `fun`.adaptive.file.delete
+import `fun`.adaptive.file.readString
+import `fun`.adaptive.file.resolve
 import `fun`.adaptive.utility.uppercaseFirstChar
-import `fun`.adaptive.utility.write
+import `fun`.adaptive.file.write
 import kotlin.String
 
 /**

@@ -19,7 +19,7 @@ class AuthWorker : WorkerImpl<AuthWorker>() {
 
     lateinit var securityOfficer: AvValueId
 
-    val valueWorker by worker<AvValueWorker>()
+    val valueWorker by workerImpl<AvValueWorker>()
 
 
     override suspend fun run() {

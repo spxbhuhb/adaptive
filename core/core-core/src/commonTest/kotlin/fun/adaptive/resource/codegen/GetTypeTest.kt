@@ -3,8 +3,8 @@ package `fun`.adaptive.resource.codegen
 import `fun`.adaptive.resource.Qualifier
 import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.runtime.GlobalRuntimeContext
-import `fun`.adaptive.utility.resolve
-import `fun`.adaptive.utility.testPath
+import `fun`.adaptive.file.resolve
+import `fun`.adaptive.file.testPath
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

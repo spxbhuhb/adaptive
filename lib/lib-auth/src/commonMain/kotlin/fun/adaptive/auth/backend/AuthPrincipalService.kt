@@ -23,9 +23,11 @@ import kotlinx.datetime.Clock.System.now
 
 class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>() {
 
-    val valueWorker by worker<AvValueWorker>()
-    val authWorker by worker<AuthWorker>()
-    val securityOfficer by lazy { authWorker.securityOfficer }
+    val valueWorker by workerImpl<AvValueWorker>()
+    val authWorker by workerImpl<AuthWorker>()
+
+    val securityOfficer
+        get() = authWorker.securityOfficer
 
     val policy
         get() = SecurityPolicy()

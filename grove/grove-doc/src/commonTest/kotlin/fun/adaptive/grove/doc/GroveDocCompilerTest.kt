@@ -1,7 +1,13 @@
 package `fun`.adaptive.grove.doc
 
+import `fun`.adaptive.file.clearedTestPath
+import `fun`.adaptive.file.ensure
+import `fun`.adaptive.file.exists
+import `fun`.adaptive.file.isEmpty
+import `fun`.adaptive.file.readString
+import `fun`.adaptive.file.resolve
+import `fun`.adaptive.file.write
 import `fun`.adaptive.log.LogLevel
-import `fun`.adaptive.utility.*
 import kotlinx.io.files.Path
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -138,6 +144,17 @@ class GroveDocCompilerTest {
     fun `adhoc test`() = compilerTest(clearedTestPath()) {
         val content = "[acl](property://AvValue)"
         inPath.resolve("AvValue.kt").write("class AvValue(val value: Int)")
+        guidePath.resolve("test.md").write(content)
+
+        compiler.compile()
+        assertTrue(compiler.notifications.isEmpty())
+    }
+
+    @Test
+    @JsName("adhocTest2")
+    fun `adhoc test2`() = compilerTest(clearedTestPath()) {
+        val content = "[valueBlobUploadExample](example://)"
+        inPath.resolve("valueBlobUploadExample.kt").write("// example of blob upload")
         guidePath.resolve("test.md").write(content)
 
         compiler.compile()

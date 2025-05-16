@@ -1,8 +1,7 @@
 package `fun`.adaptive.grove.doc
 
 import `fun`.adaptive.log.getLogger
-import `fun`.adaptive.utility.ensure
-import `fun`.adaptive.utility.resolve
+import `fun`.adaptive.file.ensure
 import kotlinx.io.files.Path
 
 fun main(args: Array<String>) {

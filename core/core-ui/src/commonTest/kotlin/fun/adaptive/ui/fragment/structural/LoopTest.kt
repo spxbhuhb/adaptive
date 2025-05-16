@@ -1,22 +1,5 @@
 package `fun`.adaptive.ui.fragment.structural
 
-import `fun`.adaptive.adat.encodeToPrettyJson
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.support.snapshot.FragmentSnapshot
-import `fun`.adaptive.ui.support.snapshot.FragmentTestScript
-import `fun`.adaptive.ui.support.snapshot.FragmentTestScriptStep
-import `fun`.adaptive.ui.support.snapshot.snapshot
-import `fun`.adaptive.ui.testing.uiTest
-import `fun`.adaptive.utility.readString
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.toList
-import kotlinx.coroutines.test.runTest
-import kotlinx.io.files.Path
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.time.Duration.Companion.hours
-
 class LoopTest {
 
     // this test fails with very various reasons with JS, so I just commented

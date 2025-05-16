@@ -79,7 +79,7 @@ abstract class BackendFragmentImpl {
      * - there is no worker of the given type
      * - there is more than one worker of the given type
      */
-    inline fun <reified T : WorkerImpl<T>> worker(crossinline filterFun: (T) -> Boolean = { true }): Lazy<T> =
+    inline fun <reified T : WorkerImpl<T>> workerImpl(crossinline filterFun: (T) -> Boolean = { true }): Lazy<T> =
         lazy {
             checkNotNull(adapter) { "this implementation is not part of an adaptive backend" }
                 .single { f -> f is BackendFragment && f.impl.let { it is T && filterFun(it) } }

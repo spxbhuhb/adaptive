@@ -22,8 +22,8 @@ import kotlin.math.abs
 
 class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
 
-    val valueWorker by worker<AvValueWorker>()
-    val sessionWorker by worker<AuthSessionWorker>()
+    val valueWorker by workerImpl<AvValueWorker>()
+    val sessionWorker by workerImpl<AuthSessionWorker>()
 
     // ----------------------------------------------------------------------------------
     // API functions

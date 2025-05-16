@@ -4,8 +4,8 @@ import `fun`.adaptive.resource.codegen.ResourceCompilation.FileAndValues
 import `fun`.adaptive.resource.codegen.ResourceCompilation.ResourceValue
 import `fun`.adaptive.resource.file.FileResource
 import `fun`.adaptive.runtime.GlobalRuntimeContext
-import `fun`.adaptive.utility.resolve
-import `fun`.adaptive.utility.testPath
+import `fun`.adaptive.file.resolve
+import `fun`.adaptive.file.testPath
 import kotlinx.io.files.Path
 import kotlin.js.JsName
 import kotlin.test.Test
