@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.doc
 
-import `fun`.adaptive.file.isDirectory
-import `fun`.adaptive.file.list
+import `fun`.adaptive.persistence.isDirectory
+import `fun`.adaptive.persistence.list
 import kotlinx.io.files.Path
 
 internal class FileCollector(

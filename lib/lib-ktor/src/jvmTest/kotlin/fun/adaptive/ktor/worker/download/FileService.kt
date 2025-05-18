@@ -2,7 +2,7 @@ package `fun`.adaptive.ktor.worker.download
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.api.getDownloadPath
-import `fun`.adaptive.file.write
+import `fun`.adaptive.persistence.write
 
 class FileService : ServiceImpl<FileService>(), FileApi {
 

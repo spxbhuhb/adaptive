@@ -5,8 +5,8 @@ import `fun`.adaptive.code.kotlin.writer.kwFile
 import `fun`.adaptive.code.kotlin.writer.kwModule
 import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.resource.codegen.kotlin.unstructuredResource
-import `fun`.adaptive.file.resolve
-import `fun`.adaptive.file.write
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.write
 
 /**
  * We need to divide accessors by different files because if all accessors are

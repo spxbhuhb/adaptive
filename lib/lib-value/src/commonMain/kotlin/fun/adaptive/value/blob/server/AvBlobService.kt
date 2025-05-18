@@ -12,16 +12,20 @@ class AvBlobService : ServiceImpl<AvBlobService>(), AvBlobApi {
     override suspend fun startUpload(valueId: AvValueId, size: Long): AvBlobUploadKey =
         blobWorker.startUpload(serviceContext.session, valueId, size)
 
-    override suspend fun sendChunk(uploadId: AvBlobUploadKey, offset: Long, data: ByteArray) {
-        blobWorker.addChunk(serviceContext.session, uploadId, offset, data)
+    override suspend fun sendChunk(uploadKey: AvBlobUploadKey, offset: Long, data: ByteArray) {
+        blobWorker.addChunk(serviceContext.session, uploadKey, offset, data)
     }
 
-    override suspend fun finishUpload(uploadId: AvBlobUploadKey) {
-        blobWorker.finishUpload(serviceContext.session, uploadId)
+    override suspend fun finishUpload(uploadKey: AvBlobUploadKey, sha256: ByteArray?) {
+        blobWorker.finishUpload(serviceContext.session, uploadKey, sha256)
     }
 
-    override suspend fun abortUpload(uploadId: AvBlobUploadKey) {
-        blobWorker.abortUpload(serviceContext.session, uploadId)
+    override suspend fun abortUpload(uploadKey: AvBlobUploadKey) {
+        blobWorker.abortUpload(serviceContext.session, uploadKey)
+    }
+
+    override suspend fun removeBlob(valueId: AvValueId) {
+        blobWorker.removeBlob(serviceContext.session, valueId)
     }
 
 }

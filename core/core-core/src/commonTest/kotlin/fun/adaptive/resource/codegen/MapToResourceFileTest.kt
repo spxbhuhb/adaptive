@@ -5,8 +5,8 @@ import `fun`.adaptive.resource.ResourceFileSet
 import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.resource.ThemeQualifier
 import `fun`.adaptive.runtime.GlobalRuntimeContext
-import `fun`.adaptive.file.resolve
-import `fun`.adaptive.file.testPath
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.globalTestPath
 import kotlinx.io.files.Path
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -98,7 +98,7 @@ class MapToResourceFileTest {
     ): Pair<Map<ResourceTypeQualifier, MutableMap<String, ResourceFileSet<*>>>, List<String>> {
 
         val prefix = "/resources"
-        val testFilePath = testPath.resolve("resources")
+        val testFilePath = globalTestPath.resolve("resources")
 
         with(
             ResourceCompilation(

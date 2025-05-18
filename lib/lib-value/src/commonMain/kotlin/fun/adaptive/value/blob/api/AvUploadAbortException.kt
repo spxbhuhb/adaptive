@@ -1,3 +1,6 @@
 package `fun`.adaptive.value.blob.api
 
-class AvUploadAbortException : Exception()
+import `fun`.adaptive.adat.Adat
+
+@Adat
+class AvUploadAbortException : RuntimeException()

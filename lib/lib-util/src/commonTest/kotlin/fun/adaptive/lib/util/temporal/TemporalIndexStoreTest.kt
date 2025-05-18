@@ -1,11 +1,11 @@
 package `fun`.adaptive.lib.util.temporal
 
 import `fun`.adaptive.adat.encodeToProtoByteArray
-import `fun`.adaptive.file.append
-import `fun`.adaptive.file.clearedTestPath
-import `fun`.adaptive.file.exists
-import `fun`.adaptive.file.resolve
-import `fun`.adaptive.file.write
+import `fun`.adaptive.persistence.append
+import `fun`.adaptive.persistence.clearedTestPath
+import `fun`.adaptive.persistence.exists
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.write
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexEntry
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexHeader
 import `fun`.adaptive.lib.util.utilCommon

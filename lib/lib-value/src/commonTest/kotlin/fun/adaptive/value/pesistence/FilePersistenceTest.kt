@@ -1,10 +1,10 @@
 package `fun`.adaptive.value.pesistence
 
-import `fun`.adaptive.file.clearedTestPath
-import `fun`.adaptive.file.ensure
-import `fun`.adaptive.file.exists
-import `fun`.adaptive.file.resolve
-import `fun`.adaptive.file.write
+import `fun`.adaptive.persistence.clearedTestPath
+import `fun`.adaptive.persistence.ensure
+import `fun`.adaptive.persistence.exists
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.write
 import `fun`.adaptive.utility.*
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId

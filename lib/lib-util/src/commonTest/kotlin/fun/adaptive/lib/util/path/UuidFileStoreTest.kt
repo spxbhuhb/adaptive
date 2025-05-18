@@ -1,10 +1,10 @@
 package `fun`.adaptive.lib.util.path
 
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.file.clearedTestPath
-import `fun`.adaptive.file.ensure
-import `fun`.adaptive.file.resolve
-import `fun`.adaptive.file.write
+import `fun`.adaptive.persistence.clearedTestPath
+import `fun`.adaptive.persistence.ensure
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.write
 import kotlinx.io.files.Path
 import kotlin.js.JsName
 import kotlin.test.Test

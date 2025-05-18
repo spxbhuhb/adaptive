@@ -1,7 +1,7 @@
 package `fun`.adaptive.lib.util.bytearray
 
-import `fun`.adaptive.file.clearedTestPath
-import `fun`.adaptive.file.resolve
+import `fun`.adaptive.persistence.clearedTestPath
+import `fun`.adaptive.persistence.resolve
 import `fun`.adaptive.utility.waitForReal
 import kotlinx.coroutines.test.runTest
 import kotlin.test.Test

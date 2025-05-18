@@ -1,15 +1,15 @@
 package `fun`.adaptive.utility
 
-import `fun`.adaptive.file.clearedTestPath
-import `fun`.adaptive.file.copy
-import `fun`.adaptive.file.delete
-import `fun`.adaptive.file.ensure
-import `fun`.adaptive.file.equalsBySizeAndLastModification
-import `fun`.adaptive.file.exists
-import `fun`.adaptive.file.read
-import `fun`.adaptive.file.resolve
-import `fun`.adaptive.file.syncBySizeAndLastModification
-import `fun`.adaptive.file.write
+import `fun`.adaptive.persistence.clearedTestPath
+import `fun`.adaptive.persistence.copy
+import `fun`.adaptive.persistence.delete
+import `fun`.adaptive.persistence.ensure
+import `fun`.adaptive.persistence.equalsBySizeAndLastModification
+import `fun`.adaptive.persistence.exists
+import `fun`.adaptive.persistence.read
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.syncBySizeAndLastModification
+import `fun`.adaptive.persistence.write
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import kotlinx.coroutines.test.runTest
 import kotlin.test.*

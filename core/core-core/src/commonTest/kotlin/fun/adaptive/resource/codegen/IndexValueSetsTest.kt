@@ -4,8 +4,8 @@ import `fun`.adaptive.resource.codegen.ResourceCompilation.FileAndValues
 import `fun`.adaptive.resource.codegen.ResourceCompilation.ResourceValue
 import `fun`.adaptive.resource.file.FileResource
 import `fun`.adaptive.runtime.GlobalRuntimeContext
-import `fun`.adaptive.file.resolve
-import `fun`.adaptive.file.testPath
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.globalTestPath
 import kotlinx.io.files.Path
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -76,7 +76,7 @@ class IndexValueSetsTest {
     ) {
         if (GlobalRuntimeContext.platform.isJs) return
 
-        val sourcePath = testPath.resolve("resources")
+        val sourcePath = globalTestPath.resolve("resources")
         val filePath = Path("/fake/path/to/file.xml")
 
         val resourceCompilation = ResourceCompilation(

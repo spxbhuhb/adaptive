@@ -173,25 +173,84 @@ open class AvValueWorker(
 
     }
 
+    fun ensureBlobReadAccess(session: ServiceSession, valueId: AvValueId) {
+
+    }
+
+    fun ensureBlobRemoveAccess(session: ServiceSession, valueId: AvValueId) {
+
+    }
+
     // --------------------------------------------------------------------------------
     // Marker operations
     // --------------------------------------------------------------------------------
 
     /**
-     * Add a marker to a given value.
+     * Adds [marker] to the value identified by [valueId].
      *
-     * Calls [execute] to add the marker.
+     * Calls [execute], all behavior of [execute] applies.
      *
-     * @param  exclusive  When true, the call fails if the marker is already on the value,
-     *                    default is false.
+     * @param valueId The ID of the value to add the marker to
+     * @param marker The marker to add
+     * @param exclusive When true, checks if the marker already exists and throws an exception if it does
+     *
+     * @throws IllegalStateException if exclusive is true and the marker already exists on the value
      */
-    suspend fun addMarker(valueId: AvValueId, marker: AvMarker, exclusive : Boolean = false) {
+    suspend fun addMarker(valueId: AvValueId, marker: AvMarker, exclusive: Boolean = false) {
         execute {
             val value = get<Any>(valueId)
             if (exclusive) {
                 check(marker !in value.markers) { "Marker $marker is already on value $valueId" }
             }
             this += value.copy(markersOrNull = value.markers + marker)
+        }
+    }
+
+    /**
+     * Replaces [oldMarker] with [newMarker] on the value identified by [valueId].
+     *
+     * Calls [execute], all behavior of [execute] applies.
+     *
+     * @param valueId The ID of the value to update markers on
+     * @param oldMarker The marker to remove
+     * @param newMarker The marker to add
+     * @param exclusive When true, checks if the new marker already exists and throws an exception if it does
+     *
+     * @throws IllegalStateException if exclusive is true and the new marker already exists on the value
+     */
+    suspend fun replaceMarker(valueId: AvValueId, oldMarker: AvMarker, newMarker: AvMarker, exclusive: Boolean = false) {
+        execute {
+            val value = get<Any>(valueId)
+            val newMarkers = value.mutableMarkers()
+
+            if (exclusive) {
+                check(newMarker !in value.markers) { "Marker $newMarker is already on value $valueId" }
+            }
+
+            newMarkers.remove(oldMarker)
+            newMarkers.add(newMarker)
+
+            this += value.copy(markersOrNull = newMarkers)
+        }
+    }
+
+    /**
+     * Removes [marker] from the value identified by [valueId].
+     *
+     * Calls [execute], all behavior of [execute] applies.
+     *
+     * @param valueId The ID of the value to remove the marker from
+     * @param marker The marker to remove
+     *
+    */
+    suspend fun removeMarker(valueId: AvValueId, marker: String) {
+        execute {
+            val value = get<Any>(valueId)
+
+            val newMarkers = value.mutableMarkers()
+            newMarkers.remove(marker)
+
+            this += value.copy(markersOrNull = if (newMarkers.isEmpty()) null else newMarkers)
         }
     }
 }

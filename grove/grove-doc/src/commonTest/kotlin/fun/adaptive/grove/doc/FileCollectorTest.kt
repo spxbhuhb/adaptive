@@ -1,8 +1,8 @@
 package `fun`.adaptive.grove.doc
 
-import `fun`.adaptive.file.clearedTestPath
-import `fun`.adaptive.file.ensure
-import `fun`.adaptive.file.resolve
+import `fun`.adaptive.persistence.clearedTestPath
+import `fun`.adaptive.persistence.ensure
+import `fun`.adaptive.persistence.resolve
 import kotlinx.io.files.Path
 import kotlin.test.*
 import kotlin.js.JsName

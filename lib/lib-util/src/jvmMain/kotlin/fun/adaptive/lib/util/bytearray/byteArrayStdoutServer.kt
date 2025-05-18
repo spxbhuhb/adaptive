@@ -1,6 +1,6 @@
 package `fun`.adaptive.lib.util.bytearray
 
-import `fun`.adaptive.file.clearedTestPath
+import `fun`.adaptive.persistence.clearedTestPath
 import kotlinx.coroutines.runBlocking
 
 fun main() {

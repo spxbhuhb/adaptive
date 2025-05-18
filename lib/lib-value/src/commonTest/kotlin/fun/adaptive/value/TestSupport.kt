@@ -7,7 +7,6 @@ import `fun`.adaptive.backend.builtin.workerImpl
 import `fun`.adaptive.backend.query.firstImplOrNull
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
-import `fun`.adaptive.utility.vmNowMicro
 import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.wireformat.api.Json
@@ -50,12 +49,10 @@ class TestSupport {
         fun valueTest(timeout: Duration = 10.seconds, testFun: suspend TestSupport.() -> Unit) =
 
             runTest(timeout = timeout) {
-                val now = vmNowMicro()
-                println("start $now")
                 with(TestSupport()) {
 
                     // Switch to a coroutine context that is NOT a test context. The test context
-                    // skips delays which wreaks havoc with service call timeouts that depend on
+                    // skips delays that wreak havoc with service call timeouts that depend on
                     // delays actually working.
 
                     val serverDispatcher = Dispatchers.Unconfined
@@ -84,7 +81,6 @@ class TestSupport {
                     clientBackend.stop()
                     serverBackend.stop()
                 }
-                println("end $now")
             }
     }
 }

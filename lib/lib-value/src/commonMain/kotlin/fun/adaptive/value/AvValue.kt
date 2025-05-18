@@ -101,7 +101,7 @@ class AvValue<T>(
      * Get the set of statuses as a mutable set. Changing this set **DOES NOT** change the value,
      * use [copy] to create a new version of the value with the new status set.
      */
-    fun toMutableStatus() = statusOrNull?.toMutableSet() ?: mutableSetOf()
+    fun mutableStatus() = statusOrNull?.toMutableSet() ?: mutableSetOf()
 
     /**
      * Get the set of markers or an empty set if there are no markers for this value.
@@ -112,7 +112,7 @@ class AvValue<T>(
      * Get the set of markers as a mutable set. Changing this set **DOES NOT** change the value,
      * use [copy] to create a new version of the value with the new marker set.
      */
-    fun toMutableMarkers() = markersOrNull?.toMutableSet() ?: mutableSetOf()
+    fun mutableMarkers() = markersOrNull?.toMutableSet() ?: mutableSetOf()
 
     /**
      * Get the map of references or an empty map if there are no references for this value.
@@ -123,7 +123,7 @@ class AvValue<T>(
      * Get the map of references as a mutable map. Changing this map **DOES NOT** change the value
      * use [copy] to create a new version of the value with the new references.
      */
-    fun toMutableRefs() = refsOrNull?.toMutableMap() ?: mutableMapOf()
+    fun mutableRefs() = refsOrNull?.toMutableMap() ?: mutableMapOf()
 
     /**
      * Get the ID of a reference by the reference label, or null if the reference is not found.

@@ -1,7 +1,7 @@
 # lib-value
 
-Library [Subproject](def://). Provides generic data containers with access control, subscription capabilities, 
-and persistence.
+A [subproject](def://) that provides generic data containers with access control, subscription capabilities, 
+and [persistence](def://).
 
 
 ## See also

@@ -8,7 +8,7 @@ import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.lib.util.app.UtilServerModule
-import `fun`.adaptive.file.ensure
+import `fun`.adaptive.persistence.ensure
 import `fun`.adaptive.value.app.ValueServerModule
 import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.io.files.Path

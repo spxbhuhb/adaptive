@@ -1,11 +1,8 @@
 package `fun`.adaptive.value.blob.server
 
-import `fun`.adaptive.crypto.sha256
-import `fun`.adaptive.file.RandomAccessFile
-import `fun`.adaptive.file.delete
-import `fun`.adaptive.file.getRandomAccess
 import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.persistence.RandomAccessPersistence
 import `fun`.adaptive.service.ServiceSessionId
 import `fun`.adaptive.utility.encodeInto
 import `fun`.adaptive.utility.getLock
@@ -14,10 +11,6 @@ import `fun`.adaptive.utility.use
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.blob.AvBlobUploadKey
 import `fun`.adaptive.value.blob.api.AvUploadAbortException
-import kotlinx.io.files.Path
-import kotlin.io.encoding.Base64
-import kotlin.io.encoding.ExperimentalEncodingApi
-import kotlin.math.min
 
 
 /**
@@ -39,60 +32,69 @@ import kotlin.math.min
  *                   only one entry in [notes] with an offset of `0` and length equals
  *                   [size].
  */
-class AvBlobUpload(
-    val sessionId : ServiceSessionId,
-    val valueId : AvValueId,
+class AvBlobUpload<PATH>(
+    val sessionId: ServiceSessionId,
+    val valueId: AvValueId,
     val key: AvBlobUploadKey,
     val size: Long,
-    val dataPath: Path,
-    val statusPath: Path,
-    val logger : AdaptiveLogger = getLogger("AvBlobUpload")
+    val dataPath : PATH,
+    val dataAccess: RandomAccessPersistence,
+    val statusAccess: RandomAccessPersistence,
+    val logger: AdaptiveLogger = getLogger("AvBlobUpload")
 ) {
 
     /**
      * A note of a saved chunk [AvBlobUpload] uses this class to keep track of the uploaded data chunks.
      */
     class AvChunkNote(
-        val offset : Long,
+        val offset: Long,
         val length: Long
     )
 
     val lock = getLock()
-
-    val dataFile = dataPath.getRandomAccess("rw")
-    val statusFile = statusPath.getRandomAccess("rw")
-
+    
     /**
      * Principal of uploaded chunks. Updated whenever a chunk is added to the upload.
      */
     private var notes = listOf<AvChunkNote>()
 
+    private var isAborted = false
+
     val isComplete
         get() = (notes.size == 1 && notes.first().offset == 0L && notes.first().length == size) || (size == 0L)
 
     init {
-        if (dataFile.length() < size) dataFile.setLength(size)
+        if (dataAccess.getSize() < size) dataAccess.setSize(size)
         loadStatus()
     }
 
     fun pause() {
-        dataFile.close()
-        statusFile.close()
-    }
-
-    fun close(sha256: String) {
-        if (! isComplete) abort()
-        // FIXME sha if (sha256 != dataFile.sha256()) abort()
-
-        statusPath.delete(mustExists = false)
-    }
-
-    fun add(data : ByteArray, offset : Long) {
         lock.use {
+            check(! isAborted) { "Upload $key is aborted" }
+            dataAccess.close()
+            statusAccess.close()
+        }
+    }
+
+    fun close(sha256: ByteArray? = null) {
+        lock.use {
+            check(! isAborted) { "Upload $key is aborted" }
+
+            if (! isComplete) abort()
+            if (sha256?.contentEquals(dataAccess.sha256()) == false) abort()
+
+            statusAccess.delete()
+        }
+    }
+
+    fun add(data: ByteArray, offset: Long) {
+        lock.use {
+            check(! isAborted) { "Upload $key is aborted" }
+
             if (offset + data.size > size) abort()
 
-            dataFile.seek(offset)
-            dataFile.write(data, 0, data.size)
+            dataAccess.setPosition(offset)
+            dataAccess.write(data, 0, data.size)
 
             addNote(offset, data.size.toLong())
 
@@ -100,7 +102,7 @@ class AvBlobUpload(
         }
     }
 
-    fun addNote(offset: Long, size: Long) {
+    internal fun addNote(offset: Long, size: Long) {
         val all = (notes + AvChunkNote(offset, size)).sortedBy { it.offset }
         val merged = mutableListOf<AvChunkNote>()
 
@@ -123,7 +125,7 @@ class AvBlobUpload(
         saveStatus()
     }
 
-    fun saveStatus() {
+    internal fun saveStatus() {
         val bytes = ByteArray(notes.size * 16)
         var offset = 0
         for (note in notes) {
@@ -132,16 +134,16 @@ class AvBlobUpload(
             offset += 16
         }
 
-        if (statusFile.length() != bytes.size.toLong()) {
-            statusFile.setLength(bytes.size.toLong())
+        if (statusAccess.getSize() != bytes.size.toLong()) {
+            statusAccess.setSize(bytes.size.toLong())
         }
 
-        statusFile.seek(0)
-        statusFile.write(bytes)
+        statusAccess.setPosition(0)
+        statusAccess.write(bytes)
     }
 
-    fun loadStatus() {
-        val bytes = statusFile.readAll()
+    internal fun loadStatus() {
+        val bytes = statusAccess.readAll()
 
         val result = mutableListOf<AvChunkNote>()
         var offset = 0
@@ -154,40 +156,22 @@ class AvBlobUpload(
         notes = result
     }
 
-    @OptIn(ExperimentalEncodingApi::class)
-    fun RandomAccessFile.calcSha256(): String {
-        val digest = sha256()
-
-        var remaining = length()
-
-        val bufferSize = min(remaining, 1024L * 1024L)
-        val bytes = ByteArray(bufferSize.toInt())
-
-        seek(0)
-        while (remaining > 0) {
-            val readSize = min(bufferSize, remaining).toInt()
-            val actualRead = read(bytes, 0, readSize)
-            digest.update(bytes, 0, actualRead)
-            remaining -= actualRead
+    internal fun abort(throwException: Boolean = true) {
+        lock.use {
+            if (!isAborted) {
+                isAborted = true
+                safeCleanup { dataAccess.delete() }
+                safeCleanup { statusAccess.delete() }
+            }
         }
-
-        return Base64.encode(digest.digest())
-    }
-
-    fun abort(throwException: Boolean = true) {
-        safeCleanup { dataFile.close() }
-        safeCleanup { statusFile.close() }
-        safeCleanup { dataPath.delete(mustExists = false) }
-        safeCleanup { statusPath.delete() }
         if (throwException) throw AvUploadAbortException()
     }
 
-    fun safeCleanup(block: () -> Unit) {
+    private fun safeCleanup(block: () -> Unit) {
         try {
             block()
         } catch (ex: Exception) {
-            // TODO logging
-            ex.printStackTrace()
+            logger.warning(ex) { "exception during cleanup, uploadId=$key, valueId=$valueId" }
         }
     }
 }

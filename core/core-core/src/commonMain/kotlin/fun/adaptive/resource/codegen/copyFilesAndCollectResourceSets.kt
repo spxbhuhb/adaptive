@@ -1,9 +1,9 @@
 package `fun`.adaptive.resource.codegen
 
-import `fun`.adaptive.file.deleteRecursively
-import `fun`.adaptive.file.exists
-import `fun`.adaptive.file.syncBySizeAndLastModification
-import `fun`.adaptive.file.walkFiles
+import `fun`.adaptive.persistence.deleteRecursively
+import `fun`.adaptive.persistence.exists
+import `fun`.adaptive.persistence.syncBySizeAndLastModification
+import `fun`.adaptive.persistence.walkFiles
 import `fun`.adaptive.resource.*
 import `fun`.adaptive.utility.*
 import kotlinx.io.files.Path

@@ -1,11 +1,11 @@
 package `fun`.adaptive.grove.doc
 
 import `fun`.adaptive.log.LogLevel
-import `fun`.adaptive.file.absolute
-import `fun`.adaptive.file.append
-import `fun`.adaptive.file.ensure
-import `fun`.adaptive.file.resolve
-import `fun`.adaptive.file.write
+import `fun`.adaptive.persistence.absolute
+import `fun`.adaptive.persistence.append
+import `fun`.adaptive.persistence.ensure
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.write
 import kotlinx.io.files.Path
 
 class GroveDocCompilation(

@@ -3,8 +3,8 @@ package `fun`.adaptive.resource.codegen
 import `fun`.adaptive.resource.Qualifier
 import `fun`.adaptive.resource.ResourceTypeQualifier
 import `fun`.adaptive.runtime.GlobalRuntimeContext
-import `fun`.adaptive.file.resolve
-import `fun`.adaptive.file.testPath
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.globalTestPath
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
@@ -15,7 +15,7 @@ class GetTypeTest {
     fun testGetType() {
         if (GlobalRuntimeContext.platform.isJs) return
 
-        val testFilePath = testPath.resolve("resource.txt")
+        val testFilePath = globalTestPath.resolve("resource.txt")
 
         val compilation = ResourceCompilation(
             testFilePath, "", "commonTest", testFilePath, testFilePath,

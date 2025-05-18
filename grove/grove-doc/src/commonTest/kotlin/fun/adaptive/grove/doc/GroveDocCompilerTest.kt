@@ -1,12 +1,12 @@
 package `fun`.adaptive.grove.doc
 
-import `fun`.adaptive.file.clearedTestPath
-import `fun`.adaptive.file.ensure
-import `fun`.adaptive.file.exists
-import `fun`.adaptive.file.isEmpty
-import `fun`.adaptive.file.readString
-import `fun`.adaptive.file.resolve
-import `fun`.adaptive.file.write
+import `fun`.adaptive.persistence.clearedTestPath
+import `fun`.adaptive.persistence.ensure
+import `fun`.adaptive.persistence.exists
+import `fun`.adaptive.persistence.isEmpty
+import `fun`.adaptive.persistence.readString
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.write
 import `fun`.adaptive.log.LogLevel
 import kotlinx.io.files.Path
 import kotlin.js.JsName

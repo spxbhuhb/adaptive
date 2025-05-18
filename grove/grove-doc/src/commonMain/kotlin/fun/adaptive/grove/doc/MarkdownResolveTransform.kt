@@ -1,11 +1,11 @@
 package `fun`.adaptive.grove.doc
 
-import `fun`.adaptive.file.absolute
-import `fun`.adaptive.file.exists
-import `fun`.adaptive.file.isDirectory
-import `fun`.adaptive.file.list
-import `fun`.adaptive.file.readString
-import `fun`.adaptive.file.resolve
+import `fun`.adaptive.persistence.absolute
+import `fun`.adaptive.persistence.exists
+import `fun`.adaptive.persistence.isDirectory
+import `fun`.adaptive.persistence.list
+import `fun`.adaptive.persistence.readString
+import `fun`.adaptive.persistence.resolve
 import `fun`.adaptive.markdown.model.MarkdownCodeFence
 import `fun`.adaptive.markdown.model.MarkdownElement
 import `fun`.adaptive.markdown.model.MarkdownInline

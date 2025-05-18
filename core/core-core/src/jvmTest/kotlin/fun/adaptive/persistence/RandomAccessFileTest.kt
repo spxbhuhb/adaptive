@@ -1,4 +1,4 @@
-package `fun`.adaptive.file
+package `fun`.adaptive.persistence
 
 import kotlinx.io.EOFException
 import kotlinx.io.files.Path
@@ -8,30 +8,30 @@ import kotlin.test.*
 
 class RandomAccessFileTest {
     private lateinit var tempFile: File
-    private lateinit var randomAccessFile: RandomAccessFile
+    private lateinit var randomAccessPersistence: RandomAccessPersistence
 
     @BeforeTest
     fun setup() {
         tempFile = createTempFile().toFile()
-        randomAccessFile = Path(tempFile.absolutePath).getRandomAccess("rw")
+        randomAccessPersistence = Path(tempFile.absolutePath).getRandomAccess("rw")
     }
 
     @AfterTest
     fun tearDown() {
-        randomAccessFile.close()
+        randomAccessPersistence.close()
         tempFile.delete()
     }
 
     @Test
     fun testWriteAndRead() {
         val testData = "Hello, World!".toByteArray()
-        randomAccessFile.write(testData, 0, testData.size)
+        randomAccessPersistence.write(testData, 0, testData.size)
 
         // Reset position to start
-        randomAccessFile.seek(0)
+        randomAccessPersistence.setPosition(0)
 
         val readBuffer = ByteArray(testData.size)
-        val bytesRead = randomAccessFile.read(readBuffer, 0, readBuffer.size, true)
+        val bytesRead = randomAccessPersistence.read(readBuffer, 0, readBuffer.size, true)
 
         assertEquals(testData.size, bytesRead)
         assertContentEquals(testData, readBuffer)
@@ -40,14 +40,14 @@ class RandomAccessFileTest {
     @Test
     fun testSeekAndFilePointer() {
         val testData = "Test seeking functionality".toByteArray()
-        randomAccessFile.write(testData, 0, testData.size)
+        randomAccessPersistence.write(testData, 0, testData.size)
 
         val position = 5L
-        randomAccessFile.seek(position)
-        assertEquals(position, randomAccessFile.getFilePointer())
+        randomAccessPersistence.setPosition(position)
+        assertEquals(position, randomAccessPersistence.getPosition())
 
         val readBuffer = ByteArray(testData.size - position.toInt())
-        val bytesRead = randomAccessFile.read(readBuffer, 0, readBuffer.size, true)
+        val bytesRead = randomAccessPersistence.read(readBuffer, 0, readBuffer.size, true)
 
         assertEquals(testData.size - position.toInt(), bytesRead)
         assertContentEquals(
@@ -59,41 +59,41 @@ class RandomAccessFileTest {
     @Test
     fun testLength() {
         val testData = "Testing file length".toByteArray()
-        randomAccessFile.write(testData, 0, testData.size)
-        assertEquals(testData.size.toLong(), randomAccessFile.length())
+        randomAccessPersistence.write(testData, 0, testData.size)
+        assertEquals(testData.size.toLong(), randomAccessPersistence.getSize())
     }
 
     @Test
     fun testSetLength() {
         val testData = "Original content".toByteArray()
-        randomAccessFile.write(testData, 0, testData.size)
+        randomAccessPersistence.write(testData, 0, testData.size)
 
         val newLength = 10L
-        randomAccessFile.setLength(newLength)
-        assertEquals(newLength, randomAccessFile.length())
+        randomAccessPersistence.setSize(newLength)
+        assertEquals(newLength, randomAccessPersistence.getSize())
     }
 
     @Test
     fun testReadWithEOFException() {
         val testData = "Short text".toByteArray()
-        randomAccessFile.write(testData, 0, testData.size)
-        randomAccessFile.seek(0)
+        randomAccessPersistence.write(testData, 0, testData.size)
+        randomAccessPersistence.setPosition(0)
 
         val largerBuffer = ByteArray(testData.size + 10)
 
         assertFailsWith<EOFException> {
-            randomAccessFile.read(largerBuffer, 0, largerBuffer.size, true)
+            randomAccessPersistence.read(largerBuffer, 0, largerBuffer.size, true)
         }
     }
 
     @Test
     fun testReadWithoutEOFException() {
         val testData = "Short text".toByteArray()
-        randomAccessFile.write(testData, 0, testData.size)
-        randomAccessFile.seek(0)
+        randomAccessPersistence.write(testData, 0, testData.size)
+        randomAccessPersistence.setPosition(0)
 
         val largerBuffer = ByteArray(testData.size + 10)
-        val bytesRead = randomAccessFile.read(largerBuffer, 0, largerBuffer.size, false)
+        val bytesRead = randomAccessPersistence.read(largerBuffer, 0, largerBuffer.size, false)
 
         assertEquals(testData.size, bytesRead)
     }
@@ -101,11 +101,11 @@ class RandomAccessFileTest {
     @Test
     fun testPartialRead() {
         val testData = "Test partial read".toByteArray()
-        randomAccessFile.write(testData, 0, testData.size)
-        randomAccessFile.seek(0)
+        randomAccessPersistence.write(testData, 0, testData.size)
+        randomAccessPersistence.setPosition(0)
 
         val buffer = ByteArray(5)
-        val bytesRead = randomAccessFile.read(buffer, 0, buffer.size, true)
+        val bytesRead = randomAccessPersistence.read(buffer, 0, buffer.size, true)
 
         assertEquals(5, bytesRead)
         assertContentEquals(testData.sliceArray(0..4), buffer)

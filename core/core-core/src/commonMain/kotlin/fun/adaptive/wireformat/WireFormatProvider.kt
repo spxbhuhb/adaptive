@@ -5,8 +5,8 @@
 package `fun`.adaptive.wireformat
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.file.read
-import `fun`.adaptive.file.write
+import `fun`.adaptive.persistence.read
+import `fun`.adaptive.persistence.write
 import kotlinx.io.files.Path
 
 abstract class WireFormatProvider {

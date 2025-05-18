@@ -1,11 +1,11 @@
 package `fun`.adaptive.lib.util.temporal
 
 import `fun`.adaptive.adat.encodeToProtoByteArray
-import `fun`.adaptive.file.append
-import `fun`.adaptive.file.ensure
-import `fun`.adaptive.file.exists
-import `fun`.adaptive.file.read
-import `fun`.adaptive.file.write
+import `fun`.adaptive.persistence.append
+import `fun`.adaptive.persistence.ensure
+import `fun`.adaptive.persistence.exists
+import `fun`.adaptive.persistence.read
+import `fun`.adaptive.persistence.write
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexEntry
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexHeader
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder

@@ -1,8 +1,8 @@
 package `fun`.adaptive.resource.codegen
 
 import `fun`.adaptive.runtime.GlobalRuntimeContext
-import `fun`.adaptive.file.resolve
-import `fun`.adaptive.file.testPath
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.globalTestPath
 import kotlinx.io.files.Path
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -107,7 +107,7 @@ class CollectValuesFromXmlTest {
     fun test(xmlContent: () -> String): Pair<ResourceCompilation, Map<String, ResourceCompilation.ResourceValue>>? {
         if (GlobalRuntimeContext.platform.isJs) return null
 
-        val sourcePath = testPath.resolve("resources")
+        val sourcePath = globalTestPath.resolve("resources")
         val filePath = Path("/fake/path/to/file.xml")
 
         val values = mutableMapOf<String, ResourceCompilation.ResourceValue>()

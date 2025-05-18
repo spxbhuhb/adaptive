@@ -4,12 +4,15 @@
 
 package `fun`.adaptive.adat
 
+import `fun`.adaptive.persistence.exists
+import `fun`.adaptive.persistence.write
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.json.JsonBufferReader
 import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
 import `fun`.adaptive.wireformat.json.formatting.JsonFormat
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import kotlinx.io.files.Path
 
 /**
  * Gets an adat class stored somewhere in this one based on [path]. Path
@@ -66,3 +69,17 @@ fun <A : AdatClass> A.encode(wireFormatProvider: WireFormatProvider): ByteArray 
 fun <A : AdatClass> ByteArray.decode(wireFormatProvider: WireFormatProvider, companion: AdatCompanion<A>): A =
     wireFormatProvider.decode(this, companion.adatWireFormat)
 
+/**
+ * Encode [value] with [wireFormatProvider] into a byte array and write it to `this`.
+ */
+fun <A : AdatClass> save(path: Path, value: A, wireFormatProvider: WireFormatProvider, overwrite: Boolean = false, useTemporaryFile: Boolean = true) {
+    check(! path.exists() || overwrite) { "file $path already exists" }
+
+    @Suppress("UNCHECKED_CAST")
+    wireFormatProvider.encoder()
+        .rawInstance(value, value.adatCompanion.adatWireFormat as WireFormat<A>)
+        .pack()
+        .also {
+            path.write(it, append = false, overwrite = overwrite, useTemporaryFile = useTemporaryFile)
+        }
+}
