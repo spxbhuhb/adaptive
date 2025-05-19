@@ -2,32 +2,40 @@
 
 [Values](def://) in a [value store](def://) can be organized into value trees.
 
-This relies on the proper uses of [markers](def://) and on the [AvRefListSpec](class://) class.
+This relies on the proper uses of [markers](def://), [reference labels](def://) and
+the [AvRefListSpec](class://) class.
 
-To build a value tree, you need to designate two markers and two [reference labels](def://):
+## Tree setup
+
+Use the utility class [AvTreeSetup](class://) to store the tree-specific [markers](def://)
+and [reference labels](def://):
 
 Markers:
 
-- one for the [values](def://) that are nodes in the tree
-- one for the [values](def://) that contain lists of children references
+- [nodeMarker](property://AvTreeSetup) marks the [values](def://) that are nodes in the tree
+- [childListMarker](property://AvTreeSetup) marks the [values](def://) that contain lists of children references
+- [rootListMarker](prooperty://AvTreeSetup) marks the [value](def://) that contains the root node list of the tree (optional)
 
 Reference labels:
 
-- one for referencing the parent node
-- one for referencing the [value](def://) that contains the list of children references
+- [parentRefLabel](prooperty://AvTreeSetup) for referencing the parent node of a child node
+- [childListRefLabel](prooperty://AvTreeSetup) for referencing the [value](def://) that contains the list of child references
+
+## Tree functions
+
+[AvComputeContext](class://) provides functions to manage the tree:
+
+- [addTreeNode](function://AvComputeContext)
+- [removeTreeNode](function://AvComputeContext)
+- [moveTreeNodeUp](function://AvComputeContext)
+- [moveTreeNodeDown](function://AvComputeContext)
+- [getTreeChildIds](function://AvComputeContext)
+- [getTreeSiblingIds](function://AvComputeContext)
 
 ## Order of children
 
-This coding pattern maintains the order of the children. The [refs](property://AvRefListSpec) property
+Trees built this way maintain the order of the children. The [refs](property://AvRefListSpec) property
 of [AvRefListSpec](class://) is list, so order is kept.
-
-[AvComputeContext](class://) offers convenience functions to manage children lists:
-
-- [getSiblingIds](function://AvComputeContext)
-- [addChild](function://AvComputeContext)
-- [removeChild](function://AvComputeContext)
-- [moveUp](function://AvComputeContext)
-- [moveDown](function://AvComputeContext)
 
 ## Example
 
@@ -37,9 +45,6 @@ In this case:
 
 - the `space` marker marks all nodes of the tree
 - the `space-children` marker marks [values](def://) that contain an [AvRefListSpec](class://)
+- the `space-roots` marker marks the [value](def://) that contains the root list
 - the `spaceParentRef` reference label references the parent node
 - the `spaceChildrenRef` reference label points to the [value](def://) which contains an [AvRefListSpec](class://)
-
-This test case uses different markers and reference labels, but the concept is the same.
-
-- [AvTreeSubscriberTest](example://)

@@ -1,26 +1,19 @@
 package `fun`.adaptive.value
 
-import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.waitFor
+import `fun`.adaptive.value.ValueTestSupport.Companion.standaloneTest
 import `fun`.adaptive.value.operation.AvValueOperation
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
 import `fun`.adaptive.value.operation.AvoMarkerRemove
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.Clock.System.now
 import kotlin.js.JsName
-import kotlin.math.exp
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-import kotlin.time.Duration
-import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
@@ -28,7 +21,7 @@ class AvValueWorkerTest {
 
     @Test
     @JsName("shouldUpdateValuesWithNewerTimestamp")
-    fun `should update values when newer timestamp is received`() = test { worker ->
+    fun `should update values when newer timestamp is received`() = standaloneTest { worker ->
         val valueId = AvValueId()
         val oldValue = AvValue(valueId, spec = "OldValue")
         val newValue = AvValue(valueId, revision = 2L, lastChange = now().plus(1.seconds), spec = "NewValue")
@@ -43,7 +36,7 @@ class AvValueWorkerTest {
 
     @Test
     @JsName("shouldNotUpdateValuesWithOlderRevision")
-    fun `should not update values when older revision is received`() = test { worker ->
+    fun `should not update values when older revision is received`() = standaloneTest { worker ->
         val valueId = AvValueId()
         val oldValue = AvValue(valueId, spec = "OldValue")
         val newValue = AvValue(valueId, revision = 0L, spec = "NewValue")
@@ -58,7 +51,7 @@ class AvValueWorkerTest {
 
     @Test
     @JsName("shouldSubscribeAndReceiveInitialValues")
-    fun `should subscribe and receive initial values`() = test { worker ->
+    fun `should subscribe and receive initial values`() = standaloneTest { worker ->
         val valueId = AvValueId()
         val initialValue = AvValue(valueId, spec = "InitialValue")
         worker.queueAdd(initialValue)
@@ -75,7 +68,7 @@ class AvValueWorkerTest {
 
     @Test
     @JsName("shouldNotifySubscribersOnUpdate")
-    fun `should notify subscribers on update`() = test { worker ->
+    fun `should notify subscribers on update`() = standaloneTest { worker ->
         val valueId = AvValueId()
         val channel = Channel<AvValueOperation>(1)
         val subscription = AvChannelSubscription(uuid4(), condition(valueId), channel)
@@ -92,7 +85,7 @@ class AvValueWorkerTest {
 
     @Test
     @JsName("shouldAllowMultipleSubscribersToReceiveUpdates")
-    fun `should allow multiple subscribers to receive updates`() = test { worker ->
+    fun `should allow multiple subscribers to receive updates`() = standaloneTest { worker ->
         val valueId = AvValueId()
         val channel1 = Channel<AvValueOperation>(1)
         val channel2 = Channel<AvValueOperation>(1)
@@ -111,7 +104,7 @@ class AvValueWorkerTest {
 
     @Test
     @JsName("shouldUnsubscribeProperly")
-    fun `should unsubscribe properly`() = test { worker ->
+    fun `should unsubscribe properly`() = standaloneTest { worker ->
         val valueId = AvValueId()
         val channel = Channel<AvValueOperation>(1)
         val subscription = AvChannelSubscription(uuid4(), condition(valueId), channel)
@@ -144,7 +137,7 @@ class AvValueWorkerTest {
 
     @Test
     @JsName("shouldReturnValuesMatchingMarkerQuery")
-    fun `should return values matching the marker query`() = test { worker ->
+    fun `should return values matching the marker query`() = standaloneTest { worker ->
         val marker = "temperature"
         val item = addSensor(worker, setOf(marker))
 
@@ -155,7 +148,7 @@ class AvValueWorkerTest {
 
     @Test
     @JsName("shouldNotReturnValuesIfMarkerQueryDoesNotMatch")
-    fun `should not return values if the marker query does not match any values`() = test { worker ->
+    fun `should not return values if the marker query does not match any values`() = standaloneTest { worker ->
         val marker = "temperature"
         addSensor(worker, setOf("other-marker"))
 
@@ -166,7 +159,7 @@ class AvValueWorkerTest {
 
     @Test
     @JsName("shouldReturnMultipleValuesIfMarkersMatch")
-    fun `should return multiple values if multiple markers match`() = test { worker ->
+    fun `should return multiple values if multiple markers match`() = standaloneTest { worker ->
         val marker = "temperature"
         val item1 = addSensor(worker, setOf(marker))
         val item2 = addSensor(worker, setOf(marker))
@@ -181,7 +174,7 @@ class AvValueWorkerTest {
 
     @Test
     @JsName("shouldNotifySubscribersOnNewMarker")
-    fun `should notify marker-based subscriptions when a new marker is added`() = test { worker ->
+    fun `should notify marker-based subscriptions when a new marker is added`() = standaloneTest { worker ->
         val marker = "temperature"
         val initialItem = addSensor(worker, setOf("other-marker"))
 
@@ -202,7 +195,7 @@ class AvValueWorkerTest {
 
     @Test
     @JsName("shouldNotifySubscribersOnMarkerRemove")
-    fun `should notify marker-based subscriptions when a marker is removed`() = test { worker ->
+    fun `should notify marker-based subscriptions when a marker is removed`() = standaloneTest { worker ->
         val marker = "temperature"
 
         val initialItem = addSensor(worker, markers = setOf(marker))
@@ -222,21 +215,6 @@ class AvValueWorkerTest {
         assertEquals(received.valueId, newValue.uuid)
         assertEquals(received.marker, "temperature")
     }
-
-    fun test(timeout: Duration = 10.seconds, testFun: suspend (worker: AvValueWorker) -> Unit) =
-        runTest(timeout = timeout) {
-            val worker = AvValueWorker("general", proxy = false)
-            worker.logger = getLogger("worker")
-            val dispatcher = Dispatchers.Unconfined
-            val scope = CoroutineScope(dispatcher)
-
-            scope.launch {
-                worker.mount()
-                worker.run()
-            }
-
-            testFun(worker)
-        }
 
     fun assertEquals(expected: AvValue<*>, actual: AvValue<*>) {
         assertEquals(expected.uuid, actual.uuid)

@@ -6,6 +6,7 @@ import `fun`.adaptive.backend.builtin.service
 import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.query.firstImplOrNull
 import `fun`.adaptive.foundation.query.firstImpl
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.testing.DirectServiceTransport
 import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.utility.waitForReal
@@ -13,12 +14,13 @@ import `fun`.adaptive.wireformat.api.Json
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.withContext
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
-class TestSupport {
+class ValueTestSupport {
 
     val clientTransport = DirectServiceTransport(name = "client", wireFormatProvider = Json).also { it.trace = true; it.transportLog.enableFine() }
     val serverTransport = DirectServiceTransport(name = "server", wireFormatProvider = Json).also { it.trace = true; it.transportLog.enableFine() }
@@ -46,10 +48,10 @@ class TestSupport {
     companion object {
 
         @OptIn(ExperimentalCoroutinesApi::class)
-        fun valueTest(timeout: Duration = 10.seconds, testFun: suspend TestSupport.() -> Unit) =
+        fun valueTest(timeout: Duration = 10.seconds, testFun: suspend ValueTestSupport.() -> Unit) =
 
             runTest(timeout = timeout) {
-                with(TestSupport()) {
+                with(ValueTestSupport()) {
 
                     // Switch to a coroutine context that is NOT a test context. The test context
                     // skips delays that wreak havoc with service call timeouts that depend on
@@ -81,6 +83,21 @@ class TestSupport {
                     clientBackend.stop()
                     serverBackend.stop()
                 }
+            }
+
+        fun standaloneTest(timeout: Duration = 10.seconds, testFun: suspend (worker: AvValueWorker) -> Unit) =
+            runTest(timeout = timeout) {
+                val worker = AvValueWorker("general", proxy = false)
+                worker.logger = getLogger("worker")
+                val dispatcher = Dispatchers.Unconfined
+                val scope = CoroutineScope(dispatcher)
+
+                scope.launch {
+                    worker.mount()
+                    worker.run()
+                }
+
+                testFun(worker)
             }
     }
 }

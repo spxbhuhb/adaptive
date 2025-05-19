@@ -7,5 +7,6 @@ class AvTreeSetup(
     val nodeMarker: AvMarker,
     val childListMarker: AvMarker,
     val parentRefLabel: AvRefLabel,
-    val childListRefLabel: AvRefLabel
+    val childListRefLabel: AvRefLabel,
+    val rootListMarker: AvMarker?
 )

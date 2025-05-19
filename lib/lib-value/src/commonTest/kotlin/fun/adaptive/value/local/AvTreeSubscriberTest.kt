@@ -3,7 +3,7 @@ package `fun`.adaptive.value.local
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.TestSupport.Companion.valueTest
+import `fun`.adaptive.value.ValueTestSupport.Companion.valueTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.test.Test
 import kotlin.test.assertEquals

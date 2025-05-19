@@ -38,7 +38,6 @@ open class AvValueWorker(
         super.unmount()
     }
 
-    @ExperimentalCoroutinesApi
     override suspend fun run() {
         storeOrNull?.run()
     }

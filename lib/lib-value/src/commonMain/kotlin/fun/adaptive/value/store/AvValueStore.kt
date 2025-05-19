@@ -59,7 +59,7 @@ open class AvValueStore(
     // Operations
     // --------------------------------------------------------------------------------
 
-    @ExperimentalCoroutinesApi
+    @OptIn(ExperimentalCoroutinesApi::class)
     suspend fun run() {
         if (trace) logger.enableFine() // .also { it.usePrintln = true}
 

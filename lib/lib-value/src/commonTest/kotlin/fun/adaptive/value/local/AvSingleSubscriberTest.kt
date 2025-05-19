@@ -4,7 +4,7 @@ import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.TestSupport.Companion.valueTest
+import `fun`.adaptive.value.ValueTestSupport.Companion.valueTest
 import `fun`.adaptive.value.avById
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.js.JsName
