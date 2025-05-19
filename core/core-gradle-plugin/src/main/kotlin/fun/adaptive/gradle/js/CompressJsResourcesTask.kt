@@ -21,14 +21,14 @@ abstract class CompressJsResourcesTask : DefaultTask() {
     init {
         group = "release"
         description = "Compress JS resources with gzip and brotli for Ktor's preCompressed feature"
-
-        if (! Brotli4jLoader.isAvailable()) {
-            Brotli4jLoader.ensureAvailability() // This loads native lib for current platform
-        }
     }
 
     @TaskAction
     fun compress() {
+        if (! Brotli4jLoader.isAvailable()) {
+            Brotli4jLoader.ensureAvailability() // This loads native lib for current platform
+        }
+
         if (! inputDir.exists()) {
             logger.warn("JS output directory does not exist: $inputDir")
             return
