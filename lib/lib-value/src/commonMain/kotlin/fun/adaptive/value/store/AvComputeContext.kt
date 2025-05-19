@@ -1,5 +1,6 @@
 package `fun`.adaptive.value.store
 
+import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.p04
 import `fun`.adaptive.value.AvMarker
 import `fun`.adaptive.value.AvRefLabel
@@ -8,6 +9,8 @@ import `fun`.adaptive.value.AvSubscription
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.model.AvRefLabels
+import `fun`.adaptive.value.model.AvTreeSetup
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
 
 class AvComputeContext(
@@ -58,7 +61,7 @@ class AvComputeContext(
 
     fun getSiblingIds(
         childId: AvValueId,
-        parentRefLabel : AvRefLabel,
+        parentRefLabel: AvRefLabel,
         childListMarker: AvMarker,
         topListMarker: AvMarker? = null
     ): List<AvValueId> {
@@ -92,30 +95,35 @@ class AvComputeContext(
 //
 //        this += new
 //    }
-//
-//    fun addChild(
-//        parentId: AvValueId,
-//        childId: AvValueId,
-//        childListMarker: AvMarker
-//    ) {
-//        val original: AvRefList? = markerVal(parentId, childListMarker)
-//
-//        if (original != null) {
-//            this += original.copy(refs = original.refs + childId)
-//            return
-//        }
-//
-//        val new = AvRefList(parentId = parentId, childListMarker, listOf(childId))
-//
-//        val parent = store.unsafeItem(parentId)
-//
-//        val markers = parent.toMutableMarkers()
-//
-//        markers[childListMarker] = new.uuid
-//
-//        this += new
-//        this += parent.copy(markersOrNull = markers)
-//    }
+
+    fun addChild(
+        parentId: AvValueId,
+        childId: AvValueId,
+        treeSetup: AvTreeSetup
+    ) {
+        val parent = store.unsafeGet(parentId)
+        val original: AvValue<AvRefListSpec>? = refOrNull(parent, treeSetup.childListRefLabel)?.withSpec()
+
+        if (original != null) {
+            if (childId in original.spec.refs) return
+            this += original.copy(spec = AvRefListSpec(original.spec.refs + childId))
+            return
+        }
+
+        val new = AvValue(
+            uuid = uuid7(),
+            markersOrNull = setOf(treeSetup.childListMarker),
+            refsOrNull = mapOf(AvRefLabels.REF_LIST_OWNER to parentId),
+            spec = AvRefListSpec(listOf(childId))
+        )
+
+        val refs = parent.mutableRefs()
+        refs[treeSetup.childListRefLabel] = new.uuid
+
+        this += new
+        this += parent.copy(refsOrNull = refs)
+    }
+
 //
 //    fun removeChild(
 //        parentId: AvValueId,

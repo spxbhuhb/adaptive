@@ -17,7 +17,7 @@ import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.blob.AvBlobUploadKey
-import `fun`.adaptive.value.model.AvValueMarkers
+import `fun`.adaptive.value.model.AvMarkers
 import kotlinx.io.files.Path
 
 class AvBlobWorker(
@@ -55,7 +55,7 @@ class AvBlobWorker(
     suspend fun startUpload(session: ServiceSession, valueId: AvValueId, size: Long): AvBlobUploadKey {
         valueWorker.ensureBlobCreateAccess(session, valueId)
 
-        valueWorker.addMarker(valueId, AvValueMarkers.BLOB_UPLOADING, exclusive = true)
+        valueWorker.addMarker(valueId, AvMarkers.BLOB_UPLOADING, exclusive = true)
 
         val uploadKey = uuid4<AvBlobUpload<*>>()
         val uploadKeyAsString = uploadKey.toString()
@@ -109,7 +109,7 @@ class AvBlobWorker(
                 uploads.remove(uploadKey)
             }
 
-            valueWorker.replaceMarker(upload.valueId, AvValueMarkers.BLOB_UPLOADING, AvValueMarkers.BLOB, exclusive = true)
+            valueWorker.replaceMarker(upload.valueId, AvMarkers.BLOB_UPLOADING, AvMarkers.BLOB, exclusive = true)
 
         } catch (ex: Exception) {
             failCleanup(upload, ex, storePath)
@@ -144,7 +144,7 @@ class AvBlobWorker(
         }
 
         safeSuspendCall(logger) {
-            valueWorker.removeMarker(upload.valueId, AvValueMarkers.BLOB_UPLOADING)
+            valueWorker.removeMarker(upload.valueId, AvMarkers.BLOB_UPLOADING)
         }
     }
 
@@ -163,7 +163,7 @@ class AvBlobWorker(
             }
         }
 
-        valueWorker.removeMarker(valueId, AvValueMarkers.BLOB)
+        valueWorker.removeMarker(valueId, AvMarkers.BLOB)
     }
 
 }
