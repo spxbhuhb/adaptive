@@ -13,7 +13,7 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "adaptive-lib-graphics"
+val baseName = "lib-graphics"
 val pomName = "Adaptive Lib Canvas and SVG"
 val scmPath = "spxbhuhb/adaptive"
 
