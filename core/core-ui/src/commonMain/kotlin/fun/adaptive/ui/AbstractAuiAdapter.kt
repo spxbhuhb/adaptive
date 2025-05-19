@@ -249,10 +249,10 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
 
             if (v || h) {
                 @Suppress("UNCHECKED_CAST")
-                return (currentContainer as AbstractContainer<RT,CRT> to RawPosition(top, left))
+                return (currentContainer as AbstractContainer<RT, CRT> to RawPosition(top, left))
             }
 
-            val scrollPosition = scrollPosition(currentContainer)!!
+            val scrollPosition = scrollPosition(currentContainer) !!
             top += currentRenderData.finalTop - scrollPosition.top
             left += currentRenderData.finalLeft - scrollPosition.left
             currentContainer = currentRenderData.layoutFragment
@@ -287,4 +287,66 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
     fun navChange() {
         trace("nav-change", navSupport.root.toString())
     }
+
+    // ------------------------------------------------------------------------------
+    // Hit detection
+    // ------------------------------------------------------------------------------
+
+
+    /**
+     * Finds all descendant fragments of [start] at the given position.
+     *
+     * Does not add structural fragments to the result.
+     *
+     * @param start The fragment to start the search from
+     * @param x The horizontal position to search at, use NaN to ignore check
+     * @param y The vertical position to search at, use NaN to ignore check
+     * @return List of fragments that contain the given position, ordered from outermost to innermost
+     */
+    fun findByPosition(
+        start: AbstractAuiFragment<*>,
+        x: Double,
+        y: Double
+    ): List<AbstractAuiFragment<*>> {
+        val result = mutableListOf<AbstractAuiFragment<*>>()
+        for (child in start.children) {
+            findByPosition(child, y, x, result)
+        }
+        return result
+    }
+
+    private fun findByPosition(
+        fragment: AdaptiveFragment,
+        top: Double,
+        left: Double,
+        result: MutableList<AbstractAuiFragment<*>>
+    ) {
+        if (fragment is AbstractAuiFragment<*>) {
+
+            val renderData = fragment.renderData
+
+            val finalTop = renderData.finalTop
+            val finalLeft = renderData.finalLeft
+
+            val isInside =
+                left.isNaN() || (left >= finalLeft && left <= finalLeft + renderData.finalWidth) &&
+                top.isNaN() || (top >= finalTop && top <= finalTop + renderData.finalHeight)
+
+            if (isInside) {
+                if (!fragment.isStructural) {
+                    @Suppress("UNCHECKED_CAST")
+                    result.add(fragment as AbstractAuiFragment<RT>)
+                }
+                for (child in fragment.children) {
+                    findByPosition(child, top - finalTop, left - finalLeft, result)
+                }
+            }
+
+        } else {
+            for (child in fragment.children) {
+                findByPosition(child, top, left, result)
+            }
+        }
+    }
+
 }

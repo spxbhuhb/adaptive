@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 @Adaptive
 fun wsDocBrowserTool(pane: WsPane<Unit, DocBrowserToolController>): AdaptiveFragment {
 
-    val observed = valueFrom { pane.controller.treeViewModel }
+    val observed = valueFrom { pane.controller.treeViewBackend }
 
     wsToolPane(pane) {
         tree(observed)

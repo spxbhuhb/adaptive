@@ -4,8 +4,19 @@ import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import kotlin.properties.Delegates.observable
 
+/**
+ * Represents an item in a tree structure that can contain hierarchical data.
+ *
+ * @param T The type of data associated with this tree item
+ * @property icon The graphical representation of this item
+ * @property title The text displayed for this item
+ * @property data The data associated with this item
+ * @property open Whether this item is expanded to show its children
+ * @property selected Whether this item is currently selected
+ * @property parent The parent item of this tree item, null if this is a root item
+ */
 class TreeItem<T>(
-    icon: GraphicsResourceSet,
+    icon: GraphicsResourceSet?,
     title: String,
     data: T,
     open: Boolean = false,
@@ -27,6 +38,15 @@ class TreeItem<T>(
             throw UnsupportedOperationException()
         }
 
+
+    /**
+     * Toggles the open state of this tree item.
+     * If the item is open, it will be closed, and vice versa.
+     */
+    fun toggle() {
+        open = !open
+    }
+    
     /**
      * Opens this tree node and all of its children recursively. This is a
      * **VERY** expensive operation. The innermost children are opened first.

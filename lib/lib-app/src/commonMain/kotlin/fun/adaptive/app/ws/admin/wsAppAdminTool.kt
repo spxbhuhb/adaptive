@@ -8,7 +8,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeTheme
-import `fun`.adaptive.ui.tree.TreeViewModel
+import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.model.SingularWsItem
@@ -20,7 +20,7 @@ fun wsAppAdminTool(pane: WsPane<*, *>): AdaptiveFragment {
 
     val module = fragment().wsContext<AppAdminWsModule<*>>()
 
-    val model = TreeViewModel(
+    val model = TreeViewBackend(
         module.adminItems.toTreeItems(),
         context = Unit,
         theme = TreeTheme.list,

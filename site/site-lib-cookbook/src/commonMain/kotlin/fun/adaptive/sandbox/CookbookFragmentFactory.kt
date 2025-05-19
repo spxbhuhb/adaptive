@@ -38,6 +38,8 @@ import `fun`.adaptive.sandbox.recipe.ui.svg.svgRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tab.tabRecipe
 import `fun`.adaptive.sandbox.recipe.ui.text.paragraphRecipe
 import `fun`.adaptive.sandbox.recipe.ui.text.textRecipe
+import `fun`.adaptive.sandbox.recipe.ui.tree.treeBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.tree.treePlayground
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeRecipe
 
 object CookbookFragmentFactory : FoundationFragmentFactory() {
@@ -116,6 +118,15 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
 
         add("cookbook/input/text/playground", ::textInputPlayground)
         add("cookbook/input/text/recipe", ::textInputRecipe)
+
+        // ----------------------------------------------------------------------------
+        // Tree
+        // ----------------------------------------------------------------------------
+
+        add("cookbook/tree/basic", ::treeBasicExample)
+
+        add("cookbook/tree/playground", ::treePlayground)
+        add("cookbook/tree/recipe", ::treeRecipe)
 
     }
 }

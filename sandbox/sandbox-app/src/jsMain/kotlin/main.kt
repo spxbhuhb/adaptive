@@ -3,12 +3,9 @@
  */
 
 import `fun`.adaptive.app.BasicBrowserClientApplication.Companion.basicBrowserClient
-import `fun`.adaptive.app.WsBrowserClientApplication.Companion.wsBrowserClient
-import `fun`.adaptive.app.ws.AppMainWsModule
 import `fun`.adaptive.app.ws.SandBoxClientModule
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.chart.app.ChartModule
-import `fun`.adaptive.document.app.DocWsModule
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
@@ -20,43 +17,26 @@ import `fun`.adaptive.lib.util.log.CollectingLogger
 import `fun`.adaptive.log.LoggerFactory
 import `fun`.adaptive.log.defaultLoggerFactory
 import `fun`.adaptive.log.getLogger
-import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.ui.input.button.buttonRecipe
+import `fun`.adaptive.sandbox.recipe.ui.tree.treeRecipe
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
-import `fun`.adaptive.ui.generated.resources.folder
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.value.app.ValueClientModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.random.Random
 
 fun main() {
     //virtualizedMain()
-    //iotMain()
     //basicAppMain()
     sandboxMain()
     // iotMain()
-}
-
-fun iotMain() {
-    wsBrowserClient {
-        module { LibUiClientModule() }
-        module { GroveRuntimeModule() }
-        module { ValueClientModule() }
-        module { ChartModule() }
-        module { DocWsModule() }
-        module { AppMainWsModule() }
-        module { SandBoxClientModule() }
-    }
 }
 
 fun basicAppMain() {
@@ -150,38 +130,13 @@ fun sandboxMain() {
                     //containerPlayground()
                     //selectInputPlayground()
                     //formBasicExample()
-                    buttonRecipe()
+                    treeRecipe()
                 }
             }
         } catch (ex: Exception) {
             rootUiLogger.error(ex)
         }
     }
-}
-
-private fun generate(): List<TreeItem<Unit>> {
-    val numRoots = Random.nextInt(1, 4)
-    return List(numRoots) { generateRandomTree(it + 1, 3, null) } // Adjust depth as needed
-}
-
-private fun generateRandomTree(index: Int, depth: Int, parent: TreeItem<Unit>?): TreeItem<Unit> {
-    val nodeTitle = "Item ${index.toString().toCharArray().joinToString(".")}"
-    val numChildren = Random.nextInt(1, 4)
-
-    val item = TreeItem(
-        icon = Graphics.folder,
-        title = nodeTitle,
-        data = Unit,
-        open = true,
-        parent = parent
-    )
-
-    item.children = when (depth) {
-        0 -> emptyList()
-        else -> List(numChildren) { generateRandomTree(index * 10 + it + 1, depth - 1, item) }
-    }
-
-    return item
 }
 
 @Adaptive

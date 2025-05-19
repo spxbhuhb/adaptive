@@ -7,7 +7,7 @@ import `fun`.adaptive.document.ws.DocTreeModel
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.tree.TreeViewModel
+import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.value.AvUiTree
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
@@ -20,7 +20,7 @@ abstract class AbstractDocToolController(
 
     val service = getService<DocApi>(workspace.transport)
 
-    val treeViewModel = TreeViewModel<AvValueId, AbstractDocToolController>(
+    val treeViewBackend = TreeViewBackend<AvValueId, AbstractDocToolController>(
         emptyList(),
         selectedFun = ::selectedFun,
         multiSelect = false,
@@ -35,15 +35,15 @@ abstract class AbstractDocToolController(
     )
 
     fun start() {
-        valueTreeStore.addListener { treeViewModel.items = it }
+        valueTreeStore.addListener { treeViewBackend.items = it }
     }
 
     fun expandAll() {
-        treeViewModel.items.forEach { it.expandAll() }
+        treeViewBackend.items.forEach { it.expandAll() }
     }
 
     fun collapseAll() {
-        treeViewModel.items.forEach { it.collapseAll() }
+        treeViewBackend.items.forEach { it.collapseAll() }
     }
 
     abstract fun selectedFun(viewModel: DocTreeModel, treeItem: TreeItem<AvValueId>, modifiers: Set<EventModifier>)

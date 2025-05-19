@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.tree.TreeViewModel
+import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.workspace.model.WsPane
@@ -16,19 +16,19 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 fun cookbookRecipes(pane: WsPane<*, *>): AdaptiveFragment {
     val context = fragment().wsContext<CbWsContext>()
 
-    val treeViewModel = TreeViewModel(
+    val treeViewBackend = TreeViewBackend(
         recipes.map { it.toTreeItem(context, null) },
         selectedFun = { viewModel, item, modifiers ->
-            if (item.data.type == CbWsContext.WSIT_CB_RECIPE_FOLDER) return@TreeViewModel
+            if (item.data.type == CbWsContext.WSIT_CB_RECIPE_FOLDER) return@TreeViewBackend
             showRecipe(context, item, modifiers)
-            TreeViewModel.defaultSelectedFun(viewModel, item, modifiers)
+            TreeViewBackend.defaultSelectedFun(viewModel, item, modifiers)
         },
         context = Unit,
-        openWithSingleClick = true
+        singleClickOpen = true
     )
 
     wsToolPane(pane) {
-        tree(treeViewModel)
+        tree(treeViewBackend)
     }
 
     return fragment()
@@ -89,7 +89,7 @@ val recipes =
             CbWsRecipeItem("Paragraph", key = "cookbook:recipe:paragraph"),
             CbWsRecipeItem("Sidebar", key = "cookbook:recipe:sidebar"),
             CbWsRecipeItem("Snackbar", key = "cookbook:recipe:snackbar"),
-            CbWsRecipeItem("Tree", key = "cookbook:recipe:tree"),
+            CbWsRecipeItem("Tree", key = "cookbook/tree/recipe"),
         ),
 
         set(
