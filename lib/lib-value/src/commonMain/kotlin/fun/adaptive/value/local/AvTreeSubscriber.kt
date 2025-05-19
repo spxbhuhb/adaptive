@@ -4,27 +4,48 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue.Companion.withSpec
-import `fun`.adaptive.value.local.AvListSubscriber
+import `fun`.adaptive.value.model.AvTreeSetup
 import kotlin.reflect.KClass
 
 /**
  * A subscriber that builds a tree from the received values.
+ *
+ * Observable, the observed value is the list of root nodes (each node is type of [TREE_ITEM]).
+ *
+ * Observers are notified whenever:
+ *
+ * - the structure of the tree changes,
+ * - a node changes.
+ *
+ * @param  SPEC  The [spec](def://) values of this tree use.
+ * @param  TREE_ITEM  The output tree item type. Usually not a value, a UI tree item, for example.
  */
 abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
     subscribeFun: AvSubscribeFun,
     backend: BackendAdapter,
+    val parentRefLabel: AvMarker,
     val specClass: KClass<SPEC>,
 ) : AvValueSubscriber<List<TREE_ITEM>>(subscribeFun, backend) {
 
     constructor(
         backend: BackendAdapter,
+        parentRefLabel: AvMarker,
         specClass: KClass<SPEC>,
         vararg conditions: AvSubscribeCondition
     ) : this(
-        { service, id -> conditions.toList().also { service.subscribe(it) } }, backend, specClass
+        { service, id -> conditions.toList().also { service.subscribe(it) } }, backend, parentRefLabel, specClass
     )
 
-    abstract val parentRefLabel: AvMarker
+    constructor(
+        backend: BackendAdapter,
+        specClass: KClass<SPEC>,
+        setup: AvTreeSetup
+    ) : this(
+        backend,
+        setup.parentRefLabel,
+        specClass,
+        avByMarker(setup.nodeMarker), avByMarker(setup.childListMarker)
+    )
 
     /**
      * List of the top-most tree items. The items should have a list

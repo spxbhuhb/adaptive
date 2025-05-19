@@ -1,6 +1,6 @@
 # Building value trees
 
-[Values](def://) in a [value store](def://) can be organized into value trees.
+[Values](def://) in a [value store](def://) can be organized into [value trees](def://).
 
 This relies on the proper uses of [markers](def://), [reference labels](def://) and
 the [AvRefListSpec](class://) class.
@@ -48,3 +48,15 @@ In this case:
 - the `space-roots` marker marks the [value](def://) that contains the root list
 - the `spaceParentRef` reference label references the parent node
 - the `spaceChildrenRef` reference label points to the [value](def://) which contains an [AvRefListSpec](class://)
+
+## Subscribing to value trees
+
+The [AvTreeSubscriber](class://) abstract class provides logic to subscribe for complete [value trees](def://).
+
+This is an abstract class to be extended. The extending class has to override the tree-specific
+properties and functions.
+
+See the class used for the unit tests for an example:
+
+- [TestTreeSubscriber](class://)
+- [TestTreeItem](class://)
