@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 import kotlin.coroutines.cancellation.CancellationException
 
 @AdaptiveExpect(backend)
-fun workerImpl(vararg instructions: AdaptiveInstruction, impl: () -> WorkerImpl<*>): AdaptiveFragment {
+fun worker(vararg instructions: AdaptiveInstruction, impl: () -> WorkerImpl<*>): AdaptiveFragment {
     manualImplementation(instructions, impl)
 }
 

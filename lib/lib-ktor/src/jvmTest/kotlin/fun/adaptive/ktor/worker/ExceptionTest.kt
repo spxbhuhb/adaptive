@@ -10,7 +10,7 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.builtin.workerImpl
+import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.service.ServiceApi
@@ -64,7 +64,7 @@ class ExceptionTest {
 
         val serverBackend = backend {
             service { NumberService() }
-            workerImpl { KtorWorker(10001) }
+            worker { KtorWorker(10001) }
         }
 
         val clientTransport = webSocketTransport("http://127.0.0.1:10001")

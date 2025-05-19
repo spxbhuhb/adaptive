@@ -2,7 +2,7 @@ package `fun`.adaptive.app.server.main.backend
 
 import `fun`.adaptive.runtime.AbstractServerApplication
 import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.builtin.workerImpl
+import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
@@ -19,7 +19,7 @@ fun basicAppServerBackendMain(): AdaptiveFragment {
     }
 
     for (w in ws.workers) {
-        workerImpl { w }
+        worker { w }
     }
 
     return fragment()

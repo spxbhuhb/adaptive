@@ -7,11 +7,11 @@ package `fun`.adaptive.ktor
 import `fun`.adaptive.auth.model.AccessDenied
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ktor.worker.KtorWorker
-import `fun`.adaptive.backend.builtin.workerImpl
+import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
 @Adaptive
 fun ktor(port : Int = 8080) {
     WireFormatRegistry += AccessDenied
-    workerImpl { KtorWorker(port) }
+    worker { KtorWorker(port) }
 }

@@ -3,7 +3,7 @@ package `fun`.adaptive.test
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.service
-import `fun`.adaptive.backend.builtin.workerImpl
+import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.unsupported
@@ -54,7 +54,7 @@ class TestServerApplication(
                 }
 
                 for (w in workspace.workers) {
-                    workerImpl { w }
+                    worker { w }
                 }
             }
         }
