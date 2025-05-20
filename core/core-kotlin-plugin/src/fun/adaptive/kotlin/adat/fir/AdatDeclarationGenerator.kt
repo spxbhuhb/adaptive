@@ -10,9 +10,9 @@ import `fun`.adaptive.kotlin.adat.FqNames
 import `fun`.adaptive.kotlin.adat.Names
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.analysis.checkers.declaration.primaryConstructorSymbol
 import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
+import org.jetbrains.kotlin.fir.declarations.primaryConstructorIfAny
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
 import org.jetbrains.kotlin.fir.expressions.impl.FirEmptyExpressionBlock
 import org.jetbrains.kotlin.fir.extensions.*
@@ -23,6 +23,7 @@ import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createMemberProperty
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.getSuperTypes
+import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.*
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
@@ -231,6 +232,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         }
     }
 
+    @OptIn(SymbolInternals::class)
     override fun generateFunctions(callableId: CallableId, context: MemberGenerationContext?): List<FirNamedFunctionSymbol> {
         if (! context.isAdatCompanion && ! context.isAdatClass) return emptyList()
         if (context == null) return emptyList()
@@ -264,7 +266,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
             Names.COPY -> {
                 listOf(
                     createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, context.owner.defaultType()) {
-                        for (parameter in context.owner.primaryConstructorSymbol(session) !!.valueParameterSymbols) {
+                        for (parameter in context.owner.fir.primaryConstructorIfAny(session) !!.valueParameterSymbols) {
                             valueParameter(parameter.name, parameter.resolvedReturnType, hasDefaultValue = true)
                         }
                     }.also{
