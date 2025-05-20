@@ -48,23 +48,7 @@ class ArmSequenceBuilder(
         irSetDescendantStateVariable(
             patchFun,
             Indices.ADAPTIVE_SEQUENCE_ITEM_INDICES,
-            IrCallImpl(
-                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                irBuiltIns.intArray.defaultType,
-                irContext.irBuiltIns.symbolFinder.findFunctions(Name.identifier("intArrayOf")).single(),
-                typeArgumentsCount = 0
-            ).apply {
-                putValueArgument(0,
-                    IrVarargImpl(
-                        SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                        irBuiltIns.intArray.defaultType,
-                        irBuiltIns.intType
-                    ).apply {
-                        elements += armSequence.statements.map { irConst(it.index) }
-                    }
-                )
-            }
-
+            irIntArrayOf(armSequence.statements.map { it.index })
         )
 
 }

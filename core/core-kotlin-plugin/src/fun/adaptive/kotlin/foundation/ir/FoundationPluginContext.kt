@@ -90,7 +90,6 @@ class FoundationPluginContext(
     val set = Strings.SET.fragmentFunction()
     val get = Strings.GET.fragmentFunction()
 
-
     val arrayGet = checkNotNull(irContext.irBuiltIns.arrayClass.getSimpleFunction("get"))
 
     val helperFunctions = listOf(
@@ -124,6 +123,8 @@ class FoundationPluginContext(
         irBuiltIns.intType,
         adaptiveFragmentType
     )
+
+    val lifecycleBoundClass = ClassIds.LIFECYCLE_BOUND.classSymbol()
 
     private fun String.fragmentPropertyList() =
         adaptiveFragmentClass.owner.properties.filter { it.name.asString() == this }.map { it.symbol }.toList()

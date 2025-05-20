@@ -97,6 +97,12 @@ abstract class AdaptiveFragment(
 
     var bindings: MutableList<AdaptiveStateVariableBinding<*>>? = null
 
+    /**
+     * Indices of [internal state variables](def://) that are bound to the
+     * [fragment lifecycle](def://) and should be notified about changes.
+     */
+    var lifecycleBound : IntArray? = null
+
     val instructions: AdaptiveInstructionGroup
         get() = get(0) ?: emptyInstructions
 
@@ -171,12 +177,24 @@ abstract class AdaptiveFragment(
         children.forEach { it.mount() }
         isMounted = true
 
+        lifecycleBound?.let {
+            for (index in it) {
+                (state[index] as? LifecycleBound)?.mount(this, index)
+            }
+        }
+
         if (trace) trace("after-Mount")
     }
 
     open fun patch() {
         patchExternal()
         patchInternal()
+
+        lifecycleBound?.let {
+            for (index in it) {
+                (state[index] as? LifecycleBound)?.patch(this, index)
+            }
+        }
     }
 
     open fun patchExternal() {
@@ -225,6 +243,13 @@ abstract class AdaptiveFragment(
         while (index >= 0) {
             children[index --].unmount()
         }
+
+        lifecycleBound?.let {
+            for (index in it) {
+                (state[index] as? LifecycleBound)?.unmount(this, index)
+            }
+        }
+
         isMounted = false
 
         if (trace) trace("after-Unmount")
@@ -241,6 +266,12 @@ abstract class AdaptiveFragment(
         // converting to array so we can safely remove
         producers?.toTypedArray()?.forEach { removeProducer(it) }
         bindings?.toTypedArray()?.forEach { removeBinding(it) }
+
+        lifecycleBound?.let {
+            for (index in it) {
+                (state[index] as? LifecycleBound)?.dispose(this, index)
+            }
+        }
 
         if (trace) trace("after-Dispose")
     }
@@ -290,6 +321,12 @@ abstract class AdaptiveFragment(
             // this might be not a good solution.
 
             if (adatEquals && value !is AdaptiveStateVariableBinding<*>) return
+        }
+
+        if (lifecycleBound != null) {
+            if (index in lifecycleBound!!) {
+                (state[index] as? LifecycleBound)?.dispose(this, index)
+            }
         }
 
         state[index] = value

@@ -11,7 +11,7 @@ In Adaptive, service APIs are modeled with Kotlin interfaces annotated with the 
 ## See also
 
 - [service](def://)
-- [backend](def://)
+- [application backend](def://)
 - [backend fragment implementation](def://)
 - [server application](def://)
 - [How to write a service](guide://).

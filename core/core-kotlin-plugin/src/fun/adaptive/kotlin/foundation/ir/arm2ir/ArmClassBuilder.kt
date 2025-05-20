@@ -6,6 +6,7 @@
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.kotlin.common.property
 import `fun`.adaptive.kotlin.common.propertyGetter
 import `fun`.adaptive.kotlin.foundation.FoundationPluginKey
 import `fun`.adaptive.kotlin.foundation.Indices
@@ -25,7 +26,6 @@ import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.builders.declarations.buildClass
 import org.jetbrains.kotlin.ir.builders.declarations.buildReceiverParameter
-import org.jetbrains.kotlin.ir.builders.irGet
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrConstKind
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -64,14 +64,16 @@ class ArmClassBuilder(
         irClass.superTypes = listOf(pluginContext.adaptiveFragmentType)
         irClass.metadata = armClass.originalFunction.metadata
         irClass.thisReceiver()
-        constructor()
-        initializer()
+        val constructorFun = constructor()
+        val initFun = initializer()
 
         irClass.parent = armClass.originalFunction
 
-        constructorBody()
+        constructorBody(constructorFun)
 
         irClass.addFakeOverrides(IrTypeSystemContextImpl(irContext.irBuiltIns))
+
+        initializerBody(initFun)
 
         armClass.irClass = irClass
         pluginContext.irClasses[armClass.fqName] = irClass
@@ -104,10 +106,9 @@ class ArmClassBuilder(
             }
         }
 
-    private fun constructorBody() {
-        val constructor = irClass.constructors.first()
+    private fun constructorBody(constructorFun: IrConstructor) {
 
-        constructor.body = irFactory.createBlockBody(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET).apply {
+        constructorFun.body = irFactory.createBlockBody(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET).apply {
 
             statements += IrDelegatingConstructorCallImpl(
                 SYNTHETIC_OFFSET,
@@ -116,9 +117,9 @@ class ArmClassBuilder(
                 pluginContext.adaptiveFragmentClass.constructors.first(),
                 typeArgumentsCount = 0
             ).apply {
-                putValueArgument(0, irGet(constructor.valueParameters[0]))
-                putValueArgument(1, irGet(constructor.valueParameters[1]))
-                putValueArgument(2, irGet(constructor.valueParameters[2]))
+                putValueArgument(0, irGet(constructorFun.valueParameters[0]))
+                putValueArgument(1, irGet(constructorFun.valueParameters[1]))
+                putValueArgument(2, irGet(constructorFun.valueParameters[2]))
                 putValueArgument(3, irConst(armClass.stateVariables.size))
             }
 
@@ -140,11 +141,24 @@ class ArmClassBuilder(
         ).also { initFun ->
             initFun.parent = irClass
             irClass.declarations += initFun
-
-            initFun.body = DeclarationIrBuilder(irContext, initFun.symbol).irBlockBody {
-
-            }
         }
+
+    private fun initializerBody(initFun: IrAnonymousInitializer) {
+        initFun.body = DeclarationIrBuilder(irContext, initFun.symbol).irBlockBody {
+            addLifecycleBound()
+        }
+    }
+
+    private fun IrBlockBodyBuilder.addLifecycleBound() {
+        val lifecycleBound = armClass.stateVariables.filter { it.type.isSubtypeOfClass(pluginContext.lifecycleBoundClass) }
+        if (lifecycleBound.isEmpty()) return
+
+        + irSetValue(
+            irClass.property(Names.LIFECYCLE_BOUND),
+            irIntArrayOf(lifecycleBound.map { it.indexInState }),
+            irGet(irClass.thisReceiver !!)
+        )
+    }
 
     // --------------------------------------------------------------------------------------------------------
     // Second step of class generation: generated function bodies
@@ -365,7 +379,7 @@ class ArmClassBuilder(
             + IrCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 irBuiltIns.intType,
-                irClass.getPropertySetter("dirtyMask")!!,
+                irClass.getPropertySetter("dirtyMask") !!,
                 typeArgumentsCount = 0
             ).also {
                 it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)

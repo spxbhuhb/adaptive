@@ -8,6 +8,7 @@ import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
+import org.jetbrains.kotlin.ir.InternalSymbolFinderAPI
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.*
@@ -16,11 +17,8 @@ import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
 import org.jetbrains.kotlin.ir.symbols.*
 import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
-import org.jetbrains.kotlin.ir.types.IrType
-import org.jetbrains.kotlin.ir.types.getPrimitiveType
+import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
-import org.jetbrains.kotlin.ir.types.isBoolean
-import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.getPrimitiveArrayElementType
@@ -451,5 +449,24 @@ interface AbstractIrBuilder {
             )
         }
     }
+
+    @OptIn(InternalSymbolFinderAPI::class)
+    fun irIntArrayOf(values : Iterable<Int>) : IrCall =
+        IrCallImpl(
+            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+            irBuiltIns.intArray.defaultType,
+            irContext.irBuiltIns.symbolFinder.findFunctions(Name.identifier("intArrayOf")).single(),
+            typeArgumentsCount = 0
+        ).apply {
+            putValueArgument(0,
+                IrVarargImpl(
+                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                    irBuiltIns.intArray.defaultType,
+                    irBuiltIns.intType
+                ).apply {
+                    elements += values.map { irConst(it) }
+                }
+            )
+        }
 
 }

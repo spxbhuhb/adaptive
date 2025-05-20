@@ -92,6 +92,7 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
     val STATE_VARIABLE = Strings.STATE_VARIABLE.name()
     val HAVE_TO_PATCH = Strings.HAVE_TO_PATCH.name()
     val DIRTY_MASK = Strings.DIRTY_MASK.name()
+    val LIFECYCLE_BOUND = "lifecycleBound".name()
 }
 
 object FqNames {
@@ -150,6 +151,8 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_CLASS = "AdatClass".classId { ADAT_PACKAGE }
 
     val HYDRATED = "AdaptiveHydrated".classId()
+
+    val LIFECYCLE_BOUND = "LifecycleBound".classId()
 }
 
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {

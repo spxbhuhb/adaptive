@@ -782,11 +782,11 @@ public class BoxTestGenerated extends AbstractBoxTest {
         runTest("testData/box/foundation/reference/hardWithParam.kt");
       }
 
-        @Test
-        @TestMetadata("reference.kt")
-        public void testReference() {
-            runTest("testData/box/foundation/reference/reference.kt");
-        }
+      @Test
+      @TestMetadata("reference.kt")
+      public void testReference() {
+        runTest("testData/box/foundation/reference/reference.kt");
+      }
 
       @Test
       @TestMetadata("refreshHigherOrder.kt")
@@ -928,6 +928,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("inline.kt")
       public void testInline() {
         runTest("testData/box/foundation/variables/inline.kt");
+      }
+
+      @Test
+      @TestMetadata("lifecycleBound.kt")
+      public void testLifecycleBound() {
+        runTest("testData/box/foundation/variables/lifecycleBound.kt");
       }
 
       @Test
