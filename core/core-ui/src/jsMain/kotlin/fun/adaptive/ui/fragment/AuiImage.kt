@@ -9,6 +9,7 @@ import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
+import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.instruction.layout.SizeBase
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
@@ -91,29 +92,37 @@ open class AuiImage(
         }
     }
 
-    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+    override fun computeLayout(width: Double, height: Double) =
+        super.computeLayout(SizingProposal(width, width, height, height))
+
+    override fun computeLayout(
+        proposal: SizingProposal
+    ) {
+        val proposedWidth = proposal.containerWidth
+        val proposedHeight = proposal.containerHeight
+
         val innerWidth = renderData.innerWidth
         val innerHeight = renderData.innerHeight
 
         if (innerWidth != null && innerHeight != null) {
-            super.computeLayout(innerWidth, innerHeight)
+            computeLayout(innerWidth, innerHeight)
             return
         }
 
         val strategy = renderData.layout?.sizeStrategy
 
         if (strategy == null) {
-            super.computeLayout(proposedWidth, proposedHeight)
+            computeLayout(proposedWidth, proposedHeight)
             return
         }
 
         if (strategy.horizontalBase == SizeBase.Container) {
-            super.computeLayout(proposedWidth, receiver.naturalHeight * proposedWidth / receiver.naturalWidth)
+            computeLayout(proposedWidth, receiver.naturalHeight * proposedWidth / receiver.naturalWidth)
             return
         }
 
         if (strategy.verticalBase == SizeBase.Container) {
-            super.computeLayout(proposedWidth, receiver.naturalHeight * proposedWidth / receiver.naturalWidth)
+            computeLayout(proposedWidth, receiver.naturalHeight * proposedWidth / receiver.naturalWidth)
             return
         }
 

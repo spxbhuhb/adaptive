@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.LifecycleBound
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.tree
@@ -27,8 +28,8 @@ fun treeValueExample(): AdaptiveFragment {
     column {
         text("AvUiTree - read from value store")
         column {
-            borders.outline .. width { 200.dp } .. height { 200.dp} .. verticalScroll .. horizontalScroll
-            tree(viewBackend.treeBackend)
+            borders.outline .. width { 200.dp } .. height { 200.dp } .. verticalScroll .. horizontalScroll
+            tree(viewBackend.treeBackend) .. sizeStrategy.container .. backgrounds.friendlyOpaque
         }
     }
 
@@ -36,7 +37,7 @@ fun treeValueExample(): AdaptiveFragment {
 }
 
 class TreeValueExampleViewBackend(
-    values : EmbeddedValueServer
+    values: EmbeddedValueServer
 ) : LifecycleBound {
 
     val avTree = AvUiTree(values.clientBackend, String::class, treeSetup)
@@ -51,18 +52,18 @@ class TreeValueExampleViewBackend(
         avTree.addListener { treeBackend.items = it }
     }
 
-    override fun dispose(fragment: AdaptiveFragment, index : Int) {
+    override fun dispose(fragment: AdaptiveFragment, index: Int) {
         avTree.stop()
     }
 
 }
 
 private fun AvComputeContext.buildExampleTree() {
-    for (rootIndex in 1..3) {
+    for (rootIndex in 1 .. 3) {
         val rootNode = AvValue(name = "root $rootIndex", markersOrNull = setOf("node"), spec = "root $rootIndex")
         addValue(rootNode)
 
-        for (childIndex in 1..3) {
+        for (childIndex in 1 .. 3) {
             val childNode = AvValue(name = "child $rootIndex.$childIndex", markersOrNull = setOf("node"), spec = "child $rootIndex.$childIndex")
             addValue(childNode)
             addTreeNode(rootNode.uuid, childNode.uuid, treeSetup)

@@ -23,8 +23,10 @@ abstract class AbstractManualLayout<RT, CRT : RT>(
 
     var updateLayoutFun: ((updateId: Long, item: AbstractAuiFragment<*>?) -> Unit)? = null
 
-    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
-        computeLayoutFun?.invoke(proposedWidth, proposedHeight)
+    override fun computeLayout(
+        proposal: SizingProposal
+    ) {
+        computeLayoutFun?.invoke(proposal.containerWidth, proposal.containerWidth)
     }
 
     override fun updateLayout(updateId: Long, item: AbstractAuiFragment<*>?) {

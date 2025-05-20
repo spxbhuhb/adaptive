@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.aui
+import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.paragraph.items.LinkParagraphItem
 import `fun`.adaptive.ui.fragment.paragraph.items.TextParagraphItem
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphItem
@@ -37,9 +38,11 @@ class AuiParagraph(
 
     var renderCache = arrayOfNulls<RenderCacheEntry?>(0)
 
-    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+    override fun computeLayout(
+        proposal: SizingProposal
+    ) {
         renderCache = arrayOfNulls(instructionSets.size)
-        super.computeLayout(proposedWidth, proposedHeight)
+        super.computeLayout(proposal)
     }
 
     override fun auiPatchInternal() {

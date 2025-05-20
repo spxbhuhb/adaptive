@@ -11,20 +11,20 @@ import `fun`.adaptive.ui.instruction.toPx
 import kotlin.math.max
 import kotlin.math.min
 
-fun AbstractAuiFragment<*>.computeFinal(proposedWidth: Double, itemsWidth: Double, proposedHeight: Double, itemsHeight: Double) {
+fun AbstractAuiFragment<*>.computeFinal(proposal : SizingProposal, itemsWidth: Double, itemsHeight: Double) {
     val data = renderData
     val layout = renderData.layout
 
     val strategy = layout?.sizeStrategy
 
     val unconstrainedInnerWidth = when {
-        proposedWidth.isFinite() && strategy?.horizontalBase == SizeBase.Container -> proposedWidth - data.surroundingHorizontal
+        strategy?.horizontalBase == SizeBase.Container -> proposal.containerWidth - data.surroundingHorizontal
         layout?.instructedWidth != null -> layout.instructedWidth !! - data.surroundingHorizontal
         else -> itemsWidth
     }
 
     val unconstrainedInnerHeight = when {
-        proposedHeight.isFinite() && strategy?.verticalBase == SizeBase.Container -> proposedHeight - data.surroundingVertical
+        strategy?.verticalBase == SizeBase.Container -> proposal.containerHeight - data.surroundingVertical
         layout?.instructedHeight != null -> layout.instructedHeight !! - data.surroundingVertical
         else -> itemsHeight
     }

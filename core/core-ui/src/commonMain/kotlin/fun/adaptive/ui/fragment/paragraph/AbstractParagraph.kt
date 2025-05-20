@@ -4,6 +4,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.layout.computeFinal
 import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphItem
@@ -27,13 +28,15 @@ abstract class AbstractParagraph<RT, CRT : RT>(
         val height: Double = 0.0
     )
 
-    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
-        val rows = computeRows((renderData.layout?.instructedWidth ?: proposedWidth) - renderData.surroundingHorizontal)
+    override fun computeLayout(
+        proposal: SizingProposal
+    ) {
+        val rows = computeRows((renderData.layout?.instructedWidth ?: proposal.containerWidth) - renderData.surroundingHorizontal)
 
         val itemsWidth = rows.maxOfOrNull { it.width } ?: 0.0
         val itemsHeight = rows.sumOf { it.height }
 
-        computeFinal(proposedWidth, itemsWidth, proposedHeight, itemsHeight)
+        computeFinal(proposal, itemsWidth, itemsHeight)
 
         placeRows(rows)
     }

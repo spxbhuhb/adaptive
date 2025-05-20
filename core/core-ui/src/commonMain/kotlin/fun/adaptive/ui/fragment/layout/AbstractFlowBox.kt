@@ -24,7 +24,9 @@ abstract class AbstractFlowBox<RT, CRT : RT>(
         var height: Double = 0.0
     )
 
-    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+    override fun computeLayout(
+        proposal: SizingProposal
+    ) {
 
         val data = renderData
         val container = renderData.container
@@ -33,7 +35,7 @@ abstract class AbstractFlowBox<RT, CRT : RT>(
 
         // ----  calculate layout of all items  ---------------------------------------
 
-        val availableWidth = proposedWidth - data.surroundingHorizontal
+        val availableWidth = proposal.maxWidth - data.surroundingHorizontal
         val colGap = container?.gapWidth ?: 0.0
         val rowGap = container?.gapHeight ?: 0.0
 
@@ -41,7 +43,7 @@ abstract class AbstractFlowBox<RT, CRT : RT>(
         var currentRow = rows.last()
 
         for (item in layoutItems) {
-            item.computeLayout(unbound, unbound)
+            item.computeLayout(0.0, unbound, 0.0, unbound)
 
             val itemWidth = item.renderData.finalWidth
             val itemHeight = item.renderData.finalHeight
@@ -69,7 +71,7 @@ abstract class AbstractFlowBox<RT, CRT : RT>(
 
         // ----  calculate sizes of this fragment  ------------------------------------
 
-        computeFinal(proposedWidth, itemsWidth, proposedHeight, itemsHeight)
+        computeFinal(proposal, itemsWidth, itemsHeight)
 
         // ----  place the items  -----------------------------------------------------
 

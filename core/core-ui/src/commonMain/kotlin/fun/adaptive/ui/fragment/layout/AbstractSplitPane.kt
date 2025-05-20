@@ -288,9 +288,14 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         scheduleUpdate() // when visibility change we surely have to update the layout
     }
 
-    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+    override fun computeLayout(
+        proposal : SizingProposal
+    ) {
 
         // this is a general, bound case, updated when method is WrapFirst or WrapSecond
+        val proposedWidth = proposal.containerWidth
+        val proposedHeight = proposal.containerHeight
+
         renderData.finalWidth = proposedWidth
         renderData.finalHeight = proposedHeight
 
@@ -455,7 +460,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         }
 
 
-        computeFinal(proposedWidth, itemsTotalWidth, proposedHeight, itemsTotalHeight)
+        computeFinal(proposal, itemsTotalWidth, itemsTotalHeight)
     }
 
     fun handleMoveStart(position: Position, x: Double, y: Double) {

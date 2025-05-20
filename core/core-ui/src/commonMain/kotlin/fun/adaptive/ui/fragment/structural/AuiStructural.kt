@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.utility.alsoIfInstance
 
 open class AuiStructural<RT, CRT : RT>(
@@ -73,9 +74,11 @@ open class AuiStructural<RT, CRT : RT>(
         }
     }
 
-    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
-        renderData.finalWidth = proposedWidth
-        renderData.finalHeight = proposedHeight
+    override fun computeLayout(
+        proposal: SizingProposal
+    ) {
+        renderData.finalWidth = proposal.containerWidth
+        renderData.finalHeight = proposal.containerHeight
     }
 
 }

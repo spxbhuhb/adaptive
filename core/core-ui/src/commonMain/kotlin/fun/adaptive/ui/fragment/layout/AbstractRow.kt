@@ -24,11 +24,15 @@ abstract class AbstractRow<RT, CRT : RT>(
     override fun itemsHeightCalc(itemsHeight: Double, item: AbstractAuiFragment<RT>): Double =
         max(itemsHeight, item.renderData.finalHeight)
 
-    override fun constrainWidthCalc(remainingWidth: Double, item: AbstractAuiFragment<RT>, gap : Double): Double =
-        remainingWidth - item.renderData.finalWidth - gap
+    override fun constrainWidthCalc(itemProposal: SizingProposal, item: AbstractAuiFragment<RT>, gap : Double) {
+        val decrement = item.renderData.finalWidth - gap
+        itemProposal.minWidth -= decrement
+        itemProposal.maxWidth -= decrement
+    }
 
-    override fun constrainHeightCalc(remainingHeight: Double, item: AbstractAuiFragment<RT>, gap : Double): Double =
-        remainingHeight
+    override fun constrainHeightCalc(itemProposal: SizingProposal, item: AbstractAuiFragment<RT>, gap : Double) {
+        // nothing to do here, row height is not constrained
+    }
 
     override fun instructedGap(): Double =
         renderData.container?.gapWidth ?: 0.0
@@ -52,10 +56,10 @@ abstract class AbstractRow<RT, CRT : RT>(
         return proposedHeight.isInfinite() || innerHeight > proposedHeight
     }
 
-    override fun resizeToMax(innerWidth: Double, innerHeight: Double, proposedWidth: Double, proposedHeight: Double, items: List<AbstractAuiFragment<RT>>) {
+    override fun resizeToMax(innerWidth: Double, innerHeight: Double, items: List<AbstractAuiFragment<RT>>) {
         for (item in items) {
             if (item.renderData.finalHeight < innerHeight) {
-                item.computeLayout(proposedWidth, innerHeight)
+                item.computeLayout(item.renderData.finalHeight, innerHeight)
             }
         }
     }

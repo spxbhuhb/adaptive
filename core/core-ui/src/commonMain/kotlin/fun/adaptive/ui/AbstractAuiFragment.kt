@@ -6,6 +6,7 @@ package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.fragment.layout.RawPosition
+import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.SizeBase
 import `fun`.adaptive.ui.render.model.AuiRenderData
@@ -77,7 +78,7 @@ abstract class AbstractAuiFragment<RT>(
 
             while (currentContainer != null) {
                 val currentRenderData = currentContainer.renderData
-                val scrollPosition = uiAdapter.scrollPosition(currentContainer)!!
+                val scrollPosition = uiAdapter.scrollPosition(currentContainer) !!
                 top += currentRenderData.finalTop - scrollPosition.top
                 left += currentRenderData.finalLeft - scrollPosition.left
                 currentContainer = currentRenderData.layoutFragment
@@ -183,13 +184,19 @@ abstract class AbstractAuiFragment<RT>(
         uiAdapter.updateBatch += this
     }
 
+    open fun computeLayout(width: Double, height: Double) =
+        computeLayout(SizingProposal(width, width, height, height))
+
+    fun computeLayout(minWidth: Double, maxWidth: Double, minHeight: Double, maxHeight: Double) =
+        computeLayout(SizingProposal(minWidth, maxWidth, minHeight, maxHeight))
+
     /**
      * Basic layout computation that is used for intrinsic UI fragments. Layout fragments
      * override this method to implement their own calculation algorithm.
      *
      * Sets final width and final height in render data.
      */
-    open fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+    open fun computeLayout(proposal: SizingProposal) {
         statistics.computeLayout ++
 
         val data = renderData
@@ -200,9 +207,8 @@ abstract class AbstractAuiFragment<RT>(
 
         data.finalWidth = when {
             instructedWidth != null -> instructedWidth
-            layout?.sizeStrategy?.horizontalBase == SizeBase.Container -> proposedWidth
+            layout?.sizeStrategy?.horizontalBase == SizeBase.Container -> proposal.containerWidth
             innerWidth != null -> innerWidth + data.surroundingHorizontal
-            proposedWidth.isFinite() -> proposedWidth
             else -> data.surroundingHorizontal
         }
 
@@ -211,9 +217,8 @@ abstract class AbstractAuiFragment<RT>(
 
         data.finalHeight = when {
             instructedHeight != null -> instructedHeight
-            layout?.sizeStrategy?.verticalBase == SizeBase.Container -> proposedHeight
+            layout?.sizeStrategy?.verticalBase == SizeBase.Container -> proposal.containerHeight
             innerHeight != null -> innerHeight + data.surroundingVertical
-            proposedHeight.isFinite() -> proposedHeight
             else -> data.surroundingVertical
         }
     }

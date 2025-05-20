@@ -52,7 +52,7 @@ open class AuiAdapter(
         traceAddActual(fragment)
 
         fragment.ifIsInstanceOrRoot<AbstractContainer<View, ContainerViewGroup>> {
-            it.computeLayout(rootContainer.width.toDouble(), rootContainer.height.toDouble())
+            it.computeLayout(0.0, rootContainer.width.toDouble(), 0.0, rootContainer.height.toDouble())
             it.placeLayout(0.0, 0.0)
             it.receiver.layoutParams = LinearLayout.LayoutParams(rootContainer.width, rootContainer.height)
             rootContainer.addView(it.receiver)

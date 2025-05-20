@@ -51,7 +51,7 @@ class AuiTestAdapter(
 
         fragment.alsoIfInstance<AbstractContainer<TestReceiver, TestReceiver>> {
             rootContainer.testFrame.let { tf ->
-                it.computeLayout(tf !!.width, tf.height)
+                it.computeLayout(0.0, tf !!.width, 0.0, tf.height)
                 it.placeLayout(0.0, 0.0)
                 rootContainer.children += it.receiver
             }

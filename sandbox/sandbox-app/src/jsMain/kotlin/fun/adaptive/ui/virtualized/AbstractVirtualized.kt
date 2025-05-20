@@ -4,6 +4,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
+import `fun`.adaptive.ui.fragment.layout.SizingProposal
 
 abstract class AbstractVirtualized<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
@@ -40,8 +41,10 @@ abstract class AbstractVirtualized<RT, CRT : RT>(
 //        return true
 //    }
 
-    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
-        val height = renderData.layout?.instructedHeight ?: proposedHeight
+    override fun computeLayout(
+        proposal: SizingProposal
+    ) {
+        val height = renderData.layout?.instructedHeight ?: proposal.containerHeight
         check(height.isFinite()) { "height must be finite for virtualized containers" }
 
         renderData.finalWidth = 100.0

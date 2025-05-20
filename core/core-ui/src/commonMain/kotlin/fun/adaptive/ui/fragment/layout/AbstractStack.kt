@@ -5,6 +5,8 @@
 package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.instruction.Name
+import `fun`.adaptive.log.devInfo
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.api.fillStrategy
@@ -34,9 +36,9 @@ abstract class AbstractStack<RT, CRT : RT>(
 
     abstract fun itemsHeightCalc(itemsHeight: Double, item: AbstractAuiFragment<RT>): Double
 
-    abstract fun constrainWidthCalc(remainingWidth: Double, item: AbstractAuiFragment<RT>, gap : Double): Double
+    abstract fun constrainWidthCalc(itemProposal: SizingProposal, item: AbstractAuiFragment<RT>, gap: Double)
 
-    abstract fun constrainHeightCalc(remainingHeight: Double, item: AbstractAuiFragment<RT>, gap : Double): Double
+    abstract fun constrainHeightCalc(itemProposal: SizingProposal, item: AbstractAuiFragment<RT>, gap: Double)
 
     abstract fun instructedGap(): Double
 
@@ -62,18 +64,15 @@ abstract class AbstractStack<RT, CRT : RT>(
     abstract fun resizeToMax(
         innerWidth: Double,
         innerHeight: Double,
-        proposedWidth: Double,
-        proposedHeight: Double,
         items: List<AbstractAuiFragment<RT>>
     )
 
-    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+    override fun computeLayout(
+        proposal : SizingProposal
+    ) {
 
         val data = renderData
         val container = renderData.container
-
-        val instructedWidth = renderData.layout?.instructedWidth
-        val instructedHeight = renderData.layout?.instructedHeight
 
         val instructedGap = instructedGap()
         val itemCount = layoutItems.size
@@ -84,22 +83,7 @@ abstract class AbstractStack<RT, CRT : RT>(
         var itemsWidth = totalGap
         var itemsHeight = totalGap
 
-        val horizontalScroll = (container?.horizontalScroll == true)
-        val verticalScroll = (container?.verticalScroll == true)
-
-        var proposedItemWidth = if (horizontalScroll) {
-            Double.POSITIVE_INFINITY
-        } else {
-            val w = (instructedWidth ?: proposedWidth) - data.surroundingHorizontal
-            if (verticalScroll) w - uiAdapter.scrollBarSize else w
-        }
-
-        var proposedItemHeight = if (verticalScroll) {
-            Double.POSITIVE_INFINITY
-        } else {
-            val h = (instructedHeight ?: proposedHeight) - data.surroundingVertical
-            if (horizontalScroll) h - uiAdapter.scrollBarSize else h
-        }
+        val itemProposal = proposal.toItemProposal(uiAdapter, renderData)
 
         val fill = data.layout?.fillStrategy ?: fillStrategy.none
         val items = if (fill.reverse) {
@@ -109,27 +93,27 @@ abstract class AbstractStack<RT, CRT : RT>(
         }
 
         for (item in items) {
-            item.computeLayout(proposedItemWidth, proposedItemHeight)
+            item.computeLayout(itemProposal)
             itemsWidth = itemsWidthCalc(itemsWidth, item)
             itemsHeight = itemsHeightCalc(itemsHeight, item)
             if (fill.constrain) {
-                proposedItemWidth = constrainWidthCalc(proposedItemWidth, item, instructedGap)
-                proposedItemHeight = constrainHeightCalc(proposedItemHeight, item, instructedGap)
+                constrainWidthCalc(itemProposal, item, instructedGap)
+                constrainHeightCalc(itemProposal, item, instructedGap)
             }
         }
 
         // ----  calculate sizes of this fragment  ------------------------------------
 
-        computeFinal(proposedWidth, itemsWidth, proposedHeight, itemsHeight)
+        computeFinal(proposal, itemsWidth, itemsHeight)
 
         val innerWidth = data.innerWidth !!
         val innerHeight = data.innerHeight !!
 
         // ----  resize items if requested  --------------------
 
-        if (fill.resizeToMax && needsResizeToMax(innerWidth, innerHeight, proposedWidth, proposedHeight)) {
-            resizeToMax(innerWidth, innerHeight, proposedWidth, proposedHeight, items)
-        }
+//        if (fill.resizeToMax && needsResizeToMax(innerWidth, innerHeight, proposal)) {
+//            resizeToMax(innerWidth, innerHeight, proposedWidth, proposedHeight, items)
+//        }
 
         // ---- calculate starting offset and gap based on instructions  --------------
 

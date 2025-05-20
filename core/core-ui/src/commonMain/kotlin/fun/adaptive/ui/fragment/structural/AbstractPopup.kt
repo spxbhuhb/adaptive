@@ -169,17 +169,18 @@ abstract class AbstractPopup<RT, CRT : RT>(
         val layoutAbsolutePosition = positioningAbsolutePosition ?: return
 
         val overlay = getOverlay() ?: return
-        overlay.computeFinal(proposedWidth, proposedWidth, proposedHeight, proposedWidth)
+        overlay.computeFinal(SizingProposal(proposedWidth, proposedWidth, proposedHeight, proposedHeight), proposedWidth, proposedHeight)
 
         val container = overlay.first<AbstractBox<*, *>>()
-
 
         val maxWidth = instructions.firstInstanceOfOrNull<MaxWidth>()
         val maxHeight = instructions.lastInstanceOfOrNull<MaxHeight>()
 
         container.computeLayout(
+            0.0,
             maxWidth?.let { layoutFinalWidth } ?: Double.POSITIVE_INFINITY,
-            maxHeight?.let { layoutFinalHeight } ?: Double.POSITIVE_INFINITY,
+            0.0,
+            maxHeight?.let { layoutFinalHeight } ?: Double.POSITIVE_INFINITY
         )
 
         val alignment = instructions.lastInstanceOfOrNull<PopupAlign>() ?: popupAlign.belowStart

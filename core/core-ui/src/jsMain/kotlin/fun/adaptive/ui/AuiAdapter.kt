@@ -61,7 +61,7 @@ class AuiAdapter(
 
         fragment.alsoIfInstance<AbstractAuiFragment<HTMLElement>> {
             rootContainer.getBoundingClientRect().let { r ->
-                it.computeLayout(r.width, r.height)
+                it.computeLayout(0.0, r.width, 0.0, r.height)
                 it.placeLayout(0.0, 0.0)
                 rootContainer.appendChild(it.receiver)
             }
@@ -195,13 +195,13 @@ class AuiAdapter(
 
                 val root = rootFragment as? AbstractAuiFragment<*>
                 if (root != null) {
-                    root.computeLayout(r.width, r.height)
+                    root.computeLayout(0.0, r.width, 0.0, r.height)
                     root.placeLayout(root.renderData.finalTop, root.renderData.finalTop)
                 }
 
                 for (fragment in otherRootFragments) {
                     if (fragment is AbstractAuiFragment<*>) {
-                        fragment.computeLayout(r.width, r.height)
+                        fragment.computeLayout(0.0, r.width, 0.0, r.height)
                         fragment.placeLayout(fragment.renderData.finalTop, fragment.renderData.finalTop)
                     }
                 }

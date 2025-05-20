@@ -4,6 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.sandbox.support.hardCodedExample
+import `fun`.adaptive.sandbox.support.red
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
@@ -22,7 +23,7 @@ fun splitPaneWrapperExample(): AdaptiveFragment {
 
         hardCodedExample("* `wrapFromLeft` shortcut") {
             wrapFromLeft(wrapperSize, ::leftWrapper) {
-                text("Hello World!")
+                text("Hello World!") .. backgrounds.red
             } .. width { 256.dp }
         }
 

@@ -13,37 +13,21 @@ abstract class AbstractBox<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
     parent: AdaptiveFragment?,
     declarationIndex: Int,
-    stateSize : Int = 2
+    stateSize: Int = 2
 ) : AbstractContainer<RT, CRT>(
     adapter, parent, declarationIndex, stateSize
 ) {
 
-    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+    override fun computeLayout(
+        proposal : SizingProposal
+    ) {
 
         val data = renderData
         val container = renderData.container
 
-        val instructedWidth = renderData.layout?.instructedWidth
-        val instructedHeight = renderData.layout?.instructedHeight
-
         // ----  calculate height and width proposed to items  ------------------------
 
-        val horizontalScroll = (container?.horizontalScroll == true)
-        val verticalScroll = (container?.verticalScroll == true)
-
-        var proposedItemWidth = if (false /*horizontalScroll*/) {
-            Double.POSITIVE_INFINITY
-        } else {
-            val w = (instructedWidth ?: proposedWidth) - data.surroundingHorizontal
-            if (verticalScroll) w - uiAdapter.scrollBarSize else w
-        }
-
-        var proposedItemHeight = if (false /*verticalScroll*/) {
-            Double.POSITIVE_INFINITY
-        } else {
-            val h = (instructedHeight ?: proposedHeight) - data.surroundingVertical
-            if (horizontalScroll) h - uiAdapter.scrollBarSize else h
-        }
+        val itemProposal = proposal.toItemProposal(uiAdapter, renderData)
 
         // ----  calculate layout of all items  ---------------------------------------
 
@@ -51,14 +35,14 @@ abstract class AbstractBox<RT, CRT : RT>(
         var itemsHeight = 0.0
 
         for (item in layoutItems) {
-            item.computeLayout(proposedItemWidth, proposedItemHeight)
+            item.computeLayout(itemProposal)
             itemsWidth = max(item.renderData.finalWidth, itemsWidth)
             itemsHeight = max(item.renderData.finalHeight, itemsHeight)
         }
 
         // ----  calculate sizes of this fragment  ------------------------------------
 
-        computeFinal(proposedWidth, itemsWidth, proposedHeight, itemsHeight)
+        computeFinal(proposal, itemsWidth, itemsHeight)
 
         val innerWidth = data.innerWidth !!
         val innerHeight = data.innerHeight !!

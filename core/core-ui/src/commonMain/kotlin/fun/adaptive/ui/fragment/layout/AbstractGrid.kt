@@ -28,13 +28,15 @@ abstract class AbstractGrid<RT, CRT : RT>(
         val defaultExtend = RawTrack(isFix = false, isFraction = true, rawValue = 1.0)
     }
 
-    override fun computeLayout(proposedWidth: Double, proposedHeight: Double) {
+    override fun computeLayout(
+        proposal: SizingProposal
+    ) {
         val data = renderData
         val layout = data.layout
         val container = data.container
 
-        var colTracks = (container?.colTracks ?: singleTrack).toMutableList()
-        var rowTracks = (container?.rowTracks ?: singleTrack).toMutableList()
+        val colTracks = (container?.colTracks ?: singleTrack).toMutableList()
+        val rowTracks = (container?.rowTracks ?: singleTrack).toMutableList()
 
         val colGap = container?.gapWidth ?: 0.0 // gap between columns
         val rowGap = container?.gapHeight ?: 0.0 // gap between rows
@@ -56,7 +58,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         val finalWidth = when {
             instructedWidth != null -> instructedWidth
-            widthSum == Double.POSITIVE_INFINITY -> proposedWidth
+            widthSum == Double.POSITIVE_INFINITY -> proposal.containerWidth
             else -> widthSum + data.surroundingHorizontal + (colGap * (colTracks.size - 1))
         }
 
@@ -64,7 +66,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         val finalHeight = when {
             instructedHeight != null -> instructedHeight
-            heightSum == Double.POSITIVE_INFINITY -> proposedHeight
+            heightSum == Double.POSITIVE_INFINITY -> proposal.containerWidth
             else -> heightSum + data.surroundingVertical + (rowGap * (rowTracks.size - 1))
         }
 
@@ -95,7 +97,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
             item.computeLayout(
                 proposeItemSize(colOffsets, colGap, g.colIndex, g.colSpan),
-                proposeItemSize(rowOffsets, rowGap, g.rowIndex, g.rowSpan)
+                proposeItemSize(rowOffsets, rowGap, g.rowIndex, g.rowSpan),
             )
 
             val row = g.rowIndex
