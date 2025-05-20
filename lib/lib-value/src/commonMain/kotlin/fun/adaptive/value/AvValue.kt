@@ -126,6 +126,14 @@ class AvValue<T>(
     fun mutableRefs() = refsOrNull?.toMutableMap() ?: mutableMapOf()
 
     /**
+     * Get the ID of a reference by the reference label.
+     *
+     * @throws  NoSuchElementException  if there is no reference with the given [label]
+     */
+    fun refId(label: AvRefLabel) : AvValueId =
+        refsOrNull?.get(label) ?: throw NoSuchElementException("No reference for label $label in value $uuid")
+
+    /**
      * Get the ID of a reference by the reference label, or null if the reference is not found.
      */
     fun refIdOrNull(label: AvRefLabel) = refsOrNull?.get(label)

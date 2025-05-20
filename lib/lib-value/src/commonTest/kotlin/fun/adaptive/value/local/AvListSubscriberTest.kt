@@ -3,8 +3,8 @@ package `fun`.adaptive.value.local
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.ValueTestSupport.Companion.valueTest
 import `fun`.adaptive.value.avById
+import `fun`.adaptive.value.valueTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.js.JsName
 import kotlin.test.*

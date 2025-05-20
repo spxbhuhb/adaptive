@@ -12,5 +12,5 @@ The [adapter](def://) or the parent [fragment](def://) calls these functions whe
 
 - [fragment](def://)
 - [adapter](def://)
-- [lifecycle-bound](def://)
+- [lifecycle-bound state variable](def://)
 - [AdaptiveFragment](class://)

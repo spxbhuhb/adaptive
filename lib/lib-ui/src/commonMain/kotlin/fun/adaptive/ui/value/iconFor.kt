@@ -6,9 +6,9 @@ import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.value.AvValue
 
 
-fun iconFor(item: AvValue<*>): GraphicsResourceSet {
+fun iconFor(item: AvValue<*>): GraphicsResourceSet? {
 
-    TODO()
+    return null
 
 //    val byType = iconCache[item.type]
 //    if (byType != null) return byType
@@ -20,5 +20,5 @@ fun iconFor(item: AvValue<*>): GraphicsResourceSet {
 //        }
 //    }
 
-    return Graphics.empty
+//    return Graphics.empty
 }

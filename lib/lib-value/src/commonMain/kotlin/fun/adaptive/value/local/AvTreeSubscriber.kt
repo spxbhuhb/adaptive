@@ -4,6 +4,7 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue.Companion.withSpec
+import `fun`.adaptive.value.model.AvRefLabels
 import `fun`.adaptive.value.model.AvTreeSetup
 import kotlin.reflect.KClass
 
@@ -141,10 +142,11 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
         } else {
             updateTreeItem(value, treeItem)
         }
+
     }
 
     private fun processChildList(list: AvValue<*>, spec: AvRefListSpec) {
-        val node = nodeMap.getOrPut(list.refIdOrNull(parentRefLabel) !!) { Node() }
+        val node = nodeMap.getOrPut(list.refId(AvRefLabels.REF_LIST_OWNER)) { Node() }
         node.childIds = spec.refs
         childRefresh += node
     }
@@ -164,9 +166,9 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
             }
         }
 
-        if (topRefresh) {
-            notifyListeners()
-        }
+//        if (topRefresh) {
+//            notifyListeners()
+//        }
 //
 //        nodeMap.values.forEach { node ->
 //            println("${node.aioItem?.name} ${node.aioItem?.uuid} ${node.childIds}")

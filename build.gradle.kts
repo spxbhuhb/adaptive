@@ -62,6 +62,7 @@ shorthand("sandbox-app", "jsBrowserDevelopmentRun", "sandbox-js")
 shorthand("sandbox-app", "jvmRun", "sandbox-jvm")
 shorthand("site-app", "jsBrowserDevelopmentRun", "site-js")
 shorthand("site-app", "jvmRun", "site-jvm")
+shorthand("grove-doc", "compileAdaptiveDocumentation", "doc")
 
 // If you add a shorthand, and it does not start the jvm/js double-check the project
 // name, typically that's what's wrong.

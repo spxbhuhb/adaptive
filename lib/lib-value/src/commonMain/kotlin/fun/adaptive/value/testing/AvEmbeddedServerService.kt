@@ -1,10 +1,15 @@
-package `fun`.adaptive.value
+package `fun`.adaptive.value.testing
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.utility.UUID.Companion.uuid4
+import `fun`.adaptive.value.AvClientSubscription
+import `fun`.adaptive.value.AvSubscribeCondition
+import `fun`.adaptive.value.AvSubscriptionId
+import `fun`.adaptive.value.AvValueApi
+import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.operation.AvValueOperation
 
-class AvValueTestServerService : ServiceImpl<AvValueTestServerService>(), AvValueApi {
+class AvEmbeddedServerService : ServiceImpl<AvEmbeddedServerService>(), AvValueApi {
 
     val worker by workerImpl<AvValueWorker>()
 

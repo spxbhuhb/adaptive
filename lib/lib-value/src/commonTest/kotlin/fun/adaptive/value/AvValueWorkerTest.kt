@@ -3,7 +3,6 @@ package `fun`.adaptive.value
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.waitFor
-import `fun`.adaptive.value.ValueTestSupport.Companion.standaloneTest
 import `fun`.adaptive.value.operation.AvValueOperation
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
 import `fun`.adaptive.value.operation.AvoMarkerRemove

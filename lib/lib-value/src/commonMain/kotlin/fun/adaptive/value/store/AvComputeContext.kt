@@ -82,6 +82,8 @@ class AvComputeContext(
         childId: AvValueId,
         treeSetup: AvTreeSetup
     ) {
+        check(parentId != childId) { "cannot add a node to itself" }
+
         if (parentId == null) {
             addRootTreeNode(childId, treeSetup)
             return

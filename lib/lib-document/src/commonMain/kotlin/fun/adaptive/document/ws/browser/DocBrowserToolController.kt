@@ -5,18 +5,18 @@ import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.AvValue
 
 class DocBrowserToolController(
     workspace: MultiPaneWorkspace,
     val config: DocBrowserConfig
 ) : AbstractDocToolController(workspace) {
 
-    override fun selectedFun(viewModel: DocTreeModel, treeItem: TreeItem<AvValueId>, modifiers: Set<EventModifier>) {
-        val aioItem = valueTreeStore[treeItem.data] ?: return
+    override fun selectedFun(viewModel: DocTreeModel, treeItem: TreeItem<AvValue<Any>>, modifiers: Set<EventModifier>) {
+        val aioItem = treeItem.data
 
         val browserItem = DocBrowserWsItem(
-            aioItem.name ?: "",
+            aioItem.nameLike,
             config.itemType,
             config,
             aioItem

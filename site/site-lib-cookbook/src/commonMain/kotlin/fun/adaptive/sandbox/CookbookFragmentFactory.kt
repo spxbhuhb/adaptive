@@ -41,6 +41,7 @@ import `fun`.adaptive.sandbox.recipe.ui.text.textRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.tree.treePlayground
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeRecipe
+import `fun`.adaptive.sandbox.recipe.ui.tree.treeValueExample
 
 object CookbookFragmentFactory : FoundationFragmentFactory() {
     init {
@@ -123,7 +124,8 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Tree
         // ----------------------------------------------------------------------------
 
-        add("cookbook/tree/basic", ::treeBasicExample)
+        add("cookbook/tree/example/basic", ::treeBasicExample)
+        add("cookbook/tree/example/value", ::treeValueExample)
 
         add("cookbook/tree/playground", ::treePlayground)
         add("cookbook/tree/recipe", ::treeRecipe)

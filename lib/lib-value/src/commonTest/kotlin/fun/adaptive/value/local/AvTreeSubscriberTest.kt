@@ -4,8 +4,9 @@ import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.AvRefListSpec
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.ValueTestSupport.Companion.valueTest
+import `fun`.adaptive.value.model.AvRefLabels
 import `fun`.adaptive.value.model.AvTreeSetup
+import `fun`.adaptive.value.valueTest
 import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -71,7 +72,7 @@ class AvTreeSubscriberTest {
                     uuid = childListId,
                     markersOrNull = setOf(setup.childListMarker),
                     spec = AvRefListSpec(listOf(child1Id, child2Id)),
-                    refsOrNull = mapOf(subscriber.parentRefLabel to rootId)
+                    refsOrNull = mapOf(AvRefLabels.REF_LIST_OWNER to rootId)
                 )
             )
         }
@@ -157,7 +158,7 @@ class AvTreeSubscriberTest {
                     uuid = childListId,
                     markersOrNull = setOf(setup.childListMarker),
                     spec = AvRefListSpec(listOf(child1Id)),
-                    refsOrNull = mapOf(subscriber.parentRefLabel to rootId)
+                    refsOrNull = mapOf(AvRefLabels.REF_LIST_OWNER to rootId)
                 )
             )
         }
@@ -172,7 +173,7 @@ class AvTreeSubscriberTest {
                     uuid = childListId,
                     spec = AvRefListSpec(emptyList()),
                     markersOrNull = setOf(setup.childListMarker),
-                    refsOrNull = mapOf(subscriber.parentRefLabel to rootId)
+                    refsOrNull = mapOf(AvRefLabels.REF_LIST_OWNER to rootId)
                 ),
                 AvValue(
                     uuid = child1Id,

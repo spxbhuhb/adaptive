@@ -20,18 +20,20 @@ typealias TreeContextMenuBuilder<IT, CT> = ((hide: () -> Unit, backend: TreeView
 
 @Adaptive
 fun <IT, CT> tree(
-    backend: TreeViewBackend<IT, CT>,
+    viewBackend: TreeViewBackend<IT, CT>,
     @Adaptive
     _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<IT, CT>? = null
 ): AdaptiveFragment {
 
-    column(backend.theme.container, instructions()) {
-        onClick { backend.onClick(it) }
-        onDoubleClick { backend.onDoubleClick(it) }
-        onKeydown { backend.onKeydown(it) }
+    val observed = valueFrom { viewBackend }
 
-        for (item in backend.items) {
-            node(backend, item, 0.dp, _KT_74337_contextMenuBuilder)
+    column(observed.theme.container, instructions()) {
+        onClick { observed.onClick(it) }
+        onDoubleClick { observed.onDoubleClick(it) }
+        onKeydown { observed.onKeydown(it) }
+
+        for (item in observed.items) {
+            node(observed, item, 0.dp, _KT_74337_contextMenuBuilder)
         }
     }
 

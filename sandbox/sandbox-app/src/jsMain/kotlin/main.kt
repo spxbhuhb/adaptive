@@ -20,6 +20,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeRecipe
+import `fun`.adaptive.sandbox.recipe.ui.tree.treeValueExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
@@ -130,7 +131,8 @@ fun sandboxMain() {
                     //containerPlayground()
                     //selectInputPlayground()
                     //formBasicExample()
-                    treeRecipe()
+                    //treeRecipe()
+                    treeValueExample()
                 }
             }
         } catch (ex: Exception) {

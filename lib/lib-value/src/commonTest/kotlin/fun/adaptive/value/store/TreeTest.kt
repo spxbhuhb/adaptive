@@ -4,8 +4,8 @@ import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.AvRefListSpec
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.withSpec
-import `fun`.adaptive.value.ValueTestSupport.Companion.standaloneTest
 import `fun`.adaptive.value.model.AvTreeSetup
+import `fun`.adaptive.value.standaloneTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue

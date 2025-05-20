@@ -11,8 +11,8 @@ import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.value.AvUiTree
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.logic.WsPaneController
-import `fun`.adaptive.value.AvValueId
-import `fun`.adaptive.value.avByMarker
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.model.AvTreeSetup
 
 abstract class AbstractDocToolController(
     override val workspace: MultiPaneWorkspace
@@ -20,18 +20,25 @@ abstract class AbstractDocToolController(
 
     val service = getService<DocApi>(workspace.transport)
 
-    val treeViewBackend = TreeViewBackend<AvValueId, AbstractDocToolController>(
+    val treeViewBackend = TreeViewBackend<AvValue<Any>, AbstractDocToolController>(
         emptyList(),
         selectedFun = ::selectedFun,
         multiSelect = false,
         context = this
     )
 
+    val treeSetup = AvTreeSetup(
+        nodeMarker = DocMarkers.DOCUMENT,
+        childListMarker = DocMarkers.SUB_DOCUMENTS,
+        rootListMarker = DocMarkers.TOP_DOCUMENTS,
+        parentRefLabel = DocRefLabels.DOCUMENT_PARENT,
+        childListRefLabel = DocRefLabels.CHILD_DOCUMENTS
+    )
+
     val valueTreeStore = AvUiTree(
         workspace.backend,
         Any::class,
-        DocRefLabels.DOCUMENT_PARENT,
-        avByMarker(DocMarkers.DOCUMENT)
+        treeSetup
     )
 
     fun start() {
@@ -46,6 +53,6 @@ abstract class AbstractDocToolController(
         treeViewBackend.items.forEach { it.collapseAll() }
     }
 
-    abstract fun selectedFun(viewModel: DocTreeModel, treeItem: TreeItem<AvValueId>, modifiers: Set<EventModifier>)
+    abstract fun selectedFun(viewModel: DocTreeModel, treeItem: TreeItem<AvValue<Any>>, modifiers: Set<EventModifier>)
 
 }
