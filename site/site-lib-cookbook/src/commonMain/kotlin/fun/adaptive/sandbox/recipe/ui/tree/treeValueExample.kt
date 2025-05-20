@@ -41,7 +41,11 @@ class TreeValueExampleViewBackend(
 
     val avTree = AvUiTree(values.clientBackend, String::class, treeSetup)
 
-    val treeBackend = TreeViewBackend<AvValue<String>, Unit>(emptyList(), context = Unit)
+    val treeBackend = TreeViewBackend<AvValue<String>, Unit>(
+        emptyList(),
+        singleClickOpen = true,
+        context = Unit
+    )
 
     init {
         avTree.addListener { treeBackend.items = it }

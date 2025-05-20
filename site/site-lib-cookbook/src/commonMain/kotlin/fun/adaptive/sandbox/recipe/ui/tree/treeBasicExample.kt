@@ -18,7 +18,7 @@ fun treeBasicExample(): AdaptiveFragment {
         text("static - double click to expand")
         column {
             borders.outline
-            tree(TreeViewBackend(staticTree(Graphics.folder), context = Unit))
+            tree(TreeViewBackend(staticTree(Graphics.folder), singleClickOpen = true, context = Unit))
         }
     }
 
