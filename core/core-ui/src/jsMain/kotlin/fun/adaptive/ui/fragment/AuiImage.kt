@@ -104,6 +104,8 @@ open class AuiImage(
         val innerWidth = renderData.innerWidth
         val innerHeight = renderData.innerHeight
 
+        renderData.sizingProposal = proposal
+
         if (innerWidth != null && innerHeight != null) {
             computeLayout(innerWidth, innerHeight)
             return

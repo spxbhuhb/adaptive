@@ -79,6 +79,7 @@ open class AuiStructural<RT, CRT : RT>(
     ) {
         renderData.finalWidth = proposal.containerWidth
         renderData.finalHeight = proposal.containerHeight
+        renderData.sizingProposal = proposal
     }
 
 }

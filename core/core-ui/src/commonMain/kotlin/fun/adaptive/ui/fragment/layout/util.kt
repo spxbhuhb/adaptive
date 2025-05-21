@@ -54,6 +54,8 @@ fun AbstractAuiFragment<*>.computeFinal(proposal : SizingProposal, itemsWidth: D
 
     data.finalWidth = innerWidth + data.surroundingHorizontal
     data.finalHeight = innerHeight + data.surroundingVertical
+
+    data.sizingProposal = proposal
 }
 
 val AbstractAuiFragment<*>.horizontalAlignment: Alignment?

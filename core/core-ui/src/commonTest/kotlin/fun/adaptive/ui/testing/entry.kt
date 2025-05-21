@@ -5,14 +5,19 @@ package `fun`.adaptive.ui.testing
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveEntry
-import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.Trace
-import `fun`.adaptive.foundation.visitor.FragmentVisitor
+import `fun`.adaptive.foundation.instruction.name
+import `fun`.adaptive.foundation.query.firstOrNull
 import `fun`.adaptive.foundation.visitor.InstructionReplaceTransform
+import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.RawFrame
+import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.support.snapshot.snapshot
+import kotlin.test.assertEquals
+import kotlin.test.assertIs
+import kotlin.test.assertNotNull
 
 @AdaptiveEntry
 fun uiTest(
@@ -50,18 +55,44 @@ fun snapshotTest(
         block(it)
         it.mounted()
     }.let {
-        SnapshotTest(it)
+        SnapshotTest(
+            adapter = it,
+            testWidth = width.toDouble(),
+            testHeight = height.toDouble()
+        )
     }
 
 class SnapshotTest(
-    val adapter: AuiTestAdapter
+    val adapter: AuiTestAdapter,
+    val testWidth: Double,
+    val testHeight: Double
 ) {
     fun snapshot() = adapter.snapshot()
 
-    fun replace(old : AdaptiveInstruction, new : AdaptiveInstruction) {
+    fun replace(old: AdaptiveInstruction, new: AdaptiveInstruction) {
         adapter.rootFragment.transformChildren(InstructionReplaceTransform(old, new), null)
         adapter.closePatchBatch()
     }
 
+    fun getUiFragment(fragmentName : String) : AbstractAuiFragment<*> {
+        val inst = name(fragmentName)
 
+        val fragment = adapter.firstOrNull{ inst in it.instructions }
+        assertNotNull(fragment, "Fragment with name $fragmentName was not found")
+
+        assertIs<AbstractAuiFragment<*>>(fragment, "Fragment $fragment is not a AbstractAuiFragment")
+
+        return fragment
+    }
+
+    fun getRenderData(fragmentName : String) : AuiRenderData =
+        getUiFragment(fragmentName).renderData
+
+    fun assertFinal(fragmentName : String, top: Number, left: Number, width: Number, height: Number) {
+        val renderData = getRenderData(fragmentName)
+        assertEquals(renderData.finalTop, top.toDouble())
+        assertEquals(renderData.finalLeft, left.toDouble())
+        assertEquals(renderData.finalWidth, width.toDouble())
+        assertEquals(renderData.finalHeight, height.toDouble())
+    }
 }

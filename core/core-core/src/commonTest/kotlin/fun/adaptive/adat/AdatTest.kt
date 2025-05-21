@@ -5,7 +5,7 @@
 package `fun`.adaptive.adat
 
 import `fun`.adaptive.adat.api.copy
-import `fun`.adaptive.adat.api.diff
+import `fun`.adaptive.adat.util.AdatDiffKind
 import `fun`.adaptive.wireformat.toJson
 import `fun`.adaptive.wireformat.toProto
 import kotlin.test.Test
@@ -44,7 +44,7 @@ class AdatTest {
     fun diffTestValue() {
         val o = TestClass(11, true, sl)
 
-        val result = t.diff(o)
+        val result = t.diff(o).items
 
         assertEquals(2, result.size)
 
@@ -61,7 +61,7 @@ class AdatTest {
     fun diffTestSignature() {
         val o = TestClassSignatureDiff(12f, false, sl)
 
-        val result = t.diff(o)
+        val result = t.diff(o).items
 
         assertEquals(1, result.size)
         assertEquals(AdatDiffKind.SignatureDiff, result.first().kind)
@@ -73,7 +73,7 @@ class AdatTest {
     fun diffTestIndex() {
         val o = TestClassIndexDiff(false, 12, sl)
 
-        val result = t.diff(o)
+        val result = t.diff(o).items
 
         assertEquals(2, result.size)
 
@@ -90,7 +90,7 @@ class AdatTest {
     fun diffTestMissing() {
         val o = TestClassMissingDiff(12, false, sl)
 
-        val result = t.diff(o)
+        val result = t.diff(o).items
 
         assertEquals(2, result.size)
 

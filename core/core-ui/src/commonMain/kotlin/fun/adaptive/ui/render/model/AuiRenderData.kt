@@ -10,6 +10,7 @@ import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
+import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.instruction.layout.Size
 
 /**
@@ -35,6 +36,7 @@ open class AuiRenderData(
         finalLeft = previous?.finalLeft ?: 0.0
         finalWidth = previous?.finalWidth ?: 0.0
         finalHeight = previous?.finalHeight ?: 0.0
+        sizingProposal = previous?.sizingProposal
         layoutFragment = previous?.layoutFragment
     }
 
@@ -57,6 +59,8 @@ open class AuiRenderData(
     var finalLeft = 0.0
     var finalWidth = 0.0
     var finalHeight = 0.0
+
+    var sizingProposal : SizingProposal? = null
 
     var layout: LayoutRenderData? = null
     var decoration: DecorationRenderData? = null

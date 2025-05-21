@@ -118,6 +118,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
         }
 
         placeStructural()
+        data.sizingProposal = proposal
     }
 
     fun placeItemsInCells(

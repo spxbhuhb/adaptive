@@ -50,6 +50,7 @@ abstract class AbstractVirtualized<RT, CRT : RT>(
         renderData.finalWidth = 100.0
         renderData.finalHeight = 100.0
 
+        renderData.sizingProposal = proposal
     }
 
     fun onScroll(scrollTop: Double) {

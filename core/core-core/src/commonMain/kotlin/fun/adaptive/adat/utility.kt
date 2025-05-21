@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.adat
 
+import `fun`.adaptive.adat.util.AdatDiff
 import `fun`.adaptive.persistence.exists
 import `fun`.adaptive.persistence.write
 import `fun`.adaptive.wireformat.WireFormat
@@ -83,3 +84,10 @@ fun <A : AdatClass> save(path: Path, value: A, wireFormatProvider: WireFormatPro
             path.write(it, append = false, overwrite = overwrite, useTemporaryFile = useTemporaryFile)
         }
 }
+
+/**
+ * Calculates the differences between two Adat instances. The instances do not
+ * have to be the same class.
+ */
+fun AdatClass.diff(other: AdatClass) =
+    AdatDiff.diff(this, other)

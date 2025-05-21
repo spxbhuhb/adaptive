@@ -27,6 +27,7 @@ abstract class AbstractManualLayout<RT, CRT : RT>(
         proposal: SizingProposal
     ) {
         computeLayoutFun?.invoke(proposal.containerWidth, proposal.containerWidth)
+        renderData.sizingProposal = proposal
     }
 
     override fun updateLayout(updateId: Long, item: AbstractAuiFragment<*>?) {

@@ -221,6 +221,8 @@ abstract class AbstractAuiFragment<RT>(
             innerHeight != null -> innerHeight + data.surroundingVertical
             else -> data.surroundingVertical
         }
+
+        data.sizingProposal = proposal
     }
 
     open fun placeLayout(top: Double, left: Double) {
@@ -251,10 +253,14 @@ abstract class AbstractAuiFragment<RT>(
         if (shouldUpdateSelf() || layoutFragment == null) {
             val layout = renderData.layout
 
-            computeLayout(
-                layout?.instructedWidth ?: renderData.finalWidth,
-                layout?.instructedHeight ?: renderData.finalHeight
-            )
+            if (renderData.sizingProposal != null) {
+                computeLayout(renderData.sizingProposal!!)
+            } else {
+                computeLayout(
+                    layout?.instructedWidth ?: renderData.finalWidth,
+                    layout?.instructedHeight ?: renderData.finalHeight
+                )
+            }
 
             placeLayout(
                 layout?.instructedTop ?: renderData.finalTop,
