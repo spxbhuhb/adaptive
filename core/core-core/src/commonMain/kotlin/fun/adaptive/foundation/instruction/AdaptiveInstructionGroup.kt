@@ -178,6 +178,17 @@ class AdaptiveInstructionGroup(
         }
     }
 
+    fun map(action: (AdaptiveInstruction) -> AdaptiveInstruction?): AdaptiveInstructionGroup =
+        instructions.mapNotNull {
+            if (it is AdaptiveInstructionGroup) {
+                it.map(action)
+            } else {
+                action(it)
+            }
+        }.let {
+            AdaptiveInstructionGroup(it)
+        }
+
     /**
      * Create a **flat** list of all the instructions in this group and any groups it contains.
      *

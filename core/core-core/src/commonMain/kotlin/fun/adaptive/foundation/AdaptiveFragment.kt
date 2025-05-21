@@ -14,7 +14,8 @@ import `fun`.adaptive.foundation.internal.StateVariableMask
 import `fun`.adaptive.foundation.internal.cleanStateMask
 import `fun`.adaptive.foundation.internal.initStateMask
 import `fun`.adaptive.foundation.producer.AdaptiveProducer
-import `fun`.adaptive.foundation.query.FragmentVisitor
+import `fun`.adaptive.foundation.visitor.FragmentTransformer
+import `fun`.adaptive.foundation.visitor.FragmentVisitor
 import `fun`.adaptive.utility.PluginReference
 import `fun`.adaptive.wireformat.asPrettyJson
 import kotlin.jvm.JvmStatic
@@ -617,14 +618,30 @@ abstract class AdaptiveFragment(
     }
 
     open fun <D> acceptChildren(visitor: FragmentVisitor<Unit,D>, data: D) {
-        instructions.forEach {
-            visitor.visitInstruction(this, it, data)
-        }
-        for (index in state.indices) {
-            visitor.visitStateVariable(this, index, state[index], data)
-        }
         for (child in children) {
             visitor.visitFragment(child, data)
         }
     }
+
+    open fun <D> transformChildren(transformer : FragmentTransformer<D>, data : D) {
+        var haveToPatch = false
+        val newChildren = mutableListOf<AdaptiveFragment>()
+
+        for (child in children) {
+            val transformed = transformer.visitFragment(child, data)
+
+            if (transformed !== child) {
+                child.throwAway()
+            } else {
+                newChildren += transformed
+                haveToPatch = true
+            }
+        }
+
+        children = newChildren
+        if (haveToPatch) scheduleUpdate()
+    }
+
+    open fun scheduleUpdate() = Unit
+
 }

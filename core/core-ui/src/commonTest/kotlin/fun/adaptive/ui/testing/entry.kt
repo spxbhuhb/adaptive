@@ -9,7 +9,8 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.Trace
-import `fun`.adaptive.foundation.query.FragmentVisitor
+import `fun`.adaptive.foundation.visitor.FragmentVisitor
+import `fun`.adaptive.foundation.visitor.InstructionReplaceTransform
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.support.snapshot.snapshot
 
@@ -58,15 +59,9 @@ class SnapshotTest(
     fun snapshot() = adapter.snapshot()
 
     fun replace(old : AdaptiveInstruction, new : AdaptiveInstruction) {
-        BasicFragmentVisitor()
+        adapter.rootFragment.transformChildren(InstructionReplaceTransform(old, new), null)
+        adapter.closePatchBatch()
     }
 
-    class BasicFragmentVisitor : FragmentVisitor<Unit, Unit>() {
-
-        override fun visitFragment(fragment: AdaptiveFragment, data: Unit) {
-            TODO("Not yet implemented")
-        }
-
-    }
 
 }

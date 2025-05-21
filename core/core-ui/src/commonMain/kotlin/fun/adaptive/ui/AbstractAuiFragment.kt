@@ -167,7 +167,7 @@ abstract class AbstractAuiFragment<RT>(
         super.unmount()
     }
 
-    open fun scheduleUpdate() {
+    override fun scheduleUpdate() {
         // When the fragment is not mounted it will be added to the layout or to the root fragment list.
         // Both cases put the actual container or this fragment (in case of root fragment) onto the update batch.
 

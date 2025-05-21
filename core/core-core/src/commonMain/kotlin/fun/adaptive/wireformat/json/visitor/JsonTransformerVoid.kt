@@ -10,13 +10,13 @@ import `fun`.adaptive.wireformat.json.elements.JsonString
 
 abstract class JsonTransformerVoid : JsonTransformer<Nothing?>() {
 
-    open fun visitElement(element: JsonElement) : JsonElement =
-        visitElement(element, null)
-
-    final override fun visitElement(element: JsonElement, data: Nothing?) : JsonElement {
-        element.transformChildren(this, data)
+    open fun visitElement(element: JsonElement) : JsonElement {
+        element.transformChildren(this, null)
         return element
     }
+
+    final override fun visitElement(element: JsonElement, data: Nothing?) : JsonElement =
+        visitElement(element)
 
     open fun visitArray(jsonArray: JsonArray) : JsonElement =
         visitElement(jsonArray, null)
