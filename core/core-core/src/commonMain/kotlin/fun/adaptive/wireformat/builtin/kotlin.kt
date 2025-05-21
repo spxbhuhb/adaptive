@@ -5,13 +5,8 @@
 package `fun`.adaptive.wireformat.builtin
 
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.wireformat.WireFormat
-import `fun`.adaptive.wireformat.WireFormatDecoder
-import `fun`.adaptive.wireformat.WireFormatEncoder
-import `fun`.adaptive.wireformat.WireFormatKind
-import `fun`.adaptive.wireformat.WireFormatRegistry
+import `fun`.adaptive.wireformat.*
 import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
-import kotlin.enums.EnumEntries
 
 object NothingWireFormat : WireFormat<Nothing> {
     override val wireFormatName: String get() = "kotlin.Nothing"
@@ -185,7 +180,7 @@ object StringWireFormat : WireFormat<String> {
     override fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber: Int, fieldName: String) = decoder.stringOrNull(fieldNumber, fieldName)
 }
 
-open class EnumWireFormat<E : Enum<E>>(val entries: EnumEntries<E>) : WireFormat<E> {
+open class EnumWireFormat<E : Enum<E>>(val entries: List<E>) : WireFormat<E> {
     override val wireFormatName: String get() = "kotlin.Enum" // FIXME polymorphic enum
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: E): WireFormatEncoder = encoder.rawEnum(value, entries)

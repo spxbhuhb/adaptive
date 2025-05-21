@@ -9,7 +9,6 @@ import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatEncoder
 import `fun`.adaptive.wireformat.WireFormatKind
 import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
-import kotlin.enums.EnumEntries
 
 /**
  * Build JSON messages.
@@ -465,12 +464,12 @@ class JsonWireFormatEncoder(
     // Enum
     // ----------------------------------------------------------------------------
 
-    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, value: E, entries: EnumEntries<E>): WireFormatEncoder {
+    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, value: E, entries: List<E>): WireFormatEncoder {
         enumOrNull(fieldNumber, fieldName, value, entries)
         return this
     }
 
-    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, value: E?, entries: EnumEntries<E>): WireFormatEncoder {
+    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, value: E?, entries: List<E>): WireFormatEncoder {
         if (value == null) {
             writer.nullValue(fieldName)
         } else {
@@ -481,7 +480,7 @@ class JsonWireFormatEncoder(
         return this
     }
 
-    override fun <E : Enum<E>> rawEnum(value: E, entries: EnumEntries<E>): WireFormatEncoder {
+    override fun <E : Enum<E>> rawEnum(value: E, entries: List<E>): WireFormatEncoder {
         writer.quotedString(value.name)
         return this
     }

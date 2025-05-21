@@ -9,7 +9,6 @@ import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatEncoder
 import `fun`.adaptive.wireformat.WireFormatKind
 import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
-import kotlin.enums.EnumEntries
 
 /**
  * Build Protocol Buffer messages.
@@ -465,12 +464,12 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
     // Enum
     // ----------------------------------------------------------------------------
 
-    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, value: E, entries: EnumEntries<E>): WireFormatEncoder {
+    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, value: E, entries: List<E>): WireFormatEncoder {
         writer.sint32(fieldNumber, value.ordinal)
         return this
     }
 
-    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, value: E?, entries: EnumEntries<E>): WireFormatEncoder {
+    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, value: E?, entries: List<E>): WireFormatEncoder {
         if (value == null) {
             writer.bool(fieldNumber + NULL_SHIFT, true)
         } else {
@@ -479,7 +478,7 @@ class ProtoWireFormatEncoder : WireFormatEncoder {
         return this
     }
 
-    override fun <E : Enum<E>> rawEnum(value: E, entries: EnumEntries<E>): WireFormatEncoder =
+    override fun <E : Enum<E>> rawEnum(value: E, entries: List<E>): WireFormatEncoder =
         enum(1, "", value, entries)
 
     // ----------------------------------------------------------------------------

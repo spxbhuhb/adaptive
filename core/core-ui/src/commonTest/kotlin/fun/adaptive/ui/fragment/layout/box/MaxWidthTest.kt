@@ -1,13 +1,10 @@
 package `fun`.adaptive.ui.fragment.layout.box
 
-import `fun`.adaptive.adat.encodeToPrettyJson
 import `fun`.adaptive.foundation.instruction.name
-import `fun`.adaptive.log.devInfo
 import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.color
 import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.margin
 import `fun`.adaptive.ui.api.marginLeft
 import `fun`.adaptive.ui.api.marginRight
 import `fun`.adaptive.ui.api.maxWidth
@@ -18,7 +15,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.testing.snapshotTest
 import kotlin.test.Test
 
-class AdhocTest {
+class MaxWidthTest {
 
     val name = "container"
 
@@ -72,4 +69,5 @@ class AdhocTest {
             assertFinal(name, 0, 3, testWidth - 8, 1)
         }
     }
+
 }

@@ -17,6 +17,7 @@ import `fun`.adaptive.sandbox.support.configureForm
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.editor.booleanEditor
 import `fun`.adaptive.ui.editor.colorEditor
+import `fun`.adaptive.ui.editor.dPixelEditor
 import `fun`.adaptive.ui.editor.doubleEditor
 import `fun`.adaptive.ui.editor.selectEditorList
 import `fun`.adaptive.ui.form.AdatFormViewBackend
@@ -30,12 +31,13 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.*
 import `fun`.adaptive.ui.splitpane.SplitPaneTheme
 import `fun`.adaptive.ui.splitpane.verticalSplitDivider
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 
 @Adaptive
 fun containerPlayground(): AdaptiveFragment {
 
-    val form = valueFrom {  adatFormBackend(PlaygroundConfig()) }
+    val form = valueFrom { adatFormBackend(PlaygroundConfig()) }
 
     flowBox {
         gap { 16.dp }
@@ -59,7 +61,7 @@ class PlaygroundConfig(
     val container: FragmentKey = containers.first(),
     val layout: LayoutConfig = LayoutConfig(),
     val decoration: DecorationConfig = DecorationConfig(),
-    val splitPane : SplitPaneViewBackend = splitPaneBackend(SplitVisibility.Both, SplitMethod.FixFirst, 100.0, Orientation.Horizontal)
+    val splitPane: SplitPaneViewBackend = splitPaneBackend(SplitVisibility.Both, SplitMethod.FixFirst, 100.0, Orientation.Horizontal)
 ) {
     fun toInstructions(): AdaptiveInstructionGroup {
         return instructionsOf(layout.toInstructions(), decoration.toInstructions())
@@ -72,10 +74,10 @@ class LayoutConfig(
     val left: Double = 20.0,
     val width: Double = 40.0,
     val height: Double = 40.0,
-    val margin : Margin = Margin.NONE,
-    val padding : Padding = Padding.NONE,
-    val useMaxWidth : Boolean = true,
-    val useMaxHeight : Boolean = false
+    val margin: Margin = Margin.NONE,
+    val padding: Padding = Padding.NONE,
+    val useMaxWidth: Boolean = true,
+    val useMaxHeight: Boolean = false
 ) {
     fun toInstructions(): AdaptiveInstructionGroup =
         instructionsOf(
@@ -87,7 +89,7 @@ class LayoutConfig(
 
 @Adat
 class DecorationConfig(
-    val border : Border = borders.outline,
+    val border: Border = borders.outline,
     val backgroundColor: Color? = null,
 ) {
     fun toInstructions(): AdaptiveInstructionGroup =
@@ -131,10 +133,18 @@ fun containerPlaygroundForm(
                 booleanEditor { template.layout.useMaxHeight } .. width { 120.dp }
             }
 
-            row {
+            column {
                 gap { 16.dp }
                 colorEditor { template.decoration.border.color } .. width { 120.dp }
-                //doubleEditor { template.decoration.border.top } .. width { 120.dp }
+
+                row {
+                    gap { 16.dp }
+
+                    dPixelEditor { template.decoration.border.top } .. width { 52.dp }
+                    dPixelEditor { template.decoration.border.right } .. width { 52.dp }
+                    dPixelEditor { template.decoration.border.left } .. width { 52.dp }
+                    dPixelEditor { template.decoration.border.bottom } .. width { 52.dp }
+                }
             }
         }
     }
@@ -158,9 +168,9 @@ fun containerPlaygroundResult(config: PlaygroundConfig) {
         if (config.container == "splitPane") {
             splitPane(
                 splitConfig,
-                { text("pane1") },
+                { box { maxSize .. backgrounds.surface; text("pane1") } },
                 { verticalSplitDivider(SplitPaneTheme.outline) },
-                { text("pane2") }
+                { box { maxSize .. backgrounds.surface; text("pane2") } }
             ) .. config.toInstructions()
         } else {
             actualize(config.container, config.toInstructions(), BoundFragmentFactory(self, - 1, ::fakeContent))

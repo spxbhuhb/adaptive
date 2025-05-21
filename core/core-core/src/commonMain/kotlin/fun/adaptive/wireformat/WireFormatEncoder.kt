@@ -6,7 +6,6 @@ package `fun`.adaptive.wireformat
 
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
-import kotlin.enums.EnumEntries
 
 /**
  * Interface for building serialized messages. Protobuf needs field number
@@ -179,11 +178,11 @@ interface WireFormatEncoder {
 
     // ----
 
-    fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, value: E, entries: EnumEntries<E>): WireFormatEncoder
+    fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, value: E, entries: List<E>): WireFormatEncoder
 
-    fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, value: E?, entries: EnumEntries<E>): WireFormatEncoder
+    fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, value: E?, entries: List<E>): WireFormatEncoder
 
-    fun <E : Enum<E>> rawEnum(value: E, entries: EnumEntries<E>): WireFormatEncoder
+    fun <E : Enum<E>> rawEnum(value: E, entries: List<E>): WireFormatEncoder
 
     // ----
 

@@ -10,7 +10,7 @@ enum class SnackType {
     Warning,
     Fail;
 
-    companion object : EnumWireFormat<SnackType>(SnackType.Companion.entries) {
+    companion object : EnumWireFormat<SnackType>(entries) {
         override val wireFormatName: String
             get() = SnackType.typeSignature().trimSignature()
     }

@@ -8,7 +8,7 @@ enum class Orientation {
     Horizontal,
     Vertical;
 
-    companion object : EnumWireFormat<Orientation>(Orientation.Companion.entries) {
+    companion object : EnumWireFormat<Orientation>(entries) {
         override val wireFormatName: String
             get() = Orientation.typeSignature().trimSignature()
     }

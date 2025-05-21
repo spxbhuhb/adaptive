@@ -5,6 +5,7 @@ package `fun`.adaptive.ui.testing
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveEntry
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.AdaptiveFragmentFactory
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.Trace
@@ -12,9 +13,11 @@ import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.query.firstOrNull
 import `fun`.adaptive.foundation.visitor.InstructionReplaceTransform
 import `fun`.adaptive.ui.AbstractAuiFragment
+import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.render.model.AuiRenderData
-import `fun`.adaptive.ui.support.snapshot.snapshot
+import `fun`.adaptive.ui.support.snapshot.FragmentSnapshot
+import `fun`.adaptive.ui.support.snapshot.uiContainerSnapshot
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
@@ -67,17 +70,22 @@ class SnapshotTest(
     val testWidth: Double,
     val testHeight: Double
 ) {
-    fun snapshot() = adapter.snapshot()
+    fun snapshot() = FragmentSnapshot(
+        "<root>",
+        emptyList(),
+        adapter.rootFragment.children.filterIsInstance<AbstractContainer<*, *>>().map { it.uiContainerSnapshot() },
+        null, null, null, null
+    )
 
     fun replace(old: AdaptiveInstruction, new: AdaptiveInstruction) {
         adapter.rootFragment.transformChildren(InstructionReplaceTransform(old, new), null)
         adapter.closePatchBatch()
     }
 
-    fun getUiFragment(fragmentName : String) : AbstractAuiFragment<*> {
+    fun getUiFragment(fragmentName: String): AbstractAuiFragment<*> {
         val inst = name(fragmentName)
 
-        val fragment = adapter.firstOrNull{ inst in it.instructions }
+        val fragment : AdaptiveFragment? = adapter.firstOrNull { inst in it.instructions }
         assertNotNull(fragment, "Fragment with name $fragmentName was not found")
 
         assertIs<AbstractAuiFragment<*>>(fragment, "Fragment $fragment is not a AbstractAuiFragment")
@@ -85,14 +93,23 @@ class SnapshotTest(
         return fragment
     }
 
-    fun getRenderData(fragmentName : String) : AuiRenderData =
+    fun getRenderData(fragmentName: String): AuiRenderData =
         getUiFragment(fragmentName).renderData
 
-    fun assertFinal(fragmentName : String, top: Number, left: Number, width: Number, height: Number) {
-        val renderData = getRenderData(fragmentName)
-        assertEquals(renderData.finalTop, top.toDouble())
-        assertEquals(renderData.finalLeft, left.toDouble())
-        assertEquals(renderData.finalWidth, width.toDouble())
-        assertEquals(renderData.finalHeight, height.toDouble())
+    fun assertLayoutParentFinal(fragmentName: String, top: Number, left: Number, width: Number, height: Number) {
+        val renderData = getRenderData(fragmentName).layoutFragment?.renderData
+        assertNotNull(renderData, "RenderData for parent of $fragmentName was not found")
+        assertFinal(renderData, top.toDouble(), left.toDouble(), width.toDouble(), height.toDouble())
+    }
+
+    fun assertFinal(fragmentName: String, top: Number, left: Number, width: Number, height: Number) {
+        assertFinal(getRenderData(fragmentName), top.toDouble(), left.toDouble(), width.toDouble(), height.toDouble())
+    }
+
+    fun assertFinal(renderData: AuiRenderData, top: Number, left: Number, width: Number, height: Number) {
+        assertEquals(top.toDouble(), renderData.finalTop, "Top should be $top")
+        assertEquals(left.toDouble(), renderData.finalLeft, "Left should be $left")
+        assertEquals(width.toDouble(), renderData.finalWidth, "Width should be $width")
+        assertEquals(height.toDouble(), renderData.finalHeight, "Height should be $height")
     }
 }

@@ -6,7 +6,6 @@ package `fun`.adaptive.wireformat
 
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
-import kotlin.enums.EnumEntries
 
 @OptIn(ExperimentalUnsignedTypes::class)
 interface WireFormatDecoder<ST> {
@@ -173,11 +172,11 @@ interface WireFormatDecoder<ST> {
 
     // ----
 
-    fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E
+    fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: List<E>): E
 
-    fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E?
+    fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: List<E>): E?
 
-    fun <E : Enum<E>> rawEnum(source: ST, entries: EnumEntries<E>): E
+    fun <E : Enum<E>> rawEnum(source: ST, entries: List<E>): E
 
     // ----
 

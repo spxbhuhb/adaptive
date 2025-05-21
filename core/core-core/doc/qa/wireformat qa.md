@@ -12,7 +12,7 @@ enum class ExampleEnum {
     V1,
     V2;
     
-    companion object : EnumWireFormat<ExampleEnum>(ExampleEnum.Companion.entries) {
+    companion object : EnumWireFormat<ExampleEnum>(entries) {
         override val wireFormatName: String
             get() = ExampleEnum.typeSignature().trimSignature()
     }

@@ -13,7 +13,6 @@ import `fun`.adaptive.wireformat.json.elements.JsonElement
 import `fun`.adaptive.wireformat.json.elements.JsonNull
 import `fun`.adaptive.wireformat.json.elements.JsonObject
 import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
-import kotlin.enums.EnumEntries
 
 @OptIn(ExperimentalUnsignedTypes::class)
 class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
@@ -324,13 +323,13 @@ class JsonWireFormatDecoder : WireFormatDecoder<JsonElement> {
     // Enum
     // -----------------------------------------------------------------------------------------
 
-    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E =
+    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: List<E>): E =
         entries.first { it.name == string(fieldNumber, fieldName) }
 
-    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E? =
+    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: List<E>): E? =
         stringOrNull(fieldNumber, fieldName)?.let { s -> entries.first { it.name == s } }
 
-    override fun <E : Enum<E>> rawEnum(source: JsonElement, entries: EnumEntries<E>): E =
+    override fun <E : Enum<E>> rawEnum(source: JsonElement, entries: List<E>): E =
         entries.first { it.name == rawString(source) }
 
     // -----------------------------------------------------------------------------------------

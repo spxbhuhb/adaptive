@@ -10,7 +10,6 @@ import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatKind
 import `fun`.adaptive.wireformat.WireFormatRegistry
 import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
-import kotlin.enums.EnumEntries
 
 /**
  * Parse Protocol Buffer messages.
@@ -293,13 +292,13 @@ class ProtoWireFormatDecoder(
     // Enum
     // -----------------------------------------------------------------------------------------
 
-    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E =
+    override fun <E : Enum<E>> enum(fieldNumber: Int, fieldName: String, entries: List<E>): E =
         entries[checkNotNull(get(fieldNumber)).value.sint32()]
 
-    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: EnumEntries<E>): E? =
+    override fun <E : Enum<E>> enumOrNull(fieldNumber: Int, fieldName: String, entries: List<E>): E? =
         get(fieldNumber)?.let { entries[it.value.sint32()] }
 
-    override fun <E : Enum<E>> rawEnum(source: ProtoRecord, entries: EnumEntries<E>): E {
+    override fun <E : Enum<E>> rawEnum(source: ProtoRecord, entries: List<E>): E {
         return entries[source.value.sint32()]
     }
 

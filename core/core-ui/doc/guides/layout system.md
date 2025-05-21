@@ -38,7 +38,21 @@ Each [ui fragment](def://) has a [layout surrounding](def://) defined by:
 - [padding](def://)
 - [border](def://)
 
-The surrounding reduces the space the fragment uses for its content.
+The surrounding reduces the space the fragment uses for its children or content.
 
 In contrast with other layout systems, **margin is counted into the size** of a fragment.
 
+## Fragment position
+
+[UI fragment](def://) positions are relative to the top-left corner of the [ui container fragment](def://)
+that contains them, including the [layout surrounding](def://) of the container fragment.
+
+For example, in the code below the top and left position of `text` is 3.dp as the surroundings
+sum to 3.dp, so the children positioning start from there.
+
+```kotlin
+box {
+    margin { 1.dp } .. border(color(0x0), 1.dp) .. padding { 1.dp }
+    text("Hello World!")
+}
+```

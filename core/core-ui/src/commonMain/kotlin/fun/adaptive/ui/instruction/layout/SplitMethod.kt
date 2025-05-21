@@ -30,7 +30,7 @@ enum class SplitMethod {
      */
     WrapSecond;
 
-    companion object : EnumWireFormat<SplitMethod>(SplitMethod.Companion.entries) {
+    companion object : EnumWireFormat<SplitMethod>(entries) {
         override val wireFormatName: String
             get() = SplitMethod.typeSignature().trimSignature()
     }

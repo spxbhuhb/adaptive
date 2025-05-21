@@ -293,8 +293,8 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     ) {
 
         // this is a general, bound case, updated when method is WrapFirst or WrapSecond
-        val proposedWidth = proposal.containerWidth
-        val proposedHeight = proposal.containerHeight
+        val proposedWidth = renderData.layout?.instructedWidth ?: proposal.containerWidth
+        val proposedHeight = renderData.layout?.instructedHeight ?: proposal.containerHeight
 
         renderData.finalWidth = proposedWidth
         renderData.finalHeight = proposedHeight
