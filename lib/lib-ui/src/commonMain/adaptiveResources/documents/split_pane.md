@@ -110,8 +110,8 @@ The percentage or the size of the panes.
 
 ## Internals
 
-Split pane is a platform-dependent fragment because it is a container fragment that 
+Split pane is a [platform-dependent](def://) fragment because it is a container fragment that 
 implies receiver dependency.
 
-The common `AbstractSplitPane` contains everything, the platform-dependent implementation
+The common `AbstractSplitPane` contains everything, the [platform-dependent](def://) implementation
 only has to extend this class as `AuiSplitPane`.

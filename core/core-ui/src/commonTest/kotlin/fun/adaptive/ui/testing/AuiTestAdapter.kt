@@ -79,8 +79,8 @@ class AuiTestAdapter(
 
         fragment.receiver.testTop = data.finalTop
         fragment.receiver.testLeft = data.finalLeft
-        fragment.receiver.testWidth = data.finalHeight
-        fragment.receiver.testHeight = data.finalWidth
+        fragment.receiver.testWidth = data.finalWidth
+        fragment.receiver.testHeight = data.finalHeight
     }
 
     override fun applyLayoutIndependent(fragment: AbstractAuiFragment<TestReceiver>) {

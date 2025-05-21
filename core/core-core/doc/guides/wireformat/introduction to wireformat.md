@@ -134,7 +134,7 @@ any values.
 When generating the wireformat for `List<Any>` there is no type information
 during compile time to rely on. While it is possible to get information about
 the contained type with `getComponentType()` in Java, this function does not exist
-on other platforms. So, if I create an array in Javascript for example, I cannot
+on other [platforms](def://). So, if I create an array in Javascript for example, I cannot
 serialize it with the type information. In result, I cannot de-serialize it with the
 proper type information in Java.
 

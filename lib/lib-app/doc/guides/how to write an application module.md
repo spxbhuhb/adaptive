@@ -8,7 +8,7 @@ This guide defines the classes needed to implement an [application module](def:/
 - Server-side [services](def://) and [workers](def://)
 - [Multi-pane workspace](def://) UI for the client side
 
-These modules establish a reusable base for apps built using the Adaptive platform.
+These modules establish a reusable base for apps built using [Adaptive](def://).
 
 # Steps
 

@@ -15,7 +15,7 @@ that handles most of the common application building steps.
 
 An [application](def://):
 
-- in this context means a client or a server, regardless of the actual platform the application runs,
+- in this context means a client or a server, regardless of the actual [platform](def://) the application runs on,
 - it is composed of [application modules](def://),
 - has exactly one [application workspace](def://).
 
@@ -85,9 +85,8 @@ These directories are optional, you can omit them if not needed.
 
 ## Application startup
 
-Currently, application platforms are implemented (JVM, Browser/JS). Android, iOS, Desktop will
+Currently, JVM and Browser/JS [platforms](def://) are implemented. Android, iOS, Desktop will
 follow the same concept.
-
 
 ### JVM - server
 

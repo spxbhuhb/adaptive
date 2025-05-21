@@ -19,6 +19,7 @@ import `fun`.adaptive.log.defaultLoggerFactory
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeValueExample
 import `fun`.adaptive.ui.LibFragmentFactory
@@ -27,6 +28,7 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.value.app.ValueClientModule
 import kotlinx.coroutines.CoroutineScope
@@ -127,12 +129,12 @@ fun sandboxMain() {
 //                }
 //            }
                 column {
-                    maxSize .. padding { 16.dp } .. gap { 16.dp }//.. backgrounds.friendlyOpaque
-                    //containerPlayground()
+                    maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. backgrounds.friendlyOpaque
+                    containerPlayground()
                     //selectInputPlayground()
                     //formBasicExample()
                     //treeRecipe()
-                    treeValueExample()
+                    //treeValueExample()
                 }
             }
         } catch (ex: Exception) {

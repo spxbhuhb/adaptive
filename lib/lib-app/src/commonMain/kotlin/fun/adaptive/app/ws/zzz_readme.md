@@ -3,8 +3,8 @@
 Main module for Workspace based UI applications. Features an IntelliJ IDEA inspired workspace with tools 
 at side/bottom and tabbed main content.
 
-Focus is on browser for now. Theoretically can run on any platform, but a some platform dependent fragments
-are not currently implemented on Android/iOS/Desktop, hence "theoretically".
+Focus is on browser for now. Theoretically can run on any [platform](def://), but some [dependent ui fragments](def://) 
+are not yet implemented on Android/iOS/Desktop, hence "theoretically".
 
 Initialization involves an `index.html` (examples in site, iot, sandbox) and a `main.kt`. This example
 shows content of `main.kt` for the IoT app.

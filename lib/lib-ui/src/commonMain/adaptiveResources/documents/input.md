@@ -11,7 +11,7 @@ There are three categories of inputs:
 ### Primitive Inputs
 
 Primitive inputs are the most basic, they are typically manually implemented using
-platform-dependent input classes and provide no styling, validation, etc.
+[platform-dependent](def://) input classes and provide no styling, validation, etc.
 A good example is `singleLineTextInput`.
 
 You can use them to build your own custom inputs, but you might be better off
