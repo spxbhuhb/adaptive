@@ -28,8 +28,7 @@ fun booleanInput(
     val theme = observed.booleanInputTheme
 
     decoratedInput(focus, observed) {
-        // FIXME space between and maxwidth should not be in booleanInput
-        instructions() .. spaceBetween .. maxWidth
+        instructions() .. spaceBetween
 
         row(theme.container) {
 

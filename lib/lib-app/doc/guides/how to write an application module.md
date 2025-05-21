@@ -3,7 +3,7 @@
 This guide defines the classes needed to implement an [application module](def://) named
 `example` under the package `my.project`. It supports:
 
-- [Adat class](def://) registration (e.g., `ExampleData`)
+- [Adat class](def://) and enum class registration (e.g., `ExampleData`)
 - Application-wide [resources](def://) (e.g., string stores)
 - Server-side [services](def://) and [workers](def://)
 - [Multi-pane workspace](def://) UI for the client side

@@ -9,6 +9,7 @@ import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatEncoder
 import `fun`.adaptive.wireformat.WireFormatKind
+import `fun`.adaptive.wireformat.WireFormatRegistry
 import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlin.enums.EnumEntries
 
@@ -191,6 +192,11 @@ open class EnumWireFormat<E : Enum<E>>(val entries: EnumEntries<E>) : WireFormat
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): E = decoder !!.rawEnum(source, entries)
     override fun wireFormatEncode(encoder: WireFormatEncoder, fieldNumber: Int, fieldName: String, value: E?) = encoder.enumOrNull(fieldNumber, fieldName, value, entries)
     override fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber: Int, fieldName: String) = decoder.enumOrNull(fieldNumber, fieldName, entries)
+
+    init {
+        // TODO think about enum wire formats registering themselves in the registry automatically
+        WireFormatRegistry[wireFormatName] = this
+    }
 }
 
 object UuidWireFormat : WireFormat<UUID<*>> {

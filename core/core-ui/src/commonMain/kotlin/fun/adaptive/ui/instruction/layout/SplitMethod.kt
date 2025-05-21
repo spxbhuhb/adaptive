@@ -1,5 +1,9 @@
 package `fun`.adaptive.ui.instruction.layout
 
+import `fun`.adaptive.reflect.typeSignature
+import `fun`.adaptive.utility.trimSignature
+import `fun`.adaptive.wireformat.builtin.EnumWireFormat
+
 enum class SplitMethod {
     /**
      * The first pane is fixed size, the second occupies the remaining space.
@@ -24,6 +28,11 @@ enum class SplitMethod {
     /**
      * The available space is distributed as if the second pane would wrap the first.
      */
-    WrapSecond
+    WrapSecond;
+
+    companion object : EnumWireFormat<SplitMethod>(SplitMethod.Companion.entries) {
+        override val wireFormatName: String
+            get() = SplitMethod.typeSignature().trimSignature()
+    }
 
 }
