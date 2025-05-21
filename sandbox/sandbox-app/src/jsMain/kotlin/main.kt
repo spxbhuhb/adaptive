@@ -20,15 +20,15 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
-import `fun`.adaptive.sandbox.recipe.ui.tree.treeRecipe
-import `fun`.adaptive.sandbox.recipe.ui.tree.treeValueExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.value.app.ValueClientModule
 import kotlinx.coroutines.CoroutineScope
@@ -135,6 +135,9 @@ fun sandboxMain() {
                     //formBasicExample()
                     //treeRecipe()
                     //treeValueExample()
+//                    box {
+//                        maxWidth .. borders.outline .. backgrounds.surface .. height { 40.dp}
+//                    }
                 }
             }
         } catch (ex: Exception) {
@@ -150,7 +153,10 @@ fun collectedLog(data: CollectedLogData) {
     box {
         maxSize .. zIndex { 100000 } .. noPointerEvents
         column {
+            enablePointerEvents
             height { 400.dp } .. verticalScroll .. alignSelf.bottom .. maxWidth
+
+            submitButton("Clear") .. onClick { data.clear() }
             for (item in observed.items) {
                 collectedLogItem(item)
             }
@@ -163,6 +169,8 @@ fun collectedLog(data: CollectedLogData) {
 @Adaptive
 fun collectedLogItem(item: CollectedLogItem) {
 
+    val lines = item.message.split("\n")
+
     column {
         row {
             maxWidth .. gap { 16.dp } .. height { 22.dp }
@@ -170,7 +178,12 @@ fun collectedLogItem(item: CollectedLogItem) {
             text(item.time)
             text(item.logger)
             text(item.level)
-            text(item.message)
+            if (lines.size < 2) text(item.message)
+        }
+        if (lines.size > 1) {
+            for (line in lines) {
+                text(line) .. paddingLeft { 40.dp }
+            }
         }
         if (item.exception != null) {
             text(item.exception)

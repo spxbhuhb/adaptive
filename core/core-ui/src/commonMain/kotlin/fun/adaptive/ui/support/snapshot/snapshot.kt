@@ -9,13 +9,20 @@ fun AbstractAuiAdapter<*, *>.snapshot(): FragmentSnapshot {
     return rootFragment.snapshot()
 }
 
-fun AdaptiveFragment.snapshot(): FragmentSnapshot {
+fun AdaptiveFragment.snapshot(
+    uiOnly: Boolean = true,
+    skipStructural: Boolean = true
+): FragmentSnapshot {
     val renderData = if (this is AbstractAuiFragment<*>) renderData else null
 
     return FragmentSnapshot(
         this.toKey(),
         state.toList().map { it.polymorphicOrToString() },
-        children.map { it.snapshot() },
+        children.mapNotNull {
+            if (uiOnly && it !is AbstractAuiFragment<*>) return@mapNotNull null
+            if (skipStructural && it is AbstractAuiFragment<*> && it.isStructural) return@mapNotNull null
+            it.snapshot(uiOnly, skipStructural)
+        },
         renderData?.finalTop,
         renderData?.finalLeft,
         renderData?.finalWidth,

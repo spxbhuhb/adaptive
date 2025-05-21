@@ -34,7 +34,7 @@ abstract class AdaptiveFragment(
         const val DETACHED_MASK = 0x04
 
         @JvmStatic
-        protected fun stateSize() : Int {
+        protected fun stateSize(): Int {
             replacedByPlugin("replaced by the compiler plugin with the calculated state size")
         }
 
@@ -101,7 +101,7 @@ abstract class AdaptiveFragment(
      * Indices of [internal state variables](def://) that are bound to the
      * [fragment lifecycle](def://) and should be notified about changes.
      */
-    var lifecycleBound : IntArray? = null
+    var lifecycleBound: IntArray? = null
 
     val instructions: AdaptiveInstructionGroup
         get() = get(0) ?: emptyInstructions
@@ -287,7 +287,7 @@ abstract class AdaptiveFragment(
         (dirtyMask == initStateMask) || (closureDirtyMask and dependencyMask) != cleanStateMask
 
     @PluginReference
-    protected fun haveToPatch(value : Any?) : Boolean {
+    protected fun haveToPatch(value: Any?): Boolean {
         replacedByPlugin("replaced with bit mask variant", value)
     }
 
@@ -324,7 +324,7 @@ abstract class AdaptiveFragment(
         }
 
         if (lifecycleBound != null) {
-            if (index in lifecycleBound!!) {
+            if (index in lifecycleBound !!) {
                 (state[index] as? LifecycleBound)?.dispose(this, index)
             }
         }
@@ -524,17 +524,17 @@ abstract class AdaptiveFragment(
      *     set(v) { set(index, v) }
      *
      */
-    protected fun <T> stateVariable() : ReadWriteProperty<AdaptiveFragment, T> {
+    protected fun <T> stateVariable(): ReadWriteProperty<AdaptiveFragment, T> {
         replacedByPlugin("state variable access")
     }
 
-    inline fun <reified T> get(index : Int) : T {
+    inline fun <reified T> get(index: Int): T {
         val value = state[index]
         check(value is T) { "$value (${value?.let { it::class.simpleName }}) is not an instance of ${T::class} in $this" }
         return value
     }
 
-    fun set(index : Int, value : Any?) {
+    fun set(index: Int, value: Any?) {
         state[index] = value
     }
 
@@ -612,11 +612,19 @@ abstract class AdaptiveFragment(
     // Visitor support
     // ----------------------------------------------
 
-    fun accept(visitor: FragmentVisitor) {
-        visitor.visitFragment(this)
+    open fun <R, D> accept(visitor: FragmentVisitor<R, D>, data: D) : R {
+        return visitor.visitFragment(this, data)
     }
 
-    fun acceptChildren(visitor: FragmentVisitor) {
-        children.forEach { it.accept(visitor) }
+    open fun <D> acceptChildren(visitor: FragmentVisitor<Unit,D>, data: D) {
+        instructions.forEach {
+            visitor.visitInstruction(this, it, data)
+        }
+        for (index in state.indices) {
+            visitor.visitStateVariable(this, index, state[index], data)
+        }
+        for (child in children) {
+            visitor.visitFragment(child, data)
+        }
     }
 }
