@@ -64,6 +64,26 @@ class AvComputeContext(
     // Tree operations
     //---------------------------------------------------------------------------------
 
+    fun <T> addTreeNode(
+        parentId: AvValueId?,
+        treeSetup: AvTreeSetup,
+        buildFun : () -> AvValue<T>
+    ) : AvValue<T> {
+        val value = buildFun()
+        this += value
+        addTreeNode(parentId, value.uuid, treeSetup)
+        return value
+    }
+
+    fun addTreeNode(
+        parentId: AvValueId?,
+        childId: AvValue<*>,
+        treeSetup: AvTreeSetup
+    ) {
+        this += childId
+        addTreeNode(parentId, childId, treeSetup)
+    }
+
     /**
      * Adds a child value to a parent value in the tree structure.
      * 
