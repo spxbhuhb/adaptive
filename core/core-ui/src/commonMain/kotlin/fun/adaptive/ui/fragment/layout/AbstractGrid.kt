@@ -66,7 +66,7 @@ abstract class AbstractGrid<RT, CRT : RT>(
 
         val finalHeight = when {
             instructedHeight != null -> instructedHeight
-            heightSum == Double.POSITIVE_INFINITY -> proposal.containerWidth
+            heightSum == Double.POSITIVE_INFINITY -> proposal.containerHeight
             else -> heightSum + data.surroundingVertical + (rowGap * (rowTracks.size - 1))
         }
 

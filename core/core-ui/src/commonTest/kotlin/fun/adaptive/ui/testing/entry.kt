@@ -21,6 +21,7 @@ import `fun`.adaptive.ui.support.snapshot.uiContainerSnapshot
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
 @AdaptiveEntry
 fun uiTest(
@@ -95,6 +96,10 @@ class SnapshotTest(
 
     fun getRenderData(fragmentName: String): AuiRenderData =
         getUiFragment(fragmentName).renderData
+
+    fun assertNotExist(fragmentName: String) {
+        assertNull(adapter.firstOrNull { name(fragmentName) in it.instructions }, "Fragment with name $fragmentName was found")
+    }
 
     fun assertLayoutParentFinal(fragmentName: String, top: Number, left: Number, width: Number, height: Number) {
         val renderData = getRenderData(fragmentName).layoutFragment?.renderData
