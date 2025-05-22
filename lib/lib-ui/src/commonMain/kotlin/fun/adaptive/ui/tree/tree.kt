@@ -32,7 +32,6 @@ fun <IT, CT> tree(
     val observed = valueFrom { viewBackend }
 
     column(observed.theme.container, instructions()) {
-        name("stuff")
         onClick { observed.onClick(it) }
         onDoubleClick { observed.onDoubleClick(it) }
         onKeydown { observed.onKeydown(it) }
@@ -118,8 +117,8 @@ private fun <IT, CT> label(
 
             when {
                 observed.children.isEmpty() -> box { }
-                observed.open -> svg(theme.handleIconOpen) .. foreground .. theme.handleIcon
-                else -> svg(theme.handleIconClosed) .. foreground .. theme.handleIcon
+                observed.open -> icon(theme.handleIconOpen) .. foreground .. theme.handleIcon
+                else -> icon(theme.handleIconClosed) .. foreground .. theme.handleIcon
             }
         }
 

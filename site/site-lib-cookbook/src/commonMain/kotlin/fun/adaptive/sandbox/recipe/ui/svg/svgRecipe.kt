@@ -25,10 +25,10 @@ fun svgRecipe(): AdaptiveFragment {
         gap { 16.dp } .. maxSize .. verticalScroll
         colTemplate(64.dp, 1.fr) .. rowTemplate(32.dp repeat 3)
 
-        svg(Graphics.account_circle)
+        svg(Graphics.account_circle) .. size(24.dp)
         text(" - default")
 
-        svg(Graphics.account_circle) .. iconColors.onSurfaceFriendly
+        svg(Graphics.account_circle) .. iconColors.onSurfaceFriendly .. size(24.dp)
         text(" - with color")
 
         colorChange()
@@ -47,7 +47,7 @@ private fun colorChange() {
     val random = poll(1.seconds) { now().epochSeconds.toInt() % 4 } ?: 0
     val colors = arrayOf(iconColors.onSurface, iconColors.onSurfaceVariant, iconColors.onSurfaceFriendly, iconColors.onSurfaceAngry)
 
-    svg(Graphics.account_circle) .. colors[random]
+    svg(Graphics.account_circle) .. colors[random] .. size(24.dp)
 
     text(" - with changing color - $random")
 }

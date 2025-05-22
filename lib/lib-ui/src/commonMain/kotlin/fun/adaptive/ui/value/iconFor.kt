@@ -5,20 +5,14 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.value.AvValue
 
-
 fun iconFor(item: AvValue<*>): GraphicsResourceSet? {
 
-    return null
+    for (marker in item.markers) {
+        val icon = iconCache[marker]
+        if (icon != null) {
+            return icon
+        }
+    }
 
-//    val byType = iconCache[item.type]
-//    if (byType != null) return byType
-//
-//    for (marker in item.markers.keys) {
-//        val icon = iconCache[marker]
-//        if (icon != null) {
-//            return icon
-//        }
-//    }
-
-//    return Graphics.empty
+    return Graphics.empty
 }
