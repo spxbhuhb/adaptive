@@ -19,14 +19,14 @@ abstract class AbstractManualLayout<RT, CRT : RT>(
 
     override var isRootActual: Boolean = false
 
-    var computeLayoutFun: ((proposedWidth: Double, proposedHeight: Double) -> Unit)? = null
+    var computeLayoutFun: ((proposal : SizingProposal) -> Unit)? = null
 
     var updateLayoutFun: ((updateId: Long, item: AbstractAuiFragment<*>?) -> Unit)? = null
 
     override fun computeLayout(
         proposal: SizingProposal
     ) {
-        computeLayoutFun?.invoke(proposal.containerWidth, proposal.containerWidth)
+        computeLayoutFun?.invoke(proposal)
         renderData.sizingProposal = proposal
     }
 

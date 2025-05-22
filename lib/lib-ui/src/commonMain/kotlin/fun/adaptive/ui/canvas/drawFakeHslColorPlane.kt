@@ -6,7 +6,11 @@ import `fun`.adaptive.graphics.canvas.platform.ActualCanvas
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.theme.colors
 
-fun ActualCanvas.drawFakeHslColorPlane(width: Double, height: Double, baseHue: Double) {
+fun ActualCanvas.drawFakeHslColorPlane(
+    baseHue: Double,
+    width: Double,
+    height: Double
+) {
 
     // Fill with base hue (fully saturated, 50% lightness)
     setFill(Color.decodeFromHsl(baseHue, 1.0, 0.5))

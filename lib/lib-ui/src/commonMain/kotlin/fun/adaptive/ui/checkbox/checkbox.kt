@@ -4,12 +4,12 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.generated.resources.check
+import `fun`.adaptive.ui.icon.icon
 
 @Adaptive
 fun checkbox(
@@ -24,7 +24,7 @@ fun checkbox(
 
         if (value) {
             box(theme.active) {
-                svg(Graphics.check, theme.icon)
+                icon(Graphics.check, theme.icon)
             }
         } else {
             box(theme.inactive) {

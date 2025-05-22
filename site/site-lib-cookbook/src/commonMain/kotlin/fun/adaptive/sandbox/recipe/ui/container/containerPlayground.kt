@@ -12,7 +12,6 @@ import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.log.devInfo
 import `fun`.adaptive.sandbox.support.configureForm
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.editor.booleanEditor
@@ -116,15 +115,12 @@ fun containerPlaygroundForm(
             selectEditorList(containers, { selectInputOptionCheckbox(it) }) { template.container } .. width { 256.dp }
 
             row {
-                gap { 16.dp }
-                doubleEditor { template.layout.top } .. width { 120.dp }
-                doubleEditor { template.layout.left } .. width { 120.dp }
-            }
+                gap { 8.dp }
 
-            row {
-                gap { 16.dp }
-                doubleEditor { template.layout.width } .. width { 120.dp }
-                doubleEditor { template.layout.height } .. width { 120.dp }
+                doubleEditor { template.layout.top } .. width { 58.dp }
+                doubleEditor { template.layout.left } .. width { 58.dp }
+                doubleEditor { template.layout.width } .. width { 58.dp }
+                doubleEditor { template.layout.height } .. width { 58.dp }
             }
 
             row {
@@ -138,12 +134,12 @@ fun containerPlaygroundForm(
                 colorEditor { template.decoration.border.color } .. width { 120.dp }
 
                 row {
-                    gap { 16.dp }
+                    gap { 8.dp }
 
-                    dPixelEditor { template.decoration.border.top } .. width { 52.dp }
-                    dPixelEditor { template.decoration.border.right } .. width { 52.dp }
-                    dPixelEditor { template.decoration.border.left } .. width { 52.dp }
-                    dPixelEditor { template.decoration.border.bottom } .. width { 52.dp }
+                    dPixelEditor { template.decoration.border.top } .. width { 58.dp }
+                    dPixelEditor { template.decoration.border.right } .. width { 58.dp }
+                    dPixelEditor { template.decoration.border.left } .. width { 58.dp }
+                    dPixelEditor { template.decoration.border.bottom } .. width { 58.dp }
                 }
             }
         }
@@ -156,11 +152,6 @@ fun containerPlaygroundResult(config: PlaygroundConfig) {
 
     val self = fragment()
     val splitConfig = copyOf { config.splitPane }
-
-    devInfo {
-        //config.encodeToPrettyJson()
-        config.toInstructions()
-    }
 
     box {
         width { 400.dp } .. height { 400.dp } .. borders.outline

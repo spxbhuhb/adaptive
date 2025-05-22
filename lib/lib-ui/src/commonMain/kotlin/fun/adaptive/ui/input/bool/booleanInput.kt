@@ -5,16 +5,10 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.focus
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.onKeydown
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.spaceBetween
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.check
+import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.input.decoratedInput
 import `fun`.adaptive.ui.instruction.event.Keys
 
@@ -43,7 +37,7 @@ fun booleanInput(
 
             if (observed.inputValue == true) {
                 box(theme.active) {
-                    svg(Graphics.check, theme.icon)
+                    icon(Graphics.check, theme.icon)
                 }
             } else {
                 box(theme.inactive) {

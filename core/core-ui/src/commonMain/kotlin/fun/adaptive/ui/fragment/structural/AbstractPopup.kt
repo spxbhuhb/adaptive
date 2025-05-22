@@ -162,14 +162,14 @@ abstract class AbstractPopup<RT, CRT : RT>(
         return select.firstOrNull<AbstractManualLayout<*, *>>()
     }
 
-    private fun computePopupLayout(proposedWidth: Double, proposedHeight: Double) {
+    private fun computePopupLayout(proposal: SizingProposal) {
 
         val layoutFinalWidth = positioningFinalWidth ?: return
         val layoutFinalHeight = positioningFinalHeight ?: return
         val layoutAbsolutePosition = positioningAbsolutePosition ?: return
 
         val overlay = getOverlay() ?: return
-        overlay.computeFinal(SizingProposal(proposedWidth, proposedWidth, proposedHeight, proposedHeight), proposedWidth, proposedHeight)
+        overlay.computeFinal(proposal, proposal.containerWidth, proposal.containerHeight)
 
         val container = overlay.first<AbstractBox<*, *>>()
 

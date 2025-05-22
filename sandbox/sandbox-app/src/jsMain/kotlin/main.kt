@@ -74,22 +74,22 @@ fun sandboxMain() {
 
         val rootUiLogger = getLogger("UI root")
 
-        browser(
-            CanvasFragmentFactory,
-            SvgFragmentFactory,
-            LibFragmentFactory,
-            CookbookFragmentFactory,
-            backend = localBackend
-        ) { adapter ->
-
-            with(adapter.defaultTextRenderData) {
-                fontName = "Open Sans"
-                fontSize = 16.sp
-                fontWeight = 300
-            }
-
-            collectedLog(collectedLogData)
-        }
+//        browser(
+//            CanvasFragmentFactory,
+//            SvgFragmentFactory,
+//            LibFragmentFactory,
+//            CookbookFragmentFactory,
+//            backend = localBackend
+//        ) { adapter ->
+//
+//            with(adapter.defaultTextRenderData) {
+//                fontName = "Open Sans"
+//                fontSize = 16.sp
+//                fontWeight = 300
+//            }
+//
+//            collectedLog(collectedLogData)
+//        }
 
         try {
             browser(

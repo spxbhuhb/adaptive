@@ -9,6 +9,8 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.decoratedInput
 import `fun`.adaptive.ui.input.text.textInput2
 import `fun`.adaptive.ui.input.text.textInputBackend
+import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.colors
 
 @Adaptive
@@ -20,8 +22,9 @@ fun colorInput(
     val focus = focus()
     val theme = observed.colorInputTheme
 
-    val hexBackend = textInputBackend(viewBackend.safeHex()) {
+    val hexBackend = textInputBackend(observed.safeHex()) {
         onChange = viewBackend::fromString
+        validateFun = { it != null && it.length >= 6 && Color.decodeFromHexOrNull(it) != null }
     }
 
     val exampleColor = observed.inputValue ?: colors.transparent
@@ -38,7 +41,7 @@ fun colorInput(
                 }
             }
 
-            textInput2(hexBackend)
+            textInput2(hexBackend) .. width { 120.dp }
         }
     }
 

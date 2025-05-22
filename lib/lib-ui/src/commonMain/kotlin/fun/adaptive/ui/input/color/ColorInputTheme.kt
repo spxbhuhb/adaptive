@@ -15,7 +15,7 @@ class ColorInputTheme {
     var inputContainer = instructionsOf(
         gap { 8.dp },
         fillStrategy.constrain,
-        alignItems.center
+        alignItems.startCenter
     )
 
     fun inputExample(color: Color) = instructionsOf(
@@ -43,13 +43,21 @@ class ColorInputTheme {
         cornerBottomRightRadius(4.dp)
     )
 
-    var hueSliderContainer = instructionsOf(
+    val sliderHorizontalPadding = 24
+
+    var hueSliderOuterContainer = instructionsOf(
+        maxWidth,
+        colSpan(2)
+    )
+
+    var hueSliderInnerContainer = instructionsOf(
         maxWidth,
         colSpan(2),
-        padding(16.dp, 24.dp, 16.dp, 24.dp)
+        padding(16.dp, sliderHorizontalPadding.dp, 16.dp, sliderHorizontalPadding.dp)
     )
 
     var hueSlider = instructionsOf(
+        tabIndex { 0 },
         maxWidth,
         height(8.dp),
         cornerRadius { 4.dp }
