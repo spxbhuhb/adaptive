@@ -72,7 +72,7 @@ abstract class JsonElement {
     abstract fun <R, D> accept(visitor: JsonVisitor<R, D>, data: D): R
 
     /**
-     * Runs the provided [transformer] on the Doc subtree with the root at this node.
+     * Runs the provided [transformer] on the JSON subtree with the root at this node.
      *
      * @param transformer The transformer to use.
      * @param data An arbitrary context to pass to each invocation of [transformer]'s methods.

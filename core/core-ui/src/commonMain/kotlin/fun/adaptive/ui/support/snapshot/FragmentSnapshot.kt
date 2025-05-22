@@ -5,6 +5,7 @@ import `fun`.adaptive.adat.Adat
 @Adat
 class FragmentSnapshot(
     val key: String,
+    val name : String?,
     val state: List<Any?>,
     val children: List<FragmentSnapshot>,
     var finalTop: Double?,

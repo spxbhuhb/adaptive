@@ -2,6 +2,7 @@ package `fun`.adaptive.ui.support.snapshot
 
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
@@ -17,6 +18,7 @@ fun AdaptiveFragment.snapshot(): FragmentSnapshot {
 
     return FragmentSnapshot(
         this.toKey(),
+        this.instructions.firstInstanceOfOrNull<Name>()?.name,
         state.toList().mapIndexed { index, value -> value.polymorphicOrToString(index) },
         children.map { it.snapshot() },
         renderData?.finalTop,
@@ -26,9 +28,10 @@ fun AdaptiveFragment.snapshot(): FragmentSnapshot {
     )
 }
 
-fun AbstractAuiFragment<*>.uiSnapshot() : FragmentSnapshot {
+fun AbstractAuiFragment<*>.uiSnapshot(): FragmentSnapshot {
     return FragmentSnapshot(
         this.toKey(),
+        this.instructions.firstInstanceOfOrNull<Name>()?.name,
         state.toList().mapIndexed { index, value -> value.polymorphicOrToString(index) },
         emptyList(),
         renderData.finalTop,
@@ -38,11 +41,12 @@ fun AbstractAuiFragment<*>.uiSnapshot() : FragmentSnapshot {
     )
 }
 
-fun AbstractContainer<*,*>.uiContainerSnapshot(): FragmentSnapshot {
+fun AbstractContainer<*, *>.uiContainerSnapshot(): FragmentSnapshot {
     return FragmentSnapshot(
         this.toKey(),
+        this.instructions.firstInstanceOfOrNull<Name>()?.name,
         state.toList().mapIndexed { index, value -> value.polymorphicOrToString(index) },
-        layoutItems.map { if (it is AbstractContainer<*,*>) it.uiContainerSnapshot() else it.uiSnapshot() },
+        layoutItems.map { if (it is AbstractContainer<*, *>) it.uiContainerSnapshot() else it.uiSnapshot() },
         renderData.finalTop,
         renderData.finalLeft,
         renderData.finalWidth,
@@ -52,7 +56,7 @@ fun AbstractContainer<*,*>.uiContainerSnapshot(): FragmentSnapshot {
 
 // FIXME polymorphicOrToString converts null values to null string as polymorphic list throws exception on null values
 // FIXME should we make BoundFragmentFactory and producers Adat compatible?
-fun Any?.polymorphicOrToString(index : Int) =
+fun Any?.polymorphicOrToString(index: Int) =
     when {
         index == 0 -> (this as? AdaptiveInstructionGroup)?.toMutableList()?.filter { it !is UIEventHandler } ?: "null"
 

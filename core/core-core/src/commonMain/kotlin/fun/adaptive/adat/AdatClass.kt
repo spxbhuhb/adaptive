@@ -5,10 +5,14 @@
 package `fun`.adaptive.adat
 
 import `fun`.adaptive.adat.api.storeOrNull
+import `fun`.adaptive.adat.visitor.AdatClassTransformer
+import `fun`.adaptive.adat.visitor.AdatClassVisitor
 import `fun`.adaptive.foundation.binding.AdaptivePropertyProvider
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.utility.pluginGenerated
+import `fun`.adaptive.wireformat.json.elements.JsonElement
+import `fun`.adaptive.wireformat.json.visitor.JsonTransformer
 
 interface AdatClass : AdaptivePropertyProvider {
 
@@ -121,9 +125,30 @@ interface AdatClass : AdaptivePropertyProvider {
         }
     }
 
-
     fun invalidIndex(index: Int): Nothing {
         throw IndexOutOfBoundsException("index $index is invalid in ${getMetadata().name}")
     }
 
+    fun <D> accept(visitor: AdatClassVisitor<Unit, D>, data: D) {
+        visitor.visitInstance(this, data)
+    }
+
+    fun <D> acceptChildren(visitor: AdatClassVisitor<Unit, D>, data: D) {
+
+    }
+
+    fun <D> transform(transformer: AdatClassTransformer<D>, data: D): AdatClass? {
+        return transformer.visitInstance(this, data)
+    }
+
+    fun <D> transformChildren(transformer: AdatClassTransformer<D>, data: D): AdatClass {
+        val properties = getMetadata().properties
+        val newValues = arrayOfNulls<Any?>(properties.size)
+
+        for (property in properties) {
+            newValues[property.index] = transformer.visitProperty(this, getValue(property.index), property, data)
+        }
+
+        return adatCompanion.newInstance(newValues) as AdatClass
+    }
 }

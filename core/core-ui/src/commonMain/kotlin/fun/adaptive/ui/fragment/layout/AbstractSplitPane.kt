@@ -89,7 +89,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     // The content boxes must occupy the full size for the calculations to work.
 
     val paneInstructions = instructionsOf(
-        maxSize
+        //maxSize
     )
 
     // Only a primary down on the divider should start resize.
@@ -285,14 +285,14 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         children.sortBy { it.declarationIndex }
         layoutItems.sortBy { it.declarationIndex }
 
-        scheduleUpdate() // when visibility change we surely have to update the layout
+        scheduleUpdate() // when visibility changes, we surely have to update the layout
     }
 
     override fun computeLayout(
         proposal : SizingProposal
     ) {
 
-        // this is a general, bound case, updated when method is WrapFirst or WrapSecond
+        // this is a general, bound case, updated when the method is WrapFirst or WrapSecond
         val proposedWidth = renderData.layout?.instructedWidth ?: proposal.containerWidth
         val proposedHeight = renderData.layout?.instructedHeight ?: proposal.containerHeight
 
@@ -367,28 +367,30 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
                 // available size in main direction - split
                 // proposed size in the other direction (might be unbound)
                 if (horizontal) {
-                    pane1.computeLayout(availableWidth - rawSplit, availableHeight)
+                    pane1.computeLayout(0.0, availableWidth - rawSplit, 0.0, availableHeight)
                 } else {
-                    pane1.computeLayout(availableWidth, availableHeight - rawSplit)
+                    pane1.computeLayout(0.0, availableWidth, 0.0, availableHeight - rawSplit)
                 }
 
                 pane1Width = pane1.renderData.finalWidth
                 pane1Height = pane1.renderData.finalHeight
 
                 if (horizontal) {
+                    availableWidth = pane1Width + rawSplit
                     availableHeight = pane1Height
                     renderData.finalHeight = availableHeight + renderData.surroundingVertical
                 } else {
                     availableWidth = pane1Width
+                    availableHeight = pane1Height + rawSplit
                     renderData.finalWidth = availableWidth + renderData.surroundingHorizontal
                 }
             }
 
             SplitMethod.WrapSecond -> {
                 if (horizontal) {
-                    pane2.computeLayout(availableWidth - rawSplit, proposedHeight)
+                    pane2.computeLayout(0.0, availableWidth - rawSplit, 0.0, availableHeight)
                 } else {
-                    pane2.computeLayout(availableWidth, availableHeight - rawSplit)
+                    pane2.computeLayout(0.0, availableWidth, 0.0, availableHeight - rawSplit)
                 }
 
                 if (horizontal) {
@@ -400,7 +402,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
                     availableWidth = pane2.renderData.finalWidth
                     renderData.finalWidth = availableWidth + renderData.surroundingHorizontal
                     pane1Width = availableWidth
-                    pane1Height = availableHeight - pane2.renderData.finalHeight
+                    pane1Height = rawSplit
                 }
             }
 
@@ -430,7 +432,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
             divider.computeLayout(availableWidth, c.dividerOverlaySize.pixelValue)
 
             if (c.method != SplitMethod.WrapSecond) {
-                pane2.computeLayout(availableWidth, availableHeight - pane1Height)
+                pane2.computeLayout(0.0, availableWidth, 0.0, availableHeight - pane1Height)
             }
         }
 

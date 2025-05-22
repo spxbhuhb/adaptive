@@ -1,15 +1,14 @@
 package `fun`.adaptive.ui.fragment.layout.splitpane
 
-import `fun`.adaptive.adat.encodeToPrettyJson
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend.Companion.splitPaneBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.testing.snapshotTest
-import `fun`.adaptive.utility.debug
 import kotlin.test.Test
 
 class SplitPaneHeightTest {
@@ -17,6 +16,8 @@ class SplitPaneHeightTest {
     val first = "first"
     val divider = "divider"
     val second = "second"
+    val wrapper = "wrapper"
+    val wrapped = "wrapped"
 
     @Test
     fun `pane content size, horizontal, both, fixFirst`() {
@@ -101,4 +102,69 @@ class SplitPaneHeightTest {
         }
     }
 
+    @Test
+    fun wrapFromTop() {
+        val wrapperSize = 20.0
+        val wrappedHeight = 40
+
+        val viewBackend = SplitPaneViewBackend(
+            SplitVisibility.Both,
+            SplitMethod.WrapSecond,
+            wrapperSize,
+            Orientation.Vertical,
+            dividerOverlaySize = 0.dp,
+            dividerEffectiveSize = 0.dp
+        )
+
+        snapshotTest {
+
+            splitPane(
+                viewBackend,
+                { box { name(wrapper) .. maxSize } },
+                { },
+                { box { name(wrapped) .. maxWidth .. height { wrappedHeight.dp } } }
+            ) .. maxWidth
+
+        }.apply {
+
+            assertLayoutParentFinal(wrapper, 0, 0, testWidth, wrapperSize)
+            assertNotExist(divider)
+            assertLayoutParentFinal(wrapped, wrapperSize, 0, testWidth, wrappedHeight)
+
+        }
+    }
+
+    @Test
+    fun wrapFromBottom() {
+        val wrapperSize = 20.0
+        val wrappedHeight = 40
+
+        val viewBackend = SplitPaneViewBackend(
+            SplitVisibility.Both,
+            SplitMethod.WrapFirst,
+            wrapperSize,
+            Orientation.Vertical,
+            dividerOverlaySize = 0.dp,
+            dividerEffectiveSize = 0.dp
+        )
+
+        snapshotTest {
+
+            splitPane(
+                viewBackend,
+                { box { name(wrapped) .. maxWidth .. height { wrappedHeight.dp } } },
+                { },
+                { box { name(wrapper) .. maxSize } },
+            ) .. maxWidth
+
+        }.apply {
+
+            printLayout()
+
+            assertLayoutParentFinal(wrapped, 0, 0, testWidth, wrappedHeight)
+            assertNotExist(divider)
+            assertLayoutParentFinal(wrapper, 40, 0, testWidth, wrapperSize)
+
+        }
+    }
 }
