@@ -1,32 +1,19 @@
-# Subscribing from a service
+# Subscribing from a service implementation
 
-Clients use subscriptions to receive updates when values are changed. To subscribe, the client typically
-calls a service function with in turn calls the value worker's `subscribe` function.
+Clients use [value subscriptions](def://) to receive updates when [values](def://) are changed. 
+
+[Service implementations](def://) may subscribe on behalf of a client by calling the [subscribe](function://AvValueWorker)
+function of a [value worker](def://).
 
 [lib-value](def://) provides a few variants of `serverSubscribe` to make this easier.
 
 The general pattern is to:
 
 1. perform authorization
-2. call `serverSubscribe` with the appropriate parameters as the example below shows
+2. call [serviceSubscribe](function://) with the appropriate parameters as the example below shows
 3. return with the list of conditions that belong to the subscription
 
-```kotlin
-class ExampleService : ServiceImpl<ExampleService>, ExampleApi {
-
-    val valueWorker by worker<AvValueWorker> { it.domain == "general" }
-
-    override suspend fun subscribe(subscriptionId: AvValueSubscriptionId): List<AvSubscribeCondition> {
-        ensureLoggedIn()
-        return serviceSubscribe(valueWorker, subscriptionId, ExampleMarkers.EXAMPLE_MARKER)
-    }
-
-    override suspend fun unsubscribe(subscriptionId: AvValueSubscriptionId) {
-        ensureLoggedIn()
-        valueWorker.unsubscribe(subscriptionId)
-    }
-}
-```
+[ServiceSubscribeExample](example://)
 
 This pattern is important because:
 
@@ -45,8 +32,8 @@ The third parameter may be:
 
 - a value ID
 - a vararg of markers
-- a list of `AvSubscribeCondition` instances
+- a list of [AvSubscribeCondition](class://) instances
 
 ## Unsubscribe
 
-To unsubscribe, the service can simply call `AvValueWorker.unsubscribe` with the subscription id.
+To unsubscribe, the service can simply call [unsubscribe](function://AvValueWorker) with the subscription id.

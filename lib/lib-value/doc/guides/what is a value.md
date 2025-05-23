@@ -4,7 +4,7 @@ A [value](def://) is an instance of the [AvValue](class://), typically stored in
 
 [AvValue](class://) consists of two parts:
 
-- common data all values have such as `id`, `name` or `revision`,
+- common data all values have such as `uuid`, `name` or `revision`,
 - domain-specific data in the `spec` property of the class.
 
 [lib-value](def://) provides functions to work with values, including:
@@ -19,10 +19,9 @@ an Adat class can be done with values (deep copy, diff, serialization, etc).
 
 ## Identification
 
-Each value has a UUID (typically Version 7), a name and a friendly ID.
-
-The friendly ID and the name should never be used to identify a value
-programmatically, use the UUID instead.
+Each value has a UUID (typically Version 7), a name and a friendly ID, stored
+in properties [uuid](property://AvValue), [friendlyId](property://AvValue),
+[name](property://AvValue) respectively.
 
 The UUID of a value never changes. Once created, it remains the same.
 
@@ -33,9 +32,12 @@ the user can change it, depending on the application.
 
 Name is an optional string that can be changed by the user.
 
+The friendly ID and the name should never be used to identify a value
+programmatically, use the UUID instead.
+
 ## Last change and revision
 
-Time of the last change and the revision of the value is stored in the
+Time of the last change and the revision of the value are stored in the
 [lastChange](property://AvValue) and the [revision](property://AvValue)
 properties of [AvValue](class://).
 
@@ -54,7 +56,7 @@ to add it to the [spec](def://).
 ## Status
 
 Status of a [value](def://) is a set of domain-specific strings, stored in
-the `statusOrNull` property of [AvValue](class://).
+the [statusOrNull](property://AvValue). property of [AvValue](class://).
 
 Many values do not have any status information, it depends on the domain.
 
@@ -69,17 +71,17 @@ For example, in the IoT domain, markers might be "temperature", "hot-water" etc.
 
 The concept originates from [Project Haystack](https://project-haystack.org).
 
-Markers are stored in the `markersOrNull` property of [AvValue](class://).
+Markers are stored in the [markersOrNull](property://AvValue). property of [AvValue](class://).
 
 ## References
 
-The `refsOrNull` property of a [value](def://) stores references to other [values](def://).
+The [refsOrNull](property://AvValue) property of a [value](def://) stores references to other [values](def://).
 
-Each reference has a [reference label](def://) which is a string, a key in `refsOrNull`.
+Each reference has a [reference label](def://) which is a string, a key in [refsOrNull](property://AvValue).
 
 For example, a measurement point might have a reference to the device it is connected to.
 In this case the reference label would be "device".
 
 Reference labes typically end with "Ref" to make separation from markers easier.
 
-To store one-to-many references, a value with `AvRefListSpec` [spec](def://) is used.
+To store one-to-many references, a value with [AvRefListSpec](class://) [spec](def://) is used.

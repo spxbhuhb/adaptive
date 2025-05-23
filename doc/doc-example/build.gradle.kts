@@ -55,7 +55,8 @@ kotlin {
                 implementation(libs.adaptive.lib.graphics)
                 implementation(libs.adaptive.lib.document)
                 implementation(libs.adaptive.lib.ui)
-                implementation(libs.kotlinx.coroutines.debug)
+                implementation(libs.adaptive.lib.util)
+                implementation(libs.adaptive.lib.value)
             }
         }
 

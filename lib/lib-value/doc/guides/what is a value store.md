@@ -38,12 +38,10 @@ the value, depending on the situation.
 Values can be transient or persisted into files or into a database, depending on the actual
 deployment parameters.
 
-Each [AvValueWorker](class://) has a persistence provider which is responsible
-for loading and saving values.
+Each [AvValueWorker](class://) has a [value persistence provider](def://) which 
+is responsible for loading and saving values.
 
-Built-in persistence providers:
-
-- [AvNoPersistence](class://)
+See [built-in persistence providers](guilde://) for more information.
 
 ## Components
 
@@ -69,50 +67,18 @@ there are no conflicting changes in the data.
 
 ## Server-Side (JVM)
 
-On the server side, the `ValueServerModule` is used to initialize a value worker.
+On the server side, the [ValueServerModule](class://) is used to initialize a value worker.
 In this example:
 
 - the domain is `general`
 - the worker is initialized with public access
 - the persistence provider is `FilePersistence`.
 
-```kotlin
-import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
-import `fun`.adaptive.app.server.BasicAppServerModule
-import `fun`.adaptive.auth.app.NoAuthServerModule
-import `fun`.adaptive.auth.context.publicAccess
-import `fun`.adaptive.ktor.KtorJvmServerModule
-import `fun`.adaptive.lib.util.app.UtilServerModule
-import `fun`.adaptive.utility.ensure
-import `fun`.adaptive.value.app.ValueServerModule
-import `fun`.adaptive.value.persistence.FilePersistence
-import kotlinx.io.files.Path
-
-fun main() {
-    jvmServer {
-        module { UtilServerModule() }
-        module { ValueServerModule("general", { publicAccess() }, FilePersistence(Path("./var/values").ensure(), 2)) }
-        module { NoAuthServerModule() } // no authentication
-        module { KtorJvmServerModule() }
-        module { BasicAppServerModule() }
-    }
-}
-```
+[valueStoreJvmServerExample](example://)
 
 ## Client-Side (Browser)
 
-On the client side, the `ValueClientModule` is used to initialize a value worker.
+On the client side, the [ValueClientModule](class://) is used to initialize a value worker.
 This typically does not require any configuration.
 
-```kotlin
-package my.project
-
-import `fun`.adaptive.app.BasicBrowserClientApplication.Companion.basicBrowserClient
-import `fun`.adaptive.value.app.ValueClientModule
-
-fun main() {
-    basicBrowserClient {
-        module { ValueClientModule() }
-    }
-}
-```
+[valueStoreBrowserClientExample](example://)

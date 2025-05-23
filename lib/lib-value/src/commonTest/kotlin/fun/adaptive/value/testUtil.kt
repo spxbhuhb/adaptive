@@ -1,8 +1,8 @@
 package `fun`.adaptive.value
 
 import `fun`.adaptive.log.getLogger
-import `fun`.adaptive.value.testing.EmbeddedValueServer
-import `fun`.adaptive.value.testing.EmbeddedValueServer.Companion.withEmbeddedValueServer
+import `fun`.adaptive.value.embedded.EmbeddedValueServer
+import `fun`.adaptive.value.embedded.EmbeddedValueServer.Companion.withEmbeddedValueServer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi

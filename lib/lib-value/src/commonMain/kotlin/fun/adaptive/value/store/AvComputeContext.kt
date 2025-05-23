@@ -18,6 +18,8 @@ class AvComputeContext(
         store.addOrUpdate(AvoAddOrUpdate(value), commitSet)
     }
 
+    inline fun <T> addValue(valueFun : () -> AvValue<T>) = addValue(valueFun())
+
     fun <T> addValue(value : AvValue<T>) : AvValue<T> {
         store.add(AvoAdd(value), commitSet)
         return value

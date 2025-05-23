@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.testing
+package `fun`.adaptive.value.embedded
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.utility.UUID.Companion.uuid4

@@ -58,5 +58,5 @@ properties and functions.
 
 See the class used for the unit tests for an example:
 
-- [TestTreeSubscriber](class://)
-- [TestTreeItem](class://)
+- [TestTreeSubscriber](example://)
+- [TestTreeItem](example://)

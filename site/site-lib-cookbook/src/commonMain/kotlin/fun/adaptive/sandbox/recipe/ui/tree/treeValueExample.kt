@@ -2,20 +2,17 @@ package `fun`.adaptive.sandbox.recipe.ui.tree
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.LifecycleBound
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.tree
-import `fun`.adaptive.ui.value.AvUiTree
+import `fun`.adaptive.ui.value.AvUiTreeViewBackend
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.model.AvTreeSetup
 import `fun`.adaptive.value.store.AvComputeContext
-import `fun`.adaptive.value.testing.EmbeddedValueServer
-import `fun`.adaptive.value.testing.EmbeddedValueServer.Companion.embeddedValueServer
+import `fun`.adaptive.value.embedded.EmbeddedValueServer.Companion.embeddedValueServer
 
 private val treeSetup = AvTreeSetup("node", "childList", "parentRef", "childListRef", "rootList")
 
@@ -23,7 +20,14 @@ private val treeSetup = AvTreeSetup("node", "childList", "parentRef", "childList
 fun treeValueExample(): AdaptiveFragment {
 
     val values = embeddedValueServer { buildExampleTree() }
-    val viewBackend = TreeValueExampleViewBackend(values)
+
+    val viewBackend = AvUiTreeViewBackend(
+        values.clientBackend,
+        String::class,
+        treeSetup
+    ) {
+        _, item, _ -> println("selected: $item")
+    }
 
     column {
         text("AvUiTree - read from value store")
@@ -34,28 +38,6 @@ fun treeValueExample(): AdaptiveFragment {
     }
 
     return fragment()
-}
-
-class TreeValueExampleViewBackend(
-    values: EmbeddedValueServer
-) : LifecycleBound {
-
-    val avTree = AvUiTree(values.clientBackend, String::class, treeSetup)
-
-    val treeBackend = TreeViewBackend<AvValue<String>, Unit>(
-        emptyList(),
-        singleClickOpen = true,
-        context = Unit
-    )
-
-    init {
-        avTree.addListener { treeBackend.items = it }
-    }
-
-    override fun dispose(fragment: AdaptiveFragment, index: Int) {
-        avTree.stop()
-    }
-
 }
 
 private fun AvComputeContext.buildExampleTree() {

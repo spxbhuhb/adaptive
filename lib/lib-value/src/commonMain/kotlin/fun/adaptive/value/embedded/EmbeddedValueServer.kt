@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.testing
+package `fun`.adaptive.value.embedded
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
@@ -13,7 +13,10 @@ import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.waitFor
 import `fun`.adaptive.utility.waitForReal
+import `fun`.adaptive.value.AvComputeFun
 import `fun`.adaptive.value.AvValueWorker
+import `fun`.adaptive.value.persistence.AbstractValuePersistence
+import `fun`.adaptive.value.persistence.NoPersistence
 import `fun`.adaptive.value.store.AvComputeContext
 import `fun`.adaptive.wireformat.api.Json
 import kotlinx.coroutines.CoroutineScope
@@ -23,6 +26,7 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 class EmbeddedValueServer(
+    val persistence : AbstractValuePersistence,
     traceTransport: Boolean = false,
     val traceWorker : Boolean = false
 ) : LifecycleBound {
@@ -94,18 +98,26 @@ class EmbeddedValueServer(
         clientBackend.stop()
     }
 
+    suspend fun <T> execute(computeFun: AvComputeFun<T>) : T {
+        return serverWorker.execute(5.seconds, computeFun)
+    }
+
     override fun dispose(fragment: AdaptiveFragment, index : Int) {
         stop()
     }
 
     companion object {
 
-        fun embeddedValueServer(initFun: AvComputeContext.() -> Unit) = EmbeddedValueServer().start(initFun)
+        fun embeddedValueServer(
+            persistence : AbstractValuePersistence = NoPersistence(),
+            initFun: AvComputeContext.() -> Unit
+        ) = EmbeddedValueServer(persistence).start(initFun)
 
         suspend fun withEmbeddedValueServer(testFun: suspend EmbeddedValueServer.() -> Unit) {
 
-            with(EmbeddedValueServer()) {
+            with(EmbeddedValueServer(NoPersistence())) {
                 start()
+
                 waitForReal(5.seconds) { serverBackend.firstImplOrNull<AvEmbeddedServerService>() != null }
                 waitForReal(5.seconds) { clientBackend.firstImplOrNull<AvEmbeddedClientService>() != null }
 

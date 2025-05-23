@@ -103,13 +103,16 @@ class MarkdownResolveTransform(
     }
 
     fun extractExample(source: String, functionName: String): String? {
-        // Match either @Adaptive or //@example followed by a function definition
-        val regex = Regex("""(?://@example|@Adaptive)\s*fun\s+$functionName\s*\([^)]*\)\s*\{""")
+        // Match one of the three supported formats
+        val regex = Regex(
+            """(?://@example|@Adaptive)\s*(suspend\s+)?fun\s+$functionName\s*\([^)]*\)\s*(\{|=\s*runTest\s*\{)""",
+            RegexOption.MULTILINE
+        )
         val match = regex.find(source) ?: return null
 
         val startIndex = match.range.first
-        var braceCount = 0
-        var endIndex = startIndex
+        var braceCount = 1 // the last char of regex
+        var endIndex = match.range.last + 1
         var inCode = false
 
         while (endIndex < source.length) {
@@ -234,7 +237,7 @@ class MarkdownResolveTransform(
             return paths.first().name.encodeToUrl(noPlus = true)
         }
 
-        compilation.warn("No resolution for $name, in $mdPath\"")
+        compilation.warn("No resolution for $name, in $mdPath")
         return null
     }
 
