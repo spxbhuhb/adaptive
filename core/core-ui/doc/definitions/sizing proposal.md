@@ -10,6 +10,6 @@ may size themselves so that they fill the available space.
 
 ## See also
 
-- [layout](def://)
+- [ui layout](def://)
 - [ui container fragment](def://)
 - [ui fragment](def://)

@@ -5,7 +5,7 @@ How can I make all [fragments](def://) in a column to have equal width based on 
 # Answer
 
 The [resizeMax](property://FillStrategy) property of the [FillStrategy](class://) [instruction](def://)
-instructs [column](fragment://) and [row](fragment://) [layouts](def://) to resize each [fragment](def://) to the
+instructs [column](fragment://) and [row](fragment://) [UI layouts](def://) to resize each [UI fragment](def://) to the
 size of the largest fragment.
 
 Use the shorthand [resizeMax](property://fillStrategy) to pass the instruction easily:

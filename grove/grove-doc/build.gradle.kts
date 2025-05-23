@@ -74,7 +74,7 @@ tasks.withType<Jar> {
 
 tasks.create<JavaExec>("compileAdaptiveDocumentation") {
     classpath = sourceSets["jvmMain"].runtimeClasspath
-    mainClass.set("fun.adaptive.grove.doc.GroveDocMainKt")
+    mainClass.set("fun.adaptive.grove.doc.MainKt")
     val input = project.rootDir.resolve("../..") // this points to the root directory of the repo
     val output = input.resolve("build/adaptive/doc")
     output.deleteRecursively()

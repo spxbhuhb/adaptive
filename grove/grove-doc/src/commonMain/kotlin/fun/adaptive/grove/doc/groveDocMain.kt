@@ -4,7 +4,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.persistence.ensure
 import kotlinx.io.files.Path
 
-fun main(args: Array<String>) {
+fun groveDocMain(args: Array<String>) {
     check(args.size == 2) { "usage: <in> <out>" }
 
     val inPath = Path(args[0])

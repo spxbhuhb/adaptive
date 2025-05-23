@@ -108,7 +108,9 @@ internal class FileCollector(
                 if (scope == null) {
                     return ktFiles[name]?.firstOrNull()
                 } else {
-                    return ktFiles[name]?.firstOrNull { isInScope(it, scope) }
+                    val files = ktFiles[scope]
+                    if (files?.size == 1) return files.first()
+                    return files?.firstOrNull { isInScope(it, scope) }
                 }
             }
 

@@ -79,15 +79,57 @@ class MarkdownResolveTransform(
         val path = link.lookupCode(compilation)
         val content = path?.readString()
 
+        var fenceContent : String? = null
+
         if (content == null && link !in compilation.reportedLinks) {
-            compilation.warn("Missing code: $link")
+            compilation.warn("Missing code: $link in $mdPath")
             compilation.reportedLinks.add(link)
+        } else {
+            if (link.scope != null) {
+                fenceContent = content?.let { extractExample(it, link.name) }
+                if (fenceContent == null) {
+                    compilation.warn("Missing example: $link in $mdPath")
+                    fenceContent = content
+                }
+            } else {
+                fenceContent = content
+            }
         }
 
         return MarkdownCodeFence(
             language = "kotlin",
-            content = path?.readString() ?: "missing code: $link"
+            content =  fenceContent ?: "missing code: $link in $mdPath"
         )
+    }
+
+    fun extractExample(source: String, functionName: String): String? {
+        // Match either @Adaptive or //@example followed by a function definition
+        val regex = Regex("""(?://@example|@Adaptive)\s*fun\s+$functionName\s*\([^)]*\)\s*\{""")
+        val match = regex.find(source) ?: return null
+
+        val startIndex = match.range.first
+        var braceCount = 0
+        var endIndex = startIndex
+        var inCode = false
+
+        while (endIndex < source.length) {
+            when (source[endIndex]) {
+                '{' -> {
+                    braceCount++
+                    inCode = true
+                }
+                '}' -> {
+                    braceCount--
+                    if (braceCount == 0 && inCode) {
+                        endIndex++
+                        break
+                    }
+                }
+            }
+            endIndex++
+        }
+
+        return source.substring(startIndex, endIndex).trim()
     }
 
     fun replaceDir(link: Link): MarkdownElement {
