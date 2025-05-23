@@ -25,12 +25,49 @@ Reference labels:
 
 [AvComputeContext](class://) provides functions to manage the tree:
 
-- [addTreeNode](function://AvComputeContext)
-- [removeTreeNode](function://AvComputeContext)
-- [moveTreeNodeUp](function://AvComputeContext)
-- [moveTreeNodeDown](function://AvComputeContext)
-- [getTreeChildIds](function://AvComputeContext)
-- [getTreeSiblingIds](function://AvComputeContext)
+### Adding tree nodes
+
+[addTreeNode](function://AvComputeContext)
+
+Adding a root node:
+
+[addRootNodeExample](example://value_tree_examples)
+
+Adding a child node:
+
+[addChildNodeExample](example://value_tree_examples)
+
+### Linking tree nodes
+
+[linkTreeNode](function://AvComputeContext)
+
+[linkTreeNodeExample](example://value_tree_examples)
+
+### Removing tree nodes
+
+[removeTreeNode](function://AvComputeContext)
+
+[removeTreeNodeExample](example://value_tree_examples)
+
+### Reordering children
+
+[moveTreeNodeUp](function://AvComputeContext)
+
+[moveTreeNodeUpExample](example://value_tree_examples)
+
+[moveTreeNodeDown](function://AvComputeContext)
+
+[moveTreeNodeDownExample](example://value_tree_examples)
+
+### Querying the tree structure
+
+[getTreeChildIdsExample](function://AvComputeContext)
+
+[linkTreeNodeExample](example://value_tree_examples)
+
+[getTreeSiblingIdsExample](function://AvComputeContext)
+
+[linkTreeNodeExample](example://value_tree_examples)
 
 ## Order of children
 

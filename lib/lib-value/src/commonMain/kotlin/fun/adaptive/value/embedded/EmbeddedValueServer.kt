@@ -77,7 +77,7 @@ class EmbeddedValueServer(
         val clientScope = CoroutineScope(clientDispatcher)
 
         serverBackend = backend(serverTransport, dispatcher = serverDispatcher, scope = serverScope) {
-            worker { AvValueWorker("server", proxy = false, trace = traceWorker) }
+            worker { AvValueWorker("server", proxy = false, persistence, trace = traceWorker) }
             service { AvEmbeddedServerService() }
         }
 
@@ -110,7 +110,7 @@ class EmbeddedValueServer(
 
         fun embeddedValueServer(
             persistence : AbstractValuePersistence = NoPersistence(),
-            initFun: AvComputeContext.() -> Unit
+            initFun: AvComputeContext.() -> Unit = {  }
         ) = EmbeddedValueServer(persistence).start(initFun)
 
         suspend fun withEmbeddedValueServer(testFun: suspend EmbeddedValueServer.() -> Unit) {

@@ -1,15 +1,17 @@
-# Document
+# Features provided by lib-document
 
-`adaptive-lib-document` provides:
+[convert lib-document docs](todo://)
+
+`lib-document` provides:
 
 - a document data model
-- UI fragments to display documents
+- UI fragments to display the data model
 - utilities to convert various formats into the document data model
-- visitors to process documents (such as collecting table of contents)
+- visitors and transformers to process documents (such as collecting table of contents)
 
 The document data model is a somewhat abstract model of everyday documents: headers, paragraphs, lists etc.
 
-The basic concept is that we can convert whatever we want (for example a Markdown file) into this model 
+The basic concept is that we can convert whatever we want (for example, a Markdown file) into this model 
 and then use one set of UI fragments that can process the model to display the document.
 
 Hopefully sooner or later we'll have a visual editor based on the model as well.
@@ -37,7 +39,7 @@ For now, only Markdown is supported, in this case the URI has to end with `.md`.
 
 You can load documents as:
 
-- normal application resources, see [Resources](../resource/readme.md).
+- normal application resources, see [Resources](def://).
 - remote resources loaded from wherever
 - an inline resource specified directly
 

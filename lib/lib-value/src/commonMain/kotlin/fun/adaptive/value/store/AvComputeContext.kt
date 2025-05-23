@@ -18,79 +18,196 @@ class AvComputeContext(
         store.addOrUpdate(AvoAddOrUpdate(value), commitSet)
     }
 
+    /**
+     * Adds a value to the value store.
+     *
+     * @param valueFun A function that returns the value to add.
+     * @return The added value.
+     * @throws IllegalStateException if the value is already in the store.
+     */
     inline fun <T> addValue(valueFun : () -> AvValue<T>) = addValue(valueFun())
 
+    /**
+     * Adds a value to the value store.
+     *
+     * @param value The value to add.
+     * @return The added value.
+     * @throws IllegalStateException if the value is already in the store.
+     */
     fun <T> addValue(value : AvValue<T>) : AvValue<T> {
         store.add(AvoAdd(value), commitSet)
         return value
     }
 
+    /**
+     * Gets a value from the store with the specified ID and type.
+     *
+     * @param valueId The ID of the value to retrieve
+     * @return The value cast to the specified type T
+     * @throws NoSuchElementException if no value exists with the given ID
+     * @throws IllegalStateException if the `spec` of the retrieved value is not of type [T]
+     */
     inline fun <reified T : Any> get(valueId: AvValueId): AvValue<T> =
-        checkNotNull(getOrNull(valueId)) { "cannot find item for id $valueId" }.withSpec<T>()
+        getOrNull(valueId)?.withSpec<T>()
+            ?: throw NoSuchElementException("cannot find item for id $valueId")
 
+    /**
+     * Gets a value from the store with the specified ID, or null if it doesn't exist.
+     *
+     * @param valueId The ID of the value to retrieve
+     * @return The value if found, null otherwise
+     */
     fun getOrNull(valueId: AvValueId?): AvValue<*>? =
         store.unsafeGetOrNull(valueId)
 
-    inline fun <reified T : Any> ref(valueId: AvValueId, refMarker: AvMarker): AvValue<T> =
-        checkNotNull(refOrNull(valueId, refMarker)) { "cannot find ref item for marker $refMarker in item $valueId" }
+    //---------------------------------------------------------------------------------
+    // Reference handling
+    //---------------------------------------------------------------------------------
+
+    /**
+     * Gets a referred value from the store based on the id of the
+     * referring value and a reference label.
+     *
+     * @param valueId The ID of the value containing the reference
+     * @param refLabel The reference label identifying the reference
+     * @return The referred value cast to the specified type T
+     * @throws NoSuchElementException if there is no [refLabel] in `refsOrNull` of if
+     *                                there is but the referred value is not in the store
+     * @throws IllegalStateException if the `spec` of the referred value is not of type [T]
+     */
+    inline fun <reified T : Any> ref(valueId: AvValueId, refLabel: AvRefLabel): AvValue<T> =
+        refOrNull(valueId, refLabel)?.withSpec<T>()
+            ?: throw NoSuchElementException("cannot find ref item for marker $refLabel in item $valueId")
+
+    /**
+     * Gets a referred value from the store based on the id of the
+     * referring value and a reference label, or null if it doesn't exist.
+     *
+     * @param valueId The ID of the value containing the reference
+     * @param refLabel The reference label identifying the reference
+     * @return The referred value if found, null otherwise
+     */
+    fun refOrNull(valueId: AvValueId, refLabel: AvRefLabel): AvValue<*>? =
+        store.unsafeRefOrNull(valueId, refLabel)
+
+    /**
+     * Gets a referred value from the store based on the id of the
+     * referring value and a reference label.
+     *
+     * @param value The value containing the reference
+     * @param refLabel The reference label identifying the reference
+     * @return The referred value cast to the specified type T
+     * @throws NoSuchElementException if there is no [refLabel] in `refsOrNull` of if
+     *                                there is but the referred value is not in the store
+     * @throws IllegalStateException if the `spec` of the referred value is not of type [T]
+     */
+    inline fun <reified T : Any> ref(value: AvValue<*>, refLabel: AvRefLabel): AvValue<T> =
+        checkNotNull(refOrNull(value, refLabel)) { "cannot find ref item for marker $refLabel in item ${value.uuid}" }
             .withSpec<T>()
 
-    fun refOrNull(valueId: AvValueId, refMarker: AvMarker): AvValue<*>? =
-        store.unsafeRefOrNull(valueId, refMarker)
+    /**
+     * Gets a referred value from the store based on the id of the
+     * referring value and a reference label, or null if it doesn't exist.
+     *
+     * @param value The value containing the reference
+     * @param refLabel The reference label identifying the reference
+     * @return The referred value if found, null otherwise
+     */
+    fun refOrNull(value: AvValue<*>, refLabel: AvRefLabel): AvValue<*>? =
+        store.unsafeRefOrNull(value, refLabel)
 
-    inline fun <reified T : Any> ref(value: AvValue<*>, refMarker: AvMarker): AvValue<T> =
-        checkNotNull(refOrNull(value, refMarker)) { "cannot find ref item for marker $refMarker in item ${value.uuid}" }
-            .withSpec<T>()
+    
+    /**
+     * Adds a reference from one value to another value in the store.
+     * Updates the referring value by adding the reference to its refsOrNull map.
+     *
+     * @param referringId The ID of the value that will contain the reference
+     * @param referredId The ID of the value being referenced
+     * @param refLabel The label used to identify this reference
+     */
+    fun addRef(referringId: AvValueId, referredId: AvValueId, refLabel: AvRefLabel) =
+        addRef(store.unsafeGet(referringId), referredId, refLabel)
 
-    fun refOrNull(value: AvValue<*>, refMarker: AvMarker): AvValue<*>? =
-        store.unsafeRefOrNull(value, refMarker)
-
-    fun nextFriendlyId(marker: AvMarker, prefix: String): String {
-        var max = 0
-
-        store.unsafeForEachItemByMarker(marker) { value ->
-            val i = value.friendlyId?.removePrefix(prefix)?.toIntOrNull()
-            if (i != null && i > max) max = i
-        }
-
-        return "$prefix${(max + 1).p04}"
+    /**
+     * Adds a reference from one value to another value in the store.
+     * Updates the referring value by adding the reference to its refsOrNull map.
+     *
+     * @param referring The value that will contain the reference
+     * @param referredId The ID of the value being referenced
+     * @param refLabel The label used to identify this reference
+     */
+    fun addRef(referring: AvValue<*>, referredId: AvValueId, refLabel: AvRefLabel) {
+        val refs = referring.mutableRefs()
+        refs[refLabel] = referredId
+        this += referring.copy(refsOrNull = refs)
     }
 
-    fun queryByMarker(marker: AvMarker): List<AvValue<*>> =
-        store.unsafeQueryByMarker(marker)
-
-    @Suppress("unused") // used for debugging
-    fun dump(): String = store.dump()
+    /**
+     * Removes a reference from a value in the store identified by the reference label.
+     *
+     * **DOES NOT REMOVE THE REFERRED VALUE!**
+     *
+     * @param referringId The ID of the value containing the reference to remove
+     * @param refLabel The label identifying the reference to remove
+     */
+    fun removeRef(referringId : AvValueId, refLabel : AvRefLabel) {
+        val referring = store.unsafeGet(referringId)
+        val refs = referring.mutableRefs()
+        refs.remove(refLabel)
+        this += referring.copy(refsOrNull = refs)
+    }
 
     //---------------------------------------------------------------------------------
     // Tree operations
     //---------------------------------------------------------------------------------
 
+
+    /**
+     * Adds a new value to the store and adds it as a child node in the tree structure.
+     * The value is created using the provided build function.
+     *
+     * When [parentId] is null and a root list marker is set in the tree setup,
+     * the value is added as a root node to the root node list.
+     *
+     * @param parentId The ID of the parent value, or null for root nodes
+     * @param treeSetup The tree setup configuration containing reference labels and markers
+     * @param buildFun A function that creates the value to add
+     * @return The newly created and added value
+     */
     fun <T> addTreeNode(
         parentId: AvValueId?,
         treeSetup: AvTreeSetup,
-        buildFun : () -> AvValue<T>
-    ) : AvValue<T> {
+        buildFun: () -> AvValue<T>
+    ): AvValue<T> {
         val value = buildFun()
         this += value
-        addTreeNode(parentId, value.uuid, treeSetup)
+        linkTreeNode(parentId, value.uuid, treeSetup)
         return value
     }
 
+    /**
+     * Adds an existing value as a child node in the tree structure.
+     *
+     * When [parentId] is null and a root list marker is set in the tree setup,
+     * the value is added as a root node to the root node list.
+     *
+     * @param parentId The ID of the parent value, or null for root nodes
+     * @param child The value to add as a child node
+     * @param treeSetup The tree setup configuration containing reference labels and markers
+     */
     fun addTreeNode(
         parentId: AvValueId?,
-        childId: AvValue<*>,
+        child: AvValue<*>,
         treeSetup: AvTreeSetup
     ) {
-        this += childId
-        addTreeNode(parentId, childId, treeSetup)
+        addTreeNode(parentId, child, treeSetup)
     }
 
     /**
-     * Adds a child value to a parent value in the tree structure.
+     * Links a child value to a parent value in the tree structure.
      * 
-     * If the child list already exists, the child ID is added to it.
-     * If not, creates a new child list value and updates parent references.
+     * If the list of children already exists, the child ID is added to it.
+     * If not, creates a new list of children value and updates parent references.
      *
      * When [parentId] is null and a root list marker is set in the tree setup,
      * the value is added as a root node to the root node list.
@@ -99,7 +216,7 @@ class AvComputeContext(
      * @param childId The ID of the value to add
      * @param treeSetup The tree setup configuration containing reference labels and markers
      */
-    fun addTreeNode(
+    fun linkTreeNode(
         parentId: AvValueId?,
         childId: AvValueId,
         treeSetup: AvTreeSetup
@@ -300,5 +417,36 @@ class AvComputeContext(
 
         return listValue?.spec?.let { (it as AvRefListSpec).refs } ?: emptyList()
     }
+
+    //---------------------------------------------------------------------------------
+    // Utility, convenience
+    //---------------------------------------------------------------------------------
+
+    /**
+     * Generates the next available friendly ID for items with the specified marker.
+     * The friendly ID consists of a prefix followed by a 4-digit number padded with zeros.
+     * The number is determined by finding the highest existing number for the given prefix
+     * and adding 1 to it.
+     *
+     * @param marker The marker used to filter items to check for existing friendly IDs
+     * @param prefix The string prefix to use for the friendly ID
+     * @return A new friendly ID string in the format "prefix####" where #### is the next available number
+     */
+    fun nextFriendlyId(marker: AvMarker, prefix: String): String {
+        var max = 0
+
+        store.unsafeForEachItemByMarker(marker) { value ->
+            val i = value.friendlyId?.removePrefix(prefix)?.toIntOrNull()
+            if (i != null && i > max) max = i
+        }
+
+        return "$prefix${(max + 1).p04}"
+    }
+
+    fun queryByMarker(marker: AvMarker): List<AvValue<*>> =
+        store.unsafeQueryByMarker(marker)
+
+    @Suppress("unused") // used for debugging
+    fun dump(): String = store.dump()
 
 }

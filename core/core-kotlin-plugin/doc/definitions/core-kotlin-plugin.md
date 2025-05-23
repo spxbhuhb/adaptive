@@ -1,3 +1,12 @@
 # core-kotlin-plugin
 
-A core [subproject](def://) of Adaptive. Contains the [compiler plugin](def://).
+`core-kotlin-plugin` is a core [subproject](def://) of Adaptive. Contains the source code of 
+the [compiler plugin](def://).
+
+The [gradle plugin](def://) applies the [compiler plugin](def://) to source codes that are built with [Adaptive](def://).
+
+## See also
+
+- [repository structure](guide://)
+- [core-core](def://)
+- [core-gradle-plugin](def://)

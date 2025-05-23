@@ -2,8 +2,8 @@
 
 The documentation system compiles all available information into a dataset for AI training.
 
-The `grove-doc:compileAdaptiveDocumentation` Gradle task performs this compilation and 
-puts the results in the `build/adaptive/doc` directory (under the repository root).
+The `aaa:doc` and `grove-doc:compileAdaptiveDocumentation` Gradle tasks perform this
+compilation and put the results in the `build/adaptive/doc` directory (under the repository root).
 
 The `merged` directory contains the datasets for training.
 

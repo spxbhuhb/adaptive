@@ -6,6 +6,9 @@ import `fun`.adaptive.persistence.append
 import `fun`.adaptive.persistence.ensure
 import `fun`.adaptive.persistence.resolve
 import `fun`.adaptive.persistence.write
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.embedded.EmbeddedValueServer.Companion.embeddedValueServer
+import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.io.files.Path
 
 class GroveDocCompilation(
@@ -24,6 +27,9 @@ class GroveDocCompilation(
     val outPathTrainingDef: Path = outPathTrainingMerged.resolve("def.md")
     val outPathTrainingQa: Path = outPathTrainingMerged.resolve("qa.md")
     val outPathTrainingGuide: Path = outPathTrainingMerged.resolve("guide.md")
+
+    val valueServer = embeddedValueServer(FilePersistence(outPath.resolve("values").ensure()))
+    val valueWorker = valueServer.serverWorker
 
     var notifications = mutableListOf<GroveDocNotification>()
 
@@ -55,6 +61,15 @@ class GroveDocCompilation(
             "guide" -> outPathTrainingGuide.append(contentWithHeader)
             "qa" -> outPathTrainingQa.append(contentWithHeader)
         }
+
+        // Save as value in the store
+        valueWorker.queueAdd(
+            AvValue(
+                spec = content,
+                name = path.name,
+                markersOrNull = setOf("markdown", type)
+            )
+        )
     }
 
 }

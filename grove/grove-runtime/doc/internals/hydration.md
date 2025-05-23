@@ -1,6 +1,10 @@
 # Hydration
 
-The hydration subsystem turns fragment designs into actual, working fragments:
+> [!NOTE]
+> Hydration works, the resources concept does not.
+> 
+
+The hydration subsystem turns [fragment models](def://) into actual, working fragments:
 
 ```kotlin
 @Adaptive
@@ -9,7 +13,7 @@ fun someFun() {
 }
 ```
 
-* Designs are handled by the standard resource subsystem.
+* Models are handled by the standard resource subsystem.
 * `Designs.something` is an instance of `DesignResource`.
 * Each design has its own resource file.
 * The resource file contains a serialized `AfmFragment` class (JSON or Protobuf).

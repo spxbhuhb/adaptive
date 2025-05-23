@@ -8,4 +8,5 @@ such as start/stop, install/update/remove, view logs, create backups etc.
 
 ## See also
 
+- [grove-host](def://)
 - [What is a Grove Host](guide://)

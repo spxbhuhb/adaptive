@@ -90,7 +90,7 @@ open class AvValueWorker(
      * - Throws exception if [computeFun] throws exception.
      * - **It is possible that computeFun is executed after timed out**.
      * - [computeFun] **MUST BE FAST**, it runs under the value worker lock, stops everything else
-     * - rollback **MUST BE HANDLED** by [computeFun], the worker does not guarantee that
+     * - rollback **MUST BE HANDLED** by [computeFun], the worker does not guarantee it
      */
     suspend fun <T> execute(timeout: Duration = 5.seconds, computeFun: AvComputeFun<T>): T =
         store.execute(timeout, computeFun)

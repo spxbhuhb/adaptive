@@ -48,7 +48,7 @@ private fun AvComputeContext.buildExampleTree() {
         for (childIndex in 1 .. 3) {
             val childNode = AvValue(name = "child $rootIndex.$childIndex", markersOrNull = setOf("node"), spec = "child $rootIndex.$childIndex")
             addValue(childNode)
-            addTreeNode(rootNode.uuid, childNode.uuid, treeSetup)
+            linkTreeNode(rootNode.uuid, childNode.uuid, treeSetup)
         }
     }
 }

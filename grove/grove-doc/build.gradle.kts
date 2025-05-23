@@ -56,6 +56,7 @@ kotlin {
             dependencies {
                 implementation(libs.adaptive.core.core)
                 implementation(libs.adaptive.lib.document)
+                implementation(libs.adaptive.lib.value)
             }
         }
 

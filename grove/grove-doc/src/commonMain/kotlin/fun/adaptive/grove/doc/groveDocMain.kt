@@ -4,7 +4,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.persistence.ensure
 import kotlinx.io.files.Path
 
-fun groveDocMain(args: Array<String>) {
+fun groveDocMain(args: Array<String>) : GroveDocCompilation {
     check(args.size == 2) { "usage: <in> <out>" }
 
     val inPath = Path(args[0])
@@ -20,4 +20,6 @@ fun groveDocMain(args: Array<String>) {
     for (notification in compilation.notifications) {
         getLogger("GroveDocCompiler").warning(notification.message + "\n" + notification.paths.joinToString("\n") + "\n")
     }
+
+    return compilation
 }

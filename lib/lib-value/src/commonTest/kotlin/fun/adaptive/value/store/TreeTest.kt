@@ -20,7 +20,7 @@ class TreeTest {
 
         worker.execute {
             addValue(rootNode)
-            addTreeNode(null, rootNode.uuid, setup)
+            linkTreeNode(null, rootNode.uuid, setup)
         }
 
         val readback = worker.get<String>(rootNode.uuid)
@@ -48,10 +48,10 @@ class TreeTest {
             addValue(childNode)
 
             // Add parent as root node
-            addTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(null, parentNode.uuid, setup)
 
             // Add child to parent
-            addTreeNode(parentNode.uuid, childNode.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode.uuid, setup)
         }
 
         // Verify parent node
@@ -92,11 +92,11 @@ class TreeTest {
             addValue(childNode2)
 
             // Add parent as root node
-            addTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(null, parentNode.uuid, setup)
 
             // Add children to parent
-            addTreeNode(parentNode.uuid, childNode1.uuid, setup)
-            addTreeNode(parentNode.uuid, childNode2.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode1.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode2.uuid, setup)
 
             // Remove first child
             removeTreeNode(parentNode.uuid, childNode1.uuid, setup)
@@ -126,8 +126,8 @@ class TreeTest {
             addValue(rootNode2)
 
             // Add both as root nodes
-            addTreeNode(null, rootNode1.uuid, setup)
-            addTreeNode(null, rootNode2.uuid, setup)
+            linkTreeNode(null, rootNode1.uuid, setup)
+            linkTreeNode(null, rootNode2.uuid, setup)
 
             // Remove first root node
             removeTreeNode(null, rootNode1.uuid, setup)
@@ -160,12 +160,12 @@ class TreeTest {
             addValue(childNode3)
 
             // Add parent as root node
-            addTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(null, parentNode.uuid, setup)
 
             // Add children to parent in order
-            addTreeNode(parentNode.uuid, childNode1.uuid, setup)
-            addTreeNode(parentNode.uuid, childNode2.uuid, setup)
-            addTreeNode(parentNode.uuid, childNode3.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode1.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode2.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode3.uuid, setup)
 
             // Move the second child up
             moveTreeNodeUp(childNode2.uuid, setup)
@@ -203,12 +203,12 @@ class TreeTest {
             addValue(childNode3)
 
             // Add parent as root node
-            addTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(null, parentNode.uuid, setup)
 
             // Add children to parent in order
-            addTreeNode(parentNode.uuid, childNode1.uuid, setup)
-            addTreeNode(parentNode.uuid, childNode2.uuid, setup)
-            addTreeNode(parentNode.uuid, childNode3.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode1.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode2.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode3.uuid, setup)
 
             // Move the second child down
             moveTreeNodeDown(childNode2.uuid, setup)
@@ -246,12 +246,12 @@ class TreeTest {
             addValue(childNode3)
 
             // Add parent as root node
-            addTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(null, parentNode.uuid, setup)
 
             // Add children to parent in order
-            addTreeNode(parentNode.uuid, childNode1.uuid, setup)
-            addTreeNode(parentNode.uuid, childNode2.uuid, setup)
-            addTreeNode(parentNode.uuid, childNode3.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode1.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode2.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode3.uuid, setup)
         }
 
         // Get child list reference
@@ -295,12 +295,12 @@ class TreeTest {
             addValue(childNode3)
 
             // Add parent as root node
-            addTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(null, parentNode.uuid, setup)
 
             // Add children to parent
-            addTreeNode(parentNode.uuid, childNode1.uuid, setup)
-            addTreeNode(parentNode.uuid, childNode2.uuid, setup)
-            addTreeNode(parentNode.uuid, childNode3.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode1.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode2.uuid, setup)
+            linkTreeNode(parentNode.uuid, childNode3.uuid, setup)
         }
 
         // Test getting children of parent node

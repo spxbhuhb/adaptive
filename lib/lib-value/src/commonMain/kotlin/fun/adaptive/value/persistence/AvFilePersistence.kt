@@ -16,9 +16,18 @@ import kotlinx.coroutines.*
 import kotlinx.io.files.Path
 import kotlin.time.Duration.Companion.minutes
 
+/**
+ * A persistence implementation that stores AvValue objects in JSON files on disk.
+ * Provides options for write caching to optimize disk I/O operations.
+ *
+ * @property root The root directory path where values will be stored
+ * @property levels Number of directory levels for file organization, defaults to 2
+ * @property scope CoroutineScope for managing background operations, defaults to a new one with Dispatchers.Default
+ * @property useWriteCache Whether to enable the write caching mechanism, defaults to false
+ */
 class FilePersistence(
     root: Path,
-    levels: Int,
+    levels: Int = 2,
     val scope: CoroutineScope = CoroutineScope(Dispatchers.Default),
     val useWriteCache: Boolean = false
 ) : AbstractValuePersistence() {

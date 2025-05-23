@@ -70,10 +70,10 @@ my.project
 - `src/jvmMain/kotlin/main.kt`: Entry point for the JVM [platform](def://).
 - `src/jvmMain/resources/logback.xml`: JVM-specific logging configuration.
 
-## Behavior or Flow
+## Behavior
 
 - The `adaptiveResources` directory is packaged with both JVM and JS targets by the Adaptive Gradle plugin.
-- [Platform-dependent](def://) entry points (`main.kt`) bootstrap the application.
+- [Platform-dependent](def://) entry points (`main.kt`) bootstrap the [applications](def://).
 
 # See also
 
