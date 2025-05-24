@@ -9,4 +9,4 @@ charts from data series.
 
 - [lib-graphics](def://)
 - [lib-ui](def://)
-- [repository structure](def://)
+- [repository structure](guide://)

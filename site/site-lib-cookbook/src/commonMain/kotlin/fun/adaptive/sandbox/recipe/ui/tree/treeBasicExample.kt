@@ -14,11 +14,17 @@ import `fun`.adaptive.ui.tree.tree
 @Adaptive
 fun treeBasicExample(): AdaptiveFragment {
 
+    val treeBackend = TreeViewBackend(
+        staticTree(Graphics.folder),
+        singleClickOpen = true,
+        context = Unit
+    )
+
     column {
         text("static - double click to expand")
         column {
             borders.outline
-            tree(TreeViewBackend(staticTree(Graphics.folder), singleClickOpen = true, context = Unit))
+            tree(treeBackend)
         }
     }
 

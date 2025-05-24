@@ -28,14 +28,14 @@ class AvUiTreeViewBackend<SPEC : Any>(
         context = this
     )
 
-    val avTree = AvUiTree(
+    val treeSubscriber = AvUiTreeSubscriber(
         backend,
         specClass,
         treeSetup
     )
 
     init {
-        avTree.addListener { treeBackend.items = it }
+        treeSubscriber.addListener { treeBackend.items = it }
     }
 
     fun expandAll() {
@@ -47,6 +47,6 @@ class AvUiTreeViewBackend<SPEC : Any>(
     }
 
     override fun dispose(fragment: AdaptiveFragment, index: Int) {
-        avTree.stop()
+        treeSubscriber.stop()
     }
 }

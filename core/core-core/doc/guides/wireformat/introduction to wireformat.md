@@ -5,10 +5,32 @@
 WireFormat supports [JSON](https://json.org) and [Protocol Buffers](https://protobuf.dev) out of the box, 
 protobuf being the default, JSON is provided for the faint-hearted.
 
-WireFormat is not meant to be coded manually:
+## Wireformat implementations
 
-* [adat classes](def://) have their wireformat automatically built from metadata
-* [services](def://) use the proper wireformat automatically
+Wireformat uses [wireformat implementations](def://) to serialize/deserialize data. These are classes
+that implement the [WireFormat](class://) interface.
+
+Each [wireformat implementation](def://) has a [supposedly unique](def://) [wireformat name](def://).
+
+[Wireformat implementations](def://) are not meant to be coded manually:
+
+* [Adaptive](def://) provides built-ins for primitive Kotlin data types, collections and datetime classes
+* [adat classes](def://) have theirs automatically built from [adat metadata](def://)
+* [services](def://) use only existing ones
+
+As of now, [wireformat implementations](def://) have to be registered manually into the [wireformat registry](def://).
+
+This is a limitation of the Kotlin compiler incremental compiling. While workarounds are possible, I don't know if
+the effort to write them would be worth it.
+
+See [writing an application module definition](guide://) for examples about how to register implementations.
+
+## Wireformat for enum classes
+
+Enum classes need a companion object for wireformat support. We might add a [compiler plugin](def://) feature
+to generate this automatically later, but for now it has to be added manually:
+
+[ExampleEnum](example://fun.adaptive.example)
 
 ## Polymorphism
 

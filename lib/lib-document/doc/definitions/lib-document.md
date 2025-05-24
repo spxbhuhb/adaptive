@@ -5,5 +5,5 @@ transform, create and display documents such as Markdown files, Excel sheets, et
 
 ## See also
 
-- [feature provided by lib-document](guide://)
-- [repository structure](def://)
+- [features provided by lib-document](guide://)
+- [repository structure](guide://)

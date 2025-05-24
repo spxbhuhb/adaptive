@@ -78,7 +78,7 @@ open class MultiPaneWorkspace(
     )
 
     val contentPaneGroups = storeFor {
-        listOf<WsContentPaneGroup>(
+        listOf(
             WsContentPaneGroup(UUID(), this, noContentPane)
         )
     }

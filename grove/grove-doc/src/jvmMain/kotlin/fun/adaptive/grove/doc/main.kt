@@ -1,5 +1,6 @@
 package `fun`.adaptive.grove.doc
 
+import `fun`.adaptive.grove.doc.lib.compiler.groveDocMain
 import `fun`.adaptive.utility.waitFor
 import kotlinx.coroutines.runBlocking
 import kotlin.time.Duration.Companion.seconds

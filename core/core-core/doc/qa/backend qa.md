@@ -6,7 +6,7 @@ How do I get a [worker implementation](def://) from a [service implementation](d
 
 Use the [workerImpl](function://BackendFragmentImpl) function.
 
-[GetWorkerImplFromServiceExample](example://backendExamples)
+[GetWorkerImplFromServiceExample](example://)
 
 ---
 
@@ -21,7 +21,7 @@ Use one of these properties:
 - [sessionId](property://ServiceContext) - throws IllegalStateException when there is no session
 - [sessionIdOrNull](property://ServiceContext) - returns with `null` when there is no session
 
-[GetSessionIdExample](example://backendExamples)
+[GetSessionIdExample](example://)
 
 ---
 
@@ -33,4 +33,4 @@ How do I get a [worker implementation](def://) from another [worker implementati
 
 Use the [workerImpl](function://BackendFragmentImpl) function.
 
-[GetWorkerImplFromWorkerExample](example://backendExamples)
+[GetWorkerImplFromWorkerExample](example://)

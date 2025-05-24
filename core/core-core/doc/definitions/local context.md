@@ -1,0 +1,16 @@
+# Local context
+
+Local contexts are [fragments](def://) that provide data for their child [fragments](def://) 
+in a [fragment trees](def://).
+
+Each local context contains an arbitrary instance of data that child fragments can find, 
+read and update by traversing up the [fragment tree](def://) until they find the
+appropriate local context.
+
+This technique makes it possible to avoid manually passing data through each fragment.
+Fragments between the one that uses the context and the one that provides the context 
+can be unaware of the existence of the context.
+
+## See also
+
+- [How to provide and use a local context](guide://)

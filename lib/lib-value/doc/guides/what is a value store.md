@@ -41,7 +41,7 @@ deployment parameters.
 Each [AvValueWorker](class://) has a [value persistence provider](def://) which 
 is responsible for loading and saving values.
 
-See [built-in persistence providers](guilde://) for more information.
+See [built-in persistence providers](guide://) for more information.
 
 ## Components
 

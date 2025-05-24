@@ -22,46 +22,11 @@ Defines shared behavior for client and server, including wire-format and resourc
 
 ### Code
 
-```kotlin
-package my.project.example.app
 
-import my.project.example.model.ExampleData
-import my.project.example.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.runtime.AbstractWorkspace
-import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.wireformat.WireFormatRegistry
-
-open class ExampleModule<WT : AbstractWorkspace> : AppModule<WT>() {
-
-    override fun wireFormatInit(registry: WireFormatRegistry) = with(registry) {
-        // Register Adat classes used across the app
-        + ExampleData
-    }
-
-    override fun resourceInit() {
-        // Register shared resource bundles (e.g., strings)
-        application.stringStores += commonMainStringsStringStore0
-    }
-}
-```
 
 ### Explanation
 
-This class sets up wire formats for Adat-based serialization and application resources. 
-Both server and client modules extend it to ensure consistent behavior across environments.
 
-`my.project.example.generated.resoures` is the package for generated resources. It can be set
-in `build.gradle.kts`. If a `Gradle` module contains more than one application module, only one 
-should add the resources as they are typically shared between all application modules in the
-same `Gradle` module.
-
-```kotlin
-adaptive {
-    resources {
-        packageOfResources = "my.project.example.generated.resources"
-    }
-}
-```
 
 ---
 
@@ -75,27 +40,9 @@ Initializes server-only components like services and workers.
 
 ### Code
 
-```kotlin
-package my.project.example.app
-
-import my.project.example.server.ExampleService
-import my.project.example.server.ExampleWorker
-import `fun`.adaptive.runtime.ServerWorkspace
-
-class ExampleServerModule<WT : ServerWorkspace> : ExampleModule<WT>() {
-
-    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
-        // Register server-side services and background workers
-        + ExampleService()
-        + ExampleWorker()
-    }
-
-}
-```
 
 ### Explanation
 
-This class handles back-end-specific registration. It ensures that services (like REST endpoints) and workers (e.g., cron jobs) are initialized when the server starts.
 
 ## 3. Workspace-Based UI Module
 

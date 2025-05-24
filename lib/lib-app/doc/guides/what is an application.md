@@ -67,6 +67,7 @@ src/commonMain/kotlin/my/project
 ├── example/
 │   ├── api
 │   ├── app
+│   ├── lib
 │   ├── model
 │   ├── server
 │   ├── ui
@@ -76,6 +77,7 @@ src/commonMain/kotlin/my/project
 - `example` is the top-level directory of the module.
 - `api` contains service API interface definitions.
 - `app` contains the application module definition classes, see [How to write an application module](guide://).
+- `lib` contains function shared by components across the module
 - `model` contains the data model of the module, typically Adat classes and enumerations.
 - `server` contains server fragment implementations.
 - `ui` contains UI fragments that are workspace-independent.

@@ -122,4 +122,8 @@ Chart drawing from data series. Works but needs some improvements and cleanup.
 
 Functions to parse, transform, create and display documents such as Markdown files, Excel sheets, etc.
 
+[lib-graphics](def://)
+
+Canvas [UI adapters](def://) and canvas [UI fragments](def://). Functions to parse and draw SVG,
+
 [finish repository structure](todo://)

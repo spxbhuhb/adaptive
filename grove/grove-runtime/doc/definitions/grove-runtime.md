@@ -8,5 +8,5 @@ code can depend on.
 
 ## See also
 
-- [repository structure](guile://)
+- [repository structure](guide://)
 - [grove-lib](def://)

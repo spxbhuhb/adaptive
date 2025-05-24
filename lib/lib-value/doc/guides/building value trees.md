@@ -97,3 +97,10 @@ See the class used for the unit tests for an example:
 
 - [TestTreeSubscriber](example://)
 - [TestTreeItem](example://)
+
+## Displaying value trees
+
+[AvUiTree](class://) and [tree](fragment://) from [lib-ui](def://) can be used to 
+display value trees with just a few lines of code.
+
+See [How to show trees](guide://) for more information.

@@ -19,5 +19,8 @@ dependencyResolutionManagement {
 }
 
 includeBuild("../../core/core-core")
+includeBuild("../../core/core-ui")
 includeBuild("../../lib/lib-document")
+includeBuild("../../lib/lib-ui")
+includeBuild("../../lib/lib-util")
 includeBuild("../../lib/lib-value")

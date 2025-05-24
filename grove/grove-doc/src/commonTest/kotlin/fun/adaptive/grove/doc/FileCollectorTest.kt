@@ -1,5 +1,7 @@
 package `fun`.adaptive.grove.doc
 
+import `fun`.adaptive.grove.doc.lib.compiler.FileCollector
+import `fun`.adaptive.grove.doc.lib.compiler.GroveDocCompilation
 import `fun`.adaptive.persistence.clearedTestPath
 import `fun`.adaptive.persistence.ensure
 import `fun`.adaptive.persistence.resolve

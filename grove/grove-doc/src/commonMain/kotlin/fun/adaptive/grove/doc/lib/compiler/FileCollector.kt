@@ -1,0 +1,162 @@
+package `fun`.adaptive.grove.doc.lib.compiler
+
+import `fun`.adaptive.persistence.isDirectory
+import `fun`.adaptive.persistence.list
+import kotlinx.io.files.Path
+import kotlin.collections.iterator
+
+internal class FileCollector(
+    val compilation : GroveDocCompilation
+) {
+
+    val excluded = listOf("build", "deprecated")
+
+    val ktFiles = mutableMapOf<String, MutableList<Path>>()
+
+    val definitions = mutableMapOf<String, MutableList<Path>>()
+    val guides = mutableMapOf<String, MutableList<Path>>()
+    val qa = mutableMapOf<String, MutableList<Path>>()
+    val uncategorized = mutableListOf<Path>()
+
+    var inDefinitions = false
+    var inGuides = false
+    var inQa = false
+
+    fun collectFiles(root: Path) {
+        for (path in root.list()) {
+            val name = path.name
+            if (name.startsWith('.') || name in excluded) continue
+
+            if (path.isDirectory) {
+                collectFromDirectory(name, path)
+                continue
+            }
+
+            registerFile(name, path)
+        }
+    }
+
+    private fun collectFromDirectory(name : String, path : Path) {
+        when (name) {
+            "definitions" -> {
+                inDefinitions = true
+                collectFiles(path)
+                inDefinitions = false
+            }
+            "guides" -> {
+                inGuides = true
+                collectFiles(path)
+                inGuides = false
+            }
+            "qa" -> {
+                inQa = true
+                collectFiles(path)
+                inQa = false
+            }
+            else -> collectFiles(path)
+        }
+    }
+
+    private fun registerFile(name: String, path: Path) {
+        when {
+            name.endsWith(".md") -> when {
+                inDefinitions -> putFile(definitions, name, path)
+                inGuides -> putFile(guides, name, path)
+                inQa -> putFile(qa, name, path)
+                //else -> uncategorized.add(path)
+            }
+            name.endsWith(".kt") -> putFile(ktFiles, name, path, normalize = false)
+        }
+    }
+
+    private fun putFile(
+        collection : MutableMap<String, MutableList<Path>>,
+        name : String,
+        path : Path,
+        normalize : Boolean = true
+    ) {
+        val putName = if (normalize) compilation.normalizedName(name) else name.substringBeforeLast('.')
+        collection.getOrPut(putName) { mutableListOf() }.add(path)
+    }
+
+    fun reportCollisions() {
+        for ((key, value) in definitions) {
+            checkCollision(key, value)
+        }
+        for ((key, value) in guides) {
+            checkCollision(key, value)
+        }
+    }
+
+    fun checkCollision(key : String, value : List<Path>) {
+        if (value.size != 1) {
+            compilation.warn("Markdown file name collision on $key", value)
+        }
+    }
+
+    /**
+     * Look up the code in [ktFiles]. If the code is not found, return null.
+     *
+     * @param  scheme  The scheme of the code, one of "class", "function" or "property".
+     * @param  name    Name of the class, function or property to find.
+     * @param  scope   The fully qualified path to the name or the simple name of the class
+     *                 if it is unique in the project.
+     */
+    fun lookupCode(scheme: String, name: String, scope: String?): Path? {
+        when (scheme) {
+
+            "class", "example" -> {
+                if (scope == null) {
+                    return ktFiles[name]?.firstOrNull()
+                } else {
+                    val files = ktFiles[scope] ?: ktFiles[name]
+                    if (files?.size == 1) return files.first()
+                    return files?.firstOrNull { isInScope(it, scope) }
+                }
+            }
+
+            "function", "property" -> {
+
+                if (scope == null) {
+                    val files = ktFiles[name]
+                    if (files == null) {
+                        compilation.warn("Missing scope for $scheme $name")
+                        return null
+                    }
+                    if (files.size != 1) {
+                        compilation.warn("Multiple scopes found for $scheme $name")
+                        return null
+                    }
+                    return files.first()
+                }
+
+                val files = ktFiles[scope]
+
+                if (files == null) {
+                    compilation.warn("Cannot find scope $scope for $scheme $name")
+                    return null
+                }
+
+                if (files.size != 1) {
+                    compilation.warn("Multiple scopes found for $scheme $name")
+                    return null
+                }
+
+                return files.first()
+            }
+
+            else -> return null
+        }
+    }
+
+    private fun isInScope(path: Path, scope: String): Boolean {
+        val normalizedScope = scope.replace('/', '.')
+
+        val normalizedPath = path.toString().removeSuffix(path.name)
+            .replace('/', '.').replace('\\', '.').trim('.')
+
+        return normalizedPath.endsWith(normalizedScope)
+    }
+
+}
+
