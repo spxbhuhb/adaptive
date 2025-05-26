@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.workspace.wsToolPane
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
 @Adaptive
-fun wsAppInspectTool(pane: WsPane<*, *>): AdaptiveFragment {
+fun wsAppInspectTool(pane: WsPane<*>): AdaptiveFragment {
 
     val app = fragment().firstContext<ClientApplication<*>>()
 

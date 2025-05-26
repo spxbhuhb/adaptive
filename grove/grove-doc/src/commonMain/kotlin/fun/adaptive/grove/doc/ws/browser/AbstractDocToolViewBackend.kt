@@ -1,20 +1,19 @@
 package `fun`.adaptive.grove.doc.ws.browser
 
+import `fun`.adaptive.grove.doc.model.GroveDocValue
 import `fun`.adaptive.grove.doc.model.avDomain
-import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.value.AvUiTreeViewBackend
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsPaneController
-import `fun`.adaptive.ui.workspace.logic.WsPaneType
+import `fun`.adaptive.ui.workspace.logic.WsPaneViewBackend
 import `fun`.adaptive.value.AvValue
 
-abstract class AbstractDocToolController(
+abstract class AbstractDocToolViewBackend<VB : AbstractDocToolViewBackend<VB>>(
     override val workspace: MultiPaneWorkspace
-) : WsPaneController<AbstractDocToolController>() {
+) : WsPaneViewBackend<VB>() {
 
-    val viewBackend = AvUiTreeViewBackend(workspace.backend, String::class, avDomain.treeDef, ::selectedFun)
+    val tree = AvUiTreeViewBackend(workspace.backend, String::class, avDomain.treeDef, ::selectedFun)
 
 //    override fun accepts(pane: WsPaneType<Unit>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
 //        return true
@@ -30,13 +29,17 @@ abstract class AbstractDocToolController(
 //    }
 
     fun expandAll() {
-        viewBackend.treeBackend.expandAll()
+        tree.treeBackend.expandAll()
     }
 
     fun collapseAll() {
-        viewBackend.treeBackend.collapseAll()
+        tree.treeBackend.collapseAll()
     }
 
     abstract fun selectedFun(backend: AvUiTreeViewBackend<String>, item: TreeItem<AvValue<String>>, modifiers: Set<EventModifier>)
+
+    fun docPathNames(item : GroveDocValue): List<String> {
+        return tree.treeSubscriber.pathNames(item)
+    }
 
 }

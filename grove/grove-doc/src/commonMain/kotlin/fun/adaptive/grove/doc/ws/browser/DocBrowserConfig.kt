@@ -12,5 +12,5 @@ class DocBrowserConfig(
     val headerKey: FragmentKey? = null,
     val itemKey: FragmentKey? = null
 ) {
-    lateinit var controller: DocBrowserToolController
+    lateinit var controller: DocBrowserToolViewBackend
 }

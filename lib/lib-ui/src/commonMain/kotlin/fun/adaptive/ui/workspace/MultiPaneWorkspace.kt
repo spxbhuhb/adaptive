@@ -7,8 +7,6 @@ import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.log.getLogger
-import `fun`.adaptive.model.NamedItem
-import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
@@ -23,12 +21,14 @@ import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.snackbar.failNotification
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
+import `fun`.adaptive.ui.workspace.logic.WsPaneViewBackend
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
 import `fun`.adaptive.ui.workspace.model.*
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
+import kotlin.reflect.KClass
 
 open class MultiPaneWorkspace(
     backend: BackendAdapter,
@@ -39,6 +39,9 @@ open class MultiPaneWorkspace(
     companion object {
         inline fun <reified T> AdaptiveFragment.wsContext() =
             firstContext<MultiPaneWorkspace>().contexts.firstInstance<T>()
+
+        inline fun <reified T : WsPaneViewBackend<T>> AdaptiveFragment.wsToolOrNull() =
+            firstContext<MultiPaneWorkspace>().toolBackend(T::class)
 
         const val WS_CENTER_PANE = "lib:ws:center"
         const val WSPANE_EMPTY = "lib:ws:nocontent"
@@ -56,12 +59,12 @@ open class MultiPaneWorkspace(
 
     var frontendOrNull: AdaptiveAdapter? = null
 
-    val contentPaneBuilders = mutableMapOf<NamedItemType, MutableList<WsContentPaneBuilder>>()
+    val contentPaneBuilders = mutableMapOf<WsPaneItemType, MutableList<WsContentPaneBuilder>>()
 
     val theme
         get() = WorkspaceTheme.DEFAULT
 
-    val toolPanes = mutableListOf<WsPane<*, *>>()
+    val toolPanes = mutableListOf<WsPane<*>>()
 
     val sideBarActions = mutableListOf<AbstractSideBarAction>()
 
@@ -72,8 +75,7 @@ open class MultiPaneWorkspace(
         Graphics.menu,
         WsPanePosition.Center,
         WSPANE_EMPTY,
-        data = Unit,
-        controller = WsUnitPaneController(this),
+        viewBackend = WsUnitPaneViewBackend(this),
         singularity = WsPaneSingularity.SINGULAR
     )
 
@@ -85,7 +87,7 @@ open class MultiPaneWorkspace(
 
     var lastActiveContentPaneGroup: WsContentPaneGroup? = null
 
-    var lastActiveContentPane: WsPane<*, *>? = null
+    var lastActiveContentPane: WsPane<*>? = null
 
     val focusedPane = storeFor<WsPaneId?> { null }
 
@@ -187,7 +189,7 @@ open class MultiPaneWorkspace(
     /**
      * Toggle the given pane (typically when the user clicks on the pane icon).
      */
-    fun toggle(pane: WsPane<*, *>) {
+    fun toggle(pane: WsPane<*>) {
         when (pane.position) {
             WsPanePosition.LeftTop -> toggleStore(leftTop, pane)
             WsPanePosition.LeftMiddle -> toggleStore(leftMiddle, pane)
@@ -196,9 +198,7 @@ open class MultiPaneWorkspace(
             WsPanePosition.RightMiddle -> toggleStore(rightMiddle, pane)
             WsPanePosition.RightBottom -> toggleStore(rightBottom, pane)
             WsPanePosition.Center -> {
-                if (pane.data is NamedItem) {
-                    addContent(pane.data)
-                }
+                // FIXME ?? addContent(pane)
                 return // no split update is needed as center is always shown
             }
         }
@@ -226,7 +226,7 @@ open class MultiPaneWorkspace(
         isFullScreen.value = false
     }
 
-    private fun toggleStore(store: Observable<WsPaneId?>, pane: WsPane<*, *>) {
+    private fun toggleStore(store: Observable<WsPaneId?>, pane: WsPane<*>) {
         if (store.value == pane.uuid) {
             store.value = null
         } else {
@@ -275,7 +275,7 @@ open class MultiPaneWorkspace(
         split.value = split.value.copy(visibility = new)
     }
 
-    fun paneStore(pane: WsPane<*, *>): Observable<WsPaneId?> =
+    fun paneStore(pane: WsPane<*>): Observable<WsPaneId?> =
         when (pane.position) {
             WsPanePosition.LeftTop -> leftTop
             WsPanePosition.LeftMiddle -> leftMiddle
@@ -290,11 +290,11 @@ open class MultiPaneWorkspace(
     // Tool management
     // --------------------------------------------------------------------------------
 
-    operator fun WsPane<*, *>.unaryPlus() {
+    operator fun WsPane<*>.unaryPlus() {
         toolPanes += this
     }
 
-    fun addToolPane(pane: () -> WsPane<*, *>) {
+    fun addToolPane(pane: () -> WsPane<*>) {
         toolPanes += pane()
     }
 
@@ -302,27 +302,39 @@ open class MultiPaneWorkspace(
         sideBarActions += this
     }
 
+    fun <T : WsPaneViewBackend<T>> toolBackend(kClass : KClass<T>) : T? {
+        for (pane in toolPanes) {
+            @Suppress("UNCHECKED_CAST")
+            if (kClass.isInstance(pane.viewBackend)) return pane.viewBackend as T
+        }
+        return null
+    }
+
     // --------------------------------------------------------------------------------
     // Content management
     // --------------------------------------------------------------------------------
 
-    fun addContentPaneBuilder(vararg itemTypes: NamedItemType, builder: WsContentPaneBuilder) {
-        for (itemType in itemTypes) {
-            contentPaneBuilders.getOrPut(itemType) { mutableListOf() } += builder
+    fun addContentPaneBuilder(vararg keys: WsPaneItemType, builder: WsContentPaneBuilder) {
+        for (key in keys) {
+            contentPaneBuilders.getOrPut(key) { mutableListOf() } += builder
         }
     }
 
-    fun addContent(item: NamedItem, modifiers: Set<EventModifier> = emptySet()) {
+    fun addContent(item: SingularWsItem, modifiers: Set<EventModifier> = emptySet()) {
+        addContent(item.type, item, modifiers)
+    }
+
+    fun addContent(type : WsPaneItemType, item: WsPaneItem, modifiers: Set<EventModifier> = emptySet()) {
 
         val accepted = accept(item, modifiers)
         if (accepted) {
             return
         }
 
-        val builder = findBuilder(item.type)
+        val builder = findBuilder(type)
 
         if (builder == null) {
-            logger.warning("no pane builder for type ${item.type}")
+            logger.warning("no pane builder for type $type")
             return
         }
 
@@ -348,7 +360,7 @@ open class MultiPaneWorkspace(
         }
     }
 
-    fun findBuilder(type: NamedItemType): WsContentPaneBuilder? {
+    fun findBuilder(type: WsPaneItemType): WsContentPaneBuilder? {
         var builder = contentPaneBuilders[type]?.firstOrNull()
         if (builder != null) return builder
 
@@ -368,7 +380,7 @@ open class MultiPaneWorkspace(
         return null
     }
 
-    fun accept(item: NamedItem, modifiers: Set<EventModifier>): Boolean {
+    fun accept(item: WsPaneItem, modifiers: Set<EventModifier>): Boolean {
         lastActiveContentPane?.let {
             if (it.accepts(item, modifiers)) {
                 loadContentPane(item, modifiers, it, lastActiveContentPaneGroup !!)
@@ -387,7 +399,7 @@ open class MultiPaneWorkspace(
         return false
     }
 
-    fun accept(item: NamedItem, modifiers: Set<EventModifier>, group: WsContentPaneGroup): Boolean {
+    fun accept(item: WsPaneItem, modifiers: Set<EventModifier>, group: WsContentPaneGroup): Boolean {
 
         for (pane in group.panes) {
             if (pane.accepts(item, modifiers)) {
@@ -399,12 +411,12 @@ open class MultiPaneWorkspace(
         return false
     }
 
-    fun loadContentPane(item: NamedItem, modifiers: Set<EventModifier>, pane: WsPane<*, *>, group: WsContentPaneGroup) {
+    fun loadContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: WsPane<*>, group: WsContentPaneGroup) {
         // pane.load may return with a different pane, most notably the name and tooltip of the pane may change
         group.load(pane.load(item, modifiers))
     }
 
-    fun addGroupContentPane(item: NamedItem, modifiers: Set<EventModifier>, pane: WsPane<*, *>) {
+    fun addGroupContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: WsPane<*>) {
 
         val safeGroup = lastActiveContentPaneGroup
 
@@ -437,14 +449,12 @@ open class MultiPaneWorkspace(
     // Item type management
     // --------------------------------------------------------------------------------
 
-    private val itemTypes = mutableMapOf<NamedItemType, WsItemConfig>()
+    private val itemTypes = mutableMapOf<WsPaneItemType, WsItemConfig>()
 
-    fun addItemConfig(type: NamedItemType, icon: GraphicsResourceSet, tooltip: String? = null) {
+    fun addItemConfig(type: WsPaneItemType, icon: GraphicsResourceSet, tooltip: String? = null) {
         itemTypes[type] = WsItemConfig(type, icon, tooltip)
     }
 
-    fun getItemConfig(type: NamedItemType) = itemTypes[type] ?: WsItemConfig.DEFAULT
-
-    fun getItemIcon(item: NamedItem) = (itemTypes[item.type] ?: WsItemConfig.DEFAULT).icon
+    fun getItemConfig(type: WsPaneItemType) = itemTypes[type] ?: WsItemConfig.DEFAULT
 
 }

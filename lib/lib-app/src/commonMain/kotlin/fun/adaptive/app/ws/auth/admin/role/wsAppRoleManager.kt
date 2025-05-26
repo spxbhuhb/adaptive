@@ -32,12 +32,12 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.value.AvValue
 
 @Adaptive
-fun wsAppRoleManager(pane: WsPane<*, RoleManagerController>): AdaptiveFragment {
+fun wsAppRoleManager(pane: WsPane<RoleManagerViewBackend>): AdaptiveFragment {
 
     val filterBackend = valueFrom { adatFormBackend(RoleFilter()) }
     val filter = filterBackend.inputValue
 
-    val items = valueFrom { pane.controller.roles }
+    val items = valueFrom { pane.viewBackend.roles }
 
     column {
         WorkspaceTheme.DEFAULT.contentPaneContainer
@@ -51,13 +51,13 @@ fun wsAppRoleManager(pane: WsPane<*, RoleManagerController>): AdaptiveFragment {
                     button(Strings.addRole)
                     primaryPopup { hide ->
                         popupAlign.absoluteCenter(modal = true, 150.dp)
-                        roleEditor(hide = hide) { pane.controller.save(it, true) }
+                        roleEditor(hide = hide) { pane.viewBackend.save(it, true) }
                     }
                 }
             }
         }
 
-        localContext(pane.controller) {
+        localContext(pane.viewBackend) {
             items(items.filter { filter.matches(it) }, filter.isEmpty())
         }
     }
@@ -118,7 +118,7 @@ private fun item(item: AvValue<RoleSpec>) {
                 primaryPopup(popupState) { hide ->
                     popupAlign.absoluteCenter(modal = true, 150.dp)
                     roleEditor(item, hide) {
-                        fragment().firstContext<RoleManagerController>().save(it, false)
+                        fragment().firstContext<RoleManagerViewBackend>().save(it, false)
                     }
                 }
             }

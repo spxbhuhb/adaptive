@@ -3,7 +3,7 @@ package `fun`.adaptive.value.local
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.AvValue.Companion.withSpec
+import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.model.AvRefLabels
 import `fun`.adaptive.value.model.AvTreeDef
 import kotlin.reflect.KClass
@@ -111,7 +111,7 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
         if (value.spec is AvRefListSpec) {
             processChildList(value, value.spec)
         } else {
-            processNode(value.withSpec(specClass))
+            processNode(value.checkSpec(specClass))
         }
     }
 
@@ -190,7 +190,7 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
 
         var current: AvValue<*>? = value
         while (current != null) {
-            names.add(current.name ?: "")
+            names.add(current.nameLike)
             current = current.refIdOrNull(parentRefLabel)?.let { this[it] }
         }
 

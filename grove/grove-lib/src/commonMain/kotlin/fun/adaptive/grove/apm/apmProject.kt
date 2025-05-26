@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun apmProject(pane: WsPane<*, *>): AdaptiveFragment {
+fun apmProject(pane: WsPane<*>): AdaptiveFragment {
     val context = fragment().wsContext<ApmWsContext>()
 
     val treeViewBackend = TreeViewBackend(
@@ -31,7 +31,7 @@ fun apmProject(pane: WsPane<*, *>): AdaptiveFragment {
 }
 
 private fun showItem(context: ApmWsContext, item: TreeItem<ApmWsItem>, modifiers: Set<EventModifier>) {
-    context.workspace.addContent(item.data, modifiers)
+    //context.workspace.addContent(item.data, modifiers)
 }
 
 val root =

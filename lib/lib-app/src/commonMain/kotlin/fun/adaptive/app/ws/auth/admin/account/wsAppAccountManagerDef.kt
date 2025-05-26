@@ -25,8 +25,7 @@ fun MultiPaneWorkspace.wsAppAccountManagerDef(
             Graphics.supervised_user_circle,
             WsPanePosition.Center,
             module.ACCOUNT_MANAGER_KEY,
-            module.ACCOUNT_MANAGER_ITEM,
-            AccountManagerController(module)
+            AccountManagerViewBackend(module)
         )
     }
 

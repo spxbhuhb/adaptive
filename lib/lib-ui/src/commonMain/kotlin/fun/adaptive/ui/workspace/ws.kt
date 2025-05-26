@@ -162,7 +162,7 @@ private fun wsPane(workspace: MultiPaneWorkspace, position: WsPanePosition): Ada
 }
 
 @Adaptive
-private fun wsPaneContent(pane: WsPane<*, *>) {
+private fun wsPaneContent(pane: WsPane<*>) {
     box {
         maxSize
         actualize(pane.key, emptyInstructions, pane)

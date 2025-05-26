@@ -10,7 +10,7 @@ import `fun`.adaptive.utility.UUID
 class WsContentPaneGroup(
     val uuid: UUID<WsContentPaneGroup>,
     val workspace: MultiPaneWorkspace,
-    firstPane: WsPane<*, *>
+    firstPane: WsPane<*>
 ) {
     /**
      * True when this group contains only one pane and that one pane
@@ -31,7 +31,7 @@ class WsContentPaneGroup(
 
     val tabContainer = storeFor<TabContainer> { toTabContainer() }
 
-    fun load(pane: WsPane<*, *>) {
+    fun load(pane: WsPane<*>) {
         val index = panes.indexOfFirst { it.uuid == pane.uuid }
 
         if (index == - 1) {
@@ -73,7 +73,7 @@ class WsContentPaneGroup(
 
     fun switchTab(model : TabContainer, pane : TabPane) {
         val newTabs = model.switchTab(pane)
-        activePane = newTabs.tabs.first { it.active }.model as WsPane<*, *>
+        activePane = newTabs.tabs.first { it.active }.model as WsPane<*>
         tabContainer.value = newTabs
     }
 
@@ -84,7 +84,7 @@ class WsContentPaneGroup(
             workspace.removePaneGroup(this)
         } else {
             val newTabs = model.removeTab(pane)
-            activePane = newTabs.tabs.first { it.active }.model as WsPane<*, *>
+            activePane = newTabs.tabs.first { it.active }.model as WsPane<*>
             tabContainer.value = newTabs
         }
     }

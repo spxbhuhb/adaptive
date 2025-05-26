@@ -23,7 +23,7 @@ fun MultiPaneWorkspace.wsDocBrowserToolDef(module: GroveDocWsModule<*>) {
         module.WSIT_DOC_ITEM
     )
 
-    val controller = DocBrowserToolController(this, config)
+    val controller = DocBrowserToolViewBackend(this, config)
 
     config.controller = controller
 
@@ -38,7 +38,6 @@ fun MultiPaneWorkspace.wsDocBrowserToolDef(module: GroveDocWsModule<*>) {
             WsPaneAction(Graphics.unfold_more, Strings.expandAll, Unit) { controller.expandAll() },
             WsPaneAction(Graphics.unfold_less, Strings.collapseAll, Unit) { controller.collapseAll() },
         ),
-        data = Unit,
-        controller = controller
+        viewBackend = controller
     )
 }

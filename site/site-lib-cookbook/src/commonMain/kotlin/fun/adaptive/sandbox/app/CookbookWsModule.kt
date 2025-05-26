@@ -6,8 +6,9 @@ import `fun`.adaptive.cookbook.generated.resources.flatware
 import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.WorkspaceRecipePaneFragmentFactory
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.sandbox.model.CbWsRecipeItem
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
@@ -32,11 +33,12 @@ class CookbookWsModule<WT : MultiPaneWorkspace> : CookbookModule<WT>() {
             Graphics.flatware,
             WsPanePosition.LeftMiddle,
             cookbookRecipePaneKey,
-            data = Unit,
-            controller = WsUnitPaneController(this)
+            viewBackend = WsUnitPaneViewBackend(this)
         )
 
         addContentPaneBuilder(CbWsContext.WSIT_CB_RECIPE) { item ->
+            item as CbWsRecipeItem
+
             WsPane(
                 UUID(),
                 workspace = workspace,
@@ -44,8 +46,7 @@ class CookbookWsModule<WT : MultiPaneWorkspace> : CookbookModule<WT>() {
                 context[item].icon,
                 WsPanePosition.Center,
                 "cookbook:center",
-                data = item,
-                controller = CookbookPaneController(workspace, context)
+                viewBackend = CookbookPaneViewBackend(workspace, context)
             )
         }
 

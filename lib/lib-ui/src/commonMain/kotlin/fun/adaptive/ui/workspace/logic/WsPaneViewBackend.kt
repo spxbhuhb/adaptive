@@ -1,21 +1,22 @@
 package `fun`.adaptive.ui.workspace.logic
 
 import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
+import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.ui.workspace.model.WsPaneItem
 import `fun`.adaptive.utility.firstInstance
 
-abstract class WsPaneController<D> {
+abstract class WsPaneViewBackend<VB : WsPaneViewBackend<VB>> {
 
     abstract val workspace : MultiPaneWorkspace
 
-    open fun accepts(pane: WsPaneType<D>, modifiers: Set<EventModifier>, item: NamedItem): Boolean {
+    open fun accepts(pane: WsPane<VB>, modifiers: Set<EventModifier>, item: WsPaneItem): Boolean {
         return false
     }
 
-    open fun load(pane: WsPaneType<D>, modifiers: Set<EventModifier>, item: NamedItem): WsPaneType<D> {
+    open fun load(pane: WsPane<VB>, modifiers: Set<EventModifier>, item: WsPaneItem): WsPane<VB> {
         throw UnsupportedOperationException("load for pane $pane is not supported")
     }
 

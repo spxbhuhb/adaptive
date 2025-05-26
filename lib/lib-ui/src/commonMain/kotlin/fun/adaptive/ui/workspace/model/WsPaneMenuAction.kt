@@ -15,11 +15,11 @@ class WsPaneMenuAction<T>(
     val theme: ContextMenuTheme = ContextMenuTheme.DEFAULT,
 ) : AbstractWsPaneAction<List<MenuItemBase<T>>>(icon, tooltip) {
 
-    override fun execute(workspace: MultiPaneWorkspace, pane: WsPane<*, *>) {
+    override fun execute(workspace: MultiPaneWorkspace, pane: WsPane<*>) {
         throw UnsupportedOperationException()
     }
 
-    fun selected(workspace: MultiPaneWorkspace, pane: WsPane<*, *>, menuItem: MenuItem<*>, modifiers: Set<EventModifier>) {
+    fun selected(workspace: MultiPaneWorkspace, pane: WsPane<*>, menuItem: MenuItem<*>, modifiers: Set<EventModifier>) {
         @Suppress("UNCHECKED_CAST")
         selectedFun(
             WsPaneMenuActionArguments<T>(workspace, pane, menuItem as MenuItem<T>, modifiers)

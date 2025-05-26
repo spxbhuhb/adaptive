@@ -25,8 +25,7 @@ fun MultiPaneWorkspace.wsAppRoleManagerDef(
             Graphics.military_tech,
             WsPanePosition.Center,
             module.ROLE_MANAGER_KEY,
-            module.ROLE_MANAGER_ITEM,
-            RoleManagerController(module)
+            RoleManagerViewBackend(module)
         )
     }
 

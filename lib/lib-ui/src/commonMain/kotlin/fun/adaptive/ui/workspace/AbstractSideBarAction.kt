@@ -16,7 +16,7 @@ abstract class AbstractSideBarAction {
     abstract val tooltip: String?
     abstract val actionFun: (workspace: MultiPaneWorkspace) -> Unit
 
-    open val pane: WsPane<*, *>
+    open val pane: WsPane<*>
         get() = workspace.noContentPane
 
     open val singularity: WsPaneSingularity

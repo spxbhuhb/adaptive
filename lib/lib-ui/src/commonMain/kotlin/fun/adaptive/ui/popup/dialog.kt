@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.NonAdaptive
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsPaneController
+import `fun`.adaptive.ui.workspace.logic.WsPaneViewBackend
 
 @NonAdaptive
 fun <T : Any> dialog(
@@ -29,7 +29,7 @@ fun <T : Any> wsDialog(
 
 @NonAdaptive
 fun <T : Any> wsDialog(
-    controller: WsPaneController<*>,
+    controller: WsPaneViewBackend<*>,
     data: T,
     content: (data: T, hide: () -> Unit) -> Any
 ) {

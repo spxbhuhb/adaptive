@@ -9,7 +9,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
 fun wsToolPane(
-    pane: WsPane<*, *>,
+    pane: WsPane<*>,
     theme: WorkspaceTheme = DEFAULT,
     @Adaptive
     _fixme_adaptive_content: () -> Unit

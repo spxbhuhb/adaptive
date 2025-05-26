@@ -24,8 +24,7 @@ fun MultiPaneWorkspace.wsAppAccountSelfDef(
             Graphics.account_circle,
             WsPanePosition.Center,
             module.ACCOUNT_SELF_KEY,
-            module.ACCOUNT_SELF_ITEM,
-            AccountSelfController(this, module.ACCOUNT_SELF_ITEM),
+            AccountSelfViewBackend(this, module.ACCOUNT_SELF_ITEM),
             displayOrder = Int.MAX_VALUE - 1
         )
     }

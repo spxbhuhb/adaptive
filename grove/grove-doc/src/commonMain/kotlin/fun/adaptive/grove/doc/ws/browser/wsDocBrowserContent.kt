@@ -5,6 +5,7 @@ import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.grove.doc.model.GroveDocValue
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.arrow_right
@@ -12,35 +13,37 @@ import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
+import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsToolOrNull
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.value.AvValue.Companion.withSpec
 
 @Adaptive
-fun wsDocBrowserContent(pane: WsPane<DocBrowserWsItem, *>): AdaptiveFragment {
+fun wsDocBrowserContent(pane: WsPane<DocBrowserContentViewBackend>): AdaptiveFragment {
+
+    val value = pane.viewBackend.value
 
     column {
         maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
 
-        pageHeader(pane)
+        pageHeader(value)
 
-        markdown(pane.data.item.withSpec<String>().spec)
-     }
+        markdown(value.spec)
+    }
 
     return fragment()
 }
 
 @Adaptive
-fun pageHeader(pane: WsPane<DocBrowserWsItem, *>) {
+fun pageHeader(value : GroveDocValue) {
     column {
         paddingBottom { 32.dp }
-        h2(pane.data.item.nameLike)
-        itemPath(pane.data)
+        h2(value.nameLike)
+        itemPath(value)
     }
 }
 
 @Adaptive
-fun itemPath(item: DocBrowserWsItem) {
-    val names = item.docPathNames()
+fun itemPath(item: GroveDocValue) {
+    val names = fragment().wsToolOrNull<DocBrowserToolViewBackend>()?.docPathNames(item) ?: emptyList()
 
     row {
         alignItems.center

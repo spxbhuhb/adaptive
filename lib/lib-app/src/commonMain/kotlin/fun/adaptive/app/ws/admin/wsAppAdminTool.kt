@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun wsAppAdminTool(pane: WsPane<*, *>): AdaptiveFragment {
+fun wsAppAdminTool(pane: WsPane<*>): AdaptiveFragment {
 
     val module = fragment().wsContext<AppAdminWsModule<*>>()
 

@@ -1,9 +1,9 @@
 package `fun`.adaptive.app.ws
 
-import `fun`.adaptive.lib_app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.lib_app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.generated.resources.eco
 import `fun`.adaptive.ui.generated.resources.home
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.WsSideBarAction
-import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
 import `fun`.adaptive.ui.workspace.model.SingularWsItem
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
@@ -53,8 +53,7 @@ class AppMainWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
                 Graphics.eco,
                 WsPanePosition.Center,
                 HOME_CONTENT_KEY,
-                HOME_CONTENT_ITEM,
-                WsSingularPaneController(this, HOME_CONTENT_ITEM),
+                WsUnitPaneViewBackend(this),
                 singularity = WsPaneSingularity.SINGULAR,
                 displayOrder = 0
             )

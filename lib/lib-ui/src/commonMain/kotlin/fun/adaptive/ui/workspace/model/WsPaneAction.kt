@@ -10,7 +10,7 @@ open class WsPaneAction<T>(
     val action : (WsPaneActionArguments<T>) -> Unit
 ) : AbstractWsPaneAction<T>(icon, tooltip){
 
-    override fun execute(workspace: MultiPaneWorkspace, pane: WsPane<*, *>) =
+    override fun execute(workspace: MultiPaneWorkspace, pane: WsPane<*>) =
         action(WsPaneActionArguments<T>(workspace, pane, data))
 
 }

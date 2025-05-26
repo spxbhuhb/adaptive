@@ -8,7 +8,7 @@ import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue.Companion.withSpec
+import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.avByMarker
 import `fun`.adaptive.value.local.AvValueSubscriber
@@ -44,13 +44,13 @@ class BasicAccountSummaryStore(
             is PrincipalSpec -> {
                 principalId = value.uuid
                 original = entryMap[principalId]
-                new = Entry(value.withSpec<PrincipalSpec>(), original?.account)
+                new = Entry(value.checkSpec<PrincipalSpec>(), original?.account)
             }
 
             is BasicAccountSpec -> {
                 principalId = value.refIdOrNull(AuthRefLabels.PRINCIPAL_REF) ?: return
                 original = entryMap[principalId]
-                new = Entry(original?.principal, value.withSpec<BasicAccountSpec>())
+                new = Entry(original?.principal, value.checkSpec<BasicAccountSpec>())
             }
 
             else -> return

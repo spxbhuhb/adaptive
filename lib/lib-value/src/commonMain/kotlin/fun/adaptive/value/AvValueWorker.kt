@@ -3,7 +3,7 @@ package `fun`.adaptive.value
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.model.ServiceSession
-import `fun`.adaptive.value.AvValue.Companion.withSpec
+import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.value.persistence.NoPersistence
@@ -152,25 +152,25 @@ open class AvValueWorker(
         store.subscriptionCount(valueId)
 
     inline fun <reified SPEC : Any> get(valueId: AvValueId): AvValue<SPEC> =
-        store.get(valueId).withSpec<SPEC>()
+        store.get(valueId).checkSpec<SPEC>()
 
     inline fun <reified SPEC : Any> getOrNull(valueId: AvValueId): AvValue<SPEC>? =
-        store.getOrNull(valueId)?.withSpec<SPEC>()
+        store.getOrNull(valueId)?.checkSpec<SPEC>()
 
     inline fun <reified SPEC : Any> ref(valueId: AvValueId, refLabel: AvRefLabel) =
-        store.ref(valueId, refLabel).withSpec<SPEC>()
+        store.ref(valueId, refLabel).checkSpec<SPEC>()
 
     inline fun <reified SPEC : Any> refOrNull(valueId: AvValueId, refMarker: AvMarker) =
-        store.refOrNull(valueId, refMarker)?.withSpec<SPEC>()
+        store.refOrNull(valueId, refMarker)?.checkSpec<SPEC>()
 
     inline fun <reified SPEC : Any> ref(value: AvValue<*>, refLabel: AvRefLabel) =
-        store.ref(value, refLabel).withSpec<SPEC>()
+        store.ref(value, refLabel).checkSpec<SPEC>()
 
     inline fun <reified SPEC : Any> refOrNull(value: AvValue<*>, refMarker: AvMarker) =
-        store.refOrNull(value, refMarker)?.withSpec<SPEC>()
+        store.refOrNull(value, refMarker)?.checkSpec<SPEC>()
 
     inline fun <reified SPEC : Any> refList(valueId: AvValueId, refListMarker: AvMarker): List<AvValue<SPEC>> =
-        store.refList(valueId, refListMarker).map { it.withSpec(SPEC::class) }
+        store.refList(valueId, refListMarker).map { it.checkSpec(SPEC::class) }
 
     fun queryByMarker(marker: AvMarker): List<AvValue<*>> =
         store.queryByMarker(marker)

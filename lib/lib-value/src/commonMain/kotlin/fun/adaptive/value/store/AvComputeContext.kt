@@ -3,7 +3,7 @@ package `fun`.adaptive.value.store
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.utility.p04
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.AvValue.Companion.withSpec
+import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.model.AvRefLabels
 import `fun`.adaptive.value.model.AvTreeDef
 import `fun`.adaptive.value.operation.AvoAdd
@@ -48,7 +48,7 @@ class AvComputeContext(
      * @throws IllegalStateException if the `spec` of the retrieved value is not of type [T]
      */
     inline fun <reified T : Any> get(valueId: AvValueId): AvValue<T> =
-        getOrNull(valueId)?.withSpec<T>()
+        getOrNull(valueId)?.checkSpec<T>()
             ?: throw NoSuchElementException("cannot find item for id $valueId")
 
     /**
@@ -76,7 +76,7 @@ class AvComputeContext(
      * @throws IllegalStateException if the `spec` of the referred value is not of type [T]
      */
     inline fun <reified T : Any> ref(valueId: AvValueId, refLabel: AvRefLabel): AvValue<T> =
-        refOrNull(valueId, refLabel)?.withSpec<T>()
+        refOrNull(valueId, refLabel)?.checkSpec<T>()
             ?: throw NoSuchElementException("cannot find ref item for marker $refLabel in item $valueId")
 
     /**
@@ -103,7 +103,7 @@ class AvComputeContext(
      */
     inline fun <reified T : Any> ref(value: AvValue<*>, refLabel: AvRefLabel): AvValue<T> =
         checkNotNull(refOrNull(value, refLabel)) { "cannot find ref item for marker $refLabel in item ${value.uuid}" }
-            .withSpec<T>()
+            .checkSpec<T>()
 
     /**
      * Gets a referred value from the store based on the id of the
@@ -252,7 +252,7 @@ class AvComputeContext(
 
         // collect data from the store
         val parent = store.unsafeGet(parentId)
-        val original: AvValue<AvRefListSpec>? = refOrNull(parent, treeDef.childListRefLabel)?.withSpec()
+        val original: AvValue<AvRefListSpec>? = refOrNull(parent, treeDef.childListRefLabel)?.checkSpec()
 
         // update child-to-parent reference
         val childRefs = child.mutableRefs()
@@ -301,7 +301,7 @@ class AvComputeContext(
 
         val nodeId = node.uuid
 
-        val rootList = queryByMarker(treeDef.rootListMarker).firstOrNull()?.withSpec<AvRefListSpec>()
+        val rootList = queryByMarker(treeDef.rootListMarker).firstOrNull()?.checkSpec<AvRefListSpec>()
 
         if (rootList != null) {
             if (nodeId in rootList.spec.refs) return
@@ -336,7 +336,7 @@ class AvComputeContext(
             return
         }
         
-        val original: AvValue<AvRefListSpec>? = refOrNull(parentId, treeDef.childListRefLabel)?.withSpec()
+        val original: AvValue<AvRefListSpec>? = refOrNull(parentId, treeDef.childListRefLabel)?.checkSpec()
 
         if (original != null) {
             this += original.copy(spec = AvRefListSpec(original.spec.refs - childId))
@@ -349,7 +349,7 @@ class AvComputeContext(
     ) {
         if (treeDef.rootListMarker == null) return
 
-        val rootList = queryByMarker(treeDef.rootListMarker).firstOrNull()?.withSpec<AvRefListSpec>()
+        val rootList = queryByMarker(treeDef.rootListMarker).firstOrNull()?.checkSpec<AvRefListSpec>()
 
         if (rootList != null) {
             this += rootList.copy(spec = AvRefListSpec(rootList.spec.refs - nodeId))

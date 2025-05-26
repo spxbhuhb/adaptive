@@ -191,10 +191,10 @@ class AvValue<T>(
             return this
         }
 
-        inline fun <reified T : Any> AvValue<*>.withSpec(): AvValue<T> =
-            withSpec(T::class)
+        inline fun <reified T : Any> AvValue<*>.checkSpec(): AvValue<T> =
+            checkSpec(T::class)
 
-        fun <T : Any> AvValue<*>.withSpec(kClass: KClass<T>): AvValue<T> {
+        fun <T : Any> AvValue<*>.checkSpec(kClass: KClass<T>): AvValue<T> {
             check(kClass.isInstance(spec)) { "Spec is not of type $kClass for item $this" }
             @Suppress("UNCHECKED_CAST")
             return this as AvValue<T>

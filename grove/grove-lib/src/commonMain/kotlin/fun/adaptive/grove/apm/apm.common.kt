@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.grove.generated.resources.folder
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
@@ -24,8 +24,7 @@ fun MultiPaneWorkspace.groveApmCommon() {
         Graphics.folder,
         WsPanePosition.LeftTop,
         ApmWsContext.APM_PROJECT_TOOL_KEY,
-        data = Unit,
-        controller = WsUnitPaneController(this)
+        viewBackend = WsUnitPaneViewBackend(this)
     )
 
 }

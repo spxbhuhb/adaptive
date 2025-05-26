@@ -6,6 +6,6 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
-fun wsEmptyCenterPane(pane: WsPane<*, *>): AdaptiveFragment {
+fun wsEmptyCenterPane(pane: WsPane<*>): AdaptiveFragment {
     return fragment()
 }

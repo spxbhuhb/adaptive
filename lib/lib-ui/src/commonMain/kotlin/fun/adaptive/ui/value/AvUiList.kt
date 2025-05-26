@@ -9,7 +9,7 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.*
-import `fun`.adaptive.value.AvValue.Companion.withSpec
+import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.operation.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -94,7 +94,7 @@ class AvUiList(
     fun process(value: AvValue<*>) {
         when (value.uuid) {
             valueId -> processValue(value)
-            listId -> processList(value.withSpec())
+            listId -> processList(value.checkSpec())
             else -> valueMap[value.uuid] = value
         }
     }

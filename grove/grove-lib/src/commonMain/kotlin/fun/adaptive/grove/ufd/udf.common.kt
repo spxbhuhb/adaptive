@@ -2,12 +2,11 @@ package `fun`.adaptive.grove.ufd
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.grove.generated.resources.*
-import `fun`.adaptive.grove.ufd.logic.UfdWsContentController
-import `fun`.adaptive.grove.ufd.model.UfdWsContentPaneData
+import `fun`.adaptive.grove.ufd.logic.UfdWsContentViewBackend
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
@@ -26,8 +25,7 @@ fun MultiPaneWorkspace.groveUfdCommon() {
         Graphics.palette,
         WsPanePosition.LeftTop,
         UfdWsContext.PALETTE_TOOL_KEY,
-        data = Unit,
-        controller = WsUnitPaneController(this)
+        viewBackend = WsUnitPaneViewBackend(this)
     )
 
     toolPanes += WsPane(
@@ -37,8 +35,7 @@ fun MultiPaneWorkspace.groveUfdCommon() {
         Graphics.cards,
         WsPanePosition.LeftMiddle,
         UfdWsContext.COMPONENTS_TOOL_KEY,
-        data = Unit,
-        controller = WsUnitPaneController(this)
+        viewBackend = WsUnitPaneViewBackend(this)
     )
 
     toolPanes += WsPane(
@@ -48,8 +45,7 @@ fun MultiPaneWorkspace.groveUfdCommon() {
         Graphics.stroke_partial,
         WsPanePosition.RightTop,
         UfdWsContext.INSTRUCTIONS_TOOL_KEY,
-        data = Unit,
-        controller = WsUnitPaneController(this)
+        viewBackend = WsUnitPaneViewBackend(this)
     )
 
     toolPanes += WsPane(
@@ -59,8 +55,7 @@ fun MultiPaneWorkspace.groveUfdCommon() {
         Graphics.data_table,
         WsPanePosition.RightTop,
         UfdWsContext.STATE_TOOL_KEY,
-        data = Unit,
-        controller = WsUnitPaneController(this)
+        viewBackend = WsUnitPaneViewBackend(this)
     )
 
     addContentPaneBuilder(UfdWsContext.WSIT_UFD_FRAGMENT) { item ->
@@ -68,12 +63,11 @@ fun MultiPaneWorkspace.groveUfdCommon() {
         WsPane(
             UUID(),
             workspace = this,
-            item.name,
+            "item.name",
             Graphics.cards,
             WsPanePosition.Center,
             UfdWsContext.CONTENT_PANE_KEY,
-            data = UfdWsContentPaneData(),
-            controller = UfdWsContentController(this)
+            viewBackend = UfdWsContentViewBackend(this)
         )
 
     }

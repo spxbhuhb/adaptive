@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.workspace.*
 import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneController
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
 import `fun`.adaptive.utility.UUID
@@ -78,8 +78,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 WsPanePosition.LeftTop,
                 "cookbook:support:lefttop",
                 tooltip = "⌘ P",
-                data = Unit,
-                controller = WsUnitPaneController(workspace)
+                viewBackend = WsUnitPaneViewBackend(workspace)
             ),
             WsPane(
                 UUID(),
@@ -88,8 +87,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 Graphics.account_box,
                 WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle1",
-                data = Unit,
-                controller = WsUnitPaneController(workspace)
+                viewBackend = WsUnitPaneViewBackend(workspace)
             ),
             WsPane(
                 UUID(),
@@ -98,8 +96,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 Graphics.settings,
                 WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle2",
-                data = Unit,
-                controller = WsUnitPaneController(workspace)
+                viewBackend = WsUnitPaneViewBackend(workspace)
             ),
             WsPane(
                 UUID(),
@@ -108,8 +105,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 Graphics.more_vert,
                 WsPanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle3",
-                data = Unit,
-                controller = WsUnitPaneController(workspace)
+                viewBackend = WsUnitPaneViewBackend(workspace)
             ),
             WsPane(
                 UUID(),
@@ -119,8 +115,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 WsPanePosition.LeftBottom,
                 "cookbook:support:bottomleft",
                 tooltip = "⌘ P",
-                data = Unit,
-                controller = WsUnitPaneController(workspace)
+                viewBackend = WsUnitPaneViewBackend(workspace)
             ),
             WsPane(
                 UUID(),
@@ -130,8 +125,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 WsPanePosition.RightTop,
                 "cookbook:support:righttop",
                 tooltip = "⌘ P",
-                data = Unit,
-                controller = WsUnitPaneController(workspace)
+                viewBackend = WsUnitPaneViewBackend(workspace)
             ),
             WsPane(
                 UUID(),
@@ -141,8 +135,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 WsPanePosition.RightMiddle,
                 "cookbook:support:rightmiddle",
                 tooltip = "⌘ P",
-                data = Unit,
-                controller = WsUnitPaneController(workspace)
+                viewBackend = WsUnitPaneViewBackend(workspace)
             ),
             WsPane(
                 UUID(),
@@ -152,8 +145,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 WsPanePosition.RightBottom,
                 "cookbook:support:bottomright",
                 tooltip = "⌘ P",
-                data = Unit,
-                controller = WsUnitPaneController(workspace)
+                viewBackend = WsUnitPaneViewBackend(workspace)
             ),
             WsPane(
                 UUID(),
@@ -162,8 +154,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 Graphics.menu,
                 WsPanePosition.Center,
                 "cookbook:support:center",
-                data = Unit,
-                controller = WsUnitPaneController(workspace)
+                viewBackend = WsUnitPaneViewBackend(workspace)
             ),
         )
     )

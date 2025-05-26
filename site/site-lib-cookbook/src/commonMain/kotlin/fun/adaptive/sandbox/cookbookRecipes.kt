@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun cookbookRecipes(pane: WsPane<*, *>): AdaptiveFragment {
+fun cookbookRecipes(pane: WsPane<*>): AdaptiveFragment {
     val context = fragment().wsContext<CbWsContext>()
 
     val treeViewBackend = TreeViewBackend(
@@ -35,7 +35,7 @@ fun cookbookRecipes(pane: WsPane<*, *>): AdaptiveFragment {
 }
 
 private fun showRecipe(context: CbWsContext, item: TreeItem<CbWsRecipeItem>, modifiers: Set<EventModifier>) {
-    context.workspace.addContent(item.data, modifiers)
+    context.workspace.addContent(item.data.type, item.data, modifiers)
 }
 
 val recipes =

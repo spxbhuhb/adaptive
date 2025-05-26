@@ -36,12 +36,12 @@ import `fun`.adaptive.ui.workspace.WorkspaceTheme
 import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
-fun wsAppAccountManager(pane: WsPane<*, AccountManagerController>): AdaptiveFragment {
+fun wsAppAccountManager(pane: WsPane<AccountManagerViewBackend>): AdaptiveFragment {
 
     val filterBackend = valueFrom { adatFormBackend(AccountFilter()) }
     val filter = filterBackend.inputValue
 
-    val items = valueFrom { pane.controller.accounts }
+    val items = valueFrom { pane.viewBackend.accounts }
 
     column {
         WorkspaceTheme.DEFAULT.contentPaneContainer
@@ -58,13 +58,13 @@ fun wsAppAccountManager(pane: WsPane<*, AccountManagerController>): AdaptiveFrag
                     button(Strings.addAccount)
                     primaryPopup { hide ->
                         popupAlign.absoluteCenter(modal = true, 150.dp)
-                        accountEditorAdmin(hide = hide) { pane.controller.save(it) }
+                        accountEditorAdmin(hide = hide) { pane.viewBackend.save(it) }
                     }
                 }
             }
         }
 
-        localContext(pane.controller) {
+        localContext(pane.viewBackend) {
             items(items.filter { filter.matches(it) }, filter.isEmpty())
         }
     }
@@ -145,7 +145,7 @@ private fun item(item: BasicAccountSummary) {
                         item.toAccountEditorData(),
                         hide = hide
                     ) {
-                        fragment().firstContext<AccountManagerController>().save(it)
+                        fragment().firstContext<AccountManagerViewBackend>().save(it)
                     }
                 }
             }

@@ -3,7 +3,7 @@ package `fun`.adaptive.value.store
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.AvRefListSpec
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue.Companion.withSpec
+import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.model.AvTreeDef
 import `fun`.adaptive.value.standaloneTest
 import kotlin.test.Test
@@ -29,7 +29,7 @@ class TreeTest {
 
         val rootList = worker.queryByMarker("rootList")
         assertEquals(1, rootList.size)
-        assertEquals(rootNode.uuid, rootList.first().withSpec<AvRefListSpec>().spec.refs.first())
+        assertEquals(rootNode.uuid, rootList.first().checkSpec<AvRefListSpec>().spec.refs.first())
     }
 
     @Test
@@ -136,8 +136,8 @@ class TreeTest {
         // Verify root list contains only the second root
         val rootList = worker.queryByMarker("rootList")
         assertEquals(1, rootList.size)
-        assertEquals(1, rootList.first().withSpec<AvRefListSpec>().spec.refs.size)
-        assertEquals(rootNode2.uuid, rootList.first().withSpec<AvRefListSpec>().spec.refs.first())
+        assertEquals(1, rootList.first().checkSpec<AvRefListSpec>().spec.refs.size)
+        assertEquals(rootNode2.uuid, rootList.first().checkSpec<AvRefListSpec>().spec.refs.first())
     }
 
     @Test

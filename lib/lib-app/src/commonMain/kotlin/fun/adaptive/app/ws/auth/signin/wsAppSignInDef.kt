@@ -1,15 +1,15 @@
 package `fun`.adaptive.app.ws.auth.signin
 
-import `fun`.adaptive.lib_app.generated.resources.signInTitle
 import `fun`.adaptive.app.ws.AppMainWsModule
 import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.auth.app.AuthAppContext.Companion.authContext
+import `fun`.adaptive.lib_app.generated.resources.signInTitle
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.ui.generated.resources.account_circle
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsSingularPaneController
+import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
 import `fun`.adaptive.ui.workspace.model.SingularWsItem
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.model.WsPanePosition
@@ -31,8 +31,7 @@ fun MultiPaneWorkspace.wsAppSignInDef(
             Graphics.account_circle,
             WsPanePosition.Center,
             module.SIGN_IN_KEY,
-            item,
-            WsSingularPaneController(this, item),
+            WsUnitPaneViewBackend(this),
             singularity = WsPaneSingularity.FULLSCREEN
         )
     }

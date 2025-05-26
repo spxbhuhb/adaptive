@@ -14,8 +14,9 @@ import `fun`.adaptive.utility.firstInstance
 val AdaptiveFragment.wsApplication
     get() = this.firstContext<ClientApplication<MultiPaneWorkspace>>()
 
+@Deprecated("Use wsAddContent(NamedItem, Set<EventModifier>) instead")
 fun AdaptiveFragment.wsAddContent(item: NamedItem, modifiers: Set<EventModifier> = emptySet()) {
-    wsApplication.workspace.addContent(item, modifiers)
+    wsApplication.workspace.addContent(item.type, item, modifiers)
 }
 
 val AbstractApplication<*>.wsAppMain

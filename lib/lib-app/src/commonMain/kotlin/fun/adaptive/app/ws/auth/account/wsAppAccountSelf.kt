@@ -7,11 +7,11 @@ import `fun`.adaptive.foundation.producer.fetch
 import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
-fun wsAppAccountSelf(pane : WsPane<*, AccountSelfController>) : AdaptiveFragment {
+fun wsAppAccountSelf(pane : WsPane<AccountSelfViewBackend>) : AdaptiveFragment {
 
-    val accountEditorData = fetch { pane.controller.getAccountEditorData() } ?: AccountEditorData()
+    val accountEditorData = fetch { pane.viewBackend.getAccountEditorData() } ?: AccountEditorData()
 
-    accountEditorSelf(accountEditorData) { pane.controller.save(it) }
+    accountEditorSelf(accountEditorData) { pane.viewBackend.save(it) }
 
     return fragment()
 }

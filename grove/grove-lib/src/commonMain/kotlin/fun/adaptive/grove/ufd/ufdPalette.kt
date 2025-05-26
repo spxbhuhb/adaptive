@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
 
 @Adaptive
-fun ufdPalette(pane: WsPane<*, *>): AdaptiveFragment {
+fun ufdPalette(pane: WsPane<*>): AdaptiveFragment {
 
     val context = fragment().wsContext<UfdWsContext>()
     val items = valueFrom { context.palette }
