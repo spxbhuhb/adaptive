@@ -8,21 +8,11 @@ import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import `fun`.adaptive.value.AvValue
 
 class DocBrowserToolViewBackend(
-    workspace: MultiPaneWorkspace,
-    val config: DocBrowserConfig
+    workspace: MultiPaneWorkspace
 ) : AbstractDocToolViewBackend<DocBrowserToolViewBackend>(workspace) {
 
     override fun selectedFun(backend: AvUiTreeViewBackend<String>, item: TreeItem<AvValue<String>>, modifiers: Set<EventModifier>) {
-        val value = item.data
-
-        val browserItem = DocBrowserWsItem(
-            value.nameLike,
-            config.itemType,
-            config,
-            value
-        )
-
-        workspace.addContent(avDomain.node, browserItem, modifiers)
+        workspace.addContent(avDomain.node, item.data, modifiers)
     }
 
 }

@@ -1,6 +1,7 @@
 package `fun`.adaptive.grove.doc.ws.browser
 
 import `fun`.adaptive.grove.doc.app.GroveDocWsModule
+import `fun`.adaptive.grove.doc.model.avDomain
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.workspace.model.WsPane
@@ -12,7 +13,7 @@ import `fun`.adaptive.value.util.checkValue
 fun wsDocBrowserContentDef(module: GroveDocWsModule<*>) {
     val workspace = module.workspace
 
-    workspace.addContentPaneBuilder(module.WSIT_DOC_ITEM) { item ->
+    workspace.addContentPaneBuilder(avDomain.node) { item ->
         checkValue(item)
 
         WsPane(

@@ -17,15 +17,7 @@ import `fun`.adaptive.utility.UUID
 
 fun MultiPaneWorkspace.wsDocBrowserToolDef(module: GroveDocWsModule<*>) {
 
-    val config = DocBrowserConfig(
-        Strings.documentation,
-        Graphics.book_3,
-        module.WSIT_DOC_ITEM
-    )
-
-    val controller = DocBrowserToolViewBackend(this, config)
-
-    config.controller = controller
+    val controller = DocBrowserToolViewBackend(this)
 
     + WsPane(
         UUID(),
