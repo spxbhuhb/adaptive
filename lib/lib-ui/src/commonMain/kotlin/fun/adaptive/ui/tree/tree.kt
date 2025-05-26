@@ -4,13 +4,8 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.query.first
 import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.graphics.svg.api.svg
-import `fun`.adaptive.log.devInfo
-import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.DPixel
@@ -39,11 +34,6 @@ fun <IT, CT> tree(
         for (item in observed.items) {
             node(observed, item, 0.dp, _KT_74337_contextMenuBuilder)
         }
-    }
-
-    afterPatchBatch {
-        devInfo { it.instructions }
-        devInfo { it.first<AbstractAuiFragment<*>>().renderData.rawFrame }
     }
 
     return fragment()
@@ -123,7 +113,7 @@ private fun <IT, CT> label(
         }
 
         if (observed.icon != null) {
-            icon(observed.icon!!, theme.icon) .. foreground
+            icon(observed.icon !!, theme.icon) .. foreground
         }
 
         text(observed.title) .. theme.label .. foreground

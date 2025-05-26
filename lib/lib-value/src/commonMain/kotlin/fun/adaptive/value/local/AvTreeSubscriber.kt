@@ -2,21 +2,23 @@ package `fun`.adaptive.value.local
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.unsupported
+import `fun`.adaptive.general.SelfObservable
+import `fun`.adaptive.utility.debug
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.model.AvRefLabels
 import `fun`.adaptive.value.model.AvTreeDef
 import kotlin.reflect.KClass
+import kotlin.time.measureTime
 
 /**
  * A subscriber that builds a tree from the received values.
  *
  * Observable, the observed value is the list of root nodes (each node is type of [TREE_ITEM]).
  *
- * Observers are notified whenever:
+ * Observers are notified when the structure of the tree changes.
  *
- * - the structure of the tree changes,
- * - a node changes.
+ * If [TREE_ITEM] is a [SelfObservable] its listeners are notified if the item changes.
  *
  * @param  SPEC  The [spec](def://) values of this tree use.
  * @param  TREE_ITEM  The output tree item type. Usually not a value, a UI tree item, for example.
@@ -102,9 +104,17 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
 
     override fun onCommit() {
         refresh()
+
+        if (topRefresh) {
+            notifyListeners()
+        }
+
+        for (child in childRefresh) {
+            child.treeItem.let { if (it is SelfObservable<*>) it.notifyListeners() }
+        }
+        
         childRefresh.clear()
         topRefresh = false
-        notifyListeners()
     }
 
     override fun process(value: AvValue<*>) {
