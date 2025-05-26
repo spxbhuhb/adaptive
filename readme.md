@@ -8,5 +8,4 @@ At this point, and for the foreseeable future, Adaptive is not a commercial or c
 framework. I'm sharing it publicly in case others find the ideas or approach useful, but there is
 no roadmap, team or formal support behind it.
 
-Feel free to explore, get inspired or borrow concepts—but keep in mind: this is an airplane 
-I built for my own travels.
+Feel free to explore, get inspired or borrow concepts—but keep in mind that what's above.
