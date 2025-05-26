@@ -9,8 +9,8 @@ import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 
 class MarkdownInline(
     val text: String,
-    val bold: Boolean,
-    val italic: Boolean,
+    val bold: Boolean = false,
+    val italic: Boolean = false,
     val code: Boolean = false,
     val imageLink: Boolean = false,
     val inlineLink: Boolean = false,

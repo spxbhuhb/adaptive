@@ -1,14 +1,6 @@
 package `fun`.adaptive.markdown.visitor
 
-import `fun`.adaptive.markdown.model.MarkdownCodeFence
-import `fun`.adaptive.markdown.model.MarkdownElement
-import `fun`.adaptive.markdown.model.MarkdownHeader
-import `fun`.adaptive.markdown.model.MarkdownHorizontalRule
-import `fun`.adaptive.markdown.model.MarkdownInline
-import `fun`.adaptive.markdown.model.MarkdownList
-import `fun`.adaptive.markdown.model.MarkdownListItem
-import `fun`.adaptive.markdown.model.MarkdownParagraph
-import `fun`.adaptive.markdown.model.MarkdownQuote
+import `fun`.adaptive.markdown.model.*
 
 abstract class MarkdownVisitor<out R, in D> {
 
@@ -34,6 +26,9 @@ abstract class MarkdownVisitor<out R, in D> {
 
     open fun visitQuote(quote: MarkdownQuote, context: D): R =
         visitElement(quote, context)
+
+    open fun visitElementGroup(group: MarkdownElementGroup, context: D): R =
+        visitElement(group, context)
 
     open fun visitHorizontalRule(horizontalRule: MarkdownHorizontalRule, context: D): R =
         visitElement(horizontalRule, context)

@@ -61,15 +61,6 @@ class GroveDocCompilation(
             "guide" -> outPathTrainingGuide.append(contentWithHeader)
             "qa" -> outPathTrainingQa.append(contentWithHeader)
         }
-
-        // Save as value in the store
-        valueWorker.queueAdd(
-            AvValue(
-                spec = content,
-                name = path.name,
-                markersOrNull = setOf("markdown", type)
-            )
-        )
     }
 
 }

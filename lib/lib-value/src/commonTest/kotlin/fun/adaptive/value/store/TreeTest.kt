@@ -4,7 +4,7 @@ import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.AvRefListSpec
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.withSpec
-import `fun`.adaptive.value.model.AvTreeSetup
+import `fun`.adaptive.value.model.AvTreeDef
 import `fun`.adaptive.value.standaloneTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -15,12 +15,12 @@ class TreeTest {
     @Test
     fun testAddRootNode() = standaloneTest { worker ->
 
-        val setup = AvTreeSetup("node", "childList", "parentRef", "childListRef", "rootList")
+        val treeDef = AvTreeDef("node", "childList", "parentRef", "childListRef", "rootList")
         val rootNode = AvValue(spec = "single top")
 
         worker.execute {
             addValue(rootNode)
-            linkTreeNode(null, rootNode.uuid, setup)
+            linkTreeNode(treeDef, null, rootNode.uuid)
         }
 
         val readback = worker.get<String>(rootNode.uuid)
@@ -34,7 +34,7 @@ class TreeTest {
 
     @Test
     fun testAddTreeNode() = standaloneTest { worker ->
-        val setup = AvTreeSetup("node", "childList", "parentRef", "childListRef", "rootList")
+        val treeDef = AvTreeDef("node", "childList", "parentRef", "childListRef", "rootList")
 
         // Create parent node
         val parentNode = AvValue(spec = "parent")
@@ -48,10 +48,10 @@ class TreeTest {
             addValue(childNode)
 
             // Add parent as root node
-            linkTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(treeDef, null, parentNode.uuid)
 
             // Add child to parent
-            linkTreeNode(parentNode.uuid, childNode.uuid, setup)
+            linkTreeNode(treeDef, parentNode.uuid, childNode.uuid)
         }
 
         // Verify parent node
@@ -65,7 +65,7 @@ class TreeTest {
         assertEquals(childNode.spec, childReadback.spec)
 
         // Verify parent has child list reference
-        val childListRef = parentReadback.refIdOrNull(setup.childListRefLabel)
+        val childListRef = parentReadback.refIdOrNull(treeDef.childListRefLabel)
         assertTrue(childListRef != null)
 
         // Verify child list contains child
@@ -76,7 +76,7 @@ class TreeTest {
 
     @Test
     fun testRemoveTreeNode() = standaloneTest { worker ->
-        val setup = AvTreeSetup("node", "childList", "parentRef", "childListRef", "rootList")
+        val treeDef = AvTreeDef("node", "childList", "parentRef", "childListRef", "rootList")
 
         // Create parent node
         val parentNode = AvValue(spec = "parent")
@@ -92,18 +92,18 @@ class TreeTest {
             addValue(childNode2)
 
             // Add parent as root node
-            linkTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(treeDef, null, parentNode.uuid)
 
             // Add children to parent
-            linkTreeNode(parentNode.uuid, childNode1.uuid, setup)
-            linkTreeNode(parentNode.uuid, childNode2.uuid, setup)
+            linkTreeNode(treeDef, parentNode.uuid, childNode1.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode2.uuid)
 
             // Remove first child
-            removeTreeNode(parentNode.uuid, childNode1.uuid, setup)
+            removeTreeNode(treeDef, parentNode.uuid, childNode1.uuid)
         }
 
         // Get child list reference
-        val childListRef = worker.get<String>(parentNode.uuid).refIdOrNull(setup.childListRefLabel)
+        val childListRef = worker.get<String>(parentNode.uuid).refIdOrNull(treeDef.childListRefLabel)
         assertTrue(childListRef != null)
 
         // Verify child list contains only the second child
@@ -114,7 +114,7 @@ class TreeTest {
 
     @Test
     fun testRemoveRootTreeNode() = standaloneTest { worker ->
-        val setup = AvTreeSetup("node", "childList", "parentRef", "childListRef", "rootList")
+        val treeDef = AvTreeDef("node", "childList", "parentRef", "childListRef", "rootList")
 
         // Create root nodes
         val rootNode1 = AvValue(spec = "root1")
@@ -126,11 +126,11 @@ class TreeTest {
             addValue(rootNode2)
 
             // Add both as root nodes
-            linkTreeNode(null, rootNode1.uuid, setup)
-            linkTreeNode(null, rootNode2.uuid, setup)
+            linkTreeNode(treeDef, null, rootNode1.uuid)
+            linkTreeNode(treeDef, null, rootNode2.uuid)
 
             // Remove first root node
-            removeTreeNode(null, rootNode1.uuid, setup)
+            removeTreeNode(treeDef, null, rootNode1.uuid)
         }
 
         // Verify root list contains only the second root
@@ -142,7 +142,7 @@ class TreeTest {
 
     @Test
     fun testMoveTreeNodeUp() = standaloneTest { worker ->
-        val setup = AvTreeSetup("node", "childList", "parentRef", "childListRef", "rootList")
+        val treeDef = AvTreeDef("node", "childList", "parentRef", "childListRef", "rootList")
 
         // Create parent node
         val parentNode = AvValue(spec = "parent")
@@ -160,19 +160,19 @@ class TreeTest {
             addValue(childNode3)
 
             // Add parent as root node
-            linkTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(treeDef, null, parentNode.uuid)
 
             // Add children to parent in order
-            linkTreeNode(parentNode.uuid, childNode1.uuid, setup)
-            linkTreeNode(parentNode.uuid, childNode2.uuid, setup)
-            linkTreeNode(parentNode.uuid, childNode3.uuid, setup)
+            linkTreeNode(treeDef, parentNode.uuid, childNode1.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode2.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode3.uuid)
 
             // Move the second child up
-            moveTreeNodeUp(childNode2.uuid, setup)
+            moveTreeNodeUp(treeDef, childNode2.uuid)
         }
 
         // Get child list reference
-        val childListRef = worker.get<String>(parentNode.uuid).refIdOrNull(setup.childListRefLabel)
+        val childListRef = worker.get<String>(parentNode.uuid).refIdOrNull(treeDef.childListRefLabel)
         assertTrue(childListRef != null)
 
         // Verify that the child list has the correct order after moving up
@@ -185,7 +185,7 @@ class TreeTest {
 
     @Test
     fun testMoveTreeNodeDown() = standaloneTest { worker ->
-        val setup = AvTreeSetup("node", "childList", "parentRef", "childListRef", "rootList")
+        val treeDef = AvTreeDef("node", "childList", "parentRef", "childListRef", "rootList")
 
         // Create parent node
         val parentNode = AvValue(spec = "parent")
@@ -203,19 +203,19 @@ class TreeTest {
             addValue(childNode3)
 
             // Add parent as root node
-            linkTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(treeDef, null, parentNode.uuid)
 
             // Add children to parent in order
-            linkTreeNode(parentNode.uuid, childNode1.uuid, setup)
-            linkTreeNode(parentNode.uuid, childNode2.uuid, setup)
-            linkTreeNode(parentNode.uuid, childNode3.uuid, setup)
+            linkTreeNode(treeDef, parentNode.uuid, childNode1.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode2.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode3.uuid)
 
             // Move the second child down
-            moveTreeNodeDown(childNode2.uuid, setup)
+            moveTreeNodeDown(treeDef, childNode2.uuid)
         }
 
         // Get child list reference
-        val childListRef = worker.get<String>(parentNode.uuid).refIdOrNull(setup.childListRefLabel)
+        val childListRef = worker.get<String>(parentNode.uuid).refIdOrNull(treeDef.childListRefLabel)
         assertTrue(childListRef != null)
 
         // Verify that the child list has the correct order after moving down
@@ -228,7 +228,7 @@ class TreeTest {
 
     @Test
     fun testGetTreeSiblingIds() = standaloneTest { worker ->
-        val setup = AvTreeSetup("node", "childList", "parentRef", "childListRef", "rootList")
+        val treeDef = AvTreeDef("node", "childList", "parentRef", "childListRef", "rootList")
 
         // Create parent node
         val parentNode = AvValue(spec = "parent")
@@ -246,16 +246,16 @@ class TreeTest {
             addValue(childNode3)
 
             // Add parent as root node
-            linkTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(treeDef, null, parentNode.uuid)
 
             // Add children to parent in order
-            linkTreeNode(parentNode.uuid, childNode1.uuid, setup)
-            linkTreeNode(parentNode.uuid, childNode2.uuid, setup)
-            linkTreeNode(parentNode.uuid, childNode3.uuid, setup)
+            linkTreeNode(treeDef, parentNode.uuid, childNode1.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode2.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode3.uuid)
         }
 
         // Get child list reference
-        val childListRef = worker.get<String>(parentNode.uuid).refIdOrNull(setup.childListRefLabel)
+        val childListRef = worker.get<String>(parentNode.uuid).refIdOrNull(treeDef.childListRefLabel)
         assertTrue(childListRef != null)
 
         // Verify child list contains all three children
@@ -266,7 +266,7 @@ class TreeTest {
         assertEquals(childNode3.uuid, childList.spec.refs[2])
 
         // Get siblings of the second child
-        val siblings = worker.execute { getTreeSiblingIds(childNode2.uuid, setup) }
+        val siblings = worker.execute { getTreeSiblingIds(treeDef, childNode2.uuid) }
 
         // Verify siblings list contains all three children
         assertEquals(3, siblings.size)
@@ -277,7 +277,7 @@ class TreeTest {
 
     @Test
     fun testGetTreeChildIds() = standaloneTest { worker ->
-        val setup = AvTreeSetup("node", "childList", "parentRef", "childListRef", "rootList")
+        val treeDef = AvTreeDef("node", "childList", "parentRef", "childListRef", "rootList")
 
         // Create parent node
         val parentNode = AvValue(spec = "parent")
@@ -295,16 +295,16 @@ class TreeTest {
             addValue(childNode3)
 
             // Add parent as root node
-            linkTreeNode(null, parentNode.uuid, setup)
+            linkTreeNode(treeDef, null, parentNode.uuid)
 
             // Add children to parent
-            linkTreeNode(parentNode.uuid, childNode1.uuid, setup)
-            linkTreeNode(parentNode.uuid, childNode2.uuid, setup)
-            linkTreeNode(parentNode.uuid, childNode3.uuid, setup)
+            linkTreeNode(treeDef, parentNode.uuid, childNode1.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode2.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode3.uuid)
         }
 
         // Test getting children of parent node
-        val children = worker.execute { getTreeChildIds(parentNode.uuid, setup) }
+        val children = worker.execute { getTreeChildIds(treeDef, parentNode.uuid) }
 
         // Verify children list contains all three children in the correct order
         assertEquals(3, children.size)
@@ -313,11 +313,11 @@ class TreeTest {
         assertEquals(childNode3.uuid, children[2])
 
         // Test getting children of a node without children
-        val emptyChildren = worker.execute { getTreeChildIds(childNode1.uuid, setup) }
+        val emptyChildren = worker.execute { getTreeChildIds(treeDef, childNode1.uuid) }
         assertTrue(emptyChildren.isEmpty())
 
         // Test getting children of non-existent node
-        val nonExistentChildren = worker.execute { getTreeChildIds(uuid4(), setup) }
+        val nonExistentChildren = worker.execute { getTreeChildIds(treeDef, uuid4()) }
         assertTrue(nonExistentChildren.isEmpty())
     }
 }

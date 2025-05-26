@@ -5,7 +5,7 @@ import `fun`.adaptive.utility.p04
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.model.AvRefLabels
-import `fun`.adaptive.value.model.AvTreeSetup
+import `fun`.adaptive.value.model.AvTreeDef
 import `fun`.adaptive.value.operation.AvoAdd
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
 
@@ -166,41 +166,62 @@ class AvComputeContext(
      * Adds a new value to the store and adds it as a child node in the tree structure.
      * The value is created using the provided build function.
      *
-     * When [parentId] is null and a root list marker is set in the tree setup,
+     * When [parentId] is null and a root list marker is set in the tree definition,
      * the value is added as a root node to the root node list.
      *
      * @param parentId The ID of the parent value, or null for root nodes
-     * @param treeSetup The tree setup configuration containing reference labels and markers
+     * @param treeDef The tree definition containing reference labels and markers
      * @param buildFun A function that creates the value to add
      * @return The newly created and added value
      */
     fun <T> addTreeNode(
-        parentId: AvValueId?,
-        treeSetup: AvTreeSetup,
+        treeDef: AvTreeDef,
+        parentId: AvValueId? = null,
         buildFun: () -> AvValue<T>
     ): AvValue<T> {
         val value = buildFun()
         this += value
-        linkTreeNode(parentId, value.uuid, treeSetup)
+        linkTreeNode(treeDef, parentId, value)
         return value
     }
 
     /**
      * Adds an existing value as a child node in the tree structure.
      *
-     * When [parentId] is null and a root list marker is set in the tree setup,
+     * When [parentId] is null and a root list marker is set in the tree definition,
      * the value is added as a root node to the root node list.
      *
      * @param parentId The ID of the parent value, or null for root nodes
      * @param child The value to add as a child node
-     * @param treeSetup The tree setup configuration containing reference labels and markers
+     * @param treeDef The tree definition containing reference labels and markers
      */
     fun addTreeNode(
-        parentId: AvValueId?,
-        child: AvValue<*>,
-        treeSetup: AvTreeSetup
+        treeDef: AvTreeDef,
+        parentId: AvValueId? = null,
+        child: AvValue<*>
     ) {
-        addTreeNode(parentId, child, treeSetup)
+        addTreeNode(treeDef, parentId, child)
+    }
+
+    /**
+     * Links a child value to a parent value in the tree structure.
+     *
+     * If the list of children already exists, the child ID is added to it.
+     * If not, creates a new list of children value and updates parent references.
+     *
+     * When [parentId] is null and a root list marker is set in the tree definition,
+     * the value is added as a root node to the root node list.
+     *
+     * @param parentId The ID of the parent value, or null for root nodes
+     * @param childId The ID of the value to add
+     * @param treeDef The tree definition containing reference labels and markers
+     */
+    fun linkTreeNode(
+        treeDef: AvTreeDef,
+        parentId: AvValueId?,
+        childId: AvValueId
+    ) {
+        linkTreeNode(treeDef, parentId, store.unsafeGet(childId))
     }
 
     /**
@@ -209,35 +230,42 @@ class AvComputeContext(
      * If the list of children already exists, the child ID is added to it.
      * If not, creates a new list of children value and updates parent references.
      *
-     * When [parentId] is null and a root list marker is set in the tree setup,
+     * When [parentId] is null and a root list marker is set in the tree definition,
      * the value is added as a root node to the root node list.
      *
      * @param parentId The ID of the parent value, or null for root nodes
-     * @param childId The ID of the value to add
-     * @param treeSetup The tree setup configuration containing reference labels and markers
+     * @param child The value to add
+     * @param treeDef The tree definition containing reference labels and markers
      */
     fun linkTreeNode(
+        treeDef: AvTreeDef,
         parentId: AvValueId?,
-        childId: AvValueId,
-        treeSetup: AvTreeSetup
+        child: AvValue<*>
     ) {
+        val childId = child.uuid
         check(parentId != childId) { "cannot add a node to itself" }
 
         if (parentId == null) {
-            addRootTreeNode(childId, treeSetup)
+            addRootTreeNode(treeDef, child)
             return
         }
 
         // collect data from the store
-        val child = store.unsafeGet(childId)
         val parent = store.unsafeGet(parentId)
-        val original: AvValue<AvRefListSpec>? = refOrNull(parent, treeSetup.childListRefLabel)?.withSpec()
+        val original: AvValue<AvRefListSpec>? = refOrNull(parent, treeDef.childListRefLabel)?.withSpec()
 
         // update child-to-parent reference
         val childRefs = child.mutableRefs()
-        childRefs[treeSetup.parentRefLabel] = parent.uuid
+        childRefs[treeDef.parentRefLabel] = parent.uuid
 
-        this += child.copy(refsOrNull = childRefs)
+        if (child.markersOrNull?.contains(treeDef.nodeMarker) != true) {
+            this += child.copy(
+                markersOrNull = child.mutableMarkers().also { it += treeDef.nodeMarker },
+                refsOrNull = childRefs
+            )
+        } else {
+            this += child.copy(refsOrNull = childRefs)
+        }
 
         // if there is a list already, update it
         if (original != null) {
@@ -249,25 +277,31 @@ class AvComputeContext(
         // there is no list yet, create a new one and update parent-to-list reference
         val new = AvValue(
             uuid = uuid7(),
-            markersOrNull = setOf(treeSetup.childListMarker),
+            markersOrNull = setOf(treeDef.childListMarker),
             refsOrNull = mapOf(AvRefLabels.REF_LIST_OWNER to parentId),
             spec = AvRefListSpec(listOf(childId))
         )
 
         val parentRefs = parent.mutableRefs()
-        parentRefs[treeSetup.childListRefLabel] = new.uuid
+        parentRefs[treeDef.childListRefLabel] = new.uuid
 
         this += new
         this += parent.copy(refsOrNull = parentRefs)
     }
 
     private fun addRootTreeNode(
-        nodeId: AvValueId,
-        treeSetup: AvTreeSetup
+        treeDef: AvTreeDef,
+        node: AvValue<*>
     ) {
-        if (treeSetup.rootListMarker == null) return
+        if (treeDef.rootListMarker == null) return
 
-        val rootList = queryByMarker(treeSetup.rootListMarker).firstOrNull()?.withSpec<AvRefListSpec>()
+        if (node.markersOrNull?.contains(treeDef.nodeMarker) != true) {
+            this += node.copy(markersOrNull = node.mutableMarkers().also { it += treeDef.nodeMarker })
+        }
+
+        val nodeId = node.uuid
+
+        val rootList = queryByMarker(treeDef.rootListMarker).firstOrNull()?.withSpec<AvRefListSpec>()
 
         if (rootList != null) {
             if (nodeId in rootList.spec.refs) return
@@ -277,7 +311,7 @@ class AvComputeContext(
 
         val new = AvValue(
             uuid = uuid7(),
-            markersOrNull = setOf(treeSetup.rootListMarker),
+            markersOrNull = setOf(treeDef.rootListMarker),
             spec = AvRefListSpec(listOf(nodeId))
         )
 
@@ -290,19 +324,19 @@ class AvComputeContext(
      * @param parentId The ID of the parent value
      * @param childId The ID of the child value to remove
      * 
-     * @param treeSetup The tree setup configuration containing reference labels and markers
+     * @param treeDef The tree definition containing reference labels and markers
      */
     fun removeTreeNode(
+        treeDef: AvTreeDef,
         parentId: AvValueId?,
-        childId: AvValueId,
-        treeSetup: AvTreeSetup
+        childId: AvValueId
     ) {
         if (parentId == null) {
-            removeRootTreeNode(childId, treeSetup)
+            removeRootTreeNode(treeDef, childId)
             return
         }
         
-        val original: AvValue<AvRefListSpec>? = refOrNull(parentId, treeSetup.childListRefLabel)?.withSpec()
+        val original: AvValue<AvRefListSpec>? = refOrNull(parentId, treeDef.childListRefLabel)?.withSpec()
 
         if (original != null) {
             this += original.copy(spec = AvRefListSpec(original.spec.refs - childId))
@@ -310,12 +344,12 @@ class AvComputeContext(
     }
 
     private fun removeRootTreeNode(
-        nodeId: AvValueId,
-        treeSetup: AvTreeSetup
+        treeDef: AvTreeDef,
+        nodeId: AvValueId
     ) {
-        if (treeSetup.rootListMarker == null) return
+        if (treeDef.rootListMarker == null) return
 
-        val rootList = queryByMarker(treeSetup.rootListMarker).firstOrNull()?.withSpec<AvRefListSpec>()
+        val rootList = queryByMarker(treeDef.rootListMarker).firstOrNull()?.withSpec<AvRefListSpec>()
 
         if (rootList != null) {
             this += rootList.copy(spec = AvRefListSpec(rootList.spec.refs - nodeId))
@@ -327,15 +361,15 @@ class AvComputeContext(
      * If the child is already at the top, no changes are made.
      *
      * @param childId The ID of the child to move up
-     * @param treeSetup The tree setup configuration containing reference labels and markers
+     * @param treeDef The tree definition containing reference labels and markers
      */
     fun moveTreeNodeUp(
-        childId: AvValueId,
-        treeSetup: AvTreeSetup
+        treeDef: AvTreeDef,
+        childId: AvValueId
     ) {
         val child = get<Any>(childId)
-        val parent = ref<Any>(child, treeSetup.parentRefLabel)
-        val original = ref<AvRefListSpec>(parent, treeSetup.childListRefLabel)
+        val parent = ref<Any>(child, treeDef.parentRefLabel)
+        val original = ref<AvRefListSpec>(parent, treeDef.childListRefLabel)
 
         val originalList = original.spec.refs.toMutableList()
         val index = originalList.indexOf(childId)
@@ -353,15 +387,15 @@ class AvComputeContext(
      * If the child is already at the bottom, no changes are made.
      *
      * @param childId The ID of the child to move down
-     * @param treeSetup The tree setup configuration containing reference labels and markers
+     * @param treeDef The tree definition containing reference labels and markers
      */
     fun moveTreeNodeDown(
-        childId: AvValueId,
-        treeSetup: AvTreeSetup
+        treeDef: AvTreeDef,
+        childId: AvValueId
     ) {
         val child = get<Any>(childId)
-        val parent = ref<Any>(child, treeSetup.parentRefLabel)
-        val original = ref<AvRefListSpec>(parent, treeSetup.childListRefLabel)
+        val parent = ref<Any>(child, treeDef.parentRefLabel)
+        val original = ref<AvRefListSpec>(parent, treeDef.childListRefLabel)
 
         val originalList = original.spec.refs.toMutableList()
         val index = originalList.indexOf(childId)
@@ -379,15 +413,15 @@ class AvComputeContext(
      * If the parent has no children or the child list reference doesn't exist, it returns an empty list.
      *
      * @param parentId The ID of the parent node to get children for
-     * @param setup The tree setup configuration containing reference labels and markers
+     * @param treeDef The tree definition containing reference labels and markers
      *
      * @return List of value IDs representing the children of the given parent
      */
     fun getTreeChildIds(
-        parentId: AvValueId,
-        setup : AvTreeSetup
+        treeDef: AvTreeDef,
+        parentId: AvValueId
     ): List<AvValueId> {
-        val listValue = store.unsafeRefOrNull(parentId, setup.childListRefLabel) ?: return emptyList()
+        val listValue = store.unsafeRefOrNull(parentId, treeDef.childListRefLabel) ?: return emptyList()
         return (listValue.spec as AvRefListSpec).refs
     }
     
@@ -396,23 +430,23 @@ class AvComputeContext(
      * If the child has no parent and no root list marker is defined, returns an empty list.
      *
      * @param childId The ID of the value to find siblings for
-     * @param setup The tree setup configuration containing reference labels and markers
+     * @param treeDef The tree definition containing reference labels and markers
      *
      * @return List of value IDs representing the siblings of the given child (including the child)
      */
     fun getTreeSiblingIds(
-        childId: AvValueId,
-        setup : AvTreeSetup
+        treeDef: AvTreeDef,
+        childId: AvValueId
     ): List<AvValueId> {
-        val parentId = store.unsafeGet(childId).refIdOrNull(setup.parentRefLabel)
+        val parentId = store.unsafeGet(childId).refIdOrNull(treeDef.parentRefLabel)
 
         val listValue: AvValue<*>?
 
         if (parentId == null) {
-            if (setup.rootListMarker == null) return emptyList()
-            listValue = queryByMarker(setup.rootListMarker).firstOrNull()
+            if (treeDef.rootListMarker == null) return emptyList()
+            listValue = queryByMarker(treeDef.rootListMarker).firstOrNull()
         } else {
-            listValue = store.unsafeRefOrNull(parentId, setup.childListRefLabel)
+            listValue = store.unsafeRefOrNull(parentId, treeDef.childListRefLabel)
         }
 
         return listValue?.spec?.let { (it as AvRefListSpec).refs } ?: emptyList()

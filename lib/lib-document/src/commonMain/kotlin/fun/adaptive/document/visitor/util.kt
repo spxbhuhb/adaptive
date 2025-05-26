@@ -1,4 +1,4 @@
-package `fun`.adaptive.document.processing
+package `fun`.adaptive.document.visitor
 
 import `fun`.adaptive.document.model.DocDocument
 import `fun`.adaptive.document.ui.DocumentTheme
@@ -12,6 +12,9 @@ suspend fun DocumentResourceSet.fetchAndCompile(
     try {
         val uri = this.uri
         val content = this.readAll()
+
+        println(uri)
+        println(content.decodeToString())
 
         when {
             uri.endsWith(".md") -> MarkdownCompiler.compile(content.decodeToString(), theme)

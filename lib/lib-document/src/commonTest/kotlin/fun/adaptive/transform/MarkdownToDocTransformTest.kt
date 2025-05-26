@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.transform
 
-import `fun`.adaptive.document.processing.DocDumpVisitor.Companion.dump
+import `fun`.adaptive.document.visitor.DocDumpVisitor.Companion.dump
 import `fun`.adaptive.markdown.transform.MarkdownToDocVisitor
 import kotlin.test.Test
 import kotlin.test.assertEquals

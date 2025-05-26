@@ -6,10 +6,13 @@ import `fun`.adaptive.grove.doc.ws.browser.wsDocBrowserTool
 import `fun`.adaptive.grove.doc.ws.browser.wsDocBrowserToolDef
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.grove.doc.model.avDomain
+import `fun`.adaptive.grove.doc.ws.browser.wsDocBrowserContent
 import `fun`.adaptive.model.NamedItemType
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.generated.resources.menu_book
+import `fun`.adaptive.ui.value.iconCache
 import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
 import kotlin.collections.plusAssign
 
@@ -30,6 +33,9 @@ class GroveDocWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
 
     override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {
         add(WSPANE_DOC_BROWSER_TOOL, ::wsDocBrowserTool)
+        add(WSPANE_DOC_BROWSER_CONTENT, ::wsDocBrowserContent)
+
+        iconCache[avDomain.node] = Graphics.menu_book
     }
 
     override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {

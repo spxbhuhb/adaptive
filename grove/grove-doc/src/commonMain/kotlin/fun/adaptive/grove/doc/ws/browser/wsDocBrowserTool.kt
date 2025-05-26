@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.workspace.model.WsPane
 import `fun`.adaptive.ui.workspace.wsToolPane
+import `fun`.adaptive.value.AvValue
 
 @Adaptive
 fun wsDocBrowserTool(pane: WsPane<Unit, DocBrowserToolController>): AdaptiveFragment {

@@ -10,11 +10,11 @@ import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.value.AvUiTreeViewBackend
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.model.AvTreeSetup
+import `fun`.adaptive.value.model.AvTreeDef
 import `fun`.adaptive.value.store.AvComputeContext
 import `fun`.adaptive.value.embedded.EmbeddedValueServer.Companion.embeddedValueServer
 
-private val treeSetup = AvTreeSetup("node", "childList", "parentRef", "childListRef", "rootList")
+private val treeDef = AvTreeDef("node", "childList", "parentRef", "childListRef", "rootList")
 
 @Adaptive
 fun treeValueExample(): AdaptiveFragment {
@@ -24,7 +24,7 @@ fun treeValueExample(): AdaptiveFragment {
     val viewBackend = AvUiTreeViewBackend(
         values.clientBackend,
         String::class,
-        treeSetup
+        treeDef
     ) {
         _, item, _ -> println("selected: $item")
     }
@@ -48,7 +48,7 @@ private fun AvComputeContext.buildExampleTree() {
         for (childIndex in 1 .. 3) {
             val childNode = AvValue(name = "child $rootIndex.$childIndex", markersOrNull = setOf("node"), spec = "child $rootIndex.$childIndex")
             addValue(childNode)
-            linkTreeNode(rootNode.uuid, childNode.uuid, treeSetup)
+            linkTreeNode(treeDef, rootNode.uuid, childNode.uuid)
         }
     }
 }

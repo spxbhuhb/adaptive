@@ -1,7 +1,7 @@
 package `fun`.adaptive.document.model
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.document.processing.DocVisitor
+import `fun`.adaptive.document.visitor.DocVisitor
 
 @Adat
 class DocDocument(

@@ -2,6 +2,7 @@ package `fun`.adaptive.value.app
 
 import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
+import `fun`.adaptive.value.AvRefListSpec
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.operation.*
@@ -18,6 +19,7 @@ abstract class ValueModule<WT : AbstractWorkspace> : AppModule<WT>() {
 
         + AvSubscribeCondition
         + AvValue
+        + AvRefListSpec
     }
 
 }

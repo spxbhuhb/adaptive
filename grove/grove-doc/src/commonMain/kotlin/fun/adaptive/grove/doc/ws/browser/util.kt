@@ -10,9 +10,9 @@ fun WsPane<DocBrowserWsItem, *>.subDocuments(): List<AvValueId> {
     return toolController.viewBackend.treeSubscriber.getChildrenIds(browserItem.item.uuid)
 }
 
-fun WsPane<DocBrowserWsItem, *>.getDocument(spaceId: AvValueId): AvValue<*>? {
+fun WsPane<DocBrowserWsItem, *>.getDocument(valueId: AvValueId): AvValue<*>? {
     val toolController = this.data.config.controller
-    return toolController.viewBackend.treeSubscriber[spaceId]
+    return toolController.viewBackend.treeSubscriber[valueId]
 }
 
 fun DocBrowserWsItem.docPathNames(): List<String> {

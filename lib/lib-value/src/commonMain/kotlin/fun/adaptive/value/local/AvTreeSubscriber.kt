@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue.Companion.withSpec
 import `fun`.adaptive.value.model.AvRefLabels
-import `fun`.adaptive.value.model.AvTreeSetup
+import `fun`.adaptive.value.model.AvTreeDef
 import kotlin.reflect.KClass
 
 /**
@@ -40,12 +40,12 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
     constructor(
         backend: BackendAdapter,
         specClass: KClass<SPEC>,
-        setup: AvTreeSetup
+        def: AvTreeDef
     ) : this(
         backend,
-        setup.parentRefLabel,
+        def.parentRefLabel,
         specClass,
-        avByMarker(setup.nodeMarker), avByMarker(setup.childListMarker)
+        avByMarker(def.nodeMarker), avByMarker(def.childListMarker)
     )
 
     /**

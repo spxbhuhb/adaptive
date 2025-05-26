@@ -16,6 +16,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withTimeout
 import kotlinx.datetime.Clock.System.now
+import kotlin.Any
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -86,22 +87,26 @@ open class AvValueStore(
         }
 
         for (operation in operations) {
-            lock.use {
-                if (trace) logOperation(operation)
+            executeBlockingInternal(operation)
+        }
+    }
 
-                val commitSet = mutableSetOf<AvSubscription>()
+    private fun executeBlockingInternal(operation: AvValueOperation) {
+        lock.use {
+            if (trace) logOperation(operation)
 
-                when (operation) {
-                    is AvoAddOrUpdate -> addOrUpdate(operation, commitSet)
-                    is AvoTransaction -> transaction(operation, commitSet)
-                    is AvoComputation<*> -> compute(operation, commitSet)
-                    is AvoUpdate -> update(operation, commitSet)
-                    is AvoAdd -> add(operation, commitSet)
-                    is AvoMarkerRemove -> Unit // used by subscribers, for worker it is no-op
-                }
+            val commitSet = mutableSetOf<AvSubscription>()
 
-                commit(commitSet)
+            when (operation) {
+                is AvoAddOrUpdate -> addOrUpdate(operation, commitSet)
+                is AvoTransaction -> transaction(operation, commitSet)
+                is AvoComputation<*> -> compute(operation, commitSet)
+                is AvoUpdate -> update(operation, commitSet)
+                is AvoAdd -> add(operation, commitSet)
+                is AvoMarkerRemove -> Unit // used by subscribers, for worker it is no-op
             }
+
+            commit(commitSet)
         }
     }
 
@@ -402,6 +407,20 @@ open class AvValueStore(
 
     fun queue(operation: AvValueOperation) {
         check(this.operations.trySend(operation).isSuccess) { "Failed to queue operation" }
+    }
+
+    internal fun <T> executeBlocking(computeFun: AvComputeFun<T>) : T {
+        val channel = Channel<Any?>(Channel.BUFFERED)
+
+        executeBlockingInternal(
+           AvoComputation<T>().also {
+                it.channel = channel
+                it.computation = computeFun
+            }
+        )
+
+        @Suppress("UNCHECKED_CAST")
+        return channel.tryReceive().getOrThrow() as T
     }
 
     /**

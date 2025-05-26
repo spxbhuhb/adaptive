@@ -1,4 +1,4 @@
-package `fun`.adaptive.document.processing
+package `fun`.adaptive.document.visitor
 
 import `fun`.adaptive.document.model.DocBlockFragment
 import `fun`.adaptive.document.model.DocCodeFence
@@ -6,6 +6,7 @@ import `fun`.adaptive.document.model.DocDocument
 import `fun`.adaptive.document.model.DocElement
 import `fun`.adaptive.document.model.DocHeader
 import `fun`.adaptive.document.model.DocBlockImage
+import `fun`.adaptive.document.model.DocElementGroup
 import `fun`.adaptive.document.model.DocInlineFragment
 import `fun`.adaptive.document.model.DocInlineImage
 import `fun`.adaptive.document.model.DocLink
@@ -31,6 +32,9 @@ abstract class DocVisitor<out R, in D> {
 
     open fun visitDocument(docDocument: DocDocument, data: D): R =
         visitElement(docDocument, data)
+
+    open fun visitElementGroup(docElementGroup: DocElementGroup, data : D) : R =
+        visitElement(docElementGroup, data)
 
     open fun visitHeader(docHeader: DocHeader, data: D): R =
         visitElement(docHeader, data)

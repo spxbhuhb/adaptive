@@ -8,7 +8,6 @@ import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.value.persistence.NoPersistence
 import `fun`.adaptive.value.store.AvValueStore
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -75,6 +74,21 @@ open class AvValueWorker(
     // --------------------------------------------------------------------------------
     // Execute and update
     // --------------------------------------------------------------------------------
+
+    /**
+     * Blocks the workers' operation processing when possible and executes
+     * [computeFun] while the loop is blocked.
+     *
+     * Behavior:
+     *
+     * - no other changes are applied to values while [computeFun] runs
+     * - the changes made by [computeFun] are atomic from outside point of view
+     * - Throws exception if [computeFun] throws exception.
+     * - [computeFun] **MUST BE FAST**, it runs under the value worker lock, stops everything else
+     * - rollback **MUST BE HANDLED** by [computeFun], the worker does not guarantee it
+     */
+    fun <T> executeOutOfBand(computeFun: AvComputeFun<T>) =
+        store.executeBlocking(computeFun)
 
     /**
      * Execute [computeFun] in the worker operation processing loop.

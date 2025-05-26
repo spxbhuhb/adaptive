@@ -1,6 +1,6 @@
 package `fun`.adaptive.document.model
 
-import `fun`.adaptive.document.processing.DocVisitor
+import `fun`.adaptive.document.visitor.DocVisitor
 
 /**
  * @credit  2010-2024 JetBrains s.r.o. and Kotlin Programming Language contributors.

@@ -1,6 +1,6 @@
 # grove-doc
 
-`grove-doc` is a [subproject](def://) of [Adaptive](def://) that contains the [documentation compiler](def://).
+`grove-doc` is a [subproject](def://) of [Grove](def://) that contains the [documentation compiler](def://).
 
 ## See also
 

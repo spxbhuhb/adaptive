@@ -7,13 +7,13 @@ import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.model.AvTreeSetup
+import `fun`.adaptive.value.model.AvTreeDef
 import kotlin.reflect.KClass
 
 class AvUiTreeViewBackend<SPEC : Any>(
     backend: BackendAdapter,
     specClass: KClass<SPEC>,
-    treeSetup: AvTreeSetup,
+    treeDef: AvTreeDef,
     selectedFun: (backend: AvUiTreeViewBackend<SPEC>, TreeItem<AvValue<SPEC>>, Set<EventModifier>) -> Unit
 ) : LifecycleBound {
 
@@ -31,7 +31,7 @@ class AvUiTreeViewBackend<SPEC : Any>(
     val treeSubscriber = AvUiTreeSubscriber(
         backend,
         specClass,
-        treeSetup
+        treeDef
     )
 
     init {

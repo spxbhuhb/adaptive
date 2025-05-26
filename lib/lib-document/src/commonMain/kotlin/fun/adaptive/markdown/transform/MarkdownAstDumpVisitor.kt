@@ -61,6 +61,13 @@ class MarkdownAstDumpVisitor() : MarkdownVisitor<Unit, MutableList<String>>() {
         level--
     }
 
+    override fun visitElementGroup(group: MarkdownElementGroup, context: MutableList<String>) {
+        context += "${indent}GROUP"
+        level++
+        group.children.forEach { it.accept(this, context) }
+        level--
+    }
+
     override fun visitHorizontalRule(horizontalRule: MarkdownHorizontalRule, context: MutableList<String>) {
         context += "${indent}HORIZONTAL RULE"
     }

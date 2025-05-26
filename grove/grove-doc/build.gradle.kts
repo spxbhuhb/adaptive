@@ -27,7 +27,7 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
 adaptive {
     resources {
         publicAccessors = true
-        packageOfResources = "fun.adaptive.grove.generated.resources"
+        packageOfResources = "fun.adaptive.grove.doc.generated.resources"
     }
 }
 

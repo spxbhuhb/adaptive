@@ -158,5 +158,8 @@ internal class FileCollector(
         return normalizedPath.endsWith(normalizedScope)
     }
 
+    fun lookupDef(name: String): Path? =
+        definitions[name]?.firstOrNull()
+
 }
 

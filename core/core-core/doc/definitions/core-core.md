@@ -1,4 +1,8 @@
+---
+markers: subproject
+---
+
 # core-core
 
-The lowest level [subproject](def://) of Adaptive. Contains foundational functionality used by all
-other subprojects, including the Gradle and Kotlin compiler plugins.
+`core-core` is a core [subproject](def://) of [Adaptive](def://). Contains foundational 
+functionality used by all other subprojects, including the Gradle and Kotlin compiler plugins.

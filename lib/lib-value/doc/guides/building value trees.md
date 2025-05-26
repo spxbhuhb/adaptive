@@ -5,21 +5,27 @@
 This relies on the proper uses of [markers](def://), [reference labels](def://) and
 the [AvRefListSpec](class://) class.
 
-## Tree setup
+## Tree definition
 
-Use the utility class [AvTreeSetup](class://) to store the tree-specific [markers](def://)
-and [reference labels](def://):
+[value tree definitions](def://) are used to define how the [values](def://) in the tree are linked
+together.
+
+They are typically part of a [value domain definition](def://) (see [how to define a value domain](guide://)
+for more information).
+
+Tree definitions are modeled by the [AvTreeDef](class://) that stores tree-specific
+[markers](def://) and [reference labels](def://):
 
 Markers:
 
-- [nodeMarker](property://AvTreeSetup) marks the [values](def://) that are nodes in the tree
-- [childListMarker](property://AvTreeSetup) marks the [values](def://) that contain lists of children references
-- [rootListMarker](prooperty://AvTreeSetup) marks the [value](def://) that contains the root node list of the tree (optional)
+- [nodeMarker](property://AvTreeDef) marks the [values](def://) that are nodes in the tree
+- [childListMarker](property://AvTreeDef) marks the [values](def://) that contain lists of children references
+- [rootListMarker](prooperty://AvTreeDef) marks the [value](def://) that contains the root node list of the tree (optional)
 
 Reference labels:
 
-- [parentRefLabel](prooperty://AvTreeSetup) for referencing the parent node of a child node
-- [childListRefLabel](prooperty://AvTreeSetup) for referencing the [value](def://) that contains the list of child references
+- [parentRefLabel](prooperty://AvTreeDef) for referencing the parent node of a child node
+- [childListRefLabel](prooperty://AvTreeDef) for referencing the [value](def://) that contains the list of child references
 
 ## Tree functions
 

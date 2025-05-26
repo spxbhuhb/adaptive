@@ -13,4 +13,4 @@ the proper use of [markers](def://) and [value references](def://).
 - [value worker](def://)
 - [compute context](def://)
 - [building value trees](guide://)
-- [AvTreeSetup](class://)
+- [AvTreeDef](class://)

@@ -5,7 +5,7 @@ import `fun`.adaptive.value.AvRefListSpec
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.model.AvRefLabels
-import `fun`.adaptive.value.model.AvTreeSetup
+import `fun`.adaptive.value.model.AvTreeDef
 import `fun`.adaptive.value.valueTest
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -14,7 +14,7 @@ import kotlin.time.Duration.Companion.seconds
 
 class AvTreeSubscriberTest {
 
-    val setup = AvTreeSetup(
+    val treeDef = AvTreeDef(
         nodeMarker = "test-node",
         childListMarker = "test-children",
         parentRefLabel = "testParentRef",
@@ -34,7 +34,7 @@ class AvTreeSubscriberTest {
         val childListId = AvValueId()
 
         // Create subscriber
-        subscriber = TestTreeSubscriber(clientBackend, setup)
+        subscriber = TestTreeSubscriber(clientBackend, treeDef)
 
         // Add listener to verify updates
         var receivedItems = emptyList<TestTreeItem>()
@@ -45,8 +45,8 @@ class AvTreeSubscriberTest {
             serverWorker.queueAdd(
                 AvValue(
                     uuid = rootId,
-                    markersOrNull = setOf(setup.nodeMarker),
-                    refsOrNull = mapOf(setup.childListRefLabel to childListId),
+                    markersOrNull = setOf(treeDef.nodeMarker),
+                    refsOrNull = mapOf(treeDef.childListRefLabel to childListId),
                     spec = "Root"
                 )
             )
@@ -57,20 +57,20 @@ class AvTreeSubscriberTest {
             serverWorker.queueAddAll(
                 AvValue(
                     uuid = child1Id,
-                    markersOrNull = setOf(setup.nodeMarker),
+                    markersOrNull = setOf(treeDef.nodeMarker),
                     refsOrNull = mapOf(subscriber.parentRefLabel to rootId),
                     spec = "Child 1"
                 ),
                 AvValue(
                     uuid = child2Id,
-                    markersOrNull = setOf(setup.nodeMarker),
+                    markersOrNull = setOf(treeDef.nodeMarker),
                     refsOrNull = mapOf(subscriber.parentRefLabel to rootId),
                     spec = "Child 2"
                 ),
                 // Add the child list
                 AvValue(
                     uuid = childListId,
-                    markersOrNull = setOf(setup.childListMarker),
+                    markersOrNull = setOf(treeDef.childListMarker),
                     spec = AvRefListSpec(listOf(child1Id, child2Id)),
                     refsOrNull = mapOf(AvRefLabels.REF_LIST_OWNER to rootId)
                 )
@@ -93,7 +93,7 @@ class AvTreeSubscriberTest {
     fun `should update existing tree items`() = valueTest {
         val rootId = AvValueId()
 
-        subscriber = TestTreeSubscriber(clientBackend, setup)
+        subscriber = TestTreeSubscriber(clientBackend, treeDef)
 
         var receivedItems = emptyList<TestTreeItem>()
         subscriber.addListener { receivedItems = it }
@@ -103,7 +103,7 @@ class AvTreeSubscriberTest {
             serverWorker.queueAdd(
                 AvValue(
                     uuid = rootId,
-                    markersOrNull = setOf(setup.nodeMarker),
+                    markersOrNull = setOf(treeDef.nodeMarker),
                     spec = "Initial Root"
                 )
             )
@@ -117,7 +117,7 @@ class AvTreeSubscriberTest {
             serverWorker.queueUpdate(
                 AvValue(
                     uuid = rootId,
-                    markersOrNull = setOf(setup.nodeMarker),
+                    markersOrNull = setOf(treeDef.nodeMarker),
                     spec = "Updated Root"
                 )
             )
@@ -134,7 +134,7 @@ class AvTreeSubscriberTest {
         val child1Id = AvValueId()
         val childListId = AvValueId()
 
-        subscriber = TestTreeSubscriber(clientBackend, setup)
+        subscriber = TestTreeSubscriber(clientBackend, treeDef)
 
         var receivedItems = emptyList<TestTreeItem>()
         subscriber.addListener { receivedItems = it }
@@ -144,19 +144,19 @@ class AvTreeSubscriberTest {
             serverWorker.queueAddAll(
                 AvValue(
                     uuid = rootId,
-                    markersOrNull = setOf(setup.nodeMarker),
-                    refsOrNull = mapOf(setup.childListRefLabel to childListId),
+                    markersOrNull = setOf(treeDef.nodeMarker),
+                    refsOrNull = mapOf(treeDef.childListRefLabel to childListId),
                     spec = "Root"
                 ),
                 AvValue(
                     uuid = child1Id,
-                    markersOrNull = setOf(setup.nodeMarker),
+                    markersOrNull = setOf(treeDef.nodeMarker),
                     refsOrNull = mapOf(subscriber.parentRefLabel to rootId),
                     spec = "Child 1"
                 ),
                 AvValue(
                     uuid = childListId,
-                    markersOrNull = setOf(setup.childListMarker),
+                    markersOrNull = setOf(treeDef.childListMarker),
                     spec = AvRefListSpec(listOf(child1Id)),
                     refsOrNull = mapOf(AvRefLabels.REF_LIST_OWNER to rootId)
                 )
@@ -172,7 +172,7 @@ class AvTreeSubscriberTest {
                 AvValue(
                     uuid = childListId,
                     spec = AvRefListSpec(emptyList()),
-                    markersOrNull = setOf(setup.childListMarker),
+                    markersOrNull = setOf(treeDef.childListMarker),
                     refsOrNull = mapOf(AvRefLabels.REF_LIST_OWNER to rootId)
                 ),
                 AvValue(

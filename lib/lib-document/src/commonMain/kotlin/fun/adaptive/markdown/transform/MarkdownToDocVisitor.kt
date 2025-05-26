@@ -4,10 +4,10 @@ import `fun`.adaptive.document.model.*
 import `fun`.adaptive.document.ui.DocumentTheme
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
-import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 import `fun`.adaptive.markdown.compiler.parseInternal
 import `fun`.adaptive.markdown.compiler.tokenizeInternal
 import `fun`.adaptive.markdown.model.*
+import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 
 class MarkdownToDocVisitor(
     val ast: List<MarkdownElement>,
@@ -162,6 +162,9 @@ class MarkdownToDocVisitor(
     override fun visitQuote(quote: MarkdownQuote, context: Int): DocQuote =
         // quote content should be treated as standalone to have proper separation
         DocQuote(- 1, quote.children.mapNotNull { it.accept(this, context) })
+
+    override fun visitElementGroup(group: MarkdownElementGroup, context: Int): DocBlockElement? =
+        DocElementGroup(-1, group.children.mapNotNull { it.accept(this, context) })
 
     override fun visitHorizontalRule(horizontalRule: MarkdownHorizontalRule, context: Int): DocRule =
         DocRule()

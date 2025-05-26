@@ -2,16 +2,16 @@ package `fun`.adaptive.value.local
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.model.AvTreeSetup
+import `fun`.adaptive.value.model.AvTreeDef
 
 // Test implementation of TreeSubscriber for testing purposes
 class TestTreeSubscriber(
     backend: BackendAdapter,
-    setup: AvTreeSetup
+    treeDef: AvTreeDef
 ) : AvTreeSubscriber<String, TestTreeItem>(
     backend,
     String::class,
-    setup
+    treeDef
 ) {
 
     override fun newTreeItem(item: AvValue<String>, parentNode: Node<String, TestTreeItem>?): TestTreeItem {

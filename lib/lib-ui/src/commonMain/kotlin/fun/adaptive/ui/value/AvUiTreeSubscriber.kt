@@ -4,15 +4,15 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.local.AvTreeSubscriber
-import `fun`.adaptive.value.model.AvTreeSetup
+import `fun`.adaptive.value.model.AvTreeDef
 import kotlin.reflect.KClass
 
 class AvUiTreeSubscriber<SPEC : Any>(
     backend: BackendAdapter,
     specClass: KClass<SPEC>,
-    setup: AvTreeSetup
+    treeDef: AvTreeDef
 ) : AvTreeSubscriber<SPEC, TreeItem<AvValue<SPEC>>>(
-    backend, specClass, setup
+    backend, specClass, treeDef
 ) {
 
     override fun newTreeItem(item: AvValue<SPEC>, parentNode: Node<SPEC, TreeItem<AvValue<SPEC>>>?): TreeItem<AvValue<SPEC>> =

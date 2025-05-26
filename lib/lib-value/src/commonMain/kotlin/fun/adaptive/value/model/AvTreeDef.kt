@@ -1,9 +1,11 @@
 package `fun`.adaptive.value.model
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.value.AvMarker
 import `fun`.adaptive.value.AvRefLabel
 
-class AvTreeSetup(
+@Adat
+class AvTreeDef(
     val nodeMarker: AvMarker,
     val childListMarker: AvMarker,
     val parentRefLabel: AvRefLabel,

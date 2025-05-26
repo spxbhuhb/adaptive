@@ -30,6 +30,9 @@ abstract class MarkdownTransformer<in D> : MarkdownVisitor<MarkdownElement, D>()
     override fun visitQuote(quote: MarkdownQuote, context: D): MarkdownElement =
         visitElement(quote, context)
 
+    override fun visitElementGroup(group: MarkdownElementGroup, context: D): MarkdownElement =
+        visitElement(group, context)
+
     override fun visitHorizontalRule(horizontalRule: MarkdownHorizontalRule, context: D): MarkdownElement =
         visitElement(horizontalRule, context)
 }

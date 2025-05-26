@@ -38,6 +38,7 @@ subethamail = "3.1.7"
 adaptive-core-core = { module = "fun.adaptive:core-core", version.ref = "adaptive" }
 adaptive-core-ui = { module = "fun.adaptive:core-ui", version.ref = "adaptive" }
 
+adaptive-grove-doc = { module = "fun.adaptive:grove-doc", version.ref = "adaptive" }
 adaptive-grove-lib = { module = "fun.adaptive:grove-lib", version.ref = "adaptive" }
 adaptive-grove-runtime = { module = "fun.adaptive:grove-runtime", version.ref = "adaptive" }
 

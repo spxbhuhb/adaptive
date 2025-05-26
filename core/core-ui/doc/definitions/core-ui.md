@@ -1,6 +1,6 @@
 # core-ui
 
-`core-ui` is a [subproject](def://) of [Adaptive](def://) that provides basic features 
+`core-ui` is a core [subproject](def://) of [Adaptive](def://) that provides basic features 
 for building [user interfaces](def://) such as [UI layout](def://), [UI rendering](def://)
 and low-level [UI fragments](def://).
 

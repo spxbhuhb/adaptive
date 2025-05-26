@@ -4,10 +4,10 @@ import `fun`.adaptive.markdown.model.*
 
 abstract class MarkdownTransformerVoid : MarkdownTransformer<Nothing?>() {
 
-    open fun visitElement(element: MarkdownElement) : MarkdownElement =
+    open fun visitElement(element: MarkdownElement): MarkdownElement =
         visitElement(element, null)
 
-    final override fun visitElement(element: MarkdownElement, data: Nothing?) : MarkdownElement {
+    final override fun visitElement(element: MarkdownElement, data: Nothing?): MarkdownElement {
         element.transformChildren(this, data)
         return element
     }
@@ -18,10 +18,10 @@ abstract class MarkdownTransformerVoid : MarkdownTransformer<Nothing?>() {
     final override fun visitHeader(header: MarkdownHeader, context: Nothing?): MarkdownElement =
         visitHeader(header)
 
-    open fun visitInline(inline: MarkdownInline) : MarkdownElement =
+    open fun visitInline(inline: MarkdownInline): MarkdownElement =
         visitElement(inline, null)
 
-    final override fun visitInline(inline: MarkdownInline, context: Nothing?) : MarkdownElement =
+    final override fun visitInline(inline: MarkdownInline, context: Nothing?): MarkdownElement =
         visitInline(inline)
 
     open fun visitParagraph(paragraph: MarkdownParagraph): MarkdownElement =
@@ -53,6 +53,12 @@ abstract class MarkdownTransformerVoid : MarkdownTransformer<Nothing?>() {
 
     final override fun visitQuote(quote: MarkdownQuote, context: Nothing?): MarkdownElement =
         visitQuote(quote)
+
+    open fun visitElementGroup(group: MarkdownElementGroup): MarkdownElement =
+        visitElement(group, null)
+
+    final override fun visitElementGroup(group: MarkdownElementGroup, context: Nothing?): MarkdownElement =
+        visitElementGroup(group)
 
     open fun visitHorizontalRule(horizontalRule: MarkdownHorizontalRule): MarkdownElement =
         visitElement(horizontalRule, null)

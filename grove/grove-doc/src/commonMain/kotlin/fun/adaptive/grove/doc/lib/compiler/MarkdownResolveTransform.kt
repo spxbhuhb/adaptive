@@ -1,17 +1,10 @@
 package `fun`.adaptive.grove.doc.lib.compiler
 
-import `fun`.adaptive.persistence.absolute
-import `fun`.adaptive.persistence.exists
-import `fun`.adaptive.persistence.isDirectory
-import `fun`.adaptive.persistence.list
-import `fun`.adaptive.persistence.readString
-import `fun`.adaptive.persistence.resolve
-import `fun`.adaptive.markdown.model.MarkdownCodeFence
-import `fun`.adaptive.markdown.model.MarkdownElement
-import `fun`.adaptive.markdown.model.MarkdownInline
-import `fun`.adaptive.markdown.model.MarkdownParagraph
+import `fun`.adaptive.markdown.compiler.MarkdownCompiler
+import `fun`.adaptive.markdown.model.*
 import `fun`.adaptive.markdown.visitor.MarkdownTransformerVoid
-import `fun`.adaptive.utility.*
+import `fun`.adaptive.persistence.*
+import `fun`.adaptive.utility.encodeToUrl
 import kotlinx.io.files.Path
 
 /**
@@ -49,9 +42,12 @@ class MarkdownResolveTransform(
         val url = match.groupValues[2]
 
         val scheme = url.substringBefore("://")
-        val scope = url.substringAfter("://", "").takeIf { it.isNotEmpty() }
+        val scopeAndArguments = url.substringAfter("://", "").takeIf { it.isNotEmpty() }
 
-        return Link(name, url, scheme, scope)
+        val scope = scopeAndArguments?.substringBefore('?')
+        val arguments = scopeAndArguments?.substringAfter('?')
+
+        return Link(name, url, scheme, scope, arguments)
     }
 
     // --------------------------------------------------------------------------------
@@ -69,7 +65,17 @@ class MarkdownResolveTransform(
 
         when (link.scheme) {
             "dirTree" -> replaceDir(link)
+
             "example" -> replaceExample(link)
+
+            "def" -> {
+                if (link.arguments == "inline") {
+                    inlineDef(link)
+                } else {
+                    super.visitParagraph(paragraph)
+                }
+            }
+
             else -> super.visitParagraph(paragraph)
         }
             .also { return it }
@@ -79,7 +85,7 @@ class MarkdownResolveTransform(
         val path = link.lookupCode(compilation)
         val content = path?.readString()
 
-        var fenceContent : String? = null
+        var fenceContent: String? = null
 
         if (content == null && link !in compilation.reportedLinks) {
             compilation.warn("Missing code: $link in $mdPath")
@@ -99,7 +105,7 @@ class MarkdownResolveTransform(
 
         return MarkdownCodeFence(
             language = "kotlin",
-            content =  fenceContent ?: "missing code: $link in $mdPath"
+            content = fenceContent ?: "missing code: $link in $mdPath"
         )
     }
 
@@ -119,21 +125,38 @@ class MarkdownResolveTransform(
         while (endIndex < source.length) {
             when (source[endIndex]) {
                 '{' -> {
-                    braceCount++
+                    braceCount ++
                     inCode = true
                 }
+
                 '}' -> {
-                    braceCount--
+                    braceCount --
                     if (braceCount == 0 && inCode) {
-                        endIndex++
+                        endIndex ++
                         break
                     }
                 }
             }
-            endIndex++
+            endIndex ++
         }
 
         return source.substring(startIndex, endIndex).trim()
+    }
+
+    fun inlineDef(link: Link): MarkdownElement {
+        val path = link.lookupDef(compilation)
+        if (path == null) {
+            compilation.warn("Missing definition: $link in $mdPath")
+            return MarkdownInline(link.name)
+        }
+
+        return extractDef(path.readString())
+    }
+
+    fun extractDef(content: String): MarkdownElement {
+        val ast = MarkdownCompiler.ast(content.trim().substringAfter('\n').substringBefore("\n#"))
+        if (ast.size == 1) return ast.first()
+        return MarkdownElementGroup(ast.toMutableList())
     }
 
     fun replaceDir(link: Link): MarkdownElement {

@@ -1,7 +1,7 @@
 package `fun`.adaptive.document.ui.basic
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.document.processing.fetchAndCompile
+import `fun`.adaptive.document.visitor.fetchAndCompile
 import `fun`.adaptive.document.ui.DocRenderContext
 import `fun`.adaptive.document.ui.DocumentTheme
 import `fun`.adaptive.foundation.Adaptive

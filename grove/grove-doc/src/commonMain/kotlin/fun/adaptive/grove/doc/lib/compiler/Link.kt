@@ -19,4 +19,8 @@ data class Link(
 
     fun lookupCode(compilation: GroveDocCompilation): Path? =
         compilation.fileCollector.lookupCode(scheme, name, scope)
+
+    fun lookupDef(compilation: GroveDocCompilation): Path? =
+        compilation.fileCollector.lookupDef(name)
+
 }

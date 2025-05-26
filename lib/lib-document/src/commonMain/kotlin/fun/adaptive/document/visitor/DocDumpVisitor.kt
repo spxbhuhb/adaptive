@@ -1,4 +1,4 @@
-package `fun`.adaptive.document.processing
+package `fun`.adaptive.document.visitor
 
 import `fun`.adaptive.document.model.DocBlockFragment
 import `fun`.adaptive.document.model.DocCodeFence
@@ -6,6 +6,7 @@ import `fun`.adaptive.document.model.DocDocument
 import `fun`.adaptive.document.model.DocElement
 import `fun`.adaptive.document.model.DocHeader
 import `fun`.adaptive.document.model.DocBlockImage
+import `fun`.adaptive.document.model.DocElementGroup
 import `fun`.adaptive.document.model.DocInlineFragment
 import `fun`.adaptive.document.model.DocInlineImage
 import `fun`.adaptive.document.model.DocLink
@@ -15,7 +16,7 @@ import `fun`.adaptive.document.model.DocQuote
 import `fun`.adaptive.document.model.DocRule
 import `fun`.adaptive.document.model.DocList
 import `fun`.adaptive.document.model.DocText
-import `fun`.adaptive.document.processing.DocDumpVisitor.DocVisitorData
+import `fun`.adaptive.document.visitor.DocDumpVisitor.DocVisitorData
 
 class DocDumpVisitor : DocVisitor<Unit, DocVisitorData>() {
 
@@ -62,6 +63,11 @@ class DocDumpVisitor : DocVisitor<Unit, DocVisitorData>() {
     override fun visitDocument(docDocument: DocDocument, data: DocVisitorData) {
         data += "DOCUMENT"
         super.visitDocument(docDocument, data)
+    }
+
+    override fun visitElementGroup(docElementGroup: DocElementGroup, data: DocVisitorData) {
+        data += "GROUP  style=${docElementGroup.style}"
+        super.visitElementGroup(docElementGroup, data)
     }
 
     override fun visitHeader(docHeader: DocHeader, data: DocVisitorData) {

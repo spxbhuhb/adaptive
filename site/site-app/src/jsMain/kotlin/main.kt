@@ -6,8 +6,8 @@ import `fun`.adaptive.app.WsBrowserClientApplication.Companion.wsBrowserClient
 import `fun`.adaptive.app.ws.AppMainWsModule
 import `fun`.adaptive.app.ws.inspect.AppInspectWsModule
 import `fun`.adaptive.auth.app.NoAuthClientModule
-import `fun`.adaptive.document.app.DocWsModule
 import `fun`.adaptive.grove.GroveRuntimeModule
+import `fun`.adaptive.grove.doc.app.GroveDocWsModule
 import `fun`.adaptive.sandbox.app.CookbookWsModule
 import `fun`.adaptive.site.SiteWsModule
 import `fun`.adaptive.ui.LibUiClientModule
@@ -22,7 +22,7 @@ fun main() {
         module { ValueClientModule() }
         //module { ChartWsModule() }
         module { CookbookWsModule() }
-        module { DocWsModule() }
+        module { GroveDocWsModule() }
         module { SiteWsModule() }
         module { AppMainWsModule() }
         module { AppInspectWsModule() }
