@@ -2,11 +2,11 @@ package `fun`.adaptive.lib.util.temporal
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.encodeToProtoByteArray
-import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.persistence.clearedTestPath
-import `fun`.adaptive.utility.debug
 import `fun`.adaptive.persistence.list
 import `fun`.adaptive.persistence.read
+import `fun`.adaptive.utility.UUID.Companion.uuid4
+import `fun`.adaptive.utility.dump
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
 import `fun`.adaptive.wireformat.protobuf.dumpProto
 import kotlinx.datetime.Instant
@@ -141,8 +141,8 @@ class TemporalRecordStoreTest {
             val name = it.name
             if (name.startsWith(".") || name.startsWith("index")) return@forEach
 
-            println("========  $name  ========")
-            it.read().dumpProto().debug()
+            dump { "========  $name  ========" }
+            dump { it.read().dumpProto() }
         }
     }
 }

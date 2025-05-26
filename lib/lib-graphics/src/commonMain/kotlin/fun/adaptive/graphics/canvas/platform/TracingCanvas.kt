@@ -9,6 +9,7 @@ import `fun`.adaptive.graphics.canvas.model.gradient.Gradient
 import `fun`.adaptive.graphics.canvas.render.CanvasRenderData
 import `fun`.adaptive.ui.fragment.layout.RawTextMeasurement
 import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.utility.dump
 
 class TracingCanvas<T : ActualCanvas>(
     val canvas: T
@@ -21,102 +22,102 @@ class TracingCanvas<T : ActualCanvas>(
         get() = canvas.height
 
     override fun apply(renderData: CanvasRenderData?) {
-        println("apply: $renderData")
+        dump { "apply: $renderData" }
         super.apply(renderData)
     }
 
     override fun save(id: Long) {
-        println("save: $id")
+        dump { "save: $id" }
         canvas.save(id)
     }
 
     override fun restore(id: Long) {
-        println("restore: $id")
+        dump { "restore: $id" }
         canvas.restore(id)
     }
 
     override fun draw(drawFun: () -> Unit) {
-        println("draw")
+        dump { "draw" }
         canvas.draw(drawFun)
     }
 
     override fun arc(cx: Double, cy: Double, radius: Double, startAngle: Double, endAngle: Double, anticlockwise: Boolean) {
-        println("arc: $cx, $cy, $radius, $startAngle, $endAngle, $anticlockwise")
+        dump { "arc: $cx, $cy, $radius, $startAngle, $endAngle, $anticlockwise" }
         canvas.arc(cx, cy, radius, startAngle, endAngle, anticlockwise)
     }
 
     override fun newPath(): ActualPath {
-        println("newPath")
+        dump { "newPath" }
         return canvas.newPath()
     }
 
     override fun fill(path: ActualPath) {
-        println("fill: $path")
+        dump { "fill: $path" }
         canvas.fill(path)
     }
 
     override fun stroke(path: ActualPath) {
-        println("stroke: $path")
+        dump { "stroke: $path" }
         canvas.stroke(path)
     }
 
     override fun fill() {
-        println("fill")
+        dump { "fill" }
         canvas.fill()
     }
 
     override fun fillText(x: Double, y: Double, text: String) {
-        println("fillText: $x, $y, $text")
+        dump { "fillText: $x, $y, $text" }
         canvas.fillText(x, y, text)
     }
 
     override fun fillRect(x: Double, y: Double, width: Double, height: Double) {
-        println("fillRect: $x, $y, $width, $height")
+        dump { "fillRect: $x, $y, $width, $height" }
         canvas.fillRect(x, y, width, height)
     }
 
     override fun line(x1: Double, y1: Double, x2: Double, y2: Double) {
-        println("line: $x1, $y1, $x2, $y2")
+        dump { "line: $x1, $y1, $x2, $y2" }
         canvas.line(x1, y1, x2, y2)
     }
 
     override fun image(x: Double, y: Double, width: Double, height: Double, drawFun: ((Int, Int) -> Unit) -> Unit) {
-        println("image: $x, $y, $width, $height")
+        dump { "image: $x, $y, $width, $height" }
         canvas.image(x, y, width, height, drawFun)
     }
 
     override fun transform(t: CanvasTransformInstruction) {
-        println("transform: $t")
+        dump { "transform: $t" }
         canvas.transform(t)
     }
 
     override fun setFont(font: String) {
-        println("font: $font")
+        dump { "font: $font" }
         canvas.setFont(font)
     }
 
     override fun setStroke(color: Color) {
-        println("setStroke: $color")
+        dump { "setStroke: $color" }
         canvas.setStroke(color)
     }
 
     override fun setFill(color: Color) {
-        println("setFill: $color")
+        dump { "setFill: $color" }
         canvas.setFill(color)
     }
 
     override fun setFill(gradient: Gradient) {
-        println("setFill: $gradient")
+        dump { "setFill: $gradient" }
         canvas.setFill(gradient)
     }
 
     override fun clear() {
-        println("clear")
+        dump { "clear" }
         canvas.clear()
     }
 
-    override fun measureText(renderData : CanvasRenderData, text: String): RawTextMeasurement {
-        println("measureText: $text")
+    override fun measureText(renderData: CanvasRenderData, text: String): RawTextMeasurement {
+        dump { "measureText: $text" }
         return canvas.measureText(renderData, text)
     }
 }

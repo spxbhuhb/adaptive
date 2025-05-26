@@ -28,7 +28,6 @@ import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.TreeViewBackend.Companion.defaultSelectedFun
 import `fun`.adaptive.ui.tree.tree
-import `fun`.adaptive.utility.debug
 import kotlin.random.Random
 
 @Adaptive
@@ -65,7 +64,6 @@ fun treePlaygroundForm(
 ) {
 
     val template = TreePlaygroundConfig()
-    val config = valueFrom { form }.inputValue.debug()
 
     configureForm(form) {
         column {

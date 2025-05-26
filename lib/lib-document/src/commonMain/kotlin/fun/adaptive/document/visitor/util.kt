@@ -13,9 +13,6 @@ suspend fun DocumentResourceSet.fetchAndCompile(
         val uri = this.uri
         val content = this.readAll()
 
-        println(uri)
-        println(content.decodeToString())
-
         when {
             uri.endsWith(".md") -> MarkdownCompiler.compile(content.decodeToString(), theme)
             else -> null

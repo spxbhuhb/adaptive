@@ -33,7 +33,6 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.utility.debug
 import kotlinx.coroutines.launch
 
 @Adaptive
@@ -66,7 +65,7 @@ fun wsAppSignIn(@Suppress("unused") pane: WsPane<*>): AdaptiveFragment {
 
                 box {
                     maxSize .. alignItems.center
-                    if (message.debug().isNotBlank()) {
+                    if (message.isNotBlank()) {
                         text(message) .. textColors.fail .. fontSize { 14.sp } .. normalFont
                     }
                 }

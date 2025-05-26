@@ -59,10 +59,10 @@ class AdaptiveFetch<VT>(
                     it.cancel()
                 } catch (e: TimeoutCancellationException) {
                     // TODO indicate the problem somehow
-                    println(e)
+                    e.printStackTrace()
                 } catch (e: ServiceCallException) {
                     // TODO indicate the problem somehow
-                    println(e)
+                    e.printStackTrace()
                 }
             }
         }
