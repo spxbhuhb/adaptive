@@ -22,7 +22,11 @@ open class ResourceFileSet<T : ResourceFile>(
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is ResourceFileSet<*>) return false
-    
+
+        if (isInline) {
+            return this.cachedContent.contentEquals(other.cachedContent)
+        }
+
         if (name != other.name) return false
         if (type != other.type) return false
         if (files != other.files) return false
