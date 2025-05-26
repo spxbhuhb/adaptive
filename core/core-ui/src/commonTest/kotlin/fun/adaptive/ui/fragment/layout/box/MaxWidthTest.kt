@@ -13,6 +13,7 @@ import `fun`.adaptive.ui.api.paddingRight
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.testing.snapshotTest
+import kotlin.js.JsName
 import kotlin.test.Test
 
 class MaxWidthTest {
@@ -20,6 +21,7 @@ class MaxWidthTest {
     val name = "container"
 
     @Test
+    @JsName("changeWidthToMaxWidthAndBack")
     fun `change width to maxWidth and back`() {
         snapshotTest {
             box { name(name) .. width { 40.dp } .. height { 40.dp } }
@@ -35,6 +37,7 @@ class MaxWidthTest {
     }
 
     @Test
+    @JsName("maxWidthShouldRespectContainerMargins")
     fun `maxWidth should respect container margins`() {
         snapshotTest {
             box {
@@ -47,6 +50,7 @@ class MaxWidthTest {
     }
 
     @Test
+    @JsName("maxWidthShouldRespectContainerBorder")
     fun `maxWidth should respect container border`() {
         snapshotTest {
             box {
@@ -59,6 +63,7 @@ class MaxWidthTest {
     }
 
     @Test
+    @JsName("maxWidthShouldRespectContainerPadding")
     fun `maxWidth should respect container padding`() {
         snapshotTest {
             box {

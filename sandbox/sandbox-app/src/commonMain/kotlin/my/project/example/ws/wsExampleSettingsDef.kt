@@ -20,7 +20,6 @@ fun MultiPaneWorkspace.wsExampleSettingsDef(
             Graphics.settings,
             WsPanePosition.Center,
             module.EXAMPLE_SETTINGS_KEY,
-            module.EXAMPLE_SETTINGS_ITEM,
             ExampleSettingsViewBackend(module)
         )
     }

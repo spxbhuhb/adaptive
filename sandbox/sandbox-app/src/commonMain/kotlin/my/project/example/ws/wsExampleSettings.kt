@@ -7,7 +7,7 @@ import `fun`.adaptive.log.devInfo
 import `fun`.adaptive.ui.workspace.model.WsPane
 
 @Adaptive
-fun wsExampleSettings(pane: WsPane<*, ExampleSettingsViewBackend>): AdaptiveFragment {
-    devInfo { "displaying: ${pane.data} with backend ${pane.controller}" }
+fun wsExampleSettings(pane: WsPane<ExampleSettingsViewBackend>): AdaptiveFragment {
+    //devInfo { "displaying: ${pane.data} with backend ${pane.controller}" }
     return fragment()
 }

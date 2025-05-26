@@ -22,7 +22,7 @@ class TestServerApplicationTest {
     @Test
     fun withModule() {
         testServer {
-            module { ValueServerModule("test", { }) }
+            module { ValueServerModule("test") }
         }.also {
             it.start()
             assertEquals("test", it.backend.firstImpl<AvValueWorker>().domain)

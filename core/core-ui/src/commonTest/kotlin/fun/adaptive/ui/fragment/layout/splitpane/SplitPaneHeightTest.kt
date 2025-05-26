@@ -9,6 +9,7 @@ import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.testing.snapshotTest
+import kotlin.js.JsName
 import kotlin.test.Test
 
 class SplitPaneHeightTest {
@@ -20,6 +21,7 @@ class SplitPaneHeightTest {
     val wrapped = "wrapped"
 
     @Test
+    @JsName("paneContentSizeHorizontalBothFixFirst")
     fun `pane content size, horizontal, both, fixFirst`() {
         val firstWidth = 100.0
         val paneHeight = 50
@@ -49,6 +51,7 @@ class SplitPaneHeightTest {
     }
 
     @Test
+    @JsName("paneContentSizeVerticalBothFixFirst")
     fun `pane content size, vertical, both, fixFirst`() {
         val paneWidth = 50
         val firstHeight = 100.0
@@ -78,6 +81,7 @@ class SplitPaneHeightTest {
     }
 
     @Test
+    @JsName("paneContentSizeVerticalFirstProportional")
     fun `pane content size, vertical, first, proportional`() {
         val paneWidth = 50
         val split = 60.0
@@ -103,6 +107,7 @@ class SplitPaneHeightTest {
     }
 
     @Test
+    @JsName("wrapFromTop")
     fun wrapFromTop() {
         val wrapperSize = 20.0
         val wrappedHeight = 40
@@ -135,6 +140,7 @@ class SplitPaneHeightTest {
     }
 
     @Test
+    @JsName("wrapFromBottom")
     fun wrapFromBottom() {
         val wrapperSize = 20.0
         val wrappedHeight = 40

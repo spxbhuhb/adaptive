@@ -7,7 +7,7 @@ import `fun`.adaptive.ui.workspace.logic.WsSingularPaneViewBackend
 
 class ExampleSettingsViewBackend(
     module: ExampleWsModule<*>
-) : WsSingularPaneViewBackend(module.workspace, module.EXAMPLE_SETTINGS_ITEM) {
+) : WsSingularPaneViewBackend<ExampleSettingsViewBackend>(module.workspace, module.EXAMPLE_SETTINGS_ITEM) {
     // This is where you can put functions like save, fetch etc.
 
     val exampleService = getService<ExampleApi>(backend.transport)

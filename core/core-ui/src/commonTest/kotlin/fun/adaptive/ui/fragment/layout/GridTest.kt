@@ -88,8 +88,8 @@ class GridTest {
         uiTest(0, 0, 400, 400) {
 
             grid(C1, AdaptiveInstructionGroup(testInstructions)) {
-                space() .. F1
-                space() .. F2
+                space() .. maxSize .. F1
+                space() .. maxSize.. F2
             }
 
         }.checks()
@@ -105,9 +105,9 @@ class GridTest {
                 rowTemplate(20.dp repeat 3)
                 gap { 10.dp }
 
-                space() .. F1 .. height { 20.dp }
-                space() .. F2 .. height { 20.dp }
-                space() .. F3 .. height { 20.dp }
+                space() .. F1 .. maxSize
+                space() .. F2 .. maxSize
+                space() .. F3 .. maxSize
             }
         }.apply {
             assertFinal(C1, 0, 0, 120, 80)

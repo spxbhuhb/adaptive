@@ -1,11 +1,11 @@
 package `fun`.adaptive.grove.doc.app
 
-import `fun`.adaptive.document.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.grove.doc.ws.browser.wsDocBrowserContentDef
 import `fun`.adaptive.grove.doc.ws.browser.wsDocBrowserTool
 import `fun`.adaptive.grove.doc.ws.browser.wsDocBrowserToolDef
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.grove.doc.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.grove.doc.model.avDomain
 import `fun`.adaptive.grove.doc.ws.browser.wsDocBrowserContent
 import `fun`.adaptive.model.NamedItemType

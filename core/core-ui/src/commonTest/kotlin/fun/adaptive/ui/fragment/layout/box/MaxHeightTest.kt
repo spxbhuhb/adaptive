@@ -4,6 +4,7 @@ import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.testing.snapshotTest
+import kotlin.js.JsName
 import kotlin.test.Test
 
 class MaxHeightTest {
@@ -11,6 +12,7 @@ class MaxHeightTest {
     val name = "container"
     
     @Test
+    @JsName("changeHeightToMaxHeightAndBack")
     fun `change height to maxHeight and back`() {
         snapshotTest {
             box { name(name) .. width { 40.dp } .. height { 40.dp } }
@@ -26,6 +28,7 @@ class MaxHeightTest {
     }
 
     @Test
+    @JsName("maxHeightShouldRespectContainerMargins")
     fun `maxHeight should respect container margins`() {
         snapshotTest {
             box {
@@ -38,6 +41,7 @@ class MaxHeightTest {
     }
 
     @Test
+    @JsName("maxHeightShouldRespectContainerBorder")
     fun `maxHeight should respect container border`() {
         snapshotTest {
             box {
@@ -50,6 +54,7 @@ class MaxHeightTest {
     }
 
     @Test
+    @JsName("maxHeightShouldRespectContainerPadding")
     fun `maxHeight should respect container padding`() {
         snapshotTest {
             box {
