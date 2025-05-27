@@ -5,4 +5,5 @@
 
 ## See also
 
-- [`lib-ui`](def://)
+- [lib-ui](def://)
+- [What is a multi-pane workspace](guide://)

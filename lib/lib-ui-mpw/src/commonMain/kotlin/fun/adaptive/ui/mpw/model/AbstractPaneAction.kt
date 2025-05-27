@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.mpw.model
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 
-abstract class AbstractWsPaneAction<T>(
+abstract class AbstractPaneAction<T>(
     val icon: GraphicsResourceSet,
     val tooltip: String
 ) {

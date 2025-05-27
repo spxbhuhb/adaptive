@@ -16,7 +16,7 @@ data class Pane<VB : PaneViewBackend<VB>>(
     val key: FragmentKey,
     val viewBackend: VB,
     override val tooltip: String? = null,
-    val actions: List<AbstractWsPaneAction<*>> = emptyList(),
+    val actions: List<AbstractPaneAction<*>> = emptyList(),
     override val singularity: PaneSingularity = PaneSingularity.GROUP,
     override val displayOrder: Int = Int.MAX_VALUE
 ) : AbstractSideBarAction() {

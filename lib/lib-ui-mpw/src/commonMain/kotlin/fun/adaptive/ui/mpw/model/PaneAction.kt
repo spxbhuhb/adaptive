@@ -8,7 +8,7 @@ open class PaneAction<T>(
     tooltip : String,
     override val data : T,
     val action : (PaneActionArguments<T>) -> Unit
-) : AbstractWsPaneAction<T>(icon, tooltip){
+) : AbstractPaneAction<T>(icon, tooltip){
 
     override fun execute(workspace: MultiPaneWorkspace, pane: Pane<*>) =
         action(PaneActionArguments<T>(workspace, pane, data))

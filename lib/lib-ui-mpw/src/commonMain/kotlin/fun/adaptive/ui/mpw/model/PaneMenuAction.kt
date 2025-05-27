@@ -13,7 +13,7 @@ class PaneMenuAction<T>(
     override val data: List<MenuItemBase<T>>,
     val selectedFun: (PaneMenuActionArguments<T>) -> Unit,
     val theme: ContextMenuTheme = ContextMenuTheme.DEFAULT,
-) : AbstractWsPaneAction<List<MenuItemBase<T>>>(icon, tooltip) {
+) : AbstractPaneAction<List<MenuItemBase<T>>>(icon, tooltip) {
 
     override fun execute(workspace: MultiPaneWorkspace, pane: Pane<*>) {
         throw UnsupportedOperationException()
