@@ -9,12 +9,12 @@ import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.fragments.toolPane
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
 @Adaptive
-fun wsAppInspectTool(pane: Pane<*>): AdaptiveFragment {
+fun wsAppInspectTool(pane: PaneDef<*>): AdaptiveFragment {
 
     val app = fragment().firstContext<ClientApplication<*>>()
 

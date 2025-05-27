@@ -8,7 +8,7 @@ import `fun`.adaptive.ui.generated.resources.account
 import `fun`.adaptive.ui.generated.resources.account_circle
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.SideBarAction
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
@@ -17,7 +17,7 @@ fun MultiPaneWorkspace.wsAppAccountSelfDef(
 ) {
 
     addContentPaneBuilder(module.ACCOUNT_SELF_KEY) {
-        Pane(
+        PaneDef(
             UUID(),
             workspace = this,
             Strings.accountSelf,

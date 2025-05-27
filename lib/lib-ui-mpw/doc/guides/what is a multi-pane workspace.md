@@ -1,7 +1,7 @@
 # What is a multi-pane workspace
 
 A [multi-pane workspace](def://) is a complex UI fragment capable of managing multiple
-tools and content editors together.
+tools and content views/editors together.
 
 Think of Intellij user interface, that functionality is implemented by [MultiPaneWorkspace](class://).
 
@@ -19,16 +19,16 @@ Each workspace has nine main areas:
 
 - The areas (except the icon bars) are separated by dividers that let the user resize the given area.
 - The tool areas:
-    - contain tool panes that provide supporting functions and information,
+    - contain [tool panes](def://) that provide supporting functions and information,
     - may be hidden or shown by the user by
         - clicking on the hide action in the pane title
         - clicking on an icon in the icon bars
-- The center area contains a [centerPane](fragment://) fragment which manages content pane groups:
-    - there must be at least one content pane group in the workspace
-    - there may be more than one content pane group in the workspace
-    - a pane group may be
-      - singular - only one content pane is shown without tabs
-      - non-singular - multiple content panes can be selected with tabs
+- The center area contains a [centerPane](fragment://) fragment which manages [content pane groups](def://):
+    - there must be at least one [content pane group](def://) in the workspace
+    - there may be more than one [content pane group](def://) in the workspace
+    - a [content pane group](def://) may be
+      - singular - only one [content pane](def://) is shown without tabs
+      - non-singular - multiple [content panes](def://) can be selected with tabs
 
 ## Icon bars
 
@@ -90,9 +90,9 @@ Other actions can be specified by setting [actions](property://Pane).
 
 For both cases [activeContentPane](property://MultiPaneWorkspace) contains the pane which is currently active.
 
-## wsCenterPane
+## centerPane
 
-- The [wsCenterPane](fragment://) fragment can be loaded to the center to manage multiple panes in pane groups.
+- The [centerPane](fragment://) fragment can be loaded to the center to manage multiple panes in pane groups.
 - Each pane group must have at least one content pane and may have more than one content pane.
 - The pane groups are separated by sliders which can be used to resize the groups.
 - Each pane group:
@@ -138,3 +138,8 @@ The [localContext](fragment://) fragment makes it possible for all inner fragmen
 as the example below shows. See [How to provide and use a local context](guide://) for details about [local contexts](def://).
 
 [findWorkspace](example://multiPaneWorkspaceExamples)
+
+## See also
+
+- [How to implement a tool pane](guide://)
+- [How to implement a content pane](guide://)

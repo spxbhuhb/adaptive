@@ -6,11 +6,11 @@ import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.hover
 import `fun`.adaptive.ui.mpw.MultiPaneTheme
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 
 @Adaptive
 fun toolPane(
-    pane: Pane<*>,
+    pane: PaneDef,
     theme: MultiPaneTheme = DEFAULT,
     @Adaptive
     _fixme_adaptive_content: () -> Unit

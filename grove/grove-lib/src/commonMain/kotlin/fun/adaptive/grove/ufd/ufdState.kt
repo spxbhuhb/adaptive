@@ -11,12 +11,12 @@ import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.flowText
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.fragments.noContent
 import `fun`.adaptive.ui.mpw.fragments.toolPane
 
 @Adaptive
-fun ufdState(pane: Pane<*>): AdaptiveFragment {
+fun ufdState(): AdaptiveFragment {
 
     val context = fragment().wsContext<SheetViewContext>()
     val controller = valueFrom { context.focusedView }

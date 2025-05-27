@@ -10,16 +10,16 @@ import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 class PaneMenuAction<T>(
     icon: GraphicsResourceSet,
     tooltip: String,
-    override val data: List<MenuItemBase<T>>,
+    val data: List<MenuItemBase<T>>,
     val selectedFun: (PaneMenuActionArguments<T>) -> Unit,
     val theme: ContextMenuTheme = ContextMenuTheme.DEFAULT,
-) : AbstractPaneAction<List<MenuItemBase<T>>>(icon, tooltip) {
+) : AbstractPaneAction(icon, tooltip) {
 
-    override fun execute(workspace: MultiPaneWorkspace, pane: Pane<*>) {
+    override fun execute() {
         throw UnsupportedOperationException()
     }
 
-    fun selected(workspace: MultiPaneWorkspace, pane: Pane<*>, menuItem: MenuItem<*>, modifiers: Set<EventModifier>) {
+    fun selected(workspace: MultiPaneWorkspace, pane: PaneDef, menuItem: MenuItem<*>, modifiers: Set<EventModifier>) {
         @Suppress("UNCHECKED_CAST")
         selectedFun(
             PaneMenuActionArguments<T>(workspace, pane, menuItem as MenuItem<T>, modifiers)

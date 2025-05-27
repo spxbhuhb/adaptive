@@ -1,4 +1,4 @@
-package `fun`.adaptive.grove.doc.ws.browser
+package `fun`.adaptive.grove.doc.ui
 
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.document.ui.direct.markdown
@@ -14,19 +14,19 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsToolOrNull
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.viewbackend.viewBackend
 
 @Adaptive
-fun wsDocBrowserContent(pane: Pane<DocBrowserContentViewBackend>): AdaptiveFragment {
+fun docContentPane(): AdaptiveFragment {
 
-    val value = pane.viewBackend.value
+    val viewBackend = viewBackend(DocContentViewBackend::class)
 
     column {
         maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
 
-        pageHeader(value)
+        pageHeader(viewBackend.item)
 
-        markdown(value.spec)
+        markdown(viewBackend.item.spec)
     }
 
     return fragment()
@@ -43,7 +43,7 @@ fun pageHeader(value : GroveDocValue) {
 
 @Adaptive
 fun itemPath(item: GroveDocValue) {
-    val names = fragment().wsToolOrNull<DocBrowserToolViewBackend>()?.docPathNames(item) ?: emptyList()
+    val names = fragment().wsToolOrNull<DocToolViewBackend>()?.docPathNames(item) ?: emptyList()
 
     row {
         alignItems.center

@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.splitpane.SplitPaneTheme
 import `fun`.adaptive.ui.theme.*
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PaneId
 
 class MultiPaneTheme(
@@ -39,7 +39,7 @@ class MultiPaneTheme(
     val leftIconColumn = paneIconColumn + borderRight(toolBorderColor)
 
     fun paneIconContainer(
-        thisPane: Pane<*>,
+        thisPane: PaneDef<*>,
         activePane: PaneId?,
         focusedPane: PaneId?,
         hover: Boolean

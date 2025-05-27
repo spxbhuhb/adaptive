@@ -1,7 +1,6 @@
 package `fun`.adaptive.ui.mpw
 
 import `fun`.adaptive.backend.BackendAdapter
-import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.value.storeFor
@@ -55,16 +54,16 @@ open class MultiPaneWorkspace(
 
     var applicationOrNull: AbstractApplication<*>? = null
 
-    val contentPaneBuilders = mutableMapOf<WsPaneItemType, MutableList<ContentPaneBuilder>>()
+    val contentPaneBuilders = mutableMapOf<PaneContentType, MutableList<ContentPaneBuilder<*>>>()
 
     val theme
         get() = MultiPaneTheme.DEFAULT
 
-    val toolPanes = mutableListOf<Pane<*>>()
+    val toolPanes = mutableListOf<PaneDef<*>>()
 
     val sideBarActions = mutableListOf<AbstractSideBarAction>()
 
-    val noContentPane = Pane(
+    val noContentPane = PaneDef(
         UUID(),
         this,
         "No content",
@@ -83,7 +82,7 @@ open class MultiPaneWorkspace(
 
     var lastActiveContentPaneGroup: ContentPaneGroupViewBackend? = null
 
-    var lastActiveContentPane: Pane<*>? = null
+    var lastActiveContentPane: PaneDef<*>? = null
 
     val focusedPane = storeFor<PaneId?> { null }
 
@@ -168,7 +167,7 @@ open class MultiPaneWorkspace(
         scope.launch {
             try {
                 block()
-            } catch (ex : Exception) {
+            } catch (ex: Exception) {
                 failNotification(Strings.executionError)
             }
         } // FIXME this should run in the backend scope
@@ -185,7 +184,7 @@ open class MultiPaneWorkspace(
     /**
      * Toggle the given pane (typically when the user clicks on the pane icon).
      */
-    fun toggle(pane: Pane<*>) {
+    fun toggle(pane: PaneDef<*>) {
         when (pane.position) {
             PanePosition.LeftTop -> toggleStore(leftTop, pane)
             PanePosition.LeftMiddle -> toggleStore(leftMiddle, pane)
@@ -222,7 +221,7 @@ open class MultiPaneWorkspace(
         isFullScreen.value = false
     }
 
-    private fun toggleStore(store: Observable<PaneId?>, pane: Pane<*>) {
+    private fun toggleStore(store: Observable<PaneId?>, pane: PaneDef<*>) {
         if (store.value == pane.uuid) {
             store.value = null
         } else {
@@ -271,7 +270,7 @@ open class MultiPaneWorkspace(
         split.value = split.value.copy(visibility = new)
     }
 
-    fun paneStore(pane: Pane<*>): Observable<PaneId?> =
+    fun paneStore(pane: PaneDef<*>): Observable<PaneId?> =
         when (pane.position) {
             PanePosition.LeftTop -> leftTop
             PanePosition.LeftMiddle -> leftMiddle
@@ -286,19 +285,19 @@ open class MultiPaneWorkspace(
     // Tool management
     // --------------------------------------------------------------------------------
 
-    operator fun Pane<*>.unaryPlus() {
+    operator fun PaneDef<*>.unaryPlus() {
         toolPanes += this
     }
 
-    fun addToolPane(pane: () -> Pane<*>) {
-        toolPanes += pane()
+    fun addToolPane(paneBackend: () -> PaneViewBackend<*>) {
+        toolPanes += paneBackend
     }
 
     operator fun SideBarAction.unaryPlus() {
         sideBarActions += this
     }
 
-    fun <T : PaneViewBackend<T>> toolBackend(kClass : KClass<T>) : T? {
+    fun <T : PaneViewBackend<T>> toolBackend(kClass: KClass<T>): T? {
         for (pane in toolPanes) {
             @Suppress("UNCHECKED_CAST")
             if (kClass.isInstance(pane.viewBackend)) return pane.viewBackend as T
@@ -310,17 +309,28 @@ open class MultiPaneWorkspace(
     // Content management
     // --------------------------------------------------------------------------------
 
-    fun addContentPaneBuilder(vararg keys: WsPaneItemType, builder: ContentPaneBuilder) {
-        for (key in keys) {
-            contentPaneBuilders.getOrPut(key) { mutableListOf() } += builder
-        }
+    class ContentPaneBuilder<T>(
+        val condition: (Any) -> T?,
+        val builder: (item: T) -> PaneViewBackend<*>?
+    )
+
+    fun <T> addContentPaneBuilder(
+        contentType: PaneContentType,
+        condition: (Any) -> T?,
+        builder: (item: T) -> PaneViewBackend<*>?
+    ) {
+        contentPaneBuilders.getOrPut(contentType) { mutableListOf() } +=
+            ContentPaneBuilder(
+                condition,
+                builder
+            )
     }
 
     fun addContent(item: SingularPaneItem, modifiers: Set<EventModifier> = emptySet()) {
         addContent(item.type, item, modifiers)
     }
 
-    fun addContent(type : WsPaneItemType, item: WsPaneItem, modifiers: Set<EventModifier> = emptySet()) {
+    fun addContent(type: PaneContentType, item: WsPaneItem, modifiers: Set<EventModifier> = emptySet()) {
 
         val accepted = accept(item, modifiers)
         if (accepted) {
@@ -356,7 +366,7 @@ open class MultiPaneWorkspace(
         }
     }
 
-    fun findBuilder(type: WsPaneItemType): ContentPaneBuilder? {
+    fun findBuilder(type: PaneContentType): ContentPaneBuilder? {
         var builder = contentPaneBuilders[type]?.firstOrNull()
         if (builder != null) return builder
 
@@ -407,12 +417,12 @@ open class MultiPaneWorkspace(
         return false
     }
 
-    fun loadContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: Pane<*>, group: ContentPaneGroupViewBackend) {
+    fun loadContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: PaneDef<*>, group: ContentPaneGroupViewBackend) {
         // pane.load may return with a different pane, most notably the name and tooltip of the pane may change
         group.load(pane.load(item, modifiers))
     }
 
-    fun addGroupContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: Pane<*>) {
+    fun addGroupContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: PaneDef<*>) {
 
         val safeGroup = lastActiveContentPaneGroup
 
@@ -445,12 +455,12 @@ open class MultiPaneWorkspace(
     // Item type management
     // --------------------------------------------------------------------------------
 
-    private val itemTypes = mutableMapOf<WsPaneItemType, WsItemConfig>()
+    private val itemTypes = mutableMapOf<PaneContentType, WsItemConfig>()
 
-    fun addItemConfig(type: WsPaneItemType, icon: GraphicsResourceSet, tooltip: String? = null) {
+    fun addItemConfig(type: PaneContentType, icon: GraphicsResourceSet, tooltip: String? = null) {
         itemTypes[type] = WsItemConfig(type, icon, tooltip)
     }
 
-    fun getItemConfig(type: WsPaneItemType) = itemTypes[type] ?: WsItemConfig.DEFAULT
+    fun getItemConfig(type: PaneContentType) = itemTypes[type] ?: WsItemConfig.DEFAULT
 
 }

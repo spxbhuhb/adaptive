@@ -6,7 +6,7 @@ import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 
 class PaneMenuActionArguments<T>(
     val workspace: MultiPaneWorkspace,
-    val pane: Pane<*>,
+    val pane: PaneDef<*>,
     val menuItem: MenuItem<T>,
     val modifiers: Set<EventModifier>
 )

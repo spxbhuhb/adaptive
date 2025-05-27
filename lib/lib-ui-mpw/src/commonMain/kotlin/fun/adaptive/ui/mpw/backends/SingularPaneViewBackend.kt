@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.mpw.backends
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.mpw.model.SingularPaneItem
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.WsPaneItem
 
 open class SingularPaneViewBackend<T : SingularPaneViewBackend<T>>(
@@ -11,11 +11,11 @@ open class SingularPaneViewBackend<T : SingularPaneViewBackend<T>>(
     val item : SingularPaneItem
 ): PaneViewBackend<T>() {
 
-    override fun accepts(pane: Pane<T>, modifiers: Set<EventModifier>, item: WsPaneItem) : Boolean {
+    override fun accepts(pane: PaneDef<T>, modifiers: Set<EventModifier>, item: WsPaneItem) : Boolean {
         return (item === this.item)
     }
 
-    override fun load(pane: Pane<T>, modifiers: Set<EventModifier>, item: WsPaneItem) =
+    override fun load(pane: PaneDef<T>, modifiers: Set<EventModifier>, item: WsPaneItem) =
         pane.copy()
 
 }

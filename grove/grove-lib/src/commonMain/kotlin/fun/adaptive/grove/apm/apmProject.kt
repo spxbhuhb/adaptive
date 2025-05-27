@@ -10,11 +10,11 @@ import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.fragments.toolPane
 
 @Adaptive
-fun apmProject(pane: Pane<*>): AdaptiveFragment {
+fun apmProject(): AdaptiveFragment {
     val context = fragment().wsContext<ApmWsContext>()
 
     val treeViewBackend = TreeViewBackend(

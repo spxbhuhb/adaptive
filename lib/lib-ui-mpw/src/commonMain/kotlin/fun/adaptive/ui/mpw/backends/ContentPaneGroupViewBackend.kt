@@ -2,7 +2,7 @@ package `fun`.adaptive.ui.mpw.backends
 
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PaneAction
 import `fun`.adaptive.ui.tab.TabContainer
 import `fun`.adaptive.ui.tab.TabPane
@@ -12,7 +12,7 @@ import `fun`.adaptive.utility.UUID
 class ContentPaneGroupViewBackend(
     val uuid: UUID<ContentPaneGroupViewBackend>,
     val workspace: MultiPaneWorkspace,
-    firstPane: Pane<*>
+    firstPane: PaneDef<*>
 ) {
     /**
      * True when this group contains only one pane and that one pane
@@ -33,7 +33,7 @@ class ContentPaneGroupViewBackend(
 
     val tabContainer = storeFor<TabContainer> { toTabContainer() }
 
-    fun load(pane: Pane<*>) {
+    fun load(pane: PaneDef<*>) {
         val index = panes.indexOfFirst { it.uuid == pane.uuid }
 
         if (index == - 1) {
@@ -75,7 +75,7 @@ class ContentPaneGroupViewBackend(
 
     fun switchTab(model : TabContainer, pane : TabPane) {
         val newTabs = model.switchTab(pane)
-        activePane = newTabs.tabs.first { it.active }.model as Pane<*>
+        activePane = newTabs.tabs.first { it.active }.model as PaneDef<*>
         tabContainer.value = newTabs
     }
 
@@ -86,7 +86,7 @@ class ContentPaneGroupViewBackend(
             workspace.removePaneGroup(this)
         } else {
             val newTabs = model.removeTab(pane)
-            activePane = newTabs.tabs.first { it.active }.model as Pane<*>
+            activePane = newTabs.tabs.first { it.active }.model as PaneDef<*>
             tabContainer.value = newTabs
         }
     }

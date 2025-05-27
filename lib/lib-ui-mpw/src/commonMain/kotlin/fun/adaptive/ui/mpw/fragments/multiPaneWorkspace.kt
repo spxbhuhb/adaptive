@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.splitpane.verticalSplitDivider
 import `fun`.adaptive.ui.mpw.AbstractSideBarAction
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 
 @Adaptive
@@ -164,7 +164,7 @@ private fun mpPane(workspace: MultiPaneWorkspace, position: PanePosition): Adapt
 }
 
 @Adaptive
-private fun mpPaneContent(pane: Pane<*>) {
+private fun mpPaneContent(pane: PaneDef<*>) {
     box {
         maxSize
         actualize(pane.key, emptyInstructions, pane)

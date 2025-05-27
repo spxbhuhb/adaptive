@@ -32,11 +32,11 @@ import `fun`.adaptive.ui.platform.input.findActualInputValue
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.textColors
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import kotlinx.coroutines.launch
 
 @Adaptive
-fun wsAppSignIn(@Suppress("unused") pane: Pane<*>): AdaptiveFragment {
+fun wsAppSignIn(@Suppress("unused") pane: PaneDef<*>): AdaptiveFragment {
 
     val app = fragment().wsApplication
 

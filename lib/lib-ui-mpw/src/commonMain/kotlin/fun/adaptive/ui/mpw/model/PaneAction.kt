@@ -1,16 +1,14 @@
 package `fun`.adaptive.ui.mpw.model
 
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 
-open class PaneAction<T>(
-    icon : GraphicsResourceSet,
-    tooltip : String,
-    override val data : T,
-    val action : (PaneActionArguments<T>) -> Unit
-) : AbstractPaneAction<T>(icon, tooltip){
+open class PaneAction(
+    icon: GraphicsResourceSet,
+    tooltip: String,
+    val action: () -> Unit
+) : AbstractPaneAction(icon, tooltip) {
 
-    override fun execute(workspace: MultiPaneWorkspace, pane: Pane<*>) =
-        action(PaneActionArguments<T>(workspace, pane, data))
+    override fun execute() = action()
 
 }

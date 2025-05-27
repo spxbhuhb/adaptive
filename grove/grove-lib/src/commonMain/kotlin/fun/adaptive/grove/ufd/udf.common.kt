@@ -7,7 +7,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
@@ -18,7 +18,7 @@ fun AdaptiveAdapter.groveUfdCommon() {
 fun MultiPaneWorkspace.groveUfdCommon() {
     contexts += UfdWsContext(this)
 
-    toolPanes += Pane(
+    toolPanes += PaneDef(
         UUID(),
         workspace = this,
         Strings.palette,
@@ -28,7 +28,7 @@ fun MultiPaneWorkspace.groveUfdCommon() {
         viewBackend = UnitPaneViewBackend(this)
     )
 
-    toolPanes += Pane(
+    toolPanes += PaneDef(
         UUID(),
         workspace = this,
         Strings.components,
@@ -38,7 +38,7 @@ fun MultiPaneWorkspace.groveUfdCommon() {
         viewBackend = UnitPaneViewBackend(this)
     )
 
-    toolPanes += Pane(
+    toolPanes += PaneDef(
         UUID(),
         workspace = this,
         Strings.instructions,
@@ -48,7 +48,7 @@ fun MultiPaneWorkspace.groveUfdCommon() {
         viewBackend = UnitPaneViewBackend(this)
     )
 
-    toolPanes += Pane(
+    toolPanes += PaneDef(
         UUID(),
         workspace = this,
         Strings.state,
@@ -60,7 +60,7 @@ fun MultiPaneWorkspace.groveUfdCommon() {
 
     addContentPaneBuilder(UfdWsContext.WSIT_UFD_FRAGMENT) { item ->
 
-        Pane(
+        PaneDef(
             UUID(),
             workspace = this,
             "item.name",

@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.generated.resources.account_circle
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.SingularPaneItem
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.ui.mpw.model.PaneSingularity
 import `fun`.adaptive.utility.UUID
@@ -24,7 +24,7 @@ fun MultiPaneWorkspace.wsAppSignInDef(
 ) {
 
     addContentPaneBuilder(module.SIGN_IN_KEY) {
-        Pane(
+        PaneDef(
             UUID(),
             this,
             Strings.signInTitle,

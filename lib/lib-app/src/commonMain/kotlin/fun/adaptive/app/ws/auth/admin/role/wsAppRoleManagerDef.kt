@@ -7,7 +7,7 @@ import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
@@ -18,7 +18,7 @@ fun MultiPaneWorkspace.wsAppRoleManagerDef(
     addAdminItem(module.ROLE_MANAGER_ITEM)
 
     addContentPaneBuilder(module.ROLE_MANAGER_KEY) {
-        Pane(
+        PaneDef(
             UUID(),
             workspace = this,
             Strings.roles,

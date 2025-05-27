@@ -12,11 +12,11 @@ import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.mpw.model.SingularPaneItem
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.fragments.toolPane
 
 @Adaptive
-fun wsAppAdminTool(pane: Pane<*>): AdaptiveFragment {
+fun wsAppAdminTool(pane: PaneDef<*>): AdaptiveFragment {
 
     val module = fragment().wsContext<AppAdminWsModule<*>>()
 

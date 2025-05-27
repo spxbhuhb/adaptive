@@ -1,8 +1,6 @@
 package `fun`.adaptive.ui.mpw.fragments
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.api.findContext
-import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -14,18 +12,17 @@ import `fun`.adaptive.ui.icon.denseVariantIconTheme
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.menu.contextMenu
 import `fun`.adaptive.ui.mpw.MultiPaneTheme
-import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneMenuAction
 
 @Adaptive
-fun paneTitle(
-    pane: Pane<*>,
+fun <BACKEND : PaneViewBackend<BACKEND>> paneTitle(
+    paneBackend : BACKEND,
     showActions: Boolean,
     theme: MultiPaneTheme
 ) {
 
-    val workspace = fragment().findContext<MultiPaneWorkspace>() !!
+    val pane = paneBackend.paneDef
     val actionContext = valueFrom { InputContext() }
 
     row {
@@ -37,25 +34,25 @@ fun paneTitle(
             theme.toolPaneTitleActionContainer
 
             if (showActions || actionContext.isPopupOpen) {
-                for (action in pane.actions) {
+                for (action in paneBackend.paneActions()) {
                     if (action is PaneMenuAction<*>) {
                         box {
                             actionIcon(action.icon, tooltip = action.tooltip, theme = denseVariantIconTheme)
                             primaryPopup(actionContext) { hide ->
                                 contextMenu(action.data, action.theme) { menuItem, modifiers ->
-                                    action.selected(workspace, pane, menuItem, modifiers);
+                                    action.selected(paneBackend.workspace, pane, menuItem, modifiers);
                                     hide()
                                 }
                             }
                         }
                     } else {
                         actionIcon(action.icon, tooltip = action.tooltip, theme = denseVariantIconTheme) .. onClick {
-                            action.execute(workspace, pane)
+                            action.execute()
                         }
                     }
                 }
                 actionIcon(Graphics.remove, tooltip = Strings.hide, theme = denseVariantIconTheme) .. onClick {
-                    workspace.toggle(pane)
+                    paneBackend.workspace.toggle(pane)
                 }
             }
         }

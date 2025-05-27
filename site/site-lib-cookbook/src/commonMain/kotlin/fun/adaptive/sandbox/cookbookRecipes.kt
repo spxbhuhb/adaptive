@@ -9,11 +9,11 @@ import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.tree
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.fragments.toolPane
 
 @Adaptive
-fun cookbookRecipes(pane: Pane<*>): AdaptiveFragment {
+fun cookbookRecipes(pane: PaneDef<*>): AdaptiveFragment {
     val context = fragment().wsContext<CbWsContext>()
 
     val treeViewBackend = TreeViewBackend(

@@ -33,10 +33,10 @@ import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.emptyInst
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.mpw.MultiPaneTheme
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 
 @Adaptive
-fun wsAppAccountManager(pane: Pane<AccountManagerViewBackend>): AdaptiveFragment {
+fun wsAppAccountManager(pane: PaneDef<AccountManagerViewBackend>): AdaptiveFragment {
 
     val filterBackend = valueFrom { adatFormBackend(AccountFilter()) }
     val filter = filterBackend.inputValue

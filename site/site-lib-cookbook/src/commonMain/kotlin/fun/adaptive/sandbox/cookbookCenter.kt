@@ -10,10 +10,10 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 
 @Adaptive
-fun cookbookCenter(pane: Pane<*>): AdaptiveFragment {
+fun cookbookCenter(pane: PaneDef<*>): AdaptiveFragment {
     val recipeKey = valueFrom { fragment().wsContext<CbWsContext>().activeRecipeKey }
 
     box {

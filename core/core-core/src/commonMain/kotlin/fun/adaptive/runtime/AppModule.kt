@@ -2,6 +2,7 @@ package `fun`.adaptive.runtime
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
 abstract class AppModule<WT : AbstractWorkspace> {
@@ -34,5 +35,10 @@ abstract class AppModule<WT : AbstractWorkspace> {
     open fun workspaceInit(workspace: WT, session: Any?) {
 
     }
+
+    inline fun fragmentKey(keyFun : () -> FragmentKey) = keyFun()
+
+    // FIXME move content type into multi-pane workspace somehow
+    inline fun contentType(keyFun : () -> String) = keyFun()
 
 }

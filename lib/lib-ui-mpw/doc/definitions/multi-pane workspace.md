@@ -8,6 +8,9 @@ Its primary role is to manage a layout composed of multiple distinct visual area
 known as panes. These panes typically host interactive tools, content editors, or various 
 views, providing a user experience similar to that found in Integrated Development Environments (IDEs).
 
+Multi-pane workspace defines six tool areas and one center area, the tool areas occupying the sides
+and bottom of the screen, the center area occupying the center.
+
 ## See also
 
 - [application workspace](def://)

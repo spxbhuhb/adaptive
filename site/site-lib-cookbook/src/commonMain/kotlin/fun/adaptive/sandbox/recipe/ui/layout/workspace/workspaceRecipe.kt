@@ -19,7 +19,7 @@ import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspaceMain
 import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspaceSideBarIcons
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
@@ -71,7 +71,7 @@ object WorkspaceRecipePaneFragmentFactory : FoundationFragmentFactory() {
 fun initPanes(workspace: MultiPaneWorkspace) {
     workspace.toolPanes.addAll(
         listOf(
-            Pane(
+            PaneDef(
                 UUID(),
                 workspace = workspace,
                 "Left Top",
@@ -81,7 +81,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 tooltip = "⌘ P",
                 viewBackend = UnitPaneViewBackend(workspace)
             ),
-            Pane(
+            PaneDef(
                 UUID(),
                 workspace = workspace,
                 "Left Middle - 1",
@@ -90,7 +90,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 "cookbook:support:leftmiddle1",
                 viewBackend = UnitPaneViewBackend(workspace)
             ),
-            Pane(
+            PaneDef(
                 UUID(),
                 workspace = workspace,
                 "Left Middle - 2",
@@ -99,7 +99,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 "cookbook:support:leftmiddle2",
                 viewBackend = UnitPaneViewBackend(workspace)
             ),
-            Pane(
+            PaneDef(
                 UUID(),
                 workspace = workspace,
                 "Left Middle - 3",
@@ -108,7 +108,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 "cookbook:support:leftmiddle3",
                 viewBackend = UnitPaneViewBackend(workspace)
             ),
-            Pane(
+            PaneDef(
                 UUID(),
                 workspace = workspace,
                 "Left Bottom",
@@ -118,7 +118,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 tooltip = "⌘ P",
                 viewBackend = UnitPaneViewBackend(workspace)
             ),
-            Pane(
+            PaneDef(
                 UUID(),
                 workspace = workspace,
                 "Right Top",
@@ -128,7 +128,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 tooltip = "⌘ P",
                 viewBackend = UnitPaneViewBackend(workspace)
             ),
-            Pane(
+            PaneDef(
                 UUID(),
                 workspace = workspace,
                 "Right Middle",
@@ -138,7 +138,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 tooltip = "⌘ P",
                 viewBackend = UnitPaneViewBackend(workspace)
             ),
-            Pane(
+            PaneDef(
                 UUID(),
                 workspace = workspace,
                 "Right Bottom",
@@ -148,7 +148,7 @@ fun initPanes(workspace: MultiPaneWorkspace) {
                 tooltip = "⌘ P",
                 viewBackend = UnitPaneViewBackend(workspace)
             ),
-            Pane(
+            PaneDef(
                 UUID(),
                 workspace = workspace,
                 "Center",

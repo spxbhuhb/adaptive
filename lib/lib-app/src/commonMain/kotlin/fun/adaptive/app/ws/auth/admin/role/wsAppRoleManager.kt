@@ -28,11 +28,11 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.mpw.MultiPaneTheme
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.value.AvValue
 
 @Adaptive
-fun wsAppRoleManager(pane: Pane<RoleManagerViewBackend>): AdaptiveFragment {
+fun wsAppRoleManager(pane: PaneDef<RoleManagerViewBackend>): AdaptiveFragment {
 
     val filterBackend = valueFrom { adatFormBackend(RoleFilter()) }
     val filter = filterBackend.inputValue

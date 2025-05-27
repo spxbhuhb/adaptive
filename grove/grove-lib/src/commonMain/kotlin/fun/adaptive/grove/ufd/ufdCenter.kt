@@ -23,10 +23,10 @@ import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 
 @Adaptive
-fun ufdCenter(pane: Pane<*>): AdaptiveFragment {
+fun ufdCenter(pane: PaneDef<*>): AdaptiveFragment {
 
     val controller = SheetViewController().also { fragment().wsContext<SheetViewContext>().focusedView.value = it }
 

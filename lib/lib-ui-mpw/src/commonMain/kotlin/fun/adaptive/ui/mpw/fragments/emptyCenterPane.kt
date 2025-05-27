@@ -5,10 +5,10 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 
 @Adaptive
-fun emptyCenterPane(pane: Pane<*>): AdaptiveFragment {
+fun emptyCenterPane(pane: PaneDef<*>): AdaptiveFragment {
     box {
         maxSize
     }

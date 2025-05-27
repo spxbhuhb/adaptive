@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.SideBarAction
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.SingularPaneItem
-import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.ui.mpw.model.PaneSingularity
 import `fun`.adaptive.utility.UUID
@@ -46,7 +46,7 @@ class AppMainWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
     fun MultiPaneWorkspace.wsAppHomePaneDef() {
 
         addContentPaneBuilder(HOME_CONTENT_KEY) {
-            Pane(
+            PaneDef(
                 UUID(),
                 workspace = this,
                 Strings.home,
