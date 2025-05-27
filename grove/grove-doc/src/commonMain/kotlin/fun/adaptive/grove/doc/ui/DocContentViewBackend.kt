@@ -15,16 +15,17 @@ import `fun`.adaptive.value.util.checkValue
 class DocContentViewBackend(
     override val workspace: MultiPaneWorkspace,
     override val paneDef: PaneDef,
-    var item : GroveDocValue
+    var content : GroveDocValue
 ) : PaneViewBackend<DocContentViewBackend>() {
 
-    override fun accepts(modifiers: Set<EventModifier>, item: WsPaneItem): Boolean {
+    override fun accepts(item: WsPaneItem, modifiers: Set<EventModifier>): Boolean {
         return item is AvValue<*> && item.spec is GroveDocSpec && avDomain.node in item.markers
     }
 
-    override fun load(modifiers: Set<EventModifier>, item: WsPaneItem) {
-        this.item = checkValue(item).checkSpec()
+    override fun load(item: WsPaneItem, modifiers: Set<EventModifier>) {
+        this.content = checkValue(item).checkSpec()
         name = item.nameLike
+        notifyListeners()
     }
 
 }

@@ -36,7 +36,7 @@ import `fun`.adaptive.ui.mpw.model.PaneDef
 import kotlinx.coroutines.launch
 
 @Adaptive
-fun wsAppSignIn(@Suppress("unused") pane: PaneDef<*>): AdaptiveFragment {
+fun wsAppSignIn(): AdaptiveFragment {
 
     val app = fragment().wsApplication
 

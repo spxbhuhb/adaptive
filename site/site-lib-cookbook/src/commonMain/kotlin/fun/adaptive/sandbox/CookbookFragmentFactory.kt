@@ -45,9 +45,6 @@ import `fun`.adaptive.sandbox.recipe.ui.tree.treeValueExample
 
 object CookbookFragmentFactory : FoundationFragmentFactory() {
     init {
-        add("cookbook:recipes", ::cookbookRecipes)
-        add("cookbook:center", ::cookbookCenter)
-
         //add("cookbook:recipe:auth", ::authRecipe)
         add("cookbook:recipe:goodmorning", ::goodMorning)
 

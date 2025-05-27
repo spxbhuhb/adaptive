@@ -4,14 +4,16 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.producer.fetch
-import `fun`.adaptive.ui.mpw.model.PaneDef
+import `fun`.adaptive.ui.viewbackend.viewBackend
 
 @Adaptive
-fun wsAppAccountSelf(pane : PaneDef<AccountSelfViewBackend>) : AdaptiveFragment {
+fun wsAppAccountSelf() : AdaptiveFragment {
 
-    val accountEditorData = fetch { pane.viewBackend.getAccountEditorData() } ?: AccountEditorData()
+    val viewBackend = viewBackend(AccountSelfViewBackend::class)
 
-    accountEditorSelf(accountEditorData) { pane.viewBackend.save(it) }
+    val accountEditorData = fetch { viewBackend.getAccountEditorData() } ?: AccountEditorData()
+
+    accountEditorSelf(accountEditorData) { viewBackend.save(it) }
 
     return fragment()
 }

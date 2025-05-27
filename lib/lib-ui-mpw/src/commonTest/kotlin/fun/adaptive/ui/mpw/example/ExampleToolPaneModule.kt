@@ -19,7 +19,7 @@ class ExampleToolPaneModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
         name = Strings.settings,
         icon = Graphics.settings,
         position = PanePosition.LeftMiddle,
-        key = EXAMPLE_TOOL_KEY
+        fragmentKey = EXAMPLE_TOOL_KEY
     )
 
     override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {

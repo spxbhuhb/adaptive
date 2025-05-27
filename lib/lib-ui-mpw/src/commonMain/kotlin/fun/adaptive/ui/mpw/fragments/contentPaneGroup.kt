@@ -2,7 +2,7 @@ package `fun`.adaptive.ui.mpw.fragments
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.actualize
-import `fun`.adaptive.foundation.instruction.emptyInstructions
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.tab.tabContainer
 import `fun`.adaptive.ui.tab.tabHandle
@@ -21,7 +21,10 @@ fun contentPaneGroup(
 
 @Adaptive
 fun singularGroup(group: ContentPaneGroupViewBackend) {
-    actualize(group.panes.first().key, emptyInstructions, group.panes.first())
+    val paneBackend = group.panes.first()
+    localContext(paneBackend) {
+        actualize(paneBackend.paneDef.fragmentKey)
+    }
 }
 
 @Adaptive

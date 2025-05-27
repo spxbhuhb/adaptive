@@ -18,7 +18,7 @@ class ExampleToolViewBackend(
     override val paneDef: PaneDef
 ) : PaneViewBackend<ExampleToolViewBackend>() {
 
-    override fun paneActions(): List<AbstractPaneAction> {
+    override fun getPaneActions(): List<AbstractPaneAction> {
         return listOf(
             PaneAction(Graphics.unfold_more, Strings.expandAll) { exampleInfo { "expand all click" } },
             PaneAction(Graphics.unfold_less, Strings.collapseAll) { exampleInfo { "collapse all click" } }

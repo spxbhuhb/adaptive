@@ -2,7 +2,6 @@ package `fun`.adaptive.ui.mpw.backends
 
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
-import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PaneAction
 import `fun`.adaptive.ui.tab.TabContainer
 import `fun`.adaptive.ui.tab.TabPane
@@ -12,14 +11,14 @@ import `fun`.adaptive.utility.UUID
 class ContentPaneGroupViewBackend(
     val uuid: UUID<ContentPaneGroupViewBackend>,
     val workspace: MultiPaneWorkspace,
-    firstPane: PaneDef<*>
+    firstPane: PaneViewBackend<*>
 ) {
     /**
      * True when this group contains only one pane and that one pane
-     * cannot be changed. Singular pane groups does not show tabs.
+     * cannot be changed. Singular pane groups do not show tabs.
      */
     val isSingular: Boolean
-        get() = (panes.size == 1 && panes.first().singularity.isSingular)
+        get() = (panes.size == 1 && panes.first().paneDef.singularity.isSingular)
 
     /**
      * The active pane of this pane group. This is the pane that is currently
@@ -31,9 +30,9 @@ class ContentPaneGroupViewBackend(
     var panes = mutableListOf(firstPane)
         private set
 
-    val tabContainer = storeFor<TabContainer> { toTabContainer() }
+    val tabContainer = storeFor { toTabContainer() }
 
-    fun load(pane: PaneDef<*>) {
+    fun load(pane: PaneViewBackend<*>) {
         val index = panes.indexOfFirst { it.uuid == pane.uuid }
 
         if (index == - 1) {
@@ -48,25 +47,24 @@ class ContentPaneGroupViewBackend(
 
     fun toTabContainer(): TabContainer =
         TabContainer(
-            panes.map { wsPane ->
+            panes.map { pane ->
                 TabPane(
-                    wsPane.uuid.cast(),
-                    wsPane.key,
-                    wsPane.name,
-                    wsPane.icon,
-                    wsPane.tooltip,
+                    pane.uuid.cast(),
+                    pane.paneDef.fragmentKey,
+                    pane.name,
+                    pane.paneDef.icon,
+                    pane.paneDef.tooltip,
                     closeable = true,
-                    wsPane.actions.mapNotNull { wsAction ->
+                    pane.getPaneActions().mapNotNull { wsAction ->
                         // TODO context menu actions for content panes
-                        if (wsAction !is PaneAction<*>) return@mapNotNull null
+                        if (wsAction !is PaneAction) return@mapNotNull null
                         TabPaneAction(
                             wsAction.icon,
-                            wsAction.tooltip,
-                            { wsAction.execute(workspace, wsPane) }
-                        )
+                            wsAction.tooltip
+                        ) { wsAction.execute() }
                     },
-                    model = wsPane,
-                    active = (wsPane.uuid == activePane.uuid)
+                    model = pane,
+                    active = (pane.uuid == activePane.uuid)
                 )
             },
             switchFun = ::switchTab,
@@ -75,7 +73,7 @@ class ContentPaneGroupViewBackend(
 
     fun switchTab(model : TabContainer, pane : TabPane) {
         val newTabs = model.switchTab(pane)
-        activePane = newTabs.tabs.first { it.active }.model as PaneDef<*>
+        activePane = newTabs.tabs.first { it.active }.model as PaneViewBackend<*>
         tabContainer.value = newTabs
     }
 
@@ -86,7 +84,7 @@ class ContentPaneGroupViewBackend(
             workspace.removePaneGroup(this)
         } else {
             val newTabs = model.removeTab(pane)
-            activePane = newTabs.tabs.first { it.active }.model as PaneDef<*>
+            activePane = newTabs.tabs.first { it.active }.model as PaneViewBackend<*>
             tabContainer.value = newTabs
         }
     }

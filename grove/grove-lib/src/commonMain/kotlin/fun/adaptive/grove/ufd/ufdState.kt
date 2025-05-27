@@ -11,12 +11,16 @@ import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.flowText
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
+import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.fragments.noContent
 import `fun`.adaptive.ui.mpw.fragments.toolPane
+import `fun`.adaptive.ui.viewbackend.viewBackend
 
 @Adaptive
 fun ufdState(): AdaptiveFragment {
+
+    val viewBackend = viewBackend(UnitPaneViewBackend::class)
 
     val context = fragment().wsContext<SheetViewContext>()
     val controller = valueFrom { context.focusedView }
@@ -24,7 +28,7 @@ fun ufdState(): AdaptiveFragment {
 
     val isEmpty = selection == null || selection.items.isEmpty()
 
-    toolPane(pane) {
+    toolPane(viewBackend) {
         if (isEmpty) {
             noContent(Strings.selectForState)
         } else {

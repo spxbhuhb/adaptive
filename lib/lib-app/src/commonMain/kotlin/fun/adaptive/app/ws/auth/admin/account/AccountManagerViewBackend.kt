@@ -8,16 +8,32 @@ import `fun`.adaptive.auth.model.CredentialType
 import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.auth.util.BasicAccountSummaryStore
+import `fun`.adaptive.lib_app.generated.resources.accounts
+import `fun`.adaptive.lib_app.generated.resources.supervised_user_circle
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.generated.resources.saveFail
 import `fun`.adaptive.ui.generated.resources.saveSuccess
-import `fun`.adaptive.ui.mpw.backends.SingularPaneViewBackend
+import `fun`.adaptive.ui.mpw.backends.SingularContentViewBackend
+import `fun`.adaptive.ui.mpw.model.PaneDef
+import `fun`.adaptive.ui.mpw.model.PanePosition
+import `fun`.adaptive.utility.UUID
 import kotlinx.datetime.Clock.System.now
 
 class AccountManagerViewBackend(
-    module: AppAuthWsModule<*>
-) : SingularPaneViewBackend<AccountManagerViewBackend>(module.workspace, module.ACCOUNT_MANAGER_ITEM) {
+    module: AppAuthWsModule<*>,
+) : SingularContentViewBackend<AccountManagerViewBackend>(
+    module.workspace,
+    PaneDef(
+        UUID(),
+        Strings.accounts,
+        Graphics.supervised_user_circle,
+        PanePosition.Center,
+        module.ACCOUNT_MANAGER_KEY
+    ),
+    module.ACCOUNT_MANAGER_ITEM
+) {
 
     val authBasic = getService<AuthBasicApi>(transport)
 

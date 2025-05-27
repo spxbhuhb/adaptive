@@ -16,11 +16,7 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.datetime.instant
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
-import `fun`.adaptive.ui.generated.resources.close
-import `fun`.adaptive.ui.generated.resources.edit
-import `fun`.adaptive.ui.generated.resources.filterPlaceholder
-import `fun`.adaptive.ui.generated.resources.more_vert
-import `fun`.adaptive.ui.generated.resources.notSet
+import `fun`.adaptive.ui.generated.resources.*
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.input.InputConfig.Companion.inputConfig
@@ -28,20 +24,21 @@ import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.mpw.MultiPaneTheme
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.emptyInst
 import `fun`.adaptive.ui.theme.textSmall
-import `fun`.adaptive.ui.mpw.MultiPaneTheme
-import `fun`.adaptive.ui.mpw.model.PaneDef
+import `fun`.adaptive.ui.viewbackend.viewBackend
 
 @Adaptive
-fun wsAppAccountManager(pane: PaneDef<AccountManagerViewBackend>): AdaptiveFragment {
+fun wsAppAccountManager(): AdaptiveFragment {
 
+    val viewBackend = viewBackend(AccountManagerViewBackend::class)
     val filterBackend = valueFrom { adatFormBackend(AccountFilter()) }
     val filter = filterBackend.inputValue
 
-    val items = valueFrom { pane.viewBackend.accounts }
+    val items = valueFrom { viewBackend.accounts }
 
     column {
         MultiPaneTheme.DEFAULT.contentPaneContainer
@@ -58,13 +55,13 @@ fun wsAppAccountManager(pane: PaneDef<AccountManagerViewBackend>): AdaptiveFragm
                     button(Strings.addAccount)
                     primaryPopup { hide ->
                         popupAlign.absoluteCenter(modal = true, 150.dp)
-                        accountEditorAdmin(hide = hide) { pane.viewBackend.save(it) }
+                        accountEditorAdmin(hide = hide) { viewBackend.save(it) }
                     }
                 }
             }
         }
 
-        localContext(pane.viewBackend) {
+        localContext(viewBackend) {
             items(items.filter { filter.matches(it) }, filter.isEmpty())
         }
     }

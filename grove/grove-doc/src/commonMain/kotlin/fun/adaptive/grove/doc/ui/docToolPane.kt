@@ -12,7 +12,7 @@ fun docToolPane(): AdaptiveFragment {
 
     val viewBackend = viewBackend(DocToolViewBackend::class)
 
-    toolPane(viewBackend.paneDef) {
+    toolPane(viewBackend) {
         tree(viewBackend.tree.treeBackend)
     }
 

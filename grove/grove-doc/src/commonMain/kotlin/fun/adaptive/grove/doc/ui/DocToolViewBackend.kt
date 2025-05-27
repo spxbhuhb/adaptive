@@ -25,7 +25,7 @@ class DocToolViewBackend(
 
     val tree = AvUiTreeViewBackend(workspace.backend, String::class, avDomain.treeDef, ::selectedFun)
 
-    override fun paneActions(): List<AbstractPaneAction> {
+    override fun getPaneActions(): List<AbstractPaneAction> {
         return listOf(
             PaneAction(Graphics.unfold_more, Strings.expandAll) { expandAll() },
             PaneAction(Graphics.unfold_less, Strings.collapseAll) { collapseAll() }

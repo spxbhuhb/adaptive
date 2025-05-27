@@ -20,10 +20,10 @@ import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.mpw.backends.ContentPaneGroupViewBackend
-import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.*
+import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 import kotlinx.coroutines.CoroutineScope
@@ -59,30 +59,32 @@ open class MultiPaneWorkspace(
     val theme
         get() = MultiPaneTheme.DEFAULT
 
-    val toolPanes = mutableListOf<PaneDef<*>>()
+    val toolPanes = mutableListOf<PaneViewBackend<*>>()
 
     val sideBarActions = mutableListOf<AbstractSideBarAction>()
 
     val noContentPane = PaneDef(
         UUID(),
-        this,
-        "No content",
-        Graphics.menu,
-        PanePosition.Center,
-        WSPANE_EMPTY,
-        viewBackend = UnitPaneViewBackend(this),
+        name = "No content",
+        icon = Graphics.menu,
+        position = PanePosition.Center,
+        fragmentKey = WSPANE_EMPTY,
         singularity = PaneSingularity.SINGULAR
     )
 
     val contentPaneGroups = storeFor {
         listOf(
-            ContentPaneGroupViewBackend(UUID(), this, noContentPane)
+            ContentPaneGroupViewBackend(
+                UUID(),
+                this,
+                UnitPaneViewBackend(this, noContentPane)
+            )
         )
     }
 
     var lastActiveContentPaneGroup: ContentPaneGroupViewBackend? = null
 
-    var lastActiveContentPane: PaneDef<*>? = null
+    var lastActiveContentPane: PaneViewBackend<*>? = null
 
     val focusedPane = storeFor<PaneId?> { null }
 
@@ -161,7 +163,7 @@ open class MultiPaneWorkspace(
         }
 
     fun sideBarActions(filterFun: (action: AbstractSideBarAction) -> Boolean) =
-        (toolPanes.filter(filterFun) + sideBarActions.filter(filterFun)).sortedBy { it.displayOrder }
+        (toolPanes.map { it.paneDef }.filter(filterFun) + sideBarActions.filter(filterFun)).sortedBy { it.displayOrder }
 
     fun io(block: suspend () -> Unit) {
         scope.launch {
@@ -181,11 +183,15 @@ open class MultiPaneWorkspace(
     // Pane switching
     // ---------------------------------------------------------------------------------------------
 
+    fun toggle(paneDef: PaneDef) {
+        toolPanes.firstOrNull { it.paneDef.uuid == paneDef.uuid }?.let { toggle(it) }
+    }
+
     /**
      * Toggle the given pane (typically when the user clicks on the pane icon).
      */
-    fun toggle(pane: PaneDef<*>) {
-        when (pane.position) {
+    fun toggle(pane: PaneViewBackend<*>) {
+        when (pane.paneDef.position) {
             PanePosition.LeftTop -> toggleStore(leftTop, pane)
             PanePosition.LeftMiddle -> toggleStore(leftMiddle, pane)
             PanePosition.LeftBottom -> toggleStore(leftBottom, pane)
@@ -221,7 +227,7 @@ open class MultiPaneWorkspace(
         isFullScreen.value = false
     }
 
-    private fun toggleStore(store: Observable<PaneId?>, pane: PaneDef<*>) {
+    private fun toggleStore(store: Observable<PaneId?>, pane: PaneViewBackend<*>) {
         if (store.value == pane.uuid) {
             store.value = null
         } else {
@@ -270,8 +276,8 @@ open class MultiPaneWorkspace(
         split.value = split.value.copy(visibility = new)
     }
 
-    fun paneStore(pane: PaneDef<*>): Observable<PaneId?> =
-        when (pane.position) {
+    fun paneStore(pane: PaneViewBackend<*>): Observable<PaneId?> =
+        when (pane.paneDef.position) {
             PanePosition.LeftTop -> leftTop
             PanePosition.LeftMiddle -> leftMiddle
             PanePosition.LeftBottom -> leftBottom
@@ -285,12 +291,8 @@ open class MultiPaneWorkspace(
     // Tool management
     // --------------------------------------------------------------------------------
 
-    operator fun PaneDef<*>.unaryPlus() {
-        toolPanes += this
-    }
-
-    fun addToolPane(paneBackend: () -> PaneViewBackend<*>) {
-        toolPanes += paneBackend
+    inline fun addToolPane(paneBackend: () -> PaneViewBackend<*>) {
+        toolPanes += paneBackend()
     }
 
     operator fun SideBarAction.unaryPlus() {
@@ -300,7 +302,7 @@ open class MultiPaneWorkspace(
     fun <T : PaneViewBackend<T>> toolBackend(kClass: KClass<T>): T? {
         for (pane in toolPanes) {
             @Suppress("UNCHECKED_CAST")
-            if (kClass.isInstance(pane.viewBackend)) return pane.viewBackend as T
+            if (kClass.isInstance(pane)) return pane as T
         }
         return null
     }
@@ -326,6 +328,17 @@ open class MultiPaneWorkspace(
             )
     }
 
+    fun addSingularContentPane(
+        singularItem : SingularPaneItem,
+        builder: (item: SingularPaneItem) -> PaneViewBackend<*>?
+    ) {
+        contentPaneBuilders.getOrPut(singularItem.type) { mutableListOf() } +=
+            ContentPaneBuilder(
+                { if (it === singularItem) it else null },
+                builder
+            )
+    }
+
     fun addContent(item: SingularPaneItem, modifiers: Set<EventModifier> = emptySet()) {
         addContent(item.type, item, modifiers)
     }
@@ -337,16 +350,18 @@ open class MultiPaneWorkspace(
             return
         }
 
-        val builder = findBuilder(type)
+        @Suppress("UNCHECKED_CAST") // erase the type so we can call builder freely
+        val builder = findBuilder(type) as? ContentPaneBuilder<Any>
 
         if (builder == null) {
             logger.warning("no pane builder for type $type")
             return
         }
 
-        val pane = builder.invoke(item)
+        val pane = builder.builder(item)
+        checkNotNull(pane) { "builder for type $type returned null pane" }
 
-        when (pane.singularity) {
+        when (pane.paneDef.singularity) {
             PaneSingularity.FULLSCREEN -> {
                 lastActiveContentPaneGroup = null
                 toFullScreen()
@@ -366,7 +381,7 @@ open class MultiPaneWorkspace(
         }
     }
 
-    fun findBuilder(type: PaneContentType): ContentPaneBuilder? {
+    fun findBuilder(type: PaneContentType): ContentPaneBuilder<*>? {
         var builder = contentPaneBuilders[type]?.firstOrNull()
         if (builder != null) return builder
 
@@ -386,7 +401,7 @@ open class MultiPaneWorkspace(
         return null
     }
 
-    fun accept(item: WsPaneItem, modifiers: Set<EventModifier>): Boolean {
+    fun accept(item: Any, modifiers: Set<EventModifier>): Boolean {
         lastActiveContentPane?.let {
             if (it.accepts(item, modifiers)) {
                 loadContentPane(item, modifiers, it, lastActiveContentPaneGroup !!)
@@ -405,7 +420,7 @@ open class MultiPaneWorkspace(
         return false
     }
 
-    fun accept(item: WsPaneItem, modifiers: Set<EventModifier>, group: ContentPaneGroupViewBackend): Boolean {
+    fun accept(item: Any, modifiers: Set<EventModifier>, group: ContentPaneGroupViewBackend): Boolean {
 
         for (pane in group.panes) {
             if (pane.accepts(item, modifiers)) {
@@ -417,12 +432,12 @@ open class MultiPaneWorkspace(
         return false
     }
 
-    fun loadContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: PaneDef<*>, group: ContentPaneGroupViewBackend) {
-        // pane.load may return with a different pane, most notably the name and tooltip of the pane may change
-        group.load(pane.load(item, modifiers))
+    fun loadContentPane(item: Any, modifiers: Set<EventModifier>, pane: PaneViewBackend<*>, group: ContentPaneGroupViewBackend) {
+        pane.load(item, modifiers)
+        group.load(pane)
     }
 
-    fun addGroupContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: PaneDef<*>) {
+    fun addGroupContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: PaneViewBackend<*>) {
 
         val safeGroup = lastActiveContentPaneGroup
 
@@ -445,7 +460,7 @@ open class MultiPaneWorkspace(
     }
 
     fun removePaneGroup(group: ContentPaneGroupViewBackend) {
-        ContentPaneGroupViewBackend(UUID(), this, noContentPane).also {
+        ContentPaneGroupViewBackend(UUID(), this, UnitPaneViewBackend(this, noContentPane)).also {
             lastActiveContentPaneGroup = it
             contentPaneGroups.value = listOf(it)
         }

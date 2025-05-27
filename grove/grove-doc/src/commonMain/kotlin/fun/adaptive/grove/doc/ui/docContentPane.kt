@@ -24,9 +24,9 @@ fun docContentPane(): AdaptiveFragment {
     column {
         maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
 
-        pageHeader(viewBackend.item)
+        pageHeader(viewBackend.content)
 
-        markdown(viewBackend.item.spec)
+        markdown(viewBackend.content.spec)
     }
 
     return fragment()

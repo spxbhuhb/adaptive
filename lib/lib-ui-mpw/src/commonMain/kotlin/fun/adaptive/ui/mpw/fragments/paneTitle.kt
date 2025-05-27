@@ -16,8 +16,8 @@ import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneMenuAction
 
 @Adaptive
-fun <BACKEND : PaneViewBackend<BACKEND>> paneTitle(
-    paneBackend : BACKEND,
+fun paneTitle(
+    paneBackend : PaneViewBackend<*>,
     showActions: Boolean,
     theme: MultiPaneTheme
 ) {
@@ -34,7 +34,7 @@ fun <BACKEND : PaneViewBackend<BACKEND>> paneTitle(
             theme.toolPaneTitleActionContainer
 
             if (showActions || actionContext.isPopupOpen) {
-                for (action in paneBackend.paneActions()) {
+                for (action in paneBackend.getPaneActions()) {
                     if (action is PaneMenuAction<*>) {
                         box {
                             actionIcon(action.icon, tooltip = action.tooltip, theme = denseVariantIconTheme)

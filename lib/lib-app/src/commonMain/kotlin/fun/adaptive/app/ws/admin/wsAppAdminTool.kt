@@ -6,18 +6,20 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.generated.resources.empty
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
+import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
+import `fun`.adaptive.ui.mpw.fragments.toolPane
+import `fun`.adaptive.ui.mpw.model.SingularPaneItem
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeTheme
 import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.tree
-import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.mpw.model.SingularPaneItem
-import `fun`.adaptive.ui.mpw.model.PaneDef
-import `fun`.adaptive.ui.mpw.fragments.toolPane
+import `fun`.adaptive.ui.viewbackend.viewBackend
 
 @Adaptive
-fun wsAppAdminTool(pane: PaneDef<*>): AdaptiveFragment {
+fun wsAppAdminTool(): AdaptiveFragment {
 
+    val viewBackend = viewBackend(UnitPaneViewBackend::class)
     val module = fragment().wsContext<AppAdminWsModule<*>>()
 
     val model = TreeViewBackend(
@@ -27,7 +29,7 @@ fun wsAppAdminTool(pane: PaneDef<*>): AdaptiveFragment {
         selectedFun = { _, item, _ -> fragment().wsAddContent(item.data) }
     )
 
-    toolPane(pane) {
+    toolPane(viewBackend) {
         tree(model)
     }
 

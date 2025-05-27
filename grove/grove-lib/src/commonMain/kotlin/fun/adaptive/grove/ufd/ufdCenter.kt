@@ -19,14 +19,13 @@ import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
-import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
-import `fun`.adaptive.ui.mpw.model.PaneDef
 
 @Adaptive
-fun ufdCenter(pane: PaneDef<*>): AdaptiveFragment {
+fun ufdCenter(): AdaptiveFragment {
 
     val controller = SheetViewController().also { fragment().wsContext<SheetViewContext>().focusedView.value = it }
 

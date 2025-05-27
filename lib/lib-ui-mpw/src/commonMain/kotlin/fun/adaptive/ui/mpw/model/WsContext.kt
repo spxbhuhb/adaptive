@@ -9,7 +9,7 @@ interface WsContext {
     val workspace: MultiPaneWorkspace
 
     fun pane(key: String) =
-        workspace.toolPanes.first { it.key == key }
+        workspace.toolPanes.first { it.paneDef.fragmentKey == key }
 
     operator fun get(item : NamedItem) = workspace.getItemConfig(item.type)
 

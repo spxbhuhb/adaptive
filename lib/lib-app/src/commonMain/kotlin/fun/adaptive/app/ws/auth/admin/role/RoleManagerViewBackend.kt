@@ -4,18 +4,34 @@ import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.auth.model.AuthMarkers
 import `fun`.adaptive.auth.model.RoleSpec
+import `fun`.adaptive.lib_app.generated.resources.military_tech
+import `fun`.adaptive.lib_app.generated.resources.roles
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.generated.resources.saveFail
 import `fun`.adaptive.ui.generated.resources.saveSuccess
-import `fun`.adaptive.ui.mpw.backends.SingularPaneViewBackend
+import `fun`.adaptive.ui.mpw.backends.SingularContentViewBackend
+import `fun`.adaptive.ui.mpw.model.PaneDef
+import `fun`.adaptive.ui.mpw.model.PanePosition
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.avByMarker
 import `fun`.adaptive.value.local.AvListSubscriber
 
 class RoleManagerViewBackend(
     module: AppAuthWsModule<*>
-) : SingularPaneViewBackend<RoleManagerViewBackend>(module.workspace, module.ROLE_MANAGER_ITEM) {
+) : SingularContentViewBackend<RoleManagerViewBackend>(
+    module.workspace,
+    PaneDef(
+        UUID(),
+        Strings.roles,
+        Graphics.military_tech,
+        PanePosition.Center,
+        module.ROLE_MANAGER_KEY
+    ),
+    module.ROLE_MANAGER_ITEM
+) {
 
     val service = getService<AuthRoleApi>(transport)
 

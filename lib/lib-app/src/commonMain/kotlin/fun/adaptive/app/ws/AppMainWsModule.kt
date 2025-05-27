@@ -45,22 +45,23 @@ class AppMainWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
 
     fun MultiPaneWorkspace.wsAppHomePaneDef() {
 
-        addContentPaneBuilder(HOME_CONTENT_KEY) {
-            PaneDef(
-                UUID(),
-                workspace = this,
-                Strings.home,
-                Graphics.eco,
-                PanePosition.Center,
-                HOME_CONTENT_KEY,
-                UnitPaneViewBackend(this),
-                singularity = PaneSingularity.SINGULAR,
-                displayOrder = 0
-            )
-        }
+        val homePaneDef = PaneDef(
+            UUID(),
+            Strings.home,
+            Graphics.eco,
+            PanePosition.Center,
+            HOME_CONTENT_KEY,
+            singularity = PaneSingularity.SINGULAR,
+            displayOrder = 0
+        )
+
+        addContentPaneBuilder(
+            HOME_CONTENT_KEY,
+            { true },
+            { UnitPaneViewBackend(this, homePaneDef) }
+        )
 
         + SideBarAction(
-            workspace = this,
             Strings.home,
             Graphics.eco,
             PanePosition.LeftTop,

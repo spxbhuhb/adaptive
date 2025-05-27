@@ -71,96 +71,105 @@ object WorkspaceRecipePaneFragmentFactory : FoundationFragmentFactory() {
 fun initPanes(workspace: MultiPaneWorkspace) {
     workspace.toolPanes.addAll(
         listOf(
-            PaneDef(
-                UUID(),
-                workspace = workspace,
-                "Left Top",
-                Graphics.menu,
-                PanePosition.LeftTop,
-                "cookbook:support:lefttop",
-                tooltip = "⌘ P",
-                viewBackend = UnitPaneViewBackend(workspace)
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID(),
+                    "Left Top",
+                    Graphics.menu,
+                    PanePosition.LeftTop,
+                    "cookbook:support:lefttop",
+                    tooltip = "⌘ P",
+                )
             ),
-            PaneDef(
-                UUID(),
-                workspace = workspace,
-                "Left Middle - 1",
-                Graphics.account_box,
-                PanePosition.LeftMiddle,
-                "cookbook:support:leftmiddle1",
-                viewBackend = UnitPaneViewBackend(workspace)
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID(),
+                    "Left Middle - 1",
+                    Graphics.account_box,
+                    PanePosition.LeftMiddle,
+                    "cookbook:support:leftmiddle1",
+                )
             ),
-            PaneDef(
-                UUID(),
-                workspace = workspace,
-                "Left Middle - 2",
-                Graphics.settings,
-                PanePosition.LeftMiddle,
-                "cookbook:support:leftmiddle2",
-                viewBackend = UnitPaneViewBackend(workspace)
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID(),
+                    "Left Middle - 2",
+                    Graphics.settings,
+                    PanePosition.LeftMiddle,
+                    "cookbook:support:leftmiddle2",
+                )
             ),
-            PaneDef(
-                UUID(),
-                workspace = workspace,
-                "Left Middle - 3",
-                Graphics.more_vert,
-                PanePosition.LeftMiddle,
-                "cookbook:support:leftmiddle3",
-                viewBackend = UnitPaneViewBackend(workspace)
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID(),
+                    "Left Middle - 3",
+                    Graphics.more_vert,
+                    PanePosition.LeftMiddle,
+                    "cookbook:support:leftmiddle3",
+                )
             ),
-            PaneDef(
-                UUID(),
-                workspace = workspace,
-                "Left Bottom",
-                Graphics.power_settings_new,
-                PanePosition.LeftBottom,
-                "cookbook:support:bottomleft",
-                tooltip = "⌘ P",
-                viewBackend = UnitPaneViewBackend(workspace)
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID(),
+                    "Left Bottom",
+                    Graphics.power_settings_new,
+                    PanePosition.LeftBottom,
+                    "cookbook:support:bottomleft",
+                    tooltip = "⌘ P",
+                )
             ),
-            PaneDef(
-                UUID(),
-                workspace = workspace,
-                "Right Top",
-                Graphics.account_box,
-                PanePosition.RightTop,
-                "cookbook:support:righttop",
-                tooltip = "⌘ P",
-                viewBackend = UnitPaneViewBackend(workspace)
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID(),
+                    "Right Top",
+                    Graphics.account_box,
+                    PanePosition.RightTop,
+                    "cookbook:support:righttop",
+                    tooltip = "⌘ P",
+                )
             ),
-            PaneDef(
-                UUID(),
-                workspace = workspace,
-                "Right Middle",
-                Graphics.account_box,
-                PanePosition.RightMiddle,
-                "cookbook:support:rightmiddle",
-                tooltip = "⌘ P",
-                viewBackend = UnitPaneViewBackend(workspace)
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID(),
+                    "Right Middle",
+                    Graphics.account_box,
+                    PanePosition.RightMiddle,
+                    "cookbook:support:rightmiddle",
+                    tooltip = "⌘ P",
+                )
             ),
-            PaneDef(
-                UUID(),
-                workspace = workspace,
-                "Right Bottom",
-                Graphics.account_circle,
-                PanePosition.RightBottom,
-                "cookbook:support:bottomright",
-                tooltip = "⌘ P",
-                viewBackend = UnitPaneViewBackend(workspace)
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID(),
+                    "Right Bottom",
+                    Graphics.account_circle,
+                    PanePosition.RightBottom,
+                    "cookbook:support:bottomright",
+                    tooltip = "⌘ P",
+                )
             ),
-            PaneDef(
-                UUID(),
-                workspace = workspace,
-                "Center",
-                Graphics.menu,
-                PanePosition.Center,
-                "cookbook:support:center",
-                viewBackend = UnitPaneViewBackend(workspace)
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID(),
+                    "Center",
+                    Graphics.menu,
+                    PanePosition.Center,
+                    "cookbook:support:center",
+                )
             ),
         )
     )
 
-    workspace.center.value = workspace.toolPanes.first { it.position == PanePosition.Center }.uuid
+    workspace.center.value = workspace.toolPanes.first { it.paneDef.position == PanePosition.Center }.uuid
 }
 
 

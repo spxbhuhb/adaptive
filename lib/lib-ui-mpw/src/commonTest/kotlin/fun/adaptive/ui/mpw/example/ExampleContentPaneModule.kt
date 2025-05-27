@@ -6,12 +6,9 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.generated.resources.settings
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
-import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
-import kotlin.contracts.ExperimentalContracts
-import kotlin.contracts.contract
 
 class ExampleContentPaneModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
 
@@ -24,7 +21,7 @@ class ExampleContentPaneModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
         name = Strings.settings,
         icon = Graphics.settings,
         position = PanePosition.LeftMiddle,
-        key = EXAMPLE_CONTENT_KEY
+        fragmentKey = EXAMPLE_CONTENT_KEY
     )
 
     override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {

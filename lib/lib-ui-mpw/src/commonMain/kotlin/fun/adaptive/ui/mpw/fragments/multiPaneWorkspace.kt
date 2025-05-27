@@ -3,6 +3,7 @@ package `fun`.adaptive.ui.mpw.fragments
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.actualize
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instructions
@@ -16,8 +17,10 @@ import `fun`.adaptive.ui.splitpane.verticalSplitDivider
 import `fun`.adaptive.ui.mpw.AbstractSideBarAction
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
+import `fun`.adaptive.utility.UUID
 
 @Adaptive
 fun multiPaneWorkspace(workspace: MultiPaneWorkspace) {
@@ -164,10 +167,12 @@ private fun mpPane(workspace: MultiPaneWorkspace, position: PanePosition): Adapt
 }
 
 @Adaptive
-private fun mpPaneContent(pane: PaneDef<*>) {
+private fun mpPaneContent(pane: PaneViewBackend<*>) {
     box {
         maxSize
-        actualize(pane.key, emptyInstructions, pane)
+        localContext(pane) {
+            actualize(pane.paneDef.fragmentKey, emptyInstructions, pane)
+        }
     }
 }
 
@@ -215,10 +220,10 @@ private fun mpSideBarIcon(
 
     val hover = hover()
     val theme = workspace.theme
-    val activePane = valueFrom { workspace.paneStore(action.pane) }
+//  FIXME  val activePane = valueFrom { workspace.paneStore(action.pane) }
     val focusedPane = valueFrom { workspace.focusedPane }
 
-    val containerStyle = theme.paneIconContainer(action.pane, activePane, focusedPane, hover)
+    val containerStyle = theme.paneIconContainer(UUID.nil(), UUID.nil(), focusedPane, hover)
 
     box {
         containerStyle

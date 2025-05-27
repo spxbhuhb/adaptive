@@ -8,7 +8,7 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.mpw.model.PaneDef
 
 @Adaptive
-fun emptyCenterPane(pane: PaneDef<*>): AdaptiveFragment {
+fun emptyCenterPane(): AdaptiveFragment {
     box {
         maxSize
     }

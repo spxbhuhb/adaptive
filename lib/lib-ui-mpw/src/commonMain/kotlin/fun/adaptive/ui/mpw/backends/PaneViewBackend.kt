@@ -1,20 +1,20 @@
 package `fun`.adaptive.ui.mpw.backends
 
 import `fun`.adaptive.general.SelfObservable
+import `fun`.adaptive.log.devNote
 import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.snackbar.failNotification
-import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.model.AbstractPaneAction
 import `fun`.adaptive.ui.mpw.model.PaneDef
-import `fun`.adaptive.ui.mpw.model.WsPaneItem
+import `fun`.adaptive.ui.snackbar.failNotification
+import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.firstInstance
 
 abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>() {
 
-    val paneId: UUID<PaneViewBackend<*>> = uuid4()
+    val uuid: UUID<PaneViewBackend<*>> = uuid4()
 
     abstract val paneDef: PaneDef
 
@@ -22,12 +22,12 @@ abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>() 
 
     var name = ""
 
-    open fun accepts(modifiers: Set<EventModifier>, item: WsPaneItem): Boolean {
+    open fun accepts(item: Any, modifiers: Set<EventModifier>): Boolean {
         return false
     }
 
-    open fun load(modifiers: Set<EventModifier>, item: WsPaneItem) {
-        throw UnsupportedOperationException("load for pane $paneDef is not supported")
+    open fun load(item: Any, modifiers: Set<EventModifier>) {
+        devNote { "PaneViewBackend.load($item, $modifiers) - using basic implementation" }
     }
 
     fun io(suspendFun: suspend () -> Unit) = workspace.io(suspendFun)
@@ -62,7 +62,7 @@ abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>() 
     val scope
         get() = workspace.scope
 
-    open fun paneActions(): List<AbstractPaneAction> =
+    open fun getPaneActions(): List<AbstractPaneAction> =
         emptyList()
 
 }

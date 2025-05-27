@@ -14,6 +14,15 @@ fun devInfo(message : () -> Any) {
 
 fun devInfo(message : String, exception: Exception) = getLogger("dev").fine(message, exception)
 
+fun devNote(message : () -> Any) {
+    getLogger("note").also {
+        try {
+            it.info(message().toString())
+        } catch (ex: Exception) {
+            it.error("error while building dev info", ex)
+        }
+    }
+}
 
 /**
  * Use this function in examples.

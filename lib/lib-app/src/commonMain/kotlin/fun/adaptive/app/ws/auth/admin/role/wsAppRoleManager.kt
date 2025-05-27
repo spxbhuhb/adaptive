@@ -5,7 +5,6 @@ import `fun`.adaptive.auth.model.RoleSpec
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
-import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.lib_app.generated.resources.addRole
@@ -14,7 +13,6 @@ import `fun`.adaptive.lib_app.generated.resources.roles
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.checkbox.checkbox
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
@@ -23,21 +21,23 @@ import `fun`.adaptive.ui.generated.resources.filterPlaceholder
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.input.InputConfig.Companion.inputConfig
 import `fun`.adaptive.ui.input.InputContext
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.mpw.MultiPaneTheme
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.mpw.MultiPaneTheme
-import `fun`.adaptive.ui.mpw.model.PaneDef
+import `fun`.adaptive.ui.viewbackend.viewBackend
 import `fun`.adaptive.value.AvValue
 
 @Adaptive
-fun wsAppRoleManager(pane: PaneDef<RoleManagerViewBackend>): AdaptiveFragment {
+fun wsAppRoleManager(): AdaptiveFragment {
 
+    val viewBackend = viewBackend(RoleManagerViewBackend::class)
     val filterBackend = valueFrom { adatFormBackend(RoleFilter()) }
     val filter = filterBackend.inputValue
 
-    val items = valueFrom { pane.viewBackend.roles }
+    val items = valueFrom { viewBackend.roles }
 
     column {
         MultiPaneTheme.DEFAULT.contentPaneContainer
@@ -51,15 +51,13 @@ fun wsAppRoleManager(pane: PaneDef<RoleManagerViewBackend>): AdaptiveFragment {
                     button(Strings.addRole)
                     primaryPopup { hide ->
                         popupAlign.absoluteCenter(modal = true, 150.dp)
-                        roleEditor(hide = hide) { pane.viewBackend.save(it, true) }
+                        roleEditor(hide = hide) { viewBackend.save(it, true) }
                     }
                 }
             }
         }
 
-        localContext(pane.viewBackend) {
-            items(items.filter { filter.matches(it) }, filter.isEmpty())
-        }
+        items(items.filter { filter.matches(it) }, filter.isEmpty())
     }
 
     return fragment()

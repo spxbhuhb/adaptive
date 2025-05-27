@@ -1,5 +1,6 @@
 package `fun`.adaptive.app.ws.auth.account
 
+import `fun`.adaptive.app.ws.auth.AppAuthWsModule
 import `fun`.adaptive.auth.api.AuthPrincipalApi
 import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.app.AuthAppContext
@@ -7,25 +8,39 @@ import `fun`.adaptive.auth.model.Credential
 import `fun`.adaptive.auth.model.CredentialType
 import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
+import `fun`.adaptive.lib_app.generated.resources.accountSelf
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
+import `fun`.adaptive.ui.generated.resources.account_circle
 import `fun`.adaptive.ui.generated.resources.saveSuccess
+import `fun`.adaptive.ui.mpw.backends.SingularContentViewBackend
+import `fun`.adaptive.ui.mpw.model.PaneDef
+import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.ui.snackbar.successNotification
-import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
-import `fun`.adaptive.ui.mpw.backends.SingularPaneViewBackend
-import `fun`.adaptive.ui.mpw.model.SingularPaneItem
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 import `fun`.adaptive.value.AvValueId
 import kotlinx.datetime.Clock.System.now
 
 class AccountSelfViewBackend(
-    workspace : MultiPaneWorkspace,
-    item : SingularPaneItem
-) : SingularPaneViewBackend<AccountSelfViewBackend>(workspace, item) {
+    module: AppAuthWsModule<*>
+) : SingularContentViewBackend<AccountSelfViewBackend>(
+    module.workspace,
+    PaneDef(
+        UUID(),
+        Strings.accountSelf,
+        Graphics.account_circle,
+        PanePosition.Center,
+        module.ACCOUNT_SELF_KEY,
+        displayOrder = Int.MAX_VALUE - 1
+    ),
+    module.ACCOUNT_SELF_ITEM
+) {
 
     val service = getService<AuthBasicApi>(transport)
 
-    suspend fun getAccountEditorData(principalId : AvValueId? = null): AccountEditorData? {
+    suspend fun getAccountEditorData(principalId: AvValueId? = null): AccountEditorData? {
 
         val actualPrincipalId =
             principalId
@@ -47,7 +62,7 @@ class AccountSelfViewBackend(
         )
     }
 
-    fun save(data : AccountEditorData) {
+    fun save(data: AccountEditorData) {
         io {
             service.save(
                 principalId = data.principalId,

@@ -4,7 +4,6 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.mpw.model.PanePosition
 
 class SideBarAction(
-    override val workspace: MultiPaneWorkspace,
     override val name: String,
     override val icon: GraphicsResourceSet,
     override val position: PanePosition,

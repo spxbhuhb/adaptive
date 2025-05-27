@@ -45,6 +45,14 @@ class GroveDocWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
 
     override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
 
+        val contentPaneDef = PaneDef(
+            UUID("ff694b37-8296-45e2-ba24-870886774730"),
+            "",
+            Graphics.menu_book,
+            PanePosition.Center,
+            WSPANE_DOC_BROWSER_CONTENT,
+        )
+
         addContentPaneBuilder(
             avDomain.node,
             { it is AvValue<*> && it.spec is GroveDocSpec && avDomain.node in it.markers }
@@ -56,27 +64,19 @@ class GroveDocWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
             )
         }
 
+
+        val toolPaneDef = PaneDef(
+            UUID("83687ee3-c871-44f1-9b91-6289e59bbbc0"),
+            Strings.documentation,
+            Graphics.book_3,
+            PanePosition.LeftMiddle,
+            WSPANE_DOC_BROWSER_TOOL
+        )
+
+
         addToolPane {
             DocToolViewBackend(workspace, toolPaneDef)
         }
 
     }
-
-    val toolPaneDef = PaneDef(
-        UUID("83687ee3-c871-44f1-9b91-6289e59bbbc0"),
-        Strings.documentation,
-        Graphics.book_3,
-        PanePosition.LeftMiddle,
-        WSPANE_DOC_BROWSER_TOOL
-    )
-
-    val contentPaneDef = PaneDef(
-        UUID("ff694b37-8296-45e2-ba24-870886774730"),
-        "",
-        Graphics.menu_book,
-        PanePosition.Center,
-        WSPANE_DOC_BROWSER_CONTENT,
-    )
-
-
 }

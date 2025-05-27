@@ -17,12 +17,16 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
+import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.fragments.noContent
 import `fun`.adaptive.ui.mpw.fragments.toolPane
+import `fun`.adaptive.ui.viewbackend.viewBackend
 
 @Adaptive
-fun ufdComponents(pane: PaneDef<*>): AdaptiveFragment {
+fun ufdComponents(): AdaptiveFragment {
+
+    val viewBackend = viewBackend(UnitPaneViewBackend::class)
 
     val context = fragment().wsContext<SheetViewContext>()
     val controller = valueFrom { context.focusedView }
@@ -30,7 +34,7 @@ fun ufdComponents(pane: PaneDef<*>): AdaptiveFragment {
 
     val isEmpty = (controller == null)
 
-    toolPane(pane) {
+    toolPane(viewBackend) {
         if (isEmpty) {
             noContent(Strings.openForComponents)
         } else {
