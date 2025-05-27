@@ -38,15 +38,14 @@ class TreeItem<T>(
             throw UnsupportedOperationException()
         }
 
-
     /**
      * Toggles the open state of this tree item.
      * If the item is open, it will be closed, and vice versa.
      */
     fun toggle() {
-        open = !open
+        open = ! open
     }
-    
+
     /**
      * Opens this tree node and all of its children recursively. This is a
      * **VERY** expensive operation. The innermost children are opened first.
@@ -63,6 +62,53 @@ class TreeItem<T>(
     fun collapseAll() {
         open = false
         children.forEach { it.collapseAll() }
+    }
+
+    /**
+     * Returns the previous visible item in the tree traversal order, respecting open
+     * children and hierarchical navigation
+     */
+    fun previous(): TreeItem<T>? {
+        val siblings = parent?.children ?: return null
+        val index = siblings.indexOf(this)
+
+        if (index == 0) {
+            return parent
+        }
+
+        val previous = siblings[index - 1]
+
+        fun lastVisibleChild(item: TreeItem<T>): TreeItem<T> {
+            return if (item.open && item.children.isNotEmpty()) {
+                lastVisibleChild(item.children.last())
+            } else {
+                item
+            }
+        }
+
+        return lastVisibleChild(previous)
+    }
+
+    /**
+     * Returns the next visible item in the tree traversal order, respecting open
+     * children and hierarchical navigation
+     */
+    fun next(): TreeItem<T>? {
+        if (open && children.isNotEmpty()) {
+            return children.first()
+        }
+
+        var current: TreeItem<T>? = this
+        while (current != null) {
+            val siblings = current.parent?.children ?: return null
+            val index = siblings.indexOf(current)
+            if (index < siblings.size - 1) {
+                return siblings[index + 1]
+            }
+            current = current.parent
+        }
+
+        return null
     }
 
     fun dumpTree(indent: Int = 0): String {

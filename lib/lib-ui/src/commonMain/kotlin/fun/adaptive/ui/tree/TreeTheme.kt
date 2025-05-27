@@ -20,6 +20,7 @@ open class TreeTheme(
     open val itemPadding : DPixel = 4.dp,
 ) {
     open val container = instructionsOf(
+        tabIndex { 0 },
         alignItems.startCenter
     )
 

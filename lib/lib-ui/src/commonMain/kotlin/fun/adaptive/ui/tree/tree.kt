@@ -27,9 +27,7 @@ fun <IT, CT> tree(
     val observed = valueFrom { viewBackend }
 
     column(observed.theme.container, instructions()) {
-        onClick { observed.onClick(it) }
-        onDoubleClick { observed.onDoubleClick(it) }
-        onKeydown { observed.onKeydown(it) }
+        onKeydown { observed.onKeyDown(it) }
 
         for (item in observed.items) {
             node(observed, item, 0.dp, _KT_74337_contextMenuBuilder)
@@ -41,7 +39,7 @@ fun <IT, CT> tree(
 
 @Adaptive
 private fun <IT, CT> node(
-    viewModel: TreeViewBackend<IT, CT>,
+    viewBackend: TreeViewBackend<IT, CT>,
     item: TreeItem<IT>,
     offset: DPixel,
     @Adaptive
@@ -52,14 +50,14 @@ private fun <IT, CT> node(
     column {
 
         localContext(observed) {
-            label(viewModel, item, offset, _KT_74337_contextMenuBuilder)
+            label(viewBackend, item, offset, _KT_74337_contextMenuBuilder)
         }
 
         if (observed.open) {
             column {
                 for (child in observed.children) {
                     column {
-                        node(viewModel, child, offset + viewModel.theme.indent, _KT_74337_contextMenuBuilder)
+                        node(viewBackend, child, offset + viewBackend.theme.indent, _KT_74337_contextMenuBuilder)
                     }
                 }
             }
@@ -69,41 +67,37 @@ private fun <IT, CT> node(
 
 @Adaptive
 private fun <IT, CT> label(
-    viewModel: TreeViewBackend<IT, CT>,
+    viewBackend: TreeViewBackend<IT, CT>,
     item: TreeItem<IT>,
     offset: DPixel,
     @Adaptive
     _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<IT, CT>?
 ) {
     val observed = valueFrom { item }
-    val theme = viewModel.theme
+    val theme = viewBackend.theme
 
     val foreground = theme.itemForeground(observed.selected, true)
 
     row(theme.item, theme.itemBackground(observed.selected, true)) {
         paddingLeft { offset }
 
-//        onClick {
-//            viewModel.selectedFun?.invoke(viewModel, observed, it.modifiers)
-//            if (viewModel.openWithSingleClick) {
-//                observed.open = ! observed.open
-//            }
-//        }
+        onClick {
+            viewBackend.selectedFun?.invoke(viewBackend, observed, it.modifiers)
+            if (viewBackend.singleClickOpen) {
+                observed.open = ! observed.open
+            }
+        }
 
-//        onDoubleClick {
-//            viewModel.selectedFun?.invoke(viewModel, observed, it.modifiers)
-//            observed.open = ! observed.open
-//        }
-
-        onKeydown {
-            viewModel.keyDownFun?.invoke(viewModel, observed, it)
+        onDoubleClick {
+            viewBackend.selectedFun?.invoke(viewBackend, observed, it.modifiers)
+            observed.open = ! observed.open
         }
 
         box {
             theme.handleContainer
             // This is tricky, `onClick` on `row` will run if this runs. If both reverses open,
             // it will remain the same at the end.
-            onClick { if (! viewModel.singleClickOpen) observed.open = ! observed.open }
+            onClick { if (! viewBackend.singleClickOpen) observed.open = ! observed.open }
 
             when {
                 observed.children.isEmpty() -> box { }
@@ -121,7 +115,7 @@ private fun <IT, CT> label(
         if (_KT_74337_contextMenuBuilder != null) {
             contextPopup { hide ->
                 popupAlign.belowCenter
-                _KT_74337_contextMenuBuilder(hide, viewModel, observed)
+                _KT_74337_contextMenuBuilder(hide, viewBackend, observed)
             }
         }
     }
