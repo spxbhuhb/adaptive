@@ -11,12 +11,14 @@ import `fun`.adaptive.grove.doc.app.GroveDocWsModule
 import `fun`.adaptive.sandbox.app.CookbookWsModule
 import `fun`.adaptive.site.SiteWsModule
 import `fun`.adaptive.ui.LibUiClientModule
+import `fun`.adaptive.ui.mpw.app.MultiPaneClientModule
 import `fun`.adaptive.value.app.ValueClientModule
 
 
 fun main() {
     wsBrowserClient {
         module { LibUiClientModule() }
+        module { MultiPaneClientModule() }
         module { GroveRuntimeModule() }
         module { NoAuthClientModule() }
         module { ValueClientModule() }

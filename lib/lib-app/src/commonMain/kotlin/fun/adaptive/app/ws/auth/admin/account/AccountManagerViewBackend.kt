@@ -12,12 +12,12 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.generated.resources.saveFail
 import `fun`.adaptive.ui.generated.resources.saveSuccess
-import `fun`.adaptive.ui.workspace.logic.WsSingularPaneViewBackend
+import `fun`.adaptive.ui.mpw.backends.SingularPaneViewBackend
 import kotlinx.datetime.Clock.System.now
 
 class AccountManagerViewBackend(
     module: AppAuthWsModule<*>
-) : WsSingularPaneViewBackend<AccountManagerViewBackend>(module.workspace, module.ACCOUNT_MANAGER_ITEM) {
+) : SingularPaneViewBackend<AccountManagerViewBackend>(module.workspace, module.ACCOUNT_MANAGER_ITEM) {
 
     val authBasic = getService<AuthBasicApi>(transport)
 

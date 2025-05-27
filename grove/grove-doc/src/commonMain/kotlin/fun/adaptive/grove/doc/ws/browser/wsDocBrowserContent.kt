@@ -13,11 +13,11 @@ import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsToolOrNull
-import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsToolOrNull
+import `fun`.adaptive.ui.mpw.model.Pane
 
 @Adaptive
-fun wsDocBrowserContent(pane: WsPane<DocBrowserContentViewBackend>): AdaptiveFragment {
+fun wsDocBrowserContent(pane: Pane<DocBrowserContentViewBackend>): AdaptiveFragment {
 
     val value = pane.viewBackend.value
 

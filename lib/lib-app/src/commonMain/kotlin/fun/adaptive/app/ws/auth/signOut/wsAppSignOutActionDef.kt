@@ -8,17 +8,17 @@ import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.generated.resources.power_settings_new
 import `fun`.adaptive.ui.generated.resources.signOut
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.WsSideBarAction
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.SideBarAction
+import `fun`.adaptive.ui.mpw.model.PanePosition
 
 fun MultiPaneWorkspace.wsAppSignOutActionDef(application: AbstractApplication<*>) {
 
-    + WsSideBarAction(
+    + SideBarAction(
         workspace = this,
         Strings.signOut,
         Graphics.power_settings_new,
-        WsPanePosition.LeftBottom,
+        PanePosition.LeftBottom,
         Int.MAX_VALUE,
         null
     ) {

@@ -5,15 +5,15 @@ import `fun`.adaptive.app.util.withRole
 import `fun`.adaptive.auth.app.AuthBasicClientModule
 import `fun`.adaptive.auth.model.AuthMarkers
 import `fun`.adaptive.foundation.AdaptiveAdapter
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.model.SingularWsItem
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.model.SingularPaneItem
 import `fun`.adaptive.value.AvValueId
 
 class AppAdminWsModule<WT : MultiPaneWorkspace> : AuthBasicClientModule<WT>() {
 
     val ADMIN_TOOL_KEY: String = "app:ws:admin:tool"
 
-    val adminItems = mutableListOf<SingularWsItem>()
+    val adminItems = mutableListOf<SingularPaneItem>()
     var securityOfficer : AvValueId? = null
 
     override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {

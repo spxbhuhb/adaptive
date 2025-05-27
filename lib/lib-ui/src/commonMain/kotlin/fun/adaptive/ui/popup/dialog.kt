@@ -4,9 +4,8 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.NonAdaptive
 import `fun`.adaptive.foundation.instruction.instructionsOf
+import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.ui.api.popupAlign
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsPaneViewBackend
 
 @NonAdaptive
 fun <T : Any> dialog(
@@ -19,21 +18,12 @@ fun <T : Any> dialog(
 }
 
 @NonAdaptive
-fun <T : Any> wsDialog(
-    workspace: MultiPaneWorkspace,
+fun <T : Any> dialog(
+    workspace: ClientWorkspace,
     data: T,
     content: (data: T, hide: () -> Unit) -> Any
 ) {
     dialog(workspace.frontend, data, content)
-}
-
-@NonAdaptive
-fun <T : Any> wsDialog(
-    controller: WsPaneViewBackend<*>,
-    data: T,
-    content: (data: T, hide: () -> Unit) -> Any
-) {
-    dialog(controller.workspace.frontend, data, content)
 }
 
 /**

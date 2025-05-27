@@ -16,13 +16,13 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.theme.textSmall
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.wsNoContent
-import `fun`.adaptive.ui.workspace.wsToolPane
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.fragments.noContent
+import `fun`.adaptive.ui.mpw.fragments.toolPane
 
 @Adaptive
-fun ufdComponents(pane: WsPane<*>): AdaptiveFragment {
+fun ufdComponents(pane: Pane<*>): AdaptiveFragment {
 
     val context = fragment().wsContext<SheetViewContext>()
     val controller = valueFrom { context.focusedView }
@@ -30,9 +30,9 @@ fun ufdComponents(pane: WsPane<*>): AdaptiveFragment {
 
     val isEmpty = (controller == null)
 
-    wsToolPane(pane) {
+    toolPane(pane) {
         if (isEmpty) {
-            wsNoContent(Strings.openForComponents)
+            noContent(Strings.openForComponents)
         } else {
             componentList(controller, selection)
         }

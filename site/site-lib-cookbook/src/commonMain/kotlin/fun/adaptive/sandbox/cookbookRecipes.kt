@@ -8,12 +8,12 @@ import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.tree
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.wsToolPane
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.fragments.toolPane
 
 @Adaptive
-fun cookbookRecipes(pane: WsPane<*>): AdaptiveFragment {
+fun cookbookRecipes(pane: Pane<*>): AdaptiveFragment {
     val context = fragment().wsContext<CbWsContext>()
 
     val treeViewBackend = TreeViewBackend(
@@ -27,7 +27,7 @@ fun cookbookRecipes(pane: WsPane<*>): AdaptiveFragment {
         singleClickOpen = true
     )
 
-    wsToolPane(pane) {
+    toolPane(pane) {
         tree(treeViewBackend)
     }
 

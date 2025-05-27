@@ -6,10 +6,10 @@ import `fun`.adaptive.grove.doc.model.avDomain
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsPaneViewBackend
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPaneItem
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.WsPaneItem
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.util.checkValue
@@ -17,13 +17,13 @@ import `fun`.adaptive.value.util.checkValue
 class DocBrowserContentViewBackend(
     override val workspace: MultiPaneWorkspace,
     var value : GroveDocValue
-) : WsPaneViewBackend<DocBrowserContentViewBackend>() {
+) : PaneViewBackend<DocBrowserContentViewBackend>() {
 
-    override fun accepts(pane: WsPane<DocBrowserContentViewBackend>, modifiers: Set<EventModifier>, item: WsPaneItem): Boolean {
+    override fun accepts(pane: Pane<DocBrowserContentViewBackend>, modifiers: Set<EventModifier>, item: WsPaneItem): Boolean {
         return item is AvValue<*> && item.spec is GroveDocSpec && avDomain.node in item.markers
     }
 
-    override fun load(pane: WsPane<DocBrowserContentViewBackend>, modifiers: Set<EventModifier>, item: WsPaneItem): WsPane<DocBrowserContentViewBackend> {
+    override fun load(pane: Pane<DocBrowserContentViewBackend>, modifiers: Set<EventModifier>, item: WsPaneItem): Pane<DocBrowserContentViewBackend> {
 
         value = checkValue(item).checkSpec()
 

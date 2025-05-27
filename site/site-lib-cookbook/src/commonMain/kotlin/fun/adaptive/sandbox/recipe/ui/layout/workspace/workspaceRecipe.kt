@@ -13,13 +13,14 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.workspace.*
-import `fun`.adaptive.ui.workspace.WorkspaceTheme.Companion.DEFAULT
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
+import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
+import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspaceMain
+import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspaceSideBarIcons
+import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
 class Context {
@@ -41,11 +42,11 @@ fun workspaceRecipe(): AdaptiveFragment {
             borders.outline .. backgrounds.surface
 
             localContext(workspace) {
-                wsSideBarIcons(left = true, workspace)
+                multiPaneWorkspaceSideBarIcons(left = true, workspace)
 
-                wsMain(workspace)
+                multiPaneWorkspaceMain(workspace)
 
-                wsSideBarIcons(left = false, workspace)
+                multiPaneWorkspaceSideBarIcons(left = false, workspace)
             }
         }
     }
@@ -70,96 +71,96 @@ object WorkspaceRecipePaneFragmentFactory : FoundationFragmentFactory() {
 fun initPanes(workspace: MultiPaneWorkspace) {
     workspace.toolPanes.addAll(
         listOf(
-            WsPane(
+            Pane(
                 UUID(),
                 workspace = workspace,
                 "Left Top",
                 Graphics.menu,
-                WsPanePosition.LeftTop,
+                PanePosition.LeftTop,
                 "cookbook:support:lefttop",
                 tooltip = "⌘ P",
-                viewBackend = WsUnitPaneViewBackend(workspace)
+                viewBackend = UnitPaneViewBackend(workspace)
             ),
-            WsPane(
+            Pane(
                 UUID(),
                 workspace = workspace,
                 "Left Middle - 1",
                 Graphics.account_box,
-                WsPanePosition.LeftMiddle,
+                PanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle1",
-                viewBackend = WsUnitPaneViewBackend(workspace)
+                viewBackend = UnitPaneViewBackend(workspace)
             ),
-            WsPane(
+            Pane(
                 UUID(),
                 workspace = workspace,
                 "Left Middle - 2",
                 Graphics.settings,
-                WsPanePosition.LeftMiddle,
+                PanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle2",
-                viewBackend = WsUnitPaneViewBackend(workspace)
+                viewBackend = UnitPaneViewBackend(workspace)
             ),
-            WsPane(
+            Pane(
                 UUID(),
                 workspace = workspace,
                 "Left Middle - 3",
                 Graphics.more_vert,
-                WsPanePosition.LeftMiddle,
+                PanePosition.LeftMiddle,
                 "cookbook:support:leftmiddle3",
-                viewBackend = WsUnitPaneViewBackend(workspace)
+                viewBackend = UnitPaneViewBackend(workspace)
             ),
-            WsPane(
+            Pane(
                 UUID(),
                 workspace = workspace,
                 "Left Bottom",
                 Graphics.power_settings_new,
-                WsPanePosition.LeftBottom,
+                PanePosition.LeftBottom,
                 "cookbook:support:bottomleft",
                 tooltip = "⌘ P",
-                viewBackend = WsUnitPaneViewBackend(workspace)
+                viewBackend = UnitPaneViewBackend(workspace)
             ),
-            WsPane(
+            Pane(
                 UUID(),
                 workspace = workspace,
                 "Right Top",
                 Graphics.account_box,
-                WsPanePosition.RightTop,
+                PanePosition.RightTop,
                 "cookbook:support:righttop",
                 tooltip = "⌘ P",
-                viewBackend = WsUnitPaneViewBackend(workspace)
+                viewBackend = UnitPaneViewBackend(workspace)
             ),
-            WsPane(
+            Pane(
                 UUID(),
                 workspace = workspace,
                 "Right Middle",
                 Graphics.account_box,
-                WsPanePosition.RightMiddle,
+                PanePosition.RightMiddle,
                 "cookbook:support:rightmiddle",
                 tooltip = "⌘ P",
-                viewBackend = WsUnitPaneViewBackend(workspace)
+                viewBackend = UnitPaneViewBackend(workspace)
             ),
-            WsPane(
+            Pane(
                 UUID(),
                 workspace = workspace,
                 "Right Bottom",
                 Graphics.account_circle,
-                WsPanePosition.RightBottom,
+                PanePosition.RightBottom,
                 "cookbook:support:bottomright",
                 tooltip = "⌘ P",
-                viewBackend = WsUnitPaneViewBackend(workspace)
+                viewBackend = UnitPaneViewBackend(workspace)
             ),
-            WsPane(
+            Pane(
                 UUID(),
                 workspace = workspace,
                 "Center",
                 Graphics.menu,
-                WsPanePosition.Center,
+                PanePosition.Center,
                 "cookbook:support:center",
-                viewBackend = WsUnitPaneViewBackend(workspace)
+                viewBackend = UnitPaneViewBackend(workspace)
             ),
         )
     )
 
-    workspace.center.value = workspace.toolPanes.first { it.position == WsPanePosition.Center }.uuid
+    workspace.center.value = workspace.toolPanes.first { it.position == PanePosition.Center }.uuid
 }
 
 

@@ -50,6 +50,7 @@ adaptive-lib-ktor = { module = "fun.adaptive:lib-ktor", version.ref = "adaptive"
 adaptive-lib-document = { module = "fun.adaptive:lib-document", version.ref = "adaptive" }
 adaptive-lib-test = { module = "fun.adaptive:lib-test", version.ref = "adaptive" }
 adaptive-lib-ui = { module = "fun.adaptive:lib-ui", version.ref = "adaptive" }
+adaptive-lib-ui-mpw = { module = "fun.adaptive:lib-ui-mpw", version.ref = "adaptive" }
 adaptive-lib-util = { module = "fun.adaptive:lib-util", version.ref = "adaptive" }
 adaptive-lib-value = { module = "fun.adaptive:lib-value", version.ref = "adaptive" }
 

@@ -9,12 +9,12 @@ import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.tree
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.wsToolPane
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.fragments.toolPane
 
 @Adaptive
-fun apmProject(pane: WsPane<*>): AdaptiveFragment {
+fun apmProject(pane: Pane<*>): AdaptiveFragment {
     val context = fragment().wsContext<ApmWsContext>()
 
     val treeViewBackend = TreeViewBackend(
@@ -23,7 +23,7 @@ fun apmProject(pane: WsPane<*>): AdaptiveFragment {
         context = Unit
     )
 
-    wsToolPane(context.pane(ApmWsContext.APM_PROJECT_TOOL_KEY)) {
+    toolPane(context.pane(ApmWsContext.APM_PROJECT_TOOL_KEY)) {
         tree(treeViewBackend)
     }
 

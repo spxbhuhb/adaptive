@@ -22,7 +22,7 @@ import `fun`.adaptive.ui.generated.resources.saveSuccess
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.snackbar.successNotification
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.value.AvValueId
 import kotlinx.datetime.Clock.System.now
 

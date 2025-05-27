@@ -25,3 +25,4 @@ includeBuild("../../grove/grove-runtime")
 
 includeBuild("../../lib/lib-graphics")
 includeBuild("../../lib/lib-ui")
+includeBuild("../../lib/lib-ui-mpw")

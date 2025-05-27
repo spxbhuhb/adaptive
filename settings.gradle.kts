@@ -26,6 +26,7 @@ includeBuild("lib/lib-document")
 includeBuild("lib/lib-process")
 includeBuild("lib/lib-test")
 includeBuild("lib/lib-ui")
+includeBuild("lib/lib-ui-mpw")
 includeBuild("lib/lib-util")
 includeBuild("lib/lib-value")
 

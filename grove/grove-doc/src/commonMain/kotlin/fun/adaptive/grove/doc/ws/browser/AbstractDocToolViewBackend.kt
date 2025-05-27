@@ -5,13 +5,13 @@ import `fun`.adaptive.grove.doc.model.avDomain
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.value.AvUiTreeViewBackend
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsPaneViewBackend
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.value.AvValue
 
 abstract class AbstractDocToolViewBackend<VB : AbstractDocToolViewBackend<VB>>(
     override val workspace: MultiPaneWorkspace
-) : WsPaneViewBackend<VB>() {
+) : PaneViewBackend<VB>() {
 
     val tree = AvUiTreeViewBackend(workspace.backend, String::class, avDomain.treeDef, ::selectedFun)
 

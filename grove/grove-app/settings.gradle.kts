@@ -20,9 +20,12 @@ dependencyResolutionManagement {
 
 includeBuild("../../core/core-core")
 includeBuild("../../core/core-ui")
-includeBuild("../../lib/lib-ktor")
+
 includeBuild("../../lib/lib-auth")
 includeBuild("../../lib/lib-graphics")
+includeBuild("../../lib/lib-ktor")
 includeBuild("../../lib/lib-ui")
+includeBuild("../../lib/lib-ui-mpw")
+
 includeBuild("../../grove/grove-lib")
 includeBuild("../../grove/grove-runtime")

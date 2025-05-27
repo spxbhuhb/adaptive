@@ -9,16 +9,16 @@ import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.wsToolPane
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.fragments.toolPane
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
 @Adaptive
-fun wsAppInspectTool(pane: WsPane<*>): AdaptiveFragment {
+fun wsAppInspectTool(pane: Pane<*>): AdaptiveFragment {
 
     val app = fragment().firstContext<ClientApplication<*>>()
 
-    wsToolPane(pane) {
+    toolPane(pane) {
         row {
             maxSize .. verticalScroll
             gap { 16.dp}

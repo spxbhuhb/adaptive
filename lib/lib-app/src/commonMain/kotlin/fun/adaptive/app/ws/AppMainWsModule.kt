@@ -9,13 +9,13 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.generated.resources.eco
 import `fun`.adaptive.ui.generated.resources.home
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.WsSideBarAction
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
-import `fun`.adaptive.ui.workspace.model.SingularWsItem
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
-import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.SideBarAction
+import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
+import `fun`.adaptive.ui.mpw.model.SingularPaneItem
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PanePosition
+import `fun`.adaptive.ui.mpw.model.PaneSingularity
 import `fun`.adaptive.utility.UUID
 
 class AppMainWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
@@ -24,7 +24,7 @@ class AppMainWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
     val BACKEND_MAIN_KEY: FragmentKey = "app:ws:backend:main"
 
     val HOME_CONTENT_KEY: FragmentKey = "app:ws:home:content"
-    val HOME_CONTENT_ITEM by lazy { SingularWsItem(Strings.home, HOME_CONTENT_KEY) }
+    val HOME_CONTENT_ITEM by lazy { SingularPaneItem(Strings.home, HOME_CONTENT_KEY) }
 
     override fun resourceInit() {
         application.stringStores += commonMainStringsStringStore0
@@ -46,24 +46,24 @@ class AppMainWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
     fun MultiPaneWorkspace.wsAppHomePaneDef() {
 
         addContentPaneBuilder(HOME_CONTENT_KEY) {
-            WsPane(
+            Pane(
                 UUID(),
                 workspace = this,
                 Strings.home,
                 Graphics.eco,
-                WsPanePosition.Center,
+                PanePosition.Center,
                 HOME_CONTENT_KEY,
-                WsUnitPaneViewBackend(this),
-                singularity = WsPaneSingularity.SINGULAR,
+                UnitPaneViewBackend(this),
+                singularity = PaneSingularity.SINGULAR,
                 displayOrder = 0
             )
         }
 
-        + WsSideBarAction(
+        + SideBarAction(
             workspace = this,
             Strings.home,
             Graphics.eco,
-            WsPanePosition.LeftTop,
+            PanePosition.LeftTop,
             0,
             null
         ) {

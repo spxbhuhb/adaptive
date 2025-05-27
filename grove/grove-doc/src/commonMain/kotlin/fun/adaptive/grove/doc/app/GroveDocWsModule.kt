@@ -13,7 +13,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.value.iconCache
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import kotlin.collections.plusAssign
 
 class GroveDocWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {

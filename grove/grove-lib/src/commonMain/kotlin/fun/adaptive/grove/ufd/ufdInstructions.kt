@@ -10,13 +10,13 @@ import `fun`.adaptive.grove.sheet.SheetViewContext
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.flowText
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.wsNoContent
-import `fun`.adaptive.ui.workspace.wsToolPane
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.fragments.noContent
+import `fun`.adaptive.ui.mpw.fragments.toolPane
 
 @Adaptive
-fun ufdInstructions(pane: WsPane<*>): AdaptiveFragment {
+fun ufdInstructions(pane: Pane<*>): AdaptiveFragment {
 
     val context = fragment().wsContext<SheetViewContext>()
     val controller = valueFrom { context.focusedView }
@@ -24,9 +24,9 @@ fun ufdInstructions(pane: WsPane<*>): AdaptiveFragment {
 
     val isEmpty = selection == null || selection.items.isEmpty()
 
-    wsToolPane(pane) {
+    toolPane(pane) {
         if (isEmpty) {
-            wsNoContent(Strings.selectForInstructions)
+            noContent(Strings.selectForInstructions)
         } else {
             instructionList(selection)
         }

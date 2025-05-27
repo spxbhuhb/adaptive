@@ -25,10 +25,11 @@ dependencyResolutionManagement {
 
 includeBuild("../../core/core-core")
 includeBuild("../../core/core-ui")
-includeBuild("../../lib/lib-auth")
-includeBuild("../../lib/lib-ui")
-includeBuild("../../lib/lib-graphics")
-includeBuild("../../lib/lib-document")
-includeBuild("../../lib/lib-ktor")
-includeBuild("../../lib/lib-value")
 
+includeBuild("../../lib/lib-auth")
+includeBuild("../../lib/lib-document")
+includeBuild("../../lib/lib-graphics")
+includeBuild("../../lib/lib-ktor")
+includeBuild("../../lib/lib-ui")
+includeBuild("../../lib/lib-ui-mpw")
+includeBuild("../../lib/lib-value")

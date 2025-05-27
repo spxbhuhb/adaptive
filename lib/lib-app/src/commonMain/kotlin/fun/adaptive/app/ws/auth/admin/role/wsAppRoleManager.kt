@@ -27,12 +27,12 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.workspace.WorkspaceTheme
-import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.ui.mpw.MultiPaneTheme
+import `fun`.adaptive.ui.mpw.model.Pane
 import `fun`.adaptive.value.AvValue
 
 @Adaptive
-fun wsAppRoleManager(pane: WsPane<RoleManagerViewBackend>): AdaptiveFragment {
+fun wsAppRoleManager(pane: Pane<RoleManagerViewBackend>): AdaptiveFragment {
 
     val filterBackend = valueFrom { adatFormBackend(RoleFilter()) }
     val filter = filterBackend.inputValue
@@ -40,7 +40,7 @@ fun wsAppRoleManager(pane: WsPane<RoleManagerViewBackend>): AdaptiveFragment {
     val items = valueFrom { pane.viewBackend.roles }
 
     column {
-        WorkspaceTheme.DEFAULT.contentPaneContainer
+        MultiPaneTheme.DEFAULT.contentPaneContainer
 
         wsContentHeader(Strings.roles) {
             row {

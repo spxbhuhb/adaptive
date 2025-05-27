@@ -3,7 +3,7 @@ package `fun`.adaptive.app.ws.inspect
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 
 class AppInspectWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
 

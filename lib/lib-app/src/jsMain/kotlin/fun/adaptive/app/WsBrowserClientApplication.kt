@@ -5,7 +5,7 @@ import `fun`.adaptive.app.ws.wsAppMain
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 
 open class WsBrowserClientApplication(
     vararg modules: AppModule<MultiPaneWorkspace>

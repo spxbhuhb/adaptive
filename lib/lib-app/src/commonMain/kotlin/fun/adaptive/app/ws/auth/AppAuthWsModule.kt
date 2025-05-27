@@ -20,22 +20,22 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.model.SingularWsItem
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.model.SingularPaneItem
 
 class AppAuthWsModule<WT : MultiPaneWorkspace> : AuthBasicClientModule<WT>() {
 
     val SIGN_IN_KEY: FragmentKey = "app:ws:auth:sign-in"
-    val SIGN_IN_ITEM by lazy { SingularWsItem(Strings.signInTitle, SIGN_IN_KEY) }
+    val SIGN_IN_ITEM by lazy { SingularPaneItem(Strings.signInTitle, SIGN_IN_KEY) }
 
     val ACCOUNT_SELF_KEY: FragmentKey = "app:ws:auth:account:self"
-    val ACCOUNT_SELF_ITEM by lazy { SingularWsItem(Strings.accountSelf, ACCOUNT_SELF_KEY) }
+    val ACCOUNT_SELF_ITEM by lazy { SingularPaneItem(Strings.accountSelf, ACCOUNT_SELF_KEY) }
 
     val ACCOUNT_MANAGER_KEY: FragmentKey = "app:ws:admin:accounts"
-    val ACCOUNT_MANAGER_ITEM by lazy { SingularWsItem(Strings.accounts, ACCOUNT_MANAGER_KEY, Graphics.supervised_user_circle) }
+    val ACCOUNT_MANAGER_ITEM by lazy { SingularPaneItem(Strings.accounts, ACCOUNT_MANAGER_KEY, Graphics.supervised_user_circle) }
 
     val ROLE_MANAGER_KEY : FragmentKey = "app:ws:admin:roles"
-    val ROLE_MANAGER_ITEM by lazy { SingularWsItem(Strings.roles, ROLE_MANAGER_KEY, Graphics.military_tech) }
+    val ROLE_MANAGER_ITEM by lazy { SingularPaneItem(Strings.roles, ROLE_MANAGER_KEY, Graphics.military_tech) }
 
     override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {
         add(SIGN_IN_KEY, ::wsAppSignIn)

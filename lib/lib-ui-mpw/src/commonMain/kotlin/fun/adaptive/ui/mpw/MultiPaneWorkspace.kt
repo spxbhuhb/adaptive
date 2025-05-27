@@ -1,0 +1,456 @@
+package `fun`.adaptive.ui.mpw
+
+import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.api.firstContext
+import `fun`.adaptive.foundation.value.storeFor
+import `fun`.adaptive.general.Observable
+import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.runtime.AbstractApplication
+import `fun`.adaptive.runtime.ClientWorkspace
+import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
+import `fun`.adaptive.ui.generated.resources.executionError
+import `fun`.adaptive.ui.generated.resources.menu
+import `fun`.adaptive.ui.instruction.event.EventModifier
+import `fun`.adaptive.ui.instruction.layout.Orientation
+import `fun`.adaptive.ui.instruction.layout.SplitMethod
+import `fun`.adaptive.ui.instruction.layout.SplitVisibility
+import `fun`.adaptive.ui.mpw.backends.ContentPaneGroupViewBackend
+import `fun`.adaptive.ui.snackbar.failNotification
+import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
+import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
+import `fun`.adaptive.ui.mpw.model.*
+import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.firstInstance
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
+import kotlin.reflect.KClass
+
+open class MultiPaneWorkspace(
+    backend: BackendAdapter,
+    scope: CoroutineScope = backend.scope,
+    transport: ServiceCallTransport = backend.transport
+) : ClientWorkspace(backend, scope, transport) {
+
+    companion object {
+        inline fun <reified T> AdaptiveFragment.wsContext() =
+            firstContext<MultiPaneWorkspace>().contexts.firstInstance<T>()
+
+        inline fun <reified T : PaneViewBackend<T>> AdaptiveFragment.wsToolOrNull() =
+            firstContext<MultiPaneWorkspace>().toolBackend(T::class)
+
+        const val WS_CENTER_PANE = "lib:ws:center"
+        const val WSPANE_EMPTY = "lib:ws:nocontent"
+    }
+
+    val logger = getLogger("workspace")
+
+    val application: AbstractApplication<*>
+        get() = checkNotNull(applicationOrNull)
+
+    var applicationOrNull: AbstractApplication<*>? = null
+
+    val contentPaneBuilders = mutableMapOf<WsPaneItemType, MutableList<ContentPaneBuilder>>()
+
+    val theme
+        get() = MultiPaneTheme.DEFAULT
+
+    val toolPanes = mutableListOf<Pane<*>>()
+
+    val sideBarActions = mutableListOf<AbstractSideBarAction>()
+
+    val noContentPane = Pane(
+        UUID(),
+        this,
+        "No content",
+        Graphics.menu,
+        PanePosition.Center,
+        WSPANE_EMPTY,
+        viewBackend = UnitPaneViewBackend(this),
+        singularity = PaneSingularity.SINGULAR
+    )
+
+    val contentPaneGroups = storeFor {
+        listOf(
+            ContentPaneGroupViewBackend(UUID(), this, noContentPane)
+        )
+    }
+
+    var lastActiveContentPaneGroup: ContentPaneGroupViewBackend? = null
+
+    var lastActiveContentPane: Pane<*>? = null
+
+    val focusedPane = storeFor<PaneId?> { null }
+
+    val isFullScreen = storeFor { false }
+
+    val rightTop = storeFor<PaneId?> { null }
+    val rightMiddle = storeFor<PaneId?> { null }
+    val rightBottom = storeFor<PaneId?> { null }
+    val center = storeFor<PaneId?> { null }
+    val leftTop = storeFor<PaneId?> { null }
+    val leftMiddle = storeFor<PaneId?> { null }
+    val leftBottom = storeFor<PaneId?> { null }
+
+    /**
+     * Top contains: top split
+     * Bottom contains: bottom split
+     */
+    val mainSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Vertical) }
+
+    /**
+     * Left contains: bottom left pane
+     * Right contains: bottom right pane
+     */
+    val bottomSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Horizontal) }
+
+    /**
+     * Left contains: left split
+     * Right contains: center and right split
+     */
+    val topSplit = storeFor { SplitPaneViewBackend(SplitVisibility.Second, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
+
+    /**
+     * Top contains: left top pane
+     * Bottom contains: left middle pane
+     */
+    var leftSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
+
+    /**
+     * Left contains: center pane
+     * Right contains: right split
+     */
+    var centerRightSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Horizontal) }
+
+    /**
+     * Top contains: right top pane
+     * Bottom contains: right middle pane
+     */
+    var rightSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
+
+    // ---------------------------------------------------------------------------------------------
+    // Utility
+    // ---------------------------------------------------------------------------------------------
+
+    fun topActions(left: Boolean) =
+        if (left) {
+            sideBarActions {
+                (it.singularity == PaneSingularity.SINGULAR && it.position == PanePosition.Center)
+                    || it.position == PanePosition.LeftTop
+            }
+        } else {
+            sideBarActions { it.position == PanePosition.RightTop }
+        }
+
+    fun middlePanes(left: Boolean) =
+        if (left) {
+            sideBarActions { it.position == PanePosition.LeftMiddle }
+        } else {
+            sideBarActions { it.position == PanePosition.RightMiddle }
+        }
+
+    fun bottomPanes(left: Boolean) =
+        if (left) {
+            sideBarActions { it.position == PanePosition.LeftBottom }
+        } else {
+            sideBarActions { it.position == PanePosition.RightBottom }
+        }
+
+    fun sideBarActions(filterFun: (action: AbstractSideBarAction) -> Boolean) =
+        (toolPanes.filter(filterFun) + sideBarActions.filter(filterFun)).sortedBy { it.displayOrder }
+
+    fun io(block: suspend () -> Unit) {
+        scope.launch {
+            try {
+                block()
+            } catch (ex : Exception) {
+                failNotification(Strings.executionError)
+            }
+        } // FIXME this should run in the backend scope
+    }
+
+    fun ui(block: suspend () -> Unit) {
+        scope.launch { block() } // FIXME this should run in the frontend scope
+    }
+
+    // ---------------------------------------------------------------------------------------------
+    // Pane switching
+    // ---------------------------------------------------------------------------------------------
+
+    /**
+     * Toggle the given pane (typically when the user clicks on the pane icon).
+     */
+    fun toggle(pane: Pane<*>) {
+        when (pane.position) {
+            PanePosition.LeftTop -> toggleStore(leftTop, pane)
+            PanePosition.LeftMiddle -> toggleStore(leftMiddle, pane)
+            PanePosition.LeftBottom -> toggleStore(leftBottom, pane)
+            PanePosition.RightTop -> toggleStore(rightTop, pane)
+            PanePosition.RightMiddle -> toggleStore(rightMiddle, pane)
+            PanePosition.RightBottom -> toggleStore(rightBottom, pane)
+            PanePosition.Center -> {
+                // FIXME ?? addContent(pane)
+                return // no split update is needed as center is always shown
+            }
+        }
+
+        updateSplits()
+    }
+
+    fun closeAllTools() {
+        leftTop.value = null
+        leftMiddle.value = null
+        leftBottom.value = null
+        rightTop.value = null
+        rightMiddle.value = null
+        rightBottom.value = null
+
+        updateSplits()
+    }
+
+    fun toFullScreen() {
+        closeAllTools()
+        isFullScreen.value = true
+    }
+
+    fun fromFullScreen() {
+        isFullScreen.value = false
+    }
+
+    private fun toggleStore(store: Observable<PaneId?>, pane: Pane<*>) {
+        if (store.value == pane.uuid) {
+            store.value = null
+        } else {
+            store.value = pane.uuid
+        }
+    }
+
+    fun updateSplits() {
+        val leftTop = leftTop.value
+        val leftMiddle = leftMiddle.value
+        val leftBottom = leftBottom.value
+        val rightBottom = rightBottom.value
+        val rightTop = rightTop.value
+        val rightMiddle = rightMiddle.value
+
+        val hasLeft = (leftTop != null || leftMiddle != null)
+        val hasBottom = (leftBottom != null || rightBottom != null)
+        val hasRight = (rightTop != null || rightMiddle != null)
+
+        update(rightSplit, rightTop, rightMiddle)
+        update(bottomSplit, leftBottom, rightBottom)
+        update(leftSplit, leftTop, leftMiddle)
+
+        update(centerRightSplit, if (hasRight) SplitVisibility.Both else SplitVisibility.First)
+        update(topSplit, if (hasLeft) SplitVisibility.Both else SplitVisibility.Second)
+        update(mainSplit, if (hasBottom) SplitVisibility.Both else SplitVisibility.First)
+    }
+
+    fun visibility(first: UUID<*>?, second: UUID<*>?): SplitVisibility =
+        if (first == null) {
+            if (second != null) SplitVisibility.Second else SplitVisibility.None
+        } else {
+            if (second == null) SplitVisibility.First else SplitVisibility.Both
+        }
+
+    fun update(split: Observable<SplitPaneViewBackend>, first: UUID<*>?, second: UUID<*>?) {
+        val new = visibility(first, second)
+        val current = split.value.visibility
+        if (current == new) return
+        split.value = split.value.copy(visibility = new)
+    }
+
+    fun update(split: Observable<SplitPaneViewBackend>, new: SplitVisibility) {
+        val current = split.value.visibility
+        if (current == new) return
+        split.value = split.value.copy(visibility = new)
+    }
+
+    fun paneStore(pane: Pane<*>): Observable<PaneId?> =
+        when (pane.position) {
+            PanePosition.LeftTop -> leftTop
+            PanePosition.LeftMiddle -> leftMiddle
+            PanePosition.LeftBottom -> leftBottom
+            PanePosition.RightTop -> rightTop
+            PanePosition.RightMiddle -> rightMiddle
+            PanePosition.RightBottom -> rightBottom
+            PanePosition.Center -> center
+        }
+
+    // --------------------------------------------------------------------------------
+    // Tool management
+    // --------------------------------------------------------------------------------
+
+    operator fun Pane<*>.unaryPlus() {
+        toolPanes += this
+    }
+
+    fun addToolPane(pane: () -> Pane<*>) {
+        toolPanes += pane()
+    }
+
+    operator fun SideBarAction.unaryPlus() {
+        sideBarActions += this
+    }
+
+    fun <T : PaneViewBackend<T>> toolBackend(kClass : KClass<T>) : T? {
+        for (pane in toolPanes) {
+            @Suppress("UNCHECKED_CAST")
+            if (kClass.isInstance(pane.viewBackend)) return pane.viewBackend as T
+        }
+        return null
+    }
+
+    // --------------------------------------------------------------------------------
+    // Content management
+    // --------------------------------------------------------------------------------
+
+    fun addContentPaneBuilder(vararg keys: WsPaneItemType, builder: ContentPaneBuilder) {
+        for (key in keys) {
+            contentPaneBuilders.getOrPut(key) { mutableListOf() } += builder
+        }
+    }
+
+    fun addContent(item: SingularPaneItem, modifiers: Set<EventModifier> = emptySet()) {
+        addContent(item.type, item, modifiers)
+    }
+
+    fun addContent(type : WsPaneItemType, item: WsPaneItem, modifiers: Set<EventModifier> = emptySet()) {
+
+        val accepted = accept(item, modifiers)
+        if (accepted) {
+            return
+        }
+
+        val builder = findBuilder(type)
+
+        if (builder == null) {
+            logger.warning("no pane builder for type $type")
+            return
+        }
+
+        val pane = builder.invoke(item)
+
+        when (pane.singularity) {
+            PaneSingularity.FULLSCREEN -> {
+                lastActiveContentPaneGroup = null
+                toFullScreen()
+                addGroupContentPane(item, modifiers, pane)
+            }
+
+            PaneSingularity.SINGULAR -> {
+                lastActiveContentPaneGroup = null
+                fromFullScreen()
+                addGroupContentPane(item, modifiers, pane)
+            }
+
+            PaneSingularity.GROUP -> {
+                fromFullScreen()
+                addGroupContentPane(item, modifiers, pane)
+            }
+        }
+    }
+
+    fun findBuilder(type: WsPaneItemType): ContentPaneBuilder? {
+        var builder = contentPaneBuilders[type]?.firstOrNull()
+        if (builder != null) return builder
+
+        var generalType = type.substringBeforeLast(':')
+
+        while (generalType.isNotEmpty()) {
+
+            builder = contentPaneBuilders[generalType]?.firstOrNull()
+            if (builder != null) return builder
+
+            val lastColon = generalType.lastIndexOf(':')
+            if (lastColon == - 1) break
+
+            generalType = generalType.substring(0, lastColon)
+        }
+
+        return null
+    }
+
+    fun accept(item: WsPaneItem, modifiers: Set<EventModifier>): Boolean {
+        lastActiveContentPane?.let {
+            if (it.accepts(item, modifiers)) {
+                loadContentPane(item, modifiers, it, lastActiveContentPaneGroup !!)
+                return true
+            }
+        }
+
+        lastActiveContentPaneGroup?.let {
+            if (accept(item, modifiers, it)) return true
+        }
+
+        contentPaneGroups.value.forEach {
+            if (accept(item, modifiers, it)) return true
+        }
+
+        return false
+    }
+
+    fun accept(item: WsPaneItem, modifiers: Set<EventModifier>, group: ContentPaneGroupViewBackend): Boolean {
+
+        for (pane in group.panes) {
+            if (pane.accepts(item, modifiers)) {
+                loadContentPane(item, modifiers, pane, lastActiveContentPaneGroup !!)
+                return true
+            }
+        }
+
+        return false
+    }
+
+    fun loadContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: Pane<*>, group: ContentPaneGroupViewBackend) {
+        // pane.load may return with a different pane, most notably the name and tooltip of the pane may change
+        group.load(pane.load(item, modifiers))
+    }
+
+    fun addGroupContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: Pane<*>) {
+
+        val safeGroup = lastActiveContentPaneGroup
+
+        if (safeGroup == null || safeGroup.isSingular) {
+
+            ContentPaneGroupViewBackend(UUID(), this, pane).also {
+                lastActiveContentPaneGroup = it
+                loadContentPane(item, modifiers, pane, it)
+                contentPaneGroups.value = listOf(it)
+            }
+
+        } else {
+
+            safeGroup.panes += pane
+            loadContentPane(item, modifiers, pane, safeGroup)
+
+        }
+
+        return
+    }
+
+    fun removePaneGroup(group: ContentPaneGroupViewBackend) {
+        ContentPaneGroupViewBackend(UUID(), this, noContentPane).also {
+            lastActiveContentPaneGroup = it
+            contentPaneGroups.value = listOf(it)
+        }
+    }
+
+    // --------------------------------------------------------------------------------
+    // Item type management
+    // --------------------------------------------------------------------------------
+
+    private val itemTypes = mutableMapOf<WsPaneItemType, WsItemConfig>()
+
+    fun addItemConfig(type: WsPaneItemType, icon: GraphicsResourceSet, tooltip: String? = null) {
+        itemTypes[type] = WsItemConfig(type, icon, tooltip)
+    }
+
+    fun getItemConfig(type: WsPaneItemType) = itemTypes[type] ?: WsItemConfig.DEFAULT
+
+}

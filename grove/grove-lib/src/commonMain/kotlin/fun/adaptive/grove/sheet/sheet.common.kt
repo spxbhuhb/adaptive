@@ -17,7 +17,7 @@ import `fun`.adaptive.grove.sheet.operation.SelectByIndex
 import `fun`.adaptive.grove.sheet.operation.SelectByPosition
 import `fun`.adaptive.grove.sheet.operation.Undo
 import `fun`.adaptive.grove.sheet.operation.Ungroup
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
 fun groveSheetCommon() {

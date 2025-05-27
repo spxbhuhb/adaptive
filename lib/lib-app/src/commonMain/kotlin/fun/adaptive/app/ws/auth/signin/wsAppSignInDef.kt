@@ -8,31 +8,31 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.ui.generated.resources.account_circle
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
-import `fun`.adaptive.ui.workspace.model.SingularWsItem
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
-import `fun`.adaptive.ui.workspace.model.WsPaneSingularity
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
+import `fun`.adaptive.ui.mpw.model.SingularPaneItem
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PanePosition
+import `fun`.adaptive.ui.mpw.model.PaneSingularity
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 
 fun MultiPaneWorkspace.wsAppSignInDef(
     application: AbstractApplication<*>,
     module : AppAuthWsModule<*>,
-    item : SingularWsItem
+    item : SingularPaneItem
 ) {
 
     addContentPaneBuilder(module.SIGN_IN_KEY) {
-        WsPane(
+        Pane(
             UUID(),
             this,
             Strings.signInTitle,
             Graphics.account_circle,
-            WsPanePosition.Center,
+            PanePosition.Center,
             module.SIGN_IN_KEY,
-            WsUnitPaneViewBackend(this),
-            singularity = WsPaneSingularity.FULLSCREEN
+            UnitPaneViewBackend(this),
+            singularity = PaneSingularity.FULLSCREEN
         )
     }
 

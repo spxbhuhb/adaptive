@@ -10,8 +10,8 @@ import `fun`.adaptive.ui.api.border
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.model.WsContext
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.model.WsContext
 
 class UfdWsContext(
     override val workspace: MultiPaneWorkspace

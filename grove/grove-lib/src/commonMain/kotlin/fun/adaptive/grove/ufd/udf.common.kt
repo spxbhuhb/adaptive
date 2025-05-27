@@ -2,13 +2,13 @@ package `fun`.adaptive.grove.ufd
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.grove.generated.resources.*
-import `fun`.adaptive.grove.ufd.logic.UfdWsContentViewBackend
+import `fun`.adaptive.grove.ufd.logic.UfdContentViewBackend
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
 fun AdaptiveAdapter.groveUfdCommon() {
@@ -18,56 +18,56 @@ fun AdaptiveAdapter.groveUfdCommon() {
 fun MultiPaneWorkspace.groveUfdCommon() {
     contexts += UfdWsContext(this)
 
-    toolPanes += WsPane(
+    toolPanes += Pane(
         UUID(),
         workspace = this,
         Strings.palette,
         Graphics.palette,
-        WsPanePosition.LeftTop,
+        PanePosition.LeftTop,
         UfdWsContext.PALETTE_TOOL_KEY,
-        viewBackend = WsUnitPaneViewBackend(this)
+        viewBackend = UnitPaneViewBackend(this)
     )
 
-    toolPanes += WsPane(
+    toolPanes += Pane(
         UUID(),
         workspace = this,
         Strings.components,
         Graphics.cards,
-        WsPanePosition.LeftMiddle,
+        PanePosition.LeftMiddle,
         UfdWsContext.COMPONENTS_TOOL_KEY,
-        viewBackend = WsUnitPaneViewBackend(this)
+        viewBackend = UnitPaneViewBackend(this)
     )
 
-    toolPanes += WsPane(
+    toolPanes += Pane(
         UUID(),
         workspace = this,
         Strings.instructions,
         Graphics.stroke_partial,
-        WsPanePosition.RightTop,
+        PanePosition.RightTop,
         UfdWsContext.INSTRUCTIONS_TOOL_KEY,
-        viewBackend = WsUnitPaneViewBackend(this)
+        viewBackend = UnitPaneViewBackend(this)
     )
 
-    toolPanes += WsPane(
+    toolPanes += Pane(
         UUID(),
         workspace = this,
         Strings.state,
         Graphics.data_table,
-        WsPanePosition.RightTop,
+        PanePosition.RightTop,
         UfdWsContext.STATE_TOOL_KEY,
-        viewBackend = WsUnitPaneViewBackend(this)
+        viewBackend = UnitPaneViewBackend(this)
     )
 
     addContentPaneBuilder(UfdWsContext.WSIT_UFD_FRAGMENT) { item ->
 
-        WsPane(
+        Pane(
             UUID(),
             workspace = this,
             "item.name",
             Graphics.cards,
-            WsPanePosition.Center,
+            PanePosition.Center,
             UfdWsContext.CONTENT_PANE_KEY,
-            viewBackend = UfdWsContentViewBackend(this)
+            viewBackend = UfdContentViewBackend(this)
         )
 
     }

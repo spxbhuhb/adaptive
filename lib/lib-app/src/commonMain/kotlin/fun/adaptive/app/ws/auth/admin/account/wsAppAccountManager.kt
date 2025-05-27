@@ -32,11 +32,11 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.emptyInst
 import `fun`.adaptive.ui.theme.textSmall
-import `fun`.adaptive.ui.workspace.WorkspaceTheme
-import `fun`.adaptive.ui.workspace.model.WsPane
+import `fun`.adaptive.ui.mpw.MultiPaneTheme
+import `fun`.adaptive.ui.mpw.model.Pane
 
 @Adaptive
-fun wsAppAccountManager(pane: WsPane<AccountManagerViewBackend>): AdaptiveFragment {
+fun wsAppAccountManager(pane: Pane<AccountManagerViewBackend>): AdaptiveFragment {
 
     val filterBackend = valueFrom { adatFormBackend(AccountFilter()) }
     val filter = filterBackend.inputValue
@@ -44,7 +44,7 @@ fun wsAppAccountManager(pane: WsPane<AccountManagerViewBackend>): AdaptiveFragme
     val items = valueFrom { pane.viewBackend.accounts }
 
     column {
-        WorkspaceTheme.DEFAULT.contentPaneContainer
+        MultiPaneTheme.DEFAULT.contentPaneContainer
 
         wsContentHeader(Strings.accounts) {
             row {

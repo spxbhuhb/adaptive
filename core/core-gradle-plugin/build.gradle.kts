@@ -52,7 +52,7 @@ dependencies {
     implementation(kotlin("gradle-plugin-api"))
     compileOnly(libs.plugin.android)
     compileOnly(libs.plugin.android.api)
-    compileOnly(libs.brotli4j)
+    implementation(libs.brotli4j)
 
     runtimeOnly(libs.brotli4j.linux)
     runtimeOnly(libs.brotli4j.linux.aarch64)

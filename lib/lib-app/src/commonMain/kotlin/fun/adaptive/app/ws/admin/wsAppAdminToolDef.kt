@@ -4,22 +4,22 @@ import `fun`.adaptive.lib_app.generated.resources.administration
 import `fun`.adaptive.lib_app.generated.resources.local_police
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
 fun MultiPaneWorkspace.wsAppAdminToolDef(module: AppAdminWsModule<*>) {
 
-    + WsPane(
+    + Pane(
         UUID(),
         this,
         Strings.administration,
         Graphics.local_police,
-        WsPanePosition.RightMiddle,
+        PanePosition.RightMiddle,
         module.ADMIN_TOOL_KEY,
-        WsUnitPaneViewBackend(this),
+        UnitPaneViewBackend(this),
         displayOrder = Int.MAX_VALUE
     )
 

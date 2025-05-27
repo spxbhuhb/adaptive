@@ -44,10 +44,11 @@ kotlin {
                 implementation(libs.adaptive.grove.lib)
                 implementation(libs.adaptive.grove.runtime)
 
-                implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.graphics)
+                implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.ui)
+                implementation(libs.adaptive.lib.ui.mpw)
             }
         }
 

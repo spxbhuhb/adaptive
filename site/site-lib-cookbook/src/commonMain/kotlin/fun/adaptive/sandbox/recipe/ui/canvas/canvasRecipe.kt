@@ -49,6 +49,8 @@ fun basicCanvas() {
         size(402.dp, 402.dp) .. borders.outline
 
         canvas {
+            maxSize
+
             circle(100.0, 100.0, seconds / 30.0) .. fill(Color(0x00ff00u, 0.3))
             transform {
                 translate(100.0, 100.0) .. rotate((seconds / 10) * PI / 180, 0.0, 0.0)
@@ -67,6 +69,8 @@ fun networkCanvas() {
         size(402.dp, 402.dp) .. borders.outline
 
         canvas {
+            maxSize
+
             for (item in positions) {
                 fillText(item.second.first, item.second.second, item.first.value)
             }

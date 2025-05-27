@@ -7,10 +7,10 @@ import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.WorkspaceRecipePaneFrag
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.model.CbWsRecipeItem
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.logic.WsUnitPaneViewBackend
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.model.WsPanePosition
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
 class CookbookWsModule<WT : MultiPaneWorkspace> : CookbookModule<WT>() {
@@ -26,25 +26,25 @@ class CookbookWsModule<WT : MultiPaneWorkspace> : CookbookModule<WT>() {
 
         contexts += context
 
-        toolPanes += WsPane(
+        toolPanes += Pane(
             UUID(),
             workspace = workspace,
             "Cookbook",
             Graphics.flatware,
-            WsPanePosition.LeftMiddle,
+            PanePosition.LeftMiddle,
             cookbookRecipePaneKey,
-            viewBackend = WsUnitPaneViewBackend(this)
+            viewBackend = UnitPaneViewBackend(this)
         )
 
         addContentPaneBuilder(CbWsContext.WSIT_CB_RECIPE) { item ->
             item as CbWsRecipeItem
 
-            WsPane(
+            Pane(
                 UUID(),
                 workspace = workspace,
                 item.name,
                 context[item].icon,
-                WsPanePosition.Center,
+                PanePosition.Center,
                 "cookbook:center",
                 viewBackend = CookbookPaneViewBackend(workspace, context)
             )

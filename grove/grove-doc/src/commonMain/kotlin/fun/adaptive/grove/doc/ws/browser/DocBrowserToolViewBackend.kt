@@ -4,7 +4,7 @@ import `fun`.adaptive.grove.doc.model.avDomain
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.value.AvUiTreeViewBackend
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.value.AvValue
 
 class DocBrowserToolViewBackend(

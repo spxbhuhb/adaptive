@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.popup.PopupTheme
-import `fun`.adaptive.ui.workspace.WorkspaceTheme
+import `fun`.adaptive.ui.mpw.MultiPaneTheme
 
 @Adaptive
 fun accountEditorSelf(
@@ -41,7 +41,7 @@ fun accountEditorSelf(
     }
 
     column {
-        WorkspaceTheme.DEFAULT.contentPaneContainer
+        MultiPaneTheme.DEFAULT.contentPaneContainer
 
         wsContentHeader(Strings.accountSelf, account.principalId) {
             row {

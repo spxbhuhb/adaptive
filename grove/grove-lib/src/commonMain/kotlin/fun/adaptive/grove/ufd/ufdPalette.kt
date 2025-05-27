@@ -10,17 +10,17 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.wsToolPane
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.fragments.toolPane
 
 @Adaptive
-fun ufdPalette(pane: WsPane<*>): AdaptiveFragment {
+fun ufdPalette(pane: Pane<*>): AdaptiveFragment {
 
     val context = fragment().wsContext<UfdWsContext>()
     val items = valueFrom { context.palette }
 
-    wsToolPane(pane) {
+    toolPane(pane) {
         column {
             for (item in items) {
                 paletteRow(item)

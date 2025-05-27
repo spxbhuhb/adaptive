@@ -16,8 +16,8 @@ import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace
-import `fun`.adaptive.ui.workspace.wsFull
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspace
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -53,7 +53,7 @@ fun main() {
                 maxSize
 
                 localContext(workspace) {
-                    wsFull(workspace)
+                    multiPaneWorkspace(workspace)
                 }
             }
         }

@@ -52,11 +52,13 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.adaptive.core.core)
             implementation(libs.adaptive.core.ui)
-            implementation(libs.adaptive.lib.ktor)
+
             implementation(libs.adaptive.lib.auth)
-            implementation(libs.adaptive.lib.ui)
-            implementation(libs.adaptive.lib.graphics)
             implementation(libs.adaptive.lib.document)
+            implementation(libs.adaptive.lib.graphics)
+            implementation(libs.adaptive.lib.ktor)
+            implementation(libs.adaptive.lib.ui)
+            implementation(libs.adaptive.lib.ui.mpw)
             implementation(libs.adaptive.lib.value)
         }
 

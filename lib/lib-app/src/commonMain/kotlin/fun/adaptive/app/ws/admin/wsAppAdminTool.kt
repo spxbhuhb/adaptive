@@ -10,13 +10,13 @@ import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeTheme
 import `fun`.adaptive.ui.tree.TreeViewBackend
 import `fun`.adaptive.ui.tree.tree
-import `fun`.adaptive.ui.workspace.MultiPaneWorkspace.Companion.wsContext
-import `fun`.adaptive.ui.workspace.model.SingularWsItem
-import `fun`.adaptive.ui.workspace.model.WsPane
-import `fun`.adaptive.ui.workspace.wsToolPane
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
+import `fun`.adaptive.ui.mpw.model.SingularPaneItem
+import `fun`.adaptive.ui.mpw.model.Pane
+import `fun`.adaptive.ui.mpw.fragments.toolPane
 
 @Adaptive
-fun wsAppAdminTool(pane: WsPane<*>): AdaptiveFragment {
+fun wsAppAdminTool(pane: Pane<*>): AdaptiveFragment {
 
     val module = fragment().wsContext<AppAdminWsModule<*>>()
 
@@ -27,16 +27,16 @@ fun wsAppAdminTool(pane: WsPane<*>): AdaptiveFragment {
         selectedFun = { _, item, _ -> fragment().wsAddContent(item.data) }
     )
 
-    wsToolPane(pane) {
+    toolPane(pane) {
         tree(model)
     }
 
     return fragment()
 }
 
-fun List<SingularWsItem>.toTreeItems() =
+fun List<SingularPaneItem>.toTreeItems() =
     map {
-        TreeItem<SingularWsItem>(
+        TreeItem<SingularPaneItem>(
             icon = it.icon ?: Graphics.empty,
             title = it.name,
             data = it,
