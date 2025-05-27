@@ -14,7 +14,8 @@ class FileCollectorTest {
     internal fun fileCollectorTest(testPath: Path, testFun: (GroveDocCompilation, FileCollector) -> Unit) {
         val compilation = GroveDocCompilation(
             testPath.resolve("in").ensure(),
-            testPath.resolve("out").ensure()
+            testPath.resolve("out").ensure(),
+            testPath.resolve("out/values").ensure()
         )
         val collector = FileCollector(compilation)
 

@@ -5,14 +5,16 @@ import `fun`.adaptive.persistence.ensure
 import kotlinx.io.files.Path
 
 fun groveDocMain(args: Array<String>) : GroveDocCompilation {
-    check(args.size == 2) { "usage: <in> <out>" }
+    check(args.size == 3) { "usage: <in> <md-out> <values-out>" }
 
     val inPath = Path(args[0])
-    val outPath = Path(args[1]).ensure()
+    val mdOutPath = Path(args[1]).ensure()
+    val valuesOutPath = Path(args[2]).ensure()
 
     val compilation = GroveDocCompilation(
         inPath,
-        outPath
+        mdOutPath,
+        valuesOutPath
     )
 
     GroveDocCompiler(compilation).compile()

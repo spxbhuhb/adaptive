@@ -3,32 +3,33 @@ package `fun`.adaptive.grove.doc.lib.compiler
 import `fun`.adaptive.log.LogLevel
 import `fun`.adaptive.persistence.absolute
 import `fun`.adaptive.persistence.append
+import `fun`.adaptive.persistence.deleteRecursively
 import `fun`.adaptive.persistence.ensure
 import `fun`.adaptive.persistence.resolve
 import `fun`.adaptive.persistence.write
-import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.embedded.EmbeddedValueServer.Companion.embeddedValueServer
 import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.io.files.Path
 
 class GroveDocCompilation(
     val inPath: Path,
-    val outPath: Path,
+    val mdOutPath: Path,
+    val valuesOutPath : Path,
     val baseUrl: String = "https://github.com/spxbhuhb/adaptive/tree/main"
 ) {
 
     val inPathAbsolute: String = inPath.absolute().toString().replace('\\', '/')
 
-    val outPathHumanReadable: Path = outPath.resolve("human-readable").ensure()
+    val outPathHumanReadable: Path = mdOutPath.resolve("human-readable").ensure()
 
-    val outPathTrainingSeparated: Path = outPath.resolve("separated").ensure()
-    val outPathTrainingMerged: Path = outPath.resolve("merged").ensure()
+    val outPathTrainingSeparated: Path = mdOutPath.resolve("separated").ensure()
+    val outPathTrainingMerged: Path = mdOutPath.resolve("merged").ensure()
 
     val outPathTrainingDef: Path = outPathTrainingMerged.resolve("def.md")
     val outPathTrainingQa: Path = outPathTrainingMerged.resolve("qa.md")
     val outPathTrainingGuide: Path = outPathTrainingMerged.resolve("guide.md")
 
-    val valueServer = embeddedValueServer(FilePersistence(outPath.resolve("values").ensure()))
+    val valueServer = embeddedValueServer(FilePersistence(valuesOutPath.ensure()))
     val valueWorker = valueServer.serverWorker
 
     var notifications = mutableListOf<GroveDocNotification>()

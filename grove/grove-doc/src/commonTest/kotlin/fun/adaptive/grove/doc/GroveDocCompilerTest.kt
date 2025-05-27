@@ -2,14 +2,8 @@ package `fun`.adaptive.grove.doc
 
 import `fun`.adaptive.grove.doc.lib.compiler.GroveDocCompilation
 import `fun`.adaptive.grove.doc.lib.compiler.GroveDocCompiler
-import `fun`.adaptive.persistence.clearedTestPath
-import `fun`.adaptive.persistence.ensure
-import `fun`.adaptive.persistence.exists
-import `fun`.adaptive.persistence.isEmpty
-import `fun`.adaptive.persistence.readString
-import `fun`.adaptive.persistence.resolve
-import `fun`.adaptive.persistence.write
 import `fun`.adaptive.log.LogLevel
+import `fun`.adaptive.persistence.*
 import kotlinx.io.files.Path
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -26,7 +20,8 @@ class GroveDocCompilerTest {
 
         val compilation = GroveDocCompilation(
             inPath = inPath,
-            outPath = testPath.resolve("out")
+            mdOutPath = testPath.resolve("out"),
+            valuesOutPath = testPath.resolve("out/values")
         )
 
         val compiler = GroveDocCompiler(compilation)
