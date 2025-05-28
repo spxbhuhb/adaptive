@@ -24,7 +24,7 @@ class TreeViewBackend<IT, CT>(
     val doubleClickOpen: Boolean = true
 ) : SelfObservable<TreeViewBackend<IT, CT>>() {
 
-    var items by observable(items, ::notify)
+    var topItems by observable(items, ::notify)
     var selection = selection
 
     /**
@@ -46,7 +46,7 @@ class TreeViewBackend<IT, CT>(
         transform: (original: TreeItem<IT>, newParent: TreeItem<NIT>?) -> TreeItem<NIT>
     ) =
         TreeViewBackend(
-            items.map { transform(it, null) },
+            topItems.map { transform(it, null) },
             emptyList(),
             context,
             selectedFun,
@@ -56,9 +56,9 @@ class TreeViewBackend<IT, CT>(
             singleClickOpen
         )
 
-    fun expandAll() = items.forEach { it.expandAll() }
+    fun expandAll() = topItems.forEach { it.expandAll() }
 
-    fun collapseAll() = items.forEach { it.collapseAll() }
+    fun collapseAll() = topItems.forEach { it.collapseAll() }
 
     fun defaultSelectedFun(item: TreeItem<IT>, modifiers: Set<EventModifier>) {
         when {
@@ -84,8 +84,10 @@ class TreeViewBackend<IT, CT>(
         if (multiSelect) return // FIXME moving in the tree with multiselect
 
         when (event.keyInfo?.key) {
-            Keys.ARROW_UP -> item.previous()
-            Keys.ARROW_DOWN -> item.next()
+            Keys.ARROW_UP -> item.previous(topItems)
+            Keys.ARROW_DOWN -> item.next(topItems)
+            Keys.ARROW_LEFT -> if (item.open) { item.open = false; null } else item.parent
+            Keys.ARROW_RIGHT -> if (!item.open) { item.open = true; null } else item.next(topItems)
             else -> null
         }?.also { newItem ->
             selectedFun?.invoke(this, newItem, event.modifiers)

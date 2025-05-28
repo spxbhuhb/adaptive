@@ -14,6 +14,7 @@ import kotlin.properties.Delegates.observable
  * @property open Whether this item is expanded to show its children
  * @property selected Whether this item is currently selected
  * @property parent The parent item of this tree item, null if this is a root item
+ *                  Changing the parent **DOES NOT** trigger notification.
  */
 class TreeItem<T>(
     icon: GraphicsResourceSet?,
@@ -21,7 +22,7 @@ class TreeItem<T>(
     data: T,
     open: Boolean = false,
     selected: Boolean = false,
-    val parent: TreeItem<T>?
+    var parent: TreeItem<T>?
 ) : SelfObservable<TreeItem<T>>() {
 
     var icon by observable(icon, ::notify)
@@ -68,9 +69,13 @@ class TreeItem<T>(
      * Returns the previous visible item in the tree traversal order, respecting open
      * children and hierarchical navigation
      */
-    fun previous(): TreeItem<T>? {
-        val siblings = parent?.children ?: return null
+    fun previous(topItems: List<TreeItem<T>>): TreeItem<T>? {
+        val siblings = parent?.children ?: topItems
         val index = siblings.indexOf(this)
+
+        if (index == -1) {
+            return null
+        }
 
         if (index == 0) {
             return parent
@@ -93,15 +98,18 @@ class TreeItem<T>(
      * Returns the next visible item in the tree traversal order, respecting open
      * children and hierarchical navigation
      */
-    fun next(): TreeItem<T>? {
+    fun next(topItems: List<TreeItem<T>>): TreeItem<T>? {
         if (open && children.isNotEmpty()) {
             return children.first()
         }
 
         var current: TreeItem<T>? = this
         while (current != null) {
-            val siblings = current.parent?.children ?: return null
+            val siblings = current.parent?.children ?: topItems
             val index = siblings.indexOf(current)
+            if (index == -1) {
+                return null
+            }
             if (index < siblings.size - 1) {
                 return siblings[index + 1]
             }

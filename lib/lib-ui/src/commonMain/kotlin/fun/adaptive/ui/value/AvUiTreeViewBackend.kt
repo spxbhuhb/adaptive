@@ -35,15 +35,15 @@ class AvUiTreeViewBackend<SPEC : Any>(
     )
 
     init {
-        treeSubscriber.addListener { treeBackend.items = it }
+        treeSubscriber.addListener { treeBackend.topItems = it }
     }
 
     fun expandAll() {
-        treeBackend.items.forEach { it.expandAll() }
+        treeBackend.topItems.forEach { it.expandAll() }
     }
 
     fun collapseAll() {
-        treeBackend.items.forEach { it.collapseAll() }
+        treeBackend.topItems.forEach { it.collapseAll() }
     }
 
     override fun dispose(fragment: AdaptiveFragment, index: Int) {

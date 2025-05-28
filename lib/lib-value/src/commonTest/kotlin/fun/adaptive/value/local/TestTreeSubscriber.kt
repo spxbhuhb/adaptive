@@ -18,7 +18,11 @@ class TestTreeSubscriber(
         return TestTreeItem(item.spec)
     }
 
-    override fun updateTreeItem(item: AvValue<String>, treeItem: TestTreeItem) {
+    override fun updateTreeItemParent(treeItem: TestTreeItem, parentItem: TestTreeItem?) {
+
+    }
+
+    override fun updateTreeItemData(item: AvValue<String>, treeItem: TestTreeItem) {
         treeItem.value = item.spec
     }
 

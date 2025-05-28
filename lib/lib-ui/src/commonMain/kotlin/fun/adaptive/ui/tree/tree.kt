@@ -29,7 +29,7 @@ fun <IT, CT> tree(
     column(observed.theme.container, instructions()) {
         onKeydown { observed.onKeyDown(it) }
 
-        for (item in observed.items) {
+        for (item in observed.topItems) {
             node(observed, item, 0.dp, _KT_74337_contextMenuBuilder)
         }
     }

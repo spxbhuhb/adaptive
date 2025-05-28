@@ -3,13 +3,11 @@ package `fun`.adaptive.value.local
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.general.SelfObservable
-import `fun`.adaptive.utility.debug
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.model.AvRefLabels
 import `fun`.adaptive.value.model.AvTreeDef
 import kotlin.reflect.KClass
-import kotlin.time.measureTime
 
 /**
  * A subscriber that builds a tree from the received values.
@@ -76,7 +74,9 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
 
     abstract fun newTreeItem(item: AvValue<SPEC>, parentNode: Node<SPEC, TREE_ITEM>?): TREE_ITEM
 
-    abstract fun updateTreeItem(item: AvValue<SPEC>, treeItem: TREE_ITEM)
+    abstract fun updateTreeItemParent(treeItem: TREE_ITEM, parentItem: TREE_ITEM?)
+
+    abstract fun updateTreeItemData(item: AvValue<SPEC>, treeItem: TREE_ITEM)
 
     abstract fun updateChildren(treeItem: TREE_ITEM, children: List<TREE_ITEM>)
 
@@ -109,12 +109,19 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
             notifyListeners()
         }
 
-        for (child in childRefresh) {
-            child.treeItem.let { if (it is SelfObservable<*>) it.notifyListeners() }
-        }
-        
-        childRefresh.clear()
+        // TODO think about the necessity of child refresh in AvTreeSubscriber
+        // I commented this out as the usual TreeItem is self-observable and
+        // it when `children` changes it will trigger notification by itself
+
+//        for (parent in childRefresh) {
+//            // This might trigger a second update if topRefresh is true, but I don't
+//            // see any way around it. It might be that this is not necessary if the
+//            // child is observable.
+//            parent.treeItem.let { if (it is SelfObservable<*>) it.notifyListeners() }
+//        }
+
         topRefresh = false
+        childRefresh.clear()
     }
 
     override fun process(value: AvValue<*>) {
@@ -150,7 +157,7 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
                 topRefresh = true
             }
         } else {
-            updateTreeItem(value, treeItem)
+            updateTreeItemData(value, treeItem)
         }
 
     }
@@ -170,15 +177,19 @@ abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
      * - all possible tree item instances are created
      */
     fun refresh() {
-        childRefresh.forEach { node ->
-            node.treeItem?.let { ti ->
-                updateChildren(ti, node.childIds?.mapNotNull { nodeMap[it]?.treeItem } ?: emptyList())
+        childRefresh.forEach { parent ->
+            parent.treeItem?.let { parentTreeItem ->
+
+                val children = parent.childIds?.mapNotNull { childId ->
+                    // this covers the case when a child arrives before the parent and therefore
+                    // the parent is not set in the child tree node
+                    nodeMap[childId]?.treeItem?.also { updateTreeItemParent(it, parentTreeItem) }
+                } ?: emptyList()
+
+                updateChildren(parentTreeItem, children)
             }
         }
 
-//        if (topRefresh) {
-//            notifyListeners()
-//        }
 //
 //        nodeMap.values.forEach { node ->
 //            println("${node.aioItem?.name} ${node.aioItem?.uuid} ${node.childIds}")
