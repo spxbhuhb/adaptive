@@ -25,7 +25,7 @@ class AvComputeContext(
      * @return The added value.
      * @throws IllegalStateException if the value is already in the store.
      */
-    inline fun <T> addValue(valueFun : () -> AvValue<T>) = addValue(valueFun())
+    inline fun <T> addValue(valueFun: () -> AvValue<T>) = addValue(valueFun())
 
     /**
      * Adds a value to the value store.
@@ -34,7 +34,7 @@ class AvComputeContext(
      * @return The added value.
      * @throws IllegalStateException if the value is already in the store.
      */
-    fun <T> addValue(value : AvValue<T>) : AvValue<T> {
+    fun <T> addValue(value: AvValue<T>): AvValue<T> {
         store.add(AvoAdd(value), commitSet)
         return value
     }
@@ -48,8 +48,9 @@ class AvComputeContext(
      * @throws IllegalStateException if the `spec` of the retrieved value is not of type [T]
      */
     inline fun <reified T : Any> get(valueId: AvValueId): AvValue<T> =
-        getOrNull(valueId)?.checkSpec<T>()
+        getOrNullGen(valueId)?.checkSpec<T>()
             ?: throw NoSuchElementException("cannot find item for id $valueId")
+
 
     /**
      * Gets a value from the store with the specified ID, or null if it doesn't exist.
@@ -57,7 +58,16 @@ class AvComputeContext(
      * @param valueId The ID of the value to retrieve
      * @return The value if found, null otherwise
      */
-    fun getOrNull(valueId: AvValueId?): AvValue<*>? =
+    inline fun <reified T : Any> getOrNull(valueId: AvValueId?): AvValue<T>? =
+        getOrNullGen(valueId)?.checkSpec<T>()
+
+    /**
+     * Gets a generic (without `spec` check) value from the store with the specified ID, or null if it doesn't exist.
+     *
+     * @param valueId The ID of the value to retrieve
+     * @return The value if found, null otherwise
+     */
+    fun getOrNullGen(valueId: AvValueId?): AvValue<*>? =
         store.unsafeGetOrNull(valueId)
 
     //---------------------------------------------------------------------------------
@@ -76,7 +86,7 @@ class AvComputeContext(
      * @throws IllegalStateException if the `spec` of the referred value is not of type [T]
      */
     inline fun <reified T : Any> ref(valueId: AvValueId, refLabel: AvRefLabel): AvValue<T> =
-        refOrNull(valueId, refLabel)?.checkSpec<T>()
+        refOrNullGen(valueId, refLabel)?.checkSpec<T>()
             ?: throw NoSuchElementException("cannot find ref item for marker $refLabel in item $valueId")
 
     /**
@@ -87,7 +97,18 @@ class AvComputeContext(
      * @param refLabel The reference label identifying the reference
      * @return The referred value if found, null otherwise
      */
-    fun refOrNull(valueId: AvValueId, refLabel: AvRefLabel): AvValue<*>? =
+    inline fun <reified T : Any> refOrNull(valueId: AvValueId, refLabel: AvRefLabel): AvValue<T>? =
+        refOrNullGen(valueId, refLabel)?.checkSpec<T>()
+
+    /**
+     * Gets a generic (without `spec` check) referred value from the store based on the id of the
+     * referring value and a reference label, or null if it doesn't exist.
+     *
+     * @param valueId The ID of the value containing the reference
+     * @param refLabel The reference label identifying the reference
+     * @return The referred value if found, null otherwise
+     */
+    fun refOrNullGen(valueId: AvValueId, refLabel: AvRefLabel): AvValue<*>? =
         store.unsafeRefOrNull(valueId, refLabel)
 
     /**
@@ -102,7 +123,7 @@ class AvComputeContext(
      * @throws IllegalStateException if the `spec` of the referred value is not of type [T]
      */
     inline fun <reified T : Any> ref(value: AvValue<*>, refLabel: AvRefLabel): AvValue<T> =
-        checkNotNull(refOrNull(value, refLabel)) { "cannot find ref item for marker $refLabel in item ${value.uuid}" }
+        checkNotNull(refOrNullGen(value, refLabel)) { "cannot find ref item for marker $refLabel in item ${value.uuid}" }
             .checkSpec<T>()
 
     /**
@@ -113,10 +134,20 @@ class AvComputeContext(
      * @param refLabel The reference label identifying the reference
      * @return The referred value if found, null otherwise
      */
-    fun refOrNull(value: AvValue<*>, refLabel: AvRefLabel): AvValue<*>? =
+    inline fun <reified T : Any> refOrNull(value: AvValue<*>, refLabel: AvRefLabel): AvValue<T>? =
+        refOrNullGen(value, refLabel)?.checkSpec<T>()
+
+    /**
+     * Gets a generic (without `spec` check) referred value from the store based on the id of the
+     * referring value and a reference label, or null if it doesn't exist.
+     *
+     * @param value The value containing the reference
+     * @param refLabel The reference label identifying the reference
+     * @return The referred value if found, null otherwise
+     */
+    fun refOrNullGen(value: AvValue<*>, refLabel: AvRefLabel): AvValue<*>? =
         store.unsafeRefOrNull(value, refLabel)
 
-    
     /**
      * Adds a reference from one value to another value in the store.
      * Updates the referring value by adding the reference to its refsOrNull map.
@@ -150,7 +181,7 @@ class AvComputeContext(
      * @param referringId The ID of the value containing the reference to remove
      * @param refLabel The label identifying the reference to remove
      */
-    fun removeRef(referringId : AvValueId, refLabel : AvRefLabel) {
+    fun removeRef(referringId: AvValueId, refLabel: AvRefLabel) {
         val referring = store.unsafeGet(referringId)
         val refs = referring.mutableRefs()
         refs.remove(refLabel)
@@ -160,7 +191,6 @@ class AvComputeContext(
     //---------------------------------------------------------------------------------
     // Tree operations
     //---------------------------------------------------------------------------------
-
 
     /**
      * Adds a new value to the store and adds it as a child node in the tree structure.
@@ -226,7 +256,7 @@ class AvComputeContext(
 
     /**
      * Links a child value to a parent value in the tree structure.
-     * 
+     *
      * If the list of children already exists, the child ID is added to it.
      * If not, creates a new list of children value and updates parent references.
      *
@@ -252,7 +282,7 @@ class AvComputeContext(
 
         // collect data from the store
         val parent = store.unsafeGet(parentId)
-        val original: AvValue<AvRefListSpec>? = refOrNull(parent, treeDef.childListRefLabel)?.checkSpec()
+        val original = refOrNull<AvRefListSpec>(parent, treeDef.childListRefLabel)
 
         // update child-to-parent reference
         val childRefs = child.mutableRefs()
@@ -323,7 +353,7 @@ class AvComputeContext(
      *
      * @param parentId The ID of the parent value
      * @param childId The ID of the child value to remove
-     * 
+     *
      * @param treeDef The tree definition containing reference labels and markers
      */
     fun removeTreeNode(
@@ -335,8 +365,8 @@ class AvComputeContext(
             removeRootTreeNode(treeDef, childId)
             return
         }
-        
-        val original: AvValue<AvRefListSpec>? = refOrNull(parentId, treeDef.childListRefLabel)?.checkSpec()
+
+        val original = refOrNull<AvRefListSpec>(parentId, treeDef.childListRefLabel)
 
         if (original != null) {
             this += original.copy(spec = AvRefListSpec(original.spec.refs - childId))
@@ -424,7 +454,7 @@ class AvComputeContext(
         val listValue = store.unsafeRefOrNull(parentId, treeDef.childListRefLabel) ?: return emptyList()
         return (listValue.spec as AvRefListSpec).refs
     }
-    
+
     /**
      * Returns a list of sibling value IDs for the given child ID in the tree structure.
      * If the child has no parent and no root list marker is defined, returns an empty list.
