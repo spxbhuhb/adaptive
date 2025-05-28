@@ -14,5 +14,5 @@ interact with [tool panes](def://).
 
 ## See also
 
-- [what is a multi-pane workspace](def://)
+- [what is a multi-pane workspace](guide://)
 - [tool pane](def://)

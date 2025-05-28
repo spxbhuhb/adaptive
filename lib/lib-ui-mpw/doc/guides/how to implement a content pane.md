@@ -17,7 +17,7 @@ To implement a [content pane](def://):
 
 ### View backend implementation
 
-[Center pane](def://) [view backends](def://) extend [PaneViewBackend](class://). 
+[Content pane](def://) [view backends](def://) extend [PaneViewBackend](class://). 
 
 They have to implement the [paneDef](property://PaneViewBackend) and [workspace](proprerty://PaneViewBackend)
 properties, but apart from that there are no other requirements.
@@ -38,7 +38,7 @@ notify the fragment which starts the standard [patching](def://) and updates the
 ### Adding the content pane
 
 The [content pane](def://) is usually added to the [application module definition](def://). For more
-information about [application modules](def://) see [What is an application module](guide://).
+information about [application modules](def://) see [What is an application](guide://).
 
 Adding the content pane involves these steps:
 
@@ -60,3 +60,8 @@ The condition has two purposes:
 The builder function creates a view backend that controls to the pane.
 
 [ExampleContentPaneModule](example://)
+
+If you display [values](def://) in your content pane, you can use the value check functions for
+the condition with checks that the item is a [value](def://) with the right [spec](def://).
+
+[ExampleTreeContentPaneModule](example://)

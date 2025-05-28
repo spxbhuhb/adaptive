@@ -3,7 +3,7 @@
 Tool pane is a subtype of [pane](def://) that shows a tool in a [multi-pane workspace](def://). Tools
 can be anything from navigation aids, inspection tools, feedback providers, etc.
 
-In many cases tools let the user add a [center pane](def://) to the [multi-pane workspace](def://). For
+In many cases tools let the user add a [content pane](def://) to the [multi-pane workspace](def://). For
 example, a documentation browser tool may let the user open a section of the documentation.
 
 Tool panes typically consist of three parts: 
@@ -14,5 +14,5 @@ Tool panes typically consist of three parts:
 
 ## See also
 
-- [what is a multi-pane workspace](def://)
-- [center pane](def://)
+- [what is a multi-pane workspace](guide://)
+- [content pane](def://)

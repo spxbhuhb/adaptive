@@ -22,7 +22,7 @@ To implement a [tool pane](def://):
 They have to implement the [paneDef](property://PaneViewBackend) and [workspace](proprerty://PaneViewBackend)
 properties, but apart from that there are no other requirements.
 
-If the tool uses the built-in [toolPane](def://) fragment and has [tool pane actions](def://), it should
+If the tool uses the built-in [toolPane](fragment://) fragment and has [tool pane actions](def://), it should
 override [paneActions](function://PaneViewBackend) as well.
 
 [ExampleToolViewBackend](example://)
@@ -41,7 +41,7 @@ notify the fragment which starts the standard [patching](def://) and updates the
 ### Adding the tool pane
 
 The [tool pane](def://) is usually added to the [application module definition](def://). For more
-information about [application modules](def://) see [What is an application module](guide://).
+information about [application modules](def://) see [What is an application](guide://).
 
 Adding the tool pane involves these steps:
 

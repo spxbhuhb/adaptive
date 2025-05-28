@@ -10,7 +10,9 @@ import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.WsPaneItem
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.checkSpec
+import `fun`.adaptive.value.util.asValue
 import `fun`.adaptive.value.util.checkValue
+import `fun`.adaptive.value.util.isValue
 
 class DocContentViewBackend(
     override val workspace: MultiPaneWorkspace,
@@ -19,11 +21,11 @@ class DocContentViewBackend(
 ) : PaneViewBackend<DocContentViewBackend>() {
 
     override fun accepts(item: WsPaneItem, modifiers: Set<EventModifier>): Boolean {
-        return item is AvValue<*> && item.spec is GroveDocSpec && avDomain.node in item.markers
+        return isValue<GroveDocSpec>(item, avDomain.node)
     }
 
     override fun load(item: WsPaneItem, modifiers: Set<EventModifier>) {
-        this.content = checkValue(item).checkSpec()
+        this.content = asValue<GroveDocSpec>(item)
         name = item.nameLike
         notifyListeners()
     }

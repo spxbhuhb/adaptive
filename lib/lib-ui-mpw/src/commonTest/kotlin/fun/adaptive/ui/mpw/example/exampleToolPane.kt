@@ -12,7 +12,7 @@ fun exampleToolPane(): AdaptiveFragment {
 
     val viewBackend = viewBackend(ExampleToolViewBackend::class)
 
-    toolPane(viewBackend.paneDef) {
+    toolPane(viewBackend) {
         text("Example tool")
     }
 

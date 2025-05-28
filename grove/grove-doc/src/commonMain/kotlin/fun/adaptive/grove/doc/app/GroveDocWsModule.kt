@@ -22,6 +22,8 @@ import `fun`.adaptive.ui.value.iconCache
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.checkSpec
+import `fun`.adaptive.value.util.asValue
+import `fun`.adaptive.value.util.asValueOrNull
 import `fun`.adaptive.value.util.checkValue
 
 class GroveDocWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
@@ -55,15 +57,10 @@ class GroveDocWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
 
         addContentPaneBuilder(
             avDomain.node,
-            { it is AvValue<*> && it.spec is GroveDocSpec && avDomain.node in it.markers }
+            { asValueOrNull<GroveDocSpec>(it, avDomain.node) }
         ) { item ->
-            DocContentViewBackend(
-                workspace,
-                contentPaneDef,
-                checkValue(item).checkSpec<GroveDocSpec>()
-            )
+            DocContentViewBackend(workspace, contentPaneDef, item)
         }
-
 
         val toolPaneDef = PaneDef(
             UUID("83687ee3-c871-44f1-9b91-6289e59bbbc0"),
@@ -72,7 +69,6 @@ class GroveDocWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
             PanePosition.LeftMiddle,
             WSPANE_DOC_BROWSER_TOOL
         )
-
 
         addToolPane {
             DocToolViewBackend(workspace, toolPaneDef)

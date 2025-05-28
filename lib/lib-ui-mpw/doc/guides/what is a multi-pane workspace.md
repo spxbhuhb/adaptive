@@ -73,14 +73,10 @@ When a user clicks on an icon, the reaction depends on:
 
 ## Tool panes
 
-### Pane title
+[tool panes](def://) typically have a [tool pane header](def://) that displays
+the name of the tool, a hide icon and possibly some [tool pane actions](def://). 
 
-Each pane may have a title. The [toolPane](fragment://) fragment automatically adds a title,
-or it can be added manually with the [paneTitle](fragment://) fragment.
-
-The title typically contains a name and at least one action which hides the area the pane is in.
-
-Other actions can be specified by setting [actions](property://Pane).
+The [toolPane](fragment://) fragment automatically adds these components.
 
 ## Content panes
 

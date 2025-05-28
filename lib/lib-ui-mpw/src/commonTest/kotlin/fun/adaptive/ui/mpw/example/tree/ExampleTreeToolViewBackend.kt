@@ -1,7 +1,5 @@
-package `fun`.adaptive.grove.doc.ui
+package `fun`.adaptive.ui.mpw.example.tree
 
-import `fun`.adaptive.grove.doc.model.GroveDocValue
-import `fun`.adaptive.grove.doc.model.avDomain
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.generated.resources.collapseAll
@@ -9,19 +7,19 @@ import `fun`.adaptive.ui.generated.resources.expandAll
 import `fun`.adaptive.ui.generated.resources.unfold_less
 import `fun`.adaptive.ui.generated.resources.unfold_more
 import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.value.AvUiTreeViewBackend
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.model.AbstractPaneAction
 import `fun`.adaptive.ui.mpw.model.PaneAction
 import `fun`.adaptive.ui.mpw.model.PaneDef
+import `fun`.adaptive.ui.tree.TreeItem
+import `fun`.adaptive.ui.value.AvUiTreeViewBackend
 import `fun`.adaptive.value.AvValue
 
-class DocToolViewBackend(
+class ExampleTreeToolViewBackend(
     override val workspace: MultiPaneWorkspace,
     override val paneDef: PaneDef
-) : PaneViewBackend<DocToolViewBackend>() {
+) : PaneViewBackend<ExampleTreeToolViewBackend>() {
 
     val tree = AvUiTreeViewBackend(workspace.backend, String::class, avDomain.treeDef, ::selectedFun)
 
@@ -41,7 +39,8 @@ class DocToolViewBackend(
         workspace.addContent(avDomain.node, item.data, modifiers)
     }
 
-    fun docPathNames(item : GroveDocValue): List<String> {
+    fun docPathNames(item : ExampleValue): List<String> {
         return tree.treeSubscriber.pathNames(item)
     }
+
 }

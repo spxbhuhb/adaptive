@@ -22,7 +22,7 @@ This pattern ensures that:
 - the general name `avDomain` is not polluting the common namespace
 - inside the module it is easy to reference to the domain definition
 
-[groveDocDomainDef](example://)
+[exampleDomainDef](example://)
 
 ## See also
 
