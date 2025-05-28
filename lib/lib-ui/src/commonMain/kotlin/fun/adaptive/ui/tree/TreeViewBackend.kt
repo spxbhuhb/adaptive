@@ -85,10 +85,27 @@ class TreeViewBackend<IT, CT>(
 
         when (event.keyInfo?.key) {
             Keys.ARROW_UP -> item.previous(topItems)
+
             Keys.ARROW_DOWN -> item.next(topItems)
-            Keys.ARROW_LEFT -> if (item.open) { item.open = false; null } else item.parent
-            Keys.ARROW_RIGHT -> if (!item.open) { item.open = true; null } else item.next(topItems)
+
+            Keys.ARROW_LEFT -> {
+                if (item.open && item.children.isNotEmpty()) {
+                    item.open = false; null
+                } else {
+                    item.parent
+                }
+            }
+
+            Keys.ARROW_RIGHT -> {
+                if (! item.open && item.children.isNotEmpty()) {
+                    item.open = true; null
+                } else {
+                    item.next(topItems)
+                }
+            }
+
             else -> null
+
         }?.also { newItem ->
             selectedFun?.invoke(this, newItem, event.modifiers)
         }
