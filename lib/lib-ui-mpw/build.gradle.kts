@@ -13,8 +13,8 @@ plugins {
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
 
-val baseName = "lib-ui"
-val pomName = "Adaptive Lib UI"
+val baseName = "lib-ui-mpw"
+val pomName = "Adaptive Lib UI Multi-pane workspace"
 val scmPath = "spxbhuhb/adaptive"
 
 adaptive {
