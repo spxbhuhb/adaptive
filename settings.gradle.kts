@@ -4,8 +4,8 @@
 rootProject.name = "adaptive"
 
 includeBuild("core/core-core")
-includeBuild("core/core-kotlin-plugin")
 includeBuild("core/core-gradle-plugin")
+includeBuild("core/core-kotlin-plugin")
 includeBuild("core/core-ui")
 
 includeBuild("doc/doc-example")
@@ -20,9 +20,9 @@ includeBuild("grove/grove-runtime")
 includeBuild("lib/lib-app")
 includeBuild("lib/lib-auth")
 includeBuild("lib/lib-chart")
+includeBuild("lib/lib-document")
 includeBuild("lib/lib-graphics")
 includeBuild("lib/lib-ktor")
-includeBuild("lib/lib-document")
 includeBuild("lib/lib-process")
 includeBuild("lib/lib-test")
 includeBuild("lib/lib-ui")
@@ -30,8 +30,9 @@ includeBuild("lib/lib-ui-mpw")
 includeBuild("lib/lib-util")
 includeBuild("lib/lib-value")
 
-includeBuild("sandbox/sandbox-app-echo")
 includeBuild("sandbox/sandbox-app")
+includeBuild("sandbox/sandbox-app-echo")
+includeBuild("sandbox/sandbox-app-mpw")
 
 includeBuild("site/site-app")
 includeBuild("site/site-lib-cookbook")

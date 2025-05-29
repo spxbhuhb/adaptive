@@ -21,6 +21,7 @@ val noPublishBuilds = listOf(
     "grove-host",
     "sandbox-app",
     "sandbox-app-echo",
+    "sandbox-app-mpw",
     "site-app",
     "site-lib-cookbook"
 )
@@ -60,6 +61,8 @@ shorthand("grove-app", "jvmRun", "grove-jvm")
 shorthand("grove-lib", "processAdaptiveResourcesCommonMain", "grove-resources")
 shorthand("sandbox-app", "jsBrowserDevelopmentRun", "sandbox-js")
 shorthand("sandbox-app", "jvmRun", "sandbox-jvm")
+shorthand("sandbox-app-mpw", "jsBrowserDevelopmentRun", "mpw-js")
+shorthand("sandbox-app-mpw", "jvmRun", "mpw-jvm")
 shorthand("site-app", "jsBrowserDevelopmentRun", "site-js")
 shorthand("site-app", "jvmRun", "site-jvm")
 shorthand("grove-doc", "compileAdaptiveDocumentation", "doc")
