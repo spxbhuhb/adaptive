@@ -58,6 +58,7 @@ kotlin {
                 implementation(libs.adaptive.lib.auth)
                 implementation(libs.adaptive.lib.graphics)
                 implementation(libs.adaptive.lib.ui)
+                implementation(libs.adaptive.lib.ui.mpw)
                 implementation(libs.adaptive.lib.util)
                 implementation(libs.adaptive.lib.value)
 

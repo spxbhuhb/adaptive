@@ -20,6 +20,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
@@ -130,8 +131,8 @@ fun sandboxMain() {
 //            }
                 column {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. backgrounds.friendlyOpaque
-                    containerPlayground()
-                    //selectInputPlayground()
+                    //containerPlayground()
+                    selectInputPlayground()
                     //formBasicExample()
                     //treeRecipe()
                     //treeValueExample()

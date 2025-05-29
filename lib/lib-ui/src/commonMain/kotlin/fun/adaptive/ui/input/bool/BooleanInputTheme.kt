@@ -43,6 +43,11 @@ class BooleanInputTheme(
         iconColors.onPrimary
     )
 
+    val defaultSpacing = instructionsOf(
+        maxWidth,
+        spaceBetween
+    )
+
     companion object {
         var default = BooleanInputTheme(38.dp, 20.dp)
         var small = BooleanInputTheme(24.dp, 16.dp)

@@ -15,7 +15,6 @@ class InputTheme : AbstractTheme() {
     val paddingB2 = padding(left = 11.dp, right = 11.dp)
 
     val base = instructionsOf(
-        maxSize,
         inputCornerRadius,
         inputFont,
         tabIndex { 0 }
@@ -60,6 +59,7 @@ class InputTheme : AbstractTheme() {
     )
 
     val singleLine = instructionsOf(
+        maxWidth,
         height { inputHeightDp }
     )
 
