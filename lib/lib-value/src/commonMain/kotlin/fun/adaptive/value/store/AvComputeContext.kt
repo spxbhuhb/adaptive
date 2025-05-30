@@ -51,7 +51,6 @@ class AvComputeContext(
         getOrNullGen(valueId)?.checkSpec<T>()
             ?: throw NoSuchElementException("cannot find item for id $valueId")
 
-
     /**
      * Gets a value from the store with the specified ID, or null if it doesn't exist.
      *
@@ -69,6 +68,24 @@ class AvComputeContext(
      */
     fun getOrNullGen(valueId: AvValueId?): AvValue<*>? =
         store.unsafeGetOrNull(valueId)
+
+    //---------------------------------------------------------------------------------
+    // Markers
+    //---------------------------------------------------------------------------------
+
+    fun addMarker(valueId : AvValueId, marker : AvMarker) {
+        val value = store.unsafeGet(valueId)
+        val markers = value.mutableMarkers()
+        markers += marker
+        this += value.copy(markersOrNull = markers)
+    }
+
+    fun addMarker(valueId : AvValueId, vararg markers : AvMarker) {
+        val value = store.unsafeGet(valueId)
+        val markers = value.mutableMarkers()
+        markers += markers
+        this += value.copy(markersOrNull = markers)
+    }
 
     //---------------------------------------------------------------------------------
     // Reference handling
