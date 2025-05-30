@@ -59,7 +59,7 @@ abstract class AbstractRow<RT, CRT : RT>(
     override fun resizeToMax(innerWidth: Double, innerHeight: Double, items: List<AbstractAuiFragment<RT>>) {
         for (item in items) {
             if (item.renderData.finalHeight < innerHeight) {
-                item.computeLayout(item.renderData.finalHeight, innerHeight)
+                item.computeLayout(item.renderData.finalWidth, innerHeight)
             }
         }
     }

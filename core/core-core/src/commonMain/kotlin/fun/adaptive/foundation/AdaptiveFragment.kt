@@ -8,6 +8,7 @@ import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
+import `fun`.adaptive.foundation.instruction.Name
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.internal.AdaptiveClosure
 import `fun`.adaptive.foundation.internal.StateVariableMask
@@ -43,6 +44,9 @@ abstract class AdaptiveFragment(
     }
 
     val id: Long = adapter.newId()
+
+    val name : String?
+        get() = instructions.firstInstanceOfOrNull<Name>()?.name
 
     var flags: Int = 0
 
@@ -607,7 +611,7 @@ abstract class AdaptiveFragment(
         }
 
     override fun toString(): String =
-        "${this::class.simpleName ?: "<unknown>"} @ $id"
+        "${this::class.simpleName ?: "<unknown>"} @ $id${name?.let { " ($it)" } ?: ""}"
 
     // ----------------------------------------------
     // Visitor support
