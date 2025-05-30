@@ -1,6 +1,6 @@
 package `fun`.adaptive.ktor.worker
 
-import `fun`.adaptive.ktor.WebSocketServiceCallTransport
+import `fun`.adaptive.ktor.websocket.WebSocketServiceCallTransport
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.model.ServiceSession
 import `fun`.adaptive.utility.UUID

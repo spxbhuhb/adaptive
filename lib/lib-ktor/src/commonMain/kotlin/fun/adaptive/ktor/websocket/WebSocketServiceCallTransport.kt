@@ -1,4 +1,4 @@
-package `fun`.adaptive.ktor
+package `fun`.adaptive.ktor.websocket
 
 import `fun`.adaptive.service.model.TransportEnvelope
 import `fun`.adaptive.service.transport.ServiceCallTransport

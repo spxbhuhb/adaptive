@@ -4,7 +4,8 @@
 
 package `fun`.adaptive.ktor.api
 
-import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
+import `fun`.adaptive.ktor.websocket.ClientWebSocketServiceCallTransport
+import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.api.Json
 
@@ -12,6 +13,7 @@ fun webSocketTransport(
     host: String,
     wireFormatProvider: WireFormatProvider = Json,
     servicePath: String = "/adaptive/service-ws",
-    clientIdPath: String = "/adaptive/client-id"
+    clientIdPath: String = "/adaptive/client-id",
+    setupFun : suspend (ServiceCallTransport) -> Unit = {  }
 ) =
-    ClientWebSocketServiceCallTransport(host, servicePath, clientIdPath, wireFormatProvider)
+    ClientWebSocketServiceCallTransport(host, servicePath, clientIdPath, wireFormatProvider, setupFun)

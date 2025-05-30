@@ -4,10 +4,6 @@
 
 package `fun`.adaptive.ktor.api
 
-import `fun`.adaptive.ktor.ClientWebSocketServiceCallTransport
-import `fun`.adaptive.wireformat.WireFormatProvider
-import `fun`.adaptive.wireformat.api.Json
-
 fun String.toHttp(path: String): String {
     var url = this.trim()
 

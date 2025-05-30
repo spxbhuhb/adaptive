@@ -1,4 +1,4 @@
-package `fun`.adaptive.ktor
+package `fun`.adaptive.ktor.websocket
 
 import `fun`.adaptive.ktor.api.toHttp
 import `fun`.adaptive.ktor.api.toWs
@@ -10,6 +10,7 @@ import io.ktor.client.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
+import io.ktor.websocket.close
 import kotlinx.coroutines.*
 
 /**
@@ -22,12 +23,14 @@ import kotlinx.coroutines.*
  * @param  servicePath          The path on which the peer of the transport listens, default is `/adaptive/service-ws`.
  * @param  clientIdPath         The path which provides a client id, default is `/adaptive/client-id`.
  * @param  wireFormatProvider   The wire format to use, default is `Json`.
+ * @param  setupFun             A function to be called after the websocket is established.
  */
 open class ClientWebSocketServiceCallTransport(
     host: String,
     servicePath: String,
     clientIdPath: String,
-    wireFormatProvider: WireFormatProvider
+    wireFormatProvider: WireFormatProvider,
+    val setupFun : suspend (transport: ServiceCallTransport) -> Unit
 ) : WebSocketServiceCallTransport(
     CoroutineScope(Dispatchers.Default),
     wireFormatProvider
@@ -38,7 +41,8 @@ open class ClientWebSocketServiceCallTransport(
     val clientIdUrl = host.toHttp(clientIdPath)
     val serviceUrl = host.toWs(servicePath)
 
-    var retryDelay = 200L // milliseconds
+    val baseRetryDelay = 200L
+    var retryDelay = baseRetryDelay // milliseconds
     var retrying = false
 
     val client = HttpClient {
@@ -69,12 +73,29 @@ open class ClientWebSocketServiceCallTransport(
 
             try {
                 counter ++
-                transportLog.fine { "connecting (retryDelay=$retryDelay, attempts=$counter)" }
+                transportLog.fine { "connecting (attempt # $counter)" }
 
                 client.webSocket(serviceUrl) {
-                    transportLog.info { "WS-CONNECT $serviceUrl (attempt=$counter)" }
+
+                    transportLog.info { "WS-CONNECT $serviceUrl (attempt # $counter)" }
+
                     counter = 0
+                    retryDelay = baseRetryDelay // reset to base if successfully connected
                     socketLock.use { socket = this }
+
+                    launch {
+                        try {
+                            setupFun(this@ClientWebSocketServiceCallTransport)
+                        } catch (ex : Exception) {
+                            if (ex is DelayReconnectException) {
+                                retryDelay = ex.delay.inWholeMilliseconds
+                                transportLog.fine { "setup requested reconnect delay of $retryDelay ms" }
+                            }
+                            this@webSocket.close()
+                            throw ex
+                        }
+                    }
+
                     incoming()
                 }
 
@@ -90,13 +111,22 @@ open class ClientWebSocketServiceCallTransport(
                 // connection problems are normal, we should not spam the error log with them
                 transportLog.fine(ex)
 
-                if (! scope.isActive) return
-                delay(retryDelay) // wait a bit before trying to re-establish the connection
-                if (retryDelay < 5_000) retryDelay = (retryDelay * 115) / 100
+                scope.ensureActive()
+
             } finally {
                 disconnect()
             }
 
+            transportLog.fine { "waiting before next attempt ($retryDelay ms)" }
+
+            delay(retryDelay) // wait a bit before trying to re-establish the connection
+
+            // slowly increment delay, first retry should be fast, but we should not
+            // spam reconnecting very fast if the connection is truly broken
+            if (retryDelay < 5_000) retryDelay = (retryDelay * 115) / 100
+
+            // limit the max delay to 5 seconds
+            if (retryDelay > 5_000) retryDelay = 5_000
         }
     }
 
