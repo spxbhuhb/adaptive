@@ -4,7 +4,7 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-abstract class AbstractServerApplication<BW : BackendWorkspace> : AbstractApplication<NoFrontendWorkspace,BW>() {
+abstract class AbstractServerApplication<FW : AbstractWorkspace, BW : BackendWorkspace> : AbstractApplication<FW,BW>() {
 
     abstract val backend : BackendAdapter
 

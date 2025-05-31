@@ -64,4 +64,15 @@ open class DirectServiceTransport(
 
     }
 
+    companion object {
+        infix fun ServiceCallTransport.connect(
+            transport2: ServiceCallTransport,
+        ) {
+            this as DirectServiceTransport
+            transport2 as DirectServiceTransport
+
+            this.peerTransport = transport2
+            transport2.peerTransport = this
+        }
+    }
 }

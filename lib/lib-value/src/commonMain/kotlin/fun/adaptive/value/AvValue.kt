@@ -3,7 +3,6 @@ package `fun`.adaptive.value
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.acl.AvAclAgent
-import kotlinx.datetime.Clock
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 import kotlin.reflect.KClass
@@ -40,7 +39,7 @@ class AvValue<T>(
     /**
      * The last time this value was changed.
      */
-    val lastChange: Instant = Clock.System.now(),
+    val lastChange: Instant = now(),
 
     /**
      * The ID of the Access Control List that governs the access to this value. When null,
@@ -84,6 +83,10 @@ class AvValue<T>(
      */
     val spec: T
 ) {
+
+    constructor(
+        spec : T
+    ) : this(uuid = uuid7(), lastChange = now(), statusOrNull = null, spec = spec)
 
     constructor(
         uuid: AvValueId = uuid7(),

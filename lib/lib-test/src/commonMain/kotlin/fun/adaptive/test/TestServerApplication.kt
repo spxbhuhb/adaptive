@@ -16,14 +16,17 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 class TestServerApplication(
-    vararg modules: AppModule<ServerWorkspace>
-) : AbstractServerApplication<ServerWorkspace>() {
+    val builder: TestServerBuilder
+) : AbstractServerApplication<AbstractWorkspace, BackendWorkspace>() {
 
     init {
-        this.modules += modules
+        this.modules += builder.modules
     }
 
-    override val workspace = ServerWorkspace()
+    override val frontendWorkspace: NoFrontendWorkspace
+        get() = unsupported()
+
+    override val backendWorkspace = BackendWorkspace()
 
     override lateinit var backend: BackendAdapter
 
@@ -31,11 +34,15 @@ class TestServerApplication(
         get() = unsupported()
 
     fun start(
-        transport: ServiceCallTransport = DirectServiceTransport(name = "node", wireFormatProvider = Json),
+        transport: ServiceCallTransport = DirectServiceTransport(name = "server", wireFormatProvider = Json),
         dispatcher: CoroutineDispatcher = Dispatchers.Unconfined,
         scope: CoroutineScope = CoroutineScope(dispatcher)
-    ) : TestServerApplication {
-        GlobalRuntimeContext.nodeType = ApplicationNodeType.Server
+    ): TestServerApplication {
+
+        if (builder.traceServiceCalls) {
+            transport.trace = true
+            transport.transportLog.enableFine()
+        }
 
         moduleInit()
 
@@ -43,17 +50,17 @@ class TestServerApplication(
 
         loadResources()
 
-        workspaceInit(workspace)
+        backendWorkspaceInit(backendWorkspace)
 
         backend = backend(transport, dispatcher = dispatcher, scope = scope) { adapter ->
             backendAdapterInit(adapter)
 
             localContext(this@TestServerApplication) {
-                for (s in workspace.services) {
+                for (s in backendWorkspace.services) {
                     service { s }
                 }
 
-                for (w in workspace.workers) {
+                for (w in backendWorkspace.workers) {
                     worker { w }
                 }
             }
@@ -64,12 +71,17 @@ class TestServerApplication(
 
     companion object {
 
-        fun testServer(buildFun: TestServerBuilder.() -> Unit): TestServerApplication {
+        fun testServer(
+            trace: Boolean = false,
+            start: Boolean = true,
+            buildFun: TestServerBuilder.() -> Unit
+        ): TestServerApplication {
             val builder = TestServerBuilder()
 
+            builder.traceServiceCalls = trace
             builder.buildFun()
 
-            return TestServerApplication(*builder.modules.toTypedArray())
+            return TestServerApplication(builder).also { if (start) it.start() }
         }
 
     }

@@ -8,6 +8,10 @@ class AvValueServerService : ServiceImpl<AvValueServerService>(), AvValueApi {
 
     val worker by workerImpl<AvValueWorker>()
 
+    override suspend fun get(avValueId: AvValueId): AvValue<*>? {
+        return worker.get<Any>(avValueId)
+    }
+
     override suspend fun process(operation: AvValueOperation) {
         throw UnsupportedOperationException()
     }

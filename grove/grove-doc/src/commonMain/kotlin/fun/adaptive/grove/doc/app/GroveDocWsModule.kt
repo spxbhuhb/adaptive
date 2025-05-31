@@ -13,6 +13,7 @@ import `fun`.adaptive.grove.doc.ui.docContentPane
 import `fun`.adaptive.grove.doc.ui.docToolPane
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
@@ -20,13 +21,9 @@ import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.ui.value.iconCache
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue.Companion.checkSpec
-import `fun`.adaptive.value.util.asValue
 import `fun`.adaptive.value.util.asValueOrNull
-import `fun`.adaptive.value.util.checkValue
 
-class GroveDocWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
+class GroveDocWsModule<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : AppModule<FW, BW>() {
 
     val WSPANE_DOC_BROWSER_TOOL: FragmentKey
         get() = "grove:doc:tool"
@@ -45,7 +42,7 @@ class GroveDocWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
         iconCache[avDomain.node] = Graphics.menu_book
     }
 
-    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
+    override fun frontendWorkspaceInit(workspace: FW, session: Any?) = with(workspace) {
 
         val contentPaneDef = PaneDef(
             UUID("ff694b37-8296-45e2-ba24-870886774730"),

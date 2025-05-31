@@ -8,7 +8,7 @@ import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.BackendWorkspace
 
-class AdhocServerModule<FW : AbstractWorkspace, BW : BackendWorkspace>(
+class AdhocClientBackendModule<FW : AbstractWorkspace, BW : BackendWorkspace>(
     val implFun : () -> BackendFragmentImpl
 ) : AppModule<FW,BW>() {
 
@@ -20,4 +20,5 @@ class AdhocServerModule<FW : AbstractWorkspace, BW : BackendWorkspace>(
             else -> error("unknown implementation type: ${impl::class.simpleName}")
         }
     }
+
 }

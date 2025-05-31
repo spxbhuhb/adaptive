@@ -6,6 +6,8 @@ import `fun`.adaptive.service.ServiceApi
 @ServiceApi
 interface AvValueApi {
 
+    suspend fun get(avValueId: AvValueId): AvValue<*>?
+
     suspend fun process(operation: AvValueOperation)
 
     suspend fun subscribe(

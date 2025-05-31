@@ -1,18 +1,25 @@
 package `fun`.adaptive.test
 
 import `fun`.adaptive.backend.builtin.BackendFragmentImpl
+import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.runtime.ServerWorkspace
+import `fun`.adaptive.runtime.BackendWorkspace
 
 class TestServerBuilder {
 
-    val modules = mutableListOf<AppModule<ServerWorkspace>>()
+    var traceServiceCalls = false
 
-    fun module(moduleFun: () -> AppModule<ServerWorkspace>) {
+    val modules = mutableListOf<AppModule<AbstractWorkspace, BackendWorkspace>>()
+
+    fun module(moduleFun: () -> AppModule<AbstractWorkspace, BackendWorkspace>) {
         modules += moduleFun()
     }
 
-    fun adhoc(implFun: () -> BackendFragmentImpl) {
+    fun worker(implFun: () -> BackendFragmentImpl) {
+        modules += AdhocServerModule(implFun)
+    }
+
+    fun service(implFun: () -> BackendFragmentImpl) {
         modules += AdhocServerModule(implFun)
     }
 }

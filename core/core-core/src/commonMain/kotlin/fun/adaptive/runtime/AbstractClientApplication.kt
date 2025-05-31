@@ -9,7 +9,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-abstract class AbstractClientApplication<FW : FrontendWorkspace, BW : BackendWorkspace> : AbstractApplication<FW,BW>() {
+abstract class AbstractClientApplication<FW : AbstractWorkspace, BW : BackendWorkspace> : AbstractApplication<FW,BW>() {
 
     abstract val transport : ServiceCallTransport
 

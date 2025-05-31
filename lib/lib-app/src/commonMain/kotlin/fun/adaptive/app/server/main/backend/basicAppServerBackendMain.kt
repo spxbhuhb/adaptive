@@ -12,7 +12,7 @@ import `fun`.adaptive.runtime.BackendWorkspace
 @Adaptive
 fun basicAppServerBackendMain(): AdaptiveFragment {
 
-    val ws = fragment().firstContext<AbstractServerApplication<*>>().backendWorkspace
+    val ws = fragment().firstContext<AbstractServerApplication<*,*>>().backendWorkspace
 
     for (s in ws.services) {
         service { s }

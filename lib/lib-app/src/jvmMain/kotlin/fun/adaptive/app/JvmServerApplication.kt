@@ -9,13 +9,14 @@ import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.AbstractServerApplication
+import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.runtime.NoFrontendWorkspace
 import kotlinx.coroutines.runBlocking
 
 class JvmServerApplication(
-    vararg modules: AppModule<NoFrontendWorkspace, BackendWorkspace>
-) : AbstractServerApplication<BackendWorkspace>() {
+    vararg modules: AppModule<AbstractWorkspace, BackendWorkspace>
+) : AbstractServerApplication<AbstractWorkspace, BackendWorkspace>() {
 
     init {
         this.modules += modules
@@ -61,8 +62,8 @@ class JvmServerApplication(
 
     companion object {
 
-        fun jvmServer(start: Boolean = true, buildFun: ApplicationBuilder<NoFrontendWorkspace, BackendWorkspace>.() -> Unit) {
-            val builder = ApplicationBuilder<NoFrontendWorkspace, BackendWorkspace>()
+        fun jvmServer(start: Boolean = true, buildFun: ApplicationBuilder<AbstractWorkspace, BackendWorkspace>.() -> Unit) {
+            val builder = ApplicationBuilder<AbstractWorkspace, BackendWorkspace>()
 
             builder.buildFun()
 
