@@ -10,6 +10,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AbstractApplication
+import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.runtime.ClientWorkspace
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
@@ -32,9 +33,10 @@ import kotlin.reflect.KClass
 
 open class MultiPaneWorkspace(
     backend: BackendAdapter,
+    backendWorkspace: BackendWorkspace,
     scope: CoroutineScope = backend.scope,
     transport: ServiceCallTransport = backend.transport
-) : ClientWorkspace(backend, scope, transport) {
+) : ClientWorkspace(backend, backendWorkspace, scope, transport) {
 
     companion object {
         inline fun <reified T> AdaptiveFragment.wsContext() =

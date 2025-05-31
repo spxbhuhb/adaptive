@@ -21,7 +21,7 @@ fun main() {
 
     jvmServer {
         module { UtilServerModule() }
-        module { ValueServerModule("general", FilePersistence(Path("./var/values"))) }
+        module { ValueServerModule(FilePersistence(Path("./var/values"))) }
         module { NoAuthServerModule() }
         module { KtorJvmServerModule() }
         module { BasicAppServerModule() }

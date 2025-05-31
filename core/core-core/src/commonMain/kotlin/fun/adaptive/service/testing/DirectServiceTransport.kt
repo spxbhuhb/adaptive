@@ -18,7 +18,8 @@ import kotlinx.coroutines.Dispatchers
 open class DirectServiceTransport(
     val dump: Boolean = false,
     override val wireFormatProvider: WireFormatProvider = Proto,
-    name : String = "direct"
+    name : String = "direct",
+    val setupFun: suspend DirectServiceTransport.() -> Unit = {  }
 ) : ServiceCallTransport(
     CoroutineScope(Dispatchers.Default),
     name
@@ -35,6 +36,11 @@ open class DirectServiceTransport(
         set(value) = lock.use { field = value }
 
     var peerTransport: DirectServiceTransport? = null
+
+    override suspend fun start(): ServiceCallTransport {
+        setupFun.invoke(this)
+        return super.start()
+    }
 
     override suspend fun send(envelope: TransportEnvelope) {
         if (drop) return

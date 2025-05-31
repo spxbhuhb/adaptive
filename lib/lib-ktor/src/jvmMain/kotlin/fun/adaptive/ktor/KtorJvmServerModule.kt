@@ -1,16 +1,10 @@
 package `fun`.adaptive.ktor
 
-import `fun`.adaptive.auth.model.AccessDenied
+import `fun`.adaptive.ktor.app.KtorModule
 import `fun`.adaptive.ktor.worker.KtorWorker
-import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.runtime.ServerWorkspace
-import `fun`.adaptive.wireformat.WireFormatRegistry
+import `fun`.adaptive.runtime.BackendWorkspace
 
-class KtorJvmServerModule<WT : ServerWorkspace> : AppModule<WT>() {
-
-    override fun wireFormatInit(registry: WireFormatRegistry) = with (registry) {
-        + AccessDenied
-    }
+class KtorJvmServerModule<WT : BackendWorkspace> : KtorModule<WT>() {
 
     override fun workspaceInit(workspace: WT, session: Any?) = with (workspace) {
         + KtorWorker()

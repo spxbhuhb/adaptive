@@ -22,7 +22,7 @@ fun main() {
 
     jvmServer {
         module { UtilServerModule() }
-        module { ValueServerModule("general", FilePersistence(kotlinx.io.files.Path("./var/values").ensure(), 2)) }
+        module { ValueServerModule(FilePersistence(kotlinx.io.files.Path("./var/values").ensure(), 2)) }
         module { AuthBasicServerModule() }
         module { KtorJvmServerModule() }
         module { BasicAppServerModule() }

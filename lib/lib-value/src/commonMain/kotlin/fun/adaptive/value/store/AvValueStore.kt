@@ -65,7 +65,8 @@ open class AvValueStore(
         if (trace) logger.enableFine() // .also { it.usePrintln = true}
 
         lock.use {
-            if (GlobalRuntimeContext.isServer) {
+            // when not a proxt (typically on servers) the values should be empty before load
+            if (! proxy) {
                 check(values.isEmpty()) { "Values are not empty" }
                 check(subscriptions.isEmpty()) { "Subscriptions are not empty" }
                 check(markerIndices.isEmpty()) { "Marker indices are not empty" }

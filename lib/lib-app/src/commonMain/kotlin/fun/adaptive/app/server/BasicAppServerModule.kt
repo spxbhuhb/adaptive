@@ -4,9 +4,9 @@ import `fun`.adaptive.app.server.main.backend.BasicAppServerFragmentFactory
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
-import `fun`.adaptive.runtime.ServerWorkspace
+import `fun`.adaptive.runtime.BackendWorkspace
 
-class BasicAppServerModule<WT : ServerWorkspace> : AppModule<WT>() {
+class BasicAppServerModule<WT : BackendWorkspace> : AppModule<WT>() {
 
     companion object {
         const val SERVER_BACKEND_MAIN_KEY: FragmentKey = "app:server:backend:main"

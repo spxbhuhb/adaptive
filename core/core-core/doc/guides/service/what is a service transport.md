@@ -1,6 +1,6 @@
 # What is a service transport
 
-Service transports are the mechanism used to exchange data between service consumers
+[Service transports](def://) are the mechanism used to exchange data between service consumers
 (usually clients) and service providers (usually servers).
 
 They are responsible for:
@@ -9,14 +9,28 @@ They are responsible for:
 - Returning results (or exceptions) from the provider to the consumer.
 - Encoding and decoding data using a `WireFormat` like `Proto` or `Json`.
 
-Service transports can be created manually but are usually handled automatically by 
-Adaptive's application framework.
+## Creating service transports
 
-## Client-Side (Browser)
+[Service transports](def://) can be created manually but are usually handled automatically by
+[lib-app](def://) or [lib-test](def://).
 
-WebSocket transports are the most common transport for browser-based clients.
+To create a [service transport](def://) manually use the [getTransport](def://) function.
 
-### Example
+[getTransport](def://) chooses the actual transport implementation to use based on the schema
+of the [url](parameter://getTransport):
+
+- `direct` creates a [DirectServiceTransport](class://), useful for testing
+- `http` creates a [ClientWebSocketServiceCallTransport](class://)
+- `https` creates a [ClientWebSocketServiceCallTransport](class://)
+
+Once created, you have to start the [start](function://ServiceCallTransport) to actually start the
+transport.
+
+[finish updating doc](todo://)
+
+### Client-Side (Browser)
+
+WebSocket transports are the most common transport for browser-based clients. 
 
 ```kotlin
 webSocketTransport(window.location.origin, wireFormatProvider = Proto).also { it.start() }

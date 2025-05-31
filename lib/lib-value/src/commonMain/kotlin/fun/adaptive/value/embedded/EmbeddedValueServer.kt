@@ -7,6 +7,7 @@ import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.backend.query.firstImplOrNull
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.LifecycleBound
+import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.service.testing.DirectServiceTransport
 import `fun`.adaptive.utility.getLock
@@ -77,7 +78,7 @@ class EmbeddedValueServer(
         val clientScope = CoroutineScope(clientDispatcher)
 
         serverBackend = backend(serverTransport, dispatcher = serverDispatcher, scope = serverScope) {
-            worker { AvValueWorker("server", proxy = false, persistence, trace = traceWorker) }
+            worker { AvValueWorker(proxy = false, persistence, trace = traceWorker) } .. name("server")
             service { AvEmbeddedServerService() }
         }
 
@@ -86,7 +87,7 @@ class EmbeddedValueServer(
         }
 
         clientBackend = backend(clientTransport, dispatcher = clientDispatcher, scope = clientScope) {
-            worker { AvValueWorker("client", proxy = true, trace = traceWorker) }
+            worker { AvValueWorker(proxy = true, trace = traceWorker) } .. name("client")
             service { AvEmbeddedClientService() }
         }
 

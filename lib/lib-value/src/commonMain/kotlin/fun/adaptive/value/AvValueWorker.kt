@@ -12,7 +12,6 @@ import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
 open class AvValueWorker(
-    val domain: AvValueDomain,
     val proxy: Boolean,
     val persistence: AbstractValuePersistence = NoPersistence(),
     val trace: Boolean = false
@@ -27,7 +26,7 @@ open class AvValueWorker(
         get() = storeOrNull?.isIdle != false
 
     override fun mount() {
-        logger = getLogger("AvValueWorker($domain)")
+        logger = getLogger(fragment?.name ?: "AvValueWorker")
         storeOrNull = AvValueStore(persistence, proxy, logger, trace)
         super.mount()
     }

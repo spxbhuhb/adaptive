@@ -28,6 +28,8 @@ import kotlinx.coroutines.launch
 abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>() {
 
     var wireFormatProvider : WireFormatProvider = Proto
+
+    @Deprecated("use service transport registry")
     var localTransport: Boolean = false
 
     override lateinit var transport: ServiceCallTransport
@@ -40,8 +42,6 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
     fun main() {
 
         CoroutineScope(Dispatchers.Default).launch {
-
-            GlobalRuntimeContext.nodeType = ApplicationNodeType.Client
 
             moduleInit()
 

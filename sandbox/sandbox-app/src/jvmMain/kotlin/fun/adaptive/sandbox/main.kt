@@ -3,7 +3,6 @@ package `fun`.adaptive.sandbox
 import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
 import `fun`.adaptive.app.server.BasicAppServerModule
 import `fun`.adaptive.auth.app.AuthServerModule
-import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.ktor.KtorJvmServerModule
@@ -25,7 +24,7 @@ fun main() {
 
     jvmServer {
         module { UtilServerModule() }
-        module { ValueServerModule("general", FilePersistence(Path("./var/values").ensure(), 2)) }
+        module { ValueServerModule(FilePersistence(Path("./var/values").ensure(), 2)) }
         module { AuthServerModule() }
         module { KtorJvmServerModule() }
         module { BasicAppServerModule() }

@@ -23,7 +23,7 @@ fun valueTest(timeout: Duration = 10.seconds, testFun: suspend EmbeddedValueServ
 
 fun standaloneTest(timeout: Duration = 10.seconds, testFun: suspend (worker: AvValueWorker) -> Unit) =
     runTest(timeout = timeout) {
-        val worker = AvValueWorker("general", proxy = false)
+        val worker = AvValueWorker(proxy = false)
         worker.logger = getLogger("worker")
         val dispatcher = Dispatchers.Unconfined
         val scope = CoroutineScope(dispatcher)

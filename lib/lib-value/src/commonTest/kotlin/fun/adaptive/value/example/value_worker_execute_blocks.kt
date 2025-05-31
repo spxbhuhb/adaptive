@@ -2,7 +2,6 @@ package `fun`.adaptive.value.example
 
 import `fun`.adaptive.value.AvRefLabel
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 
@@ -38,7 +37,7 @@ suspend fun getExample(
 
         // get a value or null if it doesn't exist
         // getOrNull does not cast to a spec itself, you can do so with `withSpec`
-        val other = getOrNull(valueId)?.checkSpec<String>()
+        val other = getOrNull<String>(valueId)
 
     }
 }
@@ -57,7 +56,7 @@ suspend fun refExample(
         // get the referred value or null if no such value exists
         // the reference label is `exampleRefLabel`
         // cast the value to `String` spec if exists
-        val r2 = refOrNull(referringValueId,"exampleRefLabel")?.checkSpec<String>()
+        val r2 = refOrNull<String>(referringValueId,"exampleRefLabel")
 
         // get the referring value
         val referring = get<String>(referringValueId)

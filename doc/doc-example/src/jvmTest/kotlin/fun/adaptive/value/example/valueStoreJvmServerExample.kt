@@ -13,7 +13,7 @@ import kotlinx.io.files.Path
 fun main() {
     jvmServer {
         module { UtilServerModule() }
-        module { ValueServerModule("general", FilePersistence(Path("./var/values").ensure(), 2)) }
+        module { ValueServerModule(FilePersistence(Path("./var/values").ensure(), 2)) }
         module { NoAuthServerModule() } // no authentication
         module { KtorJvmServerModule() }
         module { BasicAppServerModule() }
