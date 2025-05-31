@@ -67,7 +67,7 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
 
     override var trace: Array<out Regex> = emptyArray()
 
-    override var application: AbstractApplication<*>? = null
+    override var application: AbstractApplication<*,*>? = null
 
     override fun newId(): Long =
         nextId ++

@@ -9,7 +9,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-abstract class AbstractClientApplication<WT : ClientWorkspace> : AbstractApplication<WT>() {
+abstract class AbstractClientApplication<FW : FrontendWorkspace, BW : BackendWorkspace> : AbstractApplication<FW,BW>() {
 
     abstract val transport : ServiceCallTransport
 
@@ -40,16 +40,24 @@ abstract class AbstractClientApplication<WT : ClientWorkspace> : AbstractApplica
         modules.forEach { it.backendAdapterInit(adapter) }
     }
 
-    open fun frontendAdapterInit(adapter: AdaptiveAdapter) {
-        modules.forEach { it.frontendAdapterInit(adapter) }
-    }
-
-    open fun workspaceInit(workspace : WT) {
+    open fun backendWorkspaceInit(workspace : BW) {
         modules.forEach {
             workspace.contexts += it
             it.contextInit()
         }
-        modules.forEach { it.workspaceInit(workspace, genericSessionOrNull) }
+        modules.forEach { it.backendWorkspaceInit(workspace, genericSessionOrNull) }
+    }
+
+    open fun frontendAdapterInit(adapter: AdaptiveAdapter) {
+        modules.forEach { it.frontendAdapterInit(adapter) }
+    }
+
+    open fun frontendWorkspaceInit(workspace : FW) {
+        modules.forEach {
+            workspace.contexts += it
+            it.contextInit()
+        }
+        modules.forEach { it.frontendWorkspaceInit(workspace, genericSessionOrNull) }
     }
 
 }

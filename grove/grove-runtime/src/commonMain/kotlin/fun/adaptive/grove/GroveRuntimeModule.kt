@@ -7,7 +7,7 @@ import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-class GroveRuntimeModule<WT : AbstractWorkspace> : AppModule<WT>() {
+class GroveRuntimeModule<FW : AbstractWorkspace, BW : AbstractWorkspace> : AppModule<FW, BW>() {
 
     override fun wireFormatInit(registry: WireFormatRegistry) = with(registry) {
         + LfmConst
@@ -18,7 +18,7 @@ class GroveRuntimeModule<WT : AbstractWorkspace> : AppModule<WT>() {
         + LfmMapping
     }
 
-    override fun frontendAdapterInit(adapter : AdaptiveAdapter)= with(adapter) {
+    override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter) {
         + GroveRuntimeFragmentFactory
     }
 

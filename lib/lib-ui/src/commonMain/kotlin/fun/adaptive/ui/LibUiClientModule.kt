@@ -7,7 +7,7 @@ import `fun`.adaptive.ui.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.ui.snackbar.SnackType
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-class LibUiClientModule<WT : AbstractWorkspace> : AppModule<WT>() {
+class LibUiClientModule<FW : AbstractWorkspace, BW : AbstractWorkspace> : AppModule<FW,BW>() {
 
     override fun wireFormatInit(registry: WireFormatRegistry) = with(registry) {
         + SnackType

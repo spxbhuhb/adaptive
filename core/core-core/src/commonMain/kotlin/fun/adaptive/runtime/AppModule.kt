@@ -5,12 +5,12 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-abstract class AppModule<WT : AbstractWorkspace> {
+abstract class AppModule<FW : AbstractWorkspace, BW : AbstractWorkspace> {
 
-    lateinit var application : AbstractApplication<WT>
+    lateinit var application : AbstractApplication<FW,BW>
 
     val workspace
-        get() = application.workspace
+        get() = application.frontendWorkspace
 
     open fun wireFormatInit(registry: WireFormatRegistry) {
 
@@ -20,7 +20,15 @@ abstract class AppModule<WT : AbstractWorkspace> {
 
     }
 
+    open fun contextInit() {
+
+    }
+    
     open fun backendAdapterInit(adapter : BackendAdapter) {
+
+    }
+
+    open fun backendWorkspaceInit(workspace: BW, session: Any?) {
 
     }
 
@@ -28,11 +36,7 @@ abstract class AppModule<WT : AbstractWorkspace> {
 
     }
 
-    open fun contextInit() {
-
-    }
-
-    open fun workspaceInit(workspace: WT, session: Any?) {
+    open fun frontendWorkspaceInit(workspace: FW, session: Any?) {
 
     }
 

@@ -36,7 +36,7 @@ interface AdaptiveAdapter {
 
     val startedAt: Long
 
-    var application : AbstractApplication<*>?
+    var application : AbstractApplication<*,*>?
         get() = null
         set(v) = unsupported()
 

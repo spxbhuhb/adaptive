@@ -24,7 +24,7 @@ import `fun`.adaptive.value.AvValueId
 import kotlinx.datetime.Clock.System.now
 
 class AccountSelfViewBackend(
-    module: AppAuthWsModule<*>
+    module: AppAuthWsModule<*,*>
 ) : SingularContentViewBackend<AccountSelfViewBackend>(
     module.workspace,
     PaneDef(

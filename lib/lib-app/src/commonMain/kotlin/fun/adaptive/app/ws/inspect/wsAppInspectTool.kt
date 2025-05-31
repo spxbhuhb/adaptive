@@ -18,7 +18,7 @@ import `fun`.adaptive.wireformat.WireFormatRegistry
 fun wsAppInspectTool(): AdaptiveFragment {
 
     val viewBackend = viewBackend(UnitPaneViewBackend::class)
-    val app = fragment().firstContext<ClientApplication<*>>()
+    val app = fragment().firstContext<ClientApplication<*,*>>()
 
     toolPane(viewBackend) {
         row {
@@ -34,7 +34,7 @@ fun wsAppInspectTool(): AdaptiveFragment {
 }
 
 @Adaptive
-private fun modules(app : ClientApplication<*>) {
+private fun modules(app : ClientApplication<*,*>) {
     column {
         h2("Modules")
         for (module in app.modules) {
@@ -44,7 +44,7 @@ private fun modules(app : ClientApplication<*>) {
 }
 
 @Adaptive
-private fun session(app : ClientApplication<*>) {
+private fun session(app : ClientApplication<*,*>) {
     val session = app.authContext.sessionOrNull
 
     column {

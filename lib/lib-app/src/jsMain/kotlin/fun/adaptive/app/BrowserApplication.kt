@@ -11,9 +11,8 @@ import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.ktor.api.webSocketTransport
-import `fun`.adaptive.runtime.ApplicationNodeType
-import `fun`.adaptive.runtime.ClientWorkspace
-import `fun`.adaptive.runtime.GlobalRuntimeContext
+import `fun`.adaptive.runtime.BackendWorkspace
+import `fun`.adaptive.runtime.FrontendWorkspace
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.LocalServiceCallTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
@@ -25,7 +24,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>() {
+abstract class BrowserApplication<WT : FrontendWorkspace> : ClientApplication<WT, BackendWorkspace>() {
 
     var wireFormatProvider : WireFormatProvider = Proto
 
@@ -35,9 +34,11 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
     override lateinit var transport: ServiceCallTransport
     override lateinit var backend: BackendAdapter
     override lateinit var frontend: AdaptiveAdapter
-    override lateinit var workspace: WT
 
-    open fun buildWorkspace() = Unit
+    override val backendWorkspace = BackendWorkspace()
+    override lateinit var frontendWorkspace: WT
+
+    open fun buildFrontendWorkspace() = Unit
 
     fun main() {
 
@@ -70,7 +71,7 @@ abstract class BrowserApplication<WT : ClientWorkspace> : ClientApplication<WT>(
 
             loadResources()
 
-            buildWorkspace()
+            buildFrontendWorkspace()
 
             browser(
                 CanvasFragmentFactory,

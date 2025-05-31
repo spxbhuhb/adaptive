@@ -13,7 +13,7 @@ open class FormViewBackend() {
 
     var isFormDisabled: Boolean = false
 
-    var application: AbstractApplication<*>? = null
+    var application: AbstractApplication<*,*>? = null
 
     val inputBackends = mutableListOf<InputViewBackend<*, *>>()
 
@@ -93,7 +93,7 @@ open class FormViewBackend() {
         if (key == null) return null
 
         val app = application
-            ?: fragment.firstContextOrNull<AbstractApplication<*>>()?.also { application = it }
+            ?: fragment.firstContextOrNull<AbstractApplication<*,*>>()?.also { application = it }
             ?: return key
 
         for (store in app.stringStores) {

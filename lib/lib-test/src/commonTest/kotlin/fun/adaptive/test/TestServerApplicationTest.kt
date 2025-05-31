@@ -5,27 +5,27 @@ import `fun`.adaptive.test.TestServerApplication.Companion.testServer
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.app.ValueServerModule
 import kotlin.test.Test
-import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 class TestServerApplicationTest {
 
     @Test
     fun basic() {
         testServer {
-            adhoc { AvValueWorker("test", proxy = false) }
+            adhoc { AvValueWorker(proxy = false) }
         }.also {
             it.start()
-            assertEquals("test", it.backend.firstImpl<AvValueWorker>().domain)
+            assertNotNull(it.backend.firstImpl<AvValueWorker>())
         }
     }
 
     @Test
     fun withModule() {
         testServer {
-            module { ValueServerModule("test") }
+            module { ValueServerModule() }
         }.also {
             it.start()
-            assertEquals("test", it.backend.firstImpl<AvValueWorker>().domain)
+            assertNotNull(it.backend.firstImpl<AvValueWorker>())
         }
     }
 }

@@ -6,22 +6,23 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.model.NamedItem
 import `fun`.adaptive.runtime.AbstractApplication
+import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.model.SingularPaneItem
 import `fun`.adaptive.utility.firstInstance
 
 val AdaptiveFragment.wsApplication
-    get() = this.firstContext<ClientApplication<MultiPaneWorkspace>>()
+    get() = this.firstContext<ClientApplication<MultiPaneWorkspace, BackendWorkspace>>()
 
 @Deprecated("Use wsAddContent(NamedItem, Set<EventModifier>) instead")
 fun AdaptiveFragment.wsAddContent(item: NamedItem, modifiers: Set<EventModifier> = emptySet()) {
-    wsApplication.workspace.addContent(item.type, item, modifiers)
+    wsApplication.frontendWorkspace.addContent(item.type, item, modifiers)
 }
 
-val AbstractApplication<*>.wsAppMain
-    get() = modules.firstInstance<AppMainWsModule<*>>()
+val AbstractApplication<*,*>.wsAppMain
+    get() = modules.firstInstance<AppMainWsModule<*,*>>()
 
 fun MultiPaneWorkspace.addAdminItem(item : SingularPaneItem) {
-    contexts.firstInstance<AppAdminWsModule<*>>().adminItems += item
+    contexts.firstInstance<AppAdminWsModule<*,*>>().adminItems += item
 }

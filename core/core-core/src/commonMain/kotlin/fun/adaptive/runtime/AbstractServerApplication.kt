@@ -4,7 +4,7 @@ import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-abstract class AbstractServerApplication<WT : AbstractWorkspace> : AbstractApplication<WT>() {
+abstract class AbstractServerApplication<BW : BackendWorkspace> : AbstractApplication<NoFrontendWorkspace,BW>() {
 
     abstract val backend : BackendAdapter
 
@@ -26,8 +26,8 @@ abstract class AbstractServerApplication<WT : AbstractWorkspace> : AbstractAppli
         modules.forEach { it.backendAdapterInit(adapter) }
     }
 
-    fun workspaceInit(workspace : WT) {
-        modules.forEach { it.workspaceInit(workspace, null) }
+    fun backendWorkspaceInit(workspace : BW) {
+        modules.forEach { it.backendWorkspaceInit(workspace, null) }
     }
 
 }

@@ -20,7 +20,7 @@ import `fun`.adaptive.ui.viewbackend.viewBackend
 fun wsAppAdminTool(): AdaptiveFragment {
 
     val viewBackend = viewBackend(UnitPaneViewBackend::class)
-    val module = fragment().wsContext<AppAdminWsModule<*>>()
+    val module = fragment().wsContext<AppAdminWsModule<*,*>>()
 
     val model = TreeViewBackend(
         module.adminItems.toTreeItems(),

@@ -10,17 +10,19 @@ import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.AbstractServerApplication
 import `fun`.adaptive.runtime.BackendWorkspace
+import `fun`.adaptive.runtime.NoFrontendWorkspace
 import kotlinx.coroutines.runBlocking
 
 class JvmServerApplication(
-    vararg modules: AppModule<BackendWorkspace>
+    vararg modules: AppModule<NoFrontendWorkspace, BackendWorkspace>
 ) : AbstractServerApplication<BackendWorkspace>() {
 
     init {
         this.modules += modules
     }
 
-    override val workspace = BackendWorkspace()
+    override val frontendWorkspace = NoFrontendWorkspace()
+    override val backendWorkspace = BackendWorkspace()
 
     override val backendMainKey: FragmentKey
         get() = BasicAppServerModule.SERVER_BACKEND_MAIN_KEY
@@ -36,7 +38,7 @@ class JvmServerApplication(
 
             loadResources()
 
-            workspaceInit(workspace)
+            backendWorkspaceInit(backendWorkspace)
 
             backend = backend { adapter ->
                 backendAdapterInit(adapter)
@@ -59,8 +61,8 @@ class JvmServerApplication(
 
     companion object {
 
-        fun jvmServer(start: Boolean = true, buildFun: ApplicationBuilder<BackendWorkspace>.() -> Unit) {
-            val builder = ApplicationBuilder<BackendWorkspace>()
+        fun jvmServer(start: Boolean = true, buildFun: ApplicationBuilder<NoFrontendWorkspace, BackendWorkspace>.() -> Unit) {
+            val builder = ApplicationBuilder<NoFrontendWorkspace, BackendWorkspace>()
 
             builder.buildFun()
 

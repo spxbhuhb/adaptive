@@ -17,6 +17,7 @@ import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.generated.resources.account_circle
 import `fun`.adaptive.ui.generated.resources.power_settings_new
@@ -31,7 +32,7 @@ import `fun`.adaptive.ui.mpw.model.SingularPaneItem
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 
-class AppAuthWsModule<WT : MultiPaneWorkspace> : AuthBasicClientModule<WT>() {
+class AppAuthWsModule<WT : MultiPaneWorkspace, BW : BackendWorkspace> : AuthBasicClientModule<WT, BW>() {
 
     val SIGN_IN_KEY: FragmentKey = "app:ws:auth:sign-in"
     val SIGN_IN_ITEM by lazy { SingularPaneItem(Strings.signInTitle, SIGN_IN_KEY) }
@@ -52,7 +53,7 @@ class AppAuthWsModule<WT : MultiPaneWorkspace> : AuthBasicClientModule<WT>() {
         add(ROLE_MANAGER_KEY, ::wsAppRoleManager)
     }
 
-    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
+    override fun frontendWorkspaceInit(workspace: WT, session: Any?) = with(workspace) {
 
         addSingularContentPane(ACCOUNT_SELF_ITEM) {
             AccountSelfViewBackend(this@AppAuthWsModule)
@@ -86,7 +87,7 @@ class AppAuthWsModule<WT : MultiPaneWorkspace> : AuthBasicClientModule<WT>() {
         if (application.authContext.sessionOrNull == null) {
             addContent(SIGN_IN_ITEM)
         } else {
-            val appModule = application.modules.firstInstance<AppMainWsModule<*>>()
+            val appModule = application.modules.firstInstance<AppMainWsModule<*,*>>()
             checkNotNull(application) { "AppWsModule not found" }
             addContent(appModule.HOME_CONTENT_ITEM)
         }

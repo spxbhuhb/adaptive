@@ -5,7 +5,7 @@ import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-class DocModule<WT : AbstractWorkspace> : AppModule<WT>() {
+class DocModule<FW : AbstractWorkspace, BW : AbstractWorkspace> : AppModule<FW, BW>() {
 
     override fun wireFormatInit(registry: WireFormatRegistry) = with(registry) {
         + DocBlockFragment

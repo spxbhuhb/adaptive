@@ -20,7 +20,7 @@ import `fun`.adaptive.value.avByMarker
 import `fun`.adaptive.value.local.AvListSubscriber
 
 class RoleManagerViewBackend(
-    module: AppAuthWsModule<*>
+    module: AppAuthWsModule<*,*>
 ) : SingularContentViewBackend<RoleManagerViewBackend>(
     module.workspace,
     PaneDef(

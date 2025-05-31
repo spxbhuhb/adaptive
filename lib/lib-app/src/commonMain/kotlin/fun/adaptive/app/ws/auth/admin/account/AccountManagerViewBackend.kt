@@ -22,7 +22,7 @@ import `fun`.adaptive.utility.UUID
 import kotlinx.datetime.Clock.System.now
 
 class AccountManagerViewBackend(
-    module: AppAuthWsModule<*>,
+    module: AppAuthWsModule<*,*>,
 ) : SingularContentViewBackend<AccountManagerViewBackend>(
     module.workspace,
     PaneDef(

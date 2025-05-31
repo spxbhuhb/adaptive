@@ -7,6 +7,7 @@ import `fun`.adaptive.lib_app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AppModule
+import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.ui.generated.resources.eco
 import `fun`.adaptive.ui.generated.resources.home
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
@@ -18,7 +19,7 @@ import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.ui.mpw.model.PaneSingularity
 import `fun`.adaptive.utility.UUID
 
-class AppMainWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
+class AppMainWsModule<FW : MultiPaneWorkspace, BW: BackendWorkspace> : AppModule<FW, BW>() {
 
     val FRONTEND_MAIN_KEY: FragmentKey = "app:ws:frontend:main"
     val BACKEND_MAIN_KEY: FragmentKey = "app:ws:backend:main"
@@ -39,7 +40,7 @@ class AppMainWsModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
         add(FRONTEND_MAIN_KEY, ::wsAppFrontendMain)
     }
 
-    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
+    override fun frontendWorkspaceInit(workspace: FW, session: Any?) = with(workspace) {
         wsAppHomePaneDef()
     }
 

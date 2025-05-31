@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
 
-open class ChartModule<WT : AbstractWorkspace> : AppModule<WT>() {
+open class ChartModule<FW : AbstractWorkspace, BW : AbstractWorkspace> : AppModule<FW, BW>() {
 
     companion object {
         const val BASIC_HORIZONTAL_AXIS = "chart:axis:horizontal:basic"

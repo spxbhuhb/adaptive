@@ -8,7 +8,7 @@ import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.wireformat.WireFormatRegistry
 import kotlin.collections.plusAssign
 
-open class ExampleModule<WT : AbstractWorkspace> : AppModule<WT>() {
+open class ExampleModule<WT : AbstractWorkspace, BW : AbstractWorkspace> : AppModule<WT, BW>() {
 
     override fun wireFormatInit(registry: WireFormatRegistry) = with(registry) {
         // Register Adat classes and enum classes defined in this module

@@ -5,10 +5,11 @@ import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.auth.model.basic.BasicSignIn
 import `fun`.adaptive.auth.model.basic.BasicSignUp
+import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-class AuthBasicServerModule<WT : BackendWorkspace> : AuthServerModule<WT>() {
+class AuthBasicServerModule<FW : AbstractWorkspace, BW: BackendWorkspace> : AuthServerModule<FW,BW>() {
 
     override fun wireFormatInit(registry: WireFormatRegistry) {
         super.wireFormatInit(registry)
@@ -21,8 +22,8 @@ class AuthBasicServerModule<WT : BackendWorkspace> : AuthServerModule<WT>() {
         }
     }
 
-    override fun workspaceInit(workspace: WT, session: Any?) {
-        super.workspaceInit(workspace, session)
+    override fun backendWorkspaceInit(workspace: BW, session: Any?) {
+        super.backendWorkspaceInit(workspace, session)
 
         with(workspace) {
             + AuthBasicService()

@@ -9,6 +9,7 @@ import `fun`.adaptive.lib_app.generated.resources.administration
 import `fun`.adaptive.lib_app.generated.resources.local_police
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneDef
@@ -17,7 +18,7 @@ import `fun`.adaptive.ui.mpw.model.SingularPaneItem
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.AvValueId
 
-class AppAdminWsModule<WT : MultiPaneWorkspace> : AuthBasicClientModule<WT>() {
+class AppAdminWsModule<FW : MultiPaneWorkspace, BW : BackendWorkspace> : AuthBasicClientModule<FW, BW>() {
 
     val ADMIN_TOOL_KEY: String = "app:ws:admin:tool"
 
@@ -33,7 +34,7 @@ class AppAdminWsModule<WT : MultiPaneWorkspace> : AuthBasicClientModule<WT>() {
         securityOfficer = app.knownRoles.firstOrNull { AuthMarkers.SECURITY_OFFICER in it.markers }?.uuid
     }
 
-    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
+    override fun frontendWorkspaceInit(workspace: FW, session: Any?) = with(workspace) {
         application.withRole(securityOfficer) {
 
             val appAdminToolPane = PaneDef(

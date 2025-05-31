@@ -6,7 +6,7 @@ import `fun`.adaptive.auth.model.CredentialType.PASSWORD
 import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.lib.util.testing.AbstractTestSupport
-import `fun`.adaptive.runtime.ClientWorkspace
+import `fun`.adaptive.runtime.FrontendWorkspace
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.wireformat.WireFormatRegistry
@@ -55,7 +55,7 @@ class AuthTestSupport : AbstractTestSupport(
         ) =
             runTest(timeout = timeout) {
 
-                AuthClientModule<ClientWorkspace>().wireFormatInit(WireFormatRegistry)
+                AuthClientModule<FrontendWorkspace>().wireFormatInit(WireFormatRegistry)
 
                 with(AuthTestSupport()) {
                     test { testFun() }

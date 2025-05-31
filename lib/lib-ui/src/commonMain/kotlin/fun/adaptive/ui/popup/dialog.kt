@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.NonAdaptive
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.runtime.ClientWorkspace
+import `fun`.adaptive.runtime.FrontendWorkspace
 import `fun`.adaptive.ui.api.popupAlign
 
 @NonAdaptive
@@ -19,7 +19,7 @@ fun <T : Any> dialog(
 
 @NonAdaptive
 fun <T : Any> dialog(
-    workspace: ClientWorkspace,
+    workspace: FrontendWorkspace,
     data: T,
     content: (data: T, hide: () -> Unit) -> Any
 ) {

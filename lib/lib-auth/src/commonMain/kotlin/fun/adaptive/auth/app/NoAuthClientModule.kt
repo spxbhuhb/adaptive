@@ -1,10 +1,12 @@
 package `fun`.adaptive.auth.app
 
-import `fun`.adaptive.runtime.ClientWorkspace
+import `fun`.adaptive.runtime.AbstractWorkspace
+import `fun`.adaptive.runtime.BackendWorkspace
 
-class NoAuthClientModule<WT : ClientWorkspace> : AuthModule<WT>() {
+class NoAuthClientModule<FW : AbstractWorkspace, BW : BackendWorkspace> : AuthModule<FW, BW>() {
 
-    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
+    override fun frontendWorkspaceInit(workspace: FW, session: Any?) = with(workspace) {
+        // FIXME clean up auth context vs. workspace (backend or frontend)
         contexts += AuthAppContext(workspace)
     }
 

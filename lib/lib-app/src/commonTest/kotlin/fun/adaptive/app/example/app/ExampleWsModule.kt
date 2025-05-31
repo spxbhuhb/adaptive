@@ -5,11 +5,12 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.ui.generated.resources.settings
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.model.SingularPaneItem
 
-class ExampleWsModule<WT : MultiPaneWorkspace> : ExampleModule<WT>() {
+class ExampleWsModule<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : ExampleModule<FW, BW>() {
 
     // Define frontend fragment keys and singular workspace items here
     val EXAMPLE_SETTINGS_KEY : FragmentKey = "app:ws:admin:system:settings"
@@ -20,7 +21,7 @@ class ExampleWsModule<WT : MultiPaneWorkspace> : ExampleModule<WT>() {
         add(EXAMPLE_SETTINGS_KEY, ::wsExampleSettings)
     }
 
-    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
+    override fun frontendWorkspaceInit(workspace: FW, session: Any?) = with(workspace) {
         // Register workspace pane/item definitions
         // wsExampleSettingsDef(this@ExampleWsModule)
     }

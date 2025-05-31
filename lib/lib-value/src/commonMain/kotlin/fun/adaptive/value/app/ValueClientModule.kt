@@ -1,5 +1,6 @@
 package `fun`.adaptive.value.app
 
-import `fun`.adaptive.runtime.ClientWorkspace
+import `fun`.adaptive.runtime.BackendWorkspace
+import `fun`.adaptive.runtime.FrontendWorkspace
 
-class ValueClientModule<WT : ClientWorkspace> : ValueModule<WT>()
+class ValueClientModule<FW : FrontendWorkspace, BW : BackendWorkspace> : ValueModule<FW, BW>()
