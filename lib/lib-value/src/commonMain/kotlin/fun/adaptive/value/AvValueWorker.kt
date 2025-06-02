@@ -156,6 +156,15 @@ open class AvValueWorker(
     inline fun <reified SPEC : Any> getOrNull(valueId: AvValueId): AvValue<SPEC>? =
         store.getOrNull(valueId)?.checkSpec<SPEC>()
 
+    inline fun <reified SPEC : Any> get(marker: AvMarker): List<AvValue<SPEC>> =
+        store.queryByMarker(marker).map { it.checkSpec<SPEC>() }
+
+    inline fun <reified SPEC : Any> first(marker: AvMarker): AvValue<SPEC> =
+        store.queryByMarker(marker).first().checkSpec<SPEC>()
+
+    inline fun <reified SPEC : Any> firstOrNull(marker: AvMarker): AvValue<SPEC>? =
+        store.queryByMarker(marker).firstOrNull()?.checkSpec<SPEC>()
+
     inline fun <reified SPEC : Any> ref(valueId: AvValueId, refLabel: AvRefLabel) =
         store.ref(valueId, refLabel).checkSpec<SPEC>()
 
@@ -171,6 +180,7 @@ open class AvValueWorker(
     inline fun <reified SPEC : Any> refList(valueId: AvValueId, refListMarker: AvMarker): List<AvValue<SPEC>> =
         store.refList(valueId, refListMarker).map { it.checkSpec(SPEC::class) }
 
+    @Deprecated("User get instead.")
     fun queryByMarker(marker: AvMarker): List<AvValue<*>> =
         store.queryByMarker(marker)
 
@@ -233,16 +243,48 @@ open class AvValueWorker(
     suspend fun replaceMarker(valueId: AvValueId, oldMarker: AvMarker, newMarker: AvMarker, exclusive: Boolean = false) {
         execute {
             val value = get<Any>(valueId)
-            val newMarkers = value.mutableMarkers()
+            val markers = value.mutableMarkers()
 
             if (exclusive) {
                 check(newMarker !in value.markers) { "Marker $newMarker is already on value $valueId" }
             }
 
-            newMarkers.remove(oldMarker)
-            newMarkers.add(newMarker)
+            markers.remove(oldMarker)
+            markers.add(newMarker)
 
-            this += value.copy(markersOrNull = newMarkers)
+            this += value.copy(markersOrNull = markers)
+        }
+    }
+
+    /**
+     * Removes all [oldMarkers] and adds all [newMarkers] on the value identified by [valueId].
+     *
+     * Calls [execute], all behavior of [execute] applies.
+     *
+     * @param valueId The ID of the value to update markers on
+     * @param oldMarkers The markers to remove
+     * @param newMarkers The markers to add
+     * @param exclusive When true, checks if the new marker already exists and throws an exception if it does
+     *
+     * @throws IllegalStateException if exclusive is true and the new marker already exists on the value
+     */
+    suspend fun replaceMarkers(valueId: AvValueId, oldMarkers: Collection<AvMarker>, newMarkers: Collection<AvMarker>, exclusive: Boolean = false) {
+        execute {
+            val value = get<Any>(valueId)
+            val markers = value.mutableMarkers()
+
+            for (marker in oldMarkers) {
+                markers.remove(marker)
+            }
+
+            for (marker in newMarkers) {
+                if (exclusive) {
+                    check(marker !in value.markers) { "Marker $marker is already on value $valueId" }
+                }
+                markers.add(marker)
+            }
+
+            this += value.copy(markersOrNull = markers)
         }
     }
 

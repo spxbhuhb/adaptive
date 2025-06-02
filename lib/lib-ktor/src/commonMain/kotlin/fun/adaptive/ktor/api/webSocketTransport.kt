@@ -12,8 +12,8 @@ import `fun`.adaptive.wireformat.api.Json
 fun webSocketTransport(
     host: String,
     wireFormatProvider: WireFormatProvider = Json,
-    servicePath: String = "/adaptive/service-ws",
+    setupFun: suspend (ServiceCallTransport) -> Unit = { },
     clientIdPath: String = "/adaptive/client-id",
-    setupFun : suspend (ServiceCallTransport) -> Unit = {  }
+    servicePath: String = "/adaptive/service-ws"
 ) =
     ClientWebSocketServiceCallTransport(host, servicePath, clientIdPath, wireFormatProvider, setupFun)

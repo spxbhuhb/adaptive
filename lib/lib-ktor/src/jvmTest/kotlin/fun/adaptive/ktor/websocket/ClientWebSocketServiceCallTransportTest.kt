@@ -18,6 +18,7 @@ import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.model.DisconnectException
+import `fun`.adaptive.service.transport.DelayReconnectException
 import `fun`.adaptive.service.transport.ServiceCallException
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.getLock

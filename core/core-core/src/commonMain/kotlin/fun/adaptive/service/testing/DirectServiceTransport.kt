@@ -6,6 +6,7 @@ package `fun`.adaptive.service.testing
 
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.model.TransportEnvelope
+import `fun`.adaptive.service.transport.DelayReconnectException
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
@@ -18,8 +19,8 @@ import kotlinx.coroutines.Dispatchers
 open class DirectServiceTransport(
     val dump: Boolean = false,
     override val wireFormatProvider: WireFormatProvider = Proto,
-    name : String = "direct",
-    val setupFun: suspend DirectServiceTransport.() -> Unit = {  }
+    name: String = "direct",
+    val setupFun: suspend DirectServiceTransport.() -> Unit = { }
 ) : ServiceCallTransport(
     CoroutineScope(Dispatchers.Default),
     name
@@ -36,9 +37,15 @@ open class DirectServiceTransport(
         set(value) = lock.use { field = value }
 
     var peerTransport: DirectServiceTransport? = null
+        get() = lock.use { field }
+        set(value) = lock.use { field = value }
 
     override suspend fun start(): ServiceCallTransport {
-        setupFun.invoke(this)
+        try {
+            setupFun.invoke(this)
+        } catch (ex : DelayReconnectException) {
+            // nothing to do here,
+        }
         return super.start()
     }
 
@@ -57,6 +64,7 @@ open class DirectServiceTransport(
             .dispatch(funName, decoder)
 
     override suspend fun disconnect() {
+        transportLog.fine { "disconnected ${this.name}" }
         peerTransport = null
     }
 
@@ -73,6 +81,8 @@ open class DirectServiceTransport(
 
             this.peerTransport = transport2
             transport2.peerTransport = this
+
+            transportLog.fine { "connected ${this.name} to ${transport2.name}" }
         }
     }
 }

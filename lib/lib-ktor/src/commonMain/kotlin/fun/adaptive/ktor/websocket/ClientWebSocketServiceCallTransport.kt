@@ -3,6 +3,7 @@ package `fun`.adaptive.ktor.websocket
 import `fun`.adaptive.ktor.api.toHttp
 import `fun`.adaptive.ktor.api.toWs
 import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.service.transport.DelayReconnectException
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormatProvider

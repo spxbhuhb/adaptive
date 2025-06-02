@@ -10,6 +10,7 @@ import `fun`.adaptive.log.LogLevel
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.service.factory.DefaultServiceTransportRegistry
 import `fun`.adaptive.service.factory.ServiceImplFactory
 import `fun`.adaptive.service.model.DisconnectException
 import `fun`.adaptive.service.model.ReturnException
@@ -40,7 +41,7 @@ abstract class ServiceCallTransport(
 
     val accessLog = getLogger("$name.access").also { it.level = LogLevel.Warning }
 
-    var trace: Boolean = false
+    var trace: Boolean = DefaultServiceTransportRegistry.trace.also { if (it) transportLog.enableFine() }
 
     var responseTimeout = 20.seconds
 

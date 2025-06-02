@@ -83,7 +83,7 @@ open class ServiceContext(
 
     fun cleanup() {
         lock.use {
-            cleanupHandlers.forEach { it.cleanupFun.invoke(this) }
+            cleanupHandlers.forEach { it(this) }
             cleanupHandlers.clear()
         }
     }

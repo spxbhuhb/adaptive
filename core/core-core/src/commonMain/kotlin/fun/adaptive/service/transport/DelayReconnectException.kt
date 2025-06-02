@@ -1,4 +1,4 @@
-package `fun`.adaptive.ktor.websocket
+package `fun`.adaptive.service.transport
 
 import kotlin.time.Duration
 

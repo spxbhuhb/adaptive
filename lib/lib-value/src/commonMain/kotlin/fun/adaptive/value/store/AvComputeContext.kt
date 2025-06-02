@@ -70,21 +70,31 @@ class AvComputeContext(
         store.unsafeGetOrNull(valueId)
 
     //---------------------------------------------------------------------------------
+    // Status
+    //---------------------------------------------------------------------------------
+
+    fun addStatus(valueId : AvValueId, status : AvStatus) {
+        val value = store.unsafeGet(valueId)
+        this += value.copy(statusOrNull = value.mutableStatus().also { it += status })
+    }
+
+    fun addStatus(valueId : AvValueId, vararg statuses : AvStatus) {
+        val value = store.unsafeGet(valueId)
+        this += value.copy(statusOrNull = value.mutableStatus().also { it.addAll(statuses) })
+    }
+
+    //---------------------------------------------------------------------------------
     // Markers
     //---------------------------------------------------------------------------------
 
     fun addMarker(valueId : AvValueId, marker : AvMarker) {
         val value = store.unsafeGet(valueId)
-        val markers = value.mutableMarkers()
-        markers += marker
-        this += value.copy(markersOrNull = markers)
+        this += value.copy(markersOrNull = value.mutableMarkers().also { it += marker })
     }
 
     fun addMarker(valueId : AvValueId, vararg markers : AvMarker) {
         val value = store.unsafeGet(valueId)
-        val markers = value.mutableMarkers()
-        markers += markers
-        this += value.copy(markersOrNull = markers)
+        this += value.copy(markersOrNull = value.mutableMarkers().also { it.addAll(markers) })
     }
 
     //---------------------------------------------------------------------------------
