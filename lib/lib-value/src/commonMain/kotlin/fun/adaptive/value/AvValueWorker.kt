@@ -66,6 +66,14 @@ open class AvValueWorker(
         store.queue(AvoTransaction(operations))
     }
 
+    fun <T> queue(computeFun: AvComputeFun<T>) {
+        store.queue(
+            AvoComputation<T>().also {
+                it.computation = computeFun
+            }
+        )
+    }
+
     fun queue(operation: AvValueOperation) {
         storeOrNull?.queue(operation)
     }
@@ -296,7 +304,7 @@ open class AvValueWorker(
      * @param valueId The ID of the value to remove the marker from
      * @param marker The marker to remove
      *
-    */
+     */
     suspend fun removeMarker(valueId: AvValueId, marker: String) {
         execute {
             val value = get<Any>(valueId)

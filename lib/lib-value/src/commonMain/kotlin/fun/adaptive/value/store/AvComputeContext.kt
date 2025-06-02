@@ -83,6 +83,16 @@ class AvComputeContext(
         this += value.copy(statusOrNull = value.mutableStatus().also { it.addAll(statuses) })
     }
 
+    fun removeStatus(valueId : AvValueId, status : AvStatus) {
+        val value = store.unsafeGet(valueId)
+        this += value.copy(statusOrNull = value.mutableStatus().also { it -= status })
+    }
+
+    fun removeStatus(valueId : AvValueId, vararg statuses : AvStatus) {
+        val value = store.unsafeGet(valueId)
+        this += value.copy(statusOrNull = value.mutableStatus().also { it.removeAll(statuses) })
+    }
+
     //---------------------------------------------------------------------------------
     // Markers
     //---------------------------------------------------------------------------------
