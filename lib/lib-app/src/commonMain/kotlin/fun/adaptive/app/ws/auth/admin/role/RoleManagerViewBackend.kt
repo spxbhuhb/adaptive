@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.avByMarker
-import `fun`.adaptive.value.local.AvListSubscriber
+import `fun`.adaptive.value.client.AvListSubscriber
 
 class RoleManagerViewBackend(
     module: AppAuthWsModule<*,*>

@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.value
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.local.AvTreeSubscriber
+import `fun`.adaptive.value.client.AvTreeSubscriber
 import `fun`.adaptive.value.model.AvTreeDef
 import kotlin.reflect.KClass
 

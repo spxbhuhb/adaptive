@@ -78,6 +78,10 @@ open class AvValueWorker(
         storeOrNull?.queue(operation)
     }
 
+    operator fun <T> invoke(computeFun: AvComputeFun<T>) {
+        queue(computeFun)
+    }
+
     // --------------------------------------------------------------------------------
     // Execute and update
     // --------------------------------------------------------------------------------

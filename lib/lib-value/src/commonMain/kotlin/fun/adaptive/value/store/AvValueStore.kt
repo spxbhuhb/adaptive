@@ -2,7 +2,6 @@ package `fun`.adaptive.value.store
 
 import `fun`.adaptive.adat.encodeToJsonString
 import `fun`.adaptive.log.AdaptiveLogger
-import `fun`.adaptive.runtime.GlobalRuntimeContext
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.value.*
@@ -16,7 +15,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withTimeout
 import kotlinx.datetime.Clock.System.now
-import kotlin.Any
 import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -28,7 +26,7 @@ import kotlin.time.measureTime
  */
 open class AvValueStore(
     val persistence: AbstractValuePersistence = NoPersistence(),
-    val proxy : Boolean,
+    val proxy: Boolean,
     private val logger: AdaptiveLogger,
     var trace: Boolean = false
 ) {
@@ -410,11 +408,11 @@ open class AvValueStore(
         check(this.operations.trySend(operation).isSuccess) { "Failed to queue operation" }
     }
 
-    internal fun <T> executeBlocking(computeFun: AvComputeFun<T>) : T {
+    internal fun <T> executeBlocking(computeFun: AvComputeFun<T>): T {
         val channel = Channel<Any?>(Channel.BUFFERED)
 
         executeBlockingInternal(
-           AvoComputation<T>().also {
+            AvoComputation<T>().also {
                 it.channel = channel
                 it.computation = computeFun
             }
@@ -547,6 +545,33 @@ open class AvValueStore(
         }
     }
 
+    internal fun unsafeRefList(value: AvValue<*>, refName: AvRefLabel): List<AvValue<*>> {
+        val refListId = value.refsOrNull?.get(refName) ?: return emptyList()
+        val refList = values[refListId]
+
+        checkNotNull(refList) { "Value with id $refListId does not exist (referenced by ${value.uuid} through $refName)" }
+
+        val spec = refList.spec
+
+        check(spec is AvRefListSpec) { "Value with id $refListId is not a ref list" }
+
+        return spec.refs.map {
+            checkNotNull(values[it]) { "Value with id $it does not exist, referring value: ${value.uuid}, refName: $refName, refList: $refListId" }
+        }
+    }
+
+    internal fun unsafeRefListOrNull(value: AvValue<*>, refName: AvRefLabel): List<AvValue<*>>? {
+        val refListId = value.refsOrNull?.get(refName) ?: return null
+        val refList = values[refListId] ?: return null
+
+        val spec = refList.spec
+        check(spec is AvRefListSpec) { "Value with id $refListId is not a ref list" }
+
+        return spec.refs.map {
+            checkNotNull(values[it]) { "Value with id $it does not exist, referring value: ${value.uuid}, refName: $refName, refList: $refListId" }
+        }
+    }
+
     // --------------------------------------------------------------------------------
     // Query
     // --------------------------------------------------------------------------------
@@ -575,23 +600,10 @@ open class AvValueStore(
             unsafeRefOrNull(value, refLabel)
         }
 
-    fun refList(valueId: AvValueId, refName: AvRefLabel): List<AvValue<*>> {
-        return lock.use {
-            val value = unsafeGet(valueId)
-            val refListId = value.refsOrNull?.get(refName) ?: return emptyList()
-            val refList = values[refListId]
-
-            checkNotNull(refList) { "Value with id $refListId does not exist (referenced by $valueId through $refName)" }
-
-            val spec = refList.spec
-
-            check(spec is AvRefListSpec) { "Value with id $refListId is not a ref list" }
-
-            spec.refs.map {
-                checkNotNull(values[it]) { "Value with id $it does not exist, referring value: $valueId, refName: $refName, refList: $refListId" }
-            }
+    fun refList(valueId: AvValueId, refName: AvRefLabel): List<AvValue<*>> =
+        lock.use {
+            unsafeRefList(unsafeGet(valueId), refName)
         }
-    }
 
     fun query(filterFun: (AvValue<*>) -> Boolean): List<AvValue<*>> =
         lock.use {

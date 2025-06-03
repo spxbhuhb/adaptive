@@ -11,7 +11,7 @@ import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.avByMarker
-import `fun`.adaptive.value.local.AvValueSubscriber
+import `fun`.adaptive.value.client.AvValueSubscriber
 
 class BasicAccountSummaryStore(
     backend: BackendAdapter

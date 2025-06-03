@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.local
+package `fun`.adaptive.value.client
 
 // Simple tree item class for testing
 data class TestTreeItem(

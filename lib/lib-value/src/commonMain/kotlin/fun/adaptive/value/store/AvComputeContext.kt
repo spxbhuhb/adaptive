@@ -99,12 +99,26 @@ class AvComputeContext(
 
     fun addMarker(valueId : AvValueId, marker : AvMarker) {
         val value = store.unsafeGet(valueId)
+        if (value.markersOrNull?.contains(marker) == true) return
         this += value.copy(markersOrNull = value.mutableMarkers().also { it += marker })
     }
 
     fun addMarker(valueId : AvValueId, vararg markers : AvMarker) {
         val value = store.unsafeGet(valueId)
+        if (value.markersOrNull?.containsAll(markers.toList()) == true) return
         this += value.copy(markersOrNull = value.mutableMarkers().also { it.addAll(markers) })
+    }
+
+    fun removeMarker(valueId : AvValueId, marker : AvMarker) {
+        val value = store.unsafeGet(valueId)
+        if (value.markersOrNull?.contains(marker) != true) return
+        this += value.copy(markersOrNull = value.mutableMarkers().also { it -= marker })
+    }
+
+    fun removedMarker(valueId : AvValueId, vararg markers : AvMarker) {
+        val value = store.unsafeGet(valueId)
+        if (value.markersOrNull?.containsAll(markers.toList()) != true) return
+        this += value.copy(markersOrNull = value.mutableMarkers().also { it.removeAll(markers) })
     }
 
     //---------------------------------------------------------------------------------
@@ -224,6 +238,16 @@ class AvComputeContext(
         refs.remove(refLabel)
         this += referring.copy(refsOrNull = refs)
     }
+
+    //---------------------------------------------------------------------------------
+    // Reference list handling
+    //---------------------------------------------------------------------------------
+
+    inline fun <reified SPEC : Any> refListOrNull(valueId: AvValueId, refLabel: AvRefLabel): List<AvValue<SPEC>>? =
+        refListOrNullGen(valueId, refLabel)?.map { it.checkSpec(SPEC::class) }
+
+    fun refListOrNullGen(valueId: AvValueId, refLabel: AvRefLabel) : List<AvValue<*>>? =
+        store.unsafeRefListOrNull(store.unsafeGet(valueId), refLabel)
 
     //---------------------------------------------------------------------------------
     // Tree operations

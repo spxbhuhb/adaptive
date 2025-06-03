@@ -10,7 +10,7 @@ import `fun`.adaptive.service.ServiceApi
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvSubscriptionId
-import `fun`.adaptive.value.local.AvPublisher
+import `fun`.adaptive.value.client.AvPublisher
 
 @ServiceApi
 interface AuthRoleApi : AvPublisher {
