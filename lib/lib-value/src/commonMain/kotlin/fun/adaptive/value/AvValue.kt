@@ -148,24 +148,27 @@ class AvValue<T>(
      */
     internal var aclAgent : AvAclAgent? = null
 
-//
-//    operator fun contains(markerName: AvMarker): Boolean {
-//        return markersOrNull?.containsKey(markerName) == true
-//    }
-//
+
+    fun hasMarker(marker: AvMarker): Boolean {
+        return markersOrNull?.contains(marker) == true
+    }
+
+    fun hasStatus(status: AvStatus): Boolean {
+        return statusOrNull?.contains(status) == true
+    }
+
+    //
 //    operator fun get(markerName: AvMarker): AvValueId? {
 //        return markersOrNull?.get(markerName)
 //    }
 //
-//    fun copyWith(value: AvMarkerValue): AvValue<T> {
-//        return copyWith(value.markerName, value)
-//    }
-//
-//    fun copyWith(key: AvMarker, value: AvMarkerValue?): AvValue<T> {
-//        val markers = markersOrNull?.toMutableMap() ?: mutableMapOf()
-//        markers[key] = value?.uuid
-//        return copy(markersOrNull = markers)
-//    }
+    fun withMarker(marker : AvMarker): AvValue<T> {
+        return copy(markersOrNull = mutableMarkers().also { it += marker })
+    }
+
+    fun withoutMarker(marker : AvMarker): AvValue<T> {
+        return copy(markersOrNull = mutableMarkers().also { it -= marker })
+    }
 
     val nameLike
         get() = name ?: friendlyId ?: uuid.toShort()
