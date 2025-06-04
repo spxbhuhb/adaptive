@@ -8,7 +8,7 @@ import `fun`.adaptive.auth.app.NoAuthServerModule
 import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.ktor.KtorJvmServerModule
-import `fun`.adaptive.lib.util.app.UtilServerModule
+import `fun`.adaptive.lib.util.app.UtilModule
 import `fun`.adaptive.value.app.ValueServerModule
 import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.io.files.Path
@@ -20,7 +20,7 @@ fun main() {
     }
 
     jvmServer {
-        module { UtilServerModule() }
+        module { UtilModule() }
         module { ValueServerModule(FilePersistence(Path("./var/values"))) }
         module { NoAuthServerModule() }
         module { KtorJvmServerModule() }

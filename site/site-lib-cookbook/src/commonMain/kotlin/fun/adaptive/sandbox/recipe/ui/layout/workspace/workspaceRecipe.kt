@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.*
 import `fun`.adaptive.ui.instruction.dp
@@ -30,7 +31,7 @@ class Context {
 @Adaptive
 fun workspaceRecipe(): AdaptiveFragment {
 
-    val workspace = MultiPaneWorkspace(adapter().backend)
+    val workspace = MultiPaneWorkspace(adapter().backend, BackendWorkspace())
     workspace.contexts += Context()
     initPanes(workspace)
 

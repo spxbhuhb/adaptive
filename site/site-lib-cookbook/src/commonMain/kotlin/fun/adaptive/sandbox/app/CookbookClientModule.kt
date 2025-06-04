@@ -11,7 +11,7 @@ import `fun`.adaptive.utility.trimSignature
 import `fun`.adaptive.wireformat.WireFormatRegistry
 import `fun`.adaptive.wireformat.builtin.EnumWireFormat
 
-open class CookbookClientModule<WT : AbstractWorkspace> : AppModule<WT>() {
+open class CookbookClientModule<FW : AbstractWorkspace, BW : AbstractWorkspace> : AppModule<FW,BW>() {
 
     override fun wireFormatInit(registry: WireFormatRegistry) = with(registry) {
         this[E.V1.typeSignature().trimSignature()] = EnumWireFormat(E.entries)

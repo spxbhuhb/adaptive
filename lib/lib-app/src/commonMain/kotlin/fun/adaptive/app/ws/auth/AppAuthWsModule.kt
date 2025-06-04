@@ -7,6 +7,7 @@ import `fun`.adaptive.app.ws.auth.account.AccountSelfViewBackend
 import `fun`.adaptive.app.ws.auth.account.wsAppAccountSelf
 import `fun`.adaptive.app.ws.auth.admin.account.AccountManagerViewBackend
 import `fun`.adaptive.app.ws.auth.admin.account.wsAppAccountManager
+import `fun`.adaptive.app.ws.auth.admin.role.RoleManagerViewBackend
 import `fun`.adaptive.app.ws.auth.admin.role.wsAppRoleManager
 import `fun`.adaptive.app.ws.auth.signin.wsAppSignIn
 import `fun`.adaptive.auth.api.AuthSessionApi
@@ -66,7 +67,7 @@ class AppAuthWsModule<WT : MultiPaneWorkspace, BW : BackendWorkspace> : AuthBasi
 
         addAdminItem(ROLE_MANAGER_ITEM)
         addSingularContentPane(ROLE_MANAGER_ITEM) {
-            AccountManagerViewBackend(this@AppAuthWsModule)
+            RoleManagerViewBackend(this@AppAuthWsModule)
         }
 
         addSingularContentPane(SIGN_IN_ITEM) {
