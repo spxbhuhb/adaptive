@@ -95,6 +95,9 @@ class AvValue<T>(
         spec: T
     ) : this(uuid = uuid, lastChange = lastChange, statusOrNull = status, spec = spec)
 
+    // --------------------------------------------------------------------------------
+    // Status
+    // --------------------------------------------------------------------------------
     /**
      * Get the set of statuses or an empty set if there are no statuses for this value.
      */
@@ -106,6 +109,34 @@ class AvValue<T>(
      */
     fun mutableStatus() = statusOrNull?.toMutableSet() ?: mutableSetOf()
 
+    inline fun extendedStatus(statusFun : () -> AvStatus) =
+        mutableStatus().also { it += statusFun() }
+
+    fun extendedStatus(vararg extendedStatuses: AvStatus) =
+        mutableStatus().also { it += extendedStatuses }
+
+    inline fun reducedStatus(statusFun : () -> AvStatus) =
+        mutableStatus().also { it -= statusFun() }
+
+    fun reducedStatus(vararg reducedStatuses: AvStatus) =
+        mutableStatus().also { it -= reducedStatuses }
+
+    fun hasStatus(status: AvStatus): Boolean {
+        return statusOrNull?.contains(status) == true
+    }
+
+    fun withStatus(status : AvStatus): AvValue<T> {
+        return copy(statusOrNull = mutableStatus().also { it += status })
+    }
+
+    fun withoutStatus(status: AvStatus): AvValue<T> {
+        return copy(statusOrNull = mutableStatus().also { it -= status })
+    }
+
+    // --------------------------------------------------------------------------------
+    // Marker
+    // --------------------------------------------------------------------------------
+
     /**
      * Get the set of markers or an empty set if there are no markers for this value.
      */
@@ -116,6 +147,22 @@ class AvValue<T>(
      * use [copy] to create a new version of the value with the new marker set.
      */
     fun mutableMarkers() = markersOrNull?.toMutableSet() ?: mutableSetOf()
+
+    fun hasMarker(marker: AvMarker): Boolean {
+        return markersOrNull?.contains(marker) == true
+    }
+
+    fun withMarker(marker : AvMarker): AvValue<T> {
+        return copy(markersOrNull = mutableMarkers().also { it += marker })
+    }
+
+    fun withoutMarker(marker : AvMarker): AvValue<T> {
+        return copy(markersOrNull = mutableMarkers().also { it -= marker })
+    }
+
+    // --------------------------------------------------------------------------------
+    // Ref
+    // --------------------------------------------------------------------------------
 
     /**
      * Get the map of references or an empty map if there are no references for this value.
@@ -141,6 +188,10 @@ class AvValue<T>(
      */
     fun refIdOrNull(label: AvRefLabel) = refsOrNull?.get(label)
 
+    // --------------------------------------------------------------------------------
+    // ACL
+    // --------------------------------------------------------------------------------
+
     /**
      * When the value is accessed the first time, the value store sets [aclAgent]
      * which then will be used to make access control decisions. The agent is
@@ -148,30 +199,15 @@ class AvValue<T>(
      */
     internal var aclAgent : AvAclAgent? = null
 
-
-    fun hasMarker(marker: AvMarker): Boolean {
-        return markersOrNull?.contains(marker) == true
-    }
-
-    fun hasStatus(status: AvStatus): Boolean {
-        return statusOrNull?.contains(status) == true
-    }
-
-    //
-//    operator fun get(markerName: AvMarker): AvValueId? {
-//        return markersOrNull?.get(markerName)
-//    }
-//
-    fun withMarker(marker : AvMarker): AvValue<T> {
-        return copy(markersOrNull = mutableMarkers().also { it += marker })
-    }
-
-    fun withoutMarker(marker : AvMarker): AvValue<T> {
-        return copy(markersOrNull = mutableMarkers().also { it -= marker })
-    }
+    // --------------------------------------------------------------------------------
+    // Utility
+    // --------------------------------------------------------------------------------
 
     val nameLike
         get() = name ?: friendlyId ?: uuid.toShort()
+
+    val logName
+        get() = "$nameLike [$uuid]"
 
     companion object {
 
