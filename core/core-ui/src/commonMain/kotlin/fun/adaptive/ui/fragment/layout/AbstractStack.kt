@@ -5,13 +5,13 @@
 package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.Name
-import `fun`.adaptive.log.devInfo
+import `fun`.adaptive.foundation.api.firstContextOrNull
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.api.fillStrategy
 import `fun`.adaptive.ui.instruction.layout.Alignment
 import `fun`.adaptive.ui.instruction.layout.SpaceDistribution
+import `fun`.adaptive.ui.testing.LayoutTraceContext
 
 /**
  * Base class for stack which do not wrap: row, column.
@@ -36,9 +36,7 @@ abstract class AbstractStack<RT, CRT : RT>(
 
     abstract fun itemsHeightCalc(itemsHeight: Double, item: AbstractAuiFragment<RT>): Double
 
-    abstract fun constrainWidthCalc(itemProposal: SizingProposal, item: AbstractAuiFragment<RT>, gap: Double)
-
-    abstract fun constrainHeightCalc(itemProposal: SizingProposal, item: AbstractAuiFragment<RT>, gap: Double)
+    abstract fun constrainCalc(itemProposal: SizingProposal, item: AbstractAuiFragment<RT>, gap: Double) : SizingProposal
 
     abstract fun instructedGap(): Double
 
@@ -70,6 +68,7 @@ abstract class AbstractStack<RT, CRT : RT>(
     override fun computeLayout(
         proposal : SizingProposal
     ) {
+        traceLayoutCompute(proposal)
 
         val data = renderData
         val container = renderData.container
@@ -83,7 +82,7 @@ abstract class AbstractStack<RT, CRT : RT>(
         var itemsWidth = totalGap
         var itemsHeight = totalGap
 
-        val itemProposal = proposal.toItemProposal(uiAdapter, renderData)
+        var itemProposal = proposal.toItemProposal(uiAdapter, renderData)
 
         val fill = data.layout?.fillStrategy ?: fillStrategy.none
         val items = if (fill.reverse) {
@@ -97,8 +96,7 @@ abstract class AbstractStack<RT, CRT : RT>(
             itemsWidth = itemsWidthCalc(itemsWidth, item)
             itemsHeight = itemsHeightCalc(itemsHeight, item)
             if (fill.constrain) {
-                constrainWidthCalc(itemProposal, item, instructedGap)
-                constrainHeightCalc(itemProposal, item, instructedGap)
+                itemProposal = constrainCalc(itemProposal, item, instructedGap)
             }
         }
 

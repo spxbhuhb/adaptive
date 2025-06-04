@@ -5,12 +5,14 @@
 package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.api.firstContextOrNull
 import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.SizeBase
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.support.statistics.AuiStatistics
+import `fun`.adaptive.ui.testing.LayoutTraceContext
 
 abstract class AbstractAuiFragment<RT>(
     adapter: AbstractAuiAdapter<RT, *>,
@@ -197,6 +199,8 @@ abstract class AbstractAuiFragment<RT>(
      * Sets final width and final height in render data.
      */
     open fun computeLayout(proposal: SizingProposal) {
+        traceLayoutCompute(proposal)
+
         statistics.computeLayout ++
 
         val data = renderData
@@ -223,6 +227,8 @@ abstract class AbstractAuiFragment<RT>(
         }
 
         data.sizingProposal = proposal
+
+        traceLayoutResult(proposal)
     }
 
     open fun placeLayout(top: Double, left: Double) {
@@ -251,10 +257,12 @@ abstract class AbstractAuiFragment<RT>(
         val layoutFragment = renderData.layoutFragment
 
         if (shouldUpdateSelf() || layoutFragment == null) {
+            traceLayoutUpdateSelf()
+
             val layout = renderData.layout
 
             if (renderData.sizingProposal != null) {
-                computeLayout(renderData.sizingProposal!!)
+                computeLayout(renderData.sizingProposal !!)
             } else {
                 computeLayout(
                     layout?.instructedWidth ?: renderData.finalWidth,
@@ -268,6 +276,8 @@ abstract class AbstractAuiFragment<RT>(
             )
 
         } else {
+            traceLayoutUpdateContainer()
+
             renderData.layoutFragment?.updateLayout(updateId, this)
         }
     }
@@ -311,4 +321,29 @@ abstract class AbstractAuiFragment<RT>(
 
     val DPixel.pixelValue: Double
         get() = uiAdapter.toPx(this)
+
+    inline fun traceLayoutCompute(proposal: SizingProposal) {
+//        if (firstContextOrNull<LayoutTraceContext>() != null) {
+//            println("[ ${name ?: this}-COMPUTE ]  parent: ${renderData.layoutFragment}  proposal: $proposal")
+//        }
+    }
+
+    inline fun traceLayoutResult(proposal: SizingProposal) {
+//        if (firstContextOrNull<LayoutTraceContext>() != null) {
+//            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  proposal: $proposal")
+//        }
+    }
+
+    inline fun traceLayoutUpdateSelf() {
+//        if (firstContextOrNull<LayoutTraceContext>() != null) {
+//            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  proposal: ${renderData.sizingProposal}")
+//        }
+    }
+
+
+    inline fun traceLayoutUpdateContainer() {
+//        if (firstContextOrNull<LayoutTraceContext>() != null) {
+//            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  proposal: ${renderData.sizingProposal}")
+//        }
+    }
 }

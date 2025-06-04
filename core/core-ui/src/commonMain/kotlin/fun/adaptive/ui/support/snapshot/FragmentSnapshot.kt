@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.support.snapshot
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.ui.fragment.layout.SizingProposal
 
 @Adat
 class FragmentSnapshot(
@@ -11,5 +12,6 @@ class FragmentSnapshot(
     var finalTop: Double?,
     var finalLeft: Double?,
     var finalWidth: Double?,
-    var finalHeight: Double?
+    var finalHeight: Double?,
+    var sizingProposal: SizingProposal?
 )

@@ -77,6 +77,8 @@ open class AuiStructural<RT, CRT : RT>(
     override fun computeLayout(
         proposal: SizingProposal
     ) {
+        traceLayoutCompute(proposal)
+
         renderData.finalWidth = proposal.containerWidth
         renderData.finalHeight = proposal.containerHeight
         renderData.sizingProposal = proposal

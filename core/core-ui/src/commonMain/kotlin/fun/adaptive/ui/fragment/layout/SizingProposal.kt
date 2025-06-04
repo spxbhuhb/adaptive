@@ -2,12 +2,13 @@ package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.render.model.AuiRenderData
+import kotlin.math.max
 
 class SizingProposal(
-    var minWidth: Double,
-    var maxWidth: Double,
-    var minHeight: Double,
-    var maxHeight: Double
+    val minWidth: Double,
+    val maxWidth: Double,
+    val minHeight: Double,
+    val maxHeight: Double
 ) {
 
     val containerWidth
@@ -37,22 +38,31 @@ class SizingProposal(
         val verticalAdjustment = renderData.surroundingVertical + if (horizontalScroll) scrollBarSize else 0.0
 
         if (instructedWidth != null) {
-            proposedMinWidth = instructedWidth - horizontalAdjustment
+            proposedMinWidth = max(0.0, instructedWidth - horizontalAdjustment)
             proposedMaxWidth = instructedWidth - horizontalAdjustment
         } else {
-            proposedMinWidth = minWidth - horizontalAdjustment
+            proposedMinWidth = max(0.0, minWidth - horizontalAdjustment)
             proposedMaxWidth = maxWidth - horizontalAdjustment
         }
 
         if (instructedHeight != null) {
-            proposedMinHeight = instructedHeight - verticalAdjustment
+            proposedMinHeight = max(0.0, instructedHeight - verticalAdjustment)
             proposedMaxHeight = instructedHeight - verticalAdjustment
         } else {
-            proposedMinHeight = minHeight - verticalAdjustment
+            proposedMinHeight = max(0.0, minHeight - verticalAdjustment)
             proposedMaxHeight = maxHeight - verticalAdjustment
         }
 
-        return SizingProposal(proposedMinWidth, proposedMaxWidth, proposedMinHeight, proposedMaxHeight)
+        return SizingProposal(
+            proposedMinWidth,
+            max(proposedMinWidth, proposedMaxWidth),
+            proposedMinHeight,
+            max(proposedMinHeight, proposedMaxHeight)
+        )
+    }
+
+    override fun toString(): String {
+        return "$minWidth, $maxWidth, $minHeight, $maxHeight"
     }
 
 }

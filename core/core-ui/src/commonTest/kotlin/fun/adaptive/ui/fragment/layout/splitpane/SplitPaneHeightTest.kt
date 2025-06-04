@@ -165,11 +165,45 @@ class SplitPaneHeightTest {
 
         }.apply {
 
-            printLayout()
-
             assertLayoutParentFinal(wrapped, 0, 0, testWidth, wrappedHeight)
             assertNotExist(divider)
             assertLayoutParentFinal(wrapper, 40, 0, testWidth, wrapperSize)
+
+        }
+    }
+
+    @Test
+    @JsName("wrapFromBottomUnbound")
+    fun wrapFromBottomUnbound() {
+        val wrapperSize = 20.0
+        val wrappedSize = 40.0
+
+        val viewBackend = SplitPaneViewBackend(
+            SplitVisibility.Both,
+            SplitMethod.WrapFirst,
+            wrapperSize,
+            Orientation.Vertical,
+            dividerOverlaySize = 0.dp,
+            dividerEffectiveSize = 0.dp
+        )
+
+        snapshotTest {
+
+            flowBox {
+                splitPane(
+                    viewBackend,
+                    { box { name(wrapped) .. size(wrappedSize.dp) } },
+                    { },
+                    { box { name(wrapper) .. size(wrapperSize.dp) } },
+                ) .. maxWidth
+            }
+        }.apply {
+
+            printLayout()
+
+            assertLayoutParentFinal(wrapped, 0, 0, wrappedSize, wrappedSize)
+            assertNotExist(divider)
+            assertLayoutParentFinal(wrapper, wrappedSize, 0, wrapperSize, wrapperSize)
 
         }
     }

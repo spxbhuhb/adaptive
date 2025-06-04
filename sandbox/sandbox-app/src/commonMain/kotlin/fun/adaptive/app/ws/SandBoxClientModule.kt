@@ -2,10 +2,11 @@ package `fun`.adaptive.app.ws
 
 import `fun`.adaptive.app.client.basic.BasicAppClientModule
 import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.FrontendWorkspace
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 
-open class SandBoxClientModule<WT : FrontendWorkspace> : BasicAppClientModule<WT>() {
+open class SandBoxClientModule<FW : FrontendWorkspace,BW: AbstractWorkspace> : BasicAppClientModule<FW,BW>() {
 
     override fun resourceInit() {
         application.stringStores += commonMainStringsStringStore0

@@ -10,6 +10,7 @@ import `fun`.adaptive.ui.testing.fragment.*
 object AuiFragmentFactory : AdaptiveFragmentFactory() {
     init {
         add("aui:box") { p, i, s -> AdaptiveBox(p.adapter as AuiTestAdapter, p, i) }
+        add("aui:flowbox") { p, i, s -> AdaptiveFlowBox(p.adapter as AuiTestAdapter, p, i) }
         add("aui:column") { p, i, s -> AdaptiveColumn(p.adapter as AuiTestAdapter, p, i) }
         add("aui:grid") { p, i, s -> AdaptiveGrid(p.adapter as AuiTestAdapter, p, i) }
         add("aui:image") { p, i, s -> AdaptiveImage(p.adapter as AuiTestAdapter, p, i) }
@@ -17,5 +18,6 @@ object AuiFragmentFactory : AdaptiveFragmentFactory() {
         add("aui:space") { p, i, s -> AuiSpace(p.adapter as AuiTestAdapter, p, i) }
         add("aui:text") { p, i, s -> AdaptiveText(p.adapter as AuiTestAdapter, p, i) }
         add("aui:splitpane") { p, i, s -> AdaptiveSplitPane(p.adapter as AuiTestAdapter, p, i) }
+
     }
 }

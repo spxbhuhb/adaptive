@@ -1,8 +1,7 @@
-package `fun`.adaptive.ui.testing
+package `fun`.adaptive.ui.support.snapshot
 
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.visitor.AdatClassVisitor
-import `fun`.adaptive.ui.support.snapshot.FragmentSnapshot
 
 class SnapshotLayoutDumpVisitor : AdatClassVisitor<Unit, SnapshotLayoutDumpVisitor.VisitorData>() {
 
@@ -21,7 +20,7 @@ class SnapshotLayoutDumpVisitor : AdatClassVisitor<Unit, SnapshotLayoutDumpVisit
         instance as FragmentSnapshot
 
         data.level ++
-        data += "${instance.key}    [${instance.name ?: ""}]    ${instance.finalTop}  ${instance.finalLeft}  ${instance.finalWidth}  ${instance.finalHeight}"
+        data += "${instance.key}    [${instance.name ?: ""}]    ${instance.finalTop}  ${instance.finalLeft}  ${instance.finalWidth}  ${instance.finalHeight}   <--- (${instance.sizingProposal})"
         for (child in instance.children) {
             visitInstance(child, data)
         }

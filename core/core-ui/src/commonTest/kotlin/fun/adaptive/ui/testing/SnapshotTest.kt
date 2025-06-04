@@ -12,6 +12,7 @@ import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.support.snapshot.FragmentSnapshot
+import `fun`.adaptive.ui.support.snapshot.SnapshotLayoutDumpVisitor
 import `fun`.adaptive.ui.support.snapshot.uiContainerSnapshot
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -28,7 +29,7 @@ class SnapshotTest(
         null,
         emptyList(),
         adapter.rootFragment.children.filterIsInstance<AbstractContainer<*, *>>().map { it.uiContainerSnapshot() },
-        null, null, null, null
+        null, null, null, null, null
     )
 
     fun printLayout() {

@@ -31,6 +31,8 @@ abstract class AbstractGrid<RT, CRT : RT>(
     override fun computeLayout(
         proposal: SizingProposal
     ) {
+        traceLayoutCompute(proposal)
+
         val data = renderData
         val layout = data.layout
         val container = data.container

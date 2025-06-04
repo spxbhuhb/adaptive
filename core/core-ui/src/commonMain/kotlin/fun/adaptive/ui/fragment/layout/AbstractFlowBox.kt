@@ -27,6 +27,7 @@ abstract class AbstractFlowBox<RT, CRT : RT>(
     override fun computeLayout(
         proposal: SizingProposal
     ) {
+        traceLayoutCompute(proposal)
 
         val data = renderData
         val container = renderData.container

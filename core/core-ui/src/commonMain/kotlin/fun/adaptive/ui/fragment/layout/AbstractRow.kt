@@ -24,14 +24,14 @@ abstract class AbstractRow<RT, CRT : RT>(
     override fun itemsHeightCalc(itemsHeight: Double, item: AbstractAuiFragment<RT>): Double =
         max(itemsHeight, item.renderData.finalHeight)
 
-    override fun constrainWidthCalc(itemProposal: SizingProposal, item: AbstractAuiFragment<RT>, gap : Double) {
+    override fun constrainCalc(itemProposal: SizingProposal, item: AbstractAuiFragment<RT>, gap: Double): SizingProposal {
         val decrement = item.renderData.finalWidth - gap
-        itemProposal.minWidth -= decrement
-        itemProposal.maxWidth -= decrement
-    }
-
-    override fun constrainHeightCalc(itemProposal: SizingProposal, item: AbstractAuiFragment<RT>, gap : Double) {
-        // nothing to do here, row height is not constrained
+        return SizingProposal(
+            itemProposal.minWidth - decrement,
+            itemProposal.maxWidth - decrement,
+            itemProposal.minHeight,
+            itemProposal.maxHeight
+        )
     }
 
     override fun instructedGap(): Double =

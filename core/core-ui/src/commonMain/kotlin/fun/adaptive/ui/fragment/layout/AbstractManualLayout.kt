@@ -26,6 +26,8 @@ abstract class AbstractManualLayout<RT, CRT : RT>(
     override fun computeLayout(
         proposal: SizingProposal
     ) {
+        traceLayoutCompute(proposal)
+
         computeLayoutFun?.invoke(proposal)
         renderData.sizingProposal = proposal
     }

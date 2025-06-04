@@ -20,14 +20,10 @@ import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.input.select.SingleSelectInputViewBackend
-import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
-import `fun`.adaptive.ui.input.select.item.selectInputOptionIconAndText
-import `fun`.adaptive.ui.input.select.item.selectInputOptionText
-import `fun`.adaptive.ui.input.select.item.selectInputValueIconAndText
-import `fun`.adaptive.ui.input.select.item.selectInputValueText
-import `fun`.adaptive.ui.input.select.selectInputList
+import `fun`.adaptive.ui.input.select.item.*
 import `fun`.adaptive.ui.input.select.selectInputBackend
 import `fun`.adaptive.ui.input.select.selectInputDropdown
+import `fun`.adaptive.ui.input.select.selectInputList
 import `fun`.adaptive.ui.instruction.dp
 import kotlin.math.min
 

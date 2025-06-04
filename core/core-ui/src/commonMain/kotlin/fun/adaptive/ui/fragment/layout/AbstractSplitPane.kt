@@ -291,10 +291,11 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     override fun computeLayout(
         proposal : SizingProposal
     ) {
+        traceLayoutCompute(proposal)
 
         // this is a general, bound case, updated when the method is WrapFirst or WrapSecond
-        val proposedWidth = renderData.layout?.instructedWidth ?: proposal.containerWidth
-        val proposedHeight = renderData.layout?.instructedHeight ?: proposal.containerHeight
+        val proposedWidth = renderData.layout?.instructedWidth ?: proposal.maxWidth
+        val proposedHeight = renderData.layout?.instructedHeight ?: proposal.maxHeight
 
         renderData.finalWidth = proposedWidth
         renderData.finalHeight = proposedHeight

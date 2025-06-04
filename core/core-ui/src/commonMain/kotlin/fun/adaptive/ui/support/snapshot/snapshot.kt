@@ -18,39 +18,42 @@ fun AdaptiveFragment.snapshot(): FragmentSnapshot {
 
     return FragmentSnapshot(
         this.toKey(),
-        this.instructions.firstInstanceOfOrNull<Name>()?.name,
+        name ?: id.toString(),
         state.toList().mapIndexed { index, value -> value.polymorphicOrToString(index) },
         children.map { it.snapshot() },
         renderData?.finalTop,
         renderData?.finalLeft,
         renderData?.finalWidth,
-        renderData?.finalHeight
+        renderData?.finalHeight,
+        renderData?.sizingProposal
     )
 }
 
 fun AbstractAuiFragment<*>.uiSnapshot(): FragmentSnapshot {
     return FragmentSnapshot(
         this.toKey(),
-        this.instructions.firstInstanceOfOrNull<Name>()?.name,
+        name ?: id.toString(),
         state.toList().mapIndexed { index, value -> value.polymorphicOrToString(index) },
         emptyList(),
         renderData.finalTop,
         renderData.finalLeft,
         renderData.finalWidth,
-        renderData.finalHeight
+        renderData.finalHeight,
+        renderData.sizingProposal
     )
 }
 
 fun AbstractContainer<*, *>.uiContainerSnapshot(): FragmentSnapshot {
     return FragmentSnapshot(
         this.toKey(),
-        this.instructions.firstInstanceOfOrNull<Name>()?.name,
+        name ?: id.toString(),
         state.toList().mapIndexed { index, value -> value.polymorphicOrToString(index) },
         layoutItems.map { if (it is AbstractContainer<*, *>) it.uiContainerSnapshot() else it.uiSnapshot() },
         renderData.finalTop,
         renderData.finalLeft,
         renderData.finalWidth,
-        renderData.finalHeight
+        renderData.finalHeight,
+        renderData.sizingProposal
     )
 }
 
