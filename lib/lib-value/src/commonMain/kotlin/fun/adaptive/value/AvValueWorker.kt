@@ -78,6 +78,9 @@ open class AvValueWorker(
         storeOrNull?.queue(operation)
     }
 
+    /**
+     * Queue the computation for execution.
+     */
     operator fun <T> invoke(computeFun: AvComputeFun<T>) {
         queue(computeFun)
     }
@@ -215,6 +218,111 @@ open class AvValueWorker(
 
     }
 
+    // --------------------------------------------------------------------------------
+    // Status operations
+    // --------------------------------------------------------------------------------
+
+    /**
+     * Adds [status] to the value identified by [valueId].
+     *
+     * Calls [execute], all behavior of [execute] applies.
+     *
+     * @param valueId The ID of the value to add the status to
+     * @param status The status to add
+     * @param exclusive When true, checks if the status already exists and throws an exception if it does
+     *
+     * @throws IllegalStateException if exclusive is true and the status already exists on the value
+     */
+    suspend fun addStatus(valueId: AvValueId, status: AvStatus, exclusive: Boolean = false) {
+        execute {
+            val value = get<Any>(valueId)
+            if (exclusive) {
+                check(status !in value.status) { "Status $status is already on value $valueId" }
+            }
+            this += value.copy(statusOrNull = value.status + status)
+        }
+    }
+
+    /**
+     * Replaces [oldStatus] with [newStatus] on the value identified by [valueId].
+     *
+     * Calls [execute], all behavior of [execute] applies.
+     *
+     * @param valueId The ID of the value to update statuses on
+     * @param oldStatus The status to remove
+     * @param newStatus The status to add
+     * @param exclusive When true, checks if the new status already exists and throws an exception if it does
+     *
+     * @throws IllegalStateException if exclusive is true and the new status already exists on the value
+     */
+    suspend fun replaceStatus(valueId: AvValueId, oldStatus: AvStatus, newStatus: AvStatus, exclusive: Boolean = false) {
+        execute {
+            val value = get<Any>(valueId)
+            val status = value.mutableStatus()
+
+            if (exclusive) {
+                check(newStatus !in value.status) { "Status $newStatus is already on value $valueId" }
+            }
+
+            status.remove(oldStatus)
+            status.add(newStatus)
+
+            this += value.copy(statusOrNull = status)
+        }
+    }
+
+    /**
+     * Removes all [oldStatuses] and adds all [newStatuses] on the value identified by [valueId].
+     *
+     * Calls [execute], all behavior of [execute] applies.
+     *
+     * @param valueId The ID of the value to update status on
+     * @param oldStatuses The status to remove
+     * @param newStatuses The status to add
+     * @param exclusive When true, checks if the new status already exists and throws an exception if it does
+     *
+     * @throws IllegalStateException if exclusive is true and the new status already exists on the value
+     */
+    suspend fun replaceStatus(valueId: AvValueId, oldStatuses: Collection<AvStatus>, newStatuses: Collection<AvStatus>, exclusive: Boolean = false) {
+        execute {
+            val value = get<Any>(valueId)
+            val statuses = value.mutableStatus()
+
+            for (status in oldStatuses) {
+                statuses.remove(status)
+            }
+
+            for (status in newStatuses) {
+                if (exclusive) {
+                    check(status !in statuses) { "Status $status is already on value $valueId" }
+                }
+                statuses.add(status)
+            }
+
+            this += value.copy(statusOrNull = statuses)
+        }
+    }
+
+    /**
+     * Removes [status] from the value identified by [valueId].
+     *
+     * Calls [execute], all behavior of [execute] applies.
+     *
+     * @param valueId The ID of the value to remove the status from
+     * @param status The status to remove
+     *
+     */
+    suspend fun removeStatus(valueId: AvValueId, status: String) {
+        execute {
+            val value = get<Any>(valueId)
+
+            val newStatus = value.mutableStatus()
+            newStatus.remove(status)
+
+            this += value.copy(statusOrNull = if (newStatus.isEmpty()) null else newStatus)
+        }
+    }
+    
     // --------------------------------------------------------------------------------
     // Marker operations
     // --------------------------------------------------------------------------------
