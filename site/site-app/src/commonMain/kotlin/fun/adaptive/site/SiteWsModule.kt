@@ -1,6 +1,6 @@
 package `fun`.adaptive.site
 
-import `fun`.adaptive.app.ws.wsAppMain
+import `fun`.adaptive.app.ui.mpw.mpwAppMainModule
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
@@ -13,7 +13,7 @@ class SiteWsModule<FW : MultiPaneWorkspace, BW : AbstractWorkspace>() : AppModul
     }
 
     override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {
-        add(application.wsAppMain.HOME_CONTENT_KEY, ::siteHome)
+        add(application.mpwAppMainModule.HOME_CONTENT_KEY, ::siteHome)
     }
 
 }

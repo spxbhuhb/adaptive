@@ -3,7 +3,7 @@
  */
 
 import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
-import `fun`.adaptive.app.server.BasicAppServerModule
+import `fun`.adaptive.app.app.AppMainModuleServer
 import `fun`.adaptive.auth.app.NoAuthServerModule
 import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
@@ -24,7 +24,7 @@ fun main() {
         module { ValueServerModule(FilePersistence(Path("./var/values"))) }
         module { NoAuthServerModule() }
         module { KtorJvmServerModule() }
-        module { BasicAppServerModule() }
+        module { AppMainModuleServer() }
     }
 
 }

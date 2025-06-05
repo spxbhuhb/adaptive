@@ -1,7 +1,7 @@
 package `fun`.adaptive.sandbox.app.echo
 
 import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
-import `fun`.adaptive.app.server.BasicAppServerModule
+import `fun`.adaptive.app.app.AppMainModuleServer
 import `fun`.adaptive.auth.app.NoAuthServerModule
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
@@ -21,6 +21,6 @@ fun main() {
         module { EchoServerModule() } // business function :)
         module { NoAuthServerModule() } // no authentication
         module { KtorJvmServerModule() } // Ktor server
-        module { BasicAppServerModule() } // basic app bootstrap
+        module { AppMainModuleServer() } // basic app bootstrap
     }
 }

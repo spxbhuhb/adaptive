@@ -11,7 +11,8 @@ import `fun`.adaptive.ui.support.scroll.scrollIntoView
 
 @Adaptive
 fun <OT> selectInputOptionCheckbox(
-    item: AbstractSelectInputViewBackend<*,*,OT>.SelectItem
+    item: AbstractSelectInputViewBackend<*,*,OT>.SelectItem,
+    toText : ((OT) -> String)? = null
 ) {
     val hover = hover()
     val observed = valueFrom { item }
@@ -25,7 +26,7 @@ fun <OT> selectInputOptionCheckbox(
             size(24.dp, 24.dp) .. alignItems.center
             checkbox(observed.isSelected, theme = CheckboxTheme.small) {  }
         }
-        text(observed) .. observed.optionTextInstructions()
+        text(toText?.invoke(observed.option) ?: observed) .. observed.optionTextInstructions()
     }
 
     if (observed.isSelected) {

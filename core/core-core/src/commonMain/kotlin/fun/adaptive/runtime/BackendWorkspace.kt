@@ -3,7 +3,9 @@ package `fun`.adaptive.runtime
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.builtin.WorkerImpl
 
-open class BackendWorkspace : AbstractWorkspace() {
+open class BackendWorkspace(
+    override val application: AbstractApplication<*,*>
+) : AbstractWorkspace() {
 
     val services = mutableListOf<ServiceImpl<*>>()
 

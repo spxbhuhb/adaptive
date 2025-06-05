@@ -1,7 +1,7 @@
 package `fun`.adaptive.app
 
 import `fun`.adaptive.app.builder.ApplicationBuilder
-import `fun`.adaptive.app.server.BasicAppServerModule
+import `fun`.adaptive.app.app.AppMainModuleServer
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.FragmentKey
@@ -23,10 +23,10 @@ class JvmServerApplication(
     }
 
     override val frontendWorkspace = NoFrontendWorkspace()
-    override val backendWorkspace = BackendWorkspace()
+    override val backendWorkspace = BackendWorkspace(this)
 
     override val backendMainKey: FragmentKey
-        get() = BasicAppServerModule.SERVER_BACKEND_MAIN_KEY
+        get() = AppMainModuleServer.SERVER_BACKEND_MAIN_KEY
 
     override lateinit var backend: BackendAdapter
 

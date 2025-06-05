@@ -18,7 +18,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class TestClientApplication(
-    override val backendWorkspace: BackendWorkspace,
     val traceServiceCalls: Boolean = false,
     val server: TestServerApplication?
 ) : AbstractClientApplication<AbstractWorkspace, BackendWorkspace>() {
@@ -27,6 +26,7 @@ class TestClientApplication(
     override lateinit var backend: BackendAdapter
     override lateinit var frontend: AdaptiveAdapter
 
+    override val backendWorkspace = BackendWorkspace(this)
     override val frontendWorkspace = NoFrontendWorkspace()
 
     override val frontendMainKey: FragmentKey
@@ -96,7 +96,7 @@ class TestClientApplication(
 
             builder.buildFun()
 
-            return TestClientApplication(BackendWorkspace(), trace, server).also { if (start) it.start() }
+            return TestClientApplication(trace, server).also { if (start) it.start() }
         }
 
     }

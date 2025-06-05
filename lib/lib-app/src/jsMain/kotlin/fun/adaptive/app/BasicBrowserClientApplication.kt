@@ -1,7 +1,7 @@
 package `fun`.adaptive.app
 
 import `fun`.adaptive.app.builder.ApplicationBuilder
-import `fun`.adaptive.app.client.basic.BasicAppClientModule
+import `fun`.adaptive.app.app.AppMainModuleBasic
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.BackendWorkspace
@@ -16,10 +16,10 @@ open class BasicBrowserClientApplication(
     }
 
     override val backendMainKey: FragmentKey
-        get() = BasicAppClientModule.BASIC_CLIENT_BACKEND_MAIN_KEY
+        get() = AppMainModuleBasic.BASIC_CLIENT_BACKEND_MAIN_KEY
 
     override val frontendMainKey: FragmentKey
-        get() = BasicAppClientModule.BASIC_CLIENT_FRONTEND_MAIN_KEY
+        get() = AppMainModuleBasic.BASIC_CLIENT_FRONTEND_MAIN_KEY
 
     override fun buildFrontendWorkspace() {
         frontendWorkspace = FrontendWorkspace(backend, backendWorkspace)

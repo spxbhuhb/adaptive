@@ -7,21 +7,21 @@ import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.runtime.BackendWorkspace
+import `fun`.adaptive.runtime.NoBackendWorkspace
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
+import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspaceMain
 import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspaceSideBarIcons
-import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
+import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.utility.UUID
 
 class Context {
@@ -31,7 +31,7 @@ class Context {
 @Adaptive
 fun workspaceRecipe(): AdaptiveFragment {
 
-    val workspace = MultiPaneWorkspace(adapter().backend, BackendWorkspace())
+    val workspace = MultiPaneWorkspace(adapter().backend, NoBackendWorkspace())
     workspace.contexts += Context()
     initPanes(workspace)
 

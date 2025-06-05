@@ -26,7 +26,7 @@ class TestServerApplication(
     override val frontendWorkspace: NoFrontendWorkspace
         get() = unsupported()
 
-    override val backendWorkspace = BackendWorkspace()
+    override val backendWorkspace = BackendWorkspace(this)
 
     override lateinit var backend: BackendAdapter
 

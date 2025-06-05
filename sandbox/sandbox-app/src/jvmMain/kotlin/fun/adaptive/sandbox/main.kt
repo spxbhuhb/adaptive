@@ -1,7 +1,7 @@
 package `fun`.adaptive.sandbox
 
 import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
-import `fun`.adaptive.app.server.BasicAppServerModule
+import `fun`.adaptive.app.app.AppMainModuleServer
 import `fun`.adaptive.auth.app.AuthServerModule
 import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.settings
@@ -27,6 +27,6 @@ fun main() {
         module { ValueServerModule(FilePersistence(Path("./var/values").ensure(), 2)) }
         module { AuthServerModule() }
         module { KtorJvmServerModule() }
-        module { BasicAppServerModule() }
+        module { AppMainModuleServer() }
     }
 }

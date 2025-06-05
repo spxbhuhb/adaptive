@@ -5,16 +5,12 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.general.Observable
-import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.runtime.FrontendWorkspace
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
-import `fun`.adaptive.ui.generated.resources.executionError
 import `fun`.adaptive.ui.generated.resources.menu
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.layout.Orientation
@@ -24,11 +20,9 @@ import `fun`.adaptive.ui.mpw.backends.ContentPaneGroupViewBackend
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.*
-import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.launch
 import kotlin.reflect.KClass
 
 open class MultiPaneWorkspace(
@@ -48,13 +42,6 @@ open class MultiPaneWorkspace(
         const val WS_CENTER_PANE = "lib:ws:center"
         const val WSPANE_EMPTY = "lib:ws:nocontent"
     }
-
-    val logger = getLogger("workspace")
-
-    val application: AbstractApplication<*,*>
-        get() = checkNotNull(applicationOrNull)
-
-    var applicationOrNull: AbstractApplication<*,*>? = null
 
     val contentPaneBuilders = mutableMapOf<PaneContentType, MutableList<ContentPaneBuilder<*>>>()
 
@@ -166,20 +153,6 @@ open class MultiPaneWorkspace(
 
     fun sideBarActions(filterFun: (action: AbstractSideBarAction) -> Boolean) =
         (toolPanes.map { it.paneDef }.filter(filterFun) + sideBarActions.filter(filterFun)).sortedBy { it.displayOrder }
-
-    fun io(block: suspend () -> Unit) {
-        scope.launch {
-            try {
-                block()
-            } catch (ex: Exception) {
-                failNotification(Strings.executionError)
-            }
-        } // FIXME this should run in the backend scope
-    }
-
-    fun ui(block: suspend () -> Unit) {
-        scope.launch { block() } // FIXME this should run in the frontend scope
-    }
 
     // ---------------------------------------------------------------------------------------------
     // Pane switching

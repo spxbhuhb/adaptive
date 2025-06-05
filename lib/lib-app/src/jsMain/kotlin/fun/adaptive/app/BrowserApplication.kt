@@ -35,7 +35,7 @@ abstract class BrowserApplication<WT : FrontendWorkspace> : ClientApplication<WT
     override lateinit var backend: BackendAdapter
     override lateinit var frontend: AdaptiveAdapter
 
-    override val backendWorkspace = BackendWorkspace()
+    override val backendWorkspace = BackendWorkspace(this)
     override lateinit var frontendWorkspace: WT
 
     open fun buildFrontendWorkspace() = Unit

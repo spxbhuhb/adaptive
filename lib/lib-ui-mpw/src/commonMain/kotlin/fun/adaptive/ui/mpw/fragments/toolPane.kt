@@ -7,7 +7,6 @@ import `fun`.adaptive.ui.api.hover
 import `fun`.adaptive.ui.mpw.MultiPaneTheme
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
-import `fun`.adaptive.ui.mpw.model.PaneDef
 
 @Adaptive
 fun toolPane(
