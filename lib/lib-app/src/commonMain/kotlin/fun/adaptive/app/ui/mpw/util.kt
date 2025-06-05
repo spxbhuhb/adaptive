@@ -23,6 +23,6 @@ fun AdaptiveFragment.addContent(item: NamedItem, modifiers: Set<EventModifier> =
 val AbstractApplication<*,*>.mpwAppMainModule
     get() = modules.firstInstance<AppMainModuleMpw<*, *>>()
 
-fun MultiPaneWorkspace.addAdminItem(item : SingularPaneItem) {
+fun MultiPaneWorkspace.addAdminPlugin(item : SingularPaneItem) {
     contexts.firstInstance<AppAdminModuleMpw<*, *>>().plugins += item
 }

@@ -6,7 +6,7 @@ import `fun`.adaptive.app.ui.common.admin.account.accountManager
 import `fun`.adaptive.app.ui.common.admin.role.roleManager
 import `fun`.adaptive.app.ui.common.user.account.mpwAccountSelf
 import `fun`.adaptive.app.ui.common.user.signin.signIn
-import `fun`.adaptive.app.ui.mpw.addAdminItem
+import `fun`.adaptive.app.ui.mpw.addAdminPlugin
 import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.auth.app.AuthAppContext.Companion.authContext
 import `fun`.adaptive.auth.app.AuthBasicClientModule
@@ -68,7 +68,7 @@ class AppAuthModuleMpw<WT : MultiPaneWorkspace, BW : BackendWorkspace> : AuthBas
             )
         }
 
-        addAdminItem(ACCOUNT_MANAGER_ITEM)
+        addAdminPlugin(ACCOUNT_MANAGER_ITEM)
         addSingularContentPane(ACCOUNT_MANAGER_ITEM) {
             UnitSingularContentViewBackend(
                 workspace,
@@ -83,7 +83,7 @@ class AppAuthModuleMpw<WT : MultiPaneWorkspace, BW : BackendWorkspace> : AuthBas
             )
         }
 
-        addAdminItem(ROLE_MANAGER_ITEM)
+        addAdminPlugin(ROLE_MANAGER_ITEM)
         addSingularContentPane(ROLE_MANAGER_ITEM) {
             UnitSingularContentViewBackend(
                 workspace,

@@ -10,6 +10,8 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
+import `fun`.adaptive.graphics.canvas.api.canvas
+import `fun`.adaptive.graphics.canvas.api.draw
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.lib.util.log.CollectedLogData
@@ -29,6 +31,7 @@ import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.canvas.drawLoadingWireFrame
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
@@ -38,6 +41,7 @@ import `fun`.adaptive.ui.input.select.selectInputBackend
 import `fun`.adaptive.ui.input.select.selectInputList
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.loading.loading
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
@@ -158,6 +162,7 @@ fun sandboxMain() {
                 column {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. backgrounds.friendlyOpaque
 
+                   loading(null) { height { (57 + 242).dp } }
 //                    box {
 //                        size(300.dp)
 //

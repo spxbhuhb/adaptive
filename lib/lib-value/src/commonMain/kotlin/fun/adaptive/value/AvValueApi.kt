@@ -8,6 +8,10 @@ interface AvValueApi {
 
     suspend fun get(avValueId: AvValueId): AvValue<*>?
 
+    suspend fun put(avValue : AvValue<*>)
+
+    suspend fun get(marker: AvMarker) : List<AvValue<*>>
+
     suspend fun process(operation: AvValueOperation)
 
     suspend fun subscribe(

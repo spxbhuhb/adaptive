@@ -14,9 +14,9 @@ They are responsible for:
 [Service transports](def://) can be created manually but are usually handled automatically by
 [lib-app](def://) or [lib-test](def://).
 
-To create a [service transport](def://) manually use the [getTransport](def://) function.
+To create a [service transport](def://) manually, use the [getTransport](function://) function.
 
-[getTransport](def://) chooses the actual transport implementation to use based on the schema
+[getTransport](function://) chooses the actual transport implementation to use based on the schema
 of the [url](parameter://getTransport):
 
 - `direct` creates a [DirectServiceTransport](class://), useful for testing

@@ -17,7 +17,7 @@ open class FrontendWorkspace(
 ) : AbstractWorkspace() {
 
     override val application: AbstractApplication<*, *>
-        get () = backendWorkspace.application
+        get() = backendWorkspace.application
 
     val logger = getLogger("FrontendWorkspace")
 
@@ -44,5 +44,30 @@ open class FrontendWorkspace(
         }
     }
 
+    open fun onSuccess() {
+
+    }
+
+    open fun onFail(ex: Exception) {
+
+    }
+
+    open fun save(
+        onSuccess: () -> Unit = ::onSuccess,
+        onFail: (ex : Exception) -> Unit = ::onFail,
+        block: suspend () -> Unit
+    ) {
+        backend.scope.launch {
+            try {
+                block()
+                scope.launch { safeCall(logger) { onSuccess() } }
+            } catch (ex: Exception) {
+                logger.error(ex)
+                scope.launch {
+                    safeCall(logger) { onFail(ex) }
+                }
+            }
+        }
+    }
 
 }

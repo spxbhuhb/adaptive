@@ -12,6 +12,14 @@ class AvValueServerService : ServiceImpl<AvValueServerService>(), AvValueApi {
         return worker.get<Any>(avValueId)
     }
 
+    override suspend fun get(marker: AvMarker): List<AvValue<*>> {
+        return worker.get<Any>(marker)
+    }
+
+    override suspend fun put(avValue: AvValue<*>) {
+        worker.execute { this += avValue }
+    }
+
     override suspend fun process(operation: AvValueOperation) {
         throw UnsupportedOperationException()
     }

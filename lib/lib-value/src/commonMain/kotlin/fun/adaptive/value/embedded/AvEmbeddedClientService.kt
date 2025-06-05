@@ -1,6 +1,7 @@
 package `fun`.adaptive.value.embedded
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.value.AvMarker
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvSubscriptionId
 import `fun`.adaptive.value.AvValue
@@ -14,6 +15,14 @@ class AvEmbeddedClientService : ServiceImpl<AvEmbeddedClientService>(), AvValueA
     val worker by workerImpl<AvValueWorker>()
 
     override suspend fun get(avValueId: AvValueId): AvValue<*>? {
+        throw UnsupportedOperationException()
+    }
+
+    override suspend fun get(marker: AvMarker): List<AvValue<*>> {
+        throw UnsupportedOperationException()
+    }
+
+    override suspend fun put(avValue: AvValue<*>) {
         throw UnsupportedOperationException()
     }
 

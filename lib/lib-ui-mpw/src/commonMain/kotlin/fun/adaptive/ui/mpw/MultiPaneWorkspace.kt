@@ -7,11 +7,14 @@ import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.runtime.FrontendWorkspace
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.generated.resources.menu
+import `fun`.adaptive.ui.generated.resources.saveFail
+import `fun`.adaptive.ui.generated.resources.saveSuccess
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
@@ -20,6 +23,8 @@ import `fun`.adaptive.ui.mpw.backends.ContentPaneGroupViewBackend
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.*
+import `fun`.adaptive.ui.snackbar.failNotification
+import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
 import kotlinx.coroutines.CoroutineScope
@@ -452,5 +457,17 @@ open class MultiPaneWorkspace(
     }
 
     fun getItemConfig(type: PaneContentType) = itemTypes[type] ?: WsItemConfig.DEFAULT
+
+    // --------------------------------------------------------------------------------
+    // User feedback
+    // --------------------------------------------------------------------------------
+
+    override fun onSuccess() {
+        successNotification(Strings.saveSuccess)
+    }
+
+    override fun onFail(ex: Exception) {
+        failNotification(Strings.saveFail)
+    }
 
 }

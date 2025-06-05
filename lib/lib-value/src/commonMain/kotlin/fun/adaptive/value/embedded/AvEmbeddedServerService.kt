@@ -3,6 +3,7 @@ package `fun`.adaptive.value.embedded
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.AvClientSubscription
+import `fun`.adaptive.value.AvMarker
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvSubscriptionId
 import `fun`.adaptive.value.AvValue
@@ -17,6 +18,14 @@ class AvEmbeddedServerService : ServiceImpl<AvEmbeddedServerService>(), AvValueA
 
     override suspend fun get(avValueId: AvValueId): AvValue<*>? {
         return worker.get<Any>(avValueId)
+    }
+
+    override suspend fun get(marker: AvMarker): List<AvValue<*>> {
+        return worker.get<Any>(marker)
+    }
+
+    override suspend fun put(avValue: AvValue<*>) {
+        worker.execute { this += avValue }
     }
 
     override suspend fun process(operation: AvValueOperation) {

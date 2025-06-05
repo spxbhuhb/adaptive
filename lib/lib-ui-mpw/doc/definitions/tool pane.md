@@ -1,7 +1,6 @@
 # Tool pane
 
-Tool pane is a subtype of [pane](def://) that shows a tool in a [multi-pane workspace](def://). Tools
-can be anything from navigation aids, inspection tools, feedback providers, etc.
+Tool pane is a subtype of [pane](def://) that shows an [MPW tool](def://) in a [multi-pane workspace](def://). 
 
 In many cases tools let the user add a [content pane](def://) to the [multi-pane workspace](def://). For
 example, a documentation browser tool may let the user open a section of the documentation.
