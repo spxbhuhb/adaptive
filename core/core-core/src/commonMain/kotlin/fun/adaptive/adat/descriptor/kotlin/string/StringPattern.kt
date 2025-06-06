@@ -16,6 +16,7 @@ class StringPattern(
     val regex = Regex(pattern)
 
     override fun validate(instance: AdatClass, value: Any?, propertyMetadata: AdatPropertyMetadata, result: InstanceValidationResult) {
+        if (isNull(value, propertyMetadata, result)) return
         value as String
         if (!regex.matches(value)) propertyMetadata.fail(result, this)
     }

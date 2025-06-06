@@ -14,6 +14,7 @@ class StringMinLength(
 ) : AdatDescriptor() {
 
     override fun validate(instance: AdatClass, value: Any?, propertyMetadata: AdatPropertyMetadata, result: InstanceValidationResult) {
+        if (isNull(value, propertyMetadata, result)) return
         value as String
         if (value.length < minimum) propertyMetadata.fail(result, this)
     }

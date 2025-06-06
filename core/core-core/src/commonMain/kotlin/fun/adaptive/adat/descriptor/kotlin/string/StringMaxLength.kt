@@ -10,10 +10,11 @@ import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 @Adat
 class StringMaxLength(
     override val metadata: AdatDescriptorMetadata,
-    val maximum : Int
+    val maximum: Int
 ) : AdatDescriptor() {
 
     override fun validate(instance: AdatClass, value: Any?, propertyMetadata: AdatPropertyMetadata, result: InstanceValidationResult) {
+        if (isNull(value, propertyMetadata, result)) return
         value as String
         if (value.length > maximum) propertyMetadata.fail(result, this)
     }

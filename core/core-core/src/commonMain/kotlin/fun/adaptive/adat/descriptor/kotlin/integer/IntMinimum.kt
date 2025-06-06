@@ -14,6 +14,7 @@ class IntMinimum(
 ) : AdatDescriptor() {
 
     override fun validate(instance: AdatClass, value: Any?, propertyMetadata: AdatPropertyMetadata, result: InstanceValidationResult) {
+        if (isNull(value, propertyMetadata, result)) return
         value as Int
         if (value < minimum) propertyMetadata.fail(result, this)
     }
