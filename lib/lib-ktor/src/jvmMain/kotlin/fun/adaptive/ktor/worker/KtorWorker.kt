@@ -43,6 +43,9 @@ class KtorWorker(
     val downloadRoute by setting<String> { "KTOR_DOWNLOAD_ROUTE" } default "/adaptive/download"
     val clientIdCookieName by setting<String> { "KTOR_SESSION_COOKIE_NAME" } default "ADAPTIVE_CLIENT_ID"
 
+    val qualifiedCookieName
+        get() = clientIdCookieName + "_$port"
+
     val sessionProvider by implOrNull<ServiceSessionProvider>()
 
     var applicationEngine: ApplicationEngine? = null
@@ -88,7 +91,7 @@ class KtorWorker(
         val provider = sessionProvider ?: return
 
         get(clientIdRoute) {
-            val existingClientId = call.request.cookies[clientIdCookieName]?.let { UUID<ServiceContext>(it) }
+            val existingClientId = call.request.cookies[qualifiedCookieName]?.let { UUID<ServiceContext>(it) }
 
             val id = if (existingClientId != null && provider.getSession(existingClientId) != null) {
                 existingClientId
@@ -96,7 +99,7 @@ class KtorWorker(
                 UUID()
             }.toString()
 
-            call.response.cookies.append(clientIdCookieName, id, httpOnly = true, path = "/")
+            call.response.cookies.append(qualifiedCookieName, id, httpOnly = true, path = "/")
             call.respond(HttpStatusCode.OK)
         }
     }
@@ -111,7 +114,7 @@ class KtorWorker(
 
         webSocket(serviceWebSocketRoute) {
 
-            val sessionUuid = call.request.cookies[clientIdCookieName]?.let { UUID<ServiceContext>(it) } ?: UUID()
+            val sessionUuid = call.request.cookies[qualifiedCookieName]?.let { UUID<ServiceContext>(it) } ?: UUID()
 
             logger.info {
                 with(call.request.origin) { "WS-CONNECT $remoteAddress:$remotePort $sessionUuid" }
@@ -166,7 +169,7 @@ class KtorWorker(
         val provider = sessionProvider ?: return
 
         get("$downloadRoute/{fileName}") {
-            val clientId = call.request.cookies[clientIdCookieName]?.let { UUID<ServiceContext>(it) }
+            val clientId = call.request.cookies[qualifiedCookieName]?.let { UUID<ServiceContext>(it) }
             if (clientId == null) {
                 call.respond(HttpStatusCode.Unauthorized)
                 return@get
