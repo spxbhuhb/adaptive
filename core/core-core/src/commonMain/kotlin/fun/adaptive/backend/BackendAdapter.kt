@@ -48,8 +48,9 @@ open class BackendAdapter(
 
     override var trace : Array<out Regex> = emptyArray<Regex>()
 
-    // TODO implement cache synchronization
+    override var traceWithContext: Boolean = false
 
+    // TODO implement cache synchronization
     private val serviceCache = mutableMapOf<String, BackendService>()
 
     val lock = getLock()

@@ -33,6 +33,8 @@ class SvgAdapter(
 
     override var trace = parentAdapter.trace
 
+    override var traceWithContext: Boolean = parentAdapter.traceWithContext
+
     override val startedAt = vmNowMicro()
 
     override fun newId() = parentAdapter.newId()

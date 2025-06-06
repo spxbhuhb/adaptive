@@ -26,6 +26,8 @@ class CanvasAdapter(
 
     override var trace = parentAdapter.trace
 
+    override var traceWithContext: Boolean = parentAdapter.traceWithContext
+
     override val startedAt = vmNowMicro()
 
     override val transport: ServiceCallTransport

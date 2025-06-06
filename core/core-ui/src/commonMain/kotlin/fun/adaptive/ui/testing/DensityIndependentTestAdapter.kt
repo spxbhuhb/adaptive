@@ -50,6 +50,8 @@ class DensityIndependentTestAdapter(
         Regex(".*(?!addActual|removeActual)") // anything that does not end with addActual/ removeActual
     )
 
+    override var traceWithContext: Boolean = false
+
     override val startedAt = vmNowMicro()
 
     override fun addActualRoot(fragment: AdaptiveFragment) {

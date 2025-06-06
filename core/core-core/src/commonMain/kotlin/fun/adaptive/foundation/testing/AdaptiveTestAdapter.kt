@@ -48,6 +48,7 @@ class AdaptiveTestAdapter(
     override var trace: Array<out Regex> = arrayOf(
         Regex(".*(?!addActual|removeActual)") // anything that does not end with addActual/ removeActual
     )
+    override var traceWithContext = false
 
     override val startedAt = vmNowMicro()
 

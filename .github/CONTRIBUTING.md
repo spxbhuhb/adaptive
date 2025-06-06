@@ -171,14 +171,6 @@ adaptive {
 
 These are helpful during development (and I don't want to forget them).
 
-To switch on trace for one specific fragment:
-
-```kotlin
-AdaptiveFragment.jsonTrace = true
-fragment().trace = true
-fragment().tracePatterns = traceAll.patterns
-```
-
 To get layout update statistics:
 
 ```kotlin

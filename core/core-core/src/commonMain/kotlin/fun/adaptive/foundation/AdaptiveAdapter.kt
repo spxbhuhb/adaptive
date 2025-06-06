@@ -34,6 +34,8 @@ interface AdaptiveAdapter {
 
     var trace: Array<out Regex>
 
+    var traceWithContext : Boolean
+
     val startedAt: Long
 
     var application : AbstractApplication<*,*>?
@@ -83,13 +85,13 @@ interface AdaptiveAdapter {
     }
 
     fun trace(fragment: AdaptiveFragment, point: String, data: String) {
-        if (fragment.trace && fragment.tracePatterns.any { it.matches(point) }) {
+        if (traceWithContext || (fragment.trace && fragment.tracePatterns.any { it.matches(point) })) {
             TraceEvent(fragment.name(), fragment.id, point, data).println(startedAt)
         }
     }
 
     fun trace(point: String, data: String) {
-        if (trace.any { it.matches(point) }) {
+        if (traceWithContext || trace.any { it.matches(point) }) {
             TraceEvent("<adapter>", - 1, point, data).println(startedAt)
         }
     }

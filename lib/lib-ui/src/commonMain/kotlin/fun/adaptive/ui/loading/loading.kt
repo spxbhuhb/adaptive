@@ -19,8 +19,8 @@ fun <T> loading(
     val wireColor = colors.outline.opaque(0.5)
 
     if (data == null) {
-        column(instructions()) {
-            fillStrategy.constrain .. gap { 16.dp }
+        column {
+            instructions() .. fillStrategy.constrain .. gap { 16.dp }
 
             canvas {
                 maxWidth .. height { 41.dp } .. border(borderColor) .. cornerRadius { 4.dp }

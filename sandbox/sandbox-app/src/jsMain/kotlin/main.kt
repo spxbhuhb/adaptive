@@ -7,6 +7,9 @@ import `fun`.adaptive.app.ws.SandBoxClientModule
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.FragmentTraceContext
+import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
@@ -163,6 +166,8 @@ fun sandboxMain() {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. backgrounds.friendlyOpaque
 
                    loading(null) { height { (57 + 242).dp } }
+
+                    traceContextExample()
 //                    box {
 //                        size(300.dp)
 //

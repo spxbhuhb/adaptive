@@ -72,6 +72,8 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
     override fun newId(): Long =
         nextId ++
 
+    override var traceWithContext = false
+
     override val startedAt = vmNowMicro()
 
     override lateinit var rootFragment: AdaptiveFragment
