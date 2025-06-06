@@ -309,7 +309,7 @@ open class MultiPaneWorkspace(
     }
 
     fun addSingularContentPane(
-        singularItem : SingularPaneItem,
+        singularItem: SingularPaneItem,
         builder: (item: SingularPaneItem) -> PaneViewBackend<*>?
     ) {
         contentPaneBuilders.getOrPut(singularItem.type) { mutableListOf() } +=
@@ -462,12 +462,29 @@ open class MultiPaneWorkspace(
     // User feedback
     // --------------------------------------------------------------------------------
 
-    override fun onSuccess() {
-        successNotification(Strings.saveSuccess)
+    class FeedbackStrings(
+        val success: String,
+        val fail: String
+    )
+
+    open fun execute(
+        success: String,
+        fail: String,
+        action: suspend () -> Unit
+    ) {
+        execute(context = FeedbackStrings(success, fail), block = action)
     }
 
-    override fun onFail(ex: Exception) {
-        failNotification(Strings.saveFail)
+    override fun onSuccess(context: Any?) {
+        successNotification(
+            if (context is FeedbackStrings) context.success else Strings.saveSuccess
+        )
+    }
+
+    override fun onFail(context: Any?, ex: Exception) {
+        failNotification(
+            if (context is FeedbackStrings) context.fail else Strings.saveFail
+        )
     }
 
 }

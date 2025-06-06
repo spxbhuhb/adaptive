@@ -1,15 +1,12 @@
 package `fun`.adaptive.sandbox.recipe.ui.input.number
 
-import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.document.ui.direct.hr
 import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.resource.document.Documents
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.generated.resources.double_input
 import `fun`.adaptive.ui.input.number.doubleInput
 import `fun`.adaptive.ui.input.number.doubleOrNullInput
 import `fun`.adaptive.ui.input.number.doubleOrNullUnitInput
@@ -25,7 +22,7 @@ fun doubleInputRecipe(): AdaptiveFragment {
     column {
         maxHeight .. verticalScroll .. padding { 16.dp } .. gap { 16.dp }
 
-        docDocument(Documents.double_input)
+        //docDocument(Documents.double_input)
 
         h2("No unit variants")
 

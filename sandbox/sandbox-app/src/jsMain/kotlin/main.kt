@@ -3,6 +3,7 @@
  */
 
 import `fun`.adaptive.app.BasicBrowserClientApplication.Companion.basicBrowserClient
+import `fun`.adaptive.app.ui.common.contentPaneHeader
 import `fun`.adaptive.app.ws.SandBoxClientModule
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.chart.app.ChartModule
@@ -20,6 +21,7 @@ import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.lib.util.log.CollectedLogData
 import `fun`.adaptive.lib.util.log.CollectedLogItem
 import `fun`.adaptive.lib.util.log.CollectingLogger
+import `fun`.adaptive.lib_app.generated.resources.lock
 import `fun`.adaptive.log.LoggerFactory
 import `fun`.adaptive.log.defaultLoggerFactory
 import `fun`.adaptive.log.getLogger
@@ -33,6 +35,7 @@ import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.badge.badge
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.canvas.drawLoadingWireFrame
 import `fun`.adaptive.ui.generated.resources.menu_book
@@ -48,6 +51,8 @@ import `fun`.adaptive.ui.loading.loading
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
+import `fun`.adaptive.utility.UUID.Companion.uuid4
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.app.ValueClientModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -163,7 +168,13 @@ fun sandboxMain() {
 //                }
 //            }
                 column {
-                    maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. backgrounds.friendlyOpaque
+                    maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } //.. backgrounds.friendlyOpaque
+
+                    contentPaneHeader("Hello", uuid4<Any>(), AvValue(
+                        statusOrNull = setOf("online"),
+                        markersOrNull = setOf("marker1", "marker2"),
+                        spec = ""
+                    )) { }
 
                    loading(null) { height { (57 + 242).dp } }
 

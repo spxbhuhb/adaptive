@@ -9,6 +9,7 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.*
+import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.operation.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
@@ -16,20 +17,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.supervisorScope
 import kotlin.reflect.KClass
 
-class AvUiValue<T : AvValue<T>>(
+class AvUiValue<T :Any>(
     adapter: AdaptiveAdapter,
     val valueId: AvValueId?,
     val kClass : KClass<T>
-) : AbstractObservable<T?>() {
+) : AbstractObservable<AvValue<T>?>() {
 
     companion object {
-        inline operator fun <reified T : AvValue<T>> invoke(
+        inline operator fun <reified T : Any> invoke(
             adapter: AdaptiveAdapter,
             valueId: AvValueId?
         ) : AvUiValue<T> = AvUiValue(adapter, valueId, T::class)
     }
 
-    override var value: T? = null
+    override var value: AvValue<T>? = null
         set(v) {
             field = v
             notifyListeners()
@@ -49,7 +50,7 @@ class AvUiValue<T : AvValue<T>>(
 
     var isRunning = false
 
-    override fun addListener(listener: ObservableListener<T?>) {
+    override fun addListener(listener: ObservableListener<AvValue<T>?>) {
         if (valueId != null && listeners.isEmpty()) {
             start()
             renew()
@@ -57,7 +58,7 @@ class AvUiValue<T : AvValue<T>>(
         super.addListener(listener)
     }
 
-    override fun removeListener(listener: ObservableListener<T?>) {
+    override fun removeListener(listener: ObservableListener<AvValue<T>?>) {
         super.removeListener(listener)
         if (valueId != null && listeners.isEmpty()) {
             renewLocal(null)
@@ -94,7 +95,7 @@ class AvUiValue<T : AvValue<T>>(
     fun process(value: AvValue<*>) {
         if (kClass.isInstance(value.spec)) {
             @Suppress("UNCHECKED_CAST")
-            this.value = value as T
+            this.value = value.checkSpec(kClass)
         } else {
             getLogger("AvUiValue").warning("dropping value as it is not of type ${kClass.simpleName}: $value")
         }

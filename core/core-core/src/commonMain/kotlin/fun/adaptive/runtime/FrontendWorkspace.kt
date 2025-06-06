@@ -44,27 +44,28 @@ open class FrontendWorkspace(
         }
     }
 
-    open fun onSuccess() {
+    open fun onSuccess(context : Any?) {
 
     }
 
-    open fun onFail(ex: Exception) {
+    open fun onFail(context: Any?, ex: Exception) {
 
     }
 
-    open fun save(
-        onSuccess: () -> Unit = ::onSuccess,
-        onFail: (ex : Exception) -> Unit = ::onFail,
+    open fun execute(
+        onSuccess: (context : Any?) -> Unit = ::onSuccess,
+        onFail: (context : Any?, ex : Exception) -> Unit = ::onFail,
+        context : Any? = null,
         block: suspend () -> Unit
     ) {
         backend.scope.launch {
             try {
                 block()
-                scope.launch { safeCall(logger) { onSuccess() } }
+                scope.launch { safeCall(logger) { onSuccess(context) } }
             } catch (ex: Exception) {
                 logger.error(ex)
                 scope.launch {
-                    safeCall(logger) { onFail(ex) }
+                    safeCall(logger) { onFail(context, ex) }
                 }
             }
         }

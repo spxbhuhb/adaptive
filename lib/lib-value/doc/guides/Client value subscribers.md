@@ -1,4 +1,4 @@
-# Local value subscribers
+# Client value subscribers
 
 Helper classes for handling the updates of values and complex value structures (such as lists and trees) with 
 observation support.
