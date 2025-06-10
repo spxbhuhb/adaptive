@@ -6,7 +6,6 @@ import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
@@ -29,7 +28,7 @@ fun tabContainer(
     theme: TabTheme = TabTheme.DEFAULT
 ): AdaptiveFragment {
 
-    var activeTab = model.tabs.firstOrNull { it.active }
+    val activeTab = model.tabs.firstOrNull { it.active }
 
     grid(instructions()) {
         theme.outerContainer
@@ -38,7 +37,7 @@ fun tabContainer(
 
         if (activeTab != null) {
             localContext(activeTab.model) {
-                actualize(activeTab.key)
+                actualize(activeTab.key, activeTab)
             }
         }
     }

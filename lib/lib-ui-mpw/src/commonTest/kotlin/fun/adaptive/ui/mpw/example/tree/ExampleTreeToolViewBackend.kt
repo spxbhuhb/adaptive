@@ -21,7 +21,7 @@ class ExampleTreeToolViewBackend(
     override val paneDef: PaneDef
 ) : PaneViewBackend<ExampleTreeToolViewBackend>() {
 
-    val tree = AvUiTreeViewBackend(workspace.backend, String::class, avDomain.treeDef, ::selectedFun)
+    val tree = AvUiTreeViewBackend(workspace.backend, ExampleTreeValueSpec::class, avDomain.treeDef, ::selectedFun)
 
     override fun getPaneActions(): List<AbstractPaneAction> {
         return listOf(
@@ -32,8 +32,8 @@ class ExampleTreeToolViewBackend(
 
     fun selectedFun(
         @Suppress("unused")
-        backend: AvUiTreeViewBackend<String>,
-        item: TreeItem<AvValue<String>>,
+        backend: AvUiTreeViewBackend<ExampleTreeValueSpec>,
+        item: TreeItem<AvValue<ExampleTreeValueSpec>>,
         modifiers: Set<EventModifier>
     ) {
         workspace.addContent(avDomain.node, item.data, modifiers)

@@ -1,14 +1,14 @@
-package `fun`.adaptive.value.client
+package `fun`.adaptive.value.remote
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.model.AvTreeDef
 
 // Test implementation of TreeSubscriber for testing purposes
-class TestTreeSubscriber(
+class TestRemoteTreeSubscriber(
     backend: BackendAdapter,
     treeDef: AvTreeDef
-) : AvTreeSubscriber<String, TestTreeItem>(
+) : AvRemoteTreeSubscriber<String, TestTreeItem>(
     backend,
     String::class,
     treeDef

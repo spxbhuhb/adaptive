@@ -10,11 +10,11 @@ import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.button.submitButton
 
 @Adaptive
-fun modalCancelSave(hide: () -> Unit, theme : PopupTheme = PopupTheme.default, save: () -> Unit) {
+fun modalCancelSave(hide: () -> Unit, theme : PopupTheme = PopupTheme.default, save: (hide : () -> Unit) -> Unit) {
     row {
         theme.modalButtons
 
         button(Strings.cancel) .. onClick { hide() }
-        submitButton(Strings.save) .. onClick { save(); hide(); }
+        submitButton(Strings.save) .. onClick { save(hide); }
     }
 }

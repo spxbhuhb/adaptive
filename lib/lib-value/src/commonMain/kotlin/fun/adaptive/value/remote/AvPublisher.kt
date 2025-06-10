@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.client
+package `fun`.adaptive.value.remote
 
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvSubscriptionId

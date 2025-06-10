@@ -14,15 +14,19 @@ open class FoundationActualize(
     adapter: AdaptiveAdapter,
     parent: AdaptiveFragment,
     index: Int
-) : AdaptiveFragment(adapter, parent, index, 3) {
+) : AdaptiveFragment(adapter, parent, index, 4) {
 
     val key: String
         get() = get(1)
 
-    val externalState: Array<out Any?>?
+    val dependency : Any?
         get() = get(2)
 
+    val externalState: Array<out Any?>?
+        get() = get(3)
+
     var lastKey: String? = null
+    var lastDependency: Any? = null
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
         null // genPatchInternal handles building children
@@ -33,7 +37,6 @@ open class FoundationActualize(
 
         if (fragment.declarationIndex != 0) invalidIndex(fragment.declarationIndex)
 
-
         for (value in safeExternalState.indices) {
             fragment.setStateVariable(value, safeExternalState[value])
         }
@@ -41,10 +44,13 @@ open class FoundationActualize(
 
     override fun genPatchInternal(): Boolean {
 
-        if (haveToPatch(getThisClosureDirtyMask(), 1 shl 1)) {
-            if (lastKey == key) return true // no need to replace the fragment
+        // 3 shl 1 = key and dependency
+        if (haveToPatch(getThisClosureDirtyMask(), 3 shl 1)) {
+            if (lastKey == key && lastDependency == dependency) return true // no need to replace the fragment
 
+            lastDependency = dependency
             lastKey = key
+
             throwChildrenAway()
 
             adapter.actualize(key, this, 0, - 1).also {

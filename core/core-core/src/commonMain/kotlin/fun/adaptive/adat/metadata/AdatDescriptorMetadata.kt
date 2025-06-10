@@ -19,6 +19,8 @@ data class AdatDescriptorMetadata(
 
     fun asInt() = parameters.toInt()
 
+    fun asLong() = parameters.toLong()
+
     // --------------------------------------------------------------------------------
     // AdatClass overrides
     // --------------------------------------------------------------------------------

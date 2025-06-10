@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.direct
+package `fun`.adaptive.value.local
 
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.*

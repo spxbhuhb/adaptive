@@ -8,7 +8,6 @@ import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.api.absolutePath
 import `fun`.adaptive.adat.api.hasProblem
 import `fun`.adaptive.adat.api.isTouched
-import `fun`.adaptive.adat.api.isValid
 import `fun`.adaptive.adat.api.store
 import `fun`.adaptive.foundation.AdaptiveFragment
 

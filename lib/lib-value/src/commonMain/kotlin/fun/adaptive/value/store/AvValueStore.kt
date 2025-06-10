@@ -482,24 +482,28 @@ open class AvValueStore(
     fun dump(): String {
         val out = StringBuilder()
 
-        out.append("{\n  \"values\" : [\n")
-        values.forEach { (_, value) ->
-            val bytes = PolymorphicWireFormat.wireFormatEncode(JsonWireFormatEncoder(), value).pack()
-            out.append("    ")
-            out.append(bytes.decodeToString())
-            out.append(",\n")
+        lock.use {
+
+            out.append("{\n  \"values\" : [\n")
+            values.forEach { (_, value) ->
+                val bytes = PolymorphicWireFormat.wireFormatEncode(JsonWireFormatEncoder(), value).pack()
+                out.append("    ")
+                out.append(bytes.decodeToString())
+                out.append(",\n")
+            }
+
+            out.append("  ],\n  \"indices\" : {\n")
+
+            markerIndices.forEach { (marker, index) ->
+                out.append("    \"$marker\" : [ ")
+                out.append(index.joinToString(", ") { "\"$it\"" })
+                out.append("    ],")
+            }
+
+            out.append(" }\n")
+
+            out.append("}")
         }
-
-        out.append("  ],\n  \"indices\" : [\n")
-
-        markerIndices.forEach { (marker, index) ->
-            out.append("    \"$marker\" : [ ")
-            out.append(index.joinToString(", ") { "\"$it\"" })
-        }
-
-        out.append(" ],\n")
-
-        out.append("}")
 
         return out.toString()
     }

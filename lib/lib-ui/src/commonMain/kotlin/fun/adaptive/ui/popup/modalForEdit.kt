@@ -9,7 +9,7 @@ import `fun`.adaptive.ui.wrap.wrapFromTop
 fun modalForEdit(
     title : String,
     hide: () -> Unit,
-    save: () -> Unit,
+    save: (hide : () -> Unit) -> Unit,
     theme : PopupTheme =  PopupTheme.default,
     @Adaptive
     _fixme_content : () -> Unit

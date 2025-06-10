@@ -164,7 +164,7 @@ fun containerPlaygroundResult(config: PlaygroundConfig) {
                 { box { maxSize .. backgrounds.surface; text("pane2") } }
             ) .. config.toInstructions()
         } else {
-            actualize(config.container, config.toInstructions(), BoundFragmentFactory(self, - 1, ::fakeContent))
+            actualize(config.container, null, config.toInstructions(), BoundFragmentFactory(self, - 1, ::fakeContent))
         }
     }
 }

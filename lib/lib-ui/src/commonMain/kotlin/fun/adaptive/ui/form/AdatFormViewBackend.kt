@@ -5,7 +5,6 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.PropertyPath
 import `fun`.adaptive.adat.api.deepCopy
-import `fun`.adaptive.adat.api.validate
 import `fun`.adaptive.adat.descriptor.InstanceValidationResult
 import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding

@@ -5,15 +5,16 @@
 package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.backend.basic.AuthBasicService
-import `fun`.adaptive.auth.model.*
+import `fun`.adaptive.auth.model.AuthMarkers
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD
+import `fun`.adaptive.auth.model.PrincipalSpec
+import `fun`.adaptive.auth.model.RoleSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.query.firstImplOrNull
+import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
-import `fun`.adaptive.value.firstItemOrNull
-import `fun`.adaptive.value.AvValue
 
 class AuthWorker : WorkerImpl<AuthWorker>() {
 
@@ -28,7 +29,7 @@ class AuthWorker : WorkerImpl<AuthWorker>() {
     }
 
     fun getOrCreateSoRole() {
-        val soRole = valueWorker.firstItemOrNull(AuthMarkers.ROLE) { AuthMarkers.SECURITY_OFFICER in it.markers }
+        val soRole = valueWorker.get<RoleSpec>(AuthMarkers.ROLE).firstOrNull { AuthMarkers.SECURITY_OFFICER in it.markers }
 
         if (soRole == null) {
             valueWorker.queueAdd(
@@ -51,8 +52,8 @@ class AuthWorker : WorkerImpl<AuthWorker>() {
      */
     suspend fun optCreateSoPrincipal() {
 
-        val soPrincipal = valueWorker.firstItemOrNull(AuthMarkers.PRINCIPAL) {
-            securityOfficer in ((it.spec as? PrincipalSpec)?.roles ?: emptySet())
+        val soPrincipal = valueWorker.get<PrincipalSpec>(AuthMarkers.PRINCIPAL).firstOrNull {
+            securityOfficer in it.spec.roles
         }
 
         if (soPrincipal == null) {

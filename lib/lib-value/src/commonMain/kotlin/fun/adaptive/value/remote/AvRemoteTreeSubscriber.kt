@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.client
+package `fun`.adaptive.value.remote
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.unsupported
@@ -21,12 +21,12 @@ import kotlin.reflect.KClass
  * @param  SPEC  The [spec](def://) values of this tree use.
  * @param  TREE_ITEM  The output tree item type. Usually not a value, a UI tree item, for example.
  */
-abstract class AvTreeSubscriber<SPEC : Any, TREE_ITEM>(
+abstract class AvRemoteTreeSubscriber<SPEC : Any, TREE_ITEM>(
     subscribeFun: AvSubscribeFun,
     backend: BackendAdapter,
     val parentRefLabel: AvMarker,
     val specClass: KClass<SPEC>,
-) : AvValueSubscriber<List<TREE_ITEM>>(subscribeFun, backend) {
+) : AvAbstractRemoteSubscriber<List<TREE_ITEM>>(subscribeFun, backend) {
 
     constructor(
         backend: BackendAdapter,

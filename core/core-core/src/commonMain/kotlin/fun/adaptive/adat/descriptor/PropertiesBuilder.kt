@@ -17,6 +17,15 @@ class PropertiesBuilder {
     @AdatDescriptorName("IntDefault")
     infix fun Int.default(value: Int): Int = this
 
+    @AdatDescriptorName("LongMinimum")
+    infix fun Long.minimum(minimum: Long): Long = this
+
+    @AdatDescriptorName("LongMaximum")
+    infix fun Long.maximum(maximum: Long): Long = this
+
+    @AdatDescriptorName("LongDefault")
+    infix fun Long.default(value: Long): Long = this
+
     @AdatDescriptorName("StringDefault")
     infix fun String?.default(value: String): String? = this
 

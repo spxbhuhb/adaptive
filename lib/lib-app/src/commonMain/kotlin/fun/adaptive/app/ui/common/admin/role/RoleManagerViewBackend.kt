@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.avByMarker
-import `fun`.adaptive.value.client.AvListSubscriber
+import `fun`.adaptive.value.remote.AvRemoteListSubscriber
 
 class RoleManagerViewBackend(fragment: AdaptiveFragment) {
 
@@ -22,7 +22,7 @@ class RoleManagerViewBackend(fragment: AdaptiveFragment) {
 
     val service = getService<AuthRoleApi>(workspace.transport)
 
-    val roles = AvListSubscriber(workspace.backend, RoleSpec::class, avByMarker(AuthMarkers.ROLE))
+    val roles = AvRemoteListSubscriber(workspace.backend, RoleSpec::class, avByMarker(AuthMarkers.ROLE))
 
     fun save(data: AvValue<RoleSpec>, add: Boolean) {
         workspace.io {

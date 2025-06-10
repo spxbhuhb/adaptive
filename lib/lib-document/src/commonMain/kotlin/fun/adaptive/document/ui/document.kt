@@ -1,7 +1,6 @@
-package `fun`.adaptive.app.ui.util
+package `fun`.adaptive.document.ui
 
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.document.ui.DocumentTheme
 import `fun`.adaptive.document.ui.basic.docDocument
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment

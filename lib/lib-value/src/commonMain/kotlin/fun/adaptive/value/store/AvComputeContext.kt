@@ -14,6 +14,10 @@ class AvComputeContext(
     val commitSet: MutableSet<AvSubscription>
 ) {
 
+    //---------------------------------------------------------------------------------
+    // Add
+    //---------------------------------------------------------------------------------
+
     operator fun plusAssign(value: AvValue<*>) {
         store.addOrUpdate(AvoAddOrUpdate(value), commitSet)
     }
@@ -38,6 +42,10 @@ class AvComputeContext(
         store.add(AvoAdd(value), commitSet)
         return value
     }
+
+    //---------------------------------------------------------------------------------
+    // Get
+    //---------------------------------------------------------------------------------
 
     /**
      * Gets a value from the store with the specified ID and type.
@@ -68,6 +76,52 @@ class AvComputeContext(
      */
     fun getOrNullGen(valueId: AvValueId?): AvValue<*>? =
         store.unsafeGetOrNull(valueId)
+
+    /**
+     * Retrieves a list of values with the specified marker.
+     */
+    inline fun <reified T : Any> get(marker: AvMarker): List<AvValue<T>> =
+        getOrNullGen(marker)?.map { it.checkSpec<T>() } ?: emptyList()
+
+    /**
+     * Retrieves a list of values with the specified marker or null if there is
+     * no such value.
+     */
+    inline fun <reified T : Any> getOrNull(marker: AvMarker): List<AvValue<T>>? =
+        getOrNullGen(marker)?.map { it.checkSpec<T>() }
+
+    /**
+     * Retrieves a list of values with the specified marker or null if there is
+     * no such value.
+     */
+    fun getOrNullGen(marker: AvMarker): List<AvValue<*>>? =
+        store.unsafeQueryByMarker(marker).takeIf { it.isNotEmpty() }
+    /**
+     *  Retrieves a value with the specified marker or null if there
+     *  is no such value.
+     *
+     *  **IMPORTANT** Values are not ordered, call to [firstOrNull] may return with different values when called twice.
+     */
+    inline fun <reified T : Any> first(marker: AvMarker): AvValue<T> =
+        firstOrNullGen(marker)?.checkSpec<T>() ?: throw NoSuchElementException("cannot find item for marker $marker")
+
+    /**
+     *  Retrieves a value with the specified marker or null if there
+     *  is no such value.
+     *
+     *  **IMPORTANT** Values are not ordered, call to [firstOrNull] may return with different values when called twice.
+     */
+    inline fun <reified T : Any> firstOrNull(marker: AvMarker): AvValue<T>? =
+        firstOrNullGen(marker)?.checkSpec<T>()
+
+    /**
+     *  Retrieves a value with the specified marker or null if there
+     *  is no such value.
+     *
+     *  **IMPORTANT** Values are not ordered, call to [firstOrNull] may return with different values when called twice.
+     */
+    fun firstOrNullGen(marker: AvMarker): AvValue<*>? =
+        store.unsafeQueryByMarker(marker).firstOrNull()
 
     //---------------------------------------------------------------------------------
     // Status
@@ -291,7 +345,7 @@ class AvComputeContext(
         parentId: AvValueId? = null,
         child: AvValue<*>
     ) {
-        addTreeNode(treeDef, parentId, child)
+        linkTreeNode(treeDef, parentId, child)
     }
 
     /**
@@ -392,7 +446,7 @@ class AvComputeContext(
 
         val nodeId = node.uuid
 
-        val rootList = queryByMarker(treeDef.rootListMarker).firstOrNull()?.checkSpec<AvRefListSpec>()
+        val rootList = firstOrNull<AvRefListSpec>(treeDef.rootListMarker)
 
         if (rootList != null) {
             if (nodeId in rootList.spec.refs) return
@@ -440,7 +494,7 @@ class AvComputeContext(
     ) {
         if (treeDef.rootListMarker == null) return
 
-        val rootList = queryByMarker(treeDef.rootListMarker).firstOrNull()?.checkSpec<AvRefListSpec>()
+        val rootList = firstOrNull<AvRefListSpec>(treeDef.rootListMarker)
 
         if (rootList != null) {
             this += rootList.copy(spec = AvRefListSpec(rootList.spec.refs - nodeId))
@@ -535,12 +589,12 @@ class AvComputeContext(
 
         if (parentId == null) {
             if (treeDef.rootListMarker == null) return emptyList()
-            listValue = queryByMarker(treeDef.rootListMarker).firstOrNull()
+            listValue = firstOrNull<AvRefListSpec>(treeDef.rootListMarker)
         } else {
-            listValue = store.unsafeRefOrNull(parentId, treeDef.childListRefLabel)
+            listValue = refOrNull<AvRefListSpec>(parentId, treeDef.childListRefLabel)
         }
 
-        return listValue?.spec?.let { (it as AvRefListSpec).refs } ?: emptyList()
+        return listValue?.spec?.refs ?: emptyList()
     }
 
     //---------------------------------------------------------------------------------
@@ -568,6 +622,7 @@ class AvComputeContext(
         return "$prefix${(max + 1).p04}"
     }
 
+    @Deprecated("use get(marker) instead", ReplaceWith("get(marker)"))
     fun queryByMarker(marker: AvMarker): List<AvValue<*>> =
         store.unsafeQueryByMarker(marker)
 

@@ -82,11 +82,11 @@ fun lineChart(/*chart : Chart*/) {
             canvas { canvasSize ->
 
                 for (axis in context.axes) {
-                    actualize(axis.renderer, emptyInstructions, context, axis, canvasSize)
+                    actualize(axis.renderer, null, emptyInstructions, context, axis, canvasSize)
                 }
 
                 for (item in context.items) {
-                    actualize(item.renderKey, emptyInstructions, context, item, canvasSize)
+                    actualize(item.renderKey, null, emptyInstructions, context, item, canvasSize)
                 }
             }
         } else {

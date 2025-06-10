@@ -11,11 +11,11 @@ import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.avByMarker
-import `fun`.adaptive.value.client.AvValueSubscriber
+import `fun`.adaptive.value.remote.AvAbstractRemoteSubscriber
 
 class BasicAccountSummaryStore(
     backend: BackendAdapter
-) : AvValueSubscriber<List<BasicAccountSummary>>(
+) : AvAbstractRemoteSubscriber<List<BasicAccountSummary>>(
     { s, id -> markers.also { s.subscribe(it, id) } },
     backend,
 ) {

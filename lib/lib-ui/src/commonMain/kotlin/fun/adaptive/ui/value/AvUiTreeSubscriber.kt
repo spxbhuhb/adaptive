@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.value
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.value.AvValue
-import `fun`.adaptive.value.client.AvTreeSubscriber
+import `fun`.adaptive.value.remote.AvRemoteTreeSubscriber
 import `fun`.adaptive.value.model.AvTreeDef
 import kotlin.reflect.KClass
 
@@ -11,7 +11,7 @@ class AvUiTreeSubscriber<SPEC : Any>(
     backend: BackendAdapter,
     specClass: KClass<SPEC>,
     treeDef: AvTreeDef
-) : AvTreeSubscriber<SPEC, TreeItem<AvValue<SPEC>>>(
+) : AvRemoteTreeSubscriber<SPEC, TreeItem<AvValue<SPEC>>>(
     backend, specClass, treeDef
 ) {
 

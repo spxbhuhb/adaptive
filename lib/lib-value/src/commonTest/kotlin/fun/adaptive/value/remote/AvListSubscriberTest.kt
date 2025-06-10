@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.client
+package `fun`.adaptive.value.remote
 
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.AvValue
@@ -21,7 +21,7 @@ class AvListSubscriberTest {
         val spec1 = "first"
         val spec2 = "second"
 
-        val subscriber = AvListSubscriber(
+        val subscriber = AvRemoteListSubscriber(
             backend = clientBackend,
             specClass = String::class,
             avById(valueId1), avById(valueId2)
@@ -52,7 +52,7 @@ class AvListSubscriberTest {
         val stringSpec = "test"
         val intSpec = 42
 
-        val subscriber = AvListSubscriber(
+        val subscriber = AvRemoteListSubscriber(
             backend = clientBackend,
             specClass = String::class,
             avById(valueId)
@@ -86,7 +86,7 @@ class AvListSubscriberTest {
             map.values.sortedBy { it.spec }
         }
 
-        val subscriber = AvListSubscriber(
+        val subscriber = AvRemoteListSubscriber(
             backend = clientBackend,
             specClass = String::class,
             transform = transform,
@@ -122,7 +122,7 @@ class AvListSubscriberTest {
 
         val notificationCount = mutableListOf<Int>() // Track list sizes received
 
-        val subscriber = AvListSubscriber(
+        val subscriber = AvRemoteListSubscriber(
             backend = clientBackend,
             specClass = String::class,
             avById(valueId)
@@ -158,7 +158,7 @@ class AvListSubscriberTest {
             serverWorker.queueAdd(AvValue(valueId, spec = initialSpec))
         }
 
-        val subscriber = AvListSubscriber(
+        val subscriber = AvRemoteListSubscriber(
             backend = clientBackend,
             specClass = String::class,
             avById(valueId)

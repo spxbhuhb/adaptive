@@ -355,6 +355,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testWithDefault() {
         runTest("testData/box/foundation/call/withDefault.kt");
       }
+
+      @Test
+      @TestMetadata("withGeneric.kt")
+      public void testWithGeneric() {
+        runTest("testData/box/foundation/call/withGeneric.kt");
+      }
     }
 
     @Nested

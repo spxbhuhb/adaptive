@@ -4,8 +4,6 @@
 
 package `fun`.adaptive.adat
 
-import `fun`.adaptive.adat.api.isValid
-
 class InvalidAdatException : RuntimeException()
 
 fun ensureValid(data: AdatClass) {

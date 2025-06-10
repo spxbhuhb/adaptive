@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.client
+package `fun`.adaptive.value.remote
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.unsupported
@@ -12,12 +12,12 @@ import kotlin.reflect.KClass
  * Subscribe a list of [AvItem<V>], notify the listener when the list or any item
  * in the list changes.
  */
-open class AvListSubscriber<SPEC : Any>(
+open class AvRemoteListSubscriber<SPEC : Any>(
     subscribeFun: AvSubscribeFun,
     backend: BackendAdapter,
     val specClass: KClass<SPEC>,
     val transform: ((Map<AvValueId, AvValue<SPEC>>) -> List<AvValue<SPEC>>)? = null
-) : AvValueSubscriber<List<AvValue<SPEC>>>(subscribeFun, backend) {
+) : AvAbstractRemoteSubscriber<List<AvValue<SPEC>>>(subscribeFun, backend) {
 
     constructor(
         backend: BackendAdapter,

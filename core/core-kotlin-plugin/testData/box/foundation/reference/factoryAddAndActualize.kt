@@ -26,7 +26,7 @@ fun box() : String {
 
     adaptive(adapter) {
         it.fragmentFactory += arrayOf(Factory)
-        actualize("test:a")
+        actualize("test:a", null)
     }
 
     return adapter.assert(listOf(
@@ -36,9 +36,9 @@ fun box() : String {
         TraceEvent("<root>", 2, "before-Patch-Internal", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
         TraceEvent("<root>", 2, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null]"),
         TraceEvent("FoundationActualize", 3, "before-Create", ""),
-        TraceEvent("FoundationActualize", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null, null]"),
-        TraceEvent("FoundationActualize", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, test:a, null]"),
-        TraceEvent("FoundationActualize", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, test:a, null]"),
+        TraceEvent("FoundationActualize", 3, "before-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, null, null, null]"),
+        TraceEvent("FoundationActualize", 3, "after-Patch-External", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, test:a, null, null]"),
+        TraceEvent("FoundationActualize", 3, "before-Patch-Internal", "createMask: 0x00000000 thisMask: 0xffffffff state: [null, test:a, null, null]"),
         TraceEvent("AdaptiveA", 4, "before-Create", ""),
         TraceEvent("AdaptiveA", 4, "before-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
         TraceEvent("AdaptiveA", 4, "after-Patch-External", "createMask: 0xffffffff thisMask: 0xffffffff state: [null]"),
@@ -69,7 +69,7 @@ fun box() : String {
         TraceEvent("AdaptiveT0", 6, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null]"),
         TraceEvent("AdaptiveSequence", 5, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null,[1]]"),
         TraceEvent("AdaptiveA", 4, "after-Patch-Internal", "createMask: 0xffffffff thisMask: 0x00000000 state: [null]"),
-        TraceEvent("FoundationActualize", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null, test:a, null]"),
+        TraceEvent("FoundationActualize", 3, "after-Patch-Internal", "createMask: 0x00000000 thisMask: 0x00000000 state: [null, test:a, null, null]"),
         TraceEvent("FoundationActualize", 3, "after-Create", ""),
         TraceEvent("<root>", 2, "after-Create", ""),
         TraceEvent("<root>", 2, "before-Mount", ""),

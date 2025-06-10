@@ -4,8 +4,6 @@
 
 package `fun`.adaptive.adat
 
-import `fun`.adaptive.adat.api.isValid
-import `fun`.adaptive.adat.api.validate
 import kotlin.test.Test
 import kotlin.test.assertTrue
 

@@ -1,7 +1,7 @@
 package `fun`.adaptive.app.ui.common.admin.account
 
 import `fun`.adaptive.app.ui.common.user.account.AccountEditorData
-import `fun`.adaptive.app.ui.common.contentPaneHeader
+import `fun`.adaptive.ui.mpw.fragments.contentPaneHeader
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment

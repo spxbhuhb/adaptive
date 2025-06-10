@@ -1,6 +1,6 @@
 package `fun`.adaptive.app.ui.common.user.account
 
-import `fun`.adaptive.app.ui.common.contentPaneHeader
+import `fun`.adaptive.ui.mpw.fragments.contentPaneHeader
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.value.valueFrom

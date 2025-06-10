@@ -23,7 +23,7 @@ fun contentPaneGroup(
 fun singularGroup(group: ContentPaneGroupViewBackend) {
     val paneBackend = group.panes.first()
     localContext(paneBackend) {
-        actualize(paneBackend.paneDef.fragmentKey)
+        actualize(paneBackend.paneDef.fragmentKey, null)
     }
 }
 

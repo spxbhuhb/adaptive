@@ -45,7 +45,7 @@ class JvmServerApplication(
                 backendAdapterInit(adapter)
 
                 localContext(this@JvmServerApplication) {
-                    actualize(backendMainKey)
+                    actualize(backendMainKey, null)
                 }
             }
 

@@ -5,14 +5,13 @@
 package `fun`.adaptive.adat
 
 import `fun`.adaptive.adat.api.storeOrNull
+import `fun`.adaptive.adat.descriptor.InstanceValidationResult
 import `fun`.adaptive.adat.visitor.AdatClassTransformer
 import `fun`.adaptive.adat.visitor.AdatClassVisitor
 import `fun`.adaptive.foundation.binding.AdaptivePropertyProvider
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.utility.pluginGenerated
-import `fun`.adaptive.wireformat.json.elements.JsonElement
-import `fun`.adaptive.wireformat.json.visitor.JsonTransformer
 
 interface AdatClass : AdaptivePropertyProvider {
 
@@ -129,6 +128,10 @@ interface AdatClass : AdaptivePropertyProvider {
         throw IndexOutOfBoundsException("index $index is invalid in ${getMetadata().name}")
     }
 
+    // --------------------------------------------------------------------------------
+    // Visit and transform
+    // --------------------------------------------------------------------------------
+
     fun <D> accept(visitor: AdatClassVisitor<Unit, D>, data: D) {
         visitor.visitInstance(this, data)
     }
@@ -150,5 +153,70 @@ interface AdatClass : AdaptivePropertyProvider {
         }
 
         return adatCompanion.newInstance(newValues) as AdatClass
+    }
+
+    // --------------------------------------------------------------------------------
+    // Validation
+    // --------------------------------------------------------------------------------
+
+    fun validate(): InstanceValidationResult {
+
+        val result = InstanceValidationResult()
+
+        for (descriptorSet in adatCompanion.adatDescriptors) {
+            val value = genGetValue(descriptorSet.property.index)
+            for (descriptor in descriptorSet.descriptors) {
+                descriptor.validate(this, value, descriptorSet.property, result)
+            }
+        }
+
+        return result
+    }
+
+    /**
+     * Check if the Adat instance is invalid.
+     *
+     * @return  true if the instance is invalid, false otherwise
+     */
+    fun isNotValid(): Boolean =
+        ! isValid()
+
+    /**
+     * Check if the Adat instance is valid.
+     *
+     * @return  true if the instance is valid, false otherwise
+     */
+    fun isValid(): Boolean {
+        adatContext?.validationResult?.isValid?.let { return it }
+        return validate().isValid
+    }
+
+    /**
+     * Check if the property selected by [name] has any validation errors.
+     *
+     * This call is meaningful only after the `validation` function of the
+     * Adat instance is called. Built-in producers such as `copyStore`, `autoInstance`
+     * and `autoList` call `validate` automatically when the data changes.
+     *
+     * @return  true if the data is valid, false otherwise
+     */
+    fun isValid(name: String): Boolean =
+        isValid(arrayOf(name))
+
+    /**
+     * Check if the property selected by [path] has any validation errors.
+     *
+     * This call is meaningful only after the `validation` function of the
+     * Adat instance is called. Built-in producers such as `copyStore`, `autoInstance`
+     * and `autoList` call `validate` automatically when the data changes.
+     *
+     * **TODO** Deep path support (AdatClass.isValid)
+     *
+     * @return  true if the data is valid, false otherwise
+     */
+    fun isValid(path: Array<String>): Boolean {
+        check(path.size == 1) { "only simple paths are supported" }
+        val result = adatContext?.validationResult?.failedConstraints?.filter { it.property?.name == path[0] }
+        return (result == null || result.isEmpty())
     }
 }

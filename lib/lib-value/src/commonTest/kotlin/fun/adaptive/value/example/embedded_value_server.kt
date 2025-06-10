@@ -32,7 +32,7 @@ fun persistenceExample() {
 //@example
 fun accessExample() {
     embeddedValueServer { }.apply {
-        serverWorker.queryByMarker("testMarker").forEach { println(it) }
+        serverWorker.get<String>("testMarker").forEach { println(it) }
     }
 }
 
@@ -49,7 +49,7 @@ fun testExample() = runTest {
     withEmbeddedValueServer {
         serverWorker.queueAdd(AvValue(markersOrNull = setOf("testMarker"), spec = "test"))
         waitForIdle(1.seconds)
-        serverWorker.queryByMarker("testMarker").forEach { println(it) }
+        serverWorker.get<String>("testMarker").forEach { println(it) }
     }
 
 }

@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.client
+package `fun`.adaptive.value.remote
 
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.utility.waitForReal
@@ -28,7 +28,7 @@ class AvSingleSubscriberTest {
             serverWorker.queueAdd(AvValue(valueId, spec = initialSpec))
         }
 
-        val subscriber = AvSingleSubscriber(
+        val subscriber = AvRemoteValueSubscriber(
             backend = clientBackend,
             specClass = String::class,
             condition = avById(valueId)
@@ -57,7 +57,7 @@ class AvSingleSubscriberTest {
         val intSpec = 42
 
         // Create a subscriber expecting String specs
-        val subscriber = AvSingleSubscriber(
+        val subscriber = AvRemoteValueSubscriber(
             backend = clientBackend,
             specClass = String::class,
             condition = avById(valueId)
@@ -94,7 +94,7 @@ class AvSingleSubscriberTest {
         
         val receivedValues = mutableListOf<String?>()
         
-        val subscriber = AvSingleSubscriber(
+        val subscriber = AvRemoteValueSubscriber(
             backend = clientBackend,
             specClass = String::class,
             condition = avById(valueId)

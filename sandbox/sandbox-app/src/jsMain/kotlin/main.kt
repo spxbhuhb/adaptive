@@ -3,25 +3,18 @@
  */
 
 import `fun`.adaptive.app.BasicBrowserClientApplication.Companion.basicBrowserClient
-import `fun`.adaptive.app.ui.common.contentPaneHeader
+import `fun`.adaptive.ui.mpw.fragments.contentPaneHeader
 import `fun`.adaptive.app.ws.SandBoxClientModule
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.FragmentTraceContext
-import `fun`.adaptive.foundation.adapter
-import `fun`.adaptive.foundation.api.localContext
-import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
-import `fun`.adaptive.graphics.canvas.api.canvas
-import `fun`.adaptive.graphics.canvas.api.draw
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.lib.util.log.CollectedLogData
 import `fun`.adaptive.lib.util.log.CollectedLogItem
 import `fun`.adaptive.lib.util.log.CollectingLogger
-import `fun`.adaptive.lib_app.generated.resources.lock
 import `fun`.adaptive.log.LoggerFactory
 import `fun`.adaptive.log.defaultLoggerFactory
 import `fun`.adaptive.log.getLogger
@@ -29,27 +22,20 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.sandbox.recipe.ui.input.select.Option
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.badge.badge
+import `fun`.adaptive.ui.badge.BadgeTheme
+import `fun`.adaptive.ui.badge.BadgeTheme.Companion.badgeThemeMap
 import `fun`.adaptive.ui.browser
-import `fun`.adaptive.ui.canvas.drawLoadingWireFrame
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.input.button.submitButton
-import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
-import `fun`.adaptive.ui.input.select.item.selectInputOptionIconAndText
-import `fun`.adaptive.ui.input.select.item.selectInputOptionText
 import `fun`.adaptive.ui.input.select.selectInputBackend
-import `fun`.adaptive.ui.input.select.selectInputList
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.loading.loading
-import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.AvValue
@@ -130,6 +116,11 @@ fun sandboxMain() {
             toIcon = { it.icon }
         }
 
+        badgeThemeMap += "success" to BadgeTheme.success
+        badgeThemeMap += "info" to BadgeTheme.info
+        badgeThemeMap += "warning" to BadgeTheme.warning
+        badgeThemeMap += "error" to BadgeTheme.error
+
         try {
             browser(
                 CanvasFragmentFactory,
@@ -170,8 +161,9 @@ fun sandboxMain() {
                 column {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } //.. backgrounds.friendlyOpaque
 
+
                     contentPaneHeader("Hello", uuid4<Any>(), AvValue(
-                        statusOrNull = setOf("online"),
+                        statusOrNull = setOf("success", "info", "warning", "error"),
                         markersOrNull = setOf("marker1", "marker2"),
                         spec = ""
                     )) { }

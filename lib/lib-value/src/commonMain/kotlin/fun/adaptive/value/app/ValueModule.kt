@@ -5,6 +5,7 @@ import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.value.AvRefListSpec
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.model.AvSeverity
 import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
@@ -20,6 +21,8 @@ abstract class ValueModule<FW : AbstractWorkspace, BW : AbstractWorkspace> : App
         + AvSubscribeCondition
         + AvValue
         + AvRefListSpec
+
+        + AvSeverity
     }
 
 }

@@ -65,7 +65,7 @@ abstract class BrowserApplication<WT : FrontendWorkspace> : ClientApplication<WT
                 backendAdapterInit(adapter)
 
                 localContext(this@BrowserApplication) {
-                    actualize(backendMainKey)
+                    actualize(backendMainKey, null)
                 }
             }
 
@@ -90,7 +90,7 @@ abstract class BrowserApplication<WT : FrontendWorkspace> : ClientApplication<WT
                 frontendAdapterInit(adapter)
 
                 localContext(this@BrowserApplication) {
-                    actualize(frontendMainKey, emptyInstructions, this@BrowserApplication)
+                    actualize(frontendMainKey, null, emptyInstructions, this@BrowserApplication)
                 }
 
             }.also {

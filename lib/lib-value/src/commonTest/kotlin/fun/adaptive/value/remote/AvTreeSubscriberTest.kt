@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.client
+package `fun`.adaptive.value.remote
 
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.AvRefListSpec
@@ -22,7 +22,7 @@ class AvTreeSubscriberTest {
         rootListMarker = null
     )
 
-    private lateinit var subscriber: TestTreeSubscriber
+    private lateinit var subscriber: TestRemoteTreeSubscriber
 
     @Test
     @JsName("shouldBuildTreeStructureFromValues")
@@ -34,7 +34,7 @@ class AvTreeSubscriberTest {
         val childListId = AvValueId()
 
         // Create subscriber
-        subscriber = TestTreeSubscriber(clientBackend, treeDef)
+        subscriber = TestRemoteTreeSubscriber(clientBackend, treeDef)
 
         // Add listener to verify updates
         var receivedItems = emptyList<TestTreeItem>()
@@ -93,7 +93,7 @@ class AvTreeSubscriberTest {
     fun `should update existing tree items`() = valueTest {
         val rootId = AvValueId()
 
-        subscriber = TestTreeSubscriber(clientBackend, treeDef)
+        subscriber = TestRemoteTreeSubscriber(clientBackend, treeDef)
 
         var receivedItems = emptyList<TestTreeItem>()
         subscriber.addListener { receivedItems = it }
@@ -134,7 +134,7 @@ class AvTreeSubscriberTest {
         val child1Id = AvValueId()
         val childListId = AvValueId()
 
-        subscriber = TestTreeSubscriber(clientBackend, treeDef)
+        subscriber = TestRemoteTreeSubscriber(clientBackend, treeDef)
 
         var receivedItems = emptyList<TestTreeItem>()
         subscriber.addListener { receivedItems = it }

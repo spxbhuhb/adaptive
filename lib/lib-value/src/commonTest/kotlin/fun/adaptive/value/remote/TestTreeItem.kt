@@ -1,4 +1,4 @@
-package `fun`.adaptive.value.client
+package `fun`.adaptive.value.remote
 
 // Simple tree item class for testing
 data class TestTreeItem(

@@ -4,14 +4,25 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
+import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.api.border
+import `fun`.adaptive.ui.generated.resources.error
+import `fun`.adaptive.ui.generated.resources.info
+import `fun`.adaptive.ui.generated.resources.success
+import `fun`.adaptive.ui.generated.resources.warning
+import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.textColors
+import `fun`.adaptive.value.AvStatus
 
-class BadgeTheme {
+class BadgeTheme(
+    backgroundAndBorder: Color,
+    iconFill: Color,
+    text: Color,
+    val iconResource: GraphicsResourceSet?
+) {
 
     val outerContainer = instructionsOf(
         height { 20.dp },
@@ -20,24 +31,24 @@ class BadgeTheme {
     val iconContainer = instructionsOf(
         size(20.dp),
         alignItems.center,
-        backgroundColor(colors.selectedSurfaceFocus),
+        backgroundColor(backgroundAndBorder),
         cornerTopLeftRadius(4.dp),
         cornerBottomLeftRadius(4.dp),
-        border(colors.selectedSurfaceFocus, right = 0.dp)
+        border(backgroundAndBorder, right = 0.dp)
     )
 
     val icon = instructionsOf(
         size(14.dp),
         svgWidth(14.dp),
         svgHeight(14.dp),
-        fill(colors.onSurface)
+        fill(iconFill)
     )
 
     val textContainer = instructionsOf(
         height { 20.dp },
         paddingHorizontal { 8.dp },
         alignSelf.center,
-        border(colors.selectedSurfaceFocus, left = 0.dp),
+        border(backgroundAndBorder, left = 0.dp),
         cornerTopRightRadius(4.dp),
         cornerBottomRightRadius(4.dp)
     )
@@ -47,11 +58,18 @@ class BadgeTheme {
         fontWeight { 400 },
         paddingTop { 2.dp },
         alignSelf.center,
-        textColors.onSurfaceVariant
+        textColor(text)
     )
 
     companion object {
-        val default = BadgeTheme()
+        val success = BadgeTheme(colors.successSurface, colors.onSuccessSurface, colors.onSurfaceVariant, Graphics.success)
+        val info = BadgeTheme(colors.selectedSurfaceFocus, colors.onSurface, colors.onSurfaceVariant, Graphics.info)
+        val warning = BadgeTheme(colors.warningSurface, colors.onWarningSurface, colors.onSurface, Graphics.warning)
+        val error = BadgeTheme(colors.failSurface, colors.onFailSurface, colors.onSurface, Graphics.error)
+
+        val default = info
+
+        val badgeThemeMap = mutableMapOf<AvStatus, BadgeTheme>()
     }
 
 }

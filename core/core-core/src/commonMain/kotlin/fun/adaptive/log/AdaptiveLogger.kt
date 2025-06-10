@@ -28,7 +28,7 @@ abstract class AdaptiveLogger {
     }
 
     fun fine(exception: Exception) {
-        if (level == LogLevel.Fine) rawFine(exception = exception)
+        if (level == LogLevel.Fine) rawFine(exception.message, exception)
     }
 
     fun fine(message: String? = null, exception: Exception? = null) {
@@ -50,7 +50,7 @@ abstract class AdaptiveLogger {
     }
 
     fun info(exception: Exception) {
-        if (level <= LogLevel.Info) rawInfo(exception = exception)
+        if (level <= LogLevel.Info) rawInfo(exception.message, exception)
     }
 
     fun info(message: String? = null, exception: Exception? = null) {
@@ -72,7 +72,7 @@ abstract class AdaptiveLogger {
     }
 
     fun warning(exception: Exception) {
-        if (level <= LogLevel.Warning) rawWarning(exception = exception)
+        if (level <= LogLevel.Warning) rawWarning(exception.message, exception)
     }
 
     fun warning(message: String, exception: Exception) {
@@ -102,7 +102,7 @@ abstract class AdaptiveLogger {
     }
 
     fun error(exception: Exception) {
-        if (level <= LogLevel.Error) rawError(exception = exception)
+        if (level <= LogLevel.Error) rawError(exception.message, exception)
     }
 
     fun error(message: String, exception: Exception) {

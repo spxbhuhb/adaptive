@@ -171,7 +171,7 @@ private fun mpPaneContent(pane: PaneViewBackend<*>) {
     box {
         maxSize
         localContext(pane) {
-            actualize(pane.paneDef.fragmentKey, emptyInstructions, pane)
+            actualize(pane.paneDef.fragmentKey, null, emptyInstructions, pane)
         }
     }
 }
