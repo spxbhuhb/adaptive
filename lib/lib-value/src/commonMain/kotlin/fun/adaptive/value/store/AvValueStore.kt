@@ -418,8 +418,13 @@ open class AvValueStore(
             }
         )
 
-        @Suppress("UNCHECKED_CAST")
-        return channel.tryReceive().getOrThrow() as T
+        val result = channel.tryReceive().getOrThrow()
+        if (result is Throwable) {
+            throw result
+        } else {
+            @Suppress("UNCHECKED_CAST")
+            return result as T
+        }
     }
 
     /**
