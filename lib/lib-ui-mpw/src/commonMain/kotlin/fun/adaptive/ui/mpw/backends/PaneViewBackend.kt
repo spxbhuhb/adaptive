@@ -2,6 +2,7 @@ package `fun`.adaptive.ui.mpw.backends
 
 import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.log.devNote
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.model.AbstractPaneAction
@@ -20,7 +21,10 @@ abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>() 
 
     abstract val workspace: MultiPaneWorkspace
 
-    var name = ""
+    // TODO pane name, icon and tooltip belongs to the pane def, maybe the pane def itself should be changed
+    var name : String? = null
+    var icon : GraphicsResourceSet? = null
+    var tooltip : String? = null
 
     open fun accepts(item: Any, modifiers: Set<EventModifier>): Boolean {
         return false

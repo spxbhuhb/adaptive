@@ -51,9 +51,9 @@ class ContentPaneGroupViewBackend(
                 TabPane(
                     pane.uuid.cast(),
                     pane.paneDef.fragmentKey,
-                    pane.name,
-                    pane.paneDef.icon,
-                    pane.paneDef.tooltip,
+                    pane.name ?: pane.paneDef.name,
+                    pane.icon ?: pane.paneDef.icon,
+                    pane.tooltip ?: pane.paneDef.tooltip,
                     closeable = true,
                     pane.getPaneActions().mapNotNull { wsAction ->
                         // TODO context menu actions for content panes
