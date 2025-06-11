@@ -5,8 +5,8 @@ package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
 import `fun`.adaptive.kotlin.common.property
+import `fun`.adaptive.kotlin.common.propertyGetter
 import `fun`.adaptive.kotlin.foundation.ClassIds
-import `fun`.adaptive.kotlin.foundation.FqNames
 import `fun`.adaptive.kotlin.foundation.Indices
 import `fun`.adaptive.kotlin.foundation.Names
 import `fun`.adaptive.kotlin.foundation.Strings
@@ -26,20 +26,16 @@ import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
-import org.jetbrains.kotlin.ir.util.fqNameWhenAvailable
 import org.jetbrains.kotlin.ir.util.hasAnnotation
-import org.jetbrains.kotlin.ir.util.isKFunction
 import org.jetbrains.kotlin.ir.util.parents
-import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
-import kotlin.math.exp
 
 @OptIn(UnsafeDuringIrConstructionAPI::class)
 class StateAccessTransform(
     private val irBuilder: ClassBoundIrBuilder,
     private val closure: ArmClosure,
     private val getVariableFunction: IrSimpleFunctionSymbol,
-    private val newParent: IrFunction?,
+    private val newParent: IrFunction?, // the patch function
     private val irGetFragment: () -> IrExpression
 ) : IrElementTransformerVoidWithContext(), AbstractIrBuilder {
 
@@ -129,20 +125,20 @@ class StateAccessTransform(
     fun transformHelper(expression: IrCall) =
         when (expression.symbol.owner.name.identifier) {
             Strings.HELPER_ADAPTER -> getPropertyValue(Names.ADAPTER)
-            Strings.HELPER_FRAGMENT -> irGetFragment()
-            Strings.HELPER_THIS_STATE -> irGetFragment()
+            Strings.HELPER_FRAGMENT -> irGet(newParent?.dispatchReceiverParameter!!)
             Strings.HELPER_INSTRUCTIONS -> getInstructions()
             else -> throw IllegalStateException("unknown helper function: ${expression.symbol}")
         }
 
 
     fun getPropertyValue(name: Name) =
-        irBuilder.irGetValue(irBuilder.irClass.property(name), irGetFragment())
+        irBuilder.irGetValue(irBuilder.irClass.property(name), irGet(newParent?.dispatchReceiverParameter!!))
 
     fun getInstructions() : IrExpression {
-        val instructions = closure.firstOrNull { it.isInstructions }
-        checkNotNull(instructions) { "no instructions declared for the fragment: ${irBuilder.irClass.fqNameWhenAvailable}" }
-        return getStateVariable(instructions)
+        return irCall(
+            irBuilder.irClass.propertyGetter { Strings.INSTRUCTIONS },
+            irGet(newParent?.dispatchReceiverParameter!!)
+        )
     }
 
     override fun visitDeclaration(declaration: IrDeclarationBase): IrStatement {

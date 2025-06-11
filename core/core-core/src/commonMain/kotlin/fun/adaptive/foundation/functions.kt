@@ -16,10 +16,6 @@ fun fragment(): AdaptiveFragment {
     replacedByPlugin("gets the fragment")
 }
 
-fun <T : AdaptiveTransformInterface> thisState(): T {
-    replacedByPlugin("gets the fragment as a transform interface")
-}
-
 @JsName("getInstructions")
 fun instructions() : AdaptiveInstructionGroup {
     replacedByPlugin("gets the instructions of the declaring fragment")

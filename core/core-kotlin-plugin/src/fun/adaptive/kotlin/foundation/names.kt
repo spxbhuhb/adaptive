@@ -60,7 +60,6 @@ object Strings {
 
     const val HELPER_ADAPTER = "adapter"
     const val HELPER_FRAGMENT = "fragment"
-    const val HELPER_THIS_STATE = "thisState"
     const val HELPER_INSTRUCTIONS = "instructions"
 
     const val ADAPTIVE_EXPECT = "AdaptiveExpect"
@@ -158,7 +157,6 @@ object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
 object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val HELPER_FUNCTION_ADAPTER = Strings.HELPER_ADAPTER.callableId()
     val HELPER_FUNCTION_FRAGMENT = Strings.HELPER_FRAGMENT.callableId()
-    val HELPER_FUNCTION_THIS_STATE = Strings.HELPER_THIS_STATE.callableId()
     val MANUAL_IMPLEMENTATION = Strings.MANUAL_IMPLEMENTATION.callableId()
 
     private val INSTRUCTIONS = FqName("fun.adaptive.foundation.instruction")

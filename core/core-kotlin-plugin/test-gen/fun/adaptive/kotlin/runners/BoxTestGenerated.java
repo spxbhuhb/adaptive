@@ -457,12 +457,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
       public void testFragment() {
         runTest("testData/box/foundation/helpers/fragment.kt");
       }
-
-      @Test
-      @TestMetadata("thisState.kt")
-      public void testThisState() {
-        runTest("testData/box/foundation/helpers/thisState.kt");
-      }
     }
 
     @Nested
@@ -580,6 +574,12 @@ public class BoxTestGenerated extends AbstractBoxTest {
       @TestMetadata("passthrough.kt")
       public void testPassthrough() {
         runTest("testData/box/foundation/instruction/passthrough.kt");
+      }
+
+      @Test
+      @TestMetadata("passthroughNoInstructions.kt")
+      public void testPassthroughNoInstructions() {
+        runTest("testData/box/foundation/instruction/passthroughNoInstructions.kt");
       }
 
       @Test

@@ -95,7 +95,6 @@ class FoundationPluginContext(
     val helperFunctions = listOf(
         irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_ADAPTER).single(),
         irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_FRAGMENT).single(),
-        irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_THIS_STATE).single(),
         irContext.referenceFunctions(CallableIds.HELPER_FUNCTION_INSTRUCTIONS).single()
     )
 

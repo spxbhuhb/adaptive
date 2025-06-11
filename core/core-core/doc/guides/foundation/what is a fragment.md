@@ -138,6 +138,16 @@ fun callHigherOrder() {
 }
 ```
 
+## Accessing the fragment
+
+These functions help access the fragment from the [original function](def://):
+
+- [adapter](function://fun.adaptive.foundation.functions) - gets the adapter of the fragment
+- [fragment](function://fun.adaptive.foundation.functions) - gets the fragment itself
+- [instructions](function://fun.adaptive.foundation.functions) - gets the instructions of the fragment
+
+All these functions return with the data of the [declaring fragment](def://).
+ 
 ## State Dependency and Independence
 
 By default, all state variables are reactive and are updated when a variable
