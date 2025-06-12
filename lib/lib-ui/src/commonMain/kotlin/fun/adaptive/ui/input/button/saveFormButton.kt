@@ -4,6 +4,7 @@ import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.onClick
@@ -28,6 +29,6 @@ fun <T : AdatClass> saveFormButton(
         } else {
             saveFun(form.inputValue)
         }
-    }
+    } .. instructions()
     return fragment()
 }

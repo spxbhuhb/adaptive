@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.focus
+import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onKeydown
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
@@ -18,7 +19,8 @@ fun button(
     label: String? = null,
     icon: GraphicsResourceSet? = null,
     viewBackend: ButtonViewBackend? = null,
-    theme: ButtonTheme? = null
+    theme: ButtonTheme? = null,
+    onClickFun: (() -> Unit)? = null
 ): AdaptiveFragment {
     val focus = focus()
 
@@ -36,7 +38,7 @@ fun button(
         AdaptiveInstructionGroup(i.filter { it is AlignSelf })
 
         row(observed.innerContainerInstructions(focus)) {
-            AdaptiveInstructionGroup(i.filter { it !is AlignSelf })
+            AdaptiveInstructionGroup(i.filter { it !is AlignSelf }).let { if (onClickFun != null) it .. onClick { onClickFun.invoke() } else it }
 
             onKeydown { observed.onKeydown(it) }
             if (icon != null) svg(icon) .. observed.iconThemeInstructions(focus)

@@ -19,7 +19,7 @@ fun buttonDangerExample(): AdaptiveFragment {
 
         column {
             width { 240.dp }
-            dangerButton("Danger", Graphics.lock) .. onClick { failNotification("Danger submit clicked!") }
+            dangerButton("Danger", Graphics.lock) { failNotification("Danger submit clicked!") }
         }
 
         markdown(

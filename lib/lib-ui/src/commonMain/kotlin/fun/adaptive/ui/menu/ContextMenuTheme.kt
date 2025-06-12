@@ -6,6 +6,7 @@ import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.layout.SizeStrategy
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.background
 import `fun`.adaptive.ui.theme.backgrounds
@@ -21,7 +22,9 @@ open class ContextMenuTheme(
         focusFirst,
         tabIndex { 0 },
         alignItems.startCenter,
-        width { 300.dp },
+        fillStrategy.resizeToMax,
+        SizeStrategy(minWidth = 200.dp),
+        //width { 50.dp },
         padding { 6.dp },
         cornerRadius { 8.dp },
         border(colors.onSurface, 0.5.dp),
@@ -39,7 +42,7 @@ open class ContextMenuTheme(
         height(itemHeight),
         alignItems.startCenter,
         spaceBetween,
-        maxWidth,
+        //maxWidth,
         cornerRadius { 4.dp },
         paddingHorizontal { 6.dp }
     )
@@ -67,7 +70,7 @@ open class ContextMenuTheme(
     )
 
     open val separator = instructionsOf(
-        maxWidth,
+        //maxWidth,
         margin(5.5.dp, 5.dp, 6.dp, 5.dp),
         borderBottom(colors.outline, 0.5.dp),
     )

@@ -88,8 +88,8 @@ fun buttonPlaygroundResult(config: ButtonPlaygroundConfig) {
     val backend = buttonBackend { disabled = config.disabled }
 
     when (config.variant) {
-        "button" -> button(config.label, icon, backend) .. width .. onClick { devInfo("button clicked") }
-        "submitButton" -> submitButton(config.label, icon, backend) .. width .. onClick { devInfo("submitButton clicked") }
-        "dangerButton" -> dangerButton(config.label, icon, backend) .. width .. onClick { devInfo("dangerButton clicked") }
+        "button" -> button(config.label, icon, backend) { devInfo("button clicked") } .. width
+        "submitButton" -> submitButton(config.label, icon, backend) { devInfo("submitButton clicked") } .. width
+        "dangerButton" -> dangerButton(config.label, icon, backend) { devInfo("dangerButton clicked") } .. width
     }
 }

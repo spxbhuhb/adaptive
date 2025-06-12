@@ -10,8 +10,9 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 fun dangerButton(
     label: String? = null,
     icon: GraphicsResourceSet? = null,
-    viewBackend: ButtonViewBackend? = null
+    viewBackend: ButtonViewBackend? = null,
+    onClickFun: (() -> Unit)? = null
 ): AdaptiveFragment {
-    button(label, icon, (viewBackend ?: ButtonViewBackend(label)).also { it.isDanger = true }) .. instructions()
+    button(label, icon, (viewBackend ?: ButtonViewBackend(label)).also { it.isDanger = true }, onClickFun = onClickFun) .. instructions()
     return fragment()
 }

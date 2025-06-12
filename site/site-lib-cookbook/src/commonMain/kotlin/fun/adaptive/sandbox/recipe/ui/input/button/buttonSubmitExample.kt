@@ -17,7 +17,7 @@ fun buttonSubmitExample(): AdaptiveFragment {
 
         column {
             width { 240.dp }
-            submitButton("Submit") .. onClick { infoNotification("Submit clicked!") } .. width { 160.dp }
+            submitButton("Submit") { infoNotification("Submit clicked!") } .. width { 160.dp }
         }
 
         markdown(

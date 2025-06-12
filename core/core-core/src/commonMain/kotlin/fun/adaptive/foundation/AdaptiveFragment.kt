@@ -19,7 +19,6 @@ import `fun`.adaptive.foundation.producer.AdaptiveProducer
 import `fun`.adaptive.foundation.visitor.FragmentTransformer
 import `fun`.adaptive.foundation.visitor.FragmentVisitor
 import `fun`.adaptive.utility.PluginReference
-import `fun`.adaptive.utility.debug
 import `fun`.adaptive.wireformat.asPrettyJson
 import kotlin.jvm.JvmStatic
 import kotlin.properties.ReadWriteProperty
@@ -48,7 +47,7 @@ abstract class AdaptiveFragment(
     val id: Long = adapter.newId()
 
     val name : String?
-        get() = instructions.firstInstanceOfOrNull<Name>()?.name
+        get() = (state[0] as? AdaptiveInstructionGroup)?.firstInstanceOfOrNull<Name>()?.name
 
     var flags: Int = 0
 
@@ -111,7 +110,7 @@ abstract class AdaptiveFragment(
     var lifecycleBound: IntArray? = null
 
     val instructions: AdaptiveInstructionGroup
-        get() = get(0) ?: emptyInstructions
+        get() = (state[0] as? AdaptiveInstructionGroup) ?: emptyInstructions
 
     /**
      * True when this is the initial create call of the fragment.

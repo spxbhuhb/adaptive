@@ -22,8 +22,10 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.sandbox.recipe.ui.input.button.buttonPlayground
 import `fun`.adaptive.sandbox.recipe.ui.input.select.Option
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
+import `fun`.adaptive.sandbox.recipe.ui.menu.contextMenuPlayground
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
@@ -159,7 +161,12 @@ fun sandboxMain() {
 //                }
 //            }
                 column {
-                    maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } //.. backgrounds.friendlyOpaque
+                    maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. verticalScroll //.. backgrounds.friendlyOpaque
+
+
+                    contextMenuPlayground()
+
+                    buttonPlayground()
 
 
                     contentPaneHeader("Hello", uuid4<Any>(), AvValue(

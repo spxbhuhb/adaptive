@@ -126,7 +126,7 @@ val button = instructionsOf(
 )
 
 @Adaptive
-fun button(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+private fun button(label: String, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     row(button, instructions()) {
         text(label, textColor(white), textMedium, noSelect)
     }

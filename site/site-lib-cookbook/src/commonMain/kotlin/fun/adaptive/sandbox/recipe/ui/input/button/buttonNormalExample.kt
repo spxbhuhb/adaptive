@@ -17,7 +17,7 @@ fun buttonNormalExample(): AdaptiveFragment {
 
         column {
             width { 240.dp }
-            button("Normal") .. onClick { infoNotification("Normal button clicked!") }
+            button("Normal") { infoNotification("Normal button clicked!") }
         }
 
         markdown(
