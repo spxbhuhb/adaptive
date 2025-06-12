@@ -129,8 +129,16 @@ class AvValue<T>(
         return copy(statusOrNull = mutableStatus().also { it += status })
     }
 
+    fun withStatus(vararg statuses : AvStatus): AvValue<T> {
+        return copy(statusOrNull = mutableStatus().also { it += statuses })
+    }
+
     fun withoutStatus(status: AvStatus): AvValue<T> {
         return copy(statusOrNull = mutableStatus().also { it -= status })
+    }
+
+    fun withoutStatus(vararg statuses: AvStatus): AvValue<T> {
+        return copy(statusOrNull = mutableStatus().also { it += statuses })
     }
 
     // --------------------------------------------------------------------------------
@@ -156,8 +164,16 @@ class AvValue<T>(
         return copy(markersOrNull = mutableMarkers().also { it += marker })
     }
 
+    fun withMarker(vararg markers : AvMarker): AvValue<T> {
+        return copy(markersOrNull = mutableMarkers().also { it += markers })
+    }
+
     fun withoutMarker(marker : AvMarker): AvValue<T> {
         return copy(markersOrNull = mutableMarkers().also { it -= marker })
+    }
+
+    fun withoutMarker(vararg markers : AvMarker): AvValue<T> {
+        return copy(markersOrNull = mutableMarkers().also { it -= markers })
     }
 
     // --------------------------------------------------------------------------------
