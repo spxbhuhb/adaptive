@@ -18,12 +18,14 @@ fun AbstractAuiFragment<*>.computeFinal(proposal : SizingProposal, itemsWidth: D
     val strategy = layout?.sizeStrategy
 
     val unconstrainedInnerWidth = when {
+        strategy?.horizontalBase == SizeBase.Larger -> max(proposal.containerWidth - data.surroundingHorizontal, itemsWidth)
         strategy?.horizontalBase == SizeBase.Container -> proposal.containerWidth - data.surroundingHorizontal
         layout?.instructedWidth != null -> layout.instructedWidth !! - data.surroundingHorizontal
         else -> itemsWidth
     }
 
     val unconstrainedInnerHeight = when {
+        strategy?.verticalBase == SizeBase.Larger -> max(proposal.containerHeight - data.surroundingVertical, itemsHeight)
         strategy?.verticalBase == SizeBase.Container -> proposal.containerHeight - data.surroundingVertical
         layout?.instructedHeight != null -> layout.instructedHeight !! - data.surroundingVertical
         else -> itemsHeight
@@ -56,6 +58,8 @@ fun AbstractAuiFragment<*>.computeFinal(proposal : SizingProposal, itemsWidth: D
     data.finalHeight = innerHeight + data.surroundingVertical
 
     data.sizingProposal = proposal
+
+    traceLayoutFinal()
 }
 
 val AbstractAuiFragment<*>.horizontalAlignment: Alignment?

@@ -6,5 +6,6 @@ package `fun`.adaptive.ui.instruction.layout
 
 enum class SizeBase {
     Container,
-    Content
+    Content,
+    Larger
 }

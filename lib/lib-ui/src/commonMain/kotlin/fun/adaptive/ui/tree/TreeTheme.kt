@@ -10,6 +10,8 @@ import `fun`.adaptive.ui.generated.resources.arrow_drop_down
 import `fun`.adaptive.ui.generated.resources.arrow_right
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.layout.SizeBase
+import `fun`.adaptive.ui.instruction.layout.SizeStrategy
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.background
 import `fun`.adaptive.ui.theme.foreground
@@ -21,7 +23,8 @@ open class TreeTheme(
 ) {
     open val container = instructionsOf(
         tabIndex { 0 },
-        alignItems.startCenter
+        alignItems.startCenter,
+        fillStrategy.resizeToMax,
     )
 
     open val icon = instructionsOf(
@@ -33,7 +36,8 @@ open class TreeTheme(
     open val item = instructionsOf(
         height(itemHeight),
         alignItems.startCenter,
-        cornerRadius { 4.dp }
+        cornerRadius { 4.dp },
+        SizeStrategy(horizontalBase = SizeBase.Larger),
     )
 
     open val label = instructionsOf(

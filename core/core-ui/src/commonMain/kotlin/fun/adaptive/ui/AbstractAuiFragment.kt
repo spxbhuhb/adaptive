@@ -322,26 +322,31 @@ abstract class AbstractAuiFragment<RT>(
     val DPixel.pixelValue: Double
         get() = uiAdapter.toPx(this)
 
-    inline fun traceLayoutCompute(proposal: SizingProposal) {
+    fun traceLayoutFinal() {
+//        if (firstContextOrNull<LayoutTraceContext>() != null) {
+//            println("[ ${name ?: this}-FINAL ] ${renderData.finalWidth} x ${renderData.finalHeight}")
+//        }
+    }
+
+    fun traceLayoutCompute(proposal: SizingProposal) {
 //        if (firstContextOrNull<LayoutTraceContext>() != null) {
 //            println("[ ${name ?: this}-COMPUTE ]  parent: ${renderData.layoutFragment}  proposal: $proposal")
 //        }
     }
 
-    inline fun traceLayoutResult(proposal: SizingProposal) {
+    fun traceLayoutResult(proposal: SizingProposal) {
 //        if (firstContextOrNull<LayoutTraceContext>() != null) {
-//            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  proposal: $proposal")
+//            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  ${renderData.layout} final: ${renderData.finalWidth}x${renderData.finalHeight}")
 //        }
     }
 
-    inline fun traceLayoutUpdateSelf() {
+    fun traceLayoutUpdateSelf() {
 //        if (firstContextOrNull<LayoutTraceContext>() != null) {
 //            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  proposal: ${renderData.sizingProposal}")
 //        }
     }
 
-
-    inline fun traceLayoutUpdateContainer() {
+    fun traceLayoutUpdateContainer() {
 //        if (firstContextOrNull<LayoutTraceContext>() != null) {
 //            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  proposal: ${renderData.sizingProposal}")
 //        }

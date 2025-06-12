@@ -5,13 +5,11 @@
 package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.api.firstContextOrNull
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.api.fillStrategy
 import `fun`.adaptive.ui.instruction.layout.Alignment
 import `fun`.adaptive.ui.instruction.layout.SpaceDistribution
-import `fun`.adaptive.ui.testing.LayoutTraceContext
 
 /**
  * Base class for stack which do not wrap: row, column.
@@ -55,8 +53,7 @@ abstract class AbstractStack<RT, CRT : RT>(
     abstract fun needsResizeToMax(
         innerWidth: Double,
         innerHeight: Double,
-        proposedWidth: Double,
-        proposedHeight: Double
+        proposal: SizingProposal
     ): Boolean
 
     abstract fun resizeToMax(
@@ -109,9 +106,9 @@ abstract class AbstractStack<RT, CRT : RT>(
 
         // ----  resize items if requested  --------------------
 
-//        if (fill.resizeToMax && needsResizeToMax(innerWidth, innerHeight, proposal)) {
-//            resizeToMax(innerWidth, innerHeight, proposedWidth, proposedHeight, items)
-//        }
+        if (fill.resizeToMax && needsResizeToMax(innerWidth, innerHeight, proposal)) {
+            resizeToMax(innerWidth, innerHeight, items)
+        }
 
         // ---- calculate starting offset and gap based on instructions  --------------
 

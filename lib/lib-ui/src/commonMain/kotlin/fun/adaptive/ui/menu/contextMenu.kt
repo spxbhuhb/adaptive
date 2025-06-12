@@ -20,9 +20,7 @@ fun <T> contextMenu(
 
     column(theme.container, instructions()) {
         for (item in items) {
-            column {
-                node(item, selectedFun, theme)
-            }
+            node(item, selectedFun, theme)
         }
     }
 

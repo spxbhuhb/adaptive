@@ -52,8 +52,8 @@ abstract class AbstractColumn<RT, CRT : RT>(
     override fun crossAxisSize(innerWidth: Double, innerHeight: Double): Double =
         innerWidth
 
-    override fun needsResizeToMax(innerWidth: Double, innerHeight: Double, proposedWidth: Double, proposedHeight: Double): Boolean {
-        return proposedWidth.isInfinite() || innerWidth > proposedWidth
+    override fun needsResizeToMax(innerWidth: Double, innerHeight: Double, proposal: SizingProposal): Boolean {
+        return proposal.maxWidth.isInfinite() || proposal.maxWidth != proposal.minWidth
     }
 
     override fun resizeToMax(innerWidth: Double, innerHeight: Double, items: List<AbstractAuiFragment<RT>>) {

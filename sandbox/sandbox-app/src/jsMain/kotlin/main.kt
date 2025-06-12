@@ -26,6 +26,7 @@ import `fun`.adaptive.sandbox.recipe.ui.input.button.buttonPlayground
 import `fun`.adaptive.sandbox.recipe.ui.input.select.Option
 import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
 import `fun`.adaptive.sandbox.recipe.ui.menu.contextMenuPlayground
+import `fun`.adaptive.sandbox.recipe.ui.tree.treePlayground
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
@@ -163,6 +164,8 @@ fun sandboxMain() {
                 column {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. verticalScroll //.. backgrounds.friendlyOpaque
 
+
+                    treePlayground()
 
                     contextMenuPlayground()
 
