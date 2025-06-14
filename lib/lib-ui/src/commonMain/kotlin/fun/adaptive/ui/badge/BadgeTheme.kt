@@ -66,6 +66,7 @@ class BadgeTheme(
         val info = BadgeTheme(colors.selectedSurfaceFocus, colors.onSurface, colors.onSurfaceVariant, Graphics.info)
         val warning = BadgeTheme(colors.warningSurface, colors.onWarningSurface, colors.onSurface, Graphics.warning)
         val error = BadgeTheme(colors.failSurface, colors.onFailSurface, colors.onSurface, Graphics.error)
+        val important = BadgeTheme(colors.importantSurface, colors.onImportantSurface, colors.onSurface, Graphics.info)
 
         val default = info
 

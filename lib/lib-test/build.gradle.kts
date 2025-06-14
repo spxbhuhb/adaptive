@@ -51,7 +51,6 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.adaptive.core.core)
-            implementation(libs.adaptive.lib.value)
             implementation(libs.adaptive.lib.util)
         }
 

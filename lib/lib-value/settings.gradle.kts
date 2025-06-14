@@ -24,4 +24,5 @@ dependencyResolutionManagement {
 }
 
 includeBuild("../../core/core-core")
+includeBuild("../../lib/lib-test")
 includeBuild("../../lib/lib-util")

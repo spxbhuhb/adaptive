@@ -19,7 +19,8 @@ import kotlinx.coroutines.launch
 
 class TestClientApplication(
     val traceServiceCalls: Boolean = false,
-    val server: TestServerApplication?
+    val server: TestServerApplication?,
+    builder: TestClientBuilder
 ) : AbstractClientApplication<AbstractWorkspace, BackendWorkspace>() {
 
     override lateinit var transport: ServiceCallTransport
@@ -34,6 +35,10 @@ class TestClientApplication(
 
     override val backendMainKey: FragmentKey
         get() = unsupported()
+
+    init {
+        this.modules += builder.modules
+    }
 
     fun start(
         transport: ServiceCallTransport = DirectServiceTransport(name = "client", wireFormatProvider = Json),
@@ -70,6 +75,7 @@ class TestClientApplication(
                 backendAdapterInit(adapter)
 
                 localContext(this@TestClientApplication) {
+
                     for (s in backendWorkspace.services) {
                         service { s }
                     }
@@ -96,7 +102,7 @@ class TestClientApplication(
 
             builder.buildFun()
 
-            return TestClientApplication(trace, server).also { if (start) it.start() }
+            return TestClientApplication(trace, server, builder).also { if (start) it.start() }
         }
 
     }

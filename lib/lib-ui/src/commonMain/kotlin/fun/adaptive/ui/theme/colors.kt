@@ -36,6 +36,9 @@ class ThemeColors {
     val failSurface = fail
     val onFailSurface = color(0xFFFFFFu)
 
+    val importantSurface = color(0x9e10eb)
+    val onImportantSurface = color(0xFFFFFF)
+
     val primary = color(0x5C84F0)
     val onPrimary = color(0xFFFFFF)
 

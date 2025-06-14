@@ -7,18 +7,18 @@ import `fun`.adaptive.runtime.BackendWorkspace
 
 class TestClientBuilder {
 
-    val backendModules = mutableListOf<AppModule<AbstractWorkspace, BackendWorkspace>>()
+    val modules = mutableListOf<AppModule<AbstractWorkspace, BackendWorkspace>>()
 
-    fun backendModule(moduleFun: () -> AppModule<AbstractWorkspace, BackendWorkspace>) {
-        backendModules += moduleFun()
+    fun module(moduleFun: () -> AppModule<AbstractWorkspace, BackendWorkspace>) {
+        modules += moduleFun()
     }
 
     fun service(implFun: () -> BackendFragmentImpl) {
-        backendModules += AdhocClientBackendModule(implFun)
+        modules += AdhocClientBackendModule(implFun)
     }
 
     fun worker(implFun: () -> BackendFragmentImpl) {
-        backendModules += AdhocClientBackendModule(implFun)
+        modules += AdhocClientBackendModule(implFun)
     }
 
 }

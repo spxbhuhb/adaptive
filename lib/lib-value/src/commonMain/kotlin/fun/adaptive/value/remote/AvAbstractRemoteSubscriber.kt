@@ -2,12 +2,16 @@ package `fun`.adaptive.value.remote
 
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.query.firstImpl
+import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.producer.AdaptiveProducer
+import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.general.AbstractObservable
 import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.operation.*
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.ensureActive
@@ -34,21 +38,35 @@ import kotlin.coroutines.coroutineContext
  */
 abstract class AvAbstractRemoteSubscriber<V>(
     val subscribeFun: AvSubscribeFun,
-    backend: BackendAdapter
-) : AbstractObservable<V>() {
+    backend: BackendAdapter,
+    override val binding: AdaptiveStateVariableBinding<V>? = null
+) : AbstractObservable<V>(), AdaptiveProducer<V>  {
 
     val remoteService = getService<AvValueApi>(backend.transport)
     val localWorker = backend.firstImpl<AvValueWorker>()
-    val scope = backend.scope
+
+    val frontendScope = binding?.let { CoroutineScope(it.targetFragment.adapter.dispatcher) }
+    val backendScope = backend.scope
 
     var job: Job? = null
 
+    override var latestValue: V?
+        get() = value
+        set(value) { unsupported() }
+
+    override fun start() {
+        onStart()
+        job = backendScope.launch { supervisorScope { run() } }
+    }
+
+    override fun stop() {
+        listeners.clear()
+        job?.cancel()
+    }
+
     override fun addListener(listener: ObservableListener<V>) {
         // TODO refactor the subscriber pattern so that add/remove/add listeners don't need to be synchronized'
-        if (job == null) {
-            onStart()
-            job = scope.launch { supervisorScope { run() } }
-        }
+        if (job == null) start()
         super.addListener(listener)
     }
 
@@ -86,7 +104,7 @@ abstract class AvAbstractRemoteSubscriber<V>(
             getLogger("AvAbstractRemoteSubscriber").error(ex)
         } finally {
             localWorker.unsubscribe(subscriptionId)
-            scope.launch { supervisorScope { unsubscribe(subscriptionId); job = null } }
+            backendScope.launch { supervisorScope { unsubscribe(subscriptionId); job = null } }
         }
     }
 
@@ -105,15 +123,16 @@ abstract class AvAbstractRemoteSubscriber<V>(
     /**
      * Called after an update is processed.
      */
-    open fun onCommit() = Unit
+    open fun onCommit() {
+        notifyListeners()
+        frontendScope?.launch {
+            setDirtyBatch()
+        }
+    }
 
     /**
      * Process an incoming value.
      */
     abstract fun process(value: AvValue<*>)
 
-    fun stop() {
-        listeners.clear()
-        job?.cancel()
-    }
 }

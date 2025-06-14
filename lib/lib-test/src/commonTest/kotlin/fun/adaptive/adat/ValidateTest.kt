@@ -1,7 +1,6 @@
 package `fun`.adaptive.adat
 
 import `fun`.adaptive.adat.api.properties
-import `fun`.adaptive.adat.api.validate
 import `fun`.adaptive.utility.UUID
 import kotlin.test.Test
 
