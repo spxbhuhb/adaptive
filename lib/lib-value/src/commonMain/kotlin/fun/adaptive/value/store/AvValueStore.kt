@@ -78,7 +78,7 @@ open class AvValueStore(
             }
 
             // this will be empty as there are no subscriptions
-            val commitSet = mutableSetOf<AvSubscription>()
+            val commitSet = AvCommitSet()
 
             values.forEach { (_, value) ->
                 index(null, value, commitSet)
@@ -94,7 +94,7 @@ open class AvValueStore(
         lock.use {
             if (trace) logOperation(operation)
 
-            val commitSet = mutableSetOf<AvSubscription>()
+            val commitSet = AvCommitSet()
 
             when (operation) {
                 is AvoAddOrUpdate -> addOrUpdate(operation, commitSet)
@@ -126,7 +126,7 @@ open class AvValueStore(
         }
 
 
-    internal fun add(operation: AvoAdd, commitSet: MutableSet<AvSubscription>) {
+    internal fun add(operation: AvoAdd, commitSet: AvCommitSet) {
         val value = operation.value
         val original = values[value.uuid]
 
@@ -138,7 +138,7 @@ open class AvValueStore(
         put(original, value, operation, commitSet, 1L)
     }
 
-    internal fun update(operation: AvoUpdate, commitSet: MutableSet<AvSubscription>) {
+    internal fun update(operation: AvoUpdate, commitSet: AvCommitSet) {
         val value = operation.value
         val original = values[value.uuid]
 
@@ -158,13 +158,13 @@ open class AvValueStore(
         put(original, value, operation, commitSet, original.revision + 1L)
     }
 
-    internal fun addOrUpdate(operation: AvoAddOrUpdate, commitSet: MutableSet<AvSubscription>) {
+    internal fun addOrUpdate(operation: AvoAddOrUpdate, commitSet: AvCommitSet) {
         val value = operation.value
         val original = values[value.uuid]
         put(original, value, operation, commitSet, original?.revision?.let { it + 1L } ?: 1L)
     }
 
-    internal fun transaction(transaction: AvoTransaction, commitSet: MutableSet<AvSubscription>) {
+    internal fun transaction(transaction: AvoTransaction, commitSet: AvCommitSet) {
         for (operation in transaction.operations) {
             when (operation) {
                 is AvoAddOrUpdate -> addOrUpdate(operation, commitSet)
@@ -179,7 +179,7 @@ open class AvValueStore(
         transaction.success()
     }
 
-    internal fun compute(operation: AvoComputation<*>, commitSet: MutableSet<AvSubscription>) {
+    internal fun compute(operation: AvoComputation<*>, commitSet: AvCommitSet) {
         try {
             val result = operation.computation?.invoke(AvComputeContext(this, commitSet))
             operation.success(result)
@@ -192,7 +192,7 @@ open class AvValueStore(
         original: AvValue<*>?,
         value: AvValue<*>,
         operation: AvValueOperation,
-        commitSet: MutableSet<AvSubscription>,
+        commitSet: AvCommitSet,
         revision: Long
     ) {
         val new = if (proxy) {
@@ -203,6 +203,7 @@ open class AvValueStore(
 
         values[value.uuid] = new
         persistence.saveValue(new)
+        commitSet.values[value.uuid] = new
         index(original, new, commitSet)
         notify(new, commitSet)
         operation.success()
@@ -212,7 +213,7 @@ open class AvValueStore(
     // Notification (for remove marker check indexing also)
     // --------------------------------------------------------------------------------
 
-    fun notify(value: AvValue<*>, commitSet: MutableSet<AvSubscription>) {
+    fun notify(value: AvValue<*>, commitSet: AvCommitSet) {
         valueIdSubscriptions[value.uuid]?.forEach {
             add(it, value, commitSet)
         }
@@ -220,32 +221,32 @@ open class AvValueStore(
         notifyByMarker(value, commitSet)
     }
 
-    fun notifyByMarker(value: AvValue<*>, commitSet: MutableSet<AvSubscription>) {
+    fun notifyByMarker(value: AvValue<*>, commitSet: AvCommitSet) {
         val markers = value.markersOrNull ?: return
         for (marker in markers) {
             notifyByMarker(marker, value, commitSet)
         }
     }
 
-    fun notifyByMarker(markerName: String, value: AvValue<*>, commitSet: MutableSet<AvSubscription>) {
+    fun notifyByMarker(markerName: String, value: AvValue<*>, commitSet: AvCommitSet) {
         markerSubscriptions[markerName]?.forEach {
             it.ifApplicable(value) { add(it.subscription, value, commitSet) }
         }
     }
 
-    private fun add(subscription: AvSubscription, value: AvValue<*>, commitSet: MutableSet<AvSubscription>) {
+    private fun add(subscription: AvSubscription, value: AvValue<*>, commitSet: AvCommitSet) {
         try {
             subscription.add(value)
-            commitSet.add(subscription)
+            commitSet.subscriptions.add(subscription)
         } catch (e: Exception) {
             logger.warning(e)
-            commitSet.remove(subscription)
+            commitSet.subscriptions.remove(subscription)
             unsubscribe(subscription.uuid)
         }
     }
 
-    fun commit(commitSet: MutableSet<AvSubscription>) {
-        commitSet.forEach { subscription ->
+    fun commit(commitSet: AvCommitSet) {
+        commitSet.subscriptions.forEach { subscription ->
             try {
                 subscription.commit()
             } catch (e: Exception) {
@@ -253,6 +254,7 @@ open class AvValueStore(
                 unsubscribe(subscription.uuid)
             }
         }
+
         commitSet.clear()
     }
 
@@ -260,7 +262,7 @@ open class AvValueStore(
     // Indexing and remove marker notification
     // --------------------------------------------------------------------------------
 
-    private fun index(original: AvValue<*>?, value: AvValue<*>, commitSet: MutableSet<AvSubscription>) {
+    private fun index(original: AvValue<*>?, value: AvValue<*>, commitSet: AvCommitSet) {
         index(
             value,
             original?.markers ?: emptySet(),
@@ -273,7 +275,7 @@ open class AvValueStore(
         value: AvValue<*>,
         originalMarkers: Set<String>,
         markers: Set<String>,
-        commitSet: MutableSet<AvSubscription>
+        commitSet: AvCommitSet
     ) {
         val valueId = value.uuid
 
@@ -296,14 +298,14 @@ open class AvValueStore(
         subscription: AvSubscription,
         valueId: AvValueId,
         marker: AvMarker,
-        commitSet: MutableSet<AvSubscription>
+        commitSet: AvCommitSet
     ) {
         try {
             subscription.markerRemove(valueId, marker)
-            commitSet.add(subscription)
+            commitSet.subscriptions.add(subscription)
         } catch (e: Exception) {
             logger.warning(e)
-            commitSet.remove(subscription)
+            commitSet.subscriptions.remove(subscription)
             unsubscribe(subscription.uuid)
         }
     }

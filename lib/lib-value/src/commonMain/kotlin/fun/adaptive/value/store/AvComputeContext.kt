@@ -11,7 +11,7 @@ import `fun`.adaptive.value.operation.AvoAddOrUpdate
 
 class AvComputeContext(
     val store: AvValueStore,
-    val commitSet: MutableSet<AvSubscription>
+    val commitSet: AvCommitSet
 ) {
 
     //---------------------------------------------------------------------------------
