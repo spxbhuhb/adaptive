@@ -9,10 +9,10 @@ import `fun`.adaptive.ui.instruction.event.*
 
 @Suppress("EqualsOrHashCode")
 class EventRenderData(
-    val adapter : DensityIndependentAdapter
+    val adapter: DensityIndependentAdapter
 ) {
     var onClick: OnClick? = null
-    var onClickListener : Any? = null
+    var onClickListener: Any? = null
 
     var additionalEvents: Boolean = false
     var pointerEvents: PointerEvents? = null
@@ -42,7 +42,7 @@ class EventRenderData(
     var onDropListener: Any? = null
 
     var onKeyDown: OnKeyDown? = null
-    var onKeyDownListener : Any? = null
+    var onKeyDownListener: Any? = null
 
     override fun equals(other: Any?): Boolean {
         if (other === this) return true
@@ -64,5 +64,21 @@ class EventRenderData(
         if (other.onKeyDown != this.onKeyDown) return false
 
         return true
+    }
+
+    fun copyListeners(previous: EventRenderData) {
+        onClickListener = previous.onClickListener
+        if (previous.additionalEvents) {
+            additionalEvents = true
+            onDoubleClickListener = previous.onDoubleClickListener
+            onMoveListener = previous.onMoveListener
+            onLeaveListener = previous.onLeaveListener
+            onPrimaryDownListener = previous.onPrimaryDownListener
+            onPrimaryUpListener = previous.onPrimaryUpListener
+            onSecondaryDownListener = previous.onSecondaryDownListener
+            onSecondaryUpListener = previous.onSecondaryUpListener
+            onDropListener = previous.onDropListener
+            onKeyDownListener = previous.onKeyDownListener
+        }
     }
 }

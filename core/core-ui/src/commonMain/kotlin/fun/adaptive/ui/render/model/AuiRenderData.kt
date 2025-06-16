@@ -30,14 +30,23 @@ open class AuiRenderData(
     ) : this(adapter) {
         instructionSets.forEach { it.applyTo(this) }
         computeSurrounding()
-        innerWidth = previous?.innerWidth
-        innerHeight = previous?.innerHeight
-        finalTop = previous?.finalTop ?: 0.0
-        finalLeft = previous?.finalLeft ?: 0.0
-        finalWidth = previous?.finalWidth ?: 0.0
-        finalHeight = previous?.finalHeight ?: 0.0
-        sizingProposal = previous?.sizingProposal
-        layoutFragment = previous?.layoutFragment
+
+        if (previous != null) {
+            innerWidth = previous.innerWidth
+            innerHeight = previous.innerHeight
+            finalTop = previous.finalTop
+            finalLeft = previous.finalLeft
+            finalWidth = previous.finalWidth
+            finalHeight = previous.finalHeight
+            sizingProposal = previous.sizingProposal
+            layoutFragment = previous.layoutFragment
+
+            val previousEvents = previous.event
+            if (previousEvents != null) {
+                val currentEvent = if (event == null) EventRenderData(adapter).also { event == it } else event!!
+                currentEvent.copyListeners(previousEvents)
+            }
+        }
     }
 
     override var tracePatterns: Array<out Regex> = emptyArray()

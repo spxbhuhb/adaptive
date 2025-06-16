@@ -8,12 +8,13 @@ import `fun`.adaptive.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.value.persistence.NoPersistence
 
 class ValueServerModule<FW : AbstractWorkspace, BW : BackendWorkspace>(
-    val persistence: AbstractValuePersistence = NoPersistence()
+    val persistence: AbstractValuePersistence = NoPersistence(),
+    val trace : Boolean = false
 ) : ValueModule<FW,BW>() {
 
     override fun backendWorkspaceInit(workspace: BW, session: Any?) = with(workspace) {
         + AvValueServerService()
-        + AvValueWorker(proxy = false, persistence)
+        + AvValueWorker(proxy = false, persistence, trace)
     }
 
 }

@@ -184,6 +184,7 @@ open class AvValueStore(
             val result = operation.computation?.invoke(AvComputeContext(this, commitSet))
             operation.success(result)
         } catch (e: Exception) {
+            logger.warning(e)
             operation.fail(e)
         }
     }

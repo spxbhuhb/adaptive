@@ -24,6 +24,7 @@ import `fun`.adaptive.ui.input.InputContext
 import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.loading.loading
 import `fun`.adaptive.ui.mpw.MultiPaneTheme
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
@@ -33,7 +34,7 @@ import `fun`.adaptive.value.AvValue
 fun roleManager(): AdaptiveFragment {
 
     val viewBackend = RoleManagerViewBackend(fragment())
-    val roles = valueFrom { viewBackend.roles }
+    val rolesOrNull = valueFrom { viewBackend.roles }
 
     val filterBackend = valueFrom { adatFormBackend(RoleFilter()) }
     val filter = filterBackend.inputValue
@@ -57,7 +58,9 @@ fun roleManager(): AdaptiveFragment {
             }
         }
 
-        items(roles.filter { filter.matches(it) }, filter.isEmpty())
+        loading(rolesOrNull) { roles ->
+            items(roles.filter { filter.matches(it) }, filter.isEmpty())
+        }
     }
 
     return fragment()

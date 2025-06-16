@@ -25,12 +25,12 @@ abstract class AbstractColumn<RT, CRT : RT>(
         itemsHeight + item.renderData.finalHeight
 
     override fun constrainCalc(itemProposal: SizingProposal, item: AbstractAuiFragment<RT>, gap: Double): SizingProposal {
-        val decrement = item.renderData.finalHeight - gap
+        val decrement = item.renderData.finalHeight + gap
         return SizingProposal(
             itemProposal.minWidth,
             itemProposal.maxWidth,
-            itemProposal.minHeight - decrement,
-            itemProposal.maxHeight - decrement
+            max(0.0, itemProposal.minHeight - decrement),
+            max(0.0, itemProposal.maxHeight - decrement)
         )
     }
 

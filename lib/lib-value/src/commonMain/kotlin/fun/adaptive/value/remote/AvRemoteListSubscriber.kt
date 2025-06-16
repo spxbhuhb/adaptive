@@ -1,6 +1,7 @@
 package `fun`.adaptive.value.remote
 
 import `fun`.adaptive.backend.BackendAdapter
+import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvSubscribeFun
@@ -16,8 +17,9 @@ open class AvRemoteListSubscriber<SPEC : Any>(
     subscribeFun: AvSubscribeFun,
     backend: BackendAdapter,
     val specClass: KClass<SPEC>,
+    binding: AdaptiveStateVariableBinding<List<AvValue<SPEC>>?>? = null,
     val transform: ((Map<AvValueId, AvValue<SPEC>>) -> List<AvValue<SPEC>>)? = null
-) : AvAbstractRemoteSubscriber<List<AvValue<SPEC>>>(subscribeFun, backend) {
+) : AvAbstractRemoteSubscriber<List<AvValue<SPEC>>?>(subscribeFun, backend, binding) {
 
     constructor(
         backend: BackendAdapter,
@@ -30,10 +32,23 @@ open class AvRemoteListSubscriber<SPEC : Any>(
     constructor(
         backend: BackendAdapter,
         specClass: KClass<SPEC>,
-        transform: ((Map<AvValueId, AvValue<SPEC>>) -> List<AvValue<SPEC>>),
+        transform: ((Map<AvValueId, AvValue<SPEC>>) -> List<AvValue<SPEC>>)? = null,
         vararg conditions: AvSubscribeCondition
     ) : this(
-        { service, id -> conditions.toList().also { service.subscribe(it) } }, backend, specClass, transform
+        { service, id -> conditions.toList().also { service.subscribe(it) } }, backend, specClass, transform = transform
+    )
+
+    constructor(
+        binding: AdaptiveStateVariableBinding<List<AvValue<SPEC>>?>,
+        specClass: KClass<SPEC>,
+        transform: ((Map<AvValueId, AvValue<SPEC>>) -> List<AvValue<SPEC>>)?,
+        vararg conditions: AvSubscribeCondition
+    ) : this(
+        { service, id -> conditions.toList().also { service.subscribe(it) } },
+        binding.targetFragment.adapter.backend,
+        specClass,
+        binding,
+        transform
     )
 
     private val itemMap = mutableMapOf<AvValueId, AvValue<SPEC>>()
@@ -48,7 +63,7 @@ open class AvRemoteListSubscriber<SPEC : Any>(
         notifyListeners()
     }
 
-    override var value: List<AvValue<SPEC>>
+    override var value: List<AvValue<SPEC>>?
         get() = cachedValue ?: (transform?.invoke(itemMap) ?: itemMap.values.toList()).also { cachedValue = it }
         set(_) = unsupported()
 
