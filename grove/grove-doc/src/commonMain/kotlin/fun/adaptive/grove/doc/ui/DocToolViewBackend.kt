@@ -23,7 +23,7 @@ class DocToolViewBackend(
     override val paneDef: PaneDef
 ) : PaneViewBackend<DocToolViewBackend>() {
 
-    val tree = AvUiTreeViewBackend(workspace.backend, String::class, avDomain.treeDef, ::selectedFun)
+    val tree = AvUiTreeViewBackend(workspace.backend, String::class, avDomain.treeDef, ::selectedFun, ::sortChildrenFun)
 
     override fun getPaneActions(): List<AbstractPaneAction> {
         return listOf(
@@ -39,6 +39,12 @@ class DocToolViewBackend(
         modifiers: Set<EventModifier>
     ) {
         workspace.addContent(avDomain.node, item.data, modifiers)
+    }
+
+    fun sortChildrenFun(
+        children: List<TreeItem<AvValue<String>>>
+    ): List<TreeItem<AvValue<String>>> {
+        return children.sortedBy { it.data.name?.lowercase() }
     }
 
     fun docPathNames(item : GroveDocValue): List<String> {

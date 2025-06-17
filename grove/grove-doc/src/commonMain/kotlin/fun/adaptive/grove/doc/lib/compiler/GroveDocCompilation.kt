@@ -50,12 +50,12 @@ class GroveDocCompilation(
             .lowercase()
 
     fun outputHumanReadable(type: String, path: Path, content: String) {
-        outPathHumanReadable.resolve(path.name).write(content)
+        outPathHumanReadable.resolve(type + "-" + path.name).write(content)
     }
 
     fun outputTraining(type: String, path: Path, content: String) {
         val contentWithHeader = "<!-- name: ${path.name} -->\n<!-- type: $type -->\n\n$content\n\n".encodeToByteArray()
-        outPathTrainingSeparated.resolve(path.name).write(contentWithHeader)
+        outPathTrainingSeparated.resolve(type + "-" + path.name).write(contentWithHeader)
 
         when (type) {
             "definition" -> outPathTrainingDef.append(contentWithHeader)

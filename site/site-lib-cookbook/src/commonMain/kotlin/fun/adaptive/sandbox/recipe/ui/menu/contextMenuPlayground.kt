@@ -8,10 +8,10 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.sandbox.recipe.demo.goodmorning.textMedium
 import `fun`.adaptive.sandbox.support.configureForm
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.editor.booleanEditor
-import `fun`.adaptive.ui.editor.doubleEditor
 import `fun`.adaptive.ui.form.AdatFormViewBackend
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.generated.resources.menu_book
@@ -36,14 +36,10 @@ fun contextMenuPlayground(): AdaptiveFragment {
     return fragment()
 }
 
-val variants = listOf("button", "submitButton", "dangerButton")
-val icons = listOf("lock", "check", "account_circle")
-
 @Adat
 class ContextMenuPlaygroundConfig(
     val useSeparator: Boolean = true,
-    val useLongItem: Boolean = true,
-    val width: Double? = null
+    val useLongItem: Boolean = true
 )
 
 @Adaptive
@@ -61,8 +57,6 @@ fun contextMenuPlaygroundForm(
                 booleanEditor { template.useSeparator }
                 booleanEditor { template.useLongItem }
             }
-            doubleEditor { template.width }
-
         }
     }
 }
@@ -75,16 +69,18 @@ fun contextMenuPlaygroundResult(config: ContextMenuPlaygroundConfig) {
     val items = buildItems(config)
 
     column {
-        button("Click here!")
-        primaryPopup { hide ->
-            contextMenu(items) { item, modifiers ->
-                message = "Clicked on ${item.label} with modifiers $modifiers"
-                hide()
+        column {
+            button("Click here!")
+            primaryPopup { hide ->
+                contextMenu(items) { item, modifiers ->
+                    message = "Clicked on ${item.label} with modifiers $modifiers"
+                    hide()
+                }
             }
         }
+        text(message) .. textMedium
     }
 
-    text(message)
 }
 
 fun buildItems(config: ContextMenuPlaygroundConfig): List<MenuItemBase<Any>> {

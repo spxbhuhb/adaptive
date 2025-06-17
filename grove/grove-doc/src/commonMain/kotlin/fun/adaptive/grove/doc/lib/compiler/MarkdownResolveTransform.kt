@@ -154,7 +154,16 @@ class MarkdownResolveTransform(
     }
 
     fun extractDef(content: String): MarkdownElement {
-        val ast = MarkdownCompiler.ast(content.trim().substringAfter('\n').substringBefore("\n#"))
+        val fullAst = MarkdownCompiler.ast(content)
+
+        val title = fullAst.indexOfFirst { it is MarkdownHeader }
+        val seeAlso = fullAst.indexOfLast { it is MarkdownHeader }
+
+        val ast = fullAst.subList(title + 1, if (seeAlso != title) seeAlso else fullAst.size)
+
+        val last = ast.last()
+        if (last is MarkdownParagraph) { last.closed = true }
+
         if (ast.size == 1) return ast.first()
         return MarkdownElementGroup(ast.toMutableList())
     }
@@ -224,8 +233,8 @@ class MarkdownResolveTransform(
         if (training) return link.original
 
         when (link.scheme) {
-            "def" -> resolveDef(link.name)
-            "guide" -> resolveGuide(link.name)
+            "def" -> "definition-" + resolveDef(link.name)
+            "guide" -> "guide-" + resolveGuide(link.name)
             "api" -> resolveClass(link)
             "class" -> resolveClass(link)
             "property" -> resolveClass(link)

@@ -14,7 +14,8 @@ class AvUiTreeViewBackend<SPEC : Any>(
     backend: BackendAdapter,
     specClass: KClass<SPEC>,
     treeDef: AvTreeDef,
-    selectedFun: (backend: AvUiTreeViewBackend<SPEC>, TreeItem<AvValue<SPEC>>, Set<EventModifier>) -> Unit
+    selectedFun: (backend: AvUiTreeViewBackend<SPEC>, TreeItem<AvValue<SPEC>>, Set<EventModifier>) -> Unit,
+    sortNodesFun: (List<TreeItem<AvValue<SPEC>>>) -> List<TreeItem<AvValue<SPEC>>> = { it }
 ) : LifecycleBound {
 
     @Suppress("UNCHECKED_CAST")
@@ -31,11 +32,12 @@ class AvUiTreeViewBackend<SPEC : Any>(
     val treeSubscriber = AvUiTreeSubscriber(
         backend,
         specClass,
-        treeDef
+        treeDef,
+        sortNodesFun = sortNodesFun
     )
 
     init {
-        treeSubscriber.addListener { treeBackend.topItems = it }
+        treeSubscriber.addListener { treeBackend.topItems = sortNodesFun(it) }
     }
 
     fun expandAll() {

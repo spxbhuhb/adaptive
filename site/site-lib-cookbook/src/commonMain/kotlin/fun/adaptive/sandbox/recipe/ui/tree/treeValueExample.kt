@@ -24,10 +24,9 @@ fun treeValueExample(): AdaptiveFragment {
     val viewBackend = AvUiTreeViewBackend(
         values.clientBackend,
         String::class,
-        treeDef
-    ) {
-        _, item, _ -> println("selected: $item")
-    }
+        treeDef,
+        { _, item, _ -> println("selected: $item") }
+    )
 
     column {
         text("AvUiTree - read from value store")

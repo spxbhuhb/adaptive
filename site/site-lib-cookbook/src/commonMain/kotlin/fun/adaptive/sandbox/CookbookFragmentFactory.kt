@@ -23,6 +23,7 @@ import `fun`.adaptive.sandbox.recipe.ui.layout.grid.gridRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneWrapperExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.workspaceRecipe
+import `fun`.adaptive.sandbox.recipe.ui.menu.contextMenuPlayground
 import `fun`.adaptive.sandbox.recipe.ui.popup.popupRecipe
 import `fun`.adaptive.sandbox.recipe.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.sandbox.recipe.ui.snackbar.snackbarRecipe
@@ -70,6 +71,12 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // ----------------------------------------------------------------------------
 
         add("cookbook/form/example/basic", ::formBasicExample)
+
+        // ----------------------------------------------------------------------------
+        // Context menu
+        // ----------------------------------------------------------------------------
+
+        add("cookbook/menu/context/playground", ::contextMenuPlayground)
 
         // ----------------------------------------------------------------------------
         // Button

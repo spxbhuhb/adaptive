@@ -10,7 +10,8 @@ import kotlin.reflect.KClass
 class AvUiTreeSubscriber<SPEC : Any>(
     backend: BackendAdapter,
     specClass: KClass<SPEC>,
-    treeDef: AvTreeDef
+    treeDef: AvTreeDef,
+    val sortNodesFun : (List<TreeItem<AvValue<SPEC>>>) -> List<TreeItem<AvValue<SPEC>>> = { it }
 ) : AvRemoteTreeSubscriber<SPEC, TreeItem<AvValue<SPEC>>>(
     backend, specClass, treeDef
 ) {
@@ -31,8 +32,9 @@ class AvUiTreeSubscriber<SPEC : Any>(
         treeItem.title = item.nameLike // treeItem is observable
     }
 
+
     override fun updateChildren(treeItem: TreeItem<AvValue<SPEC>>, children: List<TreeItem<AvValue<SPEC>>>) {
-        treeItem.children = children // treeItem is observable
+        treeItem.children = sortNodesFun(children) // treeItem is observable
     }
 
 }
