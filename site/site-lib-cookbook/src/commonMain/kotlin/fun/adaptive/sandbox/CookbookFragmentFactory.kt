@@ -24,6 +24,9 @@ import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalEx
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneWrapperExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.workspaceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.menu.contextMenuPlayground
+import `fun`.adaptive.sandbox.recipe.ui.popup.modal.emptyModalExample
+import `fun`.adaptive.sandbox.recipe.ui.popup.modal.multiPagePopupExample
+import `fun`.adaptive.sandbox.recipe.ui.popup.modal.openPopupOnClickExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.popupRecipe
 import `fun`.adaptive.sandbox.recipe.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.sandbox.recipe.ui.snackbar.snackbarRecipe
@@ -77,6 +80,14 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // ----------------------------------------------------------------------------
 
         add("cookbook/menu/context/playground", ::contextMenuPlayground)
+
+        // ----------------------------------------------------------------------------
+        // Popup modal
+        // ----------------------------------------------------------------------------
+
+        add("cookbook/popup/modal/example/empty", ::emptyModalExample)
+        add("cookbook/popup/modal/example/multi-page", ::multiPagePopupExample)
+        add("cookbook/popup/modal/example/open-on-click", ::openPopupOnClickExample)
 
         // ----------------------------------------------------------------------------
         // Button

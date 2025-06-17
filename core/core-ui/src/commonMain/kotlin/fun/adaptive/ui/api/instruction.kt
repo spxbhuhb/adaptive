@@ -48,6 +48,8 @@ fun cornerBottomRadius(bottom: DPixel) = cornerRadius(bottomLeft = bottom, botto
 fun cornerBottomRightRadius(bottomRight: DPixel) = cornerRadius(bottomRight = bottomRight)
 fun cornerTopLeftRadius(topLeft: DPixel) = cornerRadius(topLeft = topLeft)
 fun cornerTopRadius(top: DPixel) = cornerRadius(topLeft = top, topRight = top)
+inline fun cornerTopRadius(top: () -> DPixel) = cornerRadius(topLeft = top(), topRight = top())
+
 fun cornerTopRightRadius(topRight: DPixel) = cornerRadius(topRight = topRight)
 
 fun dropShadow(color: Color, offsetX: DPixel, offsetY: DPixel, standardDeviation: DPixel) = DropShadow(color, offsetX, offsetY, standardDeviation)
@@ -94,10 +96,10 @@ fun size(size: DPixel) = Size(size, size)
 fun size(width: DPixel, height: DPixel) = Size(width, height)
 
 fun height(height: DPixel) = Height(height)
-fun height(calc: () -> DPixel) = Height(calc())
+inline fun height(calc: () -> DPixel) = Height(calc())
 
 fun width(width: DPixel) = Width(width)
-fun width(calc: () -> DPixel) = Width(calc())
+inline fun width(calc: () -> DPixel) = Width(calc())
 
 object sizeStrategy {
     object container : SizeStrategy(SizeBase.Container, SizeBase.Container) {

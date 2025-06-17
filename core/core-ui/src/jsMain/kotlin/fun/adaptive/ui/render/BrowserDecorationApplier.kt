@@ -73,12 +73,11 @@ object BrowserDecorationApplier : DecorationRenderApplier<HTMLElement>() {
     override fun applyDropShadow(receiver: HTMLElement, dropShadow: RawDropShadow?) {
 
         if (dropShadow == null) {
-            receiver.style.filter = "none"
+            receiver.style.boxShadow = "none"
             return
         }
 
-        receiver.style.filter =
-            "drop-shadow(${dropShadow.color.hex} ${dropShadow.offsetX.pxs()} ${dropShadow.offsetY.pxs()} ${dropShadow.standardDeviation.pxs()})"
+        receiver.style.boxShadow = "${dropShadow.offsetX.pxs()} ${dropShadow.offsetY.pxs()} ${dropShadow.standardDeviation.pxs()} ${dropShadow.color.rgba}"
     }
 
     override fun applyCursor(receiver: HTMLElement, cursor: CursorType?) {

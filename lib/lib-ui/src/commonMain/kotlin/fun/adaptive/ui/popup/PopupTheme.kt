@@ -5,7 +5,6 @@ import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.*
 
@@ -32,10 +31,10 @@ class PopupTheme {
     val modalTitleHeight = 28.dp
 
     val modalTitleContainer = instructionsOf(
-        colTemplate(28.dp, 1.fr),
-        rowTemplate(28.dp),
+        maxWidth,
         height(modalTitleHeight),
-        cornerRadius { 8.dp }
+        cornerTopRadius { 8.dp },
+        paddingHorizontal { 4.dp },
     )
 
     val modalTitleText = instructionsOf(
@@ -50,7 +49,7 @@ class PopupTheme {
         iconColors.onSurface,
         svgWidth(16.dp),
         svgHeight(16.dp),
-        alignSelf.center,
+        alignSelf.startCenter
     )
 
     val modalButtonsHeight = 52.dp

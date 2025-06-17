@@ -10,8 +10,12 @@ class Color(
 ) {
 
     val hex by lazy { encodeToCssHex() }
+    val rgba by lazy { encodeToCssRgba() }
 
     fun opaque(opacity: Double) = Color(value, opacity)
+
+    fun encodeToCssRgba() =
+        "rgba(${(value shr 16) and 0xFFu}, ${(value shr 8) and 0xFFu}, ${value and 0xFFu}, $opacity)"
 
     fun encodeToCssHex() =
         "#${value.toString(16).padStart(6, '0')}${(opacity * 255).toInt().toString(16).padStart(2, '0')}"

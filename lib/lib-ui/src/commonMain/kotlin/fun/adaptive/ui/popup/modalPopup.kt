@@ -1,29 +1,45 @@
 package `fun`.adaptive.ui.popup
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.support.UiClose
+import `fun`.adaptive.ui.support.UiSave
 import `fun`.adaptive.ui.wrap.wrapFromBottom
 import `fun`.adaptive.ui.wrap.wrapFromTop
 
 @Adaptive
 fun modalPopup(
-    title : String,
-    hide: () -> Unit,
+    title: String,
     @Adaptive
-    _fixme_buttons : () -> Unit,
-    theme : PopupTheme =  PopupTheme.default,
+    _fixme_buttons: ((close: UiClose?, theme: PopupTheme, save: UiSave?) -> Unit)? = null,
+    close: UiClose? = null,
+    save: UiSave? = null,
+    theme: PopupTheme = PopupTheme.default,
     @Adaptive
-    _fixme_content : () -> Unit
-) {
+    _fixme_content: () -> Unit
+): AdaptiveFragment {
 
     column(instructions()) {
         theme.modalContainer
 
-        wrapFromTop(theme.modalTitleHeight, { modalPopupTitle(title, theme, hide) }) {
-            wrapFromBottom(theme.modalButtonsHeight, _fixme_buttons) {
+        wrapFromTop(theme.modalTitleHeight, { modalPopupTitle(title, close, theme) }) {
+            wrapFromBottom(
+                theme.modalButtonsHeight,
+                {
+                    if (_fixme_buttons == null) {
+                        modalCancelSave(close, theme, save)
+                    } else {
+                        _fixme_buttons(close, theme, save)
+                    }
+                }
+            ) {
                 _fixme_content()
             }
         }
     }
+
+    return fragment()
 }
