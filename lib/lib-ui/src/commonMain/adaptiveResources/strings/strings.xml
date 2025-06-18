@@ -25,6 +25,8 @@
 
     <string name="executionError">Hiba a művelet végrehajtása közben.</string>
 
+    <string name="pleaseSelectFromList">Please select from the list on the left.</string>
+
     <string name="copyToClipboard">Másolás vágólapra</string>
 
     <string name="expandAll">Összes megnyitása</string>

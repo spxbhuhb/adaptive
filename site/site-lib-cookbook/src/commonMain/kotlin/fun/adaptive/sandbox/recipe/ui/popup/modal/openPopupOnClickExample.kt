@@ -8,17 +8,17 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.button.dangerButton
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.popup.dialog
-import `fun`.adaptive.ui.popup.modalPopup
+import `fun`.adaptive.ui.popup.modal.dialog
+import `fun`.adaptive.ui.popup.modal.modalPopup
 import `fun`.adaptive.ui.support.UiClose
+import `fun`.adaptive.ui.support.UiSave
 
 @Adaptive
 fun openPopupOnClickExample(): AdaptiveFragment {
 
-    dangerButton("Click me!") {
+    dangerButton("Left-click to open popup") {
         dialog(adapter(), "data for the popup", ::popupContent)
     }
 
@@ -31,10 +31,12 @@ private fun popupContent(
     hide: () -> Unit
 ) {
     localContext(UiClose { hide() }) {
-        modalPopup("Popup content") {
-            column {
-                padding { 16.dp }
-                text("This is the content of the popup: $data")
+        localContext(UiSave { hide() }) {
+            modalPopup("Popup content") {
+                column {
+                    padding { 16.dp }
+                    text("This is the content of the popup: $data")
+                }
             }
         }
     }

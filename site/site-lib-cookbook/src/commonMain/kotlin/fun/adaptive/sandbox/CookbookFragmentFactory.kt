@@ -13,7 +13,8 @@ import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.icon.iconRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.button.*
 import `fun`.adaptive.sandbox.recipe.ui.input.datetime.dateInputRecipe
-import `fun`.adaptive.sandbox.recipe.ui.input.number.doubleInputRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.number.commonDoubleInputExample
+import `fun`.adaptive.sandbox.recipe.ui.input.number.commonIntInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.select.*
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputPlayground
@@ -24,6 +25,7 @@ import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalEx
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneWrapperExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.workspaceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.menu.contextMenuPlayground
+import `fun`.adaptive.sandbox.recipe.ui.popup.modal.customPopupExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.emptyModalExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.multiPagePopupExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.openPopupOnClickExample
@@ -62,7 +64,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:workspace", ::workspaceRecipe)
 
         add("cookbook:recipe:input:date", ::dateInputRecipe)
-        add("cookbook:recipe:input:double", ::doubleInputRecipe)
+        add("cookbook:recipe:input:double", ::commonDoubleInputExample)
         add("cookbook:recipe:input:quick-filter", ::quickFilterRecipe)
         add("cookbook:recipe:input:text-area", ::textInputAreaRecipe)
 
@@ -88,6 +90,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook/popup/modal/example/empty", ::emptyModalExample)
         add("cookbook/popup/modal/example/multi-page", ::multiPagePopupExample)
         add("cookbook/popup/modal/example/open-on-click", ::openPopupOnClickExample)
+        add("cookbook/popup/modal/example/custom", ::customPopupExample)
 
         // ----------------------------------------------------------------------------
         // Button
@@ -99,6 +102,18 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook/input/button/example/danger", ::buttonDangerExample)
 
         add("cookbook/input/button/playground", ::buttonPlayground)
+
+        // ----------------------------------------------------------------------------
+        // Double Input
+        // ----------------------------------------------------------------------------
+
+        add("cookbook/input/double/example/common", ::commonDoubleInputExample)
+
+        // ----------------------------------------------------------------------------
+        // Int Input
+        // ----------------------------------------------------------------------------
+
+        add("cookbook/input/int/example/common", ::commonIntInputExample)
 
         // ----------------------------------------------------------------------------
         // Select Input

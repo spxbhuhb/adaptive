@@ -1,4 +1,10 @@
-## Standalone double input
+# Standalone double input
+
+## Hard-coded examples
+
+[Double inputs](actualize:///cookbook/input/double/example/common)
+
+## Details
 
 **Variants**
 
@@ -19,4 +25,4 @@ withLabel("Just a number") { state ->
 
 * Formatting (decimals) is not applied when the user edits the value, this is intentional.
 
-------
+[commonDoubleInputExample](example://)

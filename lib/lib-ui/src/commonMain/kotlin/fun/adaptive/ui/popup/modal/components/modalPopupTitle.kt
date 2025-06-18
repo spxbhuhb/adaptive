@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.popup
+package `fun`.adaptive.ui.popup.modal.components
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -11,6 +11,7 @@ import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.generated.resources.close
+import `fun`.adaptive.ui.popup.PopupTheme
 import `fun`.adaptive.ui.support.UiClose
 
 @Adaptive

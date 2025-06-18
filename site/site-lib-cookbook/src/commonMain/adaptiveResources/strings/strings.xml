@@ -18,8 +18,6 @@
     <string name="leftClickForPopup">Left click for popup</string>
     <string name="popupContent">Popup content</string>
 
-    <string name="pleaseSelectFromList">Please select from the list on the left.</string>
-
     <!-- sidebar -->
     <string name="collapsable">Collapsable - click on title to collapse</string>
     <string name="fullNormal">Full - Normal</string>

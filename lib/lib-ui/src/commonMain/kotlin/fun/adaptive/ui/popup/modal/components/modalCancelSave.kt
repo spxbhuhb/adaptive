@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.popup
+package `fun`.adaptive.ui.popup.modal.components
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.firstContext
@@ -10,13 +10,14 @@ import `fun`.adaptive.ui.generated.resources.cancel
 import `fun`.adaptive.ui.generated.resources.save
 import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.button.submitButton
+import `fun`.adaptive.ui.popup.PopupTheme
 import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.support.UiSave
 
 @Adaptive
 fun modalCancelSave(
     close: UiClose? = null,
-    theme : PopupTheme = PopupTheme.default,
+    theme : PopupTheme = PopupTheme.Companion.default,
     save: UiSave? = null
 ) {
     row {

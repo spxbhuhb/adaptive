@@ -22,7 +22,7 @@ import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.inputLabel
-import `fun`.adaptive.ui.popup.modalForEdit
+import `fun`.adaptive.ui.popup.modal.modalForEdit
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId

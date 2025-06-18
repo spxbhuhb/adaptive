@@ -10,12 +10,11 @@ import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.paddingBottom
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.popup.modalPopup
+import `fun`.adaptive.ui.popup.modal.modalPopup
 import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.support.UiSave
 

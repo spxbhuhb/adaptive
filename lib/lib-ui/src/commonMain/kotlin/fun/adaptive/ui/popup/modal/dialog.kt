@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.popup
+package `fun`.adaptive.ui.popup.modal
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.api.popupAlign
 fun <T : Any> dialog(
     adapter: AdaptiveAdapter,
     data: T,
-    content: (data: T, hide: () -> Unit) -> Any
+    content: (data: T, close: () -> Unit) -> Any
 ) {
     @Suppress("UNCHECKED_CAST") // see comments at dialogHack
     dialogHack(adapter, data, content as (AdaptiveFragment, Int) -> AdaptiveFragment)
@@ -21,7 +21,7 @@ fun <T : Any> dialog(
 fun <T : Any> dialog(
     workspace: FrontendWorkspace,
     data: T,
-    content: (data: T, hide: () -> Unit) -> Any
+    content: (data: T, close: () -> Unit) -> Any
 ) {
     dialog(workspace.frontend, data, content)
 }

@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.popup.modalForEdit
+import `fun`.adaptive.ui.popup.modal.modalForEdit
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.value.AvValue
 

@@ -19,7 +19,7 @@ import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.decoration.HslColor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.Keys
-import `fun`.adaptive.ui.popup.modalForEdit
+import `fun`.adaptive.ui.popup.modal.modalForEdit
 import `fun`.adaptive.ui.theme.colors
 import kotlin.math.max
 import kotlin.math.min

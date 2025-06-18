@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.withLabel
 
 @Adaptive
-fun doubleInputRecipe(): AdaptiveFragment {
+fun commonDoubleInputExample(): AdaptiveFragment {
     var value: Double? = 12.3
     var safeValue = 12.3
 
