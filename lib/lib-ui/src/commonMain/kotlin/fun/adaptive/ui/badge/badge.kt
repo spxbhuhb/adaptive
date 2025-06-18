@@ -32,7 +32,7 @@ fun badge(
             }
         }
         box {
-            effectiveTheme.textContainer
+            if (effectiveIcon != null) effectiveTheme.textContainerWithIcon else effectiveTheme.textContainerWithoutIcon
             text(name) .. effectiveTheme.text
         }
     }

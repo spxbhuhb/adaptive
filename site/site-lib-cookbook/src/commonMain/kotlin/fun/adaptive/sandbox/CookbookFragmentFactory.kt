@@ -3,6 +3,9 @@ package `fun`.adaptive.sandbox
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.sandbox.recipe.demo.goodmorning.goodMorning
 import `fun`.adaptive.sandbox.recipe.demo.markdown.markdownDemoRecipe
+import `fun`.adaptive.sandbox.recipe.ui.badge.commonBadgeExample
+import `fun`.adaptive.sandbox.recipe.ui.badge.contentPaneBadgeExample
+import `fun`.adaptive.sandbox.recipe.ui.badge.valueBadgeExample
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
@@ -76,6 +79,14 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // ----------------------------------------------------------------------------
 
         add("cookbook/form/example/basic", ::formBasicExample)
+
+        // ----------------------------------------------------------------------------
+        // Badge
+        // ----------------------------------------------------------------------------
+
+        add("cookbook/badge/example/common", ::commonBadgeExample)
+        add("cookbook/badge/example/value", ::valueBadgeExample)
+        add("cookbook/badge/example/content-pane", ::contentPaneBadgeExample)
 
         // ----------------------------------------------------------------------------
         // Context menu

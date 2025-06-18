@@ -2,6 +2,8 @@ package `fun`.adaptive.ui.mpw.fragments
 
 import `fun`.adaptive.document.ui.direct.h2
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.uuidLabel
@@ -15,7 +17,7 @@ fun contentPaneHeader(
     value: AvValue<*>? = null,
     @Adaptive
     _fixme_adaptive_content: () -> Unit
-) {
+) : AdaptiveFragment {
     row {
         maxWidth .. spaceBetween
 
@@ -34,4 +36,6 @@ fun contentPaneHeader(
             _fixme_adaptive_content()
         }
     }
+
+    return fragment()
 }

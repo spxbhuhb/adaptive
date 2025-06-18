@@ -15,7 +15,6 @@ import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.value.AvStatus
 
 class BadgeTheme(
     backgroundAndBorder: Color,
@@ -44,13 +43,20 @@ class BadgeTheme(
         fill(iconFill)
     )
 
-    val textContainer = instructionsOf(
+    val textContainerWithIcon = instructionsOf(
         height { 20.dp },
         paddingHorizontal { 8.dp },
         alignSelf.center,
         border(backgroundAndBorder, left = 0.dp),
         cornerTopRightRadius(4.dp),
         cornerBottomRightRadius(4.dp)
+    )
+    val textContainerWithoutIcon = instructionsOf(
+        height { 20.dp },
+        paddingHorizontal { 8.dp },
+        alignSelf.center,
+        border(backgroundAndBorder),
+        cornerRadius(4.dp)
     )
 
     val text = instructionsOf(
@@ -70,7 +76,7 @@ class BadgeTheme(
 
         val default = info
 
-        val badgeThemeMap = mutableMapOf<AvStatus, BadgeTheme>()
+        val badgeThemeMap = mutableMapOf<String, BadgeTheme>()
     }
 
 }
