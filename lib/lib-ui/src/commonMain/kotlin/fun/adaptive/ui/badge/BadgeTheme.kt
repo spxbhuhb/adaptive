@@ -11,6 +11,7 @@ import `fun`.adaptive.ui.generated.resources.error
 import `fun`.adaptive.ui.generated.resources.info
 import `fun`.adaptive.ui.generated.resources.success
 import `fun`.adaptive.ui.generated.resources.warning
+import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
@@ -19,8 +20,10 @@ import `fun`.adaptive.ui.theme.colors
 class BadgeTheme(
     backgroundAndBorder: Color,
     iconFill: Color,
+    iconFillHover: Color,
     text: Color,
-    val iconResource: GraphicsResourceSet?
+    val iconResource: GraphicsResourceSet?,
+    cornerRadius: DPixel = 4.dp
 ) {
 
     val outerContainer = instructionsOf(
@@ -31,8 +34,8 @@ class BadgeTheme(
         size(20.dp),
         alignItems.center,
         backgroundColor(backgroundAndBorder),
-        cornerTopLeftRadius(4.dp),
-        cornerBottomLeftRadius(4.dp),
+        cornerTopLeftRadius(cornerRadius),
+        cornerBottomLeftRadius(cornerRadius),
         border(backgroundAndBorder, right = 0.dp)
     )
 
@@ -43,20 +46,30 @@ class BadgeTheme(
         fill(iconFill)
     )
 
-    val textContainerWithIcon = instructionsOf(
+    val textContainerBase = instructionsOf(
         height { 20.dp },
         paddingHorizontal { 8.dp },
-        alignSelf.center,
-        border(backgroundAndBorder, left = 0.dp),
-        cornerTopRightRadius(4.dp),
-        cornerBottomRightRadius(4.dp)
+        alignSelf.center
     )
-    val textContainerWithoutIcon = instructionsOf(
-        height { 20.dp },
-        paddingHorizontal { 8.dp },
-        alignSelf.center,
+
+    val textContainerStandalone = textContainerBase + instructionsOf(
         border(backgroundAndBorder),
-        cornerRadius(4.dp)
+        cornerRadius(cornerRadius)
+    )
+
+    val textContainerIcon = textContainerBase + instructionsOf(
+        border(backgroundAndBorder, left = 0.dp),
+        cornerRadius(0.dp, cornerRadius, 0.dp, cornerRadius)
+    )
+
+    val textContainerRemovable = textContainerBase + instructionsOf(
+        border(backgroundAndBorder),
+        cornerRadius (cornerRadius, 0.dp, cornerRadius, 0.dp)
+    )
+
+    val textContainerIconAndRemovable = textContainerBase + instructionsOf(
+        border(backgroundAndBorder),
+        cornerRadius(0.dp)
     )
 
     val text = instructionsOf(
@@ -67,14 +80,88 @@ class BadgeTheme(
         textColor(text)
     )
 
-    companion object {
-        val success = BadgeTheme(colors.successSurface, colors.onSuccessSurface, colors.onSurfaceVariant, Graphics.success)
-        val info = BadgeTheme(colors.selectedSurfaceFocus, colors.onSurface, colors.onSurfaceVariant, Graphics.info)
-        val warning = BadgeTheme(colors.warningSurface, colors.onWarningSurface, colors.onSurface, Graphics.warning)
-        val error = BadgeTheme(colors.failSurface, colors.onFailSurface, colors.onSurface, Graphics.error)
-        val important = BadgeTheme(colors.importantSurface, colors.onImportantSurface, colors.onSurface, Graphics.info)
+    val removableContainer = instructionsOf(
+        size(20.dp),
+        alignItems.center,
+        backgroundColor(backgroundAndBorder),
+        cornerTopRightRadius(cornerRadius),
+        cornerBottomRightRadius(cornerRadius),
+        border(backgroundAndBorder, left = 0.dp)
+    )
 
-        val default = info
+    val removableContainerHover = instructionsOf(
+        size(20.dp),
+        alignItems.center,
+        backgroundColor(backgroundAndBorder.opaque(0.5)),
+        cornerTopRightRadius(cornerRadius),
+        cornerBottomRightRadius(cornerRadius),
+        border(backgroundAndBorder, left = 0.dp)
+    )
+
+    val removableIcon = instructionsOf(
+        size(12.dp),
+        svgWidth(12.dp),
+        svgHeight(12.dp),
+        fill(iconFill)
+    )
+
+    val removableIconHover = instructionsOf(
+        size(12.dp),
+        svgWidth(12.dp),
+        svgHeight(12.dp),
+        fill(iconFillHover)
+    )
+
+    companion object {
+        var success = BadgeTheme(
+            backgroundAndBorder = colors.successSurface, 
+            iconFill = colors.onSuccessSurface,
+            iconFillHover = colors.onSurface,
+            text = colors.onSurfaceVariant,
+            iconResource = Graphics.success
+        )
+
+        var info = BadgeTheme(
+            backgroundAndBorder = colors.info,
+            iconFill = colors.onInfoSurface,
+            iconFillHover = colors.onSurface,
+            text = colors.onSurfaceVariant,
+            iconResource = Graphics.info
+        )
+
+        var warning = BadgeTheme(
+            backgroundAndBorder = colors.warningSurface,
+            iconFill = colors.onWarningSurface,
+            iconFillHover = colors.onSurface,
+            text = colors.onSurface,
+            iconResource = Graphics.warning
+        )
+
+        var error = BadgeTheme(
+            backgroundAndBorder = colors.failSurface,
+            iconFill = colors.onFailSurface,
+            iconFillHover = colors.onSurface,
+            text = colors.onSurface,
+            iconResource = Graphics.error
+        )
+
+        var suppressed = BadgeTheme(
+            backgroundAndBorder = colors.selectedSurfaceFocus,
+            iconFill = colors.onSurface,
+            iconFillHover = colors.onSurface,
+            text = colors.onSurfaceVariant,
+            iconResource = Graphics.info
+        )
+
+        var important = BadgeTheme(
+            backgroundAndBorder = colors.importantSurface,
+            iconFill = colors.onImportantSurface,
+            iconFillHover = colors.onSurface,
+            text = colors.onSurface,
+            iconResource = Graphics.info
+        )
+
+        var default = suppressed
 
         val badgeThemeMap = mutableMapOf<String, BadgeTheme>()
     }
