@@ -7,6 +7,7 @@ import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.foundation.query.firstImpl
 import `fun`.adaptive.lib.util.testing.AbstractTestSupport
 import `fun`.adaptive.runtime.FrontendWorkspace
+import `fun`.adaptive.runtime.NoBackendWorkspace
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.wireformat.WireFormatRegistry
@@ -55,7 +56,7 @@ class AuthTestSupport : AbstractTestSupport(
         ) =
             runTest(timeout = timeout) {
 
-                AuthClientModule<FrontendWorkspace>().wireFormatInit(WireFormatRegistry)
+                AuthClientModule<FrontendWorkspace, NoBackendWorkspace>().wireFormatInit(WireFormatRegistry)
 
                 with(AuthTestSupport()) {
                     test { testFun() }

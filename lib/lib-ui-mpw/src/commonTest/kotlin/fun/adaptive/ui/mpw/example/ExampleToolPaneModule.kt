@@ -3,6 +3,7 @@ package `fun`.adaptive.ui.mpw.example
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.generated.resources.settings
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
@@ -10,7 +11,7 @@ import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
-class ExampleToolPaneModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
+class ExampleToolPaneModule<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : AppModule<FW,BW>() {
 
     val EXAMPLE_TOOL_KEY = fragmentKey { "example:pane:tool" }
 
@@ -26,7 +27,7 @@ class ExampleToolPaneModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
         add(EXAMPLE_TOOL_KEY, ::exampleToolPane) // register the UI fragment
     }
 
-    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
+    override fun frontendWorkspaceInit(workspace: FW, session: Any?) = with(workspace) {
         addToolPane { // add the tool pane to the workspace
             ExampleToolViewBackend(this, exampleToolPaneDef)
         }

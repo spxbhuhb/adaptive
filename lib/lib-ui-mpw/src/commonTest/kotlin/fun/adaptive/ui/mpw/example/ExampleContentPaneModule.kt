@@ -3,6 +3,7 @@ package `fun`.adaptive.ui.mpw.example
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.generated.resources.settings
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
@@ -10,7 +11,7 @@ import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
-class ExampleContentPaneModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
+class ExampleContentPaneModule<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : AppModule<FW,BW>() {
 
     val EXAMPLE_CONTENT_KEY = fragmentKey { "example:pane:content" }
 
@@ -28,7 +29,7 @@ class ExampleContentPaneModule<WT : MultiPaneWorkspace> : AppModule<WT>() {
         add(EXAMPLE_CONTENT_KEY, ::exampleContentPane) // register the UI fragment
     }
 
-    override fun workspaceInit(workspace: WT, session: Any?) = with(workspace) {
+    override fun frontendWorkspaceInit(workspace: FW, session: Any?) = with(workspace) {
 
         addContentPaneBuilder(
             contentType = EXAMPLE_CONTENT_TYPE,

@@ -5,13 +5,14 @@ import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.api.findContext
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.runtime.NoBackendWorkspace
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspace
 
 @Adaptive
 fun createMultiPaneWorkspace() {
 
-    val workspace = MultiPaneWorkspace(adapter().backend)
+    val workspace = MultiPaneWorkspace(adapter().backend, NoBackendWorkspace())
 
     localContext(workspace) {
         multiPaneWorkspace(workspace)

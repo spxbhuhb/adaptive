@@ -35,11 +35,11 @@ class AvListSubscriberTest {
             serverWorker.queueAdd(AvValue(valueId2, spec = spec2))
         }
 
-        waitForReal(1.seconds) { subscriber.value.size == 2 }
+        waitForReal(1.seconds) { subscriber.value?.size == 2 }
 
         assertEquals(2, receivedList?.size)
         assertTrue(receivedList?.any { it.uuid == valueId1 && it.spec == spec1 } == true)
-        assertTrue(receivedList.any { it.uuid == valueId2 && it.spec == spec2 })
+        assertTrue(receivedList?.any { it.uuid == valueId2 && it.spec == spec2 } == true)
 
         subscriber.stop()
         waitForReal(3.seconds) { subscriber.job == null }
@@ -65,7 +65,7 @@ class AvListSubscriberTest {
             serverWorker.queueAdd(AvValue(valueId, spec = stringSpec))
         }
 
-        waitForReal(1.seconds) { subscriber.value.isNotEmpty() }
+        waitForReal(1.seconds) { subscriber.value?.isNotEmpty() == true }
         assertEquals(1, receivedList?.size)
         assertEquals(stringSpec, receivedList?.first()?.spec)
 
@@ -102,7 +102,7 @@ class AvListSubscriberTest {
             serverWorker.queueAdd(AvValue(valueId1, spec = spec1))
         }
 
-        waitForReal(1.seconds) { subscriber.value.size == 2 }
+        waitForReal(1.seconds) { subscriber.value?.size == 2 }
 
         assertEquals(2, receivedList?.size)
         // Verify sorting by spec
@@ -128,18 +128,18 @@ class AvListSubscriberTest {
             avById(valueId)
         )
 
-        subscriber.addListener { list -> notificationCount.add(list.size) }
+        subscriber.addListener { list -> list?.size?.let { notificationCount.add(it) } }
 
         waitForIdle {
             serverWorker.queueAdd(AvValue(valueId, spec = initialSpec))
         }
 
-        waitForReal(1.seconds) { subscriber.value.isNotEmpty() }
+        waitForReal(1.seconds) { subscriber.value?.isNotEmpty() == true }
         assertEquals(1, notificationCount.last())
 
         serverWorker.queueUpdate(AvValue(valueId, spec = updatedSpec))
 
-        waitForReal(1.seconds) { subscriber.value.first().spec == updatedSpec }
+        waitForReal(1.seconds) { subscriber.value?.first()?.spec == updatedSpec }
         assertTrue(notificationCount.size > 1) // Should have received multiple notifications
         assertEquals(1, notificationCount.last()) // List size should still be 1
 
@@ -166,7 +166,7 @@ class AvListSubscriberTest {
 
         subscriber.addListener { } // Add listener to start subscriber
 
-        waitForReal(1.seconds) { subscriber.value.isNotEmpty() }
+        waitForReal(1.seconds) { subscriber.value?.isNotEmpty() == true }
 
         val firstAccess = subscriber.value
         assertNotNull(firstAccess)
@@ -174,7 +174,7 @@ class AvListSubscriberTest {
         // Update the value
         serverWorker.queueUpdate(AvValue(valueId, spec = updatedSpec))
 
-        waitForReal(1.seconds) { subscriber.value.first().spec == updatedSpec }
+        waitForReal(1.seconds) { subscriber.value?.first()?.spec == updatedSpec }
 
         // Cached value should be different from first access
         assertNotEquals(firstAccess, subscriber.value)
