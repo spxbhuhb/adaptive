@@ -2,6 +2,7 @@ package `fun`.adaptive.grove.doc.lib.compiler
 
 import `fun`.adaptive.grove.doc.model.avDomain
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
+import `fun`.adaptive.markdown.model.MarkdownHeader
 import `fun`.adaptive.markdown.transform.MarkdownToMarkdownVisitor.Companion.toMarkdown
 import `fun`.adaptive.persistence.readString
 import `fun`.adaptive.value.AvValue
@@ -115,6 +116,12 @@ GroveDocCompiler(
         val humanReadable = humanReadableOutAst.toMarkdown()
         compilation.outputHumanReadable(type, path, humanReadable)
 
+        val withoutTitle = if (humanReadableOutAst.firstOrNull() is MarkdownHeader) {
+            humanReadableOutAst.subList(1, humanReadableOutAst.size).toMarkdown()
+        } else {
+            humanReadable
+        }
+
         for (subproject in subprojects) {
             if (path.toString().contains("/$subproject/")) {
                 val node = docTreeNodes["$subproject/${type}s"] ?: break // FIXME really hackish categorization of docs
@@ -123,7 +130,7 @@ GroveDocCompiler(
                     addTreeNode(avDomain.treeDef, node.uuid) {
                         AvValue(
                             name = path.name.substringBeforeLast('.'),
-                            spec = humanReadable
+                            spec = withoutTitle
                         )
                     }
                 }

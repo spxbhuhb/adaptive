@@ -23,10 +23,15 @@ fun docContentPane(): AdaptiveFragment {
 
     column {
         maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
+        alignItems.topCenter
 
-        pageHeader(viewBackend.content)
+        column {
+            width { 600.dp }
 
-        markdown(viewBackend.content.spec)
+            pageHeader(viewBackend.content)
+
+            markdown(viewBackend.content.spec)
+        }
     }
 
     return fragment()
@@ -35,7 +40,7 @@ fun docContentPane(): AdaptiveFragment {
 @Adaptive
 fun pageHeader(value : GroveDocValue) {
     column {
-        paddingBottom { 32.dp }
+        paddingBottom { 24.dp }
         h2(value.nameLike)
         itemPath(value)
     }
