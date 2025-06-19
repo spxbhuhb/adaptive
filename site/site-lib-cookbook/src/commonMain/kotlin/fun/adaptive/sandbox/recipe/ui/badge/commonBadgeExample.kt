@@ -30,7 +30,16 @@ fun commonBadgeExample(): AdaptiveFragment {
     badgeThemeMap["important"] = BadgeTheme.important
 
     column {
-        examplePane("name only") {
+        gap { 24.dp }
+
+        examplePane(
+            "Only with name",
+            """
+                * Each badge has a `name`, this is the only mandatory parameter.
+                * The colors are defined by the theme, which you can pass in `theme`.
+                * Suppressed badge theme meant to display secondary information.
+            """.trimIndent()
+        ) {
             flowBox {
                 gap { 8.dp }
 
@@ -43,11 +52,16 @@ fun commonBadgeExample(): AdaptiveFragment {
             }
         }
 
-        examplePane("name, removable = true") {
+        examplePane(
+            "With name and removable",
+            """
+                When you use `removable = true` **AND** pass`removeFun`, the badge will have a close icon.
+            """.trimIndent()
+        ) {
             flowBox {
                 gap { 8.dp }
 
-                badge("suppressed") {  }
+                badge("suppressed", removable = true) {  }
                 badge("success", removable = true, theme = BadgeTheme.success) {  }
                 badge("info", removable = true, theme = BadgeTheme.info) {  }
                 badge("warning", removable = true, theme = BadgeTheme.warning) {  }
@@ -56,7 +70,12 @@ fun commonBadgeExample(): AdaptiveFragment {
             }
         }
 
-        examplePane("name and icon") {
+        examplePane(
+            "With name and icon",
+            """
+                You can pass an icon to show in the `icon` parameter.
+            """.trimIndent()
+        ) {
             flowBox {
                 gap { 8.dp }
 
@@ -68,7 +87,13 @@ fun commonBadgeExample(): AdaptiveFragment {
                 badge("important", Graphics.power_settings_new, theme = BadgeTheme.important)
             }
         }
-        examplePane("name and icon, removable = true") {
+
+        examplePane(
+            "With name, icon and removable",
+            """
+                When you use `removable = true` **AND** pass`removeFun`, the badge will have a close icon.
+            """.trimIndent()
+        ) {
             flowBox {
                 gap { 8.dp }
 
@@ -81,7 +106,16 @@ fun commonBadgeExample(): AdaptiveFragment {
             }
         }
 
-        examplePane("name only, useSeverity = true") {
+        examplePane(
+            "With name and severity",
+            """
+                With `useSeverity = true`, the fragment looks up the name of the
+                badge in `badgeThemeMap` and uses the corresponding theme.
+                
+                This is very convenient when displaying status badges which may have different
+                severities.
+            """.trimIndent()
+        ) {
             flowBox {
                 gap { 8.dp }
 
@@ -124,7 +158,13 @@ private val counter = BadgeTheme(
 @Adaptive
 private fun badgeStyles() {
 
-    examplePane("styling") {
+    examplePane(
+        "With custom styles",
+        """
+            * You can customize the appearance of badges by defining a `BadgeTheme`.
+            * `BadgeTheme` offers a number of customisation options for colors, sizing etc.
+        """.trimIndent()
+    ) {
         flowBox {
             gap { 8.dp }
 

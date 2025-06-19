@@ -26,7 +26,13 @@ fun valueBadgeExample(): AdaptiveFragment {
         spec = ""
     )
 
-    examplePane("With `valueBadges`") {
+    examplePane(
+        "valueBadges",
+        """
+            The `valueBadges` fragment can be used to displat the status and
+            marker badges of an `AvValue` instance.
+        """.trimIndent()
+    ) {
         valueBadges(value)
     }
 

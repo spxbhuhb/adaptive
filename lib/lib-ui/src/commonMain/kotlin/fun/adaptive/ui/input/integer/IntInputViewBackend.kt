@@ -9,4 +9,9 @@ class IntInputViewBackend(
     isSecret: Boolean = false
 ) : InputViewBackend<Int, IntInputViewBackend>(
     value, label, isSecret
-)
+) {
+
+    var radix by observable(10, ::notify)
+    var showRadix10 by observable(false, ::notify)
+
+}

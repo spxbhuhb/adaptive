@@ -4,6 +4,7 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.input.Disabled
+import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.AbstractTheme
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
@@ -11,8 +12,10 @@ import `fun`.adaptive.ui.theme.textColors
 
 class InputTheme : AbstractTheme() {
 
-    val paddingB1 = padding(top = 1.dp, left = 12.dp, bottom = 1.dp, right = 12.dp)
-    val paddingB2 = padding(left = 11.dp, right = 11.dp)
+    val horizontalPadding = 12.dp
+
+    val paddingB1 = padding(top = 1.dp, left = horizontalPadding, bottom = 1.dp, right = horizontalPadding)
+    val paddingB2 = padding(left = horizontalPadding - 1.dp, right = horizontalPadding - 1.dp)
 
     val base = instructionsOf(
         inputCornerRadius,
@@ -80,6 +83,24 @@ class InputTheme : AbstractTheme() {
     val unitText = instructionsOf(
         alignSelf.bottom,
         paddingLeft { 8.dp }
+    )
+
+    val hint = instructionsOf(
+        height { inputHintLineHeight + inputHintPadding },
+        paddingTop { inputHintPadding },
+        fontSize(13.sp),
+        noSelect,
+        textColors.onSurfaceVariant
+    )
+
+    val endHint = instructionsOf(
+        height { inputHintLineHeight + inputHintPadding },
+        paddingTop { inputHintPadding },
+        paddingRight { horizontalPadding },
+        fontSize(13.sp),
+        noSelect,
+        textColors.onSurfaceVariant,
+        alignSelf.end
     )
 
     companion object {

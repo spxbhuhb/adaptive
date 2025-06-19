@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.singleLineTextInput
+import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.input.decoratedInput
 
 @Adaptive
@@ -17,9 +18,10 @@ fun intInput(
 
     val observed = valueFrom { viewBackend }
     val focus = focus()
-    val formatted = observed.inputValue?.toString()
+    val formatted = observed.inputValue?.toString(viewBackend.radix)
 
     decoratedInput(focus, observed) {
+
         singleLineTextInput(
             value = formatted,
             onChange = { v ->
@@ -30,7 +32,7 @@ fun intInput(
                     return@singleLineTextInput
                 }
 
-                val inputValue = v.toIntOrNull()
+                val inputValue = v.toIntOrNull(viewBackend.radix)
 
                 if (inputValue != null) {
                     observed.isInConversionError = false
@@ -44,6 +46,10 @@ fun intInput(
             observed.inputTheme.singleLine ..
             alignItems.end ..
             instructions()
+
+        if (viewBackend.showRadix10) {
+            text(viewBackend.inputValue?.toString() ?: "-") .. viewBackend.inputTheme.endHint
+        }
     }
 
     return fragment()

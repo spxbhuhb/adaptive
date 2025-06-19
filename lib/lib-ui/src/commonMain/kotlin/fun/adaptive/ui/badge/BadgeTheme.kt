@@ -155,7 +155,7 @@ open class BadgeTheme(
             border = colors.selectedSurfaceFocus,
             textColor = colors.onSurfaceVariant,
             iconResource = Graphics.info,
-            iconColor = colors.onSurface,
+            iconColor = colors.onSurfaceVariant,
             iconColorHover = colors.onSurface
         )
 

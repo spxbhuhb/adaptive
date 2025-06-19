@@ -27,7 +27,22 @@ fun contentPaneBadgeExample(): AdaptiveFragment {
         spec = ""
     )
 
-    examplePane("With `contentPaneHeader`") {
+    examplePane(
+        "contentPaneHeader",
+        """
+            The `contentPaneHeader` fragment can be used to display a header for a
+            content pane, typically to show an `AvValue` instance.
+            
+            You can specify a renderer for the actions which are placed on the
+            right side of the header.
+            
+            Badges are automatically added under the UUID, statuses first, markers after.
+            
+            `contentPaneHeader` sets `useSeverity` to `true` to style the badges,
+            add them to `badgeThemeMap` in the `frontendAdapterInit` function of the
+            module.
+        """.trimIndent()
+    ) {
         contentPaneHeader("Example Content Pane Title", value.uuid, value) {
             submitButton("Example Button") { }
         }

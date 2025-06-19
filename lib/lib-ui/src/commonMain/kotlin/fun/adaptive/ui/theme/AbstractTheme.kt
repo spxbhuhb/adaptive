@@ -25,6 +25,10 @@ abstract class AbstractTheme {
 
     open val inputCornerRadius = cornerRadius { inputCornerRadiusDp }
 
+    open val inputHintPadding = 4.dp
+
+    open val inputHintLineHeight = 20.dp
+
     open val paneHeaderHeightDp = 42.dp
 
 }

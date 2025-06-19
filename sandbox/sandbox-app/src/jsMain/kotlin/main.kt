@@ -23,6 +23,7 @@ import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringSto
 import `fun`.adaptive.sandbox.recipe.ui.badge.commonBadgeExample
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputExample
+import `fun`.adaptive.sandbox.recipe.ui.input.number.commonIntInputExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
@@ -101,7 +102,7 @@ fun sandboxMain() {
                 column {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. verticalScroll //.. backgrounds.friendlyOpaque
 
-                    containerPlayground()
+                    commonIntInputExample()
 
                 }
             }
