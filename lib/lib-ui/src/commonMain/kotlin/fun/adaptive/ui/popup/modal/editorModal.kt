@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.wrap.wrapFromBottom
 import `fun`.adaptive.ui.wrap.wrapFromTop
 
 @Adaptive
-fun modalForEdit(
+fun editorModal(
     title : String,
     hide: UiClose? = null,
     save: UiSave? = null,

@@ -72,7 +72,7 @@ fun <MENU_ITEM_DATA> multiPageModal(
     val splitConfig = valueFrom { splitConfigStore }
 
     localContext(viewBackend) {
-        modalPopup(Strings.example) {
+        basicModal(Strings.example) {
             instructions()
             splitPane(
                 splitConfig,

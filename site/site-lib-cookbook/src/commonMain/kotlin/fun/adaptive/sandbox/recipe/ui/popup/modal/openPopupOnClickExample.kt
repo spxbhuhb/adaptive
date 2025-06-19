@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.input.button.dangerButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.popup.modal.dialog
-import `fun`.adaptive.ui.popup.modal.modalPopup
+import `fun`.adaptive.ui.popup.modal.basicModal
 import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.support.UiSave
 
@@ -32,7 +32,7 @@ private fun popupContent(
 ) {
     localContext(UiClose { hide() }) {
         localContext(UiSave { hide() }) {
-            modalPopup("Popup content") {
+            basicModal("Popup content") {
                 column {
                     padding { 16.dp }
                     text("This is the content of the popup: $data")

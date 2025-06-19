@@ -22,7 +22,7 @@ import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.inputLabel
-import `fun`.adaptive.ui.popup.modal.modalForEdit
+import `fun`.adaptive.ui.popup.modal.editorModal
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
@@ -39,7 +39,7 @@ fun accountEditorAdmin(
 
     val title = if (account == null) Strings.addAccount else Strings.editAccount
 
-    modalForEdit(title, hide, { save(form.inputValue); hide() }) {
+    editorModal(title, hide, { save(form.inputValue); hide() }) {
         row {
             localContext(form) {
                 editFields()

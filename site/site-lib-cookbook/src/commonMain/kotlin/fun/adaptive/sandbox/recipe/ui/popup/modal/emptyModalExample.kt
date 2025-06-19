@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.popup.modal.modalPopup
+import `fun`.adaptive.ui.popup.modal.basicModal
 import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.support.UiSave
 
@@ -27,7 +27,7 @@ fun emptyModalExample(): AdaptiveFragment {
     localContext(UiClose { messageStore.value += "close" }) {
         localContext(UiSave { messageStore.value += "save" }) {
 
-            modalPopup("Hello World!") {
+            basicModal("Hello World!") {
                 width { 600.dp } .. height { 400.dp }
 
                 column {

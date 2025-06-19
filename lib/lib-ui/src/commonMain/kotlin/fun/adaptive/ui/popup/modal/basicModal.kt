@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.wrap.wrapFromBottom
 import `fun`.adaptive.ui.wrap.wrapFromTop
 
 @Adaptive
-fun modalPopup(
+fun basicModal(
     title: String,
     @Adaptive
     _fixme_buttons: ((close: UiClose?, theme: PopupTheme, save: UiSave?) -> Unit)? = null,
