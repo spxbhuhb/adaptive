@@ -12,7 +12,7 @@ class BooleanInputViewBackend(
     value, label, isSecret
 ) {
 
-    override var labelAlignment by observable(PopupAlign.beforeCenter, ::notify)
+    override var labelAlignment by observable(PopupAlign.afterCenter, ::notify)
 
     var booleanInputTheme = BooleanInputTheme.default
 

@@ -2,12 +2,16 @@ package `fun`.adaptive.ui.input
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
+import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.fillStrategy
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.testing.LayoutTraceContext
 
 @Adaptive
 fun <T> decoratedInput(
@@ -20,7 +24,10 @@ fun <T> decoratedInput(
     if (viewBackend.label?.isNotEmpty() == true) {
         withLabel(focused, viewBackend) { _KT_74337_content(viewBackend) } .. instructions()
     } else {
-        _KT_74337_content(viewBackend)
+        column {
+            instructions()
+            _KT_74337_content(viewBackend)
+        }
     }
 
     return fragment()
@@ -31,7 +38,7 @@ private fun <T> withLabel(
     focused: Boolean,
     viewBackend: InputViewBackend<T, *>,
     @Adaptive
-    _KT_74337_content: (InputViewBackend<T,*>) -> Unit
+    _KT_74337_content: (InputViewBackend<T, *>) -> Unit
 ): AdaptiveFragment {
 
     val config = viewBackend.labelConfiguration(focused)
@@ -49,7 +56,7 @@ private fun <T> withLabel(
             row(instructions()) {
                 fillStrategy.constrainReverse
                 _KT_74337_content(viewBackend)
-                text(config.text, config.instruction)
+                text(config.text, config.instruction) .. viewBackend.labelTheme.rightLabel
             }
         }
 

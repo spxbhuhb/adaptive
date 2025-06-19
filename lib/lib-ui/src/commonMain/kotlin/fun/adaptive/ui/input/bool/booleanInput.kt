@@ -22,7 +22,7 @@ fun booleanInput(
     val theme = observed.booleanInputTheme
 
     decoratedInput(focus, observed) {
-        instructions() .. theme.defaultSpacing
+        instructions() .. theme.decoration
 
         row(theme.container) {
 

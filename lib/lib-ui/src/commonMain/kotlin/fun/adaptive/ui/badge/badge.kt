@@ -1,10 +1,14 @@
 package `fun`.adaptive.ui.badge
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.hover
+import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.badge.BadgeTheme.Companion.badgeThemeMap
@@ -17,8 +21,10 @@ fun badge(
     icon: GraphicsResourceSet? = null,
     removable : Boolean = false,
     theme: BadgeTheme = BadgeTheme.default,
-    useSeverity: Boolean = false
-) {
+    useSeverity: Boolean = false,
+    removeFun: ((name : String) -> Unit)? = null
+) : AdaptiveFragment {
+
     val effectiveTheme = if (useSeverity) {
         badgeThemeMap[name] ?: theme
     } else {
@@ -34,7 +40,7 @@ fun badge(
         else -> effectiveTheme.textContainerStandalone
     }
 
-    row {
+    row(instructions()) {
         effectiveTheme.outerContainer
         if (effectiveIcon != null) {
             box {
@@ -46,19 +52,24 @@ fun badge(
             containerInst
             text(name) .. effectiveTheme.text
         }
-        if (removable) {
-            removableIcon(effectiveTheme)
+        if (removable && removeFun != null) {
+            removableIcon(effectiveTheme, name, removeFun)
         }
     }
+
+    return fragment()
 }
 
 @Adaptive
 private fun removableIcon(
-    theme : BadgeTheme
+    theme: BadgeTheme,
+    name: String,
+    removeFun: (String) -> Unit
 ) {
     val hover = hover()
 
     box {
+        onClick { removeFun(name) }
         if (hover) theme.removableContainerHover else theme.removableContainer
         icon(Graphics.close) .. if (hover) theme.removableIconHover else theme.removableIcon
     }

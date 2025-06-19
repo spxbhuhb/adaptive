@@ -323,32 +323,32 @@ abstract class AbstractAuiFragment<RT>(
         get() = uiAdapter.toPx(this)
 
     fun traceLayoutFinal() {
-//        if (firstContextOrNull<LayoutTraceContext>() != null) {
-//            println("[ ${name ?: this}-FINAL ] ${renderData.finalWidth} x ${renderData.finalHeight}")
-//        }
+        if (firstContextOrNull<LayoutTraceContext>() != null) {
+            println("[ ${name ?: this}-FINAL ] ${renderData.finalWidth} x ${renderData.finalHeight}")
+        }
     }
 
     fun traceLayoutCompute(proposal: SizingProposal) {
-//        if (firstContextOrNull<LayoutTraceContext>() != null) {
-//            println("[ ${name ?: this}-COMPUTE ]  parent: ${renderData.layoutFragment}  proposal: $proposal")
-//        }
+        if (firstContextOrNull<LayoutTraceContext>() != null) {
+            println("[ ${name ?: this}-COMPUTE ]  parent: ${renderData.layoutFragment}  proposal: $proposal")
+        }
     }
 
     fun traceLayoutResult(proposal: SizingProposal) {
-//        if (firstContextOrNull<LayoutTraceContext>() != null) {
-//            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  ${renderData.layout} final: ${renderData.finalWidth}x${renderData.finalHeight}")
-//        }
+        if (firstContextOrNull<LayoutTraceContext>() != null) {
+            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  ${renderData.layout} final: ${renderData.finalWidth}x${renderData.finalHeight}")
+        }
     }
 
     fun traceLayoutUpdateSelf() {
-//        if (firstContextOrNull<LayoutTraceContext>() != null) {
-//            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  proposal: ${renderData.sizingProposal}")
-//        }
+        if (firstContextOrNull<LayoutTraceContext>() != null) {
+            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  proposal: ${renderData.sizingProposal}")
+        }
     }
 
     fun traceLayoutUpdateContainer() {
-//        if (firstContextOrNull<LayoutTraceContext>() != null) {
-//            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  proposal: ${renderData.sizingProposal}")
-//        }
+        if (firstContextOrNull<LayoutTraceContext>() != null) {
+            println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  proposal: ${renderData.sizingProposal}")
+        }
     }
 }

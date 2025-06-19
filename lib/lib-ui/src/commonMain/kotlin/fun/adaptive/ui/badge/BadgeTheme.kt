@@ -1,5 +1,6 @@
 package `fun`.adaptive.ui.badge
 
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svgHeight
@@ -17,148 +18,153 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.colors
 
-class BadgeTheme(
-    backgroundAndBorder: Color,
-    iconFill: Color,
-    iconFillHover: Color,
-    text: Color,
-    val iconResource: GraphicsResourceSet?,
-    cornerRadius: DPixel = 4.dp
+open class BadgeTheme(
+    val height: DPixel = 20.dp,
+    cornerRadius: DPixel = 4.dp,
+    border: Color,
+    background: Color = colors.surface,
+    textColor: Color,
+    textInstructions : AdaptiveInstructionGroup = instructionsOf(fontSize { 11.sp }, fontWeight { 400 }),
+    val iconResource: GraphicsResourceSet? = null,
+    iconSize: DPixel = 14.dp,
+    iconColor: Color,
+    iconColorHover: Color,
+    iconBackground: Color = border
 ) {
 
-    val outerContainer = instructionsOf(
-        height { 20.dp },
+    var outerContainer = instructionsOf(
+        height { height },
+        cornerRadius(cornerRadius),
+        backgroundColor(background)
     )
 
-    val iconContainer = instructionsOf(
-        size(20.dp),
+    var iconContainer = instructionsOf(
+        size(height),
         alignItems.center,
-        backgroundColor(backgroundAndBorder),
+        backgroundColor(iconBackground),
         cornerTopLeftRadius(cornerRadius),
         cornerBottomLeftRadius(cornerRadius),
-        border(backgroundAndBorder, right = 0.dp)
+        border(border, right = 0.dp)
     )
 
-    val icon = instructionsOf(
-        size(14.dp),
-        svgWidth(14.dp),
-        svgHeight(14.dp),
-        fill(iconFill)
+    var icon = instructionsOf(
+        size(iconSize),
+        svgWidth(iconSize),
+        svgHeight(iconSize),
+        fill(iconColor)
     )
 
-    val textContainerBase = instructionsOf(
-        height { 20.dp },
-        paddingHorizontal { 8.dp },
-        alignSelf.center
+    var textContainerBase = instructionsOf(
+        height { height },
+        alignSelf.center,
+        paddingHorizontal { 8.dp }
     )
 
-    val textContainerStandalone = textContainerBase + instructionsOf(
-        border(backgroundAndBorder),
+    var textContainerStandalone = textContainerBase + instructionsOf(
+        border(border),
         cornerRadius(cornerRadius)
     )
 
-    val textContainerIcon = textContainerBase + instructionsOf(
-        border(backgroundAndBorder, left = 0.dp),
+    var textContainerIcon = textContainerBase + instructionsOf(
+        border(border, left = 0.dp),
         cornerRadius(0.dp, cornerRadius, 0.dp, cornerRadius)
     )
 
-    val textContainerRemovable = textContainerBase + instructionsOf(
-        border(backgroundAndBorder),
-        cornerRadius (cornerRadius, 0.dp, cornerRadius, 0.dp)
+    var textContainerRemovable = textContainerBase + instructionsOf(
+        border(border),
+        cornerRadius(cornerRadius, 0.dp, cornerRadius, 0.dp)
     )
 
-    val textContainerIconAndRemovable = textContainerBase + instructionsOf(
-        border(backgroundAndBorder),
+    var textContainerIconAndRemovable = textContainerBase + instructionsOf(
+        border(border),
         cornerRadius(0.dp)
     )
 
-    val text = instructionsOf(
-        fontSize { 11.sp },
-        fontWeight { 400 },
+    var text = textInstructions + instructionsOf(
         paddingTop { 2.dp },
         alignSelf.center,
-        textColor(text)
+        textColor(textColor)
     )
 
-    val removableContainer = instructionsOf(
-        size(20.dp),
+    var removableContainer = instructionsOf(
+        size(height),
         alignItems.center,
-        backgroundColor(backgroundAndBorder),
+        backgroundColor(border),
         cornerTopRightRadius(cornerRadius),
         cornerBottomRightRadius(cornerRadius),
-        border(backgroundAndBorder, left = 0.dp)
+        border(border, left = 0.dp)
     )
 
-    val removableContainerHover = instructionsOf(
-        size(20.dp),
+    var removableContainerHover = instructionsOf(
+        size(height),
         alignItems.center,
-        backgroundColor(backgroundAndBorder.opaque(0.5)),
+        backgroundColor(border.opaque(0.5)),
         cornerTopRightRadius(cornerRadius),
         cornerBottomRightRadius(cornerRadius),
-        border(backgroundAndBorder, left = 0.dp)
+        border(border, left = 0.dp)
     )
 
-    val removableIcon = instructionsOf(
-        size(12.dp),
-        svgWidth(12.dp),
-        svgHeight(12.dp),
-        fill(iconFill)
+    var removableIcon = instructionsOf(
+        size(iconSize - 2.dp),
+        svgWidth(iconSize - 2.dp),
+        svgHeight(iconSize - 2.dp),
+        fill(iconColor)
     )
 
-    val removableIconHover = instructionsOf(
-        size(12.dp),
-        svgWidth(12.dp),
-        svgHeight(12.dp),
-        fill(iconFillHover)
+    var removableIconHover = instructionsOf(
+        size(iconSize - 2.dp),
+        svgWidth(iconSize - 2.dp),
+        svgHeight(iconSize - 2.dp),
+        fill(iconColorHover)
     )
 
     companion object {
         var success = BadgeTheme(
-            backgroundAndBorder = colors.successSurface, 
-            iconFill = colors.onSuccessSurface,
-            iconFillHover = colors.onSurface,
-            text = colors.onSurfaceVariant,
-            iconResource = Graphics.success
+            border = colors.successSurface,
+            textColor = colors.onSurface,
+            iconResource = Graphics.success,
+            iconColor = colors.onSuccessSurface,
+            iconColorHover = colors.onSurface
         )
 
         var info = BadgeTheme(
-            backgroundAndBorder = colors.info,
-            iconFill = colors.onInfoSurface,
-            iconFillHover = colors.onSurface,
-            text = colors.onSurfaceVariant,
-            iconResource = Graphics.info
+            border = colors.info,
+            textColor = colors.onSurface,
+            iconResource = Graphics.info,
+            iconColor = colors.onInfoSurface,
+            iconColorHover = colors.onSurface
         )
 
         var warning = BadgeTheme(
-            backgroundAndBorder = colors.warningSurface,
-            iconFill = colors.onWarningSurface,
-            iconFillHover = colors.onSurface,
-            text = colors.onSurface,
-            iconResource = Graphics.warning
+            border = colors.warningSurface,
+            textColor = colors.onSurface,
+            iconResource = Graphics.warning,
+            iconColor = colors.onWarningSurface,
+            iconColorHover = colors.onSurface
         )
 
         var error = BadgeTheme(
-            backgroundAndBorder = colors.failSurface,
-            iconFill = colors.onFailSurface,
-            iconFillHover = colors.onSurface,
-            text = colors.onSurface,
-            iconResource = Graphics.error
+            border = colors.failSurface,
+            textColor = colors.onSurface,
+            iconResource = Graphics.error,
+            iconColor = colors.onFailSurface,
+            iconColorHover = colors.onSurface
         )
 
         var suppressed = BadgeTheme(
-            backgroundAndBorder = colors.selectedSurfaceFocus,
-            iconFill = colors.onSurface,
-            iconFillHover = colors.onSurface,
-            text = colors.onSurfaceVariant,
-            iconResource = Graphics.info
+            border = colors.selectedSurfaceFocus,
+            textColor = colors.onSurfaceVariant,
+            iconResource = Graphics.info,
+            iconColor = colors.onSurface,
+            iconColorHover = colors.onSurface
         )
 
         var important = BadgeTheme(
-            backgroundAndBorder = colors.importantSurface,
-            iconFill = colors.onImportantSurface,
-            iconFillHover = colors.onSurface,
-            text = colors.onSurface,
-            iconResource = Graphics.info
+            border = colors.importantSurface,
+            textColor = colors.onSurface,
+            iconResource = Graphics.info,
+            iconColor = colors.onImportantSurface,
+            iconColorHover = colors.onSurface
         )
 
         var default = suppressed

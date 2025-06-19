@@ -21,14 +21,14 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.ui.badge.commonBadgeExample
-import `fun`.adaptive.sandbox.recipe.ui.popup.modal.customPopupExample
-import `fun`.adaptive.sandbox.recipe.ui.popup.modal.emptyModalExample
-import `fun`.adaptive.sandbox.recipe.ui.popup.modal.multiPagePopupExample
-import `fun`.adaptive.sandbox.recipe.ui.popup.modal.openPopupOnClickExample
+import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
+import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.input.badge.badgeInput
+import `fun`.adaptive.ui.input.badge.badgeInputBackend
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
@@ -101,7 +101,7 @@ fun sandboxMain() {
                 column {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. verticalScroll //.. backgrounds.friendlyOpaque
 
-                    commonBadgeExample()
+                    containerPlayground()
 
                 }
             }

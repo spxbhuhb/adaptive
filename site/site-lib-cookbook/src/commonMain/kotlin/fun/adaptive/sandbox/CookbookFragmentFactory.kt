@@ -9,11 +9,13 @@ import `fun`.adaptive.sandbox.recipe.ui.badge.valueBadgeExample
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
+import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.sandbox.recipe.ui.dialog.dialogRecipe
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.icon.iconRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.button.*
 import `fun`.adaptive.sandbox.recipe.ui.input.datetime.dateInputRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.number.commonDoubleInputExample
@@ -71,6 +73,11 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:input:quick-filter", ::quickFilterRecipe)
         add("cookbook:recipe:input:text-area", ::textInputAreaRecipe)
 
+        // ----------------------------------------------------------------------------
+        // Container
+        // ----------------------------------------------------------------------------
+
+        add("cookbook/container/playground", ::containerPlayground)
         add("cookbook/example/split-pane-proportional", ::splitPaneProportionalExample)
         add("cookbook/example/split-pane-wrapper", ::splitPaneWrapperExample)
 
@@ -87,6 +94,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook/badge/example/common", ::commonBadgeExample)
         add("cookbook/badge/example/value", ::valueBadgeExample)
         add("cookbook/badge/example/content-pane", ::contentPaneBadgeExample)
+        add("cookbook/badge/example/input", ::badgeInputExample)
 
         // ----------------------------------------------------------------------------
         // Context menu

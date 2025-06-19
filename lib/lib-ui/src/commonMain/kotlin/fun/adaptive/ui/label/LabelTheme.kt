@@ -36,6 +36,13 @@ class LabelTheme {
         textColors.fail
     )
 
+    /**
+     * Applied when the label is to the right of the value (boolean input, for example).
+     */
+    val rightLabel = instructionsOf(
+        padding(1.dp, 0.dp, 0.dp, 8.dp)// FIXME base vs right label in LabelTheme
+    )
+
     val uuidLabelContainer = instructionsOf(
         alignItems.center,
         gap { 4.dp }

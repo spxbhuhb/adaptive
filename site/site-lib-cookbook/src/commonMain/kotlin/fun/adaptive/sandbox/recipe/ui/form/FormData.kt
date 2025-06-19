@@ -17,6 +17,7 @@ class FormData(
     val string: String = "ab",
     val enum: E = E.V1,
     val enumOrNull: E? = null,
+    val badges : Set<String> = setOf("badge1", "badge2")
 ) {
     override fun descriptor() {
         properties {

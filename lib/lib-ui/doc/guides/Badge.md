@@ -6,17 +6,21 @@
 
 [Common Badges](actualize:///cookbook/badge/example/common)
 
-[Badges for a value](actualize:///cookbook/badge/example/value)
+[Value badges](actualize:///cookbook/badge/example/value)
 
 [Badges with contentPaneHeader](actualize:///cookbook/badge/example/content-pane)
 
+[Badge input](actualize:///cookbook/badge/example/input)
+
 ## Details
 
-Built-in badge fragments:
+Built-in badge-related fragments:
 
 - [badge](fragment://) - basic badge
 - [valueBadges](fragment://) - badges for a [value](def://)
 - [contentPaneHeader](fragment://) - uses [valueBadges](fragment://)
+- [badgeInput](fragment://) - input for badges
+- [badgeEditor](fragment://) - editor for badges
 
 You can associate badge names with icons and badge themes.
 
@@ -38,3 +42,7 @@ name in [badgeThemeMap](property://BadgeTheme) and render the badge accordingly.
 ---
 
 [contentPaneBadgeExample](example://)
+
+---
+
+[badgeInputExample](example://)
