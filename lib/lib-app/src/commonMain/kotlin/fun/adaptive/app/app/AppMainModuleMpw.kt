@@ -54,7 +54,7 @@ class AppMainModuleMpw<FW : MultiPaneWorkspace, BW: BackendWorkspace> : AppMainM
 
         addContentPaneBuilder(
             HOME_CONTENT_KEY,
-            { true },
+            { t, i -> true },
             { UnitPaneViewBackend(this, homePaneDef) }
         )
 

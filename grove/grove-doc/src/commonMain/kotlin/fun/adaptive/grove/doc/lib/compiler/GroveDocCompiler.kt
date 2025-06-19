@@ -1,6 +1,6 @@
 package `fun`.adaptive.grove.doc.lib.compiler
 
-import `fun`.adaptive.grove.doc.model.avDomain
+import `fun`.adaptive.grove.doc.model.groveDocDomain
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
 import `fun`.adaptive.markdown.model.MarkdownHeader
 import `fun`.adaptive.markdown.transform.MarkdownToMarkdownVisitor.Companion.toMarkdown
@@ -55,21 +55,21 @@ GroveDocCompiler(
 
             for (project in subprojects) {
 
-                val projectNode = addTreeNode(avDomain.treeDef) {
+                val projectNode = addTreeNode(groveDocDomain.treeDef) {
                     AvValue(
                         friendlyId = project,
                         name = project,
-                        markersOrNull = setOf(avDomain.project),
+                        markersOrNull = setOf(groveDocDomain.project),
                         spec = ""
                     )
                 }
 
                 groups.forEach { group ->
-                    addTreeNode(avDomain.treeDef, projectNode.uuid) {
+                    addTreeNode(groveDocDomain.treeDef, projectNode.uuid) {
                         AvValue(
                             friendlyId = "$project/$group",
                             name = group,
-                            markersOrNull = setOf(avDomain.group),
+                            markersOrNull = setOf(groveDocDomain.group),
                             spec = ""
                         )
                     }.also {
@@ -127,9 +127,10 @@ GroveDocCompiler(
                 val node = docTreeNodes["$subproject/${type}s"] ?: break // FIXME really hackish categorization of docs
 
                 compilation.valueWorker.executeOutOfBand {
-                    addTreeNode(avDomain.treeDef, node.uuid) {
+                    addTreeNode(groveDocDomain.treeDef, node.uuid) {
                         AvValue(
                             name = path.name.substringBeforeLast('.'),
+                            markersOrNull = setOf(type),
                             spec = withoutTitle
                         )
                     }

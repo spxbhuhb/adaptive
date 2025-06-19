@@ -20,4 +20,12 @@ abstract class AbstractApplication<FW : AbstractWorkspace, BW : AbstractWorkspac
 
     inline fun <reified T> firstModule() = modules.firstInstance<T>()
 
+    /**
+     * Set the URL that belongs to the current state of the application. This is an optional
+     * feature, applications may or may not implement it. The default implementation is an empty
+     * function.
+     */
+    open fun setUrl(url: String) {
+
+    }
 }

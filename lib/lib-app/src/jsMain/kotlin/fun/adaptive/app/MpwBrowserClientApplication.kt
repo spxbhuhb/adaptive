@@ -7,6 +7,8 @@ import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.navigation.NavState
+import kotlinx.browser.window
 
 open class MpwBrowserClientApplication(
     vararg modules: AppModule<MultiPaneWorkspace, BackendWorkspace>
@@ -28,6 +30,8 @@ open class MpwBrowserClientApplication(
 
         frontendWorkspaceInit(frontendWorkspace)
 
+        frontendWorkspace.loadUrl(window.location.href)
+
         frontendWorkspace.updateSplits()
 
     }
@@ -37,6 +41,9 @@ open class MpwBrowserClientApplication(
         super.frontendAdapterInit(adapter)
     }
 
+    override fun setUrl(url: String) {
+        historyStateListener.push(NavState.parse(url), null)
+    }
 
     companion object {
         fun wsBrowserClient(start: Boolean = true, buildFun: ApplicationBuilder<MultiPaneWorkspace, BackendWorkspace>.() -> Unit) {

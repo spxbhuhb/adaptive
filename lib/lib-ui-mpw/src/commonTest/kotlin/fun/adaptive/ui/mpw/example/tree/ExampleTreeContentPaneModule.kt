@@ -34,7 +34,7 @@ class ExampleTreeContentPaneModule<FW : MultiPaneWorkspace, BW : AbstractWorkspa
 
         addContentPaneBuilder(
             contentType = EXAMPLE_CONTENT_TYPE,
-            condition = { asValueOrNull<ExampleTreeValueSpec>(it, avDomain.node) },
+            condition = { type, item -> asValueOrNull<ExampleTreeValueSpec>(item, avDomain.node) },
             builder = { ExampleTreeContentViewBackend(this, exampleContentPaneDef, it) }
         )
 

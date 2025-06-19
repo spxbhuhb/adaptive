@@ -23,6 +23,7 @@ import `fun`.adaptive.ui.mpw.backends.ContentPaneGroupViewBackend
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.*
+import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.utility.UUID
@@ -56,6 +57,8 @@ open class MultiPaneWorkspace(
     val toolPanes = mutableListOf<PaneViewBackend<*>>()
 
     val sideBarActions = mutableListOf<AbstractSideBarAction>()
+
+    val urlResolvers = mutableListOf<MultiPaneUrlResolver>()
 
     val noContentPane = PaneDef(
         UUID(),
@@ -292,13 +295,13 @@ open class MultiPaneWorkspace(
     // --------------------------------------------------------------------------------
 
     class ContentPaneBuilder<T>(
-        val condition: (Any) -> T?,
+        val condition: (type : PaneContentType, item : PaneContentItem) -> T?,
         val builder: (item: T) -> PaneViewBackend<*>?
     )
 
     fun <T> addContentPaneBuilder(
         contentType: PaneContentType,
-        condition: (Any) -> T?,
+        condition: (type : PaneContentType, item : PaneContentItem) -> T?,
         builder: (item: T) -> PaneViewBackend<*>?
     ) {
         contentPaneBuilders.getOrPut(contentType) { mutableListOf() } +=
@@ -314,7 +317,7 @@ open class MultiPaneWorkspace(
     ) {
         contentPaneBuilders.getOrPut(singularItem.type) { mutableListOf() } +=
             ContentPaneBuilder(
-                { if (it === singularItem) it else null },
+                { type, item -> if (item === singularItem) item else null },
                 builder
             )
     }
@@ -323,9 +326,9 @@ open class MultiPaneWorkspace(
         addContent(item.type, item, modifiers)
     }
 
-    fun addContent(type: PaneContentType, item: WsPaneItem, modifiers: Set<EventModifier> = emptySet()) {
+    fun addContent(type: PaneContentType, item: PaneContentItem, modifiers: Set<EventModifier> = emptySet()) {
 
-        val accepted = accept(item, modifiers)
+        val accepted = accept(type, item, modifiers)
         if (accepted) {
             return
         }
@@ -345,18 +348,18 @@ open class MultiPaneWorkspace(
             PaneSingularity.FULLSCREEN -> {
                 lastActiveContentPaneGroup = null
                 toFullScreen()
-                addGroupContentPane(item, modifiers, pane)
+                addGroupContentPane(type, item, modifiers, pane)
             }
 
             PaneSingularity.SINGULAR -> {
                 lastActiveContentPaneGroup = null
                 fromFullScreen()
-                addGroupContentPane(item, modifiers, pane)
+                addGroupContentPane(type, item, modifiers, pane)
             }
 
             PaneSingularity.GROUP -> {
                 fromFullScreen()
-                addGroupContentPane(item, modifiers, pane)
+                addGroupContentPane(type, item, modifiers, pane)
             }
         }
     }
@@ -381,30 +384,39 @@ open class MultiPaneWorkspace(
         return null
     }
 
-    fun accept(item: Any, modifiers: Set<EventModifier>): Boolean {
+    fun accept(
+        type: PaneContentType,
+        item: PaneContentItem,
+        modifiers: Set<EventModifier>
+    ): Boolean {
         lastActiveContentPane?.let {
             if (it.accepts(item, modifiers)) {
-                loadContentPane(item, modifiers, it, lastActiveContentPaneGroup !!)
+                loadContentPane(type, item, modifiers, it, lastActiveContentPaneGroup !!)
                 return true
             }
         }
 
         lastActiveContentPaneGroup?.let {
-            if (accept(item, modifiers, it)) return true
+            if (accept(type, item, modifiers, it)) return true
         }
 
         contentPaneGroups.value.forEach {
-            if (accept(item, modifiers, it)) return true
+            if (accept(type, item, modifiers, it)) return true
         }
 
         return false
     }
 
-    fun accept(item: Any, modifiers: Set<EventModifier>, group: ContentPaneGroupViewBackend): Boolean {
+    fun accept(
+        type: PaneContentType,
+        item: PaneContentItem,
+        modifiers: Set<EventModifier>,
+        group: ContentPaneGroupViewBackend
+    ): Boolean {
 
         for (pane in group.panes) {
             if (pane.accepts(item, modifiers)) {
-                loadContentPane(item, modifiers, pane, lastActiveContentPaneGroup !!)
+                loadContentPane(type, item, modifiers, pane, lastActiveContentPaneGroup !!)
                 return true
             }
         }
@@ -412,12 +424,24 @@ open class MultiPaneWorkspace(
         return false
     }
 
-    fun loadContentPane(item: Any, modifiers: Set<EventModifier>, pane: PaneViewBackend<*>, group: ContentPaneGroupViewBackend) {
+    fun loadContentPane(
+        type : PaneContentType,
+        item: PaneContentItem,
+        modifiers: Set<EventModifier>,
+        pane: PaneViewBackend<*>,
+        group: ContentPaneGroupViewBackend
+    ) {
         pane.load(item, modifiers)
         group.load(pane)
+        updateUrl(type, item)
     }
 
-    fun addGroupContentPane(item: WsPaneItem, modifiers: Set<EventModifier>, pane: PaneViewBackend<*>) {
+    fun addGroupContentPane(
+        type: PaneContentType,
+        item: PaneContentItem,
+        modifiers: Set<EventModifier>,
+        pane: PaneViewBackend<*>
+    ) {
 
         val safeGroup = lastActiveContentPaneGroup
 
@@ -425,14 +449,14 @@ open class MultiPaneWorkspace(
 
             ContentPaneGroupViewBackend(UUID(), this, pane).also {
                 lastActiveContentPaneGroup = it
-                loadContentPane(item, modifiers, pane, it)
+                loadContentPane(type, item, modifiers, pane, it)
                 contentPaneGroups.value = listOf(it)
             }
 
         } else {
 
             safeGroup.panes += pane
-            loadContentPane(item, modifiers, pane, safeGroup)
+            loadContentPane(type, item, modifiers, pane, safeGroup)
 
         }
 
@@ -451,6 +475,50 @@ open class MultiPaneWorkspace(
     // --------------------------------------------------------------------------------
 
     private val itemTypes = mutableMapOf<PaneContentType, WsItemConfig>()
+
+    /**
+     * Add a URL resolver which is able to resolve the given URL into an item
+     * to be loaded into a content pane.
+     */
+    fun addUrlResolver(resolver: MultiPaneUrlResolver) {
+        urlResolvers += resolver
+    }
+
+    /**
+     * Resolve a URL to a workspace item to load into a content pane.
+     */
+    fun resolveUrl(url: String): Pair<PaneContentType,Any>? {
+        val navState = NavState.parse(url)
+        if (navState.segments.isEmpty()) return null
+
+        for (resolver in urlResolvers) {
+            val typeAndItem = resolver.resolve(navState)
+            if (typeAndItem != null) return typeAndItem
+        }
+
+        return null
+    }
+
+    fun loadUrl(url: String) {
+        resolveUrl(url)?.let {
+            addContent(it.first, it.second, emptySet())
+        }
+    }
+
+    /**
+     * Update the application URL if there is any resolver that can turn the item
+     * into one.
+     */
+    fun updateUrl(
+        type: PaneContentType,
+        item : PaneContentItem
+    ) {
+        for (resolver in urlResolvers) {
+            val navState = resolver.toNavState(type, item) ?: continue
+            application.setUrl(navState.toUrl())
+            break
+        }
+    }
 
     fun addItemConfig(type: PaneContentType, icon: GraphicsResourceSet, tooltip: String? = null) {
         itemTypes[type] = WsItemConfig(type, icon, tooltip)

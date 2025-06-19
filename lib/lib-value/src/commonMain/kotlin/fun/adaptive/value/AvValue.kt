@@ -185,6 +185,10 @@ class AvValue<T>(
      */
     val refs get() = refsOrNull ?: emptyMap()
 
+    fun hasRef(refLabel: AvRefLabel): Boolean {
+        return refsOrNull?.contains(refLabel) == true
+    }
+
     /**
      * Get the map of references as a mutable map. Changing this map **DOES NOT** change the value
      * use [copy] to create a new version of the value with the new references.

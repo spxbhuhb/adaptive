@@ -2,7 +2,7 @@ package `fun`.adaptive.grove.doc.model
 
 import `fun`.adaptive.value.domain.AvValueDomainDef
 
-internal val avDomain
+val groveDocDomain
     inline get() = GroveDocValueDomainDef
 
 object GroveDocValueDomainDef : AvValueDomainDef() {

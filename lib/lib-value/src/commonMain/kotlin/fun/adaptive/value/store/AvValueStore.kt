@@ -627,4 +627,17 @@ open class AvValueStore(
             markerIndices[marker]?.mapNotNull { values[it] } ?: emptyList()
         }
 
+    fun <SPEC : Any> firstOrNull(marker: AvMarker, specClass: KClass<SPEC>, condition: (AvValue<SPEC>) -> Boolean): AvValue<SPEC>? =
+        lock.use {
+            markerIndices[marker]?.firstOrNull {
+                val value = values[it]!!
+                if (! specClass.isInstance(value.spec)) return@firstOrNull false
+                @Suppress("UNCHECKED_CAST") // just checked
+                condition(value as AvValue<SPEC>)
+            }?.let {
+                @Suppress("UNCHECKED_CAST")
+                values[it]!! as AvValue<SPEC>
+            }
+        }
+
 }

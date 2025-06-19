@@ -33,7 +33,7 @@ class ExampleContentPaneModule<FW : MultiPaneWorkspace, BW : AbstractWorkspace> 
 
         addContentPaneBuilder(
             contentType = EXAMPLE_CONTENT_TYPE,
-            condition = { it as? String },
+            condition = { type, item -> item as? String },
             builder = { ExampleContentViewBackend(this, exampleContentPaneDef, it) }
         )
 

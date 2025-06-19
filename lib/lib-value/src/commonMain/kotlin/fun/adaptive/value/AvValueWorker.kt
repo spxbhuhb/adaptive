@@ -180,6 +180,9 @@ open class AvValueWorker(
     inline fun <reified SPEC : Any> firstOrNull(marker: AvMarker): AvValue<SPEC>? =
         store.queryByMarker(marker).firstOrNull()?.checkSpec<SPEC>()
 
+    inline fun <reified SPEC : Any> firstOrNull(marker: AvMarker, noinline condition : (AvValue<SPEC>) -> Boolean): AvValue<SPEC>? =
+        store.firstOrNull(marker, SPEC::class, condition)
+
     inline fun <reified SPEC : Any> ref(valueId: AvValueId, refLabel: AvRefLabel) =
         store.ref(valueId, refLabel).checkSpec<SPEC>()
 

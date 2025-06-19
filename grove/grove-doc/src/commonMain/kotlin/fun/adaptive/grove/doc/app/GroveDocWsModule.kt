@@ -5,12 +5,8 @@ import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.grove.doc.generated.resources.book_3
 import `fun`.adaptive.grove.doc.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.grove.doc.generated.resources.documentation
-import `fun`.adaptive.grove.doc.model.GroveDocSpec
-import `fun`.adaptive.grove.doc.model.avDomain
-import `fun`.adaptive.grove.doc.ui.DocContentViewBackend
-import `fun`.adaptive.grove.doc.ui.DocToolViewBackend
-import `fun`.adaptive.grove.doc.ui.docContentPane
-import `fun`.adaptive.grove.doc.ui.docToolPane
+import `fun`.adaptive.grove.doc.model.groveDocDomain
+import `fun`.adaptive.grove.doc.ui.*
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AbstractWorkspace
@@ -21,7 +17,6 @@ import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.ui.value.iconCache
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.value.util.asValueOrNull
 
 class GroveDocWsModule<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : AppModule<FW, BW>() {
 
@@ -39,7 +34,7 @@ class GroveDocWsModule<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : AppMod
         add(WSPANE_DOC_BROWSER_TOOL, ::docToolPane)
         add(WSPANE_DOC_BROWSER_CONTENT, ::docContentPane)
 
-        iconCache[avDomain.node] = Graphics.menu_book
+        iconCache[groveDocDomain.node] = Graphics.menu_book
     }
 
     override fun frontendWorkspaceInit(workspace: FW, session: Any?) = with(workspace) {
@@ -53,8 +48,8 @@ class GroveDocWsModule<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : AppMod
         )
 
         addContentPaneBuilder(
-            avDomain.node,
-            { asValueOrNull<GroveDocSpec>(it, avDomain.node) }
+            groveDocDomain.node,
+            { type, item -> item as? GroveDocContentItem }
         ) { item ->
             DocContentViewBackend(workspace, contentPaneDef, item)
         }
@@ -67,9 +62,10 @@ class GroveDocWsModule<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : AppMod
             WSPANE_DOC_BROWSER_TOOL
         )
 
-        addToolPane {
-            DocToolViewBackend(workspace, toolPaneDef)
-        }
+        val toolBackend = DocToolViewBackend(workspace, toolPaneDef)
 
+        addToolPane { toolBackend }
+        addUrlResolver(toolBackend)
     }
+
 }

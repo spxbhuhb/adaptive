@@ -1,5 +1,6 @@
 package `fun`.adaptive.app
 
+import `fun`.adaptive.app.platform.BrowserHistoryStateListener
 import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.auth.api.AuthSessionApi
 import `fun`.adaptive.backend.BackendAdapter
@@ -37,6 +38,8 @@ abstract class BrowserApplication<WT : FrontendWorkspace> : ClientApplication<WT
 
     override val backendWorkspace = BackendWorkspace(this)
     override lateinit var frontendWorkspace: WT
+
+    val historyStateListener = BrowserHistoryStateListener(this)
 
     open fun buildFrontendWorkspace() = Unit
 
