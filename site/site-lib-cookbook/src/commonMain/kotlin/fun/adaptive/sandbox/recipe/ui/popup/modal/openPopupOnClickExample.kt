@@ -28,10 +28,10 @@ fun openPopupOnClickExample(): AdaptiveFragment {
 @Adaptive
 private fun popupContent(
     data: String,
-    hide: () -> Unit
+    close: UiClose
 ) {
-    localContext(UiClose { hide() }) {
-        localContext(UiSave { hide() }) {
+    localContext(close) {
+        localContext(UiSave { close.uiClose() }) {
             basicModal("Popup content") {
                 column {
                     padding { 16.dp }

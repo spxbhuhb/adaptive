@@ -11,6 +11,7 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.input.button.dangerButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.popup.modal.dialog
+import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
 
@@ -27,11 +28,11 @@ fun customPopupExample(): AdaptiveFragment {
 @Adaptive
 private fun customPopupContent(
     data: String,
-    hide: () -> Unit
+    close: UiClose
 ) {
     column {
         backgrounds.infoSurface .. padding { 16.dp }
-        onClick { hide() }
+        onClick { close.uiClose() }
 
         text("This popup does not use the standard styling.") .. textColors.onInfoSurface
         text("Click inside the popup area to hide.") .. textColors.onInfoSurface

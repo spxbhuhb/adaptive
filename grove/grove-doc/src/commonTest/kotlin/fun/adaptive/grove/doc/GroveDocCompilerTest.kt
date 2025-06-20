@@ -65,8 +65,8 @@ class GroveDocCompilerTest {
 
         """.trimIndent()
 
-        val outMdPath = humanReadable.resolve("test.md")
-        val trainingPath = compilation.outPathTrainingSeparated.resolve("test.md")
+        val outMdPath = humanReadable.resolve("guide-test.md")
+        val trainingPath = compilation.outPathTrainingSeparated.resolve("guide-test.md")
         assertTrue(outMdPath.exists())
         assertTrue(trainingPath.exists())
         assertEquals(expectedHumanReadable, outMdPath.readString())
@@ -84,10 +84,10 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        assertTrue(compilation.outPathTrainingSeparated.resolve("test1.md").exists())
-        assertTrue(compilation.outPathTrainingSeparated.resolve("test2.md").exists())
-        assertTrue(humanReadable.resolve("test1.md").exists())
-        assertTrue(humanReadable.resolve("test2.md").exists())
+        assertTrue(compilation.outPathTrainingSeparated.resolve("guide-test1.md").exists())
+        assertTrue(compilation.outPathTrainingSeparated.resolve("guide-test2.md").exists())
+        assertTrue(humanReadable.resolve("guide-test1.md").exists())
+        assertTrue(humanReadable.resolve("guide-test2.md").exists())
     }
 
     @Test
@@ -106,8 +106,8 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        val trainingPath = compilation.outPathTrainingSeparated.resolve("test.md")
-        val humanReadablePath = humanReadable.resolve("test.md")
+        val trainingPath = compilation.outPathTrainingSeparated.resolve("guide-test.md")
+        val humanReadablePath = humanReadable.resolve("guide-test.md")
         assertTrue(trainingPath.exists())
         assertTrue(humanReadablePath.exists())
 
@@ -116,7 +116,7 @@ class GroveDocCompilerTest {
         assertTrue(processedTrainingContent.contains("# Test Header"))
         assertTrue(processedTrainingContent.contains("[Some Doc](guide://)"))
         assertTrue(processedHumanContent.contains("# Test Header"))
-        assertTrue(processedHumanContent.contains("[Some Doc](some%20doc.md)"))
+        assertTrue(processedHumanContent.contains("[Some Doc](guide-some%20doc.md)"))
     }
 
     @Test

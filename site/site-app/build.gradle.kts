@@ -163,6 +163,7 @@ tasks.named("jsBrowserProductionWebpack") {
 }
 
 tasks.register("release") {
+    group = "adaptive"
     dependsOn("build", "jvmShadowJar", "compressJsResources")
     outputs.upToDateWhen { false }
     doLast {

@@ -17,7 +17,7 @@ mkdir ./build/app/$2/etc
 cp ./etc/site.properties ./build/app/$2/etc/site.properties
 
 mkdir ./build/app/$2/lib
-cp ./build/libs/site-jvm-$2-all.jar ./build/app/$2/lib
+cp ./build/libs/site-app-jvm-$2-all.jar ./build/app/$2/lib
 
 mkdir ./build/app/$2/var
 
@@ -26,6 +26,9 @@ cp -r ./build/dist/js/productionExecutable/* ./build/app/$2/var/static/
 
 mkdir ./build/app/$2/var/release
 cp -r ./var/release/* ./build/app/$2/var/release
+
+mkdir ./build/app/$2/var/values
+cp -r ./var/values/* ./build/app/$2/var/values
 
 mkdir ./build/app/$2/var/log
 mkdir ./build/app/$2/var/log/archive
