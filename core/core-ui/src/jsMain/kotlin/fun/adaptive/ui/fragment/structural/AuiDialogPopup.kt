@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.ui.AuiAdapter
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.fragment.layout.RawPosition
+import `fun`.adaptive.ui.support.UiClose
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
@@ -33,7 +34,7 @@ class AuiDialogPopup(
 
     override fun patchContent(fragment: AdaptiveFragment) {
         fragment.setStateVariable(1, get(1))
-        fragment.setStateVariable(2, { hide() })
+        fragment.setStateVariable(2, UiClose { hide() })
     }
 
     override fun mount() {

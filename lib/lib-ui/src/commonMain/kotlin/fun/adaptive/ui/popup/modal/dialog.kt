@@ -6,12 +6,13 @@ import `fun`.adaptive.foundation.NonAdaptive
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.runtime.FrontendWorkspace
 import `fun`.adaptive.ui.api.popupAlign
+import `fun`.adaptive.ui.support.UiClose
 
 @NonAdaptive
 fun <T : Any> dialog(
     adapter: AdaptiveAdapter,
     data: T,
-    content: (data: T, close: () -> Unit) -> Any
+    content: (T, UiClose) -> Any
 ) {
     @Suppress("UNCHECKED_CAST") // see comments at dialogHack
     dialogHack(adapter, data, content as (AdaptiveFragment, Int) -> AdaptiveFragment)
@@ -21,7 +22,7 @@ fun <T : Any> dialog(
 fun <T : Any> dialog(
     workspace: FrontendWorkspace,
     data: T,
-    content: (data: T, close: () -> Unit) -> Any
+    content: (T, UiClose) -> Any
 ) {
     dialog(workspace.frontend, data, content)
 }
