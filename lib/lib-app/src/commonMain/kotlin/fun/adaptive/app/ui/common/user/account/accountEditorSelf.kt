@@ -3,7 +3,7 @@ package `fun`.adaptive.app.ui.common.user.account
 import `fun`.adaptive.ui.mpw.fragments.contentPaneHeader
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.localContext
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.lib_app.generated.resources.accountSelf
 import `fun`.adaptive.lib_app.generated.resources.passwordChange
 import `fun`.adaptive.resource.string.Strings
@@ -32,7 +32,7 @@ fun accountEditorSelf(
     // on the form when the password change popup is open. This strangely works.
     // I lost a few years of my life by being very-very angry while I figured this out.
 
-    val popupState = valueFrom { InputContext() }.also {
+    val popupState = observe { InputContext() }.also {
         if (it.value.isPopupOpen) {
             form.disableAll()
         } else {

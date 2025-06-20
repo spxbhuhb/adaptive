@@ -7,12 +7,11 @@ package `fun`.adaptive.grove.ufd
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
-import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.fragments.toolPane
 import `fun`.adaptive.ui.viewbackend.viewBackend
 
@@ -22,7 +21,7 @@ fun ufdPalette(): AdaptiveFragment {
     val viewBackend = viewBackend(UnitPaneViewBackend::class)
 
     val context = fragment().wsContext<UfdWsContext>()
-    val items = valueFrom { context.palette }
+    val items = observe { context.palette }
 
     toolPane(viewBackend) {
         column {

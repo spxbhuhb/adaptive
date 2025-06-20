@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.focus
@@ -27,7 +27,7 @@ fun button(
     // FIXME button instruction splitting is not reactive (dependency calculation problem)
     val i = fragment().instructions
 
-    val observed = valueFrom {
+    val observed = observe {
         (viewBackend ?: ButtonViewBackend(label)).also { backend ->
             theme?.let { backend.buttonTheme = it }
             i.applyTo(backend)

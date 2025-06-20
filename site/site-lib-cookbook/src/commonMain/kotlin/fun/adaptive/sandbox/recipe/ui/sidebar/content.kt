@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 
@@ -17,7 +17,7 @@ private fun next() {
 
 @Adaptive
 fun sidebarContent() : AdaptiveFragment {
-    val navState = valueFrom { sidebarRecipeNavState }
+    val navState = observe { sidebarRecipeNavState }
 
     row(instructions()) {
         padding { 16.dp }

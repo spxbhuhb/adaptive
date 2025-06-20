@@ -6,7 +6,7 @@ import `fun`.adaptive.cookbook.generated.resources.lock
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.recipe.demo.goodmorning.textMedium
 import `fun`.adaptive.sandbox.support.configureForm
@@ -25,7 +25,7 @@ import `fun`.adaptive.ui.menu.contextMenu
 @Adaptive
 fun contextMenuPlayground(): AdaptiveFragment {
 
-    val form = valueFrom { adatFormBackend(ContextMenuPlaygroundConfig()) }
+    val form = observe { adatFormBackend(ContextMenuPlaygroundConfig()) }
 
     flowBox {
         gap { 16.dp }

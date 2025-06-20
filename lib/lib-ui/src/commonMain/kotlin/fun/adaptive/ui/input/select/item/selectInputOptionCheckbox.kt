@@ -1,7 +1,7 @@
 package `fun`.adaptive.ui.input.select.item
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.checkbox.CheckboxTheme
 import `fun`.adaptive.ui.checkbox.checkbox
@@ -15,7 +15,7 @@ fun <OT> selectInputOptionCheckbox(
     toText : ((OT) -> String)? = null
 ) {
     val hover = hover()
-    val observed = valueFrom { item }
+    val observed = observe { item }
     if (hover) item.isHovered = hover
 
     row {

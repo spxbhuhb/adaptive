@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.decoratedInput
 import `fun`.adaptive.ui.input.text.textInput2
@@ -18,7 +18,7 @@ fun colorInput(
     viewBackend: ColorInputViewBackend
 ): AdaptiveFragment {
 
-    val observed = valueFrom { viewBackend }
+    val observed = observe { viewBackend }
     val focus = focus()
     val theme = observed.colorInputTheme
 

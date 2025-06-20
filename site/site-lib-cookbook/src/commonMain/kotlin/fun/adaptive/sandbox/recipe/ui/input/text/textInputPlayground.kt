@@ -4,7 +4,7 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.sandbox.support.configureForm
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.editor.booleanEditor
@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.instruction.dp
 @Adaptive
 fun textInputPlayground(): AdaptiveFragment {
 
-    val form = valueFrom { adatFormBackend(TextPlaygroundConfig()) }
+    val form = observe { adatFormBackend(TextPlaygroundConfig()) }
 
     flowBox {
         gap { 16.dp }

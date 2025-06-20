@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.grove.generated.resources.*
 import `fun`.adaptive.grove.sheet.SheetViewContext
 import `fun`.adaptive.grove.sheet.SheetViewController
@@ -83,7 +83,7 @@ private fun action(sheetAction: SheetAction, controller: SheetViewController) {
 
 @Adaptive
 fun multiplier(controller: SheetViewController) {
-    val multiplier = valueFrom { controller.multiplierStore }
+    val multiplier = observe { controller.multiplierStore }
 
     if (multiplier > 1) {
         text("Next keyboard move will be $multiplier pixels") .. textSmall .. semiBoldFont .. textColors.onSurfaceAngry .. alignSelf.bottom

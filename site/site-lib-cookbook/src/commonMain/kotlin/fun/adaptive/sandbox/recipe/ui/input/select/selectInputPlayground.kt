@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.support.configureForm
@@ -30,7 +30,7 @@ import kotlin.math.min
 @Adaptive
 fun selectInputPlayground(): AdaptiveFragment {
 
-    val form = valueFrom { adatFormBackend(SelectPlaygroundConfig()) }
+    val form = observe { adatFormBackend(SelectPlaygroundConfig()) }
 
     flowBox {
         gap { 16.dp }

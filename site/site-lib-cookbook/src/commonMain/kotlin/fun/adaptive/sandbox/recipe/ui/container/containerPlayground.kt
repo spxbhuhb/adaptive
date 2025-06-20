@@ -11,7 +11,7 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.sandbox.support.configureForm
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.editor.booleanEditor
@@ -36,7 +36,7 @@ import `fun`.adaptive.ui.theme.borders
 @Adaptive
 fun containerPlayground(): AdaptiveFragment {
 
-    val form = valueFrom { adatFormBackend(PlaygroundConfig()) }
+    val form = observe { adatFormBackend(PlaygroundConfig()) }
 
     flowBox {
         gap { 16.dp }

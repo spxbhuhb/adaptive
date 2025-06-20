@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.storeFor
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.graphics.svg.api.svgHeight
@@ -39,7 +39,7 @@ private val sidebarState = storeFor { SidebarState(FULL) }
 
 @Adaptive
 fun collapsible() {
-    val state = valueFrom { sidebarState }
+    val state = observe { sidebarState }
 
     box {
         containerStyles

@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -34,9 +34,9 @@ import `fun`.adaptive.ui.theme.textSmall
 fun accountManager(): AdaptiveFragment {
 
     val viewBackend = AccountManagerViewBackend(fragment())
-    val accounts = valueFrom { viewBackend.accounts }
+    val accounts = observe { viewBackend.accounts }
 
-    val filterBackend = valueFrom { adatFormBackend(AccountFilter()) }
+    val filterBackend = observe { adatFormBackend(AccountFilter()) }
     val filter = filterBackend.inputValue
 
     column {

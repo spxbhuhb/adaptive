@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.singleLineTextInput
@@ -17,7 +17,7 @@ fun dPixelInput(
     viewBackend: DPixelInputViewBackend
 ): AdaptiveFragment {
 
-    val observed = valueFrom { viewBackend }
+    val observed = observe { viewBackend }
     val focus = focus()
     val formatted = observed.inputValue?.value?.format(observed.decimals, hideZeroDecimals = true)
 

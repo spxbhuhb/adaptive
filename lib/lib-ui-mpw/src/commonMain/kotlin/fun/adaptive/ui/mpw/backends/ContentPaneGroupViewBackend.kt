@@ -1,6 +1,6 @@
 package `fun`.adaptive.ui.mpw.backends
 
-import `fun`.adaptive.foundation.value.storeFor
+import `fun`.adaptive.foundation.value.observableOf
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.model.PaneAction
 import `fun`.adaptive.ui.tab.TabContainer
@@ -30,7 +30,7 @@ class ContentPaneGroupViewBackend(
     var panes = mutableListOf(firstPane)
         private set
 
-    val tabContainer = storeFor { toTabContainer() }
+    val tabContainer = observableOf { toTabContainer() }
 
     fun load(pane: PaneViewBackend<*>) {
         val index = panes.indexOfFirst { it.uuid == pane.uuid }

@@ -13,7 +13,7 @@ import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.sandbox.recipe.ui.dialog.dialogRecipe
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
-import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.form.commonFormExample
 import `fun`.adaptive.sandbox.recipe.ui.icon.iconRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.button.*
@@ -85,7 +85,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Form
         // ----------------------------------------------------------------------------
 
-        add("cookbook/form/example/basic", ::formBasicExample)
+        add("cookbook/form/example/common", ::commonFormExample)
 
         // ----------------------------------------------------------------------------
         // Badge

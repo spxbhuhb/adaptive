@@ -6,7 +6,7 @@ You can build forms with standalone inputs or with editors.
 
 ## Hard-coded examples
 
-[Basic form example](actualize:///cookbook/form/example/basic)
+[Common form example](actualize:///cookbook/form/example/common)
 
 ---
 

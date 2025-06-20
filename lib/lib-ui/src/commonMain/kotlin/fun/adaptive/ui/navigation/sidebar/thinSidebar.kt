@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.ui.api.*
@@ -21,7 +21,7 @@ fun thinSidebar(
     theme: ThinSidebarTheme = thinSidebarTheme,
     vararg instructions: AdaptiveInstruction,
 ): AdaptiveFragment {
-    val navState = valueFrom { navStateOrigin }
+    val navState = observe { navStateOrigin }
 
     column(theme.container, instructions()) {
         for (item in items.sortedBy { it.index }) {

@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.mpw.fragments
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.api.localContext
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.tab.tabContainer
 import `fun`.adaptive.ui.tab.tabHandle
 import `fun`.adaptive.ui.mpw.backends.ContentPaneGroupViewBackend
@@ -29,7 +29,7 @@ fun singularGroup(group: ContentPaneGroupViewBackend) {
 
 @Adaptive
 fun nonSingularGroup(group: ContentPaneGroupViewBackend) {
-    val tabContainer = valueFrom { group.tabContainer }
+    val tabContainer = observe { group.tabContainer }
 
     // https://github.com/spxbhuhb/adaptive/issues/123
     // KT-75416 KJS / IC: "IrLinkageError: Constructor can not be called: No constructor found for symbol" on jsBrowserDevelopmentRun restart

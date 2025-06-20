@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
@@ -26,7 +26,7 @@ fun <IT, OT> selectInputDropdown(
 ): AdaptiveFragment {
 
     val focus = focus()
-    val observed = valueFrom { viewBackend.also { it.withDropdown = true } }
+    val observed = observe { viewBackend.also { it.withDropdown = true } }
 
     val theme = viewBackend.selectInputTheme
 

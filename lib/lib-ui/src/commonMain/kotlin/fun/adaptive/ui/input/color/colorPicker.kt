@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.query.first
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.canvas.api.canvas
 import `fun`.adaptive.graphics.canvas.api.circle
 import `fun`.adaptive.graphics.canvas.api.draw
@@ -30,7 +30,7 @@ fun colorPickerPopup(
     hide: () -> Unit
 ) {
 
-    val pickerViewBackend = valueFrom { HslColorPickerViewBackend(viewBackend.inputValue?.encodeToHsl()) }
+    val pickerViewBackend = observe { HslColorPickerViewBackend(viewBackend.inputValue?.encodeToHsl()) }
 
     editorModal(
         title = viewBackend.label ?: "",

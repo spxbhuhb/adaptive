@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.storeFor
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.height
 import `fun`.adaptive.ui.api.maxSize
@@ -22,7 +22,7 @@ import `fun`.adaptive.ui.support.UiSave
 fun emptyModalExample(): AdaptiveFragment {
 
     val messageStore = storeFor { emptyList<String>() }
-    val messages = valueFrom { messageStore }
+    val messages = observe { messageStore }
 
     localContext(UiClose { messageStore.value += "close" }) {
         localContext(UiSave { messageStore.value += "save" }) {

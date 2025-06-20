@@ -1,7 +1,7 @@
 package `fun`.adaptive.ui.snackbar
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 
@@ -11,7 +11,7 @@ fun snackContainer(
 ) {
     val metrics = mediaMetrics()
 
-    val activeSnacks = valueFrom { activeSnackStore }
+    val activeSnacks = observe { activeSnackStore }
 
     val snackbarPosition = position(
         metrics.viewHeight.dp - (theme.snackHeight + theme.snackGap) * activeSnacks.size,

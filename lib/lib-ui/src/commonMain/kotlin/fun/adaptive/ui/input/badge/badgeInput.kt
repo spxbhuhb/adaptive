@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.badge.badge
@@ -19,7 +19,7 @@ fun badgeInput(
     viewBackend: BadgeInputViewBackend
 ): AdaptiveFragment {
 
-    val observed = valueFrom { viewBackend }
+    val observed = observe { viewBackend }
     val focus = focus()
     val theme = observed.badgeInputTheme
     var textInputValue = ""

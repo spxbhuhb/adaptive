@@ -13,7 +13,7 @@ import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.value.storeFor
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.lib_app.generated.resources.signInButton
 import `fun`.adaptive.lib_app.generated.resources.signInSubTitle
 import `fun`.adaptive.lib_app.generated.resources.signInTitle
@@ -41,7 +41,7 @@ fun signIn(): AdaptiveFragment {
     val signInFragment = fragment()
 
     val messageStore = storeFor { "" }
-    val message = valueFrom { messageStore }
+    val message = observe { messageStore }
 
     box {
         maxSize .. alignItems.center .. backgrounds.surfaceVariant

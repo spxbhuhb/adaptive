@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.lib_app.generated.resources.addRole
 import `fun`.adaptive.lib_app.generated.resources.edit
 import `fun`.adaptive.lib_app.generated.resources.roles
@@ -34,9 +34,9 @@ import `fun`.adaptive.value.AvValue
 fun roleManager(): AdaptiveFragment {
 
     val viewBackend = RoleManagerViewBackend(fragment())
-    val rolesOrNull = valueFrom { viewBackend.roles }
+    val rolesOrNull = observe { viewBackend.roles }
 
-    val filterBackend = valueFrom { adatFormBackend(RoleFilter()) }
+    val filterBackend = observe { adatFormBackend(RoleFilter()) }
     val filter = filterBackend.inputValue
 
 

@@ -12,8 +12,7 @@ open class BadgeInputTheme {
     var badgeTheme = BadgeTheme.info
 
     var container = instructionsOf(
-        maxWidth,
-        tabIndex { 0 }
+        maxWidth
     )
 
     var inputContainer = instructionsOf(

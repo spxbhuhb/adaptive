@@ -1,7 +1,7 @@
 package `fun`.adaptive.ui.mpw.fragments
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
@@ -23,7 +23,7 @@ fun paneTitle(
 ) {
 
     val pane = paneBackend.paneDef
-    val actionContext = valueFrom { InputContext() }
+    val actionContext = observe { InputContext() }
 
     row {
         theme.paneTitleContainer

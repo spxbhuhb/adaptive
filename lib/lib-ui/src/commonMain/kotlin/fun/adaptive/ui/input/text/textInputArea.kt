@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.multiLineTextInput
 import `fun`.adaptive.ui.input.InputContext
@@ -17,7 +17,7 @@ fun textInputArea(
     theme : InputTheme = InputTheme.DEFAULT,
     onChange : (String) -> Unit
 ) : AdaptiveFragment {
-    val observed = valueFrom { state }
+    val observed = observe { state }
     val focus = focus()
 
     val themeInstructions = when {

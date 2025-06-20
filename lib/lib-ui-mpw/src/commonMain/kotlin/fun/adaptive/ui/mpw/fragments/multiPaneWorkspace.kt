@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
@@ -18,13 +18,12 @@ import `fun`.adaptive.ui.mpw.AbstractSideBarAction
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
-import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
 @Adaptive
 fun multiPaneWorkspace(workspace: MultiPaneWorkspace) {
-    val isFullScreen = valueFrom { workspace.isFullScreen }
+    val isFullScreen = observe { workspace.isFullScreen }
 
     grid {
         maxSize .. if (isFullScreen) colTemplate(0.dp, 1.fr, 0.dp) else  colTemplate(DEFAULT.width, 1.fr, DEFAULT.width)
@@ -47,7 +46,7 @@ fun multiPaneWorkspace(workspace: MultiPaneWorkspace) {
 
 @Adaptive
 fun multiPaneWorkspaceMain(workspace: MultiPaneWorkspace) {
-    val config = valueFrom { workspace.mainSplit }
+    val config = observe { workspace.mainSplit }
 
     splitPane(
         config,
@@ -59,7 +58,7 @@ fun multiPaneWorkspaceMain(workspace: MultiPaneWorkspace) {
 
 @Adaptive
 private fun mpTop(workspace: MultiPaneWorkspace) {
-    val config = valueFrom { workspace.topSplit }
+    val config = observe { workspace.topSplit }
 
     splitPane(
         config,
@@ -71,7 +70,7 @@ private fun mpTop(workspace: MultiPaneWorkspace) {
 
 @Adaptive
 private fun mpLeft(workspace: MultiPaneWorkspace) {
-    val config = valueFrom { workspace.leftSplit }
+    val config = observe { workspace.leftSplit }
 
     splitPane(
         config,
@@ -83,7 +82,7 @@ private fun mpLeft(workspace: MultiPaneWorkspace) {
 
 @Adaptive
 private fun mpCenterRight(workspace: MultiPaneWorkspace) {
-    val config = valueFrom { workspace.centerRightSplit }
+    val config = observe { workspace.centerRightSplit }
 
     splitPane(
         config,
@@ -95,7 +94,7 @@ private fun mpCenterRight(workspace: MultiPaneWorkspace) {
 
 @Adaptive
 private fun mpRight(workspace: MultiPaneWorkspace) {
-    val config = valueFrom { workspace.rightSplit }
+    val config = observe { workspace.rightSplit }
 
     splitPane(
         config,
@@ -107,7 +106,7 @@ private fun mpRight(workspace: MultiPaneWorkspace) {
 
 @Adaptive
 private fun mpBottom(workspace: MultiPaneWorkspace) {
-    val config = valueFrom { workspace.bottomSplit }
+    val config = observe { workspace.bottomSplit }
 
     splitPane(
         config,
@@ -120,7 +119,7 @@ private fun mpBottom(workspace: MultiPaneWorkspace) {
 @Adaptive
 private fun mpPane(workspace: MultiPaneWorkspace, position: PanePosition): AdaptiveFragment {
 
-    val paneUuid = valueFrom {
+    val paneUuid = observe {
         when (position) {
             PanePosition.RightTop -> {
                 workspace.rightTop
@@ -221,7 +220,7 @@ private fun mpSideBarIcon(
     val hover = hover()
     val theme = workspace.theme
 //  FIXME  val activePane = valueFrom { workspace.paneStore(action.pane) }
-    val focusedPane = valueFrom { workspace.focusedPane }
+    val focusedPane = observe { workspace.focusedPane }
 
     val containerStyle = theme.paneIconContainer(UUID.nil(), UUID.nil(), focusedPane, hover)
 

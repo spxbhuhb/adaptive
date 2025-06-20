@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.DPixel
@@ -24,7 +24,7 @@ fun <IT, CT> tree(
     _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<IT, CT>? = null
 ): AdaptiveFragment {
 
-    val observed = valueFrom { viewBackend }
+    val observed = observe { viewBackend }
 
     column(observed.theme.container, instructions()) {
         onKeydown { observed.onKeyDown(it) }
@@ -45,7 +45,7 @@ private fun <IT, CT> node(
     @Adaptive
     _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<IT, CT>?
 ) {
-    val observed = valueFrom { item }
+    val observed = observe { item }
 
     column {
 
@@ -73,7 +73,7 @@ private fun <IT, CT> label(
     @Adaptive
     _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<IT, CT>?
 ) {
-    val observed = valueFrom { item }
+    val observed = observe { item }
     val theme = viewBackend.theme
 
     val foreground = theme.itemForeground(observed.selected, true)

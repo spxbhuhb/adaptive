@@ -7,7 +7,7 @@ import `fun`.adaptive.app.ws.SandBoxClientModule
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.GroveRuntimeModule
@@ -20,16 +20,11 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.ui.badge.commonBadgeExample
-import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
-import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputExample
-import `fun`.adaptive.sandbox.recipe.ui.input.number.commonIntInputExample
+import `fun`.adaptive.sandbox.recipe.ui.form.commonFormExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
-import `fun`.adaptive.ui.input.badge.badgeInput
-import `fun`.adaptive.ui.input.badge.badgeInputBackend
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
@@ -102,7 +97,7 @@ fun sandboxMain() {
                 column {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. verticalScroll //.. backgrounds.friendlyOpaque
 
-                    commonIntInputExample()
+                    commonFormExample()
 
                 }
             }
@@ -114,7 +109,7 @@ fun sandboxMain() {
 
 @Adaptive
 fun collectedLog(data: CollectedLogData) {
-    val observed = valueFrom { data }
+    val observed = observe { data }
 
     box {
         maxSize .. zIndex { 100000 } .. noPointerEvents

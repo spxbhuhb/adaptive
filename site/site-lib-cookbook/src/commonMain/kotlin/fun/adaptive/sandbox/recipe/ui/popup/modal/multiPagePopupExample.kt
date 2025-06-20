@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.storeFor
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
@@ -108,7 +108,7 @@ fun page3() {
 fun messages(
     modalBackend: MultiPageModalExampleBackend
 ) {
-    val observed = valueFrom { modalBackend.messages }
+    val observed = observe { modalBackend.messages }
 
     text("Messages:")
     for (message in observed) text(message) .. paddingLeft { 16.dp }

@@ -3,7 +3,7 @@ package `fun`.adaptive.sandbox.recipe.ui.input.number
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.sandbox.support.examplePane
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.InputTheme
@@ -26,8 +26,8 @@ fun commonIntInputExample(): AdaptiveFragment {
 
 @Adaptive
 private fun noUnitNoRadix() {
-    val intBackend = valueFrom { intInputBackend(123).apply { label = "Non-nullable" } }
-    val nullableIntBackend = valueFrom { intInputBackend(123).apply { label = "Nullable"; isNullable = true } }
+    val intBackend = observe { intInputBackend(123).apply { label = "Non-nullable" } }
+    val nullableIntBackend = observe { intInputBackend(123).apply { label = "Nullable"; isNullable = true } }
 
     examplePane(
         "No radix",
@@ -57,14 +57,14 @@ private fun noUnitNoRadix() {
 
 @Adaptive
 private fun noUnitRadix() {
-    val radix16NoRadix10Backend = valueFrom {
+    val radix16NoRadix10Backend = observe {
         intInputBackend(123).apply {
             label = "Radix 16, not showing radix 10"
             radix = 16
         }
     }
 
-    val radix16WithRadix10Backend = valueFrom {
+    val radix16WithRadix10Backend = observe {
         intInputBackend(123).apply {
             label = "Radix 16, with radix 10"
             radix = 16

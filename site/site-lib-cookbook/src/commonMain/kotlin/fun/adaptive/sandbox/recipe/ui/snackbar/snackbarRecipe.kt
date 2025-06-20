@@ -3,7 +3,7 @@ package `fun`.adaptive.sandbox.recipe.ui.snackbar
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.instruction.dp
@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.snackbar.*
 @Adaptive
 fun snackbarRecipe(): AdaptiveFragment {
 //    val metrics = mediaMetrics()
-    val snacks = valueFrom { snackStore }
+    val snacks = observe { snackStore }
 //    val activeSnacks = autoList(activeSnacks, Snack.adatWireFormat) { activeSnacks.connectInfo(AutoConnectionType.Direct) } ?: emptyList()
 
 //    val globalPos = position(

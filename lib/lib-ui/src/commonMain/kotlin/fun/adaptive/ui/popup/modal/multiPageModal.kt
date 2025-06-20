@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.nop
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.storeFor
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
@@ -60,8 +60,8 @@ fun <MENU_ITEM_DATA> multiPageModal(
 ): AdaptiveFragment {
 
     val modalBackend = viewBackend ?: fragment().firstContext()
-    val pages = valueFrom { modalBackend.pages }
-    val selectedPage = valueFrom { modalBackend.selectedPage }
+    val pages = observe { modalBackend.pages }
+    val selectedPage = observe { modalBackend.selectedPage }
 
     val selectListBackend = selectInputBackend(
         selectedPage
@@ -74,7 +74,7 @@ fun <MENU_ITEM_DATA> multiPageModal(
 
     // FIXME split store mess
     val splitConfigStore = storeFor { SplitPaneViewBackend(SplitVisibility.Both, SplitMethod.FixFirst, 200.0, Orientation.Horizontal) }
-    val splitConfig = valueFrom { splitConfigStore }
+    val splitConfig = observe { splitConfigStore }
 
     localContext(viewBackend) {
         basicModal(modalBackend.title) {

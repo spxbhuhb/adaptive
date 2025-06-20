@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.foundation.value.storeFor
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.button.button
@@ -26,7 +26,7 @@ private val sharedData = storeFor { Data("Hello") }
 
 @Adaptive
 fun independentAuto(close: () -> Unit) {
-    val autoData = valueFrom { sharedData }
+    val autoData = observe { sharedData }
 
     @Independent
     var iData = copyOf { autoData }

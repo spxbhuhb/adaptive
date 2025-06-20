@@ -6,8 +6,12 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
 import `fun`.adaptive.general.Observable
 
+inline fun <VT> observableOf(value : () -> VT) : Observable<VT> = AdaptiveValueStore(value())
+
+@Deprecated("Use observableOf instead", ReplaceWith("observableOf { value }"))
 inline fun <VT> storeFor(value : () -> VT) : Observable<VT> = adaptiveStoreFor(value())
 
+@Deprecated("Use observableOf instead", ReplaceWith("observableOf{ value }"))
 fun <VT> adaptiveStoreFor(value : VT): Observable<VT> =
     if (value is AdatClass) {
         AdaptiveCopyStore(null, value)
@@ -16,7 +20,7 @@ fun <VT> adaptiveStoreFor(value : VT): Observable<VT> =
     }
 
 @Producer
-fun <VT> valueFrom(
+fun <VT> observe(
     binding: AdaptiveStateVariableBinding<VT>? = null,
     producerFun: () -> Observable<VT>
 ): VT {

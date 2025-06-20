@@ -3,8 +3,9 @@ package `fun`.adaptive.sandbox.recipe.ui.layout.box
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.sandbox.support.yellow
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.value.observableOf
 import `fun`.adaptive.foundation.value.storeFor
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.api.border
@@ -24,7 +25,7 @@ import `fun`.adaptive.ui.theme.textSmall
 
 @Adaptive
 fun addChild(inColumn: Boolean = false) {
-    val boxes = valueFrom { boxStore }
+    val boxes = observe { boxStore }
 
     box {
         borders.outline
@@ -43,7 +44,7 @@ fun addChild(inColumn: Boolean = false) {
 @Adat
 private class Index(val index: Int)
 
-private val boxStore = storeFor { listOf<Index>(Index(0), Index(1)) }
+private val boxStore = observableOf { listOf(Index(0), Index(1)) }
 
 @Adaptive
 private fun boxList(inColumn: Boolean, boxes: Collection<Index>) {

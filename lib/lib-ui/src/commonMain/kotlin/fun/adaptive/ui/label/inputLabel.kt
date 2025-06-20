@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.input.InputContext
@@ -16,7 +16,7 @@ fun inputLabel(
     theme: LabelTheme = LabelTheme.DEFAULT,
     label: () -> String
 ): AdaptiveFragment {
-    val observed = valueFrom { inputContext }
+    val observed = observe { inputContext }
     val focus = focus()
 
     val themeInstructions = when {

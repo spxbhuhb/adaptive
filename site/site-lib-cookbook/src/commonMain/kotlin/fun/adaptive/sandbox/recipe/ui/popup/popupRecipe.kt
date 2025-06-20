@@ -15,7 +15,7 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.checkbox.checkbox
@@ -111,7 +111,7 @@ fun AdatFormViewBackend<PopupPlaygroundConfig>.setAlignment(alignment: PopupAlig
 @Adaptive
 fun alignment(): AdaptiveFragment {
 
-    val formBackend = valueFrom { adatFormBackend(PopupPlaygroundConfig()) }
+    val formBackend = observe { adatFormBackend(PopupPlaygroundConfig()) }
     val config = formBackend.inputValue
     val alignment = config.alignment
     

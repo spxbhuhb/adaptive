@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.nop
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.support.configureForm
@@ -33,7 +33,7 @@ import kotlin.random.Random
 @Adaptive
 fun treePlayground(): AdaptiveFragment {
 
-    val form = valueFrom { adatFormBackend(TreePlaygroundConfig()) }
+    val form = observe { adatFormBackend(TreePlaygroundConfig()) }
 
     flowBox {
         gap { 16.dp }

@@ -3,7 +3,7 @@ package `fun`.adaptive.grove.ufd
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.foundation.value.valueFromOrNull
 import `fun`.adaptive.grove.generated.resources.selectForInstructions
 import `fun`.adaptive.grove.sheet.SheetViewContext
@@ -22,7 +22,7 @@ fun ufdInstructions(): AdaptiveFragment {
     val viewBackend = viewBackend(UnitPaneViewBackend::class)
 
     val context = fragment().wsContext<SheetViewContext>()
-    val controller = valueFrom { context.focusedView }
+    val controller = observe { context.focusedView }
     val selection = valueFromOrNull { controller?.selectionStore }
 
     val isEmpty = selection == null || selection.items.isEmpty()

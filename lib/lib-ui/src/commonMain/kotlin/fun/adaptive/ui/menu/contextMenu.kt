@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.event.EventModifier
@@ -33,7 +33,7 @@ private fun <T> node(
     selectedFun: MenuItemSelectedFun<T>,
     theme: ContextMenuTheme
 ) {
-    val observed = valueFrom { item }
+    val observed = observe { item }
 
     if (observed is MenuItem<T>) {
         label(observed, selectedFun, theme)

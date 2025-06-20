@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.sheet.fragment
 
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.value.valueFrom
+import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.sheet.Handles
 import `fun`.adaptive.grove.sheet.SheetViewController
@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.theme.colors
 @Adaptive
 fun controlLayer(controller: SheetViewController) {
 
-    val controlFrame = valueFrom { controller.controlFrameStore }
+    val controlFrame = observe { controller.controlFrameStore }
 
     dropTarget {
 
