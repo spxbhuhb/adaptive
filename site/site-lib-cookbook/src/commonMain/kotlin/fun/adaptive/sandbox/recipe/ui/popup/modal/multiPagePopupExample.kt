@@ -6,21 +6,24 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.value.adaptiveStoreFor
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.foundation.value.valueFrom
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.generated.resources.example
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.popup.modal.MultiPageModalBackend
 import `fun`.adaptive.ui.popup.modal.multiPageModal
 import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.support.UiSave
-import `fun`.adaptive.utility.debug
 
 
-class MultiPagePopupExampleBackend : UiClose, UiSave, MultiPageModalBackend<FragmentKey> {
+class MultiPageModalExampleBackend : UiClose, UiSave, MultiPageModalBackend<FragmentKey> {
+
+    override val title: String
+        get() = Strings.example
 
     override val pages = storeFor {
         listOf(
@@ -33,7 +36,7 @@ class MultiPagePopupExampleBackend : UiClose, UiSave, MultiPageModalBackend<Frag
     override val selectedPage = storeFor<MenuItem<FragmentKey>?> { null }
 
     // this field is for demonstration only, replace them with your own data
-    val messages = adaptiveStoreFor(emptyList<String>())
+    val messages = storeFor { emptyList<String>() }
 
     override fun selectPage(page: MenuItem<FragmentKey>?) {
         selectedPage.value = page
@@ -51,13 +54,13 @@ class MultiPagePopupExampleBackend : UiClose, UiSave, MultiPageModalBackend<Frag
 }
 
 @Adaptive
-fun multiPagePopupExample(): AdaptiveFragment {
+fun multiPageModalExample(): AdaptiveFragment {
 
-    multiPageModal(MultiPagePopupExampleBackend()) { modalBackend ->
+    multiPageModal(MultiPageModalExampleBackend()) { modalBackend ->
         size(600.dp, 400.dp)
 
         column {
-            when (modalBackend.selectedPage.value?.data?.debug()) {
+            when (modalBackend.selected) {
                 "page1" -> page1()
                 "page2" -> page2()
                 "page3" -> page3()
@@ -70,7 +73,7 @@ fun multiPagePopupExample(): AdaptiveFragment {
 
 @Adaptive
 fun page1() {
-    val modalBackend = fragment().firstContext<MultiPagePopupExampleBackend>()
+    val modalBackend = fragment().firstContext<MultiPageModalExampleBackend>()
 
     column {
         maxSize .. verticalScroll
@@ -81,7 +84,7 @@ fun page1() {
 
 @Adaptive
 fun page2() {
-    val modalBackend = fragment().firstContext<MultiPagePopupExampleBackend>()
+    val modalBackend = fragment().firstContext<MultiPageModalExampleBackend>()
 
     column {
         maxSize .. verticalScroll
@@ -92,7 +95,7 @@ fun page2() {
 
 @Adaptive
 fun page3() {
-    val modalBackend = fragment().firstContext<MultiPagePopupExampleBackend>()
+    val modalBackend = fragment().firstContext<MultiPageModalExampleBackend>()
 
     column {
         maxSize .. verticalScroll
@@ -103,7 +106,7 @@ fun page3() {
 
 @Adaptive
 fun messages(
-    modalBackend: MultiPagePopupExampleBackend
+    modalBackend: MultiPageModalExampleBackend
 ) {
     val observed = valueFrom { modalBackend.messages }
 

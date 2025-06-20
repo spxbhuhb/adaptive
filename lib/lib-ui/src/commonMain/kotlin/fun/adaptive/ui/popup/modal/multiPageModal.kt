@@ -15,7 +15,6 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.generated.resources.empty
-import `fun`.adaptive.ui.generated.resources.example
 import `fun`.adaptive.ui.generated.resources.pleaseSelectFromList
 import `fun`.adaptive.ui.input.select.item.selectInputOptionIconAndText
 import `fun`.adaptive.ui.input.select.selectInputBackend
@@ -34,14 +33,20 @@ import `fun`.adaptive.ui.theme.textMedium
 
 interface MultiPageModalBackend<MENU_ITEM_DATA> {
 
+    val title : String
     /**
      * List of the pages that shows on the left side of the modal.
      */
     val pages: Observable<List<MenuItem<MENU_ITEM_DATA>>>
 
+    val selected: MENU_ITEM_DATA?
+        get() = selectedPage.value?.data
+
     val selectedPage: Observable<MenuItem<MENU_ITEM_DATA>?>
 
-    fun selectPage(page: MenuItem<MENU_ITEM_DATA>?)
+    fun selectPage(page: MenuItem<MENU_ITEM_DATA>?) {
+        selectedPage.value = page
+    }
 
     val noPageMessage: String
         get() = Strings.pleaseSelectFromList
@@ -72,7 +77,7 @@ fun <MENU_ITEM_DATA> multiPageModal(
     val splitConfig = valueFrom { splitConfigStore }
 
     localContext(viewBackend) {
-        basicModal(Strings.example) {
+        basicModal(modalBackend.title) {
             instructions()
             splitPane(
                 splitConfig,

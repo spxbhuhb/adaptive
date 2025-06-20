@@ -22,4 +22,6 @@
     <string name="inactivate">Inaktiválás</string>
     <string name="selectArea">Válassz területet a szerkesztéshez</string>
 
+    <string name="enumOrNull">Enum vagy null</string>
+
 </resources>

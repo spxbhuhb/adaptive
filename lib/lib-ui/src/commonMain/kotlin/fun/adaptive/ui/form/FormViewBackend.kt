@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContextOrNull
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.resource.ResourceKey
+import `fun`.adaptive.resource.resolve.resolveString
 import `fun`.adaptive.runtime.AbstractApplication
 import `fun`.adaptive.ui.input.InputViewBackend
 
@@ -93,15 +94,10 @@ open class FormViewBackend() {
         if (key == null) return null
 
         val app = application
-            ?: fragment.firstContextOrNull<AbstractApplication<*,*>>()?.also { application = it }
+            ?: fragment.adapter.application.also { application = it }
             ?: return key
 
-        for (store in app.stringStores) {
-            val label = store.getOrNull(key) ?: continue
-            return label
-        }
-
-        return key
+        return app.resolveString(key) ?: key
     }
 
     companion object {

@@ -32,7 +32,7 @@ import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.workspaceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.menu.contextMenuPlayground
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.customPopupExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.emptyModalExample
-import `fun`.adaptive.sandbox.recipe.ui.popup.modal.multiPagePopupExample
+import `fun`.adaptive.sandbox.recipe.ui.popup.modal.multiPageModalExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.openPopupOnClickExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.popupRecipe
 import `fun`.adaptive.sandbox.recipe.ui.sidebar.sideBarRecipe
@@ -107,7 +107,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // ----------------------------------------------------------------------------
 
         add("cookbook/popup/modal/example/empty", ::emptyModalExample)
-        add("cookbook/popup/modal/example/multi-page", ::multiPagePopupExample)
+        add("cookbook/popup/modal/example/multi-page", ::multiPageModalExample)
         add("cookbook/popup/modal/example/open-on-click", ::openPopupOnClickExample)
         add("cookbook/popup/modal/example/custom", ::customPopupExample)
 
