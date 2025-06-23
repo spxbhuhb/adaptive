@@ -209,7 +209,7 @@ class AvRemoteListSubscriberTest {
 
         test(backendAdapter = testClient.backend) {
             val value = avRemoteList("marker", String::class).also { result += it }
-            println(value)
+            println(">$value<")
         }
 
         val serverValueWorker = testServer.backend.firstImpl<AvValueWorker>()
@@ -217,9 +217,9 @@ class AvRemoteListSubscriberTest {
             this += AvValue(valueId, markersOrNull = setOf("marker"), spec = "Hello World!")
         }
 
-        waitForReal(2.seconds) { result.count { it != null } == 1 }
+        waitForReal(2.seconds) { result.count { it != null && it.isNotEmpty() } == 1 }
 
         assertTrue(result[0]!!.isEmpty())
-        assertEquals(result[1]?.first()?.spec, "Hello World!")
+        assertEquals(result.last()?.first()?.spec, "Hello World!")
     }
 }
