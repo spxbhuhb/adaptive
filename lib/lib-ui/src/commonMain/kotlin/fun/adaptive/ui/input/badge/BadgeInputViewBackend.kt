@@ -13,6 +13,7 @@ class BadgeInputViewBackend(
     var unremovable = setOf<String>()
 
     fun addBadge(label: String) {
+        if (label.isBlank()) return
         inputValue = inputValue?.let { it + label } ?: setOf(label)
     }
 

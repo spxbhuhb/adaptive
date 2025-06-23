@@ -59,8 +59,6 @@ open class AvRemoteListSubscriber<SPEC : Any>(
         @Suppress("UNCHECKED_CAST")
         itemMap[value.uuid] = value as AvValue<SPEC>
         cachedValue = null
-
-        notifyListeners()
     }
 
     override var value: List<AvValue<SPEC>>?

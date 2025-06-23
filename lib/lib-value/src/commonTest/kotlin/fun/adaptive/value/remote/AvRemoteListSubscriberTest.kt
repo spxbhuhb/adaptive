@@ -1,17 +1,26 @@
 package `fun`.adaptive.value.remote
 
+import `fun`.adaptive.backend.query.firstImpl
+import `fun`.adaptive.foundation.testing.test
+import `fun`.adaptive.lib.util.app.UtilModule
+import `fun`.adaptive.test.TestClientApplication.Companion.testClient
+import `fun`.adaptive.test.TestServerApplication.Companion.testServer
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
+import `fun`.adaptive.value.AvValueWorker
+import `fun`.adaptive.value.app.ValueClientModule
+import `fun`.adaptive.value.app.ValueServerModule
 import `fun`.adaptive.value.avById
 import `fun`.adaptive.value.valueTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runTest
 import kotlin.js.JsName
 import kotlin.test.*
 import kotlin.time.Duration.Companion.seconds
 
 @OptIn(ExperimentalCoroutinesApi::class)
-class AvListSubscriberTest {
+class AvRemoteListSubscriberTest {
 
     @Test
     @JsName("shouldCollectAndMaintainListOfMatchingValues")
@@ -181,5 +190,36 @@ class AvListSubscriberTest {
 
         subscriber.stop()
         waitForReal(3.seconds) { subscriber.job == null }
+    }
+
+    @Test
+    fun producer() = runTest {
+        val valueId = AvValueId()
+
+        val testServer = testServer {
+            module { UtilModule() }
+            module { ValueServerModule() }
+        }
+
+        val testClient = testClient(testServer) {
+            module { ValueClientModule() }
+        }
+
+        val result = mutableListOf<List<AvValue<String>>?>()
+
+        test(backendAdapter = testClient.backend) {
+            val value = avRemoteList("marker", String::class).also { result += it }
+            println(value)
+        }
+
+        val serverValueWorker = testServer.backend.firstImpl<AvValueWorker>()
+        serverValueWorker.executeOutOfBand {
+            this += AvValue(valueId, markersOrNull = setOf("marker"), spec = "Hello World!")
+        }
+
+        waitForReal(2.seconds) { result.count { it != null } == 1 }
+
+        assertTrue(result[0]!!.isEmpty())
+        assertEquals(result[1]?.first()?.spec, "Hello World!")
     }
 }

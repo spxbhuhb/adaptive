@@ -37,7 +37,7 @@ abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>() 
     }
 
     open fun load(item: Any, modifiers: Set<EventModifier>) {
-        devNote { "PaneViewBackend.load($item, $modifiers) - using basic implementation" }
+        // devNote { "PaneViewBackend.load($item, $modifiers) - using basic implementation" }
     }
 
     fun resolveString(key : StringResourceKey) = workspace.resolveString(key)

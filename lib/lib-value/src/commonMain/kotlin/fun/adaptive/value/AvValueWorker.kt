@@ -195,6 +195,9 @@ open class AvValueWorker(
     inline fun <reified SPEC : Any> refOrNull(value: AvValue<*>, refMarker: AvMarker) =
         store.refOrNull(value, refMarker)?.checkSpec<SPEC>()
 
+    inline fun <reified SPEC : Any> refList(value: AvValue<*>, refListMarker: AvMarker): List<AvValue<SPEC>> =
+        store.refList(value.uuid, refListMarker).map { it.checkSpec(SPEC::class) }
+
     inline fun <reified SPEC : Any> refList(valueId: AvValueId, refListMarker: AvMarker): List<AvValue<SPEC>> =
         store.refList(valueId, refListMarker).map { it.checkSpec(SPEC::class) }
 

@@ -8,9 +8,11 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.theme.emptyInst
 import kotlinx.datetime.Instant
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
 
 @Adaptive
 fun instant(timestamp: Instant?, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
-    text(timestamp?.toString()?.replace("T", " ")?.substringBefore('.') ?: "-", emptyInst(timestamp), instructions())
+    text(timestamp?.toLocalDateTime(TimeZone.currentSystemDefault())?.toString()?.replace("T", " ")?.substringBefore('.') ?: "-", emptyInst(timestamp), instructions())
     return fragment()
 }

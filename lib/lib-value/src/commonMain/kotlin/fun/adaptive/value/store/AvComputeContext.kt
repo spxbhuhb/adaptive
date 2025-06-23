@@ -297,6 +297,10 @@ class AvComputeContext(
     // Reference list handling
     //---------------------------------------------------------------------------------
 
+    inline fun <reified SPEC : Any> refList(valueId: AvValueId, refLabel: AvRefLabel): List<AvValue<SPEC>> =
+        checkNotNull(refListOrNullGen(valueId, refLabel)) { "cannot find ref list for marker $refLabel in item $valueId" }
+            .map { it.checkSpec(SPEC::class) }
+
     inline fun <reified SPEC : Any> refListOrNull(valueId: AvValueId, refLabel: AvRefLabel): List<AvValue<SPEC>>? =
         refListOrNullGen(valueId, refLabel)?.map { it.checkSpec(SPEC::class) }
 
