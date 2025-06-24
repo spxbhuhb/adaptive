@@ -97,7 +97,7 @@ open class FormViewBackend() {
             ?: fragment.adapter.application.also { application = it }
             ?: return key
 
-        return app.resolveString(key) ?: key
+        return app.resolveString(key)
     }
 
     companion object {
