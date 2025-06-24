@@ -11,7 +11,10 @@ fun AbstractWorkspace.resolveString(key : StringResourceKey) : String =
 fun AdaptiveFragment.resolveString(key : StringResourceKey) : String =
     adapter.application?.resolveString(key) ?: key
 
-fun AbstractApplication<*,*>.resolveString(key : StringResourceKey) : String? {
+fun AbstractApplication<*,*>.resolveString(key : StringResourceKey) : String =
+    resolveStringOrNull(key) ?: key
+
+fun AbstractApplication<*,*>.resolveStringOrNull(key : StringResourceKey) : String? {
     for (store in stringStores) {
         store.getOrNull(key)?.let { return it }
     }
