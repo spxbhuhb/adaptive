@@ -62,7 +62,13 @@ class BasicAccountSummaryStore(
 
         summaryMap[principalId] = BasicAccountSummary(new.principal, new.account)
 
-        notifyListeners()
+        // onCommit does it: notifyListeners()
+    }
+
+    override fun processRemove(value: AvValueId) {
+        entryMap.remove(value)
+        summaryMap.remove(value)
+        // onCommit does it: notifyListeners()
     }
 
     override var value: List<BasicAccountSummary>
