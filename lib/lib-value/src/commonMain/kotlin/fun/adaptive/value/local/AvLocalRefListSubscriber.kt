@@ -21,7 +21,6 @@ open class AvLocalRefListSubscriber(
     override var value: List<AvValueId>? = null
 
     override fun process(value: AvValue<*>) {
-        println("process: ${value}")
         val spec = value.spec
 
         if (spec !is AvRefListSpec) {
@@ -30,6 +29,10 @@ open class AvLocalRefListSubscriber(
         }
 
         this.value = spec.refs
+    }
+
+    override fun processRemove(valueId: AvValueId) {
+        this.value = null // the whole list is removed
     }
 
 }

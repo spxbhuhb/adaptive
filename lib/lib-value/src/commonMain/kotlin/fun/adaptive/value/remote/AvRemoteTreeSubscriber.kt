@@ -168,6 +168,20 @@ abstract class AvRemoteTreeSubscriber<SPEC : Any, TREE_ITEM>(
         childRefresh += node
     }
 
+    override fun processRemove(value: AvValueId) {
+        val node = nodeMap.remove(value) ?: return
+        val parentId = node.value?.refIdOrNull(parentRefLabel)
+        if (parentId == null) {
+            tops.remove(value)
+            topRefresh = true
+        } else {
+            nodeMap[parentId]?.let {
+                it.childIds = it.childIds?.filter { id -> id != value }
+                childRefresh += it
+            }
+        }
+    }
+
     /**
      * When refresh is called, all nodes are updated from the
      * incoming transaction. This means that we have the most

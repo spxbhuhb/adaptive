@@ -49,4 +49,49 @@ class AvRemoteValueTest {
         assertNull(result[0])
         assertEquals(result[1], "Hello World!")
     }
+
+    @Test
+    fun testRemoveValue() = runTest {
+        val valueId = AvValueId()
+
+        val testServer = testServer {
+            module { UtilModule() }
+            module { ValueServerModule() }
+        }
+
+        val testClient = testClient(testServer) {
+            module { ValueClientModule() }
+        }
+
+        val result = mutableListOf<String?>()
+
+        test(backendAdapter = testClient.backend) {
+            val value = avRemoteValue(valueId, String::class).also { result += it?.spec }
+            println(value)
+        }
+
+        val serverValueWorker = testServer.backend.firstImpl<AvValueWorker>()
+
+        // Add a value
+        serverValueWorker.executeOutOfBand {
+            this += AvValue(valueId, spec = "Hello World!")
+        }
+
+        waitForReal(2.seconds) { result.count { it != null } == 1 }
+
+        // Verify the value was added
+        assertNull(result[0])
+        assertEquals(result[1], "Hello World!")
+
+        // remove the value
+        serverValueWorker.executeOutOfBand {
+            this -= valueId
+        }
+
+        // Wait for the value to be removed
+        waitForReal(2.seconds) { result.count { it == null } == 2 }
+
+        // Verify the value was removed
+        assertNull(result[2])
+    }
 }

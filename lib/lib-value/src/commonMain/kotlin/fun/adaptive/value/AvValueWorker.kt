@@ -62,6 +62,14 @@ open class AvValueWorker(
         store.queue(AvoAddOrUpdate(value))
     }
 
+    fun queueRemove(value: AvValue<*>) {
+        store.queue(AvoRemove(value.uuid))
+    }
+
+    fun queueRemove(valueId: AvValueId) {
+        store.queue(AvoRemove(valueId))
+    }
+
     fun queueTransaction(operations: List<AvValueOperation>) {
         store.queue(AvoTransaction(operations))
     }

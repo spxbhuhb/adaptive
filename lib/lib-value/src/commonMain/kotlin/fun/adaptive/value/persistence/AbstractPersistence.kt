@@ -9,4 +9,6 @@ abstract class AbstractValuePersistence {
 
     abstract fun saveValue(value: AvValue<*>)
 
+    abstract fun removeValue(valueId : AvValueId)
+
 }

@@ -93,6 +93,7 @@ abstract class AvAbstractRemoteSubscriber<V>(
                         is AvoAddOrUpdate -> process(operation.value)
                         is AvoAdd -> process(operation.value)
                         is AvoUpdate -> process(operation.value)
+                        is AvoRemove -> processRemove(operation.valueId)
                         is AvoMarkerRemove -> TODO()
                         else -> Unit // forEach flattens the transactions, compute is not handled here
                     }
@@ -134,5 +135,10 @@ abstract class AvAbstractRemoteSubscriber<V>(
      * Process an incoming value.
      */
     abstract fun process(value: AvValue<*>)
+
+    /**
+     * Process removal of a value.
+     */
+    abstract fun processRemove(value: AvValueId)
 
 }

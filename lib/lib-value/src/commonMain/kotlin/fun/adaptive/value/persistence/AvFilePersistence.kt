@@ -6,6 +6,7 @@ import `fun`.adaptive.persistence.resolve
 import `fun`.adaptive.persistence.write
 import `fun`.adaptive.lib.util.path.UuidFileStore
 import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.persistence.delete
 import `fun`.adaptive.utility.*
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
@@ -35,7 +36,7 @@ class FilePersistence(
     val lock = getLock()
     val logger = getLogger("FilePersistence")
 
-    var writeCache = mutableMapOf<AvValueId, AvValue<*>>()
+    var writeCache = mutableMapOf<AvValueId, AvValue<*>?>()
 
     val store = object : UuidFileStore<MutableMap<AvValueId, AvValue<*>>>(root, levels) {
 
@@ -81,12 +82,28 @@ class FilePersistence(
         }
     }
 
+    override fun removeValue(valueId: AvValueId) {
+        if (! useWriteCache) {
+            deleteValue(valueId)
+        } else {
+            lock.use {
+                writeCache[valueId] = null
+            }
+        }
+    }
+
     fun writeValue(value: AvValue<*>) {
         val bytes = PolymorphicWireFormat.wireFormatEncode(JsonWireFormatEncoder(), value).pack()
         val dirPath = store.pathFor(value.uuid).ensure()
         val filePath = dirPath.resolve("${value.uuid}.json")
 
         filePath.write(bytes, overwrite = true, useTemporaryFile = true)
+    }
+
+    fun deleteValue(valueId: AvValueId) {
+        val dirPath = store.pathFor(valueId).ensure()
+        val filePath = dirPath.resolve("${valueId}.json")
+        filePath.delete(mustExists = false)
     }
 
     fun flushCache() {
@@ -97,8 +114,12 @@ class FilePersistence(
             current
         }
 
-        for ((_, value) in out) {
-            writeValue(value)
+        for ((key, value) in out) {
+            if (value == null) {
+                deleteValue(key)
+            } else {
+                writeValue(value)
+            }
         }
 
         logger.info { "Flushed ${out.size} value(s) to disk." }

@@ -9,4 +9,6 @@ class NoPersistence : AbstractValuePersistence() {
 
     override fun saveValue(value: AvValue<*>) = Unit
 
+    override fun removeValue(valueId: AvValueId) = Unit
+
 }

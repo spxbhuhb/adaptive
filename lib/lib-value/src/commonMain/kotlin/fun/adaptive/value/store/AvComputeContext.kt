@@ -8,6 +8,7 @@ import `fun`.adaptive.value.model.AvRefLabels
 import `fun`.adaptive.value.model.AvTreeDef
 import `fun`.adaptive.value.operation.AvoAdd
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
+import `fun`.adaptive.value.operation.AvoRemove
 
 class AvComputeContext(
     val store: AvValueStore,
@@ -41,6 +42,46 @@ class AvComputeContext(
     fun <T> addValue(value: AvValue<T>): AvValue<T> {
         store.add(AvoAdd(value), commitSet)
         return value
+    }
+
+    //---------------------------------------------------------------------------------
+    // Remove
+    //---------------------------------------------------------------------------------
+
+    /**
+     * Removes the specified value from the store.
+     *
+     * @param value the value to be removed
+     */
+    operator fun minusAssign(value: AvValue<*>) {
+        store.remove(AvoRemove(value.uuid), commitSet)
+    }
+
+    /**
+     * Removes the specified value from the store.
+     *
+     * @param valueId The identifier of the value to be removed.
+     */
+    operator fun minusAssign(valueId: AvValueId) {
+        store.remove(AvoRemove(valueId), commitSet)
+    }
+
+    /**
+     * Removes the specified value from the store.
+     *
+     * @param value the value to be removed
+     */
+    fun <T> removeValue(value: AvValue<T>) {
+        store.remove(AvoRemove(value.uuid), commitSet)
+    }
+
+    /**
+     * Removes the specified value from the store.
+     *
+     * @param valueId the value to be removed
+     */
+    fun removeValue(valueId: AvValueId) {
+        store.remove(AvoRemove(valueId), commitSet)
     }
 
     //---------------------------------------------------------------------------------

@@ -104,6 +104,7 @@ open class AvValueStore(
                 is AvoUpdate -> update(operation, commitSet)
                 is AvoAdd -> add(operation, commitSet)
                 is AvoMarkerRemove -> Unit // used by subscribers, for worker it is no-op
+                is AvoRemove -> remove(operation, commitSet)
             }
 
             commit(commitSet)
@@ -165,6 +166,38 @@ open class AvValueStore(
         put(original, value, operation, commitSet, original?.revision?.let { it + 1L } ?: 1L)
     }
 
+    internal fun remove(operation: AvoRemove, commitSet: AvCommitSet) {
+        val valueId = operation.valueId
+
+        val original = values.remove(valueId)
+        if (original == null) {
+            operation.success()
+            return
+        }
+
+        val valueSubscriptions = valueIdSubscriptions.remove(valueId)
+        if (valueSubscriptions != null) {
+            for (subscription in valueSubscriptions) {
+                subscription.remove(valueId)
+                commitSet.subscriptions.add(subscription)
+            }
+        }
+
+        original.markersOrNull?.let { markers ->
+            for (marker in markers) {
+                markerIndices[marker]?.remove(valueId)
+                markerSubscriptions[marker]?.forEach {
+                    it.subscription.remove(valueId)
+                    commitSet.subscriptions.add(it.subscription)
+                }
+            }
+        }
+
+        persistence.removeValue(valueId = operation.valueId)
+        operation.success()
+    }
+
+
     internal fun transaction(transaction: AvoTransaction, commitSet: AvCommitSet) {
         for (operation in transaction.operations) {
             when (operation) {
@@ -173,6 +206,7 @@ open class AvValueStore(
                 is AvoUpdate -> update(operation, commitSet)
                 is AvoAdd -> add(operation, commitSet)
                 is AvoTransaction -> transaction(operation, commitSet)
+                is AvoRemove -> remove(operation, commitSet)
                 is AvoMarkerRemove -> Unit // used by subscribers, for worker it is no-op
             }
         }
@@ -631,13 +665,13 @@ open class AvValueStore(
     fun <SPEC : Any> firstOrNull(marker: AvMarker, specClass: KClass<SPEC>, condition: (AvValue<SPEC>) -> Boolean): AvValue<SPEC>? =
         lock.use {
             markerIndices[marker]?.firstOrNull {
-                val value = values[it]!!
+                val value = values[it] !!
                 if (! specClass.isInstance(value.spec)) return@firstOrNull false
                 @Suppress("UNCHECKED_CAST") // just checked
                 condition(value as AvValue<SPEC>)
             }?.let {
                 @Suppress("UNCHECKED_CAST")
-                values[it]!! as AvValue<SPEC>
+                values[it] !! as AvValue<SPEC>
             }
         }
 

@@ -6,6 +6,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvSubscribeFun
 import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValueId
 import kotlin.reflect.KClass
 
 /**
@@ -49,5 +50,10 @@ open class AvRemoteValueSubscriber<SPEC : Any>(
         @Suppress("UNCHECKED_CAST")
         this.value = value as AvValue<SPEC>
     }
+
+    override fun processRemove(value: AvValueId) {
+        this.value = null // the value no longer exists
+    }
+
 
 }

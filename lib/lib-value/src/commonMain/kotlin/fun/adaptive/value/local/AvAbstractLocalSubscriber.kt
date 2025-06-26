@@ -10,12 +10,8 @@ import `fun`.adaptive.general.ObservableListener
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.operation.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 import kotlin.coroutines.coroutineContext
 
 /**
@@ -90,6 +86,7 @@ abstract class AvAbstractLocalSubscriber<V>(
                         is AvoAdd -> process(operation.value)
                         is AvoUpdate -> process(operation.value)
                         is AvoMarkerRemove -> TODO()
+                        is AvoRemove -> processRemove(operation.valueId)
                         else -> Unit // forEach flattens the transactions, compute is not handled here
                     }
                 }
@@ -123,5 +120,10 @@ abstract class AvAbstractLocalSubscriber<V>(
      * Process an incoming value.
      */
     abstract fun process(value: AvValue<*>)
+
+    /**
+     * Process an incoming value.
+     */
+    abstract fun processRemove(valueId : AvValueId)
 
 }

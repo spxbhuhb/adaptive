@@ -5,6 +5,7 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValueId
 import kotlin.reflect.KClass
 
 /**
@@ -28,6 +29,10 @@ open class AvLocalValueSubscriber<SPEC : Any>(
 
         @Suppress("UNCHECKED_CAST")
         this.value = value as AvValue<SPEC>
+    }
+
+    override fun processRemove(valueId: AvValueId) {
+        this.value = null // the value no longer exists
     }
 
 }

@@ -61,6 +61,10 @@ open class AvRemoteListSubscriber<SPEC : Any>(
         cachedValue = null
     }
 
+    override fun processRemove(value: AvValueId) {
+        itemMap.remove(value)
+    }
+
     override var value: List<AvValue<SPEC>>?
         get() = cachedValue ?: (transform?.invoke(itemMap) ?: itemMap.values.toList()).also { cachedValue = it }
         set(_) = unsupported()

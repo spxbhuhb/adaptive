@@ -3,6 +3,7 @@ package `fun`.adaptive.value
 import `fun`.adaptive.value.operation.AvValueOperation
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
 import `fun`.adaptive.value.operation.AvoMarkerRemove
+import `fun`.adaptive.value.operation.AvoRemove
 import `fun`.adaptive.value.operation.AvoTransaction
 import `fun`.adaptive.value.store.AvValueStore
 
@@ -17,6 +18,10 @@ abstract class AvSubscription(
 
     fun add(value: AvValue<*>) {
         transaction.add(AvoAddOrUpdate(value))
+    }
+
+    fun remove(valueId : AvValueId) {
+        transaction.add(AvoRemove(valueId))
     }
 
     fun markerRemove(valueId: AvValueId, marker: AvMarker) {
