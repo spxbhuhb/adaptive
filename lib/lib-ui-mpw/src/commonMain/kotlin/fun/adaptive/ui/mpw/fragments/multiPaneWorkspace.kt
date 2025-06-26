@@ -18,6 +18,7 @@ import `fun`.adaptive.ui.mpw.AbstractSideBarAction
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
@@ -219,10 +220,12 @@ private fun mpSideBarIcon(
 
     val hover = hover()
     val theme = workspace.theme
-//  FIXME  val activePane = valueFrom { workspace.paneStore(action.pane) }
+    val thisPane = action as? PaneDef
+    val activePane = observe { workspace.paneStore(thisPane) }
     val focusedPane = observe { workspace.focusedPane }
 
-    val containerStyle = theme.paneIconContainer(UUID.nil(), UUID.nil(), focusedPane, hover)
+    // FIXME pane UUID confusion, what is the relation between pane uuid and pane backend uuid, why do I need to cast?
+    val containerStyle = theme.paneIconContainer(thisPane?.uuid?.cast() ?: UUID.nil(), activePane, focusedPane, hover)
 
     box {
         containerStyle

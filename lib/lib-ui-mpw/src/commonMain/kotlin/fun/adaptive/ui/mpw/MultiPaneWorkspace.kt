@@ -3,6 +3,7 @@ package `fun`.adaptive.ui.mpw
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
+import `fun`.adaptive.foundation.value.observableOf
 import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.general.Observable
 import `fun`.adaptive.resource.graphics.Graphics
@@ -83,53 +84,54 @@ open class MultiPaneWorkspace(
 
     var lastActiveContentPane: PaneViewBackend<*>? = null
 
-    val focusedPane = storeFor<PaneId?> { null }
+    val focusedPane = observableOf<PaneId?> { null }
 
-    val isFullScreen = storeFor { false }
+    val isFullScreen = observableOf { false }
 
-    val rightTop = storeFor<PaneId?> { null }
-    val rightMiddle = storeFor<PaneId?> { null }
-    val rightBottom = storeFor<PaneId?> { null }
-    val center = storeFor<PaneId?> { null }
-    val leftTop = storeFor<PaneId?> { null }
-    val leftMiddle = storeFor<PaneId?> { null }
-    val leftBottom = storeFor<PaneId?> { null }
+    val rightTop = observableOf<PaneId?> { null }
+    val rightMiddle = observableOf<PaneId?> { null }
+    val rightBottom = observableOf<PaneId?> { null }
+    val center = observableOf<PaneId?> { null }
+    val leftTop = observableOf<PaneId?> { null }
+    val leftMiddle = observableOf<PaneId?> { null }
+    val leftBottom = observableOf<PaneId?> { null }
+    val hidden = observableOf<PaneId?> { null }
 
     /**
      * Top contains: top split
      * Bottom contains: bottom split
      */
-    val mainSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Vertical) }
+    val mainSplit = observableOf { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Vertical) }
 
     /**
      * Left contains: bottom left pane
      * Right contains: bottom right pane
      */
-    val bottomSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Horizontal) }
+    val bottomSplit = observableOf { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Horizontal) }
 
     /**
      * Left contains: left split
      * Right contains: center and right split
      */
-    val topSplit = storeFor { SplitPaneViewBackend(SplitVisibility.Second, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
+    val topSplit = observableOf { SplitPaneViewBackend(SplitVisibility.Second, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
 
     /**
      * Top contains: left top pane
      * Bottom contains: left middle pane
      */
-    var leftSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
+    var leftSplit = observableOf { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
 
     /**
      * Left contains: center pane
      * Right contains: right split
      */
-    var centerRightSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Horizontal) }
+    var centerRightSplit = observableOf { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Horizontal) }
 
     /**
      * Top contains: right top pane
      * Bottom contains: right middle pane
      */
-    var rightSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
+    var rightSplit = observableOf { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
 
     // ---------------------------------------------------------------------------------------------
     // Utility
@@ -259,8 +261,8 @@ open class MultiPaneWorkspace(
         split.value = split.value.copy(visibility = new)
     }
 
-    fun paneStore(pane: PaneViewBackend<*>): Observable<PaneId?> =
-        when (pane.paneDef.position) {
+    fun paneStore(paneDef: PaneDef?): Observable<PaneId?> =
+        when (paneDef?.position) {
             PanePosition.LeftTop -> leftTop
             PanePosition.LeftMiddle -> leftMiddle
             PanePosition.LeftBottom -> leftBottom
@@ -268,6 +270,7 @@ open class MultiPaneWorkspace(
             PanePosition.RightMiddle -> rightMiddle
             PanePosition.RightBottom -> rightBottom
             PanePosition.Center -> center
+            else -> hidden
         }
 
     // --------------------------------------------------------------------------------
