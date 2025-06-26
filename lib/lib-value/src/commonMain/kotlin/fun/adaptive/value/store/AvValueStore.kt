@@ -82,6 +82,7 @@ open class AvValueStore(
 
             values.forEach { (_, value) ->
                 index(null, value, commitSet)
+                notify(value, commitSet)
             }
         }
 
