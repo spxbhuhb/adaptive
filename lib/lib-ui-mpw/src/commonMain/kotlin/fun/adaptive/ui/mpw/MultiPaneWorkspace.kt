@@ -101,37 +101,37 @@ open class MultiPaneWorkspace(
      * Top contains: top split
      * Bottom contains: bottom split
      */
-    val mainSplit = observableOf { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Vertical) }
+    val mainSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Vertical) }
 
     /**
      * Left contains: bottom left pane
      * Right contains: bottom right pane
      */
-    val bottomSplit = observableOf { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Horizontal) }
+    val bottomSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Horizontal) }
 
     /**
      * Left contains: left split
      * Right contains: center and right split
      */
-    val topSplit = observableOf { SplitPaneViewBackend(SplitVisibility.Second, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
+    val topSplit = storeFor { SplitPaneViewBackend(SplitVisibility.Second, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
 
     /**
      * Top contains: left top pane
      * Bottom contains: left middle pane
      */
-    var leftSplit = observableOf { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
+    var leftSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
 
     /**
      * Left contains: center pane
      * Right contains: right split
      */
-    var centerRightSplit = observableOf { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Horizontal) }
+    var centerRightSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Horizontal) }
 
     /**
      * Top contains: right top pane
      * Bottom contains: right middle pane
      */
-    var rightSplit = observableOf { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
+    var rightSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.Proportional, 0.5, Orientation.Vertical) }
 
     // ---------------------------------------------------------------------------------------------
     // Utility
