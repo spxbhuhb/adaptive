@@ -3,40 +3,46 @@ package `fun`.adaptive.sandbox.support
 import `fun`.adaptive.document.ui.direct.h3
 import `fun`.adaptive.document.ui.direct.markdownHint
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.sandbox.recipe.demo.goodmorning.cornerRadius
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.theme.textColors
 
 @Adaptive
 fun examplePane(
     title: String,
-    explanation : String? = null,
+    explanation: String? = null,
     @Adaptive
     _fixme_adaptive_content: () -> Unit
 ) {
     column {
-        width { 600.dp }
+        width { 600.dp } .. borders.outline .. cornerRadius { 4.dp }
 
         column {
-            maxWidth .. borderBottom(colors.outline) .. marginBottom { 8.dp }
+            maxWidth .. borderBottom(colors.outline)
+            paddingHorizontal { 16.dp } .. paddingVertical { 4.dp }
+            backgroundGradient(position(0.5.dp,0.dp), position(1.dp,1.dp), colors.surface, colors.infoSurface)
+            cornerTopRadius { 4.dp }
             h3(title)
         }
 
         if (explanation != null) {
             column {
-                paddingBottom { 16.dp }
+                padding { 16.dp } .. borderBottom(colors.outline)
+
                 markdownHint(explanation)
             }
         }
 
         column {
-            padding { 23.dp } .. backgrounds.surfaceVariant .. cornerRadius { 4.dp }
+            maxWidth .. padding { 24.dp } .. backgrounds.surfaceVariant .. cornerRadius { 4.dp }
 
-            column {
-                backgrounds.surface .. padding { 16.dp } .. cornerRadius { 4.dp }
-                _fixme_adaptive_content()
-            }
+            _fixme_adaptive_content()
+
         }
     }
 }
