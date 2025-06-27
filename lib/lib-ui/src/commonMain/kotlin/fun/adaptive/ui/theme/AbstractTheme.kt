@@ -31,4 +31,5 @@ abstract class AbstractTheme {
 
     open val paneHeaderHeightDp = 42.dp
 
+    open val actionLineHeightDp = 32.dp
 }

@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.datetime
+package `fun`.adaptive.ui.input.date
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -11,10 +11,14 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.*
+import `fun`.adaptive.ui.icon.actionIcon
+import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.icon.tableIconTheme
+import `fun`.adaptive.ui.input.button.button
+import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.support.scroll.scrollIntoView
-import `fun`.adaptive.ui.theme.textSmall
 import `fun`.adaptive.utility.localDate
 import kotlinx.datetime.*
 
@@ -28,7 +32,7 @@ fun datePicker(
     value: LocalDate = localDate(),
     close: () -> Unit,
     onChange: (LocalDate) -> Unit,
-    theme: DatetimeTheme = DatetimeTheme.DEFAULT
+    theme: DateInputTheme = DateInputTheme.Companion.default
 ) {
     @Independent
     val initValue = value
@@ -40,8 +44,8 @@ fun datePicker(
 
         grid {
             theme.datePickerMonthAndYear
-            month(value, { mode = toggleMode(mode, MONTH_MODE) }, onChange)
-            year(value, { mode = toggleMode(mode, YEAR_MODE) }, onChange)
+            month(value, theme, { mode = toggleMode(mode, MONTH_MODE) }, onChange)
+            year(value, theme, { mode = toggleMode(mode, YEAR_MODE) }, onChange)
         }
 
         box {
@@ -55,8 +59,8 @@ fun datePicker(
 
         row {
             theme.datePickerActionsContainer
-            text(Strings.cancel) .. theme.datePickerActionText .. onClick { onChange(initValue); close() }
-            text(Strings.ok) .. theme.datePickerActionText .. onClick { close() }
+            button(Strings.cancel) { onChange(initValue); close() }
+            submitButton(Strings.ok) { close() }
         }
     }
 }
@@ -69,9 +73,10 @@ private fun toggleMode(currentMode: Int, modeToSwitchTo: Int) =
     }
 
 @Adaptive
-private fun month(value: LocalDate, switchMode: () -> Unit, onChange: (LocalDate) -> Unit) {
+private fun month(value: LocalDate, theme: DateInputTheme, switchMode: () -> Unit, onChange: (LocalDate) -> Unit) {
     stepAndSelect(
         monthAbr(value.month),
+        theme,
         { onChange(value.minus(1, DateTimeUnit.MONTH)) },
         { switchMode() },
         { onChange(value.plus(1, DateTimeUnit.MONTH)) }
@@ -79,33 +84,33 @@ private fun month(value: LocalDate, switchMode: () -> Unit, onChange: (LocalDate
 }
 
 @Adaptive
-private fun year(value: LocalDate, switchMode: () -> Unit, onChange: (LocalDate) -> Unit) {
+private fun year(value: LocalDate, theme: DateInputTheme, switchMode: () -> Unit, onChange: (LocalDate) -> Unit) {
     stepAndSelect(
         value.year.toString(),
+        theme,
         { onChange(value.minus(1, DateTimeUnit.YEAR)) },
-        { switchMode() },
-        { onChange(value.plus(1, DateTimeUnit.YEAR)) }
-    )
+        { switchMode() }
+    ) { onChange(value.plus(1, DateTimeUnit.YEAR)) }
 }
 
 @Adaptive
-private fun stepAndSelect(label: String, stepLeft: () -> Unit, switchMode: () -> Unit, stepRight: () -> Unit) {
+private fun stepAndSelect(label: String, theme: DateInputTheme, stepLeft: () -> Unit, switchMode: () -> Unit, stepRight: () -> Unit) {
     row {
-        alignItems.center
-        icon(Graphics.chevron_left) .. onClick { stepLeft() }
-        box {
-            width { 60.dp } .. alignItems.center .. onClick { switchMode() }
-            text(label) .. textSmall .. semiBoldFont .. noSelect
-            icon(Graphics.arrow_drop_down) .. alignSelf.endCenter .. svgWidth(16.dp) .. svgHeight(16.dp) .. size(16.dp, 16.dp)
+        maxWidth .. alignItems.center .. spaceBetween
+        actionIcon(Graphics.chevron_left, theme = tableIconTheme) { stepLeft() }
+        row {
+            alignItems.center .. onClick { switchMode() } .. gap { 4.dp } .. paddingLeft { 12.dp }
+            text(label) .. theme.inputFont .. noSelect
+            icon(Graphics.arrow_drop_down) .. theme.dropdownIcon
         }
-        icon(Graphics.chevron_right) .. onClick { stepRight() }
+        actionIcon(Graphics.chevron_right, theme = tableIconTheme) { stepRight() }
     }
 }
 
 @Adaptive
 private fun dayList(
     value: LocalDate,
-    theme: DatetimeTheme,
+    theme: DateInputTheme,
     today: LocalDate = localDate(),
     markedDays: List<LocalDate> = emptyList(),
     onSelected: (date: LocalDate) -> Unit
@@ -142,7 +147,7 @@ private fun day(
     marked: Boolean,
     today: Boolean,
     selected: Boolean,
-    theme: DatetimeTheme = DatetimeTheme.DEFAULT,
+    theme: DateInputTheme = DateInputTheme.Companion.default,
     onSelected: (date: LocalDate) -> Unit
 ) {
     box {
@@ -165,7 +170,7 @@ private fun dayLetter(date: LocalDate) =
     }
 
 @Adaptive
-private fun monthList(value: LocalDate, theme: DatetimeTheme, onSelected: (LocalDate) -> Unit) {
+private fun monthList(value: LocalDate, theme: DateInputTheme, onSelected: (LocalDate) -> Unit) {
     val entries = Month.values() // FIXME use entries, but it causes compilation error
 
     column {
@@ -181,7 +186,7 @@ private fun monthList(value: LocalDate, theme: DatetimeTheme, onSelected: (Local
 }
 
 @Adaptive
-private fun yearList(value: LocalDate, theme: DatetimeTheme, onSelected: (LocalDate) -> Unit) {
+private fun yearList(value: LocalDate, theme: DateInputTheme, onSelected: (LocalDate) -> Unit) {
     column {
         maxSize .. verticalScroll
         for (year in 1900 .. 2100) {
@@ -195,7 +200,7 @@ private fun yearList(value: LocalDate, theme: DatetimeTheme, onSelected: (LocalD
 }
 
 @Adaptive
-private fun listRow(label: String, theme: DatetimeTheme, selected: Boolean, onSelected: () -> Unit): AdaptiveFragment {
+private fun listRow(label: String, theme: DateInputTheme, selected: Boolean, onSelected: () -> Unit): AdaptiveFragment {
     val hover = hover()
 
     grid {

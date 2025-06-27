@@ -42,7 +42,7 @@ fun background(
     BackgroundColor(
         when {
             inactive -> if (variant) colors.surfaceVariant else colors.surface
-            selected -> if (focus) colors.selectedSurfaceFocus else colors.selectedSurfaceNoFocus
+            selected -> if (focus) colors.selectedFocusedSurface else colors.selectedSurfaceNoFocus
             hover -> colors.hoverSurface
             else -> if (variant) colors.surfaceVariant else colors.surface
         }

@@ -5,6 +5,8 @@ import `fun`.adaptive.adat.api.properties
 import `fun`.adaptive.sandbox.support.E
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.utility.localDate
+import kotlinx.datetime.LocalDate
 
 @Adat
 class FormData(
@@ -13,6 +15,7 @@ class FormData(
     val long: Long = 45,
     val double: Double = 89.10,
     val string: String = "ab",
+    val date : LocalDate = localDate(),
     val enum: E = E.V1,
     val enumOrNull: E? = null,
     val badges : Set<String> = setOf("badge1", "badge2")

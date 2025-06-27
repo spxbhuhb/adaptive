@@ -2,7 +2,7 @@
 
 [badge](def://?inline)
 
-## Hard-coded examples
+## Examples
 
 [Common Badges](actualize:///cookbook/badge/example/common)
 

@@ -73,7 +73,7 @@ class SelectInputTheme : AbstractTheme() {
     val optionContainerSelected = instructionsOf(
         optionContainerBase,
         cornerRadius { 4.dp },
-        BackgroundColor(colors.selectedSurfaceFocus)
+        backgrounds.selectedFocusedSurface
     )
 
     val optionContainerHover = instructionsOf(

@@ -45,7 +45,7 @@ class ThemeColors {
     val primaryHover = color(0xCBDAFEu)
     val onPrimaryHover = color(0x1E1E1Eu)
 
-    val selectedSurfaceFocus = color(0xCBDAFE)
+    val selectedFocusedSurface = color(0xCBDAFE)
     val selectedSurfaceNoFocus = color(0xD7DADF)
     val hoverSurface = color(0xE3E9FF)
 

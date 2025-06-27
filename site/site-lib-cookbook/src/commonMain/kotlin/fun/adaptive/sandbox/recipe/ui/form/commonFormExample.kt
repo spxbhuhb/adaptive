@@ -55,6 +55,8 @@ fun commonFormExample(): AdaptiveFragment {
                     longEditor { template.long }
                     doubleEditor { template.double }
 
+                    dateEditor { template.date }
+
                     selectEditorDropdown(
                         E.Companion.entries.toList(),
                         { selectInputOptionText(it) },

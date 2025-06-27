@@ -1,68 +1,73 @@
-package `fun`.adaptive.ui.datetime
+package `fun`.adaptive.ui.input.date
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.alignSelf
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.cornerRadius
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.gridCol
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.noSelect
+import `fun`.adaptive.graphics.canvas.api.fill
+import `fun`.adaptive.graphics.svg.api.svgHeight
+import `fun`.adaptive.graphics.svg.api.svgWidth
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.borderBottom
 import `fun`.adaptive.ui.api.paddingHorizontal
-import `fun`.adaptive.ui.api.paddingRight
-import `fun`.adaptive.ui.api.paddingTop
-import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.semiBoldFont
-import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.theme.*
 import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.textColors
-import `fun`.adaptive.ui.theme.textMedium
 
-class DatetimeTheme(
+class DateInputTheme(
     daySize: DPixel = 40.dp
-) {
+) : AbstractTheme() {
+
+    val dropdownPopup = instructionsOf(
+        popupAlign.belowStart,
+        marginTop(2.dp), // FIXME replace manual margin with popup config
+        marginBottom(2.dp),
+        zIndex { 200 },
+        cornerRadius { 8.dp },
+        border(colors.onSurface, 0.5.dp),
+        backgrounds.surface,
+        onClick { event -> event.stopPropagation() },
+        dropShadow(colors.overlay.opaque(0.3), 8.dp, 8.dp, 8.dp)
+    )
 
     val datePickerContainer = instructionsOf(
-        size(318.dp, 412.dp),
-        paddingHorizontal { 16.dp },
-        paddingTop { 8.dp },
-        backgrounds.surfaceVariant,
-        borders.outline,
-        cornerRadius(16.dp),
+        size(312.dp, 380.dp),
         colTemplate(1.fr),
-        rowTemplate(64.dp, 1.fr, 36.dp)
+        rowTemplate(actionLineHeightDp, 1.fr, 42.dp),
     )
 
     val datePickerMonthAndYear = instructionsOf(
-        maxSize,
+        maxWidth,
+        height { actionLineHeightDp },
         colTemplate(1.fr, 1.fr),
-        alignItems.center
+        alignItems.center,
+        backgrounds.surfaceVariant,
+        borderBottom(colors.lightOutline, 1.dp),
+        cornerTopRadius(8.dp),
+        paddingHorizontal { 32.dp },
+    )
+
+    var dropdownIcon = instructionsOf(
+        fill(colors.onSurfaceVariant),
+        size(20.dp),
+        svgWidth(20.dp),
+        svgHeight(20.dp),
+        alignSelf.endCenter
     )
 
     val datePickerInner = instructionsOf(
-
+        paddingHorizontal { 16.dp },
     )
 
     val datePickerActionsContainer = instructionsOf(
         maxWidth,
-        alignItems.end,
-        gap { 16.dp },
-        paddingRight { 16.dp }
+        spaceBetween,
+        paddingHorizontal { 16.dp },
+        paddingBottom { 8.dp }
     )
 
-    val datePickerActionText = instructionsOf(noSelect, textMedium)
-
     val dayListGrid = instructionsOf(
+        paddingVertical { 8.dp },
         colTemplate(daySize repeat 7),
         rowTemplate(daySize + 4.dp, extend = daySize),
         gap { 1.dp }
@@ -74,7 +79,7 @@ class DatetimeTheme(
         alignItems.center
     )
 
-    val dayBoxSelected = dayBoxBase + backgrounds.friendly
+    val dayBoxSelected = dayBoxBase + backgrounds.selectedFocusedSurface
     val dayBoxToday = dayBoxBase + borders.primary
     val dayBoxMarked = dayBoxBase + backgrounds.primary
 
@@ -98,7 +103,7 @@ class DatetimeTheme(
         noSelect
     )
 
-    val dayTextBase = instructionsOf(noSelect, textMedium)
+    val dayTextBase = instructionsOf(noSelect, inputFont)
 
     val daySelected = dayTextBase + textColors.onSelected
     val dayToday = dayTextBase + textColors.primary
@@ -171,6 +176,6 @@ class DatetimeTheme(
         }
 
     companion object {
-        var DEFAULT = DatetimeTheme()
+        var default = DateInputTheme()
     }
 }

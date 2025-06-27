@@ -152,7 +152,7 @@ open class BadgeTheme(
         )
 
         var suppressed = BadgeTheme(
-            border = colors.selectedSurfaceFocus,
+            border = colors.selectedFocusedSurface,
             textColor = colors.onSurfaceVariant,
             iconResource = Graphics.info,
             iconColor = colors.onSurfaceVariant,

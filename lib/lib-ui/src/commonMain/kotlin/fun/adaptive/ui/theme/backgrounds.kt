@@ -25,4 +25,5 @@ class ThemeBackgrounds {
     val failSurface = backgroundColor(colors.failSurface)
 
     val focusSurface = backgroundColor(colors.focusColor)
+    val selectedFocusedSurface = backgroundColor(colors.selectedFocusedSurface)
 }

@@ -12,42 +12,48 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 
 class DocumentTheme(
-    val baseFontSize : SPixel = 14.sp,
+    val baseFontSize : SPixel = 16.sp,
     val textColor : Color = colors.onSurface
 ) {
 
     /**
      * The gap between blocks of content such as paragraphs.
      */
-    val blockGap = gap { 12.dp }
+    val blockGap = gap { 24.dp }
 
     val h1 = instructionsOf(
         fontSize { 28.sp },
-        textColor(textColor)
+        fontWeight { 500 },
+        textColor(textColor),
     )
 
     val h2 = instructionsOf(
         fontSize { 24.sp },
+        fontWeight { 500 },
         textColor(textColor)
     )
 
     val h3 = instructionsOf(
         fontSize { 20.sp },
+        fontWeight { 500 },
         textColor(textColor)
     )
 
     val h4 = instructionsOf(
         fontSize { 16.sp },
+        fontWeight { 500 },
         textColor(textColor)
     )
 
     val h5 = instructionsOf(
         fontSize { 12.sp },
+        fontWeight { 500 },
         textColor(textColor)
     )
 
     val hN = instructionsOf(
         fontSize { 12.sp },
+        fontWeight { 500 },
         textColor(textColor)
     )
 
@@ -131,7 +137,7 @@ class DocumentTheme(
 
     companion object {
         val default = DocumentTheme()
-        val hint = DocumentTheme(baseFontSize = 12.sp, textColor = colors.onSurfaceVariant)
+        val hint = DocumentTheme(baseFontSize = 12.sp, textColor = colors.onSurface)
     }
 
 }

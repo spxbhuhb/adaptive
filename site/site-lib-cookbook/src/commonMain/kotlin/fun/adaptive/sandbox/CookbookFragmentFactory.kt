@@ -17,7 +17,7 @@ import `fun`.adaptive.sandbox.recipe.ui.form.commonFormExample
 import `fun`.adaptive.sandbox.recipe.ui.icon.iconRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.button.*
-import `fun`.adaptive.sandbox.recipe.ui.input.datetime.dateInputRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.date.dateInputRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.number.commonDoubleInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.number.commonIntInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.select.*
