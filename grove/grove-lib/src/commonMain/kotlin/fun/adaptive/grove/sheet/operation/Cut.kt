@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.model.SheetClipboard
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 
@@ -13,7 +13,7 @@ class Cut : SheetOperation() {
 
     lateinit var cutData : SheetClipboard
 
-    override fun commit(controller: SheetViewController): OperationResult {
+    override fun commit(controller: SheetViewBackend): OperationResult {
         with(controller) {
 
             if (selection.isEmpty()) return OperationResult.DROP
@@ -36,7 +36,7 @@ class Cut : SheetOperation() {
         }
     }
 
-    override fun revert(controller: SheetViewController) {
+    override fun revert(controller: SheetViewBackend) {
         with(controller) {
             originalSelection.items.forEach { showItem(it) }
             clipboard = originalClipboard

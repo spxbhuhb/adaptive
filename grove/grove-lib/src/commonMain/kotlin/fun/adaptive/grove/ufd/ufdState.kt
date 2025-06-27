@@ -6,11 +6,10 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.foundation.value.valueFromOrNull
 import `fun`.adaptive.grove.generated.resources.selectForState
-import `fun`.adaptive.grove.sheet.SheetViewContext
 import `fun`.adaptive.grove.sheet.model.SheetSelection
+import `fun`.adaptive.grove.ufd.app.GroveUdfModuleMpw.Companion.udfModule
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.flowText
-import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.fragments.noContent
 import `fun`.adaptive.ui.mpw.fragments.toolPane
@@ -21,11 +20,10 @@ fun ufdState(): AdaptiveFragment {
 
     val viewBackend = viewBackend(UnitPaneViewBackend::class)
 
-    val context = fragment().wsContext<SheetViewContext>()
-    val controller = observe { context.focusedView }
-    val selection = valueFromOrNull { controller?.selectionStore }
+    val sheetBackend = observe { fragment().udfModule.focusedSheet }
+    val selection = valueFromOrNull { sheetBackend?.selectionStore } ?: SheetSelection(emptyList())
 
-    val isEmpty = selection == null || selection.items.isEmpty()
+    val isEmpty = selection.items.isEmpty()
 
     toolPane(viewBackend) {
         if (isEmpty) {

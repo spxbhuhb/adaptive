@@ -1,6 +1,6 @@
 package `fun`.adaptive.grove.sheet.operation
 
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 
@@ -11,7 +11,7 @@ abstract class Select: SheetOperation() {
     lateinit var originalSelection: SheetSelection
     lateinit var selectedItems: List<SheetItem>
 
-    override fun commit(controller: SheetViewController): OperationResult {
+    override fun commit(controller: SheetViewBackend): OperationResult {
         with(controller) {
 
             if (firstRun) {
@@ -25,11 +25,11 @@ abstract class Select: SheetOperation() {
         }
     }
 
-    override fun revert(controller: SheetViewController) {
+    override fun revert(controller: SheetViewBackend) {
         controller.select(originalSelection.items, additional = false)
     }
 
-    abstract fun SheetViewController.findItems(): List<SheetItem>
+    abstract fun SheetViewBackend.findItems(): List<SheetItem>
 
     val traceString: String
         get() = "additional: $additional size:${selectedItems.size} ${selectedItems.joinToString { "${it.index}:${it.model}" }}"

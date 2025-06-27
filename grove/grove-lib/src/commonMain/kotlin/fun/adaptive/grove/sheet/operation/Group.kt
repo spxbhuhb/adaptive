@@ -2,7 +2,7 @@ package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.grove.generated.resources.group
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.model.ItemIndex
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.resource.string.Strings
@@ -14,7 +14,7 @@ class Group : SheetOperation() {
     var originalGroups = mutableMapOf<ItemIndex, ItemIndex?>() // item, group
     var index = ItemIndex(-1)
 
-    override fun commit(controller: SheetViewController): OperationResult {
+    override fun commit(controller: SheetViewBackend): OperationResult {
         with (controller) {
             if (selection.isEmpty()) return OperationResult.DROP
 
@@ -43,7 +43,7 @@ class Group : SheetOperation() {
         }
     }
 
-    override fun revert(controller: SheetViewController) {
+    override fun revert(controller: SheetViewBackend) {
         controller.hideItem(index)
         originalSelection.items.forEach { it.group = originalGroups[it.index] }
         controller.select(originalSelection.items, additional = false)

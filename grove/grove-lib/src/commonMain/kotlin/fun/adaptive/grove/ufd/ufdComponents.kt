@@ -6,17 +6,16 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.foundation.value.valueFromOrNull
 import `fun`.adaptive.grove.generated.resources.openForComponents
-import `fun`.adaptive.grove.sheet.SheetViewContext
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.grove.sheet.operation.SelectByIndex
+import `fun`.adaptive.grove.ufd.app.GroveUdfModuleMpw.Companion.udfModule
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.theme.textSmall
-import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.fragments.noContent
 import `fun`.adaptive.ui.mpw.fragments.toolPane
@@ -27,17 +26,16 @@ fun ufdComponents(): AdaptiveFragment {
 
     val viewBackend = viewBackend(UnitPaneViewBackend::class)
 
-    val context = fragment().wsContext<SheetViewContext>()
-    val controller = observe { context.focusedView }
-    val selection = valueFromOrNull { controller?.selectionStore } ?: SheetSelection(emptyList())
+    val sheetBackend = observe { fragment().udfModule.focusedSheet }
+    val selection = valueFromOrNull { sheetBackend?.selectionStore } ?: SheetSelection(emptyList())
 
-    val isEmpty = (controller == null)
+    val isEmpty = (sheetBackend == null)
 
     toolPane(viewBackend) {
         if (isEmpty) {
             noContent(Strings.openForComponents)
         } else {
-            componentList(controller, selection)
+            componentList(sheetBackend, selection)
         }
     }
 
@@ -45,7 +43,7 @@ fun ufdComponents(): AdaptiveFragment {
 }
 
 @Adaptive
-fun componentList(controller: SheetViewController, selection: SheetSelection) {
+fun componentList(controller: SheetViewBackend, selection: SheetSelection) {
     column {
         maxSize .. scroll .. padding { 4.dp }
 
@@ -58,7 +56,7 @@ fun componentList(controller: SheetViewController, selection: SheetSelection) {
 }
 
 @Adaptive
-fun itemRow(item: SheetItem, selection: SheetSelection, controller: SheetViewController) {
+fun itemRow(item: SheetItem, selection: SheetSelection, controller: SheetViewBackend) {
     val hover = hover()
     val selected = item in selection.items
     val textColor = textStyles(selected, hover)

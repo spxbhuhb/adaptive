@@ -3,14 +3,14 @@ package `fun`.adaptive.grove.ufd
 import `fun`.adaptive.adat.encodeToJsonString
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.api.localContext
+import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.grove.generated.resources.*
-import `fun`.adaptive.grove.sheet.SheetViewContext
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.fragment.sheet
 import `fun`.adaptive.grove.sheet.operation.*
+import `fun`.adaptive.grove.ufd.app.GroveUdfModuleMpw.Companion.udfModule
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
@@ -20,44 +20,42 @@ import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
-import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.theme.textColors
 import `fun`.adaptive.ui.theme.textSmall
 
 @Adaptive
 fun ufdCenter(): AdaptiveFragment {
 
-    val controller = SheetViewController().also { fragment().wsContext<SheetViewContext>().focusedView.value = it }
+    // FIXME hackish set of focusedSheet
+    val viewBackend = fragment().firstContext<SheetViewBackend>().also { fragment().udfModule.focusedSheet.value = it }
 
-    localContext(controller) {
-        grid {
-            rowTemplate(DEFAULT.paneHeaderHeightDp, 1.fr)
+    grid {
+        rowTemplate(DEFAULT.paneHeaderHeightDp, 1.fr)
+
+        row {
+            maxSize .. borderBottom(DEFAULT.toolBorderColor) .. spaceBetween
+            onKeydown { it.preventDefault(); viewBackend.onKeyDown(it.keyInfo !!, it.modifiers) }
 
             row {
-                maxSize .. borderBottom(DEFAULT.toolBorderColor) .. spaceBetween
-                onKeydown { it.preventDefault(); controller.onKeyDown(it.keyInfo !!, it.modifiers) }
+                alignSelf.startCenter
 
-                row {
-                    alignSelf.startCenter
-
-                    for (action in actions) {
-                        action(action, controller)
-                    }
-                }
-
-                row {
-                    multiplier(controller)
-                }
-
-                row {
-                    actionIcon(Graphics.pest_control, theme = tableIconTheme) .. onClick {
-                        controller.snapshot.encodeToJsonString()
-                    }
+                for (action in actions) {
+                    action(action, viewBackend)
                 }
             }
 
-            sheet()
+            row {
+                multiplier(viewBackend)
+            }
+
+            row {
+                actionIcon(Graphics.pest_control, theme = tableIconTheme) .. onClick {
+                    viewBackend.snapshot.encodeToJsonString()
+                }
+            }
         }
+
+        sheet()
     }
 
     return fragment()
@@ -77,12 +75,12 @@ val actions = listOf(
 )
 
 @Adaptive
-private fun action(sheetAction: SheetAction, controller: SheetViewController) {
+private fun action(sheetAction: SheetAction, controller: SheetViewBackend) {
     actionIcon(sheetAction.icon, tooltip = sheetAction.tooltip, theme = denseIconTheme) .. onClick { controller += sheetAction.onClick() }
 }
 
 @Adaptive
-fun multiplier(controller: SheetViewController) {
+fun multiplier(controller: SheetViewBackend) {
     val multiplier = observe { controller.multiplierStore }
 
     if (multiplier > 1) {

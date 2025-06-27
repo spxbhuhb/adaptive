@@ -20,20 +20,30 @@ import `fun`.adaptive.ui.instruction.event.UIEvent.KeyInfo
 import `fun`.adaptive.ui.instruction.layout.Frame
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.layout.Size
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.utility.*
 import kotlin.math.abs
 import kotlin.time.measureTime
 
-open class SheetViewController(
-    val printTrace: Boolean = false,
-    val recordOperations: Boolean = false,
-    val recordMerge: Boolean = false
-) {
+open class SheetViewBackend(
+    override val workspace: MultiPaneWorkspace,
+    override val paneDef: PaneDef,
+    var content : LfmDescendant
+) : PaneViewBackend<SheetViewBackend>() {
+
     companion object {
-        fun AdaptiveFragment.sheetViewController() : SheetViewController =
-            findContext<SheetViewController>()!!
+        fun AdaptiveFragment.sheetViewController() : SheetViewBackend =
+            findContext<SheetViewBackend>()!!
     }
+
+    var printTrace: Boolean = false
+
+    var recordOperations: Boolean = false
+
+    var recordMerge: Boolean = false
 
     val logger = getLogger("SheetViewController").also { if (printTrace) it.enableFine() }
 
@@ -172,7 +182,7 @@ open class SheetViewController(
 
         val last = undoStack.popOrNull() ?: return
         if (printTrace) logger.fine { "UNDO -- $last" }
-        last.revert(this@SheetViewController)
+        last.revert(this@SheetViewBackend)
         redoStack.push(last)
     }
 
@@ -181,14 +191,14 @@ open class SheetViewController(
 
         val last = redoStack.popOrNull() ?: return
         if (printTrace) logger.fine { "REDO -- $last" }
-        last.commit(this@SheetViewController)
+        last.commit(this@SheetViewBackend)
         undoStack.push(last)
     }
 
     fun op(operation: SheetOperation) {
         val result: OperationResult
         measureTime {
-            result = operation.commit(this@SheetViewController)
+            result = operation.commit(this@SheetViewBackend)
 
             when (result) {
                 OperationResult.PUSH -> {

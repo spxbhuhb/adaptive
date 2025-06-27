@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.model.ItemIndex
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection.Companion.emptySelection
@@ -12,7 +12,7 @@ class Ungroup : SheetOperation() {
     var originalSelection = emptySelection
     var originalMembers = mutableMapOf<ItemIndex, MutableList<ItemIndex>?>()
 
-    override fun commit(controller: SheetViewController): OperationResult {
+    override fun commit(controller: SheetViewBackend): OperationResult {
         with (controller) {
 
             if (selection.isEmpty()) return OperationResult.DROP
@@ -51,7 +51,7 @@ class Ungroup : SheetOperation() {
         }
     }
 
-    override fun revert(controller: SheetViewController) {
+    override fun revert(controller: SheetViewBackend) {
         for (selectedItem in originalSelection.items) {
             if (! selectedItem.isGroup) continue
 

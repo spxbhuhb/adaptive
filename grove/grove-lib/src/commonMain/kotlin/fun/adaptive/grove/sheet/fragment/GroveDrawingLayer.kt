@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.throwAway
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
@@ -31,7 +31,7 @@ class GroveDrawingLayer<RT, CRT : RT>(
 ) {
 
     val controller
-        get() = get<SheetViewController>(1)
+        get() = get<SheetViewBackend>(1)
 
     val updateBatch = mutableListOf<SheetItem>()
 

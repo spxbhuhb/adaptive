@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.ui.instruction.layout.Frame
 import kotlin.math.max
@@ -13,7 +13,7 @@ class SelectByFrame(
     override val additional: Boolean
 ) : Select() {
 
-    override fun SheetViewController.findItems() : List<SheetItem> {
+    override fun SheetViewBackend.findItems() : List<SheetItem> {
         val px1 = frame.left.px
         val py1 = frame.top.px
         val px2 = px1 + frame.width.px

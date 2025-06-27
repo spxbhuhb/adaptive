@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.model.SheetItem
 
 @Adat
@@ -10,7 +10,7 @@ class SelectByIndex(
     override val additional: Boolean
 ) : Select() {
 
-    override fun SheetViewController.findItems() : List<SheetItem> {
+    override fun SheetViewBackend.findItems() : List<SheetItem> {
         return listOf(items[index])
     }
 

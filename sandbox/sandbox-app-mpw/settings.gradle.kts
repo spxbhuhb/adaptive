@@ -21,6 +21,7 @@ dependencyResolutionManagement {
 includeBuild("../../core/core-core")
 includeBuild("../../core/core-ui")
 
+includeBuild("../../grove/grove-lib")
 includeBuild("../../grove/grove-runtime")
 
 includeBuild("../../lib/lib-app")

@@ -9,6 +9,8 @@ import `fun`.adaptive.app.ui.mpw.auth.AppAuthModuleMpw
 import `fun`.adaptive.app.ui.mpw.inspect.AppInspectModuleMpw
 import `fun`.adaptive.auth.app.AuthClientModule
 import `fun`.adaptive.grove.GroveRuntimeModule
+import `fun`.adaptive.grove.sheet.app.GroveSheetModuleClient
+import `fun`.adaptive.grove.ufd.app.GroveUdfModuleMpw
 import `fun`.adaptive.sandbox.app.mpw.app.AppProjectHomeModule
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.value.app.ValueClientModule
@@ -24,5 +26,8 @@ fun main() {
         module { AppMainModuleMpw() }
         module { AppAuthModuleMpw() }
         module { AppProjectHomeModule() }
+
+        module { GroveSheetModuleClient() }
+        module { GroveUdfModuleMpw() }
     }
 }

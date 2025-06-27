@@ -2,7 +2,7 @@ package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.Position
@@ -17,7 +17,7 @@ class Move(
     override val withSizes: Boolean
         get() = false
 
-    override fun newFrame(controller: SheetViewController): RawFrame =
+    override fun newFrame(controller: SheetViewBackend): RawFrame =
         startFrame.move(controller.toPx(transformX), controller.toPx(transformY))
 
     override fun newInstructions(cacheIndex: Int): AdaptiveInstruction {

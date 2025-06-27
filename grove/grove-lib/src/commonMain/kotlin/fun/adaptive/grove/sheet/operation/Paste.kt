@@ -1,7 +1,7 @@
 package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection
 import `fun`.adaptive.ui.instruction.layout.Position
@@ -13,7 +13,7 @@ class Paste : SheetOperation() {
     lateinit var originalSelection: SheetSelection
     val pastedItems = mutableListOf<SheetItem>()
 
-    override fun commit(controller: SheetViewController): OperationResult {
+    override fun commit(controller: SheetViewBackend): OperationResult {
         with(controller) {
 
             if (clipboard.isEmpty()) return OperationResult.DROP
@@ -39,7 +39,7 @@ class Paste : SheetOperation() {
         }
     }
 
-    override fun revert(controller: SheetViewController) {
+    override fun revert(controller: SheetViewBackend) {
         pastedItems.forEach { controller.hideItem(it) }
         controller.select(originalSelection.items, additional = false)
     }
@@ -47,7 +47,7 @@ class Paste : SheetOperation() {
     override fun toString(): String =
         "Paste"
 
-    private fun shift(controller: SheetViewController): Int {
+    private fun shift(controller: SheetViewBackend): Int {
         var pastesBefore = 0
         val stack = controller.undoStack
 

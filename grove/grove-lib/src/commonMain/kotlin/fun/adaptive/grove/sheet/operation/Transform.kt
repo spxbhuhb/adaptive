@@ -3,7 +3,7 @@ package `fun`.adaptive.grove.sheet.operation
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.model.ItemIndex
 import `fun`.adaptive.grove.sheet.model.SheetItem
 import `fun`.adaptive.grove.sheet.model.SheetSelection.Companion.emptySelection
@@ -34,7 +34,7 @@ abstract class Transform: SheetOperation() {
     var positionCache = mutableListOf<Position>()
     var sizeCache = mutableListOf<Size>()
 
-    override fun commit(controller: SheetViewController): OperationResult {
+    override fun commit(controller: SheetViewBackend): OperationResult {
         if (controller.selection.isEmpty()) {
             return OperationResult.DROP
         }
@@ -61,7 +61,7 @@ abstract class Transform: SheetOperation() {
         return if (merge) OperationResult.REPLACE else OperationResult.PUSH
     }
 
-    open fun initialize(controller: SheetViewController) {
+    open fun initialize(controller: SheetViewBackend) {
         startFrame = controller.selection.containingFrame
         originalSelection = controller.selection
         originalSelection.forItems {
@@ -69,7 +69,7 @@ abstract class Transform: SheetOperation() {
         }
     }
 
-    fun preprocess(controller: SheetViewController, item: SheetItem) {
+    fun preprocess(controller: SheetViewBackend, item: SheetItem) {
         val instructions = item.fragment.instructions
 
         originalInstructions[item.index] = instructions
@@ -104,11 +104,11 @@ abstract class Transform: SheetOperation() {
         transformY += last.transformY
     }
 
-    abstract fun newFrame(controller: SheetViewController): RawFrame
+    abstract fun newFrame(controller: SheetViewBackend): RawFrame
 
     abstract fun newInstructions(cacheIndex: Int): AdaptiveInstruction
 
-    fun SheetItem.applyInstructions(controller: SheetViewController, instructions: AdaptiveInstruction) {
+    fun SheetItem.applyInstructions(controller: SheetViewBackend, instructions: AdaptiveInstruction) {
         fragment.apply {
             setStateVariable(0, instructions)
             genPatchInternal()
@@ -116,7 +116,7 @@ abstract class Transform: SheetOperation() {
         }
     }
 
-    override fun revert(controller: SheetViewController) {
+    override fun revert(controller: SheetViewBackend) {
         originalSelection.items.forEach { item ->
             val originalInstructions = originalInstructions[item.index] ?: return@forEach
             item.applyInstructions(controller, originalInstructions)

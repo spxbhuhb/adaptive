@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.grove.apm.model.ApmWsItem
-import `fun`.adaptive.grove.ufd.UfdWsContext
+import `fun`.adaptive.grove.ufd.app.GroveUdfModuleMpw
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewBackend
@@ -38,7 +38,7 @@ val root =
     listOf(
         ApmWsItem(
             "Test",
-            UfdWsContext.WSIT_UFD_FRAGMENT,
+            GroveUdfModuleMpw.WSIT_UFD_FRAGMENT,
             path = "./test"
         )
     )

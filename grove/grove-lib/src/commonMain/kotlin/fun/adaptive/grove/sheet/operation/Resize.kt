@@ -2,7 +2,7 @@ package `fun`.adaptive.grove.sheet.operation
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.model.HandleInfo
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.instruction.DPixel
@@ -27,7 +27,7 @@ class Resize(
     var widthRatio = Double.NaN
     var heightRatio = Double.NaN
 
-    override fun initialize(controller: SheetViewController) {
+    override fun initialize(controller: SheetViewBackend) {
         super.initialize(controller)
         originalFrame = controller.toFrame(startFrame)
         calculateRatio()
@@ -54,7 +54,7 @@ class Resize(
     }
 
     override fun newFrame(
-        controller: SheetViewController
+        controller: SheetViewBackend
     ): RawFrame {
 
         val (newSize, newPosition) = resizeFrame(

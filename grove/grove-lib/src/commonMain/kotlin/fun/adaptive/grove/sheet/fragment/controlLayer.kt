@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.sheet.Handles
-import `fun`.adaptive.grove.sheet.SheetViewController
+import `fun`.adaptive.grove.sheet.SheetViewBackend
 import `fun`.adaptive.grove.sheet.operation.Add
 import `fun`.adaptive.grove.sheet.operation.AddModel
 import `fun`.adaptive.ui.api.*
@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 
 @Adaptive
-fun controlLayer(controller: SheetViewController) {
+fun controlLayer(controller: SheetViewBackend) {
 
     val controlFrame = observe { controller.controlFrameStore }
 
@@ -56,7 +56,7 @@ fun controlLayer(controller: SheetViewController) {
 }
 
 @Adaptive
-private fun controls(frame: Frame, controller: SheetViewController) {
+private fun controls(frame: Frame, controller: SheetViewBackend) {
     box {
         frame
 
