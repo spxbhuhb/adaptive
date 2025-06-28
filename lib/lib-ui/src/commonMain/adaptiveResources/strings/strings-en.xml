@@ -3,24 +3,24 @@
   -->
 
 <resources>
-    <string name="invalidFields">Vannak még érvénytelen mezők.</string>
-    <string name="saveSuccess">Sikeres mentés.</string>
-    <string name="saveFail">Hiba, nem sikerült a mentés.</string>
+    <string name="invalidFields">There are still invalid fields.</string>
+    <string name="saveSuccess">Successfully saved.</string>
+    <string name="saveFail">Error, save failed.</string>
 
-    <string name="home">Nyitólap</string>
-    <string name="account">Fiók</string>
-    <string name="signOut">Kilépés</string>
+    <string name="home">Home</string>
+    <string name="account">Account</string>
+    <string name="signOut">Sign Out</string>
 
     <string name="ok">OK</string>
-    <string name="cancel">Mégse</string>
-    <string name="save">Mentés</string>
-    <string name="hide">Elrejtés</string>
-    <string name="edit">Szerkesztés</string>
-    <string name="notSet">nincs megadva</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="hide">Hide</string>
+    <string name="edit">Edit</string>
+    <string name="notSet">not set</string>
     <string name="copied">Copied</string>
-    <string name="noValueSelected">nincs érték kiválasztva</string>
-    <string name="filterPlaceholder">szűrés</string>
-    <string name="settings">beállítások</string>
+    <string name="noValueSelected">no value selected</string>
+    <string name="filterPlaceholder">filter</string>
+    <string name="settings">settings</string>
 
     <string name="copyToClipboard">Copy to clipboard</string>
 
@@ -28,10 +28,10 @@
 
     <string name="pleaseSelectFromList">Please select from the list on the left.</string>
 
-    <string name="expandAll">Összes megnyitása</string>
-    <string name="collapseAll">Összes bezárása</string>
+    <string name="expandAll">Expand All</string>
+    <string name="collapseAll">Collapse All</string>
 
-    <string name="example">Példa</string>
+    <string name="example">Example</string>
 
     <string name="january">January</string>
     <string name="february">February</string>

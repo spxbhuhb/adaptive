@@ -1,0 +1,64 @@
+<!--
+  ~ Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+  -->
+
+<resources>
+
+    <string name="administration">Administration</string>
+
+    <!-- sign-in -->
+
+    <string name="signInTitle">Welcome!</string>
+    <string name="signInSubTitle">Sign in to continue.</string>
+    <string name="signInRemember">Remember me</string>
+    <string name="signInForgot">**[Forgot password?](/password-reset)**</string>
+    <string name="signInButton">Sign In</string>
+    <string name="signInSuccess">Sign in successful!</string>
+    <string name="singInFail">Invalid username and/or password.</string>
+    <string name="signInSignUp">Don't have an account? **[Sign Up](/sign-up)**</string>
+
+    <string name="pwdResetTitle">Reset Password</string>
+    <string name="pwdResetSubTitle">Enter your e-mail address, and we will send you the instructions on how to reset your password.</string>
+    <string name="pwdResetButton">Send</string>
+    <string name="pwdResetSendSuccess">Password reset request has been sent.</string>
+
+    <string name="signUpTitle">Welcome</string>
+    <string name="signUpSubTitle">Sign up to join</string>
+    <string name="signUpAgree">I agree to the **[Terms of Service](/terms)**.</string>
+    <string name="signUpButton">Sign Up</string>
+    <string name="signUpFail">Sign-up error.</string>
+    <string name="signUpSignIn">Have an account? **[Sign In](/sign-in)**</string>
+
+    <!-- account -->
+
+    <string name="accounts">Accounts</string>
+    <string name="accountSelf">My account</string>
+
+    <string name="addAccount">Add account</string>
+    <string name="editAccount">Edit account</string>
+
+    <string name="principalName">Account name</string>
+    <string name="accountName">Account name</string>
+    <string name="email">e-mail</string>
+    <string name="password">password</string>
+
+    <string name="passwordChange">Change password</string>
+    <string name="currentPassword">Current password</string>
+    <string name="newPassword">New password</string>
+    <string name="confirmPassword">Confirm</string>
+
+    <!-- role -->
+
+    <string name="roles">Roles</string>
+    <string name="addRole">Add role</string>
+    <string name="editRole">Edit role</string>
+    <string name="context">Context</string>
+
+    <!-- inspect -->
+
+    <string name="devTools">Developer tools</string>
+
+    <!-- misc -->
+    <string name="noTechnicalInfo">No more information</string>
+
+</resources>
