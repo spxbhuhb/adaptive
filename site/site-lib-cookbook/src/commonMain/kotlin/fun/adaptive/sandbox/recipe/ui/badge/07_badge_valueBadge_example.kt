@@ -3,14 +3,19 @@ package `fun`.adaptive.sandbox.recipe.ui.badge
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.sandbox.support.examplePane
 import `fun`.adaptive.ui.badge.BadgeTheme
 import `fun`.adaptive.ui.badge.BadgeTheme.Companion.badgeThemeMap
 import `fun`.adaptive.ui.mpw.fragments.valueBadges
 import `fun`.adaptive.value.AvValue
 
+/**
+ * # valueBadges
+ *
+ * The `valueBadges` fragment can be used to display the status and
+ * marker badges of an `AvValue` instance.
+ */
 @Adaptive
-fun valueBadgeExample(): AdaptiveFragment {
+fun badgeValueBadge(): AdaptiveFragment {
 
     // these registrations should be put into the `frontendAdapterInit`
     // function of the application module, they are here for the
@@ -26,15 +31,7 @@ fun valueBadgeExample(): AdaptiveFragment {
         spec = ""
     )
 
-    examplePane(
-        "valueBadges",
-        """
-            The `valueBadges` fragment can be used to displat the status and
-            marker badges of an `AvValue` instance.
-        """.trimIndent()
-    ) {
-        valueBadges(value)
-    }
+    valueBadges(value)
 
     return fragment()
 }

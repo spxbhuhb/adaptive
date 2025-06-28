@@ -7,7 +7,7 @@ import `fun`.adaptive.app.app.AppMainModuleMpw
 import `fun`.adaptive.app.ui.mpw.inspect.AppInspectModuleMpw
 import `fun`.adaptive.auth.app.NoAuthClientModule
 import `fun`.adaptive.grove.GroveRuntimeModule
-import `fun`.adaptive.grove.doc.app.GroveDocWsModule
+import `fun`.adaptive.grove.doc.app.GroveDocModuleMpw
 import `fun`.adaptive.sandbox.app.CookbookClientModule
 import `fun`.adaptive.site.SiteWsModule
 import `fun`.adaptive.ui.LibUiClientModule
@@ -24,7 +24,7 @@ fun main() {
         module { ValueClientModule() }
         //module { ChartWsModule() }
         module { CookbookClientModule() }
-        module { GroveDocWsModule() }
+        module { GroveDocModuleMpw() }
         module { SiteWsModule() }
         module { AppMainModuleMpw() }
         module { AppInspectModuleMpw() }

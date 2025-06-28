@@ -3,17 +3,14 @@ package `fun`.adaptive.sandbox.support
 import `fun`.adaptive.document.ui.direct.h3
 import `fun`.adaptive.document.ui.direct.markdownHint
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.sandbox.recipe.demo.goodmorning.cornerRadius
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
-import `fun`.adaptive.ui.theme.textColors
 
 @Adaptive
-fun examplePane(
+fun examplePaneOld(
     title: String,
     explanation: String? = null,
     @Adaptive

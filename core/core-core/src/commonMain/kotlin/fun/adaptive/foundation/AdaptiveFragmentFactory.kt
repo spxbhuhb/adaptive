@@ -33,8 +33,11 @@ open class AdaptiveFragmentFactory : Registry<NamedFragmentFactory>() {
     }
 
     fun newInstance(key: FragmentKey, parent: AdaptiveFragment, declarationIndex: Int, stateSize : Int): AdaptiveFragment {
-        return checkNotNull(get(key)) { "Unknown fragment type: $key, known fragment types: ${entries.keys}" }
+        return checkNotNull(get(key)) {
+            "Unknown fragment type: $key\n" +
+                "parents: ${parent.collectParents().joinToString("\n") { it.toString() }}\n" +
+                "known fragment types: ${entries.keys}"
+        }
             .build(parent, declarationIndex, stateSize)
     }
-
 }

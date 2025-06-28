@@ -2,15 +2,7 @@
 
 [badge](def://?inline)
 
-## Examples
-
-[Common Badges](actualize:///cookbook/badge/example/common)
-
-[Value badges](actualize:///cookbook/badge/example/value)
-
-[Badges with contentPaneHeader](actualize:///cookbook/badge/example/content-pane)
-
-[Badge input](actualize:///cookbook/badge/example/input)
+[examples](actualize://example-group?name=badge)
 
 ## Details
 
@@ -30,19 +22,3 @@ but you can pass `true` in [useSeverity](paramter://badge).
 
 When [useSeverity](paramter://badge) is true, the badge will look up the
 name in [badgeThemeMap](property://BadgeTheme) and render the badge accordingly.
-
-## Example code
-
-[commonBadgeExample](example://)
-
----
-
-[valueBadgeExample](example://)
-
----
-
-[contentPaneBadgeExample](example://)
-
----
-
-[badgeInputExample](example://)

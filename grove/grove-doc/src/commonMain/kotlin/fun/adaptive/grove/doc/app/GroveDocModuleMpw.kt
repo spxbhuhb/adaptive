@@ -10,7 +10,6 @@ import `fun`.adaptive.grove.doc.ui.*
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AbstractWorkspace
-import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.model.PaneDef
@@ -18,7 +17,7 @@ import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.ui.value.iconCache
 import `fun`.adaptive.utility.UUID
 
-class GroveDocWsModule<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : AppModule<FW, BW>() {
+class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : GroveDocModule<FW, BW>() {
 
     val WSPANE_DOC_BROWSER_TOOL: FragmentKey
         get() = "grove:doc:tool"

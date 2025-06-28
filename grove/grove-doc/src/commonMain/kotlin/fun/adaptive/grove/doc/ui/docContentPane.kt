@@ -25,17 +25,20 @@ fun docContentPane(): AdaptiveFragment {
     val contentOrNull = fetch { viewBackend.getLoadedContent() }
 
     column {
-        maxSize .. verticalScroll .. padding { 16.dp } .. backgrounds.surface
-        alignItems.topCenter
+        maxSize .. padding { 24.dp } .. backgrounds.surface
 
         column {
-            width { 600.dp }
+            maxSize .. verticalScroll .. alignItems.topCenter
 
-            loading(contentOrNull) { content ->
+            column {
+                width { 680.dp }
 
-                pageHeader(content)
-                markdown(content.spec)
+                loading(contentOrNull) { content ->
 
+                    pageHeader(content)
+                    markdown(content.spec)
+
+                }
             }
         }
     }
@@ -44,7 +47,7 @@ fun docContentPane(): AdaptiveFragment {
 }
 
 @Adaptive
-fun pageHeader(value : GroveDocValue) {
+fun pageHeader(value: GroveDocValue) {
     column {
         paddingBottom { 24.dp }
         h2(value.nameLike)

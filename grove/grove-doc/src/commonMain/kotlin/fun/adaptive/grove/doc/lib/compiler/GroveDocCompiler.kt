@@ -1,9 +1,12 @@
 package `fun`.adaptive.grove.doc.lib.compiler
 
+import `fun`.adaptive.grove.doc.model.GroveDocExample
+import `fun`.adaptive.grove.doc.model.GroveDocExampleGroupSpec
 import `fun`.adaptive.grove.doc.model.groveDocDomain
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
 import `fun`.adaptive.markdown.model.MarkdownHeader
 import `fun`.adaptive.markdown.transform.MarkdownToMarkdownVisitor.Companion.toMarkdown
+import `fun`.adaptive.persistence.absolute
 import `fun`.adaptive.persistence.readString
 import `fun`.adaptive.value.AvValue
 import kotlinx.io.files.Path
@@ -44,6 +47,8 @@ GroveDocCompiler(
         for (path in fileCollector.uncategorized) {
             process("uncategorized", path)
         }
+
+        exampleGroups()
     }
 
     fun buildDocTreeTops() {
@@ -73,7 +78,7 @@ GroveDocCompiler(
                             spec = ""
                         )
                     }.also {
-                        docTreeNodes[it.friendlyId!!] = it
+                        docTreeNodes[it.friendlyId !!] = it
                     }
                 }
 
@@ -91,8 +96,8 @@ GroveDocCompiler(
         }
     }
 
-    fun isSubprojectDefinition(def : String) =
-        // FIXME hackish finding of a subproject
+    fun isSubprojectDefinition(def: String) =
+    // FIXME hackish finding of a subproject
         // maybe add a header to the markdown files with tags?
         def.contains("[subproject](def://)")
 
@@ -137,6 +142,80 @@ GroveDocCompiler(
                 }
             }
         }
+    }
+
+    fun exampleGroups() {
+        for ((name, items) in compilation.fileCollector.examples) {
+            compilation.valueWorker.executeOutOfBand {
+                addValue {
+                    AvValue(
+                        name = "Example group: $name",
+                        markersOrNull = setOf(groveDocDomain.exampleGroup + ":" + name),
+                        spec = GroveDocExampleGroupSpec(
+                            examples = items.map { getExample(it) }.sortedBy { it.repoPath } // this sorting is not perfect, but well...
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    fun getExample(path : Path) : GroveDocExample {
+        val fullCode = path.readString()
+
+        // Extract documentation comment
+        val docRegex = """/\*\*([\s\S]*?)\*/""".toRegex()
+        val docMatch = docRegex.find(fullCode)
+
+        // Default values in case extraction fails
+        var name = path.name.substringBeforeLast('.')
+        var explanation = ""
+        var exampleCode = fullCode
+        var fragmentKey = ""
+
+        docMatch?.let { match ->
+            val docContent = match.groupValues[1].trim()
+
+            // Extract name from markdown header
+            val nameRegex = """#\s+(.+)""".toRegex()
+            val nameMatch = nameRegex.find(docContent)
+            nameMatch?.let {
+                name = it.groupValues[1].trim()
+            }
+
+            // Extract explanation (everything after the header)
+            val explanationRegex = """#\s+.+\n([\s\S]*)""".toRegex()
+            val explanationMatch = explanationRegex.find(docContent)
+            explanationMatch?.let {
+                explanation = it.groupValues[1].trim().lines()
+                    .map { line -> line.trim().removePrefix("*").trim() }
+                    .filter { line -> line.isNotEmpty() }
+                    .joinToString("\n")
+            }
+
+            // Extract example code (everything after the documentation comment)
+            val codeRegex = """\*/\s*([\s\S]*)""".toRegex()
+            val codeMatch = codeRegex.find(fullCode)
+            codeMatch?.let {
+                exampleCode = it.groupValues[1].trim()
+
+                // Extract function name from the code after the documentation
+                val functionRegex = """fun\s+(\w+)""".toRegex()
+                val functionMatch = functionRegex.find(exampleCode)
+                functionMatch?.let { funcMatch ->
+                    fragmentKey = funcMatch.groupValues[1].trim()
+                }
+            }
+        }
+
+        return GroveDocExample(
+            name = name,
+            explanation = explanation,
+            repoPath = path.absolute().toString().replace('\\', '/').removePrefix(compilation.inPathAbsolute),
+            fragmentKey = fragmentKey,
+            fullCode = fullCode,
+            exampleCode = exampleCode,
+        )
     }
 
 }

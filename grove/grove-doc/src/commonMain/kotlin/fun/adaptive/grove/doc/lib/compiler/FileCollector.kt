@@ -11,7 +11,11 @@ internal class FileCollector(
 
     val excluded = listOf("build", "deprecated")
 
+    // file name -> paths to with the given file name (directories may differ)
     val ktFiles = mutableMapOf<String, MutableList<Path>>()
+
+    // key is the name of the example group
+    val examples = mutableMapOf<String, MutableList<Path>>()
 
     val definitions = mutableMapOf<String, MutableList<Path>>()
     val guides = mutableMapOf<String, MutableList<Path>>()
@@ -65,7 +69,20 @@ internal class FileCollector(
                 inQa -> putFile(qa, name, path)
                 //else -> uncategorized.add(path)
             }
-            name.endsWith(".kt") -> putFile(ktFiles, name, path, normalize = false)
+            name.endsWith(".kt") -> {
+                putFile(ktFiles, name, path, normalize = false)
+
+                // example file name structure: <order>_<group>_<name>_example.kt
+                if (name.endsWith("_example.kt")) {
+                    val parts = name.split("_")
+                    if (parts.size != 4) {
+                        compilation.warn("Invalid example name: $name")
+                    } else {
+                        val group = examples.getOrPut(parts[1]) { mutableListOf() }
+                        group += path
+                    }
+                }
+            }
         }
     }
 

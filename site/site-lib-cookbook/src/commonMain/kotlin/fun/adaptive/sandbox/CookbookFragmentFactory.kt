@@ -3,9 +3,7 @@ package `fun`.adaptive.sandbox
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.sandbox.recipe.demo.goodmorning.goodMorning
 import `fun`.adaptive.sandbox.recipe.demo.markdown.markdownDemoRecipe
-import `fun`.adaptive.sandbox.recipe.ui.badge.commonBadgeExample
-import `fun`.adaptive.sandbox.recipe.ui.badge.contentPaneBadgeExample
-import `fun`.adaptive.sandbox.recipe.ui.badge.valueBadgeExample
+import `fun`.adaptive.sandbox.recipe.ui.badge.*
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
@@ -15,11 +13,16 @@ import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.sandbox.recipe.ui.form.commonFormExample
 import `fun`.adaptive.sandbox.recipe.ui.icon.iconRecipe
-import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputExample
+import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeBasicInput
+import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedNoLabel
+import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedUnremovable
 import `fun`.adaptive.sandbox.recipe.ui.input.button.*
 import `fun`.adaptive.sandbox.recipe.ui.input.date.dateInputRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputNullableExample
+import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputRadixExample
+import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputRadixWithDecimalExample
 import `fun`.adaptive.sandbox.recipe.ui.input.number.commonDoubleInputExample
-import `fun`.adaptive.sandbox.recipe.ui.input.number.commonIntInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.select.*
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputPlayground
@@ -44,9 +47,12 @@ import `fun`.adaptive.sandbox.recipe.ui.text.textRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.tree.treePlayground
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeValueExample
+import `fun`.adaptive.sandbox.support.exampleGroup
 
 object CookbookFragmentFactory : FoundationFragmentFactory() {
     init {
+        add("example-group", ::exampleGroup)
+
         //add("cookbook:recipe:auth", ::authRecipe)
         add("cookbook:recipe:goodmorning", ::goodMorning)
 
@@ -91,10 +97,17 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Badge
         // ----------------------------------------------------------------------------
 
-        add("cookbook/badge/example/common", ::commonBadgeExample)
-        add("cookbook/badge/example/value", ::valueBadgeExample)
-        add("cookbook/badge/example/content-pane", ::contentPaneBadgeExample)
-        add("cookbook/badge/example/input", ::badgeInputExample)
+        add("badgeNameOnly", ::badgeNameOnly)
+        add("badgeNameAndRemovable", ::badgeNameAndRemovable)
+        add("badgeNameAndIcon", ::badgeNameAndIcon)
+        add("badgeNameIconAndRemovable", ::badgeNameIconAndRemovable)
+        add("badgeWithSeverity", ::badgeWithSeverity)
+        add("badgeCustomStyles", ::badgeCustomStyles)
+        add("badgeValueBadge", ::badgeValueBadge)
+        add("badgeContentPaneHeader", ::badgeContentPaneHeader)
+        add("badgeBasicInput", ::badgeBasicInput)
+        add("badgeInputInitializedNoLabel", ::badgeInputInitializedNoLabel)
+        add("badgeInputInitializedUnremovable", ::badgeInputInitializedUnremovable)
 
         // ----------------------------------------------------------------------------
         // Context menu
@@ -132,7 +145,11 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Int Input
         // ----------------------------------------------------------------------------
 
-        add("cookbook/input/int/example/common", ::commonIntInputExample)
+        add("intInputBasicExample", ::intInputBasicExample)
+        add("intInputNullableExample", ::intInputNullableExample)
+        add("intInputRadixExample", ::intInputRadixExample)
+        add("intInputRadixWithDecimalExample", ::intInputRadixWithDecimalExample)
+
 
         // ----------------------------------------------------------------------------
         // Select Input

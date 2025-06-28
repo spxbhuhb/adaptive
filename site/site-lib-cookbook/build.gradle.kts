@@ -53,6 +53,10 @@ kotlin {
                 implementation(libs.adaptive.core.core)
                 implementation(libs.adaptive.core.ui)
 
+                implementation(libs.adaptive.grove.doc)
+                implementation(libs.adaptive.grove.lib)
+                implementation(libs.adaptive.grove.runtime)
+
                 implementation(libs.adaptive.lib.app)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.auth)

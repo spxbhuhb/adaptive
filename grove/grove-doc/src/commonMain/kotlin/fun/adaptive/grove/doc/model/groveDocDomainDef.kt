@@ -25,4 +25,6 @@ object GroveDocValueDomainDef : AvValueDomainDef() {
         childListRefLabel = childListRef
     )
 
+    val exampleGroup = marker { "example-group" }
+
 }

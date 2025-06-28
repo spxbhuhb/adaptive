@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.sandbox.support.E
-import `fun`.adaptive.sandbox.support.examplePane
+import `fun`.adaptive.sandbox.support.examplePaneOld
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.codefence.codeFence
 import `fun`.adaptive.ui.editor.*
@@ -25,7 +25,7 @@ fun commonFormExample(): AdaptiveFragment {
     val template = FormData()
     val form = observe { adatFormBackend(template) }
 
-    examplePane(
+    examplePaneOld(
         "Basic form",
         """
             This example demonstrates a basic form with some built-in editors.

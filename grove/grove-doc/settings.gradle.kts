@@ -21,6 +21,7 @@ dependencyResolutionManagement {
 includeBuild("../../core/core-core")
 includeBuild("../../core/core-ui")
 
+includeBuild("../../lib/lib-auth")
 includeBuild("../../lib/lib-document")
 includeBuild("../../lib/lib-ui")
 includeBuild("../../lib/lib-ui-mpw")

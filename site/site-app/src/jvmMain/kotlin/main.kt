@@ -7,7 +7,7 @@ import `fun`.adaptive.app.app.AppMainModuleServer
 import `fun`.adaptive.auth.app.NoAuthServerModule
 import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
-import `fun`.adaptive.grove.doc.app.GroveServerModule
+import `fun`.adaptive.grove.doc.app.GroveDocModuleServer
 import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.lib.util.app.UtilModule
 import `fun`.adaptive.value.app.ValueServerModule
@@ -25,7 +25,7 @@ fun main() {
         module { ValueServerModule(FilePersistence(Path("./var/values"))) }
         module { NoAuthServerModule() }
         module { KtorJvmServerModule() }
-        module { GroveServerModule() }
+        module { GroveDocModuleServer() }
         module { AppMainModuleServer() }
     }
 

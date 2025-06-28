@@ -18,11 +18,14 @@
     <string name="leftClickForPopup">Left click for popup</string>
     <string name="popupContent">Popup content</string>
 
+    <string name="showCode">Show code</string>
+    <string name="showFullCode">Show full code</string>
+    <string name="hideCode">Hide code</string>
+
     <!-- sidebar -->
     <string name="collapsable">Collapsable - click on title to collapse</string>
     <string name="fullNormal">Full - Normal</string>
     <string name="fullVariant">Full - Variant</string>
     <string name="thin">Thin</string>
-
 
 </resources>

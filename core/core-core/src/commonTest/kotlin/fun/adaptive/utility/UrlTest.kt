@@ -111,4 +111,14 @@ class UrlTest {
         assertEquals("", url.tag)
         assertEquals("", url.custom)
     }
+
+    @Test
+    fun `parse actualize with parameter`() {
+        val url = Url.parse("actualize://example-group?name=intInput")
+        assertEquals("actualize", url.scheme)
+        assertEquals(listOf("example-group"), url.segments)
+        assertTrue(url.parameters["name"] == "intInput")
+        assertEquals("", url.tag)
+        assertEquals("", url.custom)
+    }
 }

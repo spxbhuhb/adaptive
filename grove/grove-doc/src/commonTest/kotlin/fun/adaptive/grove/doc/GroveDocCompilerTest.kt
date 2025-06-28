@@ -157,4 +157,146 @@ class GroveDocCompilerTest {
         compiler.compile()
         assertTrue(compiler.notifications.isEmpty())
     }
+
+    @Test
+    @JsName("testGetExample")
+    fun `test getExample method`() = compilerTest(clearedTestPath()) {
+        // Create a test Kotlin file with a structure similar to the example file
+        val exampleContent = """
+            package test.example
+
+            import some.package.Class1
+            import some.package.Class2
+
+            /**
+             * # Example Name
+             *
+             * - First explanation point
+             * - Second explanation point
+             */
+            @Annotation
+            fun exampleFunction() {
+                // Example code here
+                val x = 42
+                println(x)
+            }
+        """.trimIndent()
+
+        val exampleFile = inPath.resolve("testExample.kt")
+        exampleFile.write(exampleContent)
+
+        // Call the getExample method
+        val example = compiler.getExample(exampleFile)
+
+        // Verify the extracted components
+        assertEquals("Example Name", example.name)
+        assertEquals("- First explanation point\n- Second explanation point", example.explanation)
+        assertEquals("exampleFunction", example.fragmentKey)
+
+        val expectedCode = """
+            @Annotation
+            fun exampleFunction() {
+                // Example code here
+                val x = 42
+                println(x)
+            }
+        """.trimIndent()
+
+        assertEquals(expectedCode, example.exampleCode)
+        assertEquals(exampleContent, example.fullCode)
+        assertTrue(example.repoPath.endsWith("testExample.kt"))
+    }
+    @Test
+    @JsName("testExampleFilesCollection")
+    fun `test example files collection`() = compilerTest(clearedTestPath()) {
+        // Create example files with the correct naming convention: <order>_<group>_<name>_example.kt
+        val group1 = "button"
+        val group2 = "input"
+
+        // Create example files for group1
+        val example1 = inPath.resolve("01_${group1}_basic_example.kt")
+        val example2 = inPath.resolve("02_${group1}_advanced_example.kt")
+
+        // Create example files for group2
+        val example3 = inPath.resolve("01_${group2}_simple_example.kt")
+        val example4 = inPath.resolve("02_${group2}_complex_example.kt")
+
+        // Write content to the example files
+        example1.write("""
+            package test.example
+
+            /**
+             * # Basic Button Example
+             * 
+             * - This is a basic button example
+             */
+            fun basicButtonExample() {
+                // Example code
+            }
+        """.trimIndent())
+
+        example2.write("""
+            package test.example
+
+            /**
+             * # Advanced Button Example
+             * 
+             * - This is an advanced button example
+             */
+            fun advancedButtonExample() {
+                // Example code
+            }
+        """.trimIndent())
+
+        example3.write("""
+            package test.example
+
+            /**
+             * # Simple Input Example
+             * 
+             * - This is a simple input example
+             */
+            fun simpleInputExample() {
+                // Example code
+            }
+        """.trimIndent())
+
+        example4.write("""
+            package test.example
+
+            /**
+             * # Complex Input Example
+             * 
+             * - This is a complex input example
+             */
+            fun complexInputExample() {
+                // Example code
+            }
+        """.trimIndent())
+
+        // Run the compiler's collect method
+        compiler.collect()
+
+        // Verify that the examples are collected properly in the examples map
+        val examples = compilation.fileCollector.examples
+
+        // Check that both groups are in the map
+        assertTrue(examples.containsKey(group1), "Examples map should contain the '${group1}' group")
+        assertTrue(examples.containsKey(group2), "Examples map should contain the '${group2}' group")
+
+        // Check that each group has the correct number of examples
+        assertEquals(2, examples[group1]?.size, "The '${group1}' group should have 2 examples")
+        assertEquals(2, examples[group2]?.size, "The '${group2}' group should have 2 examples")
+
+        // Check that the examples in each group are the correct files
+        assertTrue(examples[group1]?.any { it.toString().endsWith("01_${group1}_basic_example.kt") } == true,
+            "The '${group1}' group should contain the basic example")
+        assertTrue(examples[group1]?.any { it.toString().endsWith("02_${group1}_advanced_example.kt") } == true,
+            "The '${group1}' group should contain the advanced example")
+
+        assertTrue(examples[group2]?.any { it.toString().endsWith("01_${group2}_simple_example.kt") } == true,
+            "The '${group2}' group should contain the simple example")
+        assertTrue(examples[group2]?.any { it.toString().endsWith("02_${group2}_complex_example.kt") } == true,
+            "The '${group2}' group should contain the complex example")
+    }
 }

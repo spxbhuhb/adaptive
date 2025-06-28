@@ -1,6 +1,6 @@
 package `fun`.adaptive.utility
 
-class Url(
+data class Url(
     val scheme: String = "",
     val segments: List<String> = emptyList(),
     val parameters: Map<String, String> = emptyMap(),
@@ -9,7 +9,7 @@ class Url(
 ) {
 
     companion object {
-        private val regex = Regex("(?:([a-z]+)://)?(?:[a-zA-Z0-9.-]+(?::[0-9]{1,5})?)?([^?#]*)(\\?[^#]*)?(#[^|]*)?(\\|.*)?")
+        private val regex = Regex("(?:([a-z]+)://)?(?:(?:[a-zA-Z0-9.-]+(?::[0-9]{1,5})?)/)?([^?#]*)(\\?[^#]*)?(#[^|]*)?(\\|.*)?")
 
         fun String.parseUrl(): Url = parse(this)
 

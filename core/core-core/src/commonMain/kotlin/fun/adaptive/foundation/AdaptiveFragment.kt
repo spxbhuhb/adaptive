@@ -615,6 +615,18 @@ abstract class AdaptiveFragment(
     override fun toString(): String =
         "${this::class.simpleName ?: "<unknown>"} @ $id${name?.let { " ($it)" } ?: ""}"
 
+    fun collectParents(): List<AdaptiveFragment> {
+        val result = mutableListOf<AdaptiveFragment>()
+        var current: AdaptiveFragment? = this
+
+        while (current != null) {
+            result += current
+            current = current.parent
+        }
+
+        return result
+    }
+
     // ----------------------------------------------
     // Visitor support
     // ----------------------------------------------

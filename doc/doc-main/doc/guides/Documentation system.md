@@ -9,14 +9,14 @@ This document describes the documentation system of Adaptive and the documentati
 1. Top level documentation (such as this one) is in the [doc-main](def://) subproject.
 2. [Subproject](def://) documentation is in the `doc` directory of the given subproject.
 
-`doc` directories may contain these subdirectories:
+`doc` directories may contain these subdirectories, each containing the given type of documents:
 
 1. `definitions`
 2. `guides`
 3. `internals`
 
-All non-class file names related to documentation **SHALL** be unique through the whole repository. 
-This includes file names, class names, everything.
+All non-class file names related to documentation **SHALL** be unique through the whole repository in 
+respect of the document type.
 
 This was a design decision for multiple reasons:
 
@@ -29,8 +29,24 @@ This was a design decision for multiple reasons:
 1. **DO NOT** put Kotlin code fences into Markdown.
 2. Example code that can be placed inside the module shall be in `commonTest`.
 3. Example code that cannot be placed inside the module shall be in [doc-example](def://)
-4. Reference full file examples with the `[FileName](example://)` shorthand.
-5. Reference function examples with the `[FunctionName](example://file-name)` shorthand
+4. Each example shall have its own file, do not put more examples into one file.
+5. Name of the example file: `<order>_<group>_<name>_example.kt` where
+    1. `<order>` is used to set the ordering of the examples in the group
+    2. `<group>` is the name of the example group
+    3. `<name>` is the name of the example, unique in the group
+    4. the `example` suffix lets the documentation system collect the examples
+
+The first documented function in the file is the main function of the example.
+The documentation of the main function should start with a Markdown header that
+is the name of the example, followed by the explanation of the example.
+
+```kotlin
+/**
+ * # With name and icon
+ *
+ * - Pass an icon in the `icon` parameter.
+ */
+```
 
 ### Todos
 

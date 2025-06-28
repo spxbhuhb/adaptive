@@ -18,7 +18,7 @@ fun intInput(
 
     val observed = observe { viewBackend }
     val focus = focus()
-    val formatted = observed.inputValue?.toString(viewBackend.radix)
+    val formatted = observed.inputValue?.toString(observed.radix)
 
     decoratedInput(focus, observed) {
 
@@ -32,7 +32,7 @@ fun intInput(
                     return@singleLineTextInput
                 }
 
-                val inputValue = v.toIntOrNull(viewBackend.radix)
+                val inputValue = v.toIntOrNull(observed.radix)
 
                 if (inputValue != null) {
                     observed.isInConversionError = false
@@ -47,8 +47,8 @@ fun intInput(
             alignItems.end ..
             instructions()
 
-        if (viewBackend.showRadix10) {
-            text(viewBackend.inputValue?.toString() ?: "-") .. viewBackend.inputTheme.endHint
+        if (observed.showRadix10) {
+            text(observed.inputValue?.toString() ?: "-") .. observed.inputTheme.endHint
         }
     }
 

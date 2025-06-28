@@ -1,10 +1,9 @@
 package `fun`.adaptive.grove.doc.server
 
+import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.grove.doc.api.GroveDocApi
-import `fun`.adaptive.grove.doc.model.GroveDocSpec
-import `fun`.adaptive.grove.doc.model.GroveDocValue
-import `fun`.adaptive.grove.doc.model.groveDocDomain
+import `fun`.adaptive.grove.doc.model.*
 import `fun`.adaptive.value.AvValueWorker
 
 class GroveDocService : ServiceImpl<GroveDocService>(), GroveDocApi {
@@ -12,6 +11,8 @@ class GroveDocService : ServiceImpl<GroveDocService>(), GroveDocApi {
     val values by workerImpl<AvValueWorker>()
 
     override suspend fun getByPath(path: List<String>): GroveDocValue? {
+        publicAccess()
+
         val top = values.firstOrNull<GroveDocSpec>(groveDocDomain.node) {
             // hasRef filters for top nodes only
             it.name == path.first() && ! it.hasRef(groveDocDomain.parentRef)
@@ -28,6 +29,12 @@ class GroveDocService : ServiceImpl<GroveDocService>(), GroveDocApi {
         }
 
         return current
+    }
+
+    override suspend fun getExampleGroup(group: String): List<GroveDocExample> {
+        publicAccess()
+
+        return values.firstOrNull<GroveDocExampleGroupSpec>(groveDocDomain.exampleGroup + ":" + group)?.spec?.examples ?: emptyList()
     }
 
 }

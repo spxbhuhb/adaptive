@@ -1,5 +1,6 @@
 package `fun`.adaptive.grove.doc.api
 
+import `fun`.adaptive.grove.doc.model.GroveDocExample
 import `fun`.adaptive.grove.doc.model.GroveDocValue
 import `fun`.adaptive.service.ServiceApi
 
@@ -7,5 +8,7 @@ import `fun`.adaptive.service.ServiceApi
 interface GroveDocApi {
 
     suspend fun getByPath(path: List<String>): GroveDocValue?
+
+    suspend fun getExampleGroup(group : String) : List<GroveDocExample>
 
 }
