@@ -58,5 +58,5 @@ In this example:
 
 ## See Also
 
-- [How to write a service](guide://)
-- [What is a service transport](guide://)
+- [Writing a service](guide://)
+- [Service transport](guide://)

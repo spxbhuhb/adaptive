@@ -150,7 +150,7 @@ class ExampleService : ServiceImpl<ExampleService>(), ExampleApi {
 Service providers implement a service API. They are standard server-side fragments that extend `ServiceImpl`.
 
 A new service implementation instance is created for each service call. This might seem a bit of overkill, but it
-makes the handling of the [service context](what_is_a_service_context.md) very straightforward.
+makes the handling of the [service context](def://) very straightforward.
 
 This example uses the companion to store the data protected by a lock. Synchronizing data access is
 critical as there may be many implementations running at the same time. Here we use a simple lock, but you can
@@ -262,7 +262,7 @@ suspend fun checkNumber(i : Int, illegal : Boolean) : String {
 
 ### Explanation
 
-Exception handling depends on the transport implementation, see [Service Transport](what_is_a_service_transport.md).
+Exception handling depends on the transport implementation, see [Service transport](guide://).
 
 With the Ktor implementation, server-side exceptions are thrown on the client-side according to these rules.
 
@@ -350,5 +350,5 @@ You can call client-side service functions from the server if:
 
 # See Also
 
-- [What is a service Context](guide://)
-- [What is a service transport](guide://)
+- [Service Context](guide://)
+- [Service transport](guide://)

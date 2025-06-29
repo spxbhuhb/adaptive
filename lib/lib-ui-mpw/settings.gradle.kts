@@ -30,5 +30,6 @@ includeBuild("../../grove/grove-runtime")
 
 includeBuild("../../lib/lib-document")
 includeBuild("../../lib/lib-graphics")
+includeBuild("../../lib/lib-util")
 includeBuild("../../lib/lib-value")
 includeBuild("../../lib/lib-ui")

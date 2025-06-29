@@ -80,5 +80,5 @@ jvmServer {
 
 ## See Also
 
-- [How to write a service](guide://)
-- [What is a service context](guide://)
+- [Writing a service](guide://)
+- [Service context](guide://)

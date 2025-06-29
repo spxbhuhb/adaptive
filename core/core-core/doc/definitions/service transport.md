@@ -9,4 +9,4 @@ more service transports to facilitate the communication.
 
 ## See also
 
-- [what is a service transport](guide://)
+- [Service transport](guide://)

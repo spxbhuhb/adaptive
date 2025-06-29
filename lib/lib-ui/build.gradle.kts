@@ -60,9 +60,12 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.adaptive.core.core)
             implementation(libs.adaptive.core.ui)
+
             implementation(libs.adaptive.grove.runtime)
-            implementation(libs.adaptive.lib.value)
+
             implementation(libs.adaptive.lib.graphics)
+            implementation(libs.adaptive.lib.util)
+            implementation(libs.adaptive.lib.value)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)

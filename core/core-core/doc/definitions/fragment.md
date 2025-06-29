@@ -12,6 +12,6 @@ Each fragment tree has an [adapter](def://) which manages the tree.
 
 ## See Also
 
-- [What is a fragment?](guide://)
+- [Fragment](guide://)
 - [What is an adapter?](guide://)
 - [AdaptiveFragment](class://)

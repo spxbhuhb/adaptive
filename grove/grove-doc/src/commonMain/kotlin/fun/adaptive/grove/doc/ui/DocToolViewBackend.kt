@@ -57,8 +57,8 @@ class DocToolViewBackend(
     }
 
     override fun resolve(navState: NavState): Pair<PaneContentType, PaneContentItem>? {
-        if (navState.segments[0] != "documentation") return null // FIXME hard coded URL segment
-        return groveDocDomain.node to GroveDocContentItem(navState.segments.drop(1))
+        if (navState.url.segmentsStartsWith("/documentation")) return null // FIXME hard coded URL segment
+        return groveDocDomain.node to GroveDocContentItem(navState.url.segments.drop(2))
     }
 
     override fun toNavState(type : PaneContentType, item: PaneContentItem): NavState? {

@@ -7,5 +7,5 @@ Not all property changes result in notification, some properties may be ignored.
 actual self-observable implementation decides which property changes require a
 notification.
 
-- [what is a producer](guide://)
+- [Producer](guide://)
 - [lifecycle-bound state variables](def://)

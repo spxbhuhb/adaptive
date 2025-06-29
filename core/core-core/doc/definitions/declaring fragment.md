@@ -11,5 +11,5 @@ the fragments that are declared within its scope.
 
 ## See also
 
-- [what is a fragment](def://)
-- [fragment lifecycle](Def://)
+- [Fragment](guide://)
+- [fragment lifecycle](def://)

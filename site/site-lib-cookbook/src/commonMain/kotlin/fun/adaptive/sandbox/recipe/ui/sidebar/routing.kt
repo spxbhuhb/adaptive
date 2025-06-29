@@ -5,12 +5,13 @@ import `fun`.adaptive.cookbook.generated.resources.assignment
 import `fun`.adaptive.cookbook.generated.resources.grid_view
 import `fun`.adaptive.cookbook.generated.resources.mail
 import `fun`.adaptive.foundation.value.storeFor
+import `fun`.adaptive.lib.util.url.Url
 import `fun`.adaptive.ui.generated.resources.settings
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.navState
 import `fun`.adaptive.ui.navigation.sidebar.SidebarItem
 
-val sidebarRecipeNavState = storeFor { NavState() }
+val sidebarRecipeNavState = storeFor { NavState(Url()) }
 
 object Routes {
     val zones = navState("zones")

@@ -30,7 +30,7 @@ class BrowserHistoryStateListener(
         val title = newValue.title ?: ""
         document.title = title
 
-        window.history.pushState(newValue.encodeToJsonString(), newValue.title ?: "", newValue.toUrl())
+        window.history.pushState(newValue.encodeToJsonString(), newValue.title ?: "", newValue.url.toString())
     }
 
 }

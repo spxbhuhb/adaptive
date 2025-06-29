@@ -9,5 +9,5 @@ the notifications are no longer needed (for example, when the listener is dispos
 
 ## See also
 
-- [what is a producer](guide://)
+- [Producer](guide://)
 - [lifecycle-bound state variables](def://)

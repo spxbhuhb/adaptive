@@ -1,5 +1,6 @@
 package `fun`.adaptive.grove.doc.lib.compiler
 
+import `fun`.adaptive.grove.doc.model.GroveDocExample
 import `fun`.adaptive.log.LogLevel
 import `fun`.adaptive.persistence.absolute
 import `fun`.adaptive.persistence.append
@@ -37,6 +38,8 @@ class GroveDocCompilation(
     var reportedLinks = mutableSetOf<Link>()
 
     internal val fileCollector = FileCollector(this)
+
+    val exampleGroups = mutableMapOf<String, List<GroveDocExample>>()
 
     fun warn(message: String, paths: List<Path> = emptyList()) {
         notifications.add(GroveDocNotification(LogLevel.Warning, message, paths.map { it.toString() }))

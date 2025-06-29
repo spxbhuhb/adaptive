@@ -8,8 +8,8 @@ import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.log.getLogger
-import `fun`.adaptive.utility.Url
-import `fun`.adaptive.utility.Url.Companion.parseUrl
+import `fun`.adaptive.lib.util.url.Url
+import `fun`.adaptive.lib.util.url.Url.Companion.parseUrl
 
 
 @Adaptive

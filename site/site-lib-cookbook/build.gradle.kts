@@ -64,6 +64,7 @@ kotlin {
                 implementation(libs.adaptive.lib.document)
                 implementation(libs.adaptive.lib.ui)
                 implementation(libs.adaptive.lib.ui.mpw)
+                implementation(libs.adaptive.lib.util)
                 implementation(libs.adaptive.lib.value)
 
                 implementation(libs.kotlinx.coroutines.debug)

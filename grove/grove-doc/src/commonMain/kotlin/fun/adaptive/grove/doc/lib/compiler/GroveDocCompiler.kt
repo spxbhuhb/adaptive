@@ -40,6 +40,9 @@ GroveDocCompiler(
         collectSubprojects()
         buildDocTreeTops()
 
+        transformExamples(compilation.exampleGroups) // transformed examples used by Markdown transform as well
+        addExampleGroupValues(compilation.exampleGroups)
+
         process("definition", fileCollector.definitions)
         process("guide", fileCollector.guides)
         process("qa", fileCollector.qa)
@@ -48,7 +51,6 @@ GroveDocCompiler(
             process("uncategorized", path)
         }
 
-        exampleGroups()
     }
 
     fun buildDocTreeTops() {
@@ -144,23 +146,13 @@ GroveDocCompiler(
         }
     }
 
-    fun exampleGroups() {
+    fun transformExamples(out : MutableMap<String, List<GroveDocExample>>) {
         for ((name, items) in compilation.fileCollector.examples) {
-            compilation.valueWorker.executeOutOfBand {
-                addValue {
-                    AvValue(
-                        name = "Example group: $name",
-                        markersOrNull = setOf(groveDocDomain.exampleGroup + ":" + name),
-                        spec = GroveDocExampleGroupSpec(
-                            examples = items.map { getExample(it) }.sortedBy { it.repoPath } // this sorting is not perfect, but well...
-                        )
-                    )
-                }
-            }
+            out[name] = items.map { getExample(it) }.sortedBy { it.repoPath } // this sorting is not perfect, but well...
         }
     }
 
-    fun getExample(path : Path) : GroveDocExample {
+    fun getExample(path: Path): GroveDocExample {
         val fullCode = path.readString()
 
         // Extract documentation comment
@@ -217,5 +209,22 @@ GroveDocCompiler(
             exampleCode = exampleCode,
         )
     }
+
+    fun addExampleGroupValues(exampleMap: Map<String, List<GroveDocExample>>) {
+        for ((name, examples) in exampleMap) {
+            compilation.valueWorker.executeOutOfBand {
+                addValue {
+                    AvValue(
+                        name = "Example group: $name",
+                        markersOrNull = setOf(groveDocDomain.exampleGroup + ":" + name),
+                        spec = GroveDocExampleGroupSpec(
+                            examples = examples
+                        )
+                    )
+                }
+            }
+        }
+    }
+
 
 }

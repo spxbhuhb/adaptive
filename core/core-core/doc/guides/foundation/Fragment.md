@@ -192,7 +192,7 @@ fun t2(time : Instant) {
 > variables can change, just not because of the other variables used to calculate them.
 >
 > You can change them explicitly (if they are declared as `var`) or they can change
-> automatically if they have a [producer](what_is_a_producer.md).
+> automatically if they have a [Producer](guide://).
 >
 
 ## Lifecycle
@@ -302,7 +302,7 @@ val p : () -> Unit = {  }
 # See Also
 
 - [What is an instruction](guide://)
-- [What is a producer](guide://)
+- [Producer](guide://)
 
 # Conclusion
 

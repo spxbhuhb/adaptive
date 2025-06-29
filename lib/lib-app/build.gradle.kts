@@ -59,6 +59,7 @@ kotlin {
             implementation(libs.adaptive.lib.ktor)
             implementation(libs.adaptive.lib.ui)
             implementation(libs.adaptive.lib.ui.mpw)
+            implementation(libs.adaptive.lib.util)
             implementation(libs.adaptive.lib.value)
         }
 

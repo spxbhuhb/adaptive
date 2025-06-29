@@ -8,6 +8,6 @@ and presented by [Adapters](def://).
 ## See Also
 
 - [What is an adapter](guide://)
-- [What is a fragment](guide://)
+- [Fragment](guide://)
 - [AdaptiveFragment](class://)
 - [AdaptiveAdapter](class://)

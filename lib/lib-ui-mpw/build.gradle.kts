@@ -66,6 +66,7 @@ kotlin {
             implementation(libs.adaptive.lib.document)
             implementation(libs.adaptive.lib.graphics)
             implementation(libs.adaptive.lib.ui)
+            implementation(libs.adaptive.lib.util)
             implementation(libs.adaptive.lib.value)
         }
         commonTest.dependencies {

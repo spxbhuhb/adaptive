@@ -9,5 +9,5 @@ Original functions typically define [user interface](def://) fragments.
 
 ## See also
 
-- [fragment](def://)
-- [What is a fragment](guide://)
+- [Fragment](def://)
+- [Fragment](guide://)

@@ -3,11 +3,10 @@ package `fun`.adaptive.ui.navigation
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.utility.Url
-import `fun`.adaptive.utility.encodeToUrl
+import `fun`.adaptive.lib.util.url.Url
 
 fun navState(vararg segments: String, title: String? = null, fullScreen: Boolean = false) =
-    NavState(segments.toList(), title = title, fullScreen = fullScreen)
+    NavState(Url(segments = segments.toList()), title = title, fullScreen = fullScreen)
 
 //fun NavStateOrigin.open(navState: NavState) {
 //    navState.update(
@@ -22,10 +21,7 @@ fun navState(vararg segments: String, title: String? = null, fullScreen: Boolean
 
 @Adat
 open class NavState(
-    val segments: List<String> = emptyList(),
-    val parameters: Map<String, String> = emptyMap(),
-    val tag: String = "",
-    val custom: String = "",
+    val url: Url,
     val title: String? = null,
     val fullScreen: Boolean = false,
 ) {
@@ -36,10 +32,7 @@ open class NavState(
      */
     fun sub(vararg segments: String): NavState =
         NavState(
-            this.segments + segments,
-            this.parameters,
-            this.tag,
-            this.custom,
+            this.url.copy(segments = this.url.segments + segments),
             this.title,
             this.fullScreen
         )
@@ -56,11 +49,11 @@ open class NavState(
 
         // this       other
         // /a/b/c     /a        as there are fewer fragments in other, it cannot contain this
-        if (other.segments.size < segments.size) return false
+        if (other.url.segments.size < this.url.segments.size) return false
 
-        for (i in other.segments.indices) {
-            if (i > this.segments.lastIndex) return true
-            if (other.segments[i] != segments[i]) return false
+        for (i in other.url.segments.indices) {
+            if (i > this.url.segments.lastIndex) return true
+            if (other.url.segments[i] != this.url.segments[i]) return false
         }
 
         return true
@@ -68,20 +61,6 @@ open class NavState(
 
     fun goto(newState: NavState) {
         store().update(newState)
-    }
-
-    fun toUrl(): String {
-        var result = "/" + segments.joinToString("/") { it.encodeToUrl() }
-        if (parameters.isNotEmpty()) {
-            result += "?" + parameters.map { "${it.key.encodeToUrl()}=${it.value.encodeToUrl()}" }.joinToString("&")
-        }
-        if (tag.isNotEmpty()) {
-            result += "#${tag.encodeToUrl()}"
-        }
-        if (custom.isNotEmpty()) {
-            result += "|${custom.encodeToUrl()}"
-        }
-        return result
     }
 
     private fun store(): AdatStore<NavState> {
@@ -92,14 +71,8 @@ open class NavState(
 
     companion object : AdatCompanion<NavState> {
 
-        fun parse(url : String): NavState {
-            val url = Url.parse(url)
-            return NavState(
-                url.segments,
-                url.parameters,
-                url.tag,
-                url.custom
-            )
+        fun parse(url: String): NavState {
+            return NavState(Url.parse(url))
         }
     }
 }

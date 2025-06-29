@@ -1,9 +1,11 @@
 package `fun`.adaptive.grove.doc.lib.compiler
 
+import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
 import `fun`.adaptive.markdown.model.*
 import `fun`.adaptive.markdown.visitor.MarkdownTransformerVoid
 import `fun`.adaptive.persistence.*
+import `fun`.adaptive.lib.util.url.Url.Companion.parseUrl
 import `fun`.adaptive.utility.encodeToUrl
 import kotlinx.io.files.Path
 
@@ -15,6 +17,7 @@ import kotlinx.io.files.Path
  * - "def" and "guide" links as-is,
  * - "class", "property", "function" links as-is,
  * - "example" and "dirTree" links into code fences.
+ * - "actualize" with "example-group" turns into markdown of function docs and code fence
  *
  * Human-readable Markdown target transforms:
  *
@@ -41,13 +44,7 @@ class MarkdownResolveTransform(
         val name = match.groupValues[1]
         val url = match.groupValues[2]
 
-        val scheme = url.substringBefore("://")
-        val scopeAndArguments = url.substringAfter("://", "").takeIf { it.isNotEmpty() }
-
-        val scope = scopeAndArguments?.substringBefore('?')
-        val arguments = scopeAndArguments?.substringAfter('?')
-
-        return Link(name, url, scheme, scope, arguments)
+        return Link(name, url, url.parseUrl())
     }
 
     // --------------------------------------------------------------------------------
@@ -69,8 +66,16 @@ class MarkdownResolveTransform(
             "example" -> replaceExample(link)
 
             "def" -> {
-                if (link.arguments == "inline") {
+                if ("inline" in link.arguments) {
                     inlineDef(link)
+                } else {
+                    super.visitParagraph(paragraph)
+                }
+            }
+
+            "actualize" -> {
+                if (training && link.scope == "example-group") {
+                    inlineExampleGroup(link)
                 } else {
                     super.visitParagraph(paragraph)
                 }
@@ -162,10 +167,38 @@ class MarkdownResolveTransform(
         val ast = fullAst.subList(title + 1, if (seeAlso != title) seeAlso else fullAst.size)
 
         val last = ast.last()
-        if (last is MarkdownParagraph) { last.closed = true }
+        if (last is MarkdownParagraph) {
+            last.closed = true
+        }
 
         if (ast.size == 1) return ast.first()
         return MarkdownElementGroup(ast.toMutableList())
+    }
+
+    fun inlineExampleGroup(link: Link): MarkdownElement {
+        val groupName = link.arguments["name"]
+
+        if (groupName == null) {
+            compilation.warn("Missing example group name: $link in $mdPath")
+            return MarkdownInline(link.name)
+        }
+
+        val group = compilation.exampleGroups[groupName]
+        if (group == null) {
+            compilation.warn("Missing group name: $groupName in $mdPath")
+            return MarkdownInline(link.name)
+        }
+
+        return MarkdownElementGroup(
+            group.map { example ->
+                val elements = mutableListOf<MarkdownElement>(
+                    MarkdownHeader(2, mutableListOf(MarkdownInline(example.name)))
+                )
+                elements.addAll(MarkdownCompiler.ast(example.explanation))
+                elements.add(MarkdownCodeFence("kotlin", example.exampleCode))
+                MarkdownElementGroup(elements)
+            }.toMutableList()
+        )
     }
 
     fun replaceDir(link: Link): MarkdownElement {

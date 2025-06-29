@@ -26,18 +26,19 @@ This was a design decision for multiple reasons:
 
 ### Example code
 
-1. **DO NOT** put Kotlin code fences into Markdown.
-2. Example code that can be placed inside the module shall be in `commonTest`.
-3. Example code that cannot be placed inside the module shall be in [doc-example](def://)
-4. Each example shall have its own file, do not put more examples into one file.
-5. Name of the example file: `<order>_<group>_<name>_example.kt` where
+1. **DO NOT** put Kotlin code examples into Markdown (except this document).
+2. Put example code into `commonTest` of the given module when possible.
+3. Put example code into [doc-example](def://) if you cannot put it into a given module.
+4. Put each example into a separate file, **DO NOT** put more than one example into a file.
+5. Follow the pattern: `<order>_<group>_<name>_example.kt` where
     1. `<order>` is used to set the ordering of the examples in the group
     2. `<group>` is the name of the example group
     3. `<name>` is the name of the example, unique in the group
     4. the `example` suffix lets the documentation system collect the examples
 
-The first documented function in the file is the main function of the example.
-The documentation of the main function should start with a Markdown header that
+The first documented declaration in the file marks the start of the actual example code.
+
+The documentation of the example code should start with a Markdown header that
 is the name of the example, followed by the explanation of the example.
 
 ```kotlin
@@ -47,6 +48,25 @@ is the name of the example, followed by the explanation of the example.
  * - Pass an icon in the `icon` parameter.
  */
 ```
+
+Reference example code from Markdown like this:
+
+```markdown
+[examples](actualize://example-group?name=<group>)
+```
+
+The documentation system:
+
+- collects all files named according to the example pattern above
+- extracts information from the collected examples (name, explanation, code without imports)
+- for human-readable documentation
+  - keeps the link above as-is
+  - puts the examples into the value store of [site-app](def://) with a [GroveDocExampleGroupSpec](class://)
+  - when someone browses the documentation [exampleGroup](function://) fetches this value and renders example panes
+- for AI training documentation
+  - replaces the link with:
+    - the name and explanation are lifted out into Markdown
+    - the example code is put into a code fence
 
 ### Todos
 
@@ -177,11 +197,6 @@ The documentation has to be compiled to resolve the links.
 
 * The `grove-doc` project contains the documentation compiler.
 * The`compileAdaptiveDocumentation` Gradle task compiles all the documentation.
-* Output directory: `build/adaptive/doc`
-
-The output directory contains **ALL** the compiled documentation in one directory.
-
-> [!NOTE]
-> This might change in the future, but I would like to avoid a semantic directory
-> structure because it is a pain to manage. Most probably I'll just use a value
-> store and put all the files into it.
+* Output directories: 
+  * `build/adaptive/doc`
+  * `site/site-app/var/values`

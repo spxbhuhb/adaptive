@@ -1,5 +1,6 @@
 package `fun`.adaptive.grove.doc.lib.compiler
 
+import `fun`.adaptive.lib.util.url.Url
 import kotlinx.io.files.Path
 
 /**
@@ -10,12 +11,23 @@ import kotlinx.io.files.Path
 data class Link(
     val name: String,
     val original: String,
-    val scheme: String,
-    val scope: String? = null,
-    val arguments: String? = null
+    val url : Url
 ) {
+    val scheme: String
+        get() = url.scheme
+
+    val scope: String?
+        get() = when {
+            url.segments.isEmpty() -> null
+            url.segments.size == 1 && url.segments.first().isBlank() -> null
+            else -> url.segments.joinToString("/")
+        }
+
+    val arguments: Map<String,String>
+        get() = url.parameters
+
     override fun toString() =
-        "[$name]($scheme://${scope ?: ""}${arguments?.let { "($it)" } ?: ""})"
+        "[$name]($url)"
 
     fun lookupCode(compilation: GroveDocCompilation): Path? =
         compilation.fileCollector.lookupCode(scheme, name, scope)

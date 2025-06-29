@@ -39,7 +39,7 @@ Both `ExampleClientModule` and `ExampleServerModule` modules extend `ExampleModu
 consistent behavior across environments.
 
 `commonMainStringsStringStore0` is imported from the package of generated [resources](def://). See
-[What is the resource subsystem](guide://) for more information.
+[Resource subsystem](guide://) for more information.
 
 ## Frontend fragment registration
 

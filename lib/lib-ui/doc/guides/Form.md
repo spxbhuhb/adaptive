@@ -12,7 +12,7 @@ You can build forms with standalone inputs or with editors.
 
 ## Details
 
-Standalone input-based forms may be useful in special situations, check [Input](input.md)
+Standalone input-based forms may be useful in special situations, check [Inputs](guide://)
 for more information about them.
 
 Editor-based forms offer an easy way to create a from for an Adat class:
@@ -121,4 +121,4 @@ button("Save") .. onClick {
   - editor input error (for example, text in a number input)
 - both have a parameter `touchAll` with default `true`
 - `touchAll` decorates all invalid fields
-- see [Input](input.md) for more details about validation and `touchAll`
+- see [Inputs](guide://) for more details about validation and `touchAll`

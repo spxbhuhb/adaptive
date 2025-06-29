@@ -36,7 +36,7 @@ fun someFun() {
 }
 ```
 
-If you are interested about under-the-hood mechanisms, check out the [Internals](../internals/resource.md).
+If you are interested in under-the-hood mechanisms, check out the [resource internals](internals://).
 
 ## Setup
 
