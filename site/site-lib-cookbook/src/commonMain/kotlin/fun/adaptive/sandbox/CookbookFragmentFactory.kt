@@ -128,10 +128,10 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Button
         // ----------------------------------------------------------------------------
 
-        add("cookbook/input/button/example/normal", ::buttonNormalExample)
-        add("cookbook/input/button/example/disabled", ::buttonDisabledExample)
-        add("cookbook/input/button/example/submit", ::buttonSubmitExample)
-        add("cookbook/input/button/example/danger", ::buttonDangerExample)
+        add("buttonBasicExample", ::buttonBasicExample)
+        add("buttonDisabledExample", ::buttonDisabledExample)
+        add("buttonSubmitExample", ::buttonSubmitExample)
+        add("buttonDangerExample", ::buttonDangerExample)
 
         add("cookbook/input/button/playground", ::buttonPlayground)
 

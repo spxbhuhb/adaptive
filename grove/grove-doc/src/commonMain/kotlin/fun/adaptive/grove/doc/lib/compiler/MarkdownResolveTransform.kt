@@ -1,11 +1,10 @@
 package `fun`.adaptive.grove.doc.lib.compiler
 
-import `fun`.adaptive.document.ui.direct.markdown
+import `fun`.adaptive.lib.util.url.Url.Companion.parseUrl
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
 import `fun`.adaptive.markdown.model.*
 import `fun`.adaptive.markdown.visitor.MarkdownTransformerVoid
 import `fun`.adaptive.persistence.*
-import `fun`.adaptive.lib.util.url.Url.Companion.parseUrl
 import `fun`.adaptive.utility.encodeToUrl
 import kotlinx.io.files.Path
 
@@ -195,6 +194,9 @@ class MarkdownResolveTransform(
                     MarkdownHeader(2, mutableListOf(MarkdownInline(example.name)))
                 )
                 elements.addAll(MarkdownCompiler.ast(example.explanation))
+                elements.last().also {
+                    if (it is MarkdownParagraph) it.closed = true
+                }
                 elements.add(MarkdownCodeFence("kotlin", example.exampleCode))
                 MarkdownElementGroup(elements)
             }.toMutableList()
