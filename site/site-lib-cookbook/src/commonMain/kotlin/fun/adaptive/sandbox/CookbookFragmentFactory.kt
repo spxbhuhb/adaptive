@@ -17,12 +17,12 @@ import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeBasicInput
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedNoLabel
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedUnremovable
 import `fun`.adaptive.sandbox.recipe.ui.input.button.*
-import `fun`.adaptive.sandbox.recipe.ui.input.date.dateInputRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.date.dateInputExample
+import `fun`.adaptive.sandbox.recipe.ui.input.double_.*
 import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputNullableExample
 import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputRadixExample
 import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputRadixWithDecimalExample
-import `fun`.adaptive.sandbox.recipe.ui.input.number.commonDoubleInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.select.*
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputPlayground
@@ -74,8 +74,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:text", ::textRecipe)
         add("cookbook:recipe:workspace", ::workspaceRecipe)
 
-        add("cookbook:recipe:input:date", ::dateInputRecipe)
-        add("cookbook:recipe:input:double", ::commonDoubleInputExample)
         add("cookbook:recipe:input:quick-filter", ::quickFilterRecipe)
         add("cookbook:recipe:input:text-area", ::textInputAreaRecipe)
 
@@ -136,10 +134,21 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook/input/button/playground", ::buttonPlayground)
 
         // ----------------------------------------------------------------------------
+        // Date Input
+        // ----------------------------------------------------------------------------
+
+        add("dateInputExample", ::dateInputExample)
+
+        // ----------------------------------------------------------------------------
         // Double Input
         // ----------------------------------------------------------------------------
 
-        add("cookbook/input/double/example/common", ::commonDoubleInputExample)
+        add("doubleInputDefault", ::doubleInputDefault)
+        add("doubleInput1decNullable", ::doubleInput1decNullable)
+        add("doubleInput8dec", ::doubleInput8dec)
+        add("doubleInputNoDec", ::doubleInputNoDec)
+        add("doubleInputUnit", ::doubleInputUnit)
+        add("doubleInputOnChange", ::doubleInputOnChange)
 
         // ----------------------------------------------------------------------------
         // Int Input

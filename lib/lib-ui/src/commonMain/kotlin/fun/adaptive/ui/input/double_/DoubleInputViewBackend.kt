@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.input.number
+package `fun`.adaptive.ui.input.double_
 
 import `fun`.adaptive.ui.input.InputViewBackend
 import kotlin.properties.Delegates.observable
@@ -12,5 +12,6 @@ class DoubleInputViewBackend(
 ) {
 
     var decimals by observable(2, ::notify)
+    var unit by observable<String?>(null, ::notify)
 
 }

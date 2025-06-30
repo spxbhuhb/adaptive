@@ -7,8 +7,8 @@ import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
-import `fun`.adaptive.ui.input.number.DoubleInputViewBackend
-import `fun`.adaptive.ui.input.number.doubleInput2
+import `fun`.adaptive.ui.input.double_.DoubleInputViewBackend
+import `fun`.adaptive.ui.input.double_.doubleInput
 
 @Adaptive
 fun doubleEditor(
@@ -17,7 +17,7 @@ fun doubleEditor(
     @PropertySelector
     selector: () -> Double?,
 ) : AdaptiveFragment {
-    doubleInput2(
+    doubleInput(
         fragment().viewBackendFor(binding) { value, label, isSecret ->
             DoubleInputViewBackend(value, label, isSecret)
         }

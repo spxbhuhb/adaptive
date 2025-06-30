@@ -94,6 +94,13 @@ class InputTheme : AbstractTheme() {
     )
 
     val endHint = instructionsOf(
+        paddingLeft { inputHintPadding },
+        fontSize(13.sp),
+        noSelect,
+        textColors.onSurfaceVariant
+    )
+
+    val bottomEndHint = instructionsOf(
         height { inputHintLineHeight + inputHintPadding },
         paddingTop { inputHintPadding },
         paddingRight { horizontalPadding },

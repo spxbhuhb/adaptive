@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.input.number
+package `fun`.adaptive.ui.input.double_
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -8,32 +8,12 @@ import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.alignItems
 import `fun`.adaptive.ui.api.focus
 import `fun`.adaptive.ui.api.singleLineTextInput
-import `fun`.adaptive.ui.input.InputContext
-import `fun`.adaptive.ui.input.InputTheme
+import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.input.decoratedInput
 import `fun`.adaptive.utility.format
 
 @Adaptive
 fun doubleInput(
-    value: Double,
-    decimals: Int = 2,
-    state: InputContext = InputContext(),
-    theme: InputTheme = InputTheme.DEFAULT,
-    onChange: (Double) -> Unit
-): AdaptiveFragment {
-    doubleOrNullInput(value, decimals, state, theme) { v ->
-        if (v == null) {
-            state.invalid = true
-        } else {
-            onChange(v)
-            state.invalid = false
-        }
-    } .. instructions()
-    return fragment()
-}
-
-@Adaptive
-fun doubleInput2(
     viewBackend: DoubleInputViewBackend
 ): AdaptiveFragment {
 
@@ -48,7 +28,7 @@ fun doubleInput2(
 
                 if (v.isEmpty()) {
                     observed.inputValue = null
-                    observed.isInConversionError = !observed.isNullable
+                    observed.isInConversionError = ! observed.isNullable
                     return@singleLineTextInput
                 }
 
@@ -66,6 +46,10 @@ fun doubleInput2(
             observed.inputTheme.singleLine ..
             alignItems.end ..
             instructions()
+
+        if (observed.unit != null) {
+            text(observed.unit) .. observed.inputTheme.endHint
+        }
     }
 
     return fragment()

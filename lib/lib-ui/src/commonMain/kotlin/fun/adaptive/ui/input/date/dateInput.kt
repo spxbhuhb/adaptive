@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.decoratedInput
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.event.Keys
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.utility.localDate
 
@@ -24,11 +25,12 @@ fun dateInput(
         column(instructions()) {
             observed.containerThemeInstructions(focus)
 
-            text(observed.inputValue.toString()) .. alignSelf.startCenter .. theme.inputFont
+            text((observed.inputValue ?: localDate()).toString()) .. alignSelf.startCenter .. theme.inputFont
 
             if (! observed.isDisabled) {
                 primaryPopup(observed) { hide ->
                     observed.dateInputTheme.dropdownPopup
+                    focusFirst
 
                     datePicker(
                         observed.inputValue ?: localDate(),

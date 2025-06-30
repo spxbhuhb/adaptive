@@ -48,7 +48,7 @@ fun intInput(
             instructions()
 
         if (observed.showRadix10) {
-            text(observed.inputValue?.toString() ?: "-") .. observed.inputTheme.endHint
+            text(observed.inputValue?.toString() ?: "-") .. observed.inputTheme.bottomEndHint
         }
     }
 
