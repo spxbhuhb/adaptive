@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.ops
 
 /**
  * @property  closureSize  The total number of state variables in this closure. This is the sum of the number
- *                         of state variables in [owner] and all [components].
+ *                         of state variables in [owner] and all [fragments].
  */
 class AdaptiveClosure(
     val fragments: Array<AdaptiveFragment>,

@@ -35,8 +35,6 @@ class HaveToPatchTransform(
                 irConst(1 shl index)
             )
         )
-
-        return super.visitCall(expression)
     }
 
 }

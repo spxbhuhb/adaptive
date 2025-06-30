@@ -209,39 +209,37 @@ fun someFun() {
 
 ## Closures
 
-### Named components
+### Named fragments
 
-Named components have two closures:
+Named fragments have two closures:
 
 * `createClosure`
 * `thisClosure`
 
 `createClosure` is:
 
-* the closure at the point where the component is **created**
-* provides the data to compute the external state variables of the component
+* the closure at the point where the fragment is **created**
+* provides the data to compute the external state variables of the fragment
 
 `thisClosure` is 
 
-* a new closure created by the component
-* contains the given component in `components`
-* provides access to the state variables of the component
-* passed to all components built by the component as `createClosure`
-
-
+* a new closure created by the fragment
+* contains the given fragment in `fragments`
+* provides access to the state variables of the fragment
+* passed to all fragments built by the fragment as `createClosure`
 
 It is important that lambda has access to the closure
 
-### Anonymous components
+### Anonymous fragments
 
-Anonymous components have two different modes: "reference" and "lambda", depending on the way
+Anonymous fragments have two different modes: "reference" and "lambda", depending on the way
 the higher order argument is supplied
 
 Lambda mode uses the declaration closure, reference mode defines its own closure.
 
-### Lambda anonymous components
+### Lambda anonymous fragments
 
-Anonymous components have three closures:
+Anonymous fragments have three closures:
 
 * `createClosure`
 * `declarationClosure`
@@ -249,23 +247,23 @@ Anonymous components have three closures:
 
 `createClosure` is:
 
-* the closure at the point where the anonymous component is **created** in the higher order component
-* provides the data to compute the external state variables of the anonymous component
+* the closure at the point where the anonymous fragment is **created** in the higher order fragment
+* provides the data to compute the external state variables of the anonymous fragment
 
 `declarationClosure` is:
 
 * the closure at the point where the anonymous function is **declared**
-* found by finding the closest parent that has the same declaring component instance 
+* found by finding the closest parent that has the same declaring fragment instance 
 * used to create `thisClosure`
 
 `thisClosure` is:
 
-* a new closure created by the anonymous component
+* a new closure created by the anonymous fragment
 * created by calling `AdaptiveClosure.extend`:
   * create a new `AdaptiveClosure` instance
   * copy all data from `declarationClosure` into the new instance
-  * add the anonymous component to `components` of the new instance
-* used by the child components of the anonymous component to access the state where the anonymous function is **declared**
+  * add the anonymous fragment to `fragments` of the new instance
+* used by the child fragments of the anonymous fragment to access the state where the anonymous function is **declared**
 
 ```kotlin
 fun Z2.test() {
