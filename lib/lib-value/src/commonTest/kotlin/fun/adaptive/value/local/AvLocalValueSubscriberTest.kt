@@ -22,7 +22,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.time.Duration.Companion.seconds
 
-class AcLocalValueSubscriberTest {
+class AvLocalValueSubscriberTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test

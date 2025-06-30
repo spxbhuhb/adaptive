@@ -45,7 +45,7 @@ class AvSpecListener<SPEC : Any>(
 
     private val subscriptionId: AvSubscriptionId = uuid4()
 
-    private val channel = Channel<AvValueOperation>(Channel.RENDEZVOUS)
+    private val channel = Channel<AvValueOperation>(Channel.UNLIMITED)
 
     /**
      * Starts the listener by subscribing to value operations and launching the processing coroutine.

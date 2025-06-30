@@ -20,7 +20,7 @@ import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.time.Duration.Companion.seconds
 
-class AcLocalRefListSubscriberTest {
+class AvLocalRefListSubscriberTest {
 
     @OptIn(ExperimentalCoroutinesApi::class)
     @Test
