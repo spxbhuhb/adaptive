@@ -11,6 +11,7 @@ import `fun`.adaptive.ui.instruction.input.*
 import `fun`.adaptive.ui.instruction.layout.*
 import `fun`.adaptive.ui.instruction.navigation.ExternalLink
 import `fun`.adaptive.ui.instruction.text.*
+import `fun`.adaptive.ui.support.UiEventHandler
 
 // ------------------------------------------------------------------------------------
 // Decoration
@@ -60,26 +61,26 @@ val cursor = Cursor.Companion
 // Event
 // ------------------------------------------------------------------------------------
 
-fun onClick(handler: (event: UIEvent) -> Unit) = OnClick(handler)
+fun onClick(handler: UiEventHandler) = OnClick(handler)
 
 fun onClick(
     feedbackText: String? = null,
     feedbackIcon: GraphicsResourceSet? = null,
-    handler: (event: UIEvent) -> Unit
+    handler: UiEventHandler
 ) = OnClick(handler, feedbackText, feedbackIcon)
 
-fun onDoubleClick(handler: (event: UIEvent) -> Unit) = OnDoubleClick(handler)
+fun onDoubleClick(handler: UiEventHandler) = OnDoubleClick(handler)
 
-fun onMove(handler: (event: UIEvent) -> Unit) = OnMove(handler)
-fun onLeave(handler: (event: UIEvent) -> Unit) = OnLeave(handler)
+fun onMove(handler: UiEventHandler) = OnMove(handler)
+fun onLeave(handler: UiEventHandler) = OnLeave(handler)
 
-fun onPrimaryDown(handler: (event: UIEvent) -> Unit) = OnPrimaryDown(handler)
-fun onPrimaryUp(handler: (event: UIEvent) -> Unit) = OnPrimaryUp(handler)
+fun onPrimaryDown(handler: UiEventHandler) = OnPrimaryDown(handler)
+fun onPrimaryUp(handler: UiEventHandler) = OnPrimaryUp(handler)
 
-fun onSecondaryDown(handler: (event: UIEvent) -> Unit) = OnSecondaryDown(handler)
-fun onSecondaryUp(handler: (event: UIEvent) -> Unit) = OnSecondaryUp(handler)
+fun onSecondaryDown(handler: UiEventHandler) = OnSecondaryDown(handler)
+fun onSecondaryUp(handler: UiEventHandler) = OnSecondaryUp(handler)
 
-fun onKeydown(handler: (event: UIEvent) -> Unit) = OnKeyDown(handler)
+fun onKeydown(handler: UiEventHandler) = OnKeyDown(handler)
 
 val noPointerEvents = PointerEvents(false)
 val enablePointerEvents = PointerEvents(true)
@@ -278,4 +279,4 @@ val secret = Secret()
 // ------------------------------------------------------------------------------------
 
 inline fun transferData(data: () -> Any?) = TransferData(data())
-fun onDrop(focusOnDrop : Boolean = false, handler: (event: UIEvent) -> Unit) = OnDrop(focusOnDrop, handler)
+fun onDrop(focusOnDrop : Boolean = false, handler: UiEventHandler) = OnDrop(focusOnDrop, handler)

@@ -7,20 +7,25 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.icon.icon
-import `fun`.adaptive.ui.instruction.event.EventModifier
 
-typealias MenuItemSelectedFun<T> = (item: MenuItem<T>, modifiers: Set<EventModifier>) -> Unit
+typealias MenuEventHandler<T> = (event : MenuEvent<T>) -> Unit
 
-@Adaptive
-fun <T> contextMenu(
+fun <T> menuBackend(
     items: List<MenuItemBase<T>>,
     theme: ContextMenuTheme = ContextMenuTheme.DEFAULT,
-    selectedFun: MenuItemSelectedFun<T>,
+    selectedFun: MenuEventHandler<T>
+) = MenuViewBackend(
+    items, theme, selectedFun
+)
+
+@Adaptive
+fun <T> menu(
+    viewBackend: MenuViewBackend<T>
 ): AdaptiveFragment {
 
-    column(theme.container, instructions()) {
-        for (item in items) {
-            node(item, selectedFun, theme)
+    column(viewBackend.theme.container, instructions()) {
+        for (item in viewBackend.items) {
+            node(item, viewBackend)
         }
     }
 
@@ -28,17 +33,16 @@ fun <T> contextMenu(
 }
 
 @Adaptive
-private fun <T> node(
+internal fun <T> node(
     item: MenuItemBase<T>,
-    selectedFun: MenuItemSelectedFun<T>,
-    theme: ContextMenuTheme
+    viewBackend: MenuViewBackend<T>
 ) {
     val observed = observe { item }
 
     if (observed is MenuItem<T>) {
-        label(observed, selectedFun, theme)
+        label(observed, viewBackend)
     } else {
-        box { theme.separator }
+        box { viewBackend.theme.separator }
     }
 
     // TODO sub menus for context menu
@@ -47,10 +51,10 @@ private fun <T> node(
 @Adaptive
 private fun <T> label(
     item: MenuItem<T>,
-    selectedFun: MenuItemSelectedFun<T>,
-    theme: ContextMenuTheme
+    viewBackend: MenuViewBackend<T>
 ) {
     val hover = hover()
+    val theme = viewBackend.theme
 
     val foreground = theme.itemForeground(hover, item.inactive)
 
@@ -61,7 +65,7 @@ private fun <T> label(
         onClick {
             it.stopPropagation()
             if (item.inactive) return@onClick
-            selectedFun(item, it.modifiers)
+            viewBackend.selectedFun(MenuEvent(viewBackend, item, it.modifiers))
         }
 
         row {

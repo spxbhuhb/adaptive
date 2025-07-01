@@ -32,7 +32,9 @@ import `fun`.adaptive.sandbox.recipe.ui.layout.grid.gridRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneWrapperExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.workspaceRecipe
-import `fun`.adaptive.sandbox.recipe.ui.menu.contextMenuPlayground
+import `fun`.adaptive.sandbox.recipe.ui.menu.menuBasic
+import `fun`.adaptive.sandbox.recipe.ui.menu.menuContext
+import `fun`.adaptive.sandbox.recipe.ui.menu.menuPrimary
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.customPopupExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.emptyModalExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.multiPageModalExample
@@ -108,10 +110,12 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("badgeInputInitializedUnremovable", ::badgeInputInitializedUnremovable)
 
         // ----------------------------------------------------------------------------
-        // Context menu
+        // Menu
         // ----------------------------------------------------------------------------
 
-        add("cookbook/menu/context/playground", ::contextMenuPlayground)
+        add("menuBasic", ::menuBasic)
+        add("menuPrimary", ::menuPrimary)
+        add("menuContext", ::menuContext)
 
         // ----------------------------------------------------------------------------
         // Popup modal

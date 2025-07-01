@@ -10,7 +10,9 @@ import `fun`.adaptive.ui.generated.resources.remove
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseVariantIconTheme
 import `fun`.adaptive.ui.input.InputContext
-import `fun`.adaptive.ui.menu.contextMenu
+import `fun`.adaptive.ui.menu.menu
+import `fun`.adaptive.ui.menu.menuBackend
+import `fun`.adaptive.ui.menu.withContextMenu
 import `fun`.adaptive.ui.mpw.MultiPaneTheme
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneMenuAction
@@ -23,6 +25,7 @@ fun paneTitle(
 ) {
 
     val pane = paneBackend.paneDef
+
     val actionContext = observe { InputContext() }
 
     row {
@@ -36,15 +39,7 @@ fun paneTitle(
             if (showActions || actionContext.isPopupOpen) {
                 for (action in paneBackend.getPaneActions()) {
                     if (action is PaneMenuAction<*>) {
-                        box {
-                            actionIcon(action.icon, tooltip = action.tooltip, theme = denseVariantIconTheme)
-                            primaryPopup(actionContext) { hide ->
-                                contextMenu(action.data, action.theme) { menuItem, modifiers ->
-                                    action.selected(paneBackend.workspace, pane, menuItem, modifiers);
-                                    hide()
-                                }
-                            }
-                        }
+                       paneMenuAction(paneBackend, action)
                     } else {
                         actionIcon(action.icon, tooltip = action.tooltip, theme = denseVariantIconTheme) .. onClick {
                             action.execute()
@@ -56,5 +51,20 @@ fun paneTitle(
                 }
             }
         }
+    }
+}
+
+@Adaptive
+private fun paneMenuAction(
+    paneBackend : PaneViewBackend<*>,
+    action : PaneMenuAction<*>,
+) {
+    val menuBackend = menuBackend(action.data) {
+        action.selected(paneBackend.workspace, paneBackend.paneDef, it.item, it.modifiers)
+        it.closeMenu()
+    }
+
+    withContextMenu(menuBackend) {
+        actionIcon(action.icon, tooltip = action.tooltip, theme = denseVariantIconTheme)
     }
 }

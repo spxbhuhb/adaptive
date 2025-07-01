@@ -10,9 +10,8 @@ import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.generated.resources.folder
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.menu.MenuItem
-import `fun`.adaptive.ui.menu.contextMenu
+import `fun`.adaptive.ui.menu.menu
 
 @Adaptive
 fun contextMenuMain() {
@@ -22,13 +21,13 @@ fun contextMenuMain() {
     column {
         maxSize .. padding { 16.dp } .. gap { 24.dp }
 
-        contextMenu(menu) { item, modifiers -> clickedOn = item.label }
+        menu(menu) { item, modifiers -> clickedOn = item.label }
 
         box {
             text("right-click for context fun.adaptive.iot.space.menu")
             contextPopup { hide ->
                 popupAlign.afterBelow
-                contextMenu(menu) { item, _ -> clickedOn = item.label; hide() }
+                menu(menu) { item, _ -> clickedOn = item.label; hide() }
             }
         }
 

@@ -7,12 +7,9 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.ui.api.focus
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.onKeydown
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.layout.AlignSelf
+import `fun`.adaptive.ui.support.UiEventHandler
 
 @Adaptive
 fun button(
@@ -20,7 +17,7 @@ fun button(
     icon: GraphicsResourceSet? = null,
     viewBackend: ButtonViewBackend? = null,
     theme: ButtonTheme? = null,
-    onClickFun: (() -> Unit)? = null
+    onClickFun: UiEventHandler? = null
 ): AdaptiveFragment {
     val focus = focus()
 
@@ -38,7 +35,9 @@ fun button(
         AdaptiveInstructionGroup(i.filter { it is AlignSelf })
 
         row(observed.innerContainerInstructions(focus)) {
-            AdaptiveInstructionGroup(i.filter { it !is AlignSelf }).let { if (onClickFun != null) it .. onClick { onClickFun.invoke() } else it }
+            AdaptiveInstructionGroup(i.filter { it !is AlignSelf }).let {
+                if (onClickFun != null) it .. onClick { e -> onClickFun.invoke(e) } else it
+            }
 
             onKeydown { observed.onKeydown(it) }
             if (icon != null) svg(icon) .. observed.iconThemeInstructions(focus)
