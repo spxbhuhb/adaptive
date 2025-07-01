@@ -12,6 +12,7 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.platform.clipboard.copyToClipboard
+import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
@@ -19,12 +20,20 @@ import `fun`.adaptive.wireformat.WireFormatRegistry
 fun appInspect(): AdaptiveFragment {
 
     val app = fragment().firstContext<ClientApplication<*, *>>()
+    var generatedUuid = uuid4<Any>()
 
     column {
         maxSize .. verticalScroll
         row {
             button("Copy values to clipboard") .. onClick { event ->
                 copyToClipboard(app.backend.firstImpl<AvValueWorker>().store.dump())
+            }
+            column {
+                button("Copy & generate new") .. onClick { event ->
+                    copyToClipboard(generatedUuid.toString())
+                    generatedUuid = uuid4<Any>()
+                }
+                text("Generated UUID v4: $generatedUuid")
             }
         }
         row {

@@ -2,9 +2,9 @@ package `fun`.adaptive.grove.doc.app
 
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
-import `fun`.adaptive.grove.doc.generated.resources.book_3
 import `fun`.adaptive.grove.doc.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.grove.doc.generated.resources.documentation
+import `fun`.adaptive.grove.doc.generated.resources.reference
 import `fun`.adaptive.grove.doc.model.groveDocDomain
 import `fun`.adaptive.grove.doc.ui.*
 import `fun`.adaptive.resource.graphics.Graphics
@@ -19,10 +19,13 @@ import `fun`.adaptive.utility.UUID
 
 class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : GroveDocModule<FW, BW>() {
 
-    val WSPANE_DOC_BROWSER_TOOL: FragmentKey
-        get() = "grove:doc:tool"
+    val DOC_TOOL: FragmentKey
+        get() = "grove:doc:doc-tool"
 
-    val WSPANE_DOC_BROWSER_CONTENT: FragmentKey
+    val REF_TOOL: FragmentKey
+        get() = "grove:doc:reference-tool"
+
+    val DOC_CONTENT: FragmentKey
         get() = "grove:doc:content"
 
     override fun resourceInit() {
@@ -30,8 +33,9 @@ class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : Grove
     }
 
     override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {
-        add(WSPANE_DOC_BROWSER_TOOL, ::docToolPane)
-        add(WSPANE_DOC_BROWSER_CONTENT, ::docContentPane)
+        add(DOC_TOOL, ::docToolPane)
+        add(REF_TOOL, ::referenceToolPane)
+        add(DOC_CONTENT, ::docContentPane)
 
         iconCache[groveDocDomain.node] = Graphics.menu_book
     }
@@ -43,7 +47,7 @@ class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : Grove
             "",
             Graphics.menu_book,
             PanePosition.Center,
-            WSPANE_DOC_BROWSER_CONTENT,
+            DOC_CONTENT,
         )
 
         addContentPaneBuilder(
@@ -53,18 +57,31 @@ class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : Grove
             DocContentViewBackend(workspace, contentPaneDef, item)
         }
 
-        val toolPaneDef = PaneDef(
-            UUID("83687ee3-c871-44f1-9b91-6289e59bbbc0"),
+        val docToolPaneDef = PaneDef(
+            UUID("add25359-772e-45d8-bdf1-2f53ea9e1634"),
             Strings.documentation,
-            Graphics.book_3,
+            Graphics.documentation,
             PanePosition.LeftMiddle,
-            WSPANE_DOC_BROWSER_TOOL
+            DOC_TOOL
         )
 
-        val toolBackend = DocToolViewBackend(workspace, toolPaneDef)
+        val docToolBackend = DocToolViewBackend(workspace, docToolPaneDef)
 
-        addToolPane { toolBackend }
-        addUrlResolver(toolBackend)
+        addToolPane { docToolBackend }
+        addUrlResolver(docToolBackend)
+
+        val referenceToolPaneDef = PaneDef(
+            UUID("83687ee3-c871-44f1-9b91-6289e59bbbc0"),
+            Strings.reference,
+            Graphics.reference,
+            PanePosition.LeftMiddle,
+            REF_TOOL
+        )
+
+        val referenceToolBackend = ReferenceToolViewBackend(workspace, referenceToolPaneDef)
+
+        addToolPane { referenceToolBackend }
+        addUrlResolver(referenceToolBackend)
     }
 
 }

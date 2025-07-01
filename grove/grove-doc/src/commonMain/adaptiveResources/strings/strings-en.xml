@@ -7,5 +7,6 @@
     <!-- general -->
 
     <string name="documentation">Documentation</string>
+    <string name="reference">Reference</string>
 
 </resources>

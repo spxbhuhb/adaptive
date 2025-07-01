@@ -57,7 +57,7 @@ fun pageHeader(value: GroveDocValue) {
 
 @Adaptive
 fun itemPath(item: GroveDocValue) {
-    val names = fragment().wsToolOrNull<DocToolViewBackend>()?.docPathNames(item) ?: emptyList()
+    val names = fragment().wsToolOrNull<ReferenceToolViewBackend>()?.docPathNames(item) ?: emptyList()
 
     row {
         alignItems.center
