@@ -2,15 +2,7 @@
 
 [modal popup](def://?inline)
 
-## Hard-coded examples
-
-[Open popup on click](actualize:///cookbook/popup/modal/example/open-on-click)
-
-[Custom popup](actualize:///cookbook/popup/modal/example/custom)
-
-[Empty popup](actualize:///cookbook/popup/modal/example/empty)
-
-[Multi-page popup](actualize:///cookbook/popup/modal/example/multi-page)
+[examples](actualize://example-group?name=modalPopup)
 
 ## Details
 
@@ -23,8 +15,6 @@ To display modal popups, use the [dialog](function://) function.
 * [dialog](function://) provides two state variables for the rendering fragment:
     * the data from its second parameter
     * a function that can be called to close the modal
-
-[customPopupExample](example://)
 
 ### Built-in convenience fragments
 

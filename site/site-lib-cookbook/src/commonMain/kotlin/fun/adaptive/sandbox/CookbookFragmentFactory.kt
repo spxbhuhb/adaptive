@@ -36,10 +36,9 @@ import `fun`.adaptive.sandbox.recipe.ui.menu.menuBasic
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuContext
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuItemActions
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuPrimary
-import `fun`.adaptive.sandbox.recipe.ui.popup.modal.customPopupExample
-import `fun`.adaptive.sandbox.recipe.ui.popup.modal.emptyModalExample
-import `fun`.adaptive.sandbox.recipe.ui.popup.modal.multiPageModalExample
-import `fun`.adaptive.sandbox.recipe.ui.popup.modal.openPopupOnClickExample
+import `fun`.adaptive.sandbox.recipe.ui.popup.modal.modalPopupCustom
+import `fun`.adaptive.sandbox.recipe.ui.popup.modal.modalPopupMultiPage
+import `fun`.adaptive.sandbox.recipe.ui.popup.modal.modalPopupStandard
 import `fun`.adaptive.sandbox.recipe.ui.popup.popupRecipe
 import `fun`.adaptive.sandbox.recipe.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.sandbox.recipe.ui.snackbar.snackbarRecipe
@@ -123,10 +122,9 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Popup modal
         // ----------------------------------------------------------------------------
 
-        add("cookbook/popup/modal/example/empty", ::emptyModalExample)
-        add("cookbook/popup/modal/example/multi-page", ::multiPageModalExample)
-        add("cookbook/popup/modal/example/open-on-click", ::openPopupOnClickExample)
-        add("cookbook/popup/modal/example/custom", ::customPopupExample)
+        add("modalPopupStandard", ::modalPopupStandard)
+        add("modalPopupCustom", ::modalPopupCustom)
+        add("modalPopupMultiPage", ::modalPopupMultiPage)
 
         // ----------------------------------------------------------------------------
         // Button

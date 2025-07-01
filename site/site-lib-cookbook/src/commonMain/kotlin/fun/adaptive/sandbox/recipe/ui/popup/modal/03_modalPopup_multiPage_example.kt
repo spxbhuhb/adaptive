@@ -20,6 +20,32 @@ import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.support.UiSave
 
 
+/**
+ * # Multi page popup
+ *
+ * Use [multiPageModal](fragment://) to create a popup with multiple selectable
+ * pages.
+ *
+ * For multipage modal you have to define a backend that implements `MultiPageModalBackend`.
+ */
+@Adaptive
+fun modalPopupMultiPage(): AdaptiveFragment {
+
+    multiPageModal(MultiPageModalExampleBackend()) { modalBackend ->
+        size(600.dp, 400.dp)
+
+        column {
+            when (modalBackend.selected) {
+                "page1" -> page1()
+                "page2" -> page2()
+                "page3" -> page3()
+            }
+        }
+    }
+
+    return fragment()
+}
+
 class MultiPageModalExampleBackend : UiClose, UiSave, MultiPageModalBackend<FragmentKey> {
 
     override val title: String
@@ -51,24 +77,6 @@ class MultiPageModalExampleBackend : UiClose, UiSave, MultiPageModalBackend<Frag
         messages.value += "save"
     }
 
-}
-
-@Adaptive
-fun multiPageModalExample(): AdaptiveFragment {
-
-    multiPageModal(MultiPageModalExampleBackend()) { modalBackend ->
-        size(600.dp, 400.dp)
-
-        column {
-            when (modalBackend.selected) {
-                "page1" -> page1()
-                "page2" -> page2()
-                "page3" -> page3()
-            }
-        }
-    }
-
-    return fragment()
 }
 
 @Adaptive

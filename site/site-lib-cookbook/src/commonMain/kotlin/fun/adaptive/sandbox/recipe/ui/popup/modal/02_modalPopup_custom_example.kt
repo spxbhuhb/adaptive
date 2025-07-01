@@ -8,6 +8,7 @@ import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.padding
 import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.button.dangerButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.popup.modal.dialog
@@ -15,10 +16,16 @@ import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
 
-@Adaptive
-fun customPopupExample(): AdaptiveFragment {
 
-    dangerButton("Click for custom popup") {
+/**
+ * # Custom modal popup
+ *
+ * Dialog accepts any kind of fragment, it does not have to be a standard popup.
+ */
+@Adaptive
+fun modalPopupCustom(): AdaptiveFragment {
+
+    button("Click for custom popup") {
         dialog(adapter(), "data for the popup", ::customPopupContent)
     }
 
