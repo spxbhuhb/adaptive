@@ -61,7 +61,6 @@ private fun paneMenuAction(
 ) {
     val menuBackend = menuBackend(action.data) {
         action.selected(paneBackend.workspace, paneBackend.paneDef, it.item, it.modifiers)
-        it.closeMenu()
     }
 
     withContextMenu(menuBackend) {

@@ -7,19 +7,22 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.generated.resources.menu_book
-import `fun`.adaptive.ui.input.button.button
-import `fun`.adaptive.ui.menu.*
+import `fun`.adaptive.ui.menu.MenuItem
+import `fun`.adaptive.ui.menu.MenuSeparator
+import `fun`.adaptive.ui.menu.itemActionsMenu
 import `fun`.adaptive.ui.snackbar.infoNotification
 
 /**
- * # Context menu
+ * # Item actions
  *
- * - [withContextMenu](function://) shows a menu on right-click
- * - [closeMenu](function://MenuEvent) of [MenuEvent](class://) closes the menu
- * - the menu sizes itself to the longest item, but it is at least 200.dp wide
+ * Intended to add actions to a list of items.
+ *
+ * - [itemActionsMenu](function://) shows an icon with a primary-click menu
+ * - the menu backend is built automatically from the parameters
+ * - [selectedFun](function://MenuViewBackend) is passed as parameter of [itemActionsMenu](function://)
  */
 @Adaptive
-fun menuContext(): AdaptiveFragment {
+fun menuItemActions(): AdaptiveFragment {
 
     val items = listOf(
         MenuItem(Graphics.lock, "Menu Item 1", "data-1"),
@@ -32,12 +35,8 @@ fun menuContext(): AdaptiveFragment {
         )
     )
 
-    val menuBackend = menuBackend(items) {
+    itemActionsMenu(items) {
         infoNotification("Clicked on ${it.item.label} with modifiers ${it.modifiers}")
-    }
-
-    withContextMenu(menuBackend) {
-        button("Right-click here for the menu!")
     }
 
     return fragment()

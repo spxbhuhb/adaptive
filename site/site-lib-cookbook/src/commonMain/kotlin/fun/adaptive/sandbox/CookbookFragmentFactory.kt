@@ -34,6 +34,7 @@ import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneWrapperExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.workspaceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuBasic
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuContext
+import `fun`.adaptive.sandbox.recipe.ui.menu.menuItemActions
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuPrimary
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.customPopupExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.emptyModalExample
@@ -116,6 +117,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("menuBasic", ::menuBasic)
         add("menuPrimary", ::menuPrimary)
         add("menuContext", ::menuContext)
+        add("menuItemActions", ::menuItemActions)
 
         // ----------------------------------------------------------------------------
         // Popup modal

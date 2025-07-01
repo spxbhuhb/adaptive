@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.foreground
 
 
-open class ContextMenuTheme(
+open class MenuTheme(
     open val itemHeight: DPixel = 26.dp,
     open val indent: DPixel = 22.dp,
 ) {
@@ -76,6 +76,6 @@ open class ContextMenuTheme(
     )
 
     companion object {
-        var DEFAULT = ContextMenuTheme()
+        var DEFAULT = MenuTheme()
     }
 }

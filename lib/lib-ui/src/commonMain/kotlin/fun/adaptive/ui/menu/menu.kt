@@ -12,7 +12,7 @@ typealias MenuEventHandler<T> = (event : MenuEvent<T>) -> Unit
 
 fun <T> menuBackend(
     items: List<MenuItemBase<T>>,
-    theme: ContextMenuTheme = ContextMenuTheme.DEFAULT,
+    theme: MenuTheme = MenuTheme.DEFAULT,
     selectedFun: MenuEventHandler<T>
 ) = MenuViewBackend(
     items, theme, selectedFun
@@ -66,6 +66,9 @@ private fun <T> label(
             it.stopPropagation()
             if (item.inactive) return@onClick
             viewBackend.selectedFun(MenuEvent(viewBackend, item, it.modifiers))
+            if (viewBackend.autoClose) {
+                viewBackend.hidePopup?.invoke()
+            }
         }
 
         row {

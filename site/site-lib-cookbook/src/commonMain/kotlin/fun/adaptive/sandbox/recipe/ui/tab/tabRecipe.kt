@@ -46,7 +46,7 @@ val noTabsWithMenu = TabContainer(
     emptyList(),
     "Close tab",
     "Tab Container Menu",
-    listOf(MenuItem<Unit>(Graphics.menu, "Menu Item 1", data = Unit))
+    listOf(MenuItem(Graphics.menu, "Menu Item 1", Unit))
 )
 
 val oneTabNoIconNoActionsNoMenu = TabContainer(

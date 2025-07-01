@@ -21,6 +21,7 @@
     <string name="noValueSelected">no value selected</string>
     <string name="filterPlaceholder">filter</string>
     <string name="settings">settings</string>
+    <string name="actions">Actions</string>
 
     <string name="copyToClipboard">Copy to clipboard</string>
 

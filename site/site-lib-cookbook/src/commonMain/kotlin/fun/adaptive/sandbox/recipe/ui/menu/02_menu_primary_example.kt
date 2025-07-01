@@ -21,20 +21,19 @@ import `fun`.adaptive.ui.snackbar.infoNotification
 @Adaptive
 fun menuPrimary(): AdaptiveFragment {
 
-    val items = listOf<MenuItemBase<Any>>(
+    val items = listOf(
         MenuItem(Graphics.lock, "Menu Item 1", "data-1"),
         MenuSeparator(),
         MenuItem(Graphics.menu_book, "Menu Item 2", "data-2"),
         MenuItem(
             Graphics.dining,
             "Menu Item with a long-long name, hopefully more than 200.dp",
-            "data-2"
+            "data-3"
         )
     )
 
     val menuBackend = menuBackend(items) {
         infoNotification("Clicked on ${it.item.label} with modifiers ${it.modifiers}")
-        it.closeMenu()
     }
 
     withPrimaryMenu(menuBackend) {

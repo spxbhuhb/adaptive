@@ -4,9 +4,9 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.observe
-import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.primaryPopup
 
 @Adaptive
 fun <T> withPrimaryMenu(

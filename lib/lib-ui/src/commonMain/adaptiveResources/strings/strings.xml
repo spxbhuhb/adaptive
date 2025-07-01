@@ -22,6 +22,7 @@
     <string name="noValueSelected">nincs érték kiválasztva</string>
     <string name="filterPlaceholder">szűrés</string>
     <string name="settings">beállítások</string>
+    <string name="actions">Műveletek</string>
 
     <string name="executionError">Hiba a művelet végrehajtása közben.</string>
 

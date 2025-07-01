@@ -20,12 +20,15 @@ import `fun`.adaptive.ui.snackbar.infoNotification
  * - use [shortcut](property://MenuItem) to display a keyboard shortcut (not handled by the menu)
  * - pass `null` in [icon](property://MenuItem) to have an item without an icon
  *
- * When a menu item is selected by the user, the menu calls [selectedFun](function://MenuViewBackend)
+ * When the user selects a menu item, the menu calls [selectedFun](function://MenuViewBackend)
  *
  * [selectedFun](function://MenuViewBackend) gets a [MenuEvent](class://) that contains:
  * - the item clicked
  * - event modifiers
  * - the menu view backend
+ *
+ * If [autoClose](property://MenuViewBackend) is `true` (default), the menu closes itself automatically
+ * after [selectedFun](function://MenuViewBackend) returns.
  *
  * When used directly, such as in this example, the menu occupies the available space, so here
  * we limit the size manually. When used with a popup, the menu automatically sizes the popup
@@ -38,13 +41,12 @@ fun menuBasic(): AdaptiveFragment {
         MenuItem(Graphics.lock, "Menu Item 1", "data-1"),
         MenuItem(Graphics.full_code, "Inactive item", "data-2", inactive = true),
         MenuSeparator(),
-        MenuItem(Graphics.content_copy, "Item with a shortcut", "data-5", shortcut = "⌘C"),
-        MenuItem(null, "Item without an icon", "data-2")
+        MenuItem(Graphics.content_copy, "Item with a shortcut", "data-3", shortcut = "⌘C"),
+        MenuItem(null, "Item without an icon", "data-4")
     )
 
     val menuBackend = menuBackend(items) {
         infoNotification("Clicked on ${it.item.label} with modifiers ${it.modifiers}")
-        it.closeMenu()
     }
 
     menu(menuBackend) .. width { 300.dp }
