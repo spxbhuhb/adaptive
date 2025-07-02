@@ -7,19 +7,20 @@ import `fun`.adaptive.foundation.binding.PropertySelector
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
-import `fun`.adaptive.ui.input.long_.LongInputViewBackend
-import `fun`.adaptive.ui.input.long_.longInput
+import `fun`.adaptive.ui.input.datetime.DateTimeInputViewBackend
+import `fun`.adaptive.ui.input.datetime.dateTimeInput
+import kotlinx.datetime.LocalDateTime
 
 @Adaptive
-fun longEditor(
-    binding: AdaptiveStateVariableBinding<Long>? = null,
+fun dateTimeEditor(
+    binding: AdaptiveStateVariableBinding<LocalDateTime>? = null,
     @Suppress("unused")
     @PropertySelector
-    selector: () -> Long?,
+    selector: () -> LocalDateTime?,
 ) : AdaptiveFragment {
-    longInput(
+    dateTimeInput(
         fragment().viewBackendFor(binding) { value, label, isSecret ->
-            LongInputViewBackend(value, label, isSecret)
+            DateTimeInputViewBackend(value, label, isSecret)
         }
     ) .. instructions()
     return fragment()

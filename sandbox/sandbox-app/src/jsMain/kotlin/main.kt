@@ -20,8 +20,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
-import `fun`.adaptive.sandbox.recipe.ui.form.commonFormExample
+import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
@@ -98,9 +97,8 @@ fun sandboxMain() {
                 column {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. verticalScroll //.. backgrounds.friendlyOpaque
 
-                    // commonFormExample()
+                    formBasicExample()
                     // quickFilterRecipe()
-                    datePickerMain()
                 }
             }
         } catch (ex: Exception) {

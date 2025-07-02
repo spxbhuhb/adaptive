@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.input.longint
+package `fun`.adaptive.ui.input.long_
 
 import `fun`.adaptive.ui.input.InputViewBackend
 

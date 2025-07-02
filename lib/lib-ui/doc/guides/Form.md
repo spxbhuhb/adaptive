@@ -1,14 +1,6 @@
 # Forms
 
-You can build forms with standalone inputs or with editors.
-
----
-
-## Hard-coded examples
-
-[Common form example](actualize:///cookbook/form/example/common)
-
----
+[examples](actualize://example-group?name=form)
 
 ## Details
 

@@ -11,13 +11,14 @@ import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.sandbox.recipe.ui.dialog.dialogRecipe
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
-import `fun`.adaptive.sandbox.recipe.ui.form.commonFormExample
+import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.icon.iconRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeBasicInput
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedNoLabel
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedUnremovable
 import `fun`.adaptive.sandbox.recipe.ui.input.button.*
 import `fun`.adaptive.sandbox.recipe.ui.input.date.dateInputExample
+import `fun`.adaptive.sandbox.recipe.ui.input.datetime.dateTimeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.double_.*
 import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputNullableExample
@@ -27,6 +28,7 @@ import `fun`.adaptive.sandbox.recipe.ui.input.select.*
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputPlayground
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
+import `fun`.adaptive.sandbox.recipe.ui.input.time.timeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.box.boxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.grid.gridRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalExample
@@ -91,7 +93,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Form
         // ----------------------------------------------------------------------------
 
-        add("cookbook/form/example/common", ::commonFormExample)
+        add("formBasicExample", ::formBasicExample)
 
         // ----------------------------------------------------------------------------
         // Badge
@@ -141,6 +143,12 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Date Input
         // ----------------------------------------------------------------------------
 
+        add("dateTimeInputExample", ::dateTimeInputExample)
+
+        // ----------------------------------------------------------------------------
+        // Date Input
+        // ----------------------------------------------------------------------------
+
         add("dateInputExample", ::dateInputExample)
 
         // ----------------------------------------------------------------------------
@@ -182,6 +190,12 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook/input/text/example/simple", ::textInputSimpleExample)
 
         add("cookbook/input/text/playground", ::textInputPlayground)
+
+        // ----------------------------------------------------------------------------
+        // Time Input
+        // ----------------------------------------------------------------------------
+
+        add("timeInputExample", ::timeInputExample)
 
         // ----------------------------------------------------------------------------
         // Tree
