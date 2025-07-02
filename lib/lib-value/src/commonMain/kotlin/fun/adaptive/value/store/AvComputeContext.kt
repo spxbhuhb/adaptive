@@ -643,6 +643,31 @@ class AvComputeContext(
     }
 
     //---------------------------------------------------------------------------------
+    // Validity
+    //---------------------------------------------------------------------------------
+
+    /**
+     * Check that the spec of the value with the given [valueId] is an instance
+     * of [SPEC].
+     *
+     * @throes NoSuchElementException if the value does not exist
+     * @throws IllegalStateException if the spec of value is not an instance of [SPEC]
+     */
+    inline fun <reified SPEC : Any> ensureSpec(valueId : AvValueId) {
+        get<SPEC>(valueId)
+    }
+
+    /**
+     * Check that the spec of the value with the given [valueId] is an instance
+     * of [SPEC].
+     *
+     * @throws IllegalStateException if the spec of value is not an instance of [SPEC]
+     */
+    inline fun <reified SPEC : Any> ensureSpecOrNull(valueId : AvValueId) {
+        getOrNull<SPEC>(valueId)
+    }
+
+    //---------------------------------------------------------------------------------
     // Utility, convenience
     //---------------------------------------------------------------------------------
 

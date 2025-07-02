@@ -5,15 +5,13 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.resource.language.localizedString
+import `fun`.adaptive.resource.language.localized
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.theme.emptyInst
 import kotlinx.datetime.Instant
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
 
 @Adaptive
 fun instant(timestamp: Instant?, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
-    text(timestamp?.localizedString() ?: "-", emptyInst(timestamp), instructions())
+    text(timestamp?.localized() ?: "-", emptyInst(timestamp), instructions())
     return fragment()
 }
