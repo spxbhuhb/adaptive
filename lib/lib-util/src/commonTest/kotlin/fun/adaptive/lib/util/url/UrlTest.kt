@@ -1,6 +1,11 @@
-package `fun`.adaptive.utility
+package `fun`.adaptive.lib.util.url
 
-import kotlin.test.*
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertTrue
+import kotlin.text.get
+import kotlin.toString
 
 class UrlTest {
 
