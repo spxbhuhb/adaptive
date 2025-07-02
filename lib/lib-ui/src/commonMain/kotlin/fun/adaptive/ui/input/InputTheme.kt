@@ -95,9 +95,11 @@ class InputTheme : AbstractTheme() {
 
     val endHint = instructionsOf(
         paddingLeft { inputHintPadding },
+        paddingTop { 3.dp}, // FIXME manual adjustment for baseline
         fontSize(13.sp),
         noSelect,
-        textColors.onSurfaceVariant
+        textColors.onSurfaceVariant,
+        alignSelf.startCenter
     )
 
     val bottomEndHint = instructionsOf(

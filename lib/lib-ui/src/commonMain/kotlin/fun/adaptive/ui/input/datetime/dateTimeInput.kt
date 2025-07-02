@@ -25,8 +25,17 @@ fun dateTimeInput(
 ): AdaptiveFragment {
 
     val observed = observe { viewBackend }
-    val dateBackend = observe { dateInputBackend(viewBackend.inputValue?.date ?: localDate()) }
-    val timeBackend = observe { timeInputBackend(viewBackend.inputValue?.time ?: localTime()) }
+
+    val dateBackend = observe {
+        dateInputBackend(viewBackend.inputValue?.date ?: localDate()) {
+            onChange = { if (it != null) viewBackend.inputValue = LocalDateTime(it, viewBackend.inputValue?.time ?: localTime()) }
+        }}
+
+    val timeBackend = observe {
+        timeInputBackend(viewBackend.inputValue?.time ?: localTime()) {
+            onChange = { if (it != null) viewBackend.inputValue = LocalDateTime(viewBackend.inputValue?.date ?: localDate(), it) }
+        }
+    }
 
     val focus = focus()
 

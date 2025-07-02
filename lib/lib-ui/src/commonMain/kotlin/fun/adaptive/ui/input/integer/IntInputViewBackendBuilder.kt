@@ -8,12 +8,14 @@ class IntInputViewBackendBuilder(
 
     val radix : Int? = null
     val showRadix10 : Boolean? = null
+    var unit : String? = null
 
     override fun toBackend() =
         IntInputViewBackend(inputValue, label, secret).also { backend ->
             setup(backend)
             radix?.let { backend.radix = it }
             showRadix10?.let { backend.showRadix10 = it }
+            unit?.let { backend.unit = it }
         }
 
 }

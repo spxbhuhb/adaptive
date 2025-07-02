@@ -6,7 +6,11 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.alignItems
+import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.fillStrategy
 import `fun`.adaptive.ui.api.focus
+import `fun`.adaptive.ui.api.maxWidth
+import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.singleLineTextInput
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.input.decoratedInput
@@ -21,34 +25,43 @@ fun intInput(
     val formatted = observed.inputValue?.toString(observed.radix)
 
     decoratedInput(focus, observed) {
+        row {
+            maxWidth .. fillStrategy.constrainReverse
 
-        singleLineTextInput(
-            value = formatted,
-            onChange = { v ->
+            column {
+                singleLineTextInput(
+                    value = formatted,
+                    onChange = { v ->
 
-                if (v.isEmpty()) {
-                    observed.inputValue = null
-                    observed.isInConversionError = !observed.isNullable
-                    return@singleLineTextInput
-                }
+                        if (v.isEmpty()) {
+                            observed.inputValue = null
+                            observed.isInConversionError = ! observed.isNullable
+                            return@singleLineTextInput
+                        }
 
-                val inputValue = v.toIntOrNull(observed.radix)
+                        val inputValue = v.toIntOrNull(observed.radix)
 
-                if (inputValue != null) {
-                    observed.isInConversionError = false
-                    observed.inputValue = inputValue
-                } else {
-                    observed.isInConversionError = true
+                        if (inputValue != null) {
+                            observed.isInConversionError = false
+                            observed.inputValue = inputValue
+                        } else {
+                            observed.isInConversionError = true
+                        }
+                    }
+                ) ..
+                    observed.containerThemeInstructions(focus) ..
+                    observed.inputTheme.singleLine ..
+                    alignItems.end ..
+                    instructions()
+
+                if (observed.showRadix10) {
+                    text(observed.inputValue?.toString() ?: "-") .. observed.inputTheme.bottomEndHint
                 }
             }
-        ) ..
-            observed.containerThemeInstructions(focus) ..
-            observed.inputTheme.singleLine ..
-            alignItems.end ..
-            instructions()
 
-        if (observed.showRadix10) {
-            text(observed.inputValue?.toString() ?: "-") .. observed.inputTheme.bottomEndHint
+            if (observed.unit != null) {
+                text(observed.unit) .. observed.inputTheme.endHint
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.observe
+import `fun`.adaptive.lib.util.datetime.TimeRange
 import `fun`.adaptive.sandbox.support.E
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.codefence.codeFence
@@ -63,6 +64,7 @@ fun formBasicExample(): AdaptiveFragment {
                 dateEditor { template.date }
                 timeEditor { template.time }
                 dateTimeEditor { template.dateTime }
+                timeRangeEditor { template.timeRange }
 
                 selectEditorDropdown(
                     E.Companion.entries.toList(),
@@ -108,6 +110,7 @@ class FormData(
     val date : LocalDate = localDate(),
     val time : LocalTime = localTime(),
     val dateTime : LocalDateTime = localDateTime(),
+    val timeRange : TimeRange = TimeRange(),
     val enum: E = E.V1,
     val enumOrNull: E? = null,
     val badges : Set<String> = setOf("badge1", "badge2")

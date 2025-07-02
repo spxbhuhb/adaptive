@@ -14,4 +14,6 @@ class IntInputViewBackend(
     var radix by observable(10, ::notify)
     var showRadix10 by observable(false, ::notify)
 
+    var unit by observable<String?>(null, ::notify)
+
 }

@@ -21,11 +21,18 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.input.double_.doubleInputUnit
+import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputRadixWithDecimalExample
+import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputUnitExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.input.button.submitButton
+import `fun`.adaptive.ui.input.datetime.dateTimeInput
+import `fun`.adaptive.ui.input.datetime.dateTimeInputBackend
+import `fun`.adaptive.ui.input.timerange.timeRangeInput
+import `fun`.adaptive.ui.input.timerange.timeRangeInputBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.uiCommon
@@ -94,10 +101,19 @@ fun sandboxMain() {
                     fontWeight = 300
                 }
 
+                var feedBack : String = ""
+                val backend = observe {
+                    dateTimeInputBackend {
+                        onChange = { feedBack = it.toString() }
+                    }
+                }
+
                 column {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. verticalScroll //.. backgrounds.friendlyOpaque
 
-                    formBasicExample()
+                    dateTimeInput(backend)
+                    text("FeedBack: $feedBack")
+                    //formBasicExample()
                     // quickFilterRecipe()
                 }
             }

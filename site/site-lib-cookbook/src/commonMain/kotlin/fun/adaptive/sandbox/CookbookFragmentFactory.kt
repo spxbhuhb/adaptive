@@ -24,11 +24,13 @@ import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputNullableExample
 import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputRadixExample
 import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputRadixWithDecimalExample
+import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputUnitExample
 import `fun`.adaptive.sandbox.recipe.ui.input.select.*
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaRecipe
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputPlayground
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
 import `fun`.adaptive.sandbox.recipe.ui.input.time.timeInputExample
+import `fun`.adaptive.sandbox.recipe.ui.input.timerange.timeRangeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.box.boxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.grid.gridRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalExample
@@ -170,7 +172,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("intInputNullableExample", ::intInputNullableExample)
         add("intInputRadixExample", ::intInputRadixExample)
         add("intInputRadixWithDecimalExample", ::intInputRadixWithDecimalExample)
-
+        add("intInputUnitExample", ::intInputUnitExample)
 
         // ----------------------------------------------------------------------------
         // Select Input
@@ -196,6 +198,12 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // ----------------------------------------------------------------------------
 
         add("timeInputExample", ::timeInputExample)
+
+        // ----------------------------------------------------------------------------
+        // TimeRange Input
+        // ----------------------------------------------------------------------------
+
+        add("timeRangeInputExample", ::timeRangeInputExample)
 
         // ----------------------------------------------------------------------------
         // Tree
