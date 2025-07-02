@@ -25,8 +25,8 @@ fun doubleInput(
     val formatted = observed.inputValue?.format(observed.decimals, hideZeroDecimals = true)
 
     decoratedInput(focus, observed) {
-        row {
-            maxWidth .. fillStrategy.constrainReverse
+        row(instructions()) {
+            fillStrategy.constrainReverse
 
             singleLineTextInput(
                 value = formatted,
@@ -50,8 +50,7 @@ fun doubleInput(
             ) ..
                 observed.containerThemeInstructions(focus) ..
                 observed.inputTheme.singleLine ..
-                alignItems.end ..
-                instructions()
+                alignItems.end
 
             if (observed.unit != null) {
                 text(observed.unit) .. observed.inputTheme.endHint

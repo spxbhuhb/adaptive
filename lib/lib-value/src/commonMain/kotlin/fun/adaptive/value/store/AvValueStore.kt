@@ -54,16 +54,10 @@ open class AvValueStore(
         val itemOnly: Boolean
     )
 
-    // --------------------------------------------------------------------------------
-    // Operations
-    // --------------------------------------------------------------------------------
-
     @OptIn(ExperimentalCoroutinesApi::class)
-    suspend fun run() {
-        if (trace) logger.enableFine() // .also { it.usePrintln = true}
-
+    fun load() {
         lock.use {
-            // when not a proxt (typically on servers) the values should be empty before load
+            // when not a proxy (typically on servers), the values should be empty before load
             if (! proxy) {
                 check(values.isEmpty()) { "Values are not empty" }
                 check(subscriptions.isEmpty()) { "Subscriptions are not empty" }
@@ -85,6 +79,15 @@ open class AvValueStore(
                 notify(value, commitSet)
             }
         }
+    }
+
+    // --------------------------------------------------------------------------------
+    // Operations
+    // --------------------------------------------------------------------------------
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    suspend fun run() {
+        if (trace) logger.enableFine() // .also { it.usePrintln = true}
 
         for (operation in operations) {
             executeBlockingInternal(operation)

@@ -27,7 +27,7 @@ open class AvValueWorker(
 
     override fun mount() {
         logger = getLogger(fragment?.name ?: "AvValueWorker")
-        storeOrNull = AvValueStore(persistence, proxy, logger, trace)
+        storeOrNull = AvValueStore(persistence, proxy, logger, trace).also { it.load() }
         super.mount()
     }
 

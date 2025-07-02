@@ -25,8 +25,8 @@ fun intInput(
     val formatted = observed.inputValue?.toString(observed.radix)
 
     decoratedInput(focus, observed) {
-        row {
-            maxWidth .. fillStrategy.constrainReverse
+        row(instructions()) {
+            fillStrategy.constrainReverse
 
             column {
                 singleLineTextInput(

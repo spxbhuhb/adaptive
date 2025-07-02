@@ -31,10 +31,13 @@ import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.input.datetime.dateTimeInput
 import `fun`.adaptive.ui.input.datetime.dateTimeInputBackend
+import `fun`.adaptive.ui.input.double_.doubleInput
+import `fun`.adaptive.ui.input.double_.doubleInputBackend
 import `fun`.adaptive.ui.input.timerange.timeRangeInput
 import `fun`.adaptive.ui.input.timerange.timeRangeInputBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.value.app.ValueClientModule
 import kotlinx.coroutines.CoroutineScope
@@ -109,9 +112,9 @@ fun sandboxMain() {
                 }
 
                 column {
-                    maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. verticalScroll //.. backgrounds.friendlyOpaque
+                    maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. verticalScroll .. backgrounds.friendlyOpaque
 
-                    dateTimeInput(backend)
+                    doubleInput(doubleInputBackend(12.3) { unit = "min" }) .. width { 100.dp} .. backgrounds.surfaceVariant
                     text("FeedBack: $feedBack")
                     //formBasicExample()
                     // quickFilterRecipe()
