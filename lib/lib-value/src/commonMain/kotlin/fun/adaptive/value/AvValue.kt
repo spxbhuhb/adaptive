@@ -109,16 +109,22 @@ class AvValue<T>(
      */
     fun mutableStatus() = statusOrNull?.toMutableSet() ?: mutableSetOf()
 
-    inline fun extendedStatus(statusFun : () -> AvStatus) =
-        mutableStatus().also { it += statusFun() }
+    fun extendedStatus(status: AvStatus) =
+        mutableStatus().also { it += status }
 
     fun extendedStatus(vararg extendedStatuses: AvStatus) =
         mutableStatus().also { it += extendedStatuses }
 
-    inline fun reducedStatus(statusFun : () -> AvStatus) =
-        mutableStatus().also { it -= statusFun() }
+    fun extendedStatus(extendedStatuses: Iterable<AvStatus>) =
+        mutableStatus().also { it += extendedStatuses }
+
+    fun reducedStatus(status: AvStatus) =
+        mutableStatus().also { it -= status }
 
     fun reducedStatus(vararg reducedStatuses: AvStatus) =
+        mutableStatus().also { it -= reducedStatuses }
+
+    fun reducedStatus(reducedStatuses: Iterable<AvStatus>) =
         mutableStatus().also { it -= reducedStatuses }
 
     fun hasStatus(status: AvStatus): Boolean {

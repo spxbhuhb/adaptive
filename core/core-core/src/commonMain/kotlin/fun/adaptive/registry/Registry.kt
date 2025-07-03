@@ -31,5 +31,5 @@ open class Registry<T> {
     }
 
     @JsName("entriesFun")
-    fun entries() : Set<Map.Entry<String, T>> = entries.entries
+    fun entries() : Set<Map.Entry<String, T>> = entries.toMap().entries // make it independent of the original map
 }

@@ -759,11 +759,11 @@ class JsonWireFormatEncoder(
     override fun <T> polymorphicOrNull(fieldNumber: Int, fieldName: String, value: T?, wireFormat: WireFormat<T>?): WireFormatEncoder {
         if (value == null) {
             writer.nullValue(fieldName)
-            writer.separator()
         } else {
             writer.fieldName(fieldName)
             rawPolymorphic(value, wireFormat !!)
         }
+        writer.separator()
         return this
     }
 
@@ -782,6 +782,7 @@ class JsonWireFormatEncoder(
         } else {
             rawPolymorphic(value, wireFormat)
         }
+        writer.separator()
         return this
     }
 

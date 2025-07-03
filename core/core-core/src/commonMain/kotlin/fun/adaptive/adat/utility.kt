@@ -9,10 +9,16 @@ import `fun`.adaptive.persistence.exists
 import `fun`.adaptive.persistence.write
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatProvider
+import `fun`.adaptive.wireformat.api.Json
+import `fun`.adaptive.wireformat.builtin.ListWireFormat
 import `fun`.adaptive.wireformat.json.JsonBufferReader
+import `fun`.adaptive.wireformat.json.JsonWireFormatDecoder
+import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
 import `fun`.adaptive.wireformat.json.JsonWireFormatProvider
+import `fun`.adaptive.wireformat.json.elements.JsonArray
 import `fun`.adaptive.wireformat.json.formatting.JsonFormat
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatProvider
+import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
 import kotlinx.io.files.Path
 
 /**
@@ -45,6 +51,18 @@ fun <A : AdatClass> A.encodeToJsonByteArray(): ByteArray =
     @Suppress("UNCHECKED_CAST")
     JsonWireFormatProvider().encode(this, this.adatCompanion.adatWireFormat as WireFormat<A>)
 
+fun <T : AdatClass> List<T>.encodeToJsonByteArray(): ByteArray {
+    if (isEmpty()) return "[]".encodeToByteArray()
+    val encoder = Json.encoder() as JsonWireFormatEncoder
+    encoder.array(null, this) {
+        @Suppress("UNCHECKED_CAST")
+        for (item in this) {
+            encoder.rawInstanceOrNull(item, item.adatCompanion as WireFormat<AdatClass>)
+        }
+    }
+    return encoder.pack()
+}
+
 fun <A : AdatClass> AdatCompanion<A>.decodeFromJson(json: ByteArray) =
     @Suppress("UNCHECKED_CAST")
     JsonWireFormatProvider().decode(json, adatWireFormat as WireFormat<A>)
@@ -52,6 +70,19 @@ fun <A : AdatClass> AdatCompanion<A>.decodeFromJson(json: ByteArray) =
 fun <A : AdatClass> AdatCompanion<A>.decodeFromJson(json: String) =
     @Suppress("UNCHECKED_CAST")
     JsonWireFormatProvider().decode(json.encodeToByteArray(), adatWireFormat as WireFormat<A>)
+
+fun <A : AdatClass> AdatCompanion<A>.decodeListFromJson(json: ByteArray): MutableList<A> {
+    val result = mutableListOf<A>()
+    val decoder = Json.decoder(json) as JsonWireFormatDecoder
+    val root = decoder.root
+    check(root is JsonArray) { "root element is not a JsonArray" }
+
+    for (element in root.value) {
+        result += decoder.rawInstance(element, adatWireFormat)
+    }
+
+    return result
+}
 
 fun <A : AdatClass> A.encodeToProtoByteArray(): ByteArray =
     @Suppress("UNCHECKED_CAST")
