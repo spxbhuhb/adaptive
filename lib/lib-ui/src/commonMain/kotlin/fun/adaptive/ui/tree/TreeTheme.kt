@@ -8,12 +8,16 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.arrow_drop_down
 import `fun`.adaptive.ui.generated.resources.arrow_right
+import `fun`.adaptive.ui.generated.resources.chevron_right
+import `fun`.adaptive.ui.generated.resources.keyboard_arrow_down
+import `fun`.adaptive.ui.generated.resources.keyboard_arrow_right
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.SizeBase
 import `fun`.adaptive.ui.instruction.layout.SizeStrategy
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.background
+import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.foreground
 
 open class TreeTheme(
@@ -28,7 +32,7 @@ open class TreeTheme(
     )
 
     open val icon = instructionsOf(
-        size(18.dp, 18.dp),
+        size(18.dp),
         svgWidth(18.dp),
         svgHeight(18.dp)
     )
@@ -55,16 +59,19 @@ open class TreeTheme(
         foreground(selected, focus = focus)
 
     open val handleContainer = instructionsOf(
-        size(24.dp, 24.dp)
+        size(24.dp, 24.dp),
+        alignItems.center
     )
 
     open val handleIcon = instructionsOf(
-        cornerRadius { 4.dp }
+        size(20.dp),
+        svgWidth(20.dp),
+        svgHeight(20.dp)
     )
 
-    open val handleIconOpen = Graphics.arrow_drop_down
+    open val handleIconOpen = Graphics.keyboard_arrow_down
 
-    open val handleIconClosed = Graphics.arrow_right
+    open val handleIconClosed = Graphics.keyboard_arrow_right
 
     open fun itemHandleColors(selected : Boolean, focus: Boolean) =
         fill(foreground(selected, focus = focus).color)
