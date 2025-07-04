@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.date.dateInput
 import `fun`.adaptive.ui.input.date.dateInputBackend
-import `fun`.adaptive.ui.input.text.textInput2
+import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.withLabel
@@ -22,7 +22,7 @@ fun datePickerMain(): AdaptiveFragment {
         padding { 16.dp } .. maxHeight .. width { 400.dp } .. verticalScroll
 
         withLabel("Text") {
-            textInput2(text)
+            textInput(text)
         }
 
         dateInput(vb1)

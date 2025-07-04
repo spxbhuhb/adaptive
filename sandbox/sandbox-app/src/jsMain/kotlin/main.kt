@@ -6,7 +6,9 @@ import `fun`.adaptive.app.BasicBrowserClientApplication.Companion.basicBrowserCl
 import `fun`.adaptive.app.ws.SandBoxClientModule
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.chart.app.ChartModule
+import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
@@ -20,23 +22,26 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
-import `fun`.adaptive.sandbox.recipe.ui.input.double_.doubleInputUnit
-import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputRadixWithDecimalExample
-import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputUnitExample
+import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaExample
+import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.button.submitButton
-import `fun`.adaptive.ui.input.datetime.dateTimeInput
 import `fun`.adaptive.ui.input.datetime.dateTimeInputBackend
-import `fun`.adaptive.ui.input.double_.doubleInput
-import `fun`.adaptive.ui.input.double_.doubleInputBackend
-import `fun`.adaptive.ui.input.timerange.timeRangeInput
-import `fun`.adaptive.ui.input.timerange.timeRangeInputBackend
+import `fun`.adaptive.ui.input.integer.intInput
+import `fun`.adaptive.ui.input.integer.intInputBackend
+import `fun`.adaptive.ui.input.long_.longInput
+import `fun`.adaptive.ui.input.long_.longInputBackend
+import `fun`.adaptive.ui.input.text.textInput
+import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.popup.modal.basicModal
+import `fun`.adaptive.ui.popup.modal.dialog
+import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.uiCommon
 import `fun`.adaptive.value.app.ValueClientModule
@@ -104,7 +109,7 @@ fun sandboxMain() {
                     fontWeight = 300
                 }
 
-                var feedBack : String = ""
+                var feedBack: String = ""
                 val backend = observe {
                     dateTimeInputBackend {
                         onChange = { feedBack = it.toString() }
@@ -114,15 +119,56 @@ fun sandboxMain() {
                 column {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. verticalScroll .. backgrounds.friendlyOpaque
 
-                    doubleInput(doubleInputBackend(12.3) { unit = "min" }) .. width { 100.dp} .. backgrounds.surfaceVariant
-                    text("FeedBack: $feedBack")
+//                    doubleInput(doubleInputBackend(12.3) { unit = "min" }) .. width { 100.dp} .. backgrounds.surfaceVariant
+//                    text("FeedBack: $feedBack")
                     //formBasicExample()
                     // quickFilterRecipe()
+
+//                    button("hello") {
+//                        dialog(adapter(), "", ::modal)
+//                    }
+//
+//                    modal("hello", { })
+
+                    textInputSimpleExample()
+                    textInputAreaExample()
                 }
             }
         } catch (ex: Exception) {
             rootUiLogger.error(ex)
         }
+    }
+}
+
+@Adaptive
+fun modal(
+    data : String,
+    close : UiClose
+) {
+    basicModal("stuff") {
+        width { 600.dp }
+
+        column {
+            padding { 24.dp } .. gap { 16.dp } .. maxWidth
+
+            markdown("""**Kulcs, csatorna, PAN és EPAN változtatásánál a korábban csatlakoztatott eszközök le fognak szakadni a hálózatról és mindegyiket újra kell csatlakozatni.**""".trimIndent())
+
+            textInput(textInputBackend("hello") { label = "hello" })
+            textInput(textInputBackend("hello") { label = "hello" })
+
+            row {
+                gap { 16.dp }
+                intInput(intInputBackend(12) { label = "hello" }) .. width { 100.dp }
+                intInput(intInputBackend(12) { label = "hello" }) .. width { 100.dp }
+                longInput(longInputBackend(12) { label = "hello" }) .. width { 200.dp }
+            }
+
+            row {
+                gap { 16.dp }
+                intInput(intInputBackend(12) { label = "hello" }) .. width { 100.dp }
+            }
+        }
+
     }
 }
 

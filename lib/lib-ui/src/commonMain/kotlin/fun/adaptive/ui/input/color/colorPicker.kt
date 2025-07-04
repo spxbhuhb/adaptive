@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.canvas.drawFakeHslColorPlane
 import `fun`.adaptive.ui.canvas.drawHueSlider
 import `fun`.adaptive.ui.fragment.layout.RawSize
-import `fun`.adaptive.ui.input.text.textInput2
+import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.decoration.HslColor
 import `fun`.adaptive.ui.instruction.dp
@@ -71,7 +71,7 @@ fun colorPicker(
 
         hueSlider(viewBackend)
 
-        textInput2(hexBackend) .. width { 120.dp }
+        textInput(hexBackend) .. width { 120.dp }
     }
 }
 

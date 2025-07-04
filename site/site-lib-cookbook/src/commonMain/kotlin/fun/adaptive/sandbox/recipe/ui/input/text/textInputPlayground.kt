@@ -11,7 +11,7 @@ import `fun`.adaptive.ui.editor.booleanEditor
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.AdatFormViewBackend
 import `fun`.adaptive.ui.form.adatFormBackend
-import `fun`.adaptive.ui.input.text.textInput2
+import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.dp
 
@@ -34,7 +34,8 @@ fun textInputPlayground(): AdaptiveFragment {
 class TextPlaygroundConfig(
     val label: String? = null,
     val isInConstraintError: Boolean = false,
-    val isDisabled: Boolean = false
+    val isDisabled: Boolean = false,
+    val multiline : Boolean = false,
 )
 
 @Adaptive
@@ -58,6 +59,7 @@ fun textInputPlaygroundForm(
                     maxWidth
                     booleanEditor { template.isInConstraintError }
                     booleanEditor { template.isDisabled }
+                    booleanEditor { template.multiline }
                 }
             }
         }
@@ -72,6 +74,7 @@ fun textInputPlaygroundResult(config: TextPlaygroundConfig) {
         disabled = config.isDisabled
         label = config.label
         validateFun = { ! config.isInConstraintError }
+        multiline = config.multiline
     }.also {
         if (config.isInConstraintError) {
             it.isInConstraintError = true
@@ -81,6 +84,6 @@ fun textInputPlaygroundResult(config: TextPlaygroundConfig) {
 
     column {
         width { 240.dp } .. height { 240.dp }
-        textInput2(backend) .. maxSize
+        textInput(backend) .. maxSize
     }
 }

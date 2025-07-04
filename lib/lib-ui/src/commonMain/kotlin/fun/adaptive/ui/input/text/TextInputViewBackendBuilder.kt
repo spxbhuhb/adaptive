@@ -6,11 +6,12 @@ class TextInputViewBackendBuilder(
     inputValue: String?
 ) : InputViewBackendBuilder<String, TextInputViewBackend>(inputValue) {
 
-    var decimals : Int? = null
+    var multiline : Boolean? = null
 
     override fun toBackend() =
         TextInputViewBackend(inputValue, label, secret).also { backend ->
             setup(backend)
+            multiline?.let { backend.multiline = it }
         }
 
 }

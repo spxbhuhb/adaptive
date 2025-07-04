@@ -9,4 +9,14 @@ class TextInputViewBackend(
     isSecret: Boolean = false
 ) : InputViewBackend<String, TextInputViewBackend>(
     value, label, isSecret
-)
+) {
+
+    var multiline: Boolean = false
+
+    fun areaInstructions(focus: Boolean) =
+        when {
+            focus -> inputTheme.textAreaFocused
+            else -> inputTheme.textAreaNonFocused
+        }
+
+}

@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.decoratedInput
-import `fun`.adaptive.ui.input.text.textInput2
+import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
@@ -41,7 +41,7 @@ fun colorInput(
                 }
             }
 
-            textInput2(hexBackend) .. width { 120.dp }
+            textInput(hexBackend) .. width { 120.dp }
         }
     }
 

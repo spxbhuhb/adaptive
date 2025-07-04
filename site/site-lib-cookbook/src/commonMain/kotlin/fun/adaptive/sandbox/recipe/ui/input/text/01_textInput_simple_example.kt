@@ -8,20 +8,21 @@ import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.width
-import `fun`.adaptive.ui.input.text.textInput2
+import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.dp
 
+/**
+ * # Simple text input
+ *
+ * - text inputs use [maxWidth](instruction://) by default, set a width to make them smaller
+ */
 @Adaptive
 fun textInputSimpleExample(): AdaptiveFragment {
-    val backend = textInputBackend("Hello World!") {}
-    val observed = observe { backend }
 
-    row {
-        gap { 16.dp }
-        textInput2(backend) .. width { 200.dp }
-        text("Input value: ${observed.inputValue}")
-    }
+    val backend = textInputBackend("Hello World!")
+
+    textInput(backend) .. width { 200.dp }
 
     return fragment()
 }

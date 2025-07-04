@@ -2,6 +2,7 @@ package `fun`.adaptive.ui.input
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.input.Disabled
 import `fun`.adaptive.ui.instruction.sp
@@ -68,12 +69,14 @@ class InputTheme : AbstractTheme() {
 
     val textAreaFocused = instructionsOf(
         paddingTop { 5.dp },
-        paddingLeft { 6.dp }
+        paddingLeft { 6.dp },
+        maxSize
     )
 
     val textAreaNonFocused = instructionsOf(
         paddingTop { 6.dp },
-        paddingLeft { 7.dp }
+        paddingLeft { 7.dp },
+        maxSize
     )
 
     val unitContainer = instructionsOf(
@@ -95,7 +98,7 @@ class InputTheme : AbstractTheme() {
 
     val endHint = instructionsOf(
         paddingLeft { inputHintPadding },
-        paddingTop { 3.dp}, // FIXME manual adjustment for baseline
+        paddingTop { 3.dp }, // FIXME manual adjustment for baseline
         fontSize(13.sp),
         noSelect,
         textColors.onSurfaceVariant,

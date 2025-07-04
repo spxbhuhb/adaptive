@@ -8,7 +8,6 @@ import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
-import `fun`.adaptive.sandbox.recipe.ui.dialog.dialogRecipe
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
@@ -20,13 +19,9 @@ import `fun`.adaptive.sandbox.recipe.ui.input.button.*
 import `fun`.adaptive.sandbox.recipe.ui.input.date.dateInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.datetime.dateTimeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.double_.*
-import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputBasicExample
-import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputNullableExample
-import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputRadixExample
-import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputRadixWithDecimalExample
-import `fun`.adaptive.sandbox.recipe.ui.input.integer.intInputUnitExample
+import `fun`.adaptive.sandbox.recipe.ui.input.integer.*
 import `fun`.adaptive.sandbox.recipe.ui.input.select.*
-import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaRecipe
+import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaExample
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputPlayground
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
 import `fun`.adaptive.sandbox.recipe.ui.input.time.timeInputExample
@@ -66,7 +61,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:canvas", ::canvasRecipe)
         add("cookbook:recipe:checkbox", ::checkboxRecipe)
         add("cookbook:recipe:codefence", ::codeFenceRecipe)
-        add("cookbook:recipe:dialog", ::dialogRecipe)
         add("cookbook:recipe:event", ::eventRecipe)
         add("cookbook:recipe:grid", ::gridRecipe)
         add("cookbook:recipe:icon", ::iconRecipe)
@@ -81,7 +75,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:workspace", ::workspaceRecipe)
 
         add("cookbook:recipe:input:quick-filter", ::quickFilterRecipe)
-        add("cookbook:recipe:input:text-area", ::textInputAreaRecipe)
 
         // ----------------------------------------------------------------------------
         // Container
@@ -189,7 +182,8 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Text Input
         // ----------------------------------------------------------------------------
 
-        add("cookbook/input/text/example/simple", ::textInputSimpleExample)
+        add("textInputSimpleExample", ::textInputSimpleExample)
+        add("textInputAreaExample", ::textInputAreaExample)
 
         add("cookbook/input/text/playground", ::textInputPlayground)
 

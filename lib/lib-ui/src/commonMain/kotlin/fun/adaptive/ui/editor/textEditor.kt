@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
 import `fun`.adaptive.ui.input.text.TextInputViewBackend
-import `fun`.adaptive.ui.input.text.textInput2
+import `fun`.adaptive.ui.input.text.textInput
 
 @Adaptive
 fun textEditor(
@@ -18,7 +18,7 @@ fun textEditor(
     selector: () -> String?
 ): AdaptiveFragment {
 
-    textInput2(
+    textInput(
         fragment().viewBackendFor(binding) { value, label, isSecret ->
             TextInputViewBackend(value, label, isSecret)
         }

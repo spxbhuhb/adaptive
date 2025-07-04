@@ -6,34 +6,12 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.focus
+import `fun`.adaptive.ui.api.multiLineTextInput
 import `fun`.adaptive.ui.api.singleLineTextInput
-import `fun`.adaptive.ui.input.InputContext
-import `fun`.adaptive.ui.input.InputTheme
 import `fun`.adaptive.ui.input.decoratedInput
 
 @Adaptive
 fun textInput(
-    value : String?,
-    state : InputContext = InputContext(),
-    theme : InputTheme = InputTheme.DEFAULT,
-    onChange : (String) -> Unit
-) : AdaptiveFragment {
-    val observed = observe { state }
-    val focus = focus()
-
-    val themeInstructions = when {
-        observed.disabled -> theme.disabled
-        observed.invalid -> if (focus) theme.invalidFocused else theme.invalidNotFocused
-        else -> if (focus) theme.focused else theme.enabled
-    }
-
-    singleLineTextInput(value = value, onChange = onChange) .. themeInstructions .. theme.singleLine .. instructions()
-
-    return fragment()
-}
-
-@Adaptive
-fun textInput2(
     viewBackend: TextInputViewBackend? = null,
     value: (() -> String?)? = null
 ): AdaptiveFragment {
@@ -46,10 +24,17 @@ fun textInput2(
     val focus = focus()
 
     decoratedInput(focus, observed) {
-        singleLineTextInput(value = observed.inputValue, onChange = { v -> observed.inputValue = v }) ..
-            observed.containerThemeInstructions(focus) ..
-            observed.inputTheme.singleLine ..
-            instructions()
+        if (! observed.multiline) {
+            singleLineTextInput(value = observed.inputValue, onChange = { v -> observed.inputValue = v }) ..
+                observed.containerThemeInstructions(focus) ..
+                observed.inputTheme.singleLine ..
+                instructions()
+        } else {
+            multiLineTextInput(value = observed.inputValue, onChange = { v -> observed.inputValue = v }) ..
+                observed.containerThemeInstructions(focus) ..
+                observed.areaInstructions(focus) ..
+                instructions()
+        }
     }
 
     return fragment()
