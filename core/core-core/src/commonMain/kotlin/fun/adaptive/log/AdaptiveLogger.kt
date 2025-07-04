@@ -93,10 +93,6 @@ abstract class AdaptiveLogger {
 
     abstract fun rawError(message: String? = null, exception: Exception? = null)
 
-    fun error(message: String) {
-        if (level <= LogLevel.Error) rawError(message)
-    }
-
     inline fun error(exception: Exception, message: () -> String) {
         error(message(), exception)
     }
@@ -105,7 +101,7 @@ abstract class AdaptiveLogger {
         if (level <= LogLevel.Error) rawError(exception.message, exception)
     }
 
-    fun error(message: String, exception: Exception) {
+    fun error(message: String, exception: Exception? = null) {
         if (level <= LogLevel.Error) rawError(message, exception)
     }
 
