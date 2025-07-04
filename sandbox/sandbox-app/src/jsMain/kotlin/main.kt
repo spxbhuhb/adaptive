@@ -22,6 +22,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaExample
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
 import `fun`.adaptive.ui.LibFragmentFactory
@@ -30,6 +31,8 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.button.submitButton
+import `fun`.adaptive.ui.input.color.colorInput
+import `fun`.adaptive.ui.input.color.colorInputBackend
 import `fun`.adaptive.ui.input.datetime.dateTimeInputBackend
 import `fun`.adaptive.ui.input.integer.intInput
 import `fun`.adaptive.ui.input.integer.intInputBackend
@@ -37,6 +40,7 @@ import `fun`.adaptive.ui.input.long_.longInput
 import `fun`.adaptive.ui.input.long_.longInputBackend
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.input.text.textInputBackend
+import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.popup.modal.basicModal
@@ -121,7 +125,7 @@ fun sandboxMain() {
 
 //                    doubleInput(doubleInputBackend(12.3) { unit = "min" }) .. width { 100.dp} .. backgrounds.surfaceVariant
 //                    text("FeedBack: $feedBack")
-                    //formBasicExample()
+                    formBasicExample()
                     // quickFilterRecipe()
 
 //                    button("hello") {
@@ -130,8 +134,6 @@ fun sandboxMain() {
 //
 //                    modal("hello", { })
 
-                    textInputSimpleExample()
-                    textInputAreaExample()
                 }
             }
         } catch (ex: Exception) {

@@ -18,6 +18,7 @@ import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
 import `fun`.adaptive.ui.input.select.item.selectInputOptionText
 import `fun`.adaptive.ui.input.select.item.selectInputValueText
+import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.snackbar.infoNotification
 import `fun`.adaptive.ui.snackbar.warningNotification
@@ -66,6 +67,8 @@ fun formBasicExample(): AdaptiveFragment {
                 dateTimeEditor { template.dateTime }
                 timeRangeEditor { template.timeRange }
 
+                colorEditor { template.color }
+
                 selectEditorDropdown(
                     E.Companion.entries.toList(),
                     { selectInputOptionText(it) },
@@ -111,6 +114,7 @@ class FormData(
     val time : LocalTime = localTime(),
     val dateTime : LocalDateTime = localDateTime(),
     val timeRange : TimeRange = TimeRange(),
+    val color : Color = color(0xff0000),
     val enum: E = E.V1,
     val enumOrNull: E? = null,
     val badges : Set<String> = setOf("badge1", "badge2")

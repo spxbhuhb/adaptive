@@ -37,6 +37,7 @@ fun borderTop(color: Color, width: DPixel = 1.dp) = Border(color, width, null, n
 val noBorder = Border(color(0u), 0.dp, null, null, null)
 
 inline fun color(value : () -> Int) = Color(value().toUInt())
+fun color(color: String) = Color.decodeFromHex(color)
 fun color(color: Int, opacity: Double = 1.0) = Color(color.toUInt(), opacity)
 fun color(color: UInt, opacity: Double = 1.0) = Color(color, opacity)
 

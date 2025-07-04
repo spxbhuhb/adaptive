@@ -8,7 +8,7 @@ class Color(
     val value: UInt,
     val opacity: Double = 1.0
 ) {
-
+    
     val hex by lazy { encodeToCssHex() }
     val rgba by lazy { encodeToCssRgba() }
 

@@ -16,6 +16,7 @@ import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeBasicInput
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedNoLabel
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedUnremovable
 import `fun`.adaptive.sandbox.recipe.ui.input.button.*
+import `fun`.adaptive.sandbox.recipe.ui.input.color.colorInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.date.dateInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.datetime.dateTimeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.double_.*
@@ -105,6 +106,12 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("badgeBasicInput", ::badgeBasicInput)
         add("badgeInputInitializedNoLabel", ::badgeInputInitializedNoLabel)
         add("badgeInputInitializedUnremovable", ::badgeInputInitializedUnremovable)
+
+        // ----------------------------------------------------------------------------
+        // Color input
+        // ----------------------------------------------------------------------------
+
+        add("colorInputExample", ::colorInputExample)
 
         // ----------------------------------------------------------------------------
         // Menu

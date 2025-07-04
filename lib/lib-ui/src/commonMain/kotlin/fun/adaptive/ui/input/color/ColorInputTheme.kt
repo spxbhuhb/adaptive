@@ -11,6 +11,7 @@ import `fun`.adaptive.ui.theme.colors
 class ColorInputTheme {
 
     val exampleSize = 160.dp
+    val colorPaneWidth = 360.dp
 
     var inputContainer = instructionsOf(
         gap { 8.dp },
@@ -26,8 +27,7 @@ class ColorInputTheme {
     )
 
     var pickerContainer = instructionsOf(
-        colTemplate(exampleSize, 1.fr),
-        rowTemplate(exampleSize, 38.dp, 38.dp)
+
     )
 
     var pickerExample = instructionsOf(
@@ -36,8 +36,10 @@ class ColorInputTheme {
         cornerBottomLeftRadius(4.dp)
     )
 
+    //colTemplate(exampleSize, 1.fr),
+    //        rowTemplate(exampleSize, 38.dp, 38.dp)
     var colorPlane = instructionsOf(
-        maxWidth,
+        width(colorPaneWidth),
         height(exampleSize),
         cornerTopRightRadius(4.dp),
         cornerBottomRightRadius(4.dp)
@@ -46,13 +48,12 @@ class ColorInputTheme {
     val sliderHorizontalPadding = 24
 
     var hueSliderOuterContainer = instructionsOf(
-        maxWidth,
-        colSpan(2)
+        width(exampleSize + colorPaneWidth),
+        height(38.dp)
     )
 
     var hueSliderInnerContainer = instructionsOf(
         maxWidth,
-        colSpan(2),
         padding(16.dp, sliderHorizontalPadding.dp, 16.dp, sliderHorizontalPadding.dp)
     )
 

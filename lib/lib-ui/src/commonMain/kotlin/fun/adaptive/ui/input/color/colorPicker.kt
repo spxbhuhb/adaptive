@@ -21,6 +21,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.Keys
 import `fun`.adaptive.ui.popup.modal.editorModal
 import `fun`.adaptive.ui.theme.colors
+import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
 
@@ -60,14 +61,15 @@ fun colorPicker(
         onChange = viewBackend::fromString
     }
 
-    grid(theme.pickerContainer) {
-        size(500.dp, 400.dp)
-        box {
-            theme.pickerExample
-            backgroundColor { viewBackend.inputValue?.toColor() ?: colors.transparent }
-        }
+    column(theme.pickerContainer) {
+        row {
+            box {
+                theme.pickerExample
+                backgroundColor { viewBackend.inputValue?.toColor() ?: colors.transparent }
+            }
 
-        colorPlaneContainer(viewBackend)
+            colorPlaneContainer(viewBackend)
+        }
 
         hueSlider(viewBackend)
 
@@ -88,17 +90,32 @@ fun colorPlaneContainer(
         onClick { event ->
             val actualCanvas = self.first<ActualCanvasOwner>().canvas
 
-            val saturation = (event.x / actualCanvas.width).coerceIn(0.0, 1.0)
-            val lightness = (1.0 - (event.y / actualCanvas.height)).coerceIn(0.0, 1.0)
+            val fx = event.x / actualCanvas.width
+            val fy = event.y / actualCanvas.height
 
-            viewBackend.inputValue = HslColor(hue, saturation, lightness, 1.0)
+            // calculate HSV first
+            val saturation = fx.coerceIn(0.0, 1.0)
+            val value = (1 - fy).coerceIn(0.0, 1.0)
+
+            // convert HSV to HSL TODO use HSL to RGB directly
+            val lightness = value * (1 - saturation / 2).coerceIn(0.0, 1.0)
+            viewBackend.inputValue = HslColor(
+                hue,
+                if (abs(lightness) < 0.000001 || abs(lightness - 1.0) < 0.000001) {
+                    0.0
+                } else {
+                    (value - lightness) / min(lightness, 1 - lightness)
+                },
+                lightness,
+                1.0
+            )
         }
 
         canvas {
             maxSize
             draw {
                 // TODO think about fake vs. true HSL color pane
-                drawFakeHslColorPlane(hue, width = width * 2, height = height * 2)
+                drawFakeHslColorPlane(hue, width = width, height = height)
             } .. name("$hue") // FIXME using name as patch bug (dependency related) workaround
         }
     }
