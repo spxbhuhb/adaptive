@@ -74,6 +74,10 @@ open class ResourceFileSet<T : ResourceFile>(
         val bytes: ByteArray
         val safeLastResult = lastResult
 
+        // IMPORTANT
+        // SVG caching relies on the referential equality (`===`) of the returned
+        // byte array. This is provided now and we should keep it that way.
+
         if (environment == lastEnvironment && safeLastResult != null) {
             val cached = cachedContent
             if (cacheResource && cached != null) {
