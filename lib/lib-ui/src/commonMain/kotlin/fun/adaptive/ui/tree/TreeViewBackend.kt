@@ -21,10 +21,12 @@ class TreeViewBackend<IT, CT>(
     val theme: TreeTheme = TreeTheme.DEFAULT,
     val multiSelect: Boolean = false,
     val singleClickOpen: Boolean = false,
-    val doubleClickOpen: Boolean = true
+    val doubleClickOpen: Boolean = true,
+    val handleAtEnd : Boolean = false
 ) : SelfObservable<TreeViewBackend<IT, CT>>() {
 
     var topItems by observable(items, ::notify)
+
     var selection = selection
 
     /**

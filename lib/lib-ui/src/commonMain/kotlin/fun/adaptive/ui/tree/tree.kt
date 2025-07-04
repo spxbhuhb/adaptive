@@ -4,6 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instruction.nop
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.*
@@ -12,6 +13,7 @@ import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.EventModifier
 import `fun`.adaptive.ui.instruction.event.UIEvent
+import `fun`.adaptive.ui.instruction.text.TextColor
 
 typealias TreeItemSelectedFun<IT, CT> = (backend: TreeViewBackend<IT, CT>, item: TreeItem<IT>, modifiers: Set<EventModifier>) -> Unit
 typealias TreeKeyDownFun<IT, CT> = (backend: TreeViewBackend<IT, CT>, item: TreeItem<IT>, event: UIEvent) -> Unit
@@ -75,10 +77,15 @@ private fun <IT, CT> label(
 ) {
     val observed = observe { item }
     val theme = viewBackend.theme
+    val hover = hover()
 
-    val foreground = theme.itemForeground(observed.selected, true)
+    val foreground = theme.itemForeground(observed.selected, true, hover)
 
-    row(theme.item, theme.itemBackground(observed.selected, true)) {
+    row(
+        theme.item,
+        theme.itemBackground(observed.selected, true, hover),
+        if (viewBackend.handleAtEnd) spaceBetween else nop
+    ) {
         paddingLeft { offset }
 
         onClick {
@@ -93,30 +100,50 @@ private fun <IT, CT> label(
             observed.open = ! observed.open
         }
 
-        box {
-            theme.handleContainer
-            // This is tricky, `onClick` on `row` will run if this runs. If both reverses open,
-            // it will remain the same at the end.
-            onClick { if (! viewBackend.singleClickOpen) observed.open = ! observed.open }
+        if (! viewBackend.handleAtEnd) {
+            handle(viewBackend, observed, foreground)
+        }
 
-            when {
-                observed.children.isEmpty() -> box { }
-                observed.open -> icon(theme.handleIconOpen) .. foreground .. theme.handleIcon
-                else -> icon(theme.handleIconClosed) .. foreground .. theme.handleIcon
+        row {
+            if (observed.icon != null) {
+                icon(observed.icon !!, theme.icon) .. foreground
             }
+
+            text(observed.title) .. theme.label .. foreground
         }
 
-        if (observed.icon != null) {
-            icon(observed.icon !!, theme.icon) .. foreground
+        if (viewBackend.handleAtEnd) {
+            handle(viewBackend, observed, foreground)
         }
-
-        text(observed.title) .. theme.label .. foreground
 
         if (_KT_74337_contextMenuBuilder != null) {
             contextPopup { hide ->
                 popupAlign.belowCenter
                 _KT_74337_contextMenuBuilder(hide, viewBackend, observed)
             }
+        }
+    }
+}
+
+@Adaptive
+private fun <IT, CT> handle(
+    viewBackend: TreeViewBackend<IT, CT>,
+    observed: TreeItem<IT>,
+    foreground: TextColor,
+) {
+    val theme = viewBackend.theme
+
+    box {
+        if (viewBackend.handleAtEnd) theme.handleContainerEnd else theme.handleContainerFront
+
+        // This is tricky, `onClick` on `row` will run if this runs. If both reverses open,
+        // it will remain the same at the end.
+        onClick { if (! viewBackend.singleClickOpen) observed.open = ! observed.open }
+
+        when {
+            observed.children.isEmpty() -> box { }
+            observed.open -> icon(theme.handleIconOpen) .. foreground .. theme.handleIcon
+            else -> icon(theme.handleIconClosed) .. foreground .. theme.handleIcon
         }
     }
 }

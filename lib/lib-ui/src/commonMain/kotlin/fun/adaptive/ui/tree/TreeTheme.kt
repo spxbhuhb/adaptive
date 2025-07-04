@@ -52,15 +52,21 @@ open class TreeTheme(
         noSelect
     )
 
-    open fun itemBackground(selected: Boolean, focus: Boolean) =
-        background(selected, focus = focus, variant = true)
+    open fun itemBackground(selected: Boolean, focus: Boolean, hover : Boolean) =
+        background(selected, focus = focus, variant = true, hover = hover)
 
-    open fun itemForeground(selected: Boolean, focus: Boolean) =
-        foreground(selected, focus = focus)
+    open fun itemForeground(selected: Boolean, focus: Boolean, hover : Boolean) =
+        foreground(selected, focus = focus, hover = hover)
 
-    open val handleContainer = instructionsOf(
+    open val handleContainerFront = instructionsOf(
         size(24.dp, 24.dp),
         alignItems.center
+    )
+
+    open val handleContainerEnd = instructionsOf(
+        size(24.dp, 24.dp),
+        alignItems.center,
+        alignSelf.end
     )
 
     open val handleIcon = instructionsOf(

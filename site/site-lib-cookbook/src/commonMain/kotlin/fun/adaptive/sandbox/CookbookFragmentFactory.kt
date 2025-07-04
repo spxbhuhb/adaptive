@@ -210,8 +210,8 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Tree
         // ----------------------------------------------------------------------------
 
-        add("cookbook/tree/example/basic", ::treeBasicExample)
-        add("cookbook/tree/example/value", ::treeValueExample)
+        add("treeBasicExample", ::treeBasicExample)
+        add("treeValueExample", ::treeValueExample)
 
         add("cookbook/tree/playground", ::treePlayground)
 

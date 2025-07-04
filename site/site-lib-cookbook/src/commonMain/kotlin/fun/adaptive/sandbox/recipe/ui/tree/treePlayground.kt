@@ -51,6 +51,7 @@ class TreePlaygroundConfig(
     val icon: String? = icons.first(),
     val singleClickOpen: Boolean = true,
     val doubleClickOpen: Boolean = false,
+    val handleAtEnd : Boolean = false,
     val randomData: Boolean = false,
     val matchBackground: Boolean = false,
     val randomDataDepth: Int = 3,
@@ -77,6 +78,7 @@ fun treePlaygroundForm(
 
             column { // this column does not use gap, so boolean options look nice
                 maxWidth
+                booleanEditor { template.handleAtEnd }
                 booleanEditor { template.singleClickOpen }
                 booleanEditor { template.doubleClickOpen }
                 booleanEditor { template.matchBackground }
@@ -106,11 +108,12 @@ fun treePlaygroundResult(config: TreePlaygroundConfig) {
 
     val backend =
         TreeViewBackend(
-            if (config.randomData) generate(config.randomDataDepth, icon) else staticTree(icon),
+            if (config.randomData) generate(config.randomDataDepth, icon) else exampleTree(icon),
             context = Unit,
             selectedFun = ::defaultSelectedFun,
             singleClickOpen = config.singleClickOpen,
-            doubleClickOpen = config.doubleClickOpen
+            doubleClickOpen = config.doubleClickOpen,
+            handleAtEnd = config.handleAtEnd,
         )
 
     column {

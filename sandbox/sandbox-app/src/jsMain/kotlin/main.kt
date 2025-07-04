@@ -25,6 +25,9 @@ import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringSto
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaExample
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
+import `fun`.adaptive.sandbox.recipe.ui.tree.treeBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.tree.treePlayground
+import `fun`.adaptive.sandbox.recipe.ui.tree.treeValueExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
@@ -125,9 +128,10 @@ fun sandboxMain() {
 
 //                    doubleInput(doubleInputBackend(12.3) { unit = "min" }) .. width { 100.dp} .. backgrounds.surfaceVariant
 //                    text("FeedBack: $feedBack")
-                    formBasicExample()
+//                    formBasicExample()
                     // quickFilterRecipe()
 
+                    treePlayground()
 //                    button("hello") {
 //                        dialog(adapter(), "", ::modal)
 //                    }

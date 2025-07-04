@@ -18,7 +18,7 @@ class AvUiTreeSubscriber<SPEC : Any>(
 
     override fun newTreeItem(item: AvValue<SPEC>, parentNode: Node<SPEC, TreeItem<AvValue<SPEC>>>?): TreeItem<AvValue<SPEC>> =
         TreeItem(
-            iconFor(item),
+            iconForOrNull(item),
             title = item.nameLike,
             data = item,
             parent = parentNode?.treeItem,
