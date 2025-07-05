@@ -18,9 +18,9 @@ fun browser(
     rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
     trace : Trace? = null,
     @Adaptive block: (adapter: AbstractAuiAdapter<*, *>) -> Unit
-) : AuiAdapter {
+) : AuiBrowserAdapter {
 
-    return AuiAdapter(rootContainer, backend).also {
+    return AuiBrowserAdapter(rootContainer, backend).also {
         it.fragmentFactory += imports
         if (trace != null) { it.trace = trace.patterns }
         block(it)

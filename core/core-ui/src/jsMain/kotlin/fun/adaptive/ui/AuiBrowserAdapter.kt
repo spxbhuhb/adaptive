@@ -29,7 +29,7 @@ import kotlinx.coroutines.Dispatchers
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
-class AuiAdapter(
+class AuiBrowserAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
     override val backend: BackendAdapter,
     override val transport: ServiceCallTransport = backend.transport

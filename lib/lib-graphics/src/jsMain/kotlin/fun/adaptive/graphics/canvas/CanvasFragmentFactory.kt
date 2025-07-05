@@ -6,11 +6,11 @@ package `fun`.adaptive.graphics.canvas
 
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.graphics.canvas.fragment.*
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 
 object CanvasFragmentFactory : FoundationFragmentFactory() {
     init {
-        add("canvas:canvas") { p, i, s -> CanvasCanvas(p.adapter as AuiAdapter, p, i) }
+        add("canvas:canvas") { p, i, s -> CanvasCanvas(p.adapter as AuiBrowserAdapter, p, i) }
         add("canvas:circle") { p, i, s -> CanvasCircle(p.adapter as CanvasAdapter, p, i) }
         add("canvas:draw") { p, i, s -> CanvasDraw(p.adapter as CanvasAdapter, p, i) }
         add("canvas:line") { p, i, s -> CanvasLine(p.adapter as CanvasAdapter, p, i) }

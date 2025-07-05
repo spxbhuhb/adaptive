@@ -2,7 +2,7 @@ package `fun`.adaptive.ui.virtualized
 
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.padding
@@ -26,7 +26,7 @@ fun virtualizedMain() {
 
         browser(backend = localBackend) { adapter ->
 
-            adapter.fragmentFactory.add("aui:virtualized") { p, i, s -> AuiVirtualized(p.adapter as AuiAdapter, p, i) }
+            adapter.fragmentFactory.add("aui:virtualized") { p, i, s -> AuiVirtualized(p.adapter as AuiBrowserAdapter, p, i) }
 
             with(adapter.defaultTextRenderData) {
                 fontName = "Open Sans"

@@ -12,14 +12,14 @@ import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.canvas
 import `fun`.adaptive.graphics.canvas.platform.ActualBrowserCanvas
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.fragment.layout.RawSize
 import org.w3c.dom.HTMLCanvasElement
 import org.w3c.dom.HTMLElement
 
 @AdaptiveActual(canvas)
 class CanvasCanvas(
-    adapter: AuiAdapter,
+    adapter: AuiBrowserAdapter,
     parent: AdaptiveFragment,
     index: Int
 ) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()), ActualCanvasOwner {

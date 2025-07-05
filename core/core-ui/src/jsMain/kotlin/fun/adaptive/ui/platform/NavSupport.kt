@@ -5,7 +5,7 @@
 package `fun`.adaptive.ui.platform
 
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.support.navigation.AbstractNavSupport
 import `fun`.adaptive.ui.support.navigation.NavData
 import kotlinx.browser.window
@@ -17,7 +17,7 @@ import org.w3c.dom.set
 import web.url.URLSearchParams
 
 class NavSupport(
-    val adapter: AuiAdapter
+    val adapter: AuiBrowserAdapter
 ) : AbstractNavSupport() {
 
     val lastCounterKey = "adaptive-nav-counter"

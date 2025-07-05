@@ -5,7 +5,7 @@ package `fun`.adaptive.ui.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.aui
 import kotlinx.browser.document
 import org.w3c.dom.CanvasRenderingContext2D
@@ -16,7 +16,7 @@ import kotlin.math.ceil
 
 @AdaptiveActual(aui)
 open class AuiText(
-    adapter: AuiAdapter,
+    adapter: AuiBrowserAdapter,
     parent: AdaptiveFragment,
     index: Int,
 ) : AbstractText<HTMLElement>(adapter, parent, index) {

@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.FragmentTask
 import `fun`.adaptive.foundation.instruction.get
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.api.disabled
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.instruction.input.FocusFirst
@@ -22,7 +22,7 @@ import org.w3c.dom.HTMLInputElement
 
 @AdaptiveActual(aui)
 open class AuiSingleLineTextInput(
-    adapter: AuiAdapter,
+    adapter: AuiBrowserAdapter,
     parent: AdaptiveFragment,
     index: Int,
 ) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {

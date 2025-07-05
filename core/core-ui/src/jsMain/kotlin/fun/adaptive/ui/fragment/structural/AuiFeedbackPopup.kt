@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.fragment.structural
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.fragment.layout.RawPosition
@@ -13,7 +13,7 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
 class AuiFeedbackPopup(
-    adapter: AuiAdapter,
+    adapter: AuiBrowserAdapter,
     parentLayout: AbstractContainer<*, *>,
     val feedbackText: String? = null,
     val feedbackIcon: GraphicsResourceSet? = null

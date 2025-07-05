@@ -5,14 +5,14 @@ package `fun`.adaptive.ui.fragment.layout
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.aui
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
 @AdaptiveActual(aui)
 class AuiManualLayout(
-    adapter: AuiAdapter,
+    adapter: AuiBrowserAdapter,
     parent: AdaptiveFragment,
     declarationIndex: Int
 ) : AbstractManualLayout<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex)

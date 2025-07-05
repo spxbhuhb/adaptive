@@ -5,19 +5,18 @@ package `fun`.adaptive.graphics.svg.fragment
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.graphics.canvas.CanvasAdapter
 import `fun`.adaptive.graphics.canvas.fragment.CanvasSvg
 import `fun`.adaptive.graphics.canvas.platform.ActualBrowserCanvas
 import `fun`.adaptive.graphics.svg.svg
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import org.w3c.dom.HTMLElement
 
 @AdaptiveActual(svg)
 class SvgSvg(
-    adapter: AuiAdapter,
+    adapter: AuiBrowserAdapter,
     parent: AdaptiveFragment,
     index: Int
 ) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {

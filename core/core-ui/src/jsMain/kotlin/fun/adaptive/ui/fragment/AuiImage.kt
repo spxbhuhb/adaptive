@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.instruction.layout.SizeBase
@@ -17,7 +17,7 @@ import org.w3c.dom.HTMLImageElement
 
 @AdaptiveActual(aui)
 open class AuiImage(
-    adapter: AuiAdapter,
+    adapter: AuiBrowserAdapter,
     parent: AdaptiveFragment,
     index: Int
 ) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {

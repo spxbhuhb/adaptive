@@ -6,10 +6,8 @@ package `fun`.adaptive.ui.fragment
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.api.disabled
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.aui
 import kotlinx.browser.document
 import org.w3c.dom.HTMLElement
@@ -17,7 +15,7 @@ import org.w3c.dom.HTMLTextAreaElement
 
 @AdaptiveActual(aui)
 open class AuiMultiLineTextInput(
-    adapter: AuiAdapter,
+    adapter: AuiBrowserAdapter,
     parent: AdaptiveFragment,
     index: Int,
 ) : AbstractAuiFragment<HTMLElement>(adapter, parent, index, stateSize()) {

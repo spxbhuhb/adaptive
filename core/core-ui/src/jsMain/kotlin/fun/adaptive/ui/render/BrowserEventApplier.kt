@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.render
 import `fun`.adaptive.adat.decodeFromJson
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.fragment.structural.AuiFeedbackPopup
@@ -144,7 +144,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
         fragment.renderData.layoutFragment?.let { layoutFragment ->
 
             AuiFeedbackPopup(
-                fragment.uiAdapter as AuiAdapter,
+                fragment.uiAdapter as AuiBrowserAdapter,
                 layoutFragment,
                 eventHandler.feedbackText,
                 eventHandler.feedbackIcon

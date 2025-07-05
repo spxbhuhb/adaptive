@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.fragment.structural
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.unsupported
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.fragment.layout.RawFrame
 import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.support.UiClose
@@ -11,7 +11,7 @@ import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
 class AuiDialogPopup(
-    adapter: AuiAdapter,
+    adapter: AuiBrowserAdapter,
     parent: AdaptiveFragment?
 ) : AbstractPopup<HTMLElement, HTMLDivElement>(adapter, parent, - 1, 3) {
 

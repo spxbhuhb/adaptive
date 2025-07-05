@@ -1,12 +1,12 @@
 package `fun`.adaptive.ui.fragment.structural
 
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 
 class AuiHoverPopup(
-    adapter: AuiAdapter,
+    adapter: AuiBrowserAdapter,
     parent: AdaptiveFragment?,
     index: Int,
 ) : AbstractPopup<HTMLElement, HTMLDivElement>(adapter, parent, index, 2) {

@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.query.firstOrNull
 import `fun`.adaptive.foundation.query.firstWithOrNull
 import `fun`.adaptive.ui.AbstractAuiFragment
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.fragment.layout.AbstractBox
 import `fun`.adaptive.ui.instruction.input.FocusFirst
 import `fun`.adaptive.ui.instruction.layout.PopupAlign
@@ -15,7 +15,7 @@ import org.w3c.dom.events.FocusEvent
 import org.w3c.dom.events.KeyboardEvent
 
 abstract class AbstractClickPopup(
-    adapter: AuiAdapter,
+    adapter: AuiBrowserAdapter,
     parent: AdaptiveFragment?,
     index: Int,
     val eventName: String

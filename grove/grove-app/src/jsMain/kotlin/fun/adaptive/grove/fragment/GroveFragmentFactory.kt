@@ -5,11 +5,10 @@
 package `fun`.adaptive.grove.fragment
 
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
-import `fun`.adaptive.grove.sheet.fragment.GroveDrawingLayer
-import `fun`.adaptive.ui.AuiAdapter
+import `fun`.adaptive.ui.AuiBrowserAdapter
 
 object GroveFragmentFactory : FoundationFragmentFactory() {
     init {
-        add("grove:dpixelinput") { p, i, s -> GroveDPixelInput(p.adapter as AuiAdapter, p, i) }
+        add("grove:dpixelinput") { p, i, s -> GroveDPixelInput(p.adapter as AuiBrowserAdapter, p, i) }
     }
 }
