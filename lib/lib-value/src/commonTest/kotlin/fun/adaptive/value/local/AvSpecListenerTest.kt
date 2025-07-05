@@ -2,6 +2,8 @@ package `fun`.adaptive.value.local
 
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.utility.UUID.Companion.uuid4
+import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.embedded.EmbeddedValueServer.Companion.embeddedValueServer
@@ -70,11 +72,12 @@ class AvSpecListenerTest {
         )
 
         // Wait for the value to be processed
-        waitForReal(5.seconds) { processedValues.isNotEmpty() }
+        waitForReal(5.seconds) { processedValues.size == 2 }
 
         // Verify the value was processed correctly
-        assertEquals(1, processedValues.size)
+        assertEquals(2, processedValues.size)
         assertEquals(42, processedValues[0])
+        assertEquals(42, processedValues[1])
 
         // Clean up
         listener.stop()
@@ -146,12 +149,13 @@ class AvSpecListenerTest {
         )
 
         // Wait for the updated value to be processed
-        waitForReal(5.seconds) { processedValues.size > 1 }
+        waitForReal(5.seconds) { processedValues.size > 2 }
 
         // Verify both values were processed correctly
-        assertEquals(2, processedValues.size)
+        assertEquals(3, processedValues.size)
         assertEquals(42, processedValues[0])
-        assertEquals(84, processedValues[1])
+        assertEquals(42, processedValues[1])
+        assertEquals(84, processedValues[2])
 
         // Clean up
         listener.stop()
@@ -212,6 +216,7 @@ class AvSpecListenerTest {
         println("[DEBUG_LOG] Values are available in client worker")
 
         // Create a mutable list to track processed values
+        val lock = getLock()
         val processedValues = mutableListOf<Int>()
 
         // Create and start separate spec listeners for each value
@@ -221,7 +226,9 @@ class AvSpecListenerTest {
             specClass = Int::class,
             processFun = { value ->
                 println("[DEBUG_LOG] Processing value 1: ${value.spec}")
-                processedValues.add(value.spec)
+                lock.use {
+                    processedValues.add(value.spec)
+                }
             }
         )
 
@@ -231,7 +238,9 @@ class AvSpecListenerTest {
             specClass = Int::class,
             processFun = { value ->
                 println("[DEBUG_LOG] Processing value 2: ${value.spec}")
-                processedValues.add(value.spec)
+                lock.use {
+                    processedValues.add(value.spec)
+                }
             }
         )
 
@@ -264,15 +273,17 @@ class AvSpecListenerTest {
         )
 
         // Wait for both values to be processed
-        waitForReal(5.seconds) { 
-            println("[DEBUG_LOG] Checking if values were processed: ${processedValues.size}")
-            processedValues.size >= 2 
+        waitForReal(5.seconds) {
+            lock.use {
+                println("[DEBUG_LOG] Checking if values were processed: ${processedValues.size}")
+                processedValues.size > 3
+            }
         }
 
         println("[DEBUG_LOG] Values were processed")
 
         // Verify both values were processed
-        assertEquals(2, processedValues.size)
+        assertEquals(4, processedValues.size)
         assertTrue(processedValues.contains(42))
         assertTrue(processedValues.contains(84))
 
@@ -336,7 +347,7 @@ class AvSpecListenerTest {
         )
 
         // Wait for the value to be processed
-        waitForReal(5.seconds) { processedValues.isNotEmpty() }
+        waitForReal(5.seconds) { processedValues.size == 2 }
 
         // Stop the listener
         listener.stop()
@@ -352,11 +363,13 @@ class AvSpecListenerTest {
         )
 
         // Wait a bit to ensure the update has time to propagate
-        waitForReal(2.seconds) { true }
+        waitForReal(2.seconds)
 
         // Verify only the initial value was processed (since the listener was stopped)
-        assertEquals(1, processedValues.size)
+        assertEquals(2, processedValues.size)
         assertEquals(42, processedValues[0])
+        assertEquals(42, processedValues[1])
+
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)

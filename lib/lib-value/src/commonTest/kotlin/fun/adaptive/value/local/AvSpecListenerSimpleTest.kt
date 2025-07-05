@@ -93,8 +93,9 @@ class AvSpecListenerSimpleTest {
         println("[DEBUG_LOG] Value was processed")
 
         // Verify the value was processed correctly
-        assertEquals(1, processedValues.size)
+        assertEquals(2, processedValues.size)
         assertEquals(42, processedValues[0])
+        assertEquals(42, processedValues[1])
 
         // Clean up
         listener.stop()

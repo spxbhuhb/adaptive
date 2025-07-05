@@ -5,6 +5,8 @@ import `fun`.adaptive.foundation.testing.test
 import `fun`.adaptive.lib.util.app.UtilModule
 import `fun`.adaptive.test.TestClientApplication.Companion.testClient
 import `fun`.adaptive.test.TestServerApplication.Companion.testServer
+import `fun`.adaptive.utility.getLock
+import `fun`.adaptive.utility.use
 import `fun`.adaptive.utility.waitForReal
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
@@ -205,10 +207,11 @@ class AvRemoteListSubscriberTest {
             module { ValueClientModule() }
         }
 
+        val lock = getLock()
         val result = mutableListOf<List<AvValue<String>>?>()
 
         test(backendAdapter = testClient.backend) {
-            val value = avRemoteList("marker", String::class).also { result += it }
+            val value = avRemoteList("marker", String::class).also { lock.use { result += it } }
             println(">$value<")
         }
 
@@ -217,7 +220,7 @@ class AvRemoteListSubscriberTest {
             this += AvValue(valueId, markersOrNull = setOf("marker"), spec = "Hello World!")
         }
 
-        waitForReal(2.seconds) { result.count { it != null && it.isNotEmpty() } == 1 }
+        waitForReal(2.seconds) { lock.use { result.count { it != null && it.isNotEmpty() } == 1 } }
 
         assertTrue(result[0]!!.isEmpty())
         assertEquals(result.last()?.first()?.spec, "Hello World!")

@@ -1,5 +1,6 @@
 package `fun`.adaptive.lib.util.url
 
+import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -10,6 +11,7 @@ import kotlin.toString
 class UrlTest {
 
     @Test
+    @JsName("parseURLWithFullComponents")
     fun `parse URL with full components`() {
         val urlString = "http://host/path/to/resource?key1=value1&key2=value2#tag|custom"
         val url = Url.parse(urlString)
@@ -22,6 +24,7 @@ class UrlTest {
     }
 
     @Test
+    @JsName("parseURLWithMissingOptionalComponents")
     fun `parse URL with missing optional components`() {
         val urlString = "ftp://host/resource"
         val url = Url.parse(urlString)
@@ -34,6 +37,7 @@ class UrlTest {
     }
 
     @Test
+    @JsName("parseURLWithEncodedComponents")
     fun `parse URL with encoded components`() {
         val urlString = "https://host/path%20one?key%201=value%202#some%20tag|custom%20data"
         val url = Url.parse(urlString)
@@ -46,6 +50,7 @@ class UrlTest {
     }
 
     @Test
+    @JsName("parseURLWithEmptyQueryParameters")
     fun `parse URL with empty query parameters`() {
         val urlString = "scheme://host/path?#|"
         val url = Url.parse(urlString)
@@ -58,6 +63,7 @@ class UrlTest {
     }
 
     @Test
+    @JsName("parseURLWithNoSchemeAndMinimalParts")
     fun `parse URL with no scheme and minimal parts`() {
         val urlString = "/a/b"
         val url = Url.parse(urlString)
@@ -70,6 +76,7 @@ class UrlTest {
     }
 
     @Test
+    @JsName("parseURLWithComplexQueryAndNoTagOrCustom")
     fun `parse URL with complex query and no tag or custom`() {
         val urlString = "custom://domain/path/to?x=1&y=2"
         val url = Url.parse(urlString)
@@ -82,6 +89,7 @@ class UrlTest {
     }
 
     @Test
+    @JsName("reinitializationDoesNotRetainPreviousState")
     fun `reinitialization does not retain previous state`() {
         val url1 = Url.parse("scheme://host/path1#tag1|custom1")
         val url2 = Url.parse("scheme://host/path2?param=value")
@@ -97,6 +105,7 @@ class UrlTest {
     }
 
     @Test
+    @JsName("parseInvalidURL")
     fun `parse invalid URL`() {
         val urlString = "scheme://host/path??#|"
 
@@ -108,6 +117,7 @@ class UrlTest {
     }
 
     @Test
+    @JsName("parseActualize")
     fun `parse actualize`() {
         val url = Url.parse("actualize:///cookbook/example/select-input-text")
         assertEquals("actualize", url.scheme)
@@ -118,6 +128,7 @@ class UrlTest {
     }
 
     @Test
+    @JsName("parseActualizeWithParameter")
     fun `parse actualize with parameter`() {
         val url = Url.parse("actualize://example-group?name=intInput")
         assertEquals("actualize", url.scheme)
@@ -128,6 +139,7 @@ class UrlTest {
     }
 
     @Test
+    @JsName("toStringProducesCorrectURLString")
     fun `toString produces correct URL string`() {
         // Test with all components
         val url1 = Url(
@@ -164,6 +176,7 @@ class UrlTest {
     }
 
     @Test
+    @JsName("parseAndToStringAreInverseOperations")
     fun `parse and toString are inverse operations`() {
         val originalUrls = listOf(
             "http://host/path/to/resource?key1=value1&key2=value2#tag|custom",

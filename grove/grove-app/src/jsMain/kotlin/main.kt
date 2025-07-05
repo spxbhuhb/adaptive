@@ -9,8 +9,6 @@ import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.grove.api.GroveRuntimeFragmentFactory
 import `fun`.adaptive.grove.fragment.GroveFragmentFactory
 import `fun`.adaptive.grove.groveCommon
-import `fun`.adaptive.grove.sheet.SheetFragmentFactory
-import `fun`.adaptive.grove.ufd.UfdPaneFactory
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.browser
@@ -37,8 +35,6 @@ fun main() {
                 SvgFragmentFactory,
                 GroveFragmentFactory,
                 GroveRuntimeFragmentFactory,
-                SheetFragmentFactory,
-                UfdPaneFactory
             )
 
             with(adapter.defaultTextRenderData) {
