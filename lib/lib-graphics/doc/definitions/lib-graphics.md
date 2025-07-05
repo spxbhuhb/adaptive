@@ -9,4 +9,4 @@ in the subproject.
 # See also
 
 - [lib-ui](def://)
-- [repository structure](guide://)
+- [Project structure](guide://)

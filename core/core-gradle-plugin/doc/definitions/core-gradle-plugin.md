@@ -7,6 +7,6 @@ The Gradle plugin applies the Kotlin [compiler plugin](def://) to source codes t
 
 ## See also
 
-- [repository structure](guide://)
+- [Project structure](guide://)
 - [core-core](def://)
 - [core-kotlin-plugin](def://)

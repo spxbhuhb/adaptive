@@ -209,6 +209,19 @@ class AstTest {
     }
 
     @Test
+    fun boldTextAsteriskHyphen() {
+        val source = "**bold-text**"
+        val expected = listOf(
+            MarkdownParagraph(
+                mutableListOf(MarkdownInline("bold-text", true, italic = false)),
+                false
+            )
+        )
+        val actual = ast(source)
+        assertEquals(expected.dump(), actual.dump())
+    }
+
+    @Test
     fun boldTextUnderscore() {
         val source = "__bold text__"
         val expected = listOf(
@@ -269,8 +282,7 @@ class AstTest {
                     MarkdownParagraph(
                         mutableListOf(
                             MarkdownInline("This is a quote", false, italic = false),
-                            MarkdownInline(" ", false, italic = false),
-                            MarkdownInline("and another quote", false, italic = false)
+                            MarkdownInline(" and another quote", false, italic = false)
                         ),
                         false
                     )
@@ -376,6 +388,18 @@ class AstTest {
                 + paragraph { "quote 1" }
             }
             + quote {
+                + paragraph { "quote 2" }
+            }
+        }
+    }
+
+    @Test
+    fun multiParagraphQuote() {
+        val source = "> quote 1\n>\n> quote 2"
+
+        source assertEquals {
+            + quote {
+                + paragraph(closed = true) { "quote 1" }
                 + paragraph { "quote 2" }
             }
         }

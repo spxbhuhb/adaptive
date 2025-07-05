@@ -1,9 +1,8 @@
-# What is a fragment
+# Fragment
 
-Fragments are the fundamental runtime units in Adaptive. Any typical Adaptive application builds
-one or more trees of these fragments to manage application state and rendering (in the case of UI applications).
+[fragment](def://?inline)
 
-There are more ways to define a fragment:
+There are many ways to define a fragment:
 
 - write a function with the `@Adaptive` annotation,
 - write a manual implementation class extending `AdaptiveFragment`,
@@ -301,11 +300,5 @@ val p : () -> Unit = {  }
 
 # See Also
 
-- [What is an instruction](guide://)
-- [Producer](guide://)
-
-# Conclusion
-
-Fragments provide the building blocks for reactive, declarative, and platform-independent UIs 
-in Adaptive Kotlin. Understanding their lifecycle, state management, and composition is key
-to using the framework effectively.
+- [Instructions](guide://)
+- [Producers](guide://)

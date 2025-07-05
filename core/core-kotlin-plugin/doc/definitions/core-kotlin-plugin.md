@@ -7,6 +7,6 @@ The [Gradle plugin](def://) applies the [compiler plugin](def://) to source code
 
 ## See also
 
-- [repository structure](guide://)
+- [Project structure](guide://)
 - [core-core](def://)
 - [core-gradle-plugin](def://)

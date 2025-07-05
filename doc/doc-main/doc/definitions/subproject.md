@@ -6,4 +6,4 @@ Many of these (but not all) are published as Maven artifacts.
 
 ## See Also
 
-- [Repository structure](guide://)
+- [Project structure](guide://)

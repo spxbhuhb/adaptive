@@ -13,16 +13,18 @@ import `fun`.adaptive.ui.generated.resources.arrow_right
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.loading.loading
+import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsToolOrNull
+import `fun`.adaptive.ui.mpw.fragments.contentPaneHeader
+import `fun`.adaptive.ui.mpw.fragments.valueBadges
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.textColors
-import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsToolOrNull
 import `fun`.adaptive.ui.viewbackend.viewBackend
 
 @Adaptive
 fun docContentPane(): AdaptiveFragment {
 
     val viewBackend = viewBackend(DocContentViewBackend::class)
-    val contentOrNull = fetch { viewBackend.getLoadedContent() }
+    val valueOrNull = fetch { viewBackend.getLoadedValue() }
 
     column {
         maxSize .. padding { 24.dp } .. backgrounds.surface
@@ -33,10 +35,10 @@ fun docContentPane(): AdaptiveFragment {
             column {
                 width { 680.dp }
 
-                loading(contentOrNull) { content ->
+                loading(valueOrNull) { value ->
 
-                    pageHeader(content)
-                    markdown(content.spec)
+                    pageHeader(value)
+                    markdown(value.spec.content)
 
                 }
             }
@@ -50,8 +52,9 @@ fun docContentPane(): AdaptiveFragment {
 fun pageHeader(value: GroveDocValue) {
     column {
         paddingBottom { 24.dp }
-        h2(value.nameLike)
+
         itemPath(value)
+        contentPaneHeader(value.nameLike, value.uuid, value) { }
     }
 }
 
@@ -62,9 +65,9 @@ fun itemPath(item: GroveDocValue) {
     row {
         alignItems.center
 
-        for (name in names.indices) {
-            text(names[name]) .. textColors.onSurfaceVariant
-            if (name < names.size - 1) {
+        for (index in names.dropLast(1).indices) {
+            text(names[index]) .. textColors.onSurfaceVariant
+            if (index < names.size - 2) {
                 icon(Graphics.arrow_right) .. textColors.onSurfaceVariant
             }
         }

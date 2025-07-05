@@ -11,8 +11,8 @@ import `fun`.adaptive.markdown.model.MarkdownQuote
 fun header1(content: () -> String) =
     MarkdownHeader(1, mutableListOf(MarkdownInline(content(), bold = false, italic = false)))
 
-fun paragraph(content: () -> String) =
-    MarkdownParagraph(mutableListOf(MarkdownInline(content(), bold = false, italic = false)), false)
+fun paragraph(closed : Boolean = false, content: () -> String) =
+    MarkdownParagraph(mutableListOf(MarkdownInline(content(), bold = false, italic = false)), closed)
 
 fun link(content: () -> String) =
     MarkdownParagraph(mutableListOf(MarkdownInline(content(), bold = false, italic = false, inlineLink = true)), false)

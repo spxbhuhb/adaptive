@@ -26,5 +26,7 @@ object GroveDocValueDomainDef : AvValueDomainDef() {
     )
 
     val exampleGroup = marker { "example-group" }
-
+    val groveDocToc = marker { "grove-doc-toc" }
+    val guide = marker { "guide" }
+    val definition = marker { "definition" }
 }

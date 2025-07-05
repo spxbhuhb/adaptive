@@ -5,6 +5,7 @@
 package `fun`.adaptive.markdown.compiler
 
 import `fun`.adaptive.markdown.model.*
+import kotlinx.coroutines.MainScope
 
 internal fun parseInternal(tokens: List<MarkdownToken>): List<MarkdownElement> {
 
@@ -143,7 +144,13 @@ private fun CompileContext.inline(start: Int, children: MutableList<MarkdownElem
         when (token.type) {
 
             MarkdownTokenType.Text, MarkdownTokenType.Hyphens -> {
-                children += MarkdownInline(token.text, bold, italic)
+                val last = children.lastOrNull()
+                if (last != null && last is MarkdownInline && last.isPlainText() && last.bold == bold && last.italic == italic) {
+                    children.removeLast()
+                    children += MarkdownInline(last.text + token.text, bold, italic)
+                } else {
+                    children += MarkdownInline(token.text, bold, italic)
+                }
             }
 
             MarkdownTokenType.Asterisks, MarkdownTokenType.Underscores -> {

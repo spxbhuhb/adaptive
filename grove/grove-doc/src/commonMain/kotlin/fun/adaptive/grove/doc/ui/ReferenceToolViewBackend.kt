@@ -1,5 +1,6 @@
 package `fun`.adaptive.grove.doc.ui
 
+import `fun`.adaptive.grove.doc.model.GroveDocSpec
 import `fun`.adaptive.grove.doc.model.GroveDocValue
 import `fun`.adaptive.grove.doc.model.groveDocDomain
 import `fun`.adaptive.resource.graphics.Graphics
@@ -28,7 +29,7 @@ class ReferenceToolViewBackend(
     override val paneDef: PaneDef
 ) : PaneViewBackend<ReferenceToolViewBackend>(), MultiPaneUrlResolver {
 
-    val tree = AvUiTreeViewBackend(workspace.backend, String::class, groveDocDomain.treeDef, ::selectedFun, ::sortChildrenFun)
+    val tree = AvUiTreeViewBackend(workspace.backend, GroveDocSpec::class, groveDocDomain.treeDef, ::selectedFun, ::sortChildrenFun)
 
     override fun getPaneActions(): List<AbstractPaneAction> {
         return listOf(
@@ -39,22 +40,25 @@ class ReferenceToolViewBackend(
 
     fun selectedFun(
         @Suppress("unused")
-        backend: AvUiTreeViewBackend<String>,
-        item: TreeItem<AvValue<String>>,
+        backend: AvUiTreeViewBackend<GroveDocSpec>,
+        item: TreeItem<GroveDocValue>,
         modifiers: Set<EventModifier>
     ) {
         workspace.addContent(groveDocDomain.node, GroveDocContentItem(docPathNames(item.data)), modifiers)
     }
 
     fun sortChildrenFun(
-        children: List<TreeItem<AvValue<String>>>
-    ): List<TreeItem<AvValue<String>>> {
+        children: List<TreeItem<GroveDocValue>>
+    ): List<TreeItem<GroveDocValue>> {
         return children.sortedBy { it.data.name?.lowercase() }
     }
 
     fun docPathNames(item: GroveDocValue): List<String> {
         return tree.treeSubscriber.pathNames(item)
     }
+
+    fun findGuideByName(name : String) : AvValue<GroveDocSpec>? =
+        tree.treeSubscriber.find { it.name == name && groveDocDomain.guide in it.markers }
 
     override fun resolve(navState: NavState): Pair<PaneContentType, PaneContentItem>? {
         if (navState.url.segmentsStartsWith("/documentation")) return null // FIXME hard coded URL segment

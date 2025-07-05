@@ -5,5 +5,5 @@ role-based authorization and session management.
 
 ## See also
 
-- [repository structure](guide://)
+- [Project structure](guide://)
 - [lib-app](def://)

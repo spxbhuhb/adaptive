@@ -5,4 +5,4 @@
 
 ## See also
 
-- [repository structure](guide://)
+- [Project structure](guide://)

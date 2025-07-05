@@ -1,4 +1,4 @@
-# What is an instruction
+# Instruction
 
 All [fragments](def://) carry a list of **instructions**, which can influence styling, layout, or behavior.
 These are commonly used in UI components (e.g., `text`, `row`) but are not limited to them.

@@ -1,11 +1,6 @@
-/*
- * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
- */
-
-package `fun`.adaptive.transform
+package `fun`.adaptive.markdown.transform
 
 import `fun`.adaptive.document.visitor.DocDumpVisitor.Companion.dump
-import `fun`.adaptive.markdown.transform.MarkdownToDocVisitor
 import kotlin.test.Test
 import kotlin.test.assertEquals
 

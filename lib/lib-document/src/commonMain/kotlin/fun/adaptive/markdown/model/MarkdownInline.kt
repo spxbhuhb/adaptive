@@ -26,5 +26,8 @@ class MarkdownInline(
         return transformer.visitInline(this, data)
     }
 
+    fun isPlainText() =
+        ! code && ! imageLink && ! inlineLink && ! referenceLink && ! referenceDef
+
 
 }

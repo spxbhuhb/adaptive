@@ -6,4 +6,4 @@ that does not belong to any other subprojects.
 ## See also
 
 - [Documentation system](guide://)
-- [Repository structure](guide://)
+- [Project structure](guide://)

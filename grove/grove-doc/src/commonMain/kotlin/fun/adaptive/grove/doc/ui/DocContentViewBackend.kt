@@ -28,7 +28,7 @@ class DocContentViewBackend(
         notifyListeners()
     }
 
-    suspend fun getLoadedContent() : AvValue<GroveDocSpec>? {
+    suspend fun getLoadedValue() : AvValue<GroveDocSpec>? {
         return service.getByPath(content.path)
     }
 

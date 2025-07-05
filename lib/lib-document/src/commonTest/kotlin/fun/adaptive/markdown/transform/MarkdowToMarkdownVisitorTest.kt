@@ -1,4 +1,4 @@
-package `fun`.adaptive.transform
+package `fun`.adaptive.markdown.transform
 
 import `fun`.adaptive.markdown.compiler.parseInternal
 import `fun`.adaptive.markdown.compiler.tokenizeInternal
@@ -33,6 +33,7 @@ class MarkdownToMarkdownVisitorTest {
         val tests = mapOf(
             "**bold text**" to "**bold text**",
             "_italic text_" to "_italic text_",
+            "**bold-text**" to "**bold-text**",
             "`code`" to "`code`",
             "**_bold italic_**" to "_**bold italic**_",
             "[link text](https://example.com)" to "[link text](https://example.com)"

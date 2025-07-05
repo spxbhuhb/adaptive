@@ -2,13 +2,17 @@ package `fun`.adaptive.grove.doc.lib.compiler
 
 import `fun`.adaptive.grove.doc.model.GroveDocExample
 import `fun`.adaptive.grove.doc.model.GroveDocExampleGroupSpec
+import `fun`.adaptive.grove.doc.model.GroveDocSpec
+import `fun`.adaptive.grove.doc.model.GroveDocValue
 import `fun`.adaptive.grove.doc.model.groveDocDomain
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
 import `fun`.adaptive.markdown.model.MarkdownHeader
 import `fun`.adaptive.markdown.transform.MarkdownToMarkdownVisitor.Companion.toMarkdown
 import `fun`.adaptive.persistence.absolute
 import `fun`.adaptive.persistence.readString
+import `fun`.adaptive.value.AvMarker
 import `fun`.adaptive.value.AvValue
+import kotlinx.datetime.Instant
 import kotlinx.io.files.Path
 
 class
@@ -20,7 +24,7 @@ GroveDocCompiler(
         get() = compilation.notifications
 
     val subprojects = mutableListOf<String>()
-    val docTreeNodes = mutableMapOf<String, AvValue<String>>()
+    val docTreeNodes = mutableMapOf<String, GroveDocValue>()
 
     fun compile() {
         collect()
@@ -67,7 +71,7 @@ GroveDocCompiler(
                         friendlyId = project,
                         name = project,
                         markersOrNull = setOf(groveDocDomain.project),
-                        spec = ""
+                        spec = GroveDocSpec(null, "")
                     )
                 }
 
@@ -77,7 +81,7 @@ GroveDocCompiler(
                             friendlyId = "$project/$group",
                             name = group,
                             markersOrNull = setOf(groveDocDomain.group),
-                            spec = ""
+                            spec = GroveDocSpec(null, "")
                         )
                     }.also {
                         docTreeNodes[it.friendlyId !!] = it
@@ -109,8 +113,16 @@ GroveDocCompiler(
         }
     }
 
+    class ContentAndHeader(
+        val content: String,
+        val lastUpdate : Instant?,
+        val markers : Set<AvMarker>
+    )
+
     fun process(type: String, path: Path) {
-        val inAst = MarkdownCompiler.ast(path.readString())
+        val contentAndHeader = readAndProcessHeader(path)
+
+        val inAst = MarkdownCompiler.ast(contentAndHeader.content)
 
         val trainingTransform = MarkdownResolveTransform(compilation, path, training = true)
         val trainingOutAst = inAst.map { it.transform(trainingTransform, null) }
@@ -137,13 +149,48 @@ GroveDocCompiler(
                     addTreeNode(groveDocDomain.treeDef, node.uuid) {
                         AvValue(
                             name = path.name.substringBeforeLast('.'),
-                            markersOrNull = setOf(type),
-                            spec = withoutTitle
+                            markersOrNull = setOf(type) + contentAndHeader.markers,
+                            spec = GroveDocSpec(
+                                lastUpdate = contentAndHeader.lastUpdate,
+                                content = withoutTitle
+                            )
                         )
                     }
                 }
             }
         }
+    }
+
+    val headerRegex = """(---(\n.*\n)---)""".toRegex()
+    val lastChangeRegex = """\n\s*lastChange: (.*)\s*\n""".toRegex()
+    val markerRegex = """\n\s*markers: (.*)\s*\n""".toRegex()
+
+    fun readAndProcessHeader(path: Path): ContentAndHeader {
+        val content = path.readString()
+
+        if (!content.startsWith("---")) {
+            return ContentAndHeader(content, null, emptySet())
+        }
+
+        val headerMatch = headerRegex.find(content)
+        if (headerMatch == null || headerMatch.range.first != 0) {
+            return ContentAndHeader(content, null, emptySet())
+        }
+
+        val headerText = headerMatch.groupValues[2]
+        val actualContent = content.substring(headerMatch.range.last + 1)
+
+        val lastChange = try {
+            lastChangeRegex.find(headerText)?.groupValues[1]?.let { Instant.parse(it) }
+        } catch (e: Exception) {
+            compilation.warn("Failed to parse lastChange date in ${path.absolute()}", listOf(path))
+            null
+        }
+
+        val markers = markerRegex.find(headerText)?.groupValues?.get(1)?.split(",")?.toSet() ?: emptySet()
+
+        return ContentAndHeader(actualContent, lastChange, markers)
+
     }
 
     fun transformExamples(out : MutableMap<String, List<GroveDocExample>>) {

@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.mpw.fragments
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.grid
 import `fun`.adaptive.ui.api.hover
@@ -23,7 +24,7 @@ fun toolPane(
         paneTitle(viewBackend, hover, theme)
 
         box {
-            theme.toolPaneContent
+            theme.toolPaneContent .. instructions()
             _fixme_adaptive_content()
         }
     }

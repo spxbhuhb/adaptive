@@ -10,4 +10,4 @@ some commonly used application components such as a list of users, password chan
 - [application](def://)
 - [What is an application](guide://)
 - [How to write an application](guid://)
-- [repository structure](guide://)
+- [Project structure](guide://)

@@ -1,4 +1,4 @@
-package `fun`.adaptive.transform
+package `fun`.adaptive.markdown.transform
 
 import `fun`.adaptive.document.model.*
 

@@ -61,7 +61,7 @@ class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : Grove
             UUID("add25359-772e-45d8-bdf1-2f53ea9e1634"),
             Strings.documentation,
             Graphics.documentation,
-            PanePosition.LeftMiddle,
+            PanePosition.LeftTop,
             DOC_TOOL
         )
 

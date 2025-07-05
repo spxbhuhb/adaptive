@@ -8,5 +8,5 @@ Gradle plugin from [core-gradle-plugin](def://).
 
 ## See also
 
-- [repository structure](guide://)
+- [Project structure](guide://)
 - [core-kotlin-plugin](def://)

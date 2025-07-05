@@ -9,4 +9,4 @@ as the application framework is usually not available for subprojects in the dep
 ## See also
 
 - [Documentation system](guide://)
-- [Repository structure](guide://)
+- [Project structure](guide://)

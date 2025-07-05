@@ -1,4 +1,4 @@
-# What is a producer
+# Producer
 
 Producers are functions that initialize or update state variables over time. They are most commonly used for:
 

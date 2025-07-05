@@ -3,6 +3,7 @@ package `fun`.adaptive.value.remote
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.value.AvMarker
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvSubscribeFun
 import `fun`.adaptive.value.AvValue
@@ -26,6 +27,14 @@ open class AvRemoteValueSubscriber<SPEC : Any>(
         condition: AvSubscribeCondition
     ) : this(
         { service, id -> listOf(condition).also { service.subscribe(it) } }, backend, specClass
+    )
+
+    constructor(
+        backend: BackendAdapter,
+        specClass: KClass<SPEC>,
+        marker: AvMarker
+    ) : this(
+        { service, id -> listOf(AvSubscribeCondition(marker = marker)).also { service.subscribe(it) } }, backend, specClass
     )
 
     constructor(
