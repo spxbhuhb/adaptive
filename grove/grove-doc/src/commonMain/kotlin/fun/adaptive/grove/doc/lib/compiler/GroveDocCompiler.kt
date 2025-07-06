@@ -8,6 +8,7 @@ import `fun`.adaptive.persistence.absolute
 import `fun`.adaptive.persistence.readString
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.AvMarker
+import `fun`.adaptive.value.AvStatus
 import `fun`.adaptive.value.AvValue
 import kotlinx.coroutines.channels.Channel
 import kotlinx.datetime.Instant
@@ -201,6 +202,7 @@ GroveDocCompiler(
     class ContentAndHeader(
         val content: String,
         val lastUpdate: Instant?,
+        val status: Set<AvStatus>?,
         val markers: Set<AvMarker>
     )
 
@@ -251,6 +253,7 @@ GroveDocCompiler(
                 if (existing != null) {
                     this += existing.copy(
                         name = path.name.substringBeforeLast('.'),
+                        statusOrNull = contentAndHeader.status,
                         markersOrNull = existing.markers + contentAndHeader.markers,
                         spec = spec
                     )
@@ -258,6 +261,7 @@ GroveDocCompiler(
                     addTreeNode(groveDocDomain.treeDef, groupValue.uuid) {
                         AvValue(
                             name = path.name.substringBeforeLast('.'),
+                            statusOrNull = contentAndHeader.status,
                             markersOrNull = setOf(group) + contentAndHeader.markers,
                             spec = spec
                         )
@@ -269,20 +273,21 @@ GroveDocCompiler(
         }
     }
 
-    val headerRegex = """(---(\n.*\n)---)""".toRegex()
+    val headerRegex = """(---([\s\S]*?)---)""".toRegex()
     val lastChangeRegex = """\n\s*lastChange: (.*)\s*\n""".toRegex()
+    val statusRegex = """\n\s*status: (.*)\s*\n""".toRegex()
     val markerRegex = """\n\s*markers: (.*)\s*\n""".toRegex()
 
     fun readAndProcessHeader(path: Path): ContentAndHeader {
         val content = path.readString()
 
         if (! content.startsWith("---")) {
-            return ContentAndHeader(content, null, emptySet())
+            return ContentAndHeader(content, null, null, emptySet())
         }
 
         val headerMatch = headerRegex.find(content)
         if (headerMatch == null || headerMatch.range.first != 0) {
-            return ContentAndHeader(content, null, emptySet())
+            return ContentAndHeader(content, null, null, emptySet())
         }
 
         val headerText = headerMatch.groupValues[2]
@@ -295,9 +300,11 @@ GroveDocCompiler(
             null
         }
 
+        val status = statusRegex.find(headerText)?.groupValues?.get(1)?.split(",")?.toSet()
+
         val markers = markerRegex.find(headerText)?.groupValues?.get(1)?.split(",")?.toSet() ?: emptySet()
 
-        return ContentAndHeader(actualContent, lastChange, markers)
+        return ContentAndHeader(actualContent, lastChange, status, markers)
     }
 
     // --------------------------------------------------------------------------------

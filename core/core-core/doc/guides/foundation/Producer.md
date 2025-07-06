@@ -1,19 +1,10 @@
+---
+status: outdated
+---
+
 # Producer
 
-Producers are functions that initialize or update state variables over time. They are most commonly used for:
-
-- Fetching data from suspend functions.
-- Polling values on a timer.
-- Providing external or computed values outside normal rendering cycles.
-
-Supported producer types:
-
-| Producer    | Use Case                                                                  |
-|-------------|---------------------------------------------------------------------------|
-| `fetch`     | Call a suspend function once and update when it returns.                  |
-| `poll`      | Call a suspend function on an interval, update on each result.            |
-| `periodic`  | Call a non-suspend function on an interval, update on each result.        |
-| `valueFrom` | Bind to an external value store.                                          |
+[producer](def://?inline)
 
 > [!IMPORTANT]
 > Indirect use of producers is **not supported**. Producers must be called directly.
@@ -21,13 +12,13 @@ Supported producer types:
 Invalid:
 
 ```kotlin
-val a = if (odd) fetch { 12 } else fetch { 13 }  // ❌ does not work
+val a = if (odd) fetch { 12 } else fetch { 13 }
 ```
 
 Valid:
 
 ```kotlin
-val a = fetch { if (odd) 12 else 13 }  // ✅ works correctly
+val a = fetch { if (odd) 12 else 13 }
 ```
 
 ## Built-in producers
@@ -78,31 +69,15 @@ val time = periodic(1.seconds) { now() }
 
 - Efficient for local or lightweight time-based updates.
 
-## ValueFrom
+## Observe
 
-Use `valueFrom` to get a value from an `Observable`:
+Use `observe` to get a value from an `Observable`:
 
-```kotlin
-package my.project.example.ui
+[observeExample](example://)
 
-import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.value.adaptiveStoreFor
-import `fun`.adaptive.foundation.value.valueFrom
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.text
-
-val valueStore = adaptiveStoreFor(12)
-
-@Adaptive
-fun exampleFun() {
-    val observed = valueFrom { valueStore }
-    text(observed) .. onClick { valueStore.value = valueStore.value + 1 }
-}
-```
-
-- `valueForm` adds itself as a listener for the observable (`valueStore` in the example).
+- `observe` adds itself as a listener for the observable (`observableOf` in the example).
 - Whenever the observable changes, it notifies the listeners.
-- In turn, `valueFrom` updates the state variable which triggers a fragment patching.
+- In turn, `observe` updates the state variable which triggers a fragment patching.
 
 ## See Also
 

@@ -1,4 +1,6 @@
-# What is the Adat metadata
+# Adat metadata
+
+[adat metadata](def://?inline)
 
 Adat metadata enables runtime reflection, schema-based UI generation, and transport-safe serialization.
 It abstracts the structure of a class into a compact, JSON-encoded format accessible at runtime.

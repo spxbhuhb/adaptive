@@ -1,4 +1,6 @@
-# How to transform fragments
+# Fragment transform
+
+[fragment transform](def://?inline)
 
 [Fragments](def://) and consequently [fragment trees](def://) can be transformed with
 [fragment transforms](def://). This is a rather advanced technique that lets [Adaptive](def://)

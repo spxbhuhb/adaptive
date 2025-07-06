@@ -10,6 +10,8 @@ import `fun`.adaptive.grove.doc.ui.*
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.AbstractWorkspace
+import `fun`.adaptive.ui.badge.BadgeTheme
+import `fun`.adaptive.ui.badge.BadgeTheme.Companion.badgeThemeMap
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.model.PaneDef
@@ -45,6 +47,7 @@ class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : Grove
         add(DOC_CONTENT, ::docContentPane)
         add(INLINE_DEFINITION, ::inlineDefinition)
 
+        badgeThemeMap[groveDocDomain.outdated] = BadgeTheme.error
         iconCache[groveDocDomain.node] = Graphics.menu_book
     }
 

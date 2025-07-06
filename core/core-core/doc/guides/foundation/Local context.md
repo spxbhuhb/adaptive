@@ -1,6 +1,8 @@
-# How to provide and use a local context
+# Local context
 
-[Local contexts](def://) are useful for providing data for [fragments](def://) without 
+[local context](def://?inline)
+
+These contexts are useful for providing data for [fragments](def://) without 
 passing the data through all fragments between the context provider and the context
 consumer.
 

@@ -9,6 +9,15 @@ markers: grove-doc-toc
 - [Project structure](guide://)
 - [Getting started](guide://)
 
+## Foundation
+
+- [Adapters](guide://)
+- [Fragments](guide://)
+- [Instructions](guide://)
+- [Producers](guide://)
+- [Local context](guide://)
+- [Fragment transform](guide://)
+
 ## Application
 
 - [Module definition](guide://)
@@ -17,15 +26,10 @@ markers: grove-doc-toc
   - [Writing a basic application](guide://)
 - [MPW application](def://)
   - [Writing an MPW application](guide://)
-  - [Admin tool plugin](guide://)
+  - [Admin tool](guide://)
 
 ## User interface
 
-- [Fundamentals](guide://)
-  - [Adapters](guide://)
-  - [Fragments](guide://)
-  - [Instructions](guide://)
-  - [Producers](guide://)
 - [Layout system](guide://)
 - [Resource subsystem](guide://)
 - [Layout fragments](guide://)

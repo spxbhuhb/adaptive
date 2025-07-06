@@ -1,4 +1,8 @@
-# What are the Adat functions
+---
+status: outdated
+---
+
+# Adat functions
 
 Adat classes provide a rich set of functions that go beyond standard Kotlin data classes. These include:
 

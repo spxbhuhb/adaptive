@@ -38,7 +38,6 @@ fun inlineDefinition(
 ): AdaptiveFragment {
 
     val viewBackend = viewBackend(DocContentViewBackend::class)
-    println(args.entries.joinToString("\n") { "${it.key} = ${it.value}" })
     val valueOrNull = fetch { viewBackend.getDefinition(args["name"] ?: "<no-name>") }
 
     loading(valueOrNull) { value ->

@@ -24,16 +24,16 @@ fun codeFence(
     grid(instructions()) {
         theme.codeFenceContainer .. fenceHeight
 
-        column {
-            theme.lineNumberColumn
-
-            for (index in lines.indices) {
-                box {
-                    theme.lineNumberContainer
-                    text(index) .. theme.lineNumberText
-                }
-            }
-        }
+//        column {
+//            theme.lineNumberColumn
+//
+//            for (index in lines.indices) {
+//                box {
+//                    theme.lineNumberContainer
+//                    text(index) .. theme.lineNumberText
+//                }
+//            }
+//        }
 
         column {
             theme.codeColumn

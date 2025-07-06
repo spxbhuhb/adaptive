@@ -1,10 +1,6 @@
 # Instruction
 
-All [fragments](def://) carry a list of **instructions**, which can influence styling, layout, or behavior.
-These are commonly used in UI components (e.g., `text`, `row`) but are not limited to them.
-
-By definition, the first state variable of **ALL** fragments is the list of instructions passed
-to that fragment.
+[instruction](def://?inline)
 
 > [!IMPORTANT]
 > Adding instructions to a fragment does **not** affect rendering unless passed to an actual UI fragment

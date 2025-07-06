@@ -55,7 +55,7 @@ class CodeFenceTheme {
         backgrounds.surface,
         paddingRight { 8.dp },
         verticalScroll,
-        colTemplate(48.dp, 1.fr),
+        colTemplate(/*48.dp,*/ 1.fr),
         cornerRadius { 2.dp }
     )
 
