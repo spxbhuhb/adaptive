@@ -61,8 +61,13 @@ class DocToolViewBackend(
     ) {
         val referenceTool = workspace.toolBackend(ReferenceToolViewBackend::class) ?: return
 
-        val name = item.data.removePrefix(groveDocDomain.guide + "-").removeSuffix(".md").decodeFromUrl()
-        val value = referenceTool.findGuideByName(name)
+        val name = item.data.removeSuffix(".md").decodeFromUrl()
+
+        val value = when {
+            name.startsWith(groveDocDomain.guide) -> referenceTool.findGuideByName(name.removePrefix(groveDocDomain.guide + "-"))
+            name.startsWith(groveDocDomain.definition) -> referenceTool.findDefinitionByName(name.removePrefix(groveDocDomain.definition + "-"))
+            else -> referenceTool.findGuideByName(name) ?: referenceTool.findDefinitionByName(name)
+        }
 
         if (value == null) {
             warningNotification("Cannot find guide: ${item.data}")

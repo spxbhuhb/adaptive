@@ -1,5 +1,6 @@
 package `fun`.adaptive.grove.doc.lib.compiler
 
+import `fun`.adaptive.grove.doc.app.GroveDocModuleMpw
 import `fun`.adaptive.lib.util.url.Url.Companion.parseUrl
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
 import `fun`.adaptive.markdown.model.*
@@ -154,24 +155,15 @@ class MarkdownResolveTransform(
             return MarkdownInline(link.name)
         }
 
-        return extractDef(path.readString())
-    }
+        val fragmentKey = GroveDocModuleMpw.INLINE_DEFINITION.encodeToUrl()
+        val name = path.name.removeSuffix(".md").encodeToUrl()
 
-    fun extractDef(content: String): MarkdownElement {
-        val fullAst = MarkdownCompiler.ast(content)
-
-        val title = fullAst.indexOfFirst { it is MarkdownHeader }
-        val seeAlso = fullAst.indexOfLast { it is MarkdownHeader }
-
-        val ast = fullAst.subList(title + 1, if (seeAlso != title) seeAlso else fullAst.size)
-
-        val last = ast.last()
-        if (last is MarkdownParagraph) {
-            last.closed = true
-        }
-
-        if (ast.size == 1) return ast.first()
-        return MarkdownElementGroup(ast.toMutableList())
+        return MarkdownParagraph(
+            mutableListOf(
+                MarkdownInline("[${link.name}](actualize://$fragmentKey?name=$name)")
+            ),
+            closed = true
+        )
     }
 
     fun inlineExampleGroup(link: Link): MarkdownElement {
@@ -240,7 +232,7 @@ class MarkdownResolveTransform(
 
             builder.append(prefix).append(currentPrefix).append(file.name).append("\n")
 
-            if (file.isDirectory) {
+            if (file.isDirectory && file.name != "values") {
                 dirToText(file, prefix + nextPrefix, builder, excludeNames)
             }
         }

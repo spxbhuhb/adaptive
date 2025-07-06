@@ -16,17 +16,24 @@ import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.ui.value.iconCache
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.encodeToUrl
 
 class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : GroveDocModule<FW, BW>() {
 
-    val DOC_TOOL: FragmentKey
-        get() = "grove:doc:doc-tool"
+    companion object {
+        val DOC_TOOL: FragmentKey
+            get() = "grove:doc:doc-tool"
 
-    val REF_TOOL: FragmentKey
-        get() = "grove:doc:reference-tool"
+        val REF_TOOL: FragmentKey
+            get() = "grove:doc:reference-tool"
 
-    val DOC_CONTENT: FragmentKey
-        get() = "grove:doc:content"
+        val DOC_CONTENT: FragmentKey
+            get() = "grove:doc:content"
+
+        val INLINE_DEFINITION: FragmentKey
+            get() = "grove:doc:inline-definition"
+
+    }
 
     override fun resourceInit() {
         application.stringStores += commonMainStringsStringStore0
@@ -36,6 +43,7 @@ class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : Grove
         add(DOC_TOOL, ::docToolPane)
         add(REF_TOOL, ::referenceToolPane)
         add(DOC_CONTENT, ::docContentPane)
+        add(INLINE_DEFINITION, ::inlineDefinition)
 
         iconCache[groveDocDomain.node] = Graphics.menu_book
     }

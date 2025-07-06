@@ -15,10 +15,13 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.badge.BadgeTheme
+import `fun`.adaptive.ui.badge.badge
 import `fun`.adaptive.ui.codefence.codeFence
 import `fun`.adaptive.ui.generated.resources.content_copy
 import `fun`.adaptive.ui.generated.resources.copied
 import `fun`.adaptive.ui.generated.resources.copyToClipboard
+import `fun`.adaptive.ui.generated.resources.example
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.instruction.dp
@@ -97,12 +100,16 @@ fun examplePane(
     column {
        maxWidth .. borders.outline .. cornerRadius { 4.dp }
 
-        column {
+        row {
             maxWidth .. borderBottom(colors.outline)
             paddingHorizontal { 16.dp } .. paddingVertical { 4.dp }
             backgroundGradient(position(0.5.dp, 0.dp), position(1.dp, 1.dp), colors.surface, colors.infoSurface)
             cornerTopRadius { 4.dp }
+            spaceBetween
+            alignItems.center
+
             h3(example.name)
+            badge(Strings.example.lowercase(), theme = BadgeTheme.info)
         }
 
         if (example.explanation.isNotEmpty()) {

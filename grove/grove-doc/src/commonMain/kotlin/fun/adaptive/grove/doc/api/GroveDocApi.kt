@@ -11,4 +11,6 @@ interface GroveDocApi {
 
     suspend fun getExampleGroup(group : String) : List<GroveDocExample>
 
+    suspend fun getDefinition(name : String) : GroveDocValue?
+
 }

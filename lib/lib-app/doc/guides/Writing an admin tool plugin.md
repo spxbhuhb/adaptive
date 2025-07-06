@@ -1,6 +1,6 @@
 # Writing an admin tool plugin
 
-To write an [admin tool plugin](def://):
+[admin tool plugin](def://?inline)
 
 1. Write the [view backend](def://) (optional)
 2. Write the [UI fragment](def://)

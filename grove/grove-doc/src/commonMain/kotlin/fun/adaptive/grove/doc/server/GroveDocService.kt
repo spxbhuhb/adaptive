@@ -37,4 +37,11 @@ class GroveDocService : ServiceImpl<GroveDocService>(), GroveDocApi {
         return values.firstOrNull<GroveDocExampleGroupSpec>(groveDocDomain.exampleGroup + ":" + group)?.spec?.examples ?: emptyList()
     }
 
+    override suspend fun getDefinition(name: String): GroveDocValue? {
+        publicAccess()
+
+        return values.firstOrNull<GroveDocSpec>(groveDocDomain.node) {
+            it.name == name && groveDocDomain.definition in it.markers
+        }
+    }
 }

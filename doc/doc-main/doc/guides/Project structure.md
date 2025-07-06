@@ -42,18 +42,17 @@ site
 
 ## Core
 
----
 [core-core](def://?inline)
----
+
 [core-gradle-plugin](def://?inline)
----
+
 [core-kotlin-plugin](def://?inline)
----
+
 [core-ui](def://?inline)
 
 ## Doc
 
-[doc-examples](def://?inline)
+[doc-example](def://?inline)
 
 [doc-main](def://?inline)
 

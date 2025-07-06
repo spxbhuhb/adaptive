@@ -11,6 +11,7 @@ import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.grove.doc.app.GroveDocModuleServer
 import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.lib.util.app.UtilModule
+import `fun`.adaptive.persistence.ensure
 import `fun`.adaptive.value.app.ValueServerModule
 import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.io.files.Path
@@ -23,7 +24,7 @@ fun main() {
 
     jvmServer {
         module { UtilModule() }
-        module { ValueServerModule(FilePersistence(Path("./var/values"))) }
+        module { ValueServerModule(FilePersistence(Path("./var/values").ensure())) }
         module { NoAuthServerModule() }
         module { KtorJvmServerModule() }
         module { GroveDocModuleServer() }

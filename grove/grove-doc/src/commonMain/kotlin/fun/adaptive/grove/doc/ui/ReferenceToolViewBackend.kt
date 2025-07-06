@@ -60,6 +60,9 @@ class ReferenceToolViewBackend(
     fun findGuideByName(name : String) : AvValue<GroveDocSpec>? =
         tree.treeSubscriber.find { it.name == name && groveDocDomain.guide in it.markers }
 
+    fun findDefinitionByName(name : String) : AvValue<GroveDocSpec>? =
+        tree.treeSubscriber.find { it.name == name && groveDocDomain.definition in it.markers }
+
     override fun resolve(navState: NavState): Pair<PaneContentType, PaneContentItem>? {
         if (navState.url.segmentsStartsWith("/documentation")) return null // FIXME hard coded URL segment
         return groveDocDomain.node to GroveDocContentItem(navState.url.segments.drop(2))

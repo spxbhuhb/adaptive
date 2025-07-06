@@ -1,9 +1,8 @@
 # Layout system
 
-[UI layouts](def://) in [Adaptive](def://) perform the layout calculations necessary to 
-position [UI fragments](def://) with exact coordinates and sizes.
+[ui layout](def://?inline)
 
-They are typically independent of the layouts provided by the underlying [actual UI](def://).
+Adaptive layouts are typically independent of the layouts provided by the underlying [actual UI](def://).
 
 One goal of the layout system is to make sure that [applications](def://) written with [Adaptive](def://)
 have the very same look and feel on all [platforms](def://).

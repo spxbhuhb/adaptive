@@ -32,4 +32,8 @@ class DocContentViewBackend(
         return service.getByPath(content.path)
     }
 
+    suspend fun getDefinition(name : String) : AvValue<GroveDocSpec>? {
+        return service.getDefinition(name)
+    }
+
 }

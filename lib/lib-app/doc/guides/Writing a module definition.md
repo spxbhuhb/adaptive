@@ -1,6 +1,6 @@
 # Writing a module definition
 
-[Application module definitions](def://) define and register features offered by [application modules](def://).
+[application module definition](def://?inline)
 
 In this guide we use `Example` as module name.
 

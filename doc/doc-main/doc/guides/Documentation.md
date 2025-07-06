@@ -11,13 +11,13 @@ markers: grove-doc-toc
 
 ## Application
 
-- [What is an application](guide://)
-- [Writing an application](guide://)
-- [Writing a basic application](guide://)
-- [Writing an MPW application](guide://)
-- [Writing a module definition](guide://)
-- [Writing an admin tool plugin](guide://)
+- [Module definition](guide://)
 - [Built-in lib-app features](guide://)
+- [Basic application](def://)
+  - [Writing a basic application](guide://)
+- [MPW application](def://)
+  - [Writing an MPW application](guide://)
+  - [Admin tool plugin](guide://)
 
 ## User interface
 
