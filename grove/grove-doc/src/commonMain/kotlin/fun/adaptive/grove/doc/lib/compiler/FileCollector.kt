@@ -86,7 +86,7 @@ internal class FileCollector(
         }
     }
 
-    private fun putFile(
+    fun putFile(
         collection : MutableMap<String, MutableList<Path>>,
         name : String,
         path : Path,

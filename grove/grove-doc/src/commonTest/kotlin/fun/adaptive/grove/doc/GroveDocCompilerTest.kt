@@ -21,7 +21,7 @@ class GroveDocCompilerTest {
         val compilation = GroveDocCompilation(
             inPath = inPath,
             mdOutPath = testPath.resolve("out"),
-            valuesOutPath = testPath.resolve("out/values")
+            values = testPath.resolve("out/values")
         )
 
         val compiler = GroveDocCompiler(compilation)
@@ -186,7 +186,7 @@ class GroveDocCompilerTest {
         exampleFile.write(exampleContent)
 
         // Call the getExample method
-        val example = compiler.getExample(exampleFile)
+        val example = compiler.processExample(exampleFile)
 
         // Verify the extracted components
         assertEquals("Example Name", example.name)

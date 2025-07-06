@@ -9,6 +9,7 @@ import `fun`.adaptive.value.model.AvTreeDef
 import `fun`.adaptive.value.operation.AvoAdd
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
 import `fun`.adaptive.value.operation.AvoRemove
+import kotlin.reflect.KClass
 
 class AvComputeContext(
     val store: AvValueStore,
@@ -613,6 +614,43 @@ class AvComputeContext(
     ): List<AvValueId> {
         val listValue = store.unsafeRefOrNull(parentId, treeDef.childListRefLabel) ?: return emptyList()
         return (listValue.spec as AvRefListSpec).refs
+    }
+
+    /**
+     * Returns a list of child values for the given parent ID in the tree structure.
+     * If the parent has no children or the child list reference doesn't exist, it returns an empty list.
+     *
+     * @param parentId The ID of the parent node to get children for
+     * @param treeDef The tree definition containing reference labels and markers
+     *
+     * @return List of values representing the children of the given parent
+     *
+     * @throws IllegalStateException  if any of the children has a spec that is not [SPEC]
+     */
+    inline fun <reified SPEC : Any> getTreeChildren(
+        treeDef: AvTreeDef,
+        parentId: AvValueId
+    ): List<AvValue<SPEC>> =
+        getTreeChildren(treeDef, parentId, SPEC::class)
+
+    /**
+     * Returns a list of child values for the given parent ID in the tree structure.
+     * If the parent has no children or the child list reference doesn't exist, it returns an empty list.
+     *
+     * @param parentId The ID of the parent node to get children for
+     * @param treeDef The tree definition containing reference labels and markers
+     *
+     * @return List of values representing the children of the given parent
+     *
+     * @throws IllegalStateException  if any of the children has a spec that is not [SPEC]
+     */
+    fun <SPEC : Any> getTreeChildren(
+        treeDef: AvTreeDef,
+        parentId: AvValueId,
+        specClass : KClass<SPEC>
+    ): List<AvValue<SPEC>> {
+        val listValue = store.unsafeRefOrNull(parentId, treeDef.childListRefLabel) ?: return emptyList()
+        return (listValue.spec as AvRefListSpec).refs.map { store.unsafeGet(it).checkSpec(specClass) }
     }
 
     /**

@@ -1,15 +1,13 @@
 package `fun`.adaptive.grove.doc
 
 import `fun`.adaptive.grove.doc.lib.compiler.groveDocMain
-import `fun`.adaptive.utility.waitFor
+import `fun`.adaptive.persistence.deleteRecursively
+import `fun`.adaptive.utility.DangerousApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.io.files.Path
 import kotlin.io.path.ExperimentalPathApi
-import kotlin.io.path.Path
-import kotlin.io.path.absolute
-import kotlin.io.path.deleteRecursively
-import kotlin.time.Duration.Companion.seconds
 
-@OptIn(ExperimentalPathApi::class)
+@OptIn(ExperimentalPathApi::class, DangerousApi::class)
 fun main(args: Array<String>) {
 
     val effectiveArgs = if (args.isEmpty()) {
@@ -28,9 +26,7 @@ fun main(args: Array<String>) {
         args
     }
 
-    groveDocMain(effectiveArgs).apply {
-        runBlocking {
-            waitFor(10.seconds) { valueWorker.isIdle }
-        }
+    runBlocking {
+        groveDocMain(effectiveArgs)
     }
 }

@@ -5,6 +5,7 @@ import kotlinx.datetime.Instant
 
 @Adat
 class GroveDocSpec(
+    val repoPath : String,
     val lastUpdate : Instant?,
     val content : String
 )

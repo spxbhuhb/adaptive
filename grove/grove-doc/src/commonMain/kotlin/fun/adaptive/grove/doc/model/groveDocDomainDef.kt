@@ -7,7 +7,7 @@ val groveDocDomain
 
 object GroveDocValueDomainDef : AvValueDomainDef() {
 
-    val project = marker { "project" }
+    val subProject = marker { "subProject" }
     val group = marker { "group" }
 
     val node = marker { "grove-doc-node" }

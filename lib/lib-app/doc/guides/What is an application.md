@@ -1,4 +1,6 @@
-# What is an application
+# Applications
+
+[application](def://?inline)
 
 [lib-app](def://) provides a framework for client and server [applications](def://) in a somewhat simple, well-defined way.
 

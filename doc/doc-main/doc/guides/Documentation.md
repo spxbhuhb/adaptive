@@ -12,6 +12,12 @@ markers: grove-doc-toc
 ## Application
 
 - [What is an application](guide://)
+- [Writing an application](guide://)
+- [Writing a basic application](guide://)
+- [Writing an MPW application](guide://)
+- [Writing a module definition](guide://)
+- [Writing an admin tool plugin](guide://)
+- [Built-in lib-app features](guide://)
 
 ## User interface
 
@@ -44,10 +50,14 @@ markers: grove-doc-toc
   - [Tree](guide://)
 - [Development tools](guide://)
 
-## Data models
+## Data
 
-- [Adat classes](guide://)
-- [Value store](guide://)
+- [Adat](def://)
+  - [Adat classes](guide://)  
+  - [Adat functions](guide://)
+  - [Adat metadata](guide://)
+  - [Writing an Adat class](guide://)
+- [Value](guide://)
 - [Serialization](guide://)
 
 ## Communication

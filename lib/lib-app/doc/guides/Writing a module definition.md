@@ -1,4 +1,4 @@
-# Writing an application module definition
+# Writing a module definition
 
 [Application module definitions](def://) define and register features offered by [application modules](def://).
 
@@ -11,9 +11,9 @@ This is a convention, you may tailor it as needed.
 <module-package>
 └── app
     ├── ExampleModule        - registers data models and resources
-    ├── ExampleClientModule  - extends ExampleModule, registers frontent fragments
-    ├── ExampleServerModule  - extends ExampleModule, configures server
-    └── ExampleWsModule      - extends ExampleClientModule, registers multi-pane workspace components
+    ├── ExampleModuleServer  - extends ExampleModule, configures server
+    ├── ExampleModuleClient  - extends ExampleModule, registers frontent fragments
+    └── ExampleModuleMpw     - extends ExampleModuleClient, registers multi-pane workspace components
 ```
 
 ## Data model and resource registration
@@ -35,7 +35,7 @@ example shows to start the loading.
 
 `ExampleModule` sets up wire formats for Adat-based serialization and application resources.
 
-Both `ExampleClientModule` and `ExampleServerModule` modules extend `ExampleModule` to ensure
+Both `ExampleModuleClient` and `ExampleModuleServer` modules extend `ExampleModule` to ensure
 consistent behavior across environments.
 
 `commonMainStringsStringStore0` is imported from the package of generated [resources](def://). See
@@ -45,4 +45,5 @@ consistent behavior across environments.
 
 ## Server configuration
 
-This class handles back-end-specific registration. It ensures that services (like REST endpoints) and workers (e.g., cron jobs) are initialized when the server starts.
+This class handles back-end-specific registration. It ensures that services (like REST endpoints) and
+workers (e.g., cron jobs) are initialized when the server starts.

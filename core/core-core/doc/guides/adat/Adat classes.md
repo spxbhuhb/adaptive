@@ -1,7 +1,6 @@
-# What is an Adat class
+# Adat classes
 
-An **Adat class** is a Kotlin class annotated with `@Adat`, enabling the Adaptive compiler plugin to
-generate rich runtime capabilities. These include:
+[adat class](def://?inline)
 
 - serialization/deserialization,
 - JSON-based metadata and validation descriptors,
