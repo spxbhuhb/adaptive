@@ -1,6 +1,4 @@
-# How to implement a content pane
-
-## Definition
+# Writing a content pane
 
 [content pane](def://?inline)
 

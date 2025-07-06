@@ -1,4 +1,6 @@
-# How to write a UI fragment
+# Writing a UI fragment
+
+[ui fragment](def://?inline)
 
 Writing a [UI fragment](def://) in [Adaptive](def://) is straightforward,
 as most fragments are simple Kotlin functions with the `@Adaptive` annotation.

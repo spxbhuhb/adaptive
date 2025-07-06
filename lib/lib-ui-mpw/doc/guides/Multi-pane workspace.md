@@ -1,7 +1,6 @@
-# What is a multi-pane workspace
+# Multi-pane workspace
 
-A [multi-pane workspace](def://) is a complex UI fragment capable of managing multiple
-tools and content views/editors together.
+[multi-pane workspace](def://?inline)
 
 Think of Intellij user interface, that functionality is implemented by [MultiPaneWorkspace](class://).
 

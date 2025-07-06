@@ -1,6 +1,6 @@
-# What is a value
+# Value
 
-A [value](def://) is an instance of the [AvValue](class://), typically stored in a [value store](def://).
+[value](def://?inline)
 
 [AvValue](class://) consists of two parts:
 

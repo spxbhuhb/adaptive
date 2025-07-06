@@ -1,6 +1,4 @@
-# How to implement a tool pane
-
-## Definition
+# Writing a tool pane
 
 [tool pane](def://?inline)
 

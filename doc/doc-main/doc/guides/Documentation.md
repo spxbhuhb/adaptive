@@ -22,19 +22,27 @@ markers: grove-doc-toc
 
 - [Module definition](guide://)
 - [Built-in lib-app features](guide://)
-- [Basic application](def://)
-  - [Writing a basic application](guide://)
-- [MPW application](def://)
-  - [Writing an MPW application](guide://)
+- [Basic client](def://)
+  - [Writing a basic client](guide://)
+- [MPW client](def://)
+  - [Writing an MPW client](guide://)
   - [Admin tool](guide://)
+- [Server](guide://)
+  - [Writing a service](guide://)
+  - [Writing a worker](guide://)
 
 ## User interface
 
+- [Writing a UI fragment](guide://)
+- [Resource system](guide://)
 - [Layout system](guide://)
-- [Resource subsystem](guide://)
-- [Layout fragments](guide://)
+  - [Built-in UI container fragments](guide://)
+  - [Built-in layout instructions](guide://)
   - [Split pane](guide://)
   - [Modal popup](guide://)
+- [Style system](guide://) 
+  - [Built-in decoration instructions](guide://)
+  - [Themes](guide://)
 - [Basic fragments](guide://)
   - [Badge](guide://) 
   - [Button](guide://)
@@ -52,6 +60,10 @@ markers: grove-doc-toc
 - [High-level fragments](guide://)
   - [Form](guide://)
   - [Tree](guide://)
+- [Multi-pane workspace](guide://) 
+  - [Writing a tool pane](guide://)
+  - [Writing a content pane](guide://)
+  - [Writing a value tree browser](guide://)
 - [Development tools](guide://)
 
 ## Data
@@ -62,12 +74,24 @@ markers: grove-doc-toc
   - [Adat metadata](guide://)
   - [Writing an Adat class](guide://)
 - [Value](guide://)
-- [Serialization](guide://)
+  - [Value store](guide://)
+  - [Value domain](guide://)
+  - [Value trees](guide://)
+  - [Embedded value server](guide://)
+  - [Built-in persistence providers](guide://)
+  - [Built-in value subscribers](guide://)
+  - [Execute blocks](guide://)
+  - [Subscribing from a service](guide://)
+- [WireFormat](guide://)
+  - [Low-level JSON](guide://)
+  - [JSON transform](guide://)
+  - [Protobuf implementation details](guide://)
 
 ## Communication
 
-- [Services](guide://)
-- [Ktor](guide://)
+- [Service context](guide://)
+- [Service transport](guide://)
+- [Writing a service](guide://)
 
 ## Impressum
 

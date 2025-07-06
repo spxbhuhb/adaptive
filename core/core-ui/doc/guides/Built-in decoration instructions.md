@@ -1,3 +1,7 @@
+---
+status: outdated
+---
+
 # Built-in decoration instructions
 
 ## Border

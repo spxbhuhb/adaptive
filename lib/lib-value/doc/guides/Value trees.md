@@ -1,5 +1,7 @@
 # Building value trees
 
+[value tree](def://?inline)
+
 [Values](def://) in a [value store](def://) can be organized into [value trees](def://).
 
 This relies on the proper uses of [markers](def://), [reference labels](def://) and
@@ -101,8 +103,8 @@ properties and functions.
 
 See the class used for the unit tests for an example:
 
-- [TestTreeSubscriber](example://)
-- [TestTreeItem](example://)
+- [AvTreeSubscriberTest](class://)
+- [TestTreeItem](class://)
 
 ## Displaying value trees
 

@@ -1,6 +1,6 @@
 # What is a value store
 
-Value stores are generic data containers that store [values](def://).
+[value store](def://?inline)
 
 Each value is an instance of the [AvValue](class://) class.
 

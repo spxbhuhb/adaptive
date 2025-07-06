@@ -1,15 +1,6 @@
----
-title: Transform a JSON file
-tags: [core-core, json, transform, file]
-type: procedural
----
+# JSON transform
 
-# Summary
-
-This document describes how to load, process and save the content of a JSON file using the 
-JSON transformer provided by Adaptive.
-
-# Objective
+Adaptive provides visitors and transformers to inspect and process JSON structures.
 
 Load, modify and save the content of a JSON file with the following original content:
 
@@ -51,8 +42,6 @@ class ExampleJsonTransformer : JsonTransformerVoidWithContext() {
 ```
 
 ### Explanation
-
-Adaptive provides visitors and transformers to inspect and process JSON structures.
 
 This transformer checks if the given `JsonNumber` instance is part of a `JsonObject` in an object with the key `age`, if so, 
 changes the number to `13`.

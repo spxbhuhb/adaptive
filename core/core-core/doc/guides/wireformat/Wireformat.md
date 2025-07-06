@@ -1,6 +1,6 @@
-# Introduction to Wireformat
+# Wireformat
 
-[Wireformat](def://) provides serialization for [services](def://) and [adat classes](def://). 
+[Wireformat](def://?inline)
 
 WireFormat supports [JSON](https://json.org) and [Protocol Buffers](https://protobuf.dev) out of the box, 
 protobuf being the default, JSON is provided for the faint-hearted.

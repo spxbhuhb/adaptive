@@ -1,4 +1,4 @@
-# How to implement tool and content panes for a value tree
+# Writing a value tree browser
 
 Implementing a [tool pane](def://) and [content pane](def://) for a [value tree](def://) is quite
 straightforward:

@@ -1,6 +1,6 @@
 ## Built-in UI container fragments
 
-[core-ui](def://) provides a few commonly used [ui container fragments](def://):
+[ui container fragment](def://?inline):
 
 - [box](fragment://)
 - [flowBox](fragment://)
