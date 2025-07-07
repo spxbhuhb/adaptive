@@ -102,6 +102,18 @@ class AvComputeContext(
             ?: throw NoSuchElementException("cannot find item for id $valueId")
 
     /**
+     * Gets a value from the store with the specified ID and type.
+     *
+     * @param valueId The ID of the value to retrieve
+     * @return The value cast to the specified type T
+     * @throws NoSuchElementException if no value exists with the given ID
+     * @throws IllegalStateException if the `spec` of the retrieved value is not of type [T]
+     */
+    fun <SPEC : Any> get(valueId: AvValueId, specClass : KClass<SPEC>): AvValue<SPEC> =
+        getOrNullGen(valueId)?.checkSpec(specClass)
+            ?: throw NoSuchElementException("cannot find item for id $valueId")
+
+    /**
      * Gets a value from the store with the specified ID, or null if it doesn't exist.
      *
      * @param valueId The ID of the value to retrieve

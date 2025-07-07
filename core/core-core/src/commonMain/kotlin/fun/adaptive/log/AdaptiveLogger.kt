@@ -21,18 +21,18 @@ abstract class AdaptiveLogger {
     // Fine (a.k.a. debug, trace)
     // --------------------------------------------------------------------------------
 
-    abstract fun rawFine(message: String? = null, exception: Exception? = null)
+    abstract fun rawFine(message: String? = null, throwable: Throwable? = null)
 
     fun fine(message: String) {
         if (level == LogLevel.Fine) rawFine(message)
     }
 
-    fun fine(exception: Exception) {
-        if (level == LogLevel.Fine) rawFine(exception.message, exception)
+    fun fine(throwable: Throwable) {
+        if (level == LogLevel.Fine) rawFine(throwable.message, throwable)
     }
 
-    fun fine(message: String? = null, exception: Exception? = null) {
-        if (level == LogLevel.Fine) rawFine(message, exception)
+    fun fine(message: String? = null, throwable: Throwable? = null) {
+        if (level == LogLevel.Fine) rawFine(message, throwable)
     }
 
     inline fun fine(message: () -> String) {
@@ -43,18 +43,18 @@ abstract class AdaptiveLogger {
     // Info
     // --------------------------------------------------------------------------------
 
-    abstract fun rawInfo(message: String? = null, exception: Exception? = null)
+    abstract fun rawInfo(message: String? = null, throwable: Throwable? = null)
 
     fun info(message: String) {
         if (level <= LogLevel.Info) rawInfo(message)
     }
 
-    fun info(exception: Exception) {
-        if (level <= LogLevel.Info) rawInfo(exception.message, exception)
+    fun info(throwable: Throwable) {
+        if (level <= LogLevel.Info) rawInfo(throwable.message, throwable)
     }
 
-    fun info(message: String? = null, exception: Exception? = null) {
-        if (level <= LogLevel.Info) rawInfo(message, exception)
+    fun info(message: String? = null, throwable: Throwable? = null) {
+        if (level <= LogLevel.Info) rawInfo(message, throwable)
     }
 
     inline fun info(message: () -> String) {
@@ -65,22 +65,22 @@ abstract class AdaptiveLogger {
     // Warning
     // --------------------------------------------------------------------------------
 
-    abstract fun rawWarning(message: String? = null, exception: Exception? = null)
+    abstract fun rawWarning(message: String? = null, throwable: Throwable? = null)
 
     fun warning(message: String) {
         if (level <= LogLevel.Warning) rawWarning(message)
     }
 
-    fun warning(exception: Exception) {
-        if (level <= LogLevel.Warning) rawWarning(exception.message, exception)
+    fun warning(throwable: Throwable) {
+        if (level <= LogLevel.Warning) rawWarning(throwable.message, throwable)
     }
 
-    fun warning(message: String, exception: Exception) {
-        if (level <= LogLevel.Warning) rawWarning(message, exception)
+    fun warning(message: String, throwable: Throwable) {
+        if (level <= LogLevel.Warning) rawWarning(message, throwable)
     }
 
-    inline fun warning(exception: Exception? = null, message: () -> String) {
-        if (level <= LogLevel.Warning) rawWarning(message(), exception)
+    inline fun warning(throwable: Throwable? = null, message: () -> String) {
+        if (level <= LogLevel.Warning) rawWarning(message(), throwable)
     }
 
     inline fun AdaptiveLogger.warning(message: () -> String) {
@@ -91,18 +91,18 @@ abstract class AdaptiveLogger {
     // Error
     // --------------------------------------------------------------------------------
 
-    abstract fun rawError(message: String? = null, exception: Exception? = null)
+    abstract fun rawError(message: String? = null, throwable: Throwable? = null)
 
-    inline fun error(exception: Exception, message: () -> String) {
-        error(message(), exception)
+    inline fun error(throwable: Throwable, message: () -> String) {
+        error(message(), throwable)
     }
 
-    fun error(exception: Exception) {
-        if (level <= LogLevel.Error) rawError(exception.message, exception)
+    fun error(throwable: Throwable) {
+        if (level <= LogLevel.Error) rawError(throwable.message, throwable)
     }
 
-    fun error(message: String, exception: Exception? = null) {
-        if (level <= LogLevel.Error) rawError(message, exception)
+    fun error(message: String, throwable: Throwable? = null) {
+        if (level <= LogLevel.Error) rawError(message, throwable)
     }
 
     inline fun error(message: () -> String) {
@@ -113,7 +113,7 @@ abstract class AdaptiveLogger {
     // Fatal
     // --------------------------------------------------------------------------------
 
-    abstract fun fatal(message: String, exception: Exception? = null): Nothing
+    abstract fun fatal(message: String, throwable: Throwable? = null): Nothing
 
     fun enableFine(): AdaptiveLogger {
         level = LogLevel.Fine

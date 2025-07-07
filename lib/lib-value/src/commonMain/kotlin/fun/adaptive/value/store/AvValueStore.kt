@@ -5,6 +5,7 @@ import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.value.*
+import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.value.persistence.NoPersistence
@@ -660,6 +661,17 @@ open class AvValueStore(
             values.values.filter(filterFun)
         }
 
+    fun get(marker: AvMarker): List<AvValue<*>> =
+        lock.use {
+            markerIndices[marker]?.mapNotNull { values[it] } ?: emptyList()
+        }
+
+    fun <SPEC : Any> get(marker: AvMarker, specClass : KClass<SPEC>): List<AvValue<SPEC>> =
+        lock.use {
+            markerIndices[marker]?.mapNotNull { values[it]?.checkSpec(specClass) } ?: emptyList()
+        }
+
+    @Deprecated("Use get instead", ReplaceWith("get(marker)"))
     fun queryByMarker(marker: AvMarker): List<AvValue<*>> =
         lock.use {
             markerIndices[marker]?.mapNotNull { values[it] } ?: emptyList()

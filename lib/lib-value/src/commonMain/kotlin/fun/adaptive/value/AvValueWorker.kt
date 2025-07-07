@@ -8,6 +8,7 @@ import `fun`.adaptive.value.operation.*
 import `fun`.adaptive.value.persistence.AbstractValuePersistence
 import `fun`.adaptive.value.persistence.NoPersistence
 import `fun`.adaptive.value.store.AvValueStore
+import kotlin.reflect.KClass
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
@@ -176,23 +177,32 @@ open class AvValueWorker(
     inline fun <reified SPEC : Any> get(valueId: AvValueId): AvValue<SPEC> =
         store.get(valueId).checkSpec<SPEC>()
 
+    fun <SPEC : Any> get(valueId: AvValueId, specClass : KClass<SPEC>): AvValue<SPEC> =
+        store.get(valueId).checkSpec(specClass)
+
     inline fun <reified SPEC : Any> getOrNull(valueId: AvValueId): AvValue<SPEC>? =
         store.getOrNull(valueId)?.checkSpec<SPEC>()
 
     inline fun <reified SPEC : Any> get(marker: AvMarker): List<AvValue<SPEC>> =
-        store.queryByMarker(marker).map { it.checkSpec<SPEC>() }
+        store.get(marker, SPEC::class)
+
+    fun <SPEC : Any> get(marker: AvMarker, specClass : KClass<SPEC>): List<AvValue<SPEC>> =
+        store.get(marker, specClass)
 
     inline fun <reified SPEC : Any> first(marker: AvMarker): AvValue<SPEC> =
-        store.queryByMarker(marker).first().checkSpec<SPEC>()
+        store.get(marker).first().checkSpec<SPEC>()
 
     inline fun <reified SPEC : Any> firstOrNull(marker: AvMarker): AvValue<SPEC>? =
-        store.queryByMarker(marker).firstOrNull()?.checkSpec<SPEC>()
+        store.get(marker).firstOrNull()?.checkSpec<SPEC>()
 
     inline fun <reified SPEC : Any> firstOrNull(marker: AvMarker, noinline condition : (AvValue<SPEC>) -> Boolean): AvValue<SPEC>? =
         store.firstOrNull(marker, SPEC::class, condition)
 
     inline fun <reified SPEC : Any> ref(valueId: AvValueId, refLabel: AvRefLabel) =
         store.ref(valueId, refLabel).checkSpec<SPEC>()
+
+    fun <SPEC : Any> ref(valueId: AvValueId, refLabel: AvRefLabel, specClass : KClass<SPEC>) =
+        store.ref(valueId, refLabel).checkSpec(specClass)
 
     inline fun <reified SPEC : Any> refOrNull(valueId: AvValueId, refMarker: AvMarker) =
         store.refOrNull(valueId, refMarker)?.checkSpec<SPEC>()
@@ -205,6 +215,9 @@ open class AvValueWorker(
 
     inline fun <reified SPEC : Any> refList(value: AvValue<*>, refListMarker: AvMarker): List<AvValue<SPEC>> =
         store.refList(value.uuid, refListMarker).map { it.checkSpec(SPEC::class) }
+
+    fun <SPEC : Any> refList(value: AvValue<*>, refListMarker: AvMarker, specClass : KClass<SPEC>): List<AvValue<SPEC>> =
+        store.refList(value.uuid, refListMarker).map { it.checkSpec(specClass) }
 
     inline fun <reified SPEC : Any> refList(valueId: AvValueId, refListMarker: AvMarker): List<AvValue<SPEC>> =
         store.refList(valueId, refListMarker).map { it.checkSpec(SPEC::class) }

@@ -4,6 +4,7 @@ import `fun`.adaptive.adat.AdatChange
 import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.adat.metadata.AdatClassMetadata
 import `fun`.adaptive.wireformat.toJson
+import kotlin.reflect.KProperty
 
 /**
  * Creates a deep copy of [this]. The copy is fully independent of the original, any
@@ -17,6 +18,20 @@ fun <A : AdatClass> A.deepCopy(replace: AdatChange? = null): A {
     // TODO when A is immutable, return with A
     @Suppress("UNCHECKED_CAST")
     return this.genericDeepCopy(replace) as A
+}
+
+/**
+ * Creates a deep copy of [this]. The copy is fully independent of the original, any
+ * changes made on it will not change the original in any ways.
+ *
+ * **Mutable collections are not supported yet.** See: [Adat problems and improvements #35](https://github.com/spxbhuhb/adaptive/issues/35)
+ *
+ * @throws  IllegalArgumentException  In case it is not possible to make a deep copy.
+ */
+fun <A : AdatClass> A.deepCopy(property : KProperty<*>, value : Any?): A {
+    // TODO when A is immutable, return with A
+    @Suppress("UNCHECKED_CAST")
+    return this.genericDeepCopy(AdatChange(listOf(property.name), value)) as A
 }
 
 private fun AdatClass.genericDeepCopy(replace: AdatChange?): AdatClass {

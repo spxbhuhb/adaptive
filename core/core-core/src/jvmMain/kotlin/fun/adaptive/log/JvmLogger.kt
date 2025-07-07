@@ -13,24 +13,24 @@ class JvmLogger(name: String) : AdaptiveLogger() {
 
     val platformLogger: Logger = LoggerFactory.getLogger(name)
 
-    override fun rawFine(message: String?, exception: Exception?) {
-        platformLogger.debug(message, exception)
+    override fun rawFine(message: String?, throwable: Throwable?) {
+        platformLogger.debug(message, throwable)
     }
 
-    override fun rawInfo(message: String?, exception: Exception?) {
-        platformLogger.info(message, exception)
+    override fun rawInfo(message: String?, throwable: Throwable?) {
+        platformLogger.info(message, throwable)
     }
 
-    override fun rawWarning(message: String?, exception: Exception?) {
-        platformLogger.warn(message, exception)
+    override fun rawWarning(message: String?, throwable: Throwable?) {
+        platformLogger.warn(message, throwable)
     }
 
-    override fun rawError(message: String?, exception: Exception?) {
-        platformLogger.error(message, exception)
+    override fun rawError(message: String?, throwable: Throwable?) {
+        platformLogger.error(message, throwable)
     }
 
-    override fun fatal(message: String, exception: Exception?): Nothing {
-        platformLogger.error(message, exception)
+    override fun fatal(message: String, throwable: Throwable?): Nothing {
+        platformLogger.error(message, throwable)
         exitProcessCommon(3210)
     }
 

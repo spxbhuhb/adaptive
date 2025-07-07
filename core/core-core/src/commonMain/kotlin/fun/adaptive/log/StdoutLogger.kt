@@ -15,28 +15,28 @@ class StdoutLogger(
 
     val prefix = "[$name]"
 
-    private fun log(level : String, message: String?, exception: Exception?) {
-        println("$level: $prefix ${message ?: ""} ${exception?.stackTraceToString() ?: ""}".replace("%", "%%"))
+    private fun log(level : String, message: String?, throwable: Throwable?) {
+        println("$level: $prefix ${message ?: ""} ${throwable?.stackTraceToString() ?: ""}".replace("%", "%%"))
     }
 
-    override fun rawFine(message: String?, exception: Exception?) {
-        log("FINE", message, exception)
+    override fun rawFine(message: String?, throwable: Throwable?) {
+        log("FINE", message, throwable)
     }
 
-    override fun rawInfo(message: String?, exception: Exception?) {
-        log("INFO", message, exception)
+    override fun rawInfo(message: String?, throwable: Throwable?) {
+        log("INFO", message, throwable)
     }
 
-    override fun rawWarning(message: String?, exception: Exception?) {
-        log("WARNING", message, exception)
+    override fun rawWarning(message: String?, throwable: Throwable?) {
+        log("WARNING", message, throwable)
     }
 
-    override fun rawError(message: String?, exception: Exception?) {
-        log("ERROR", message, exception)
+    override fun rawError(message: String?, throwable: Throwable?) {
+        log("ERROR", message, throwable)
     }
 
-    override fun fatal(message: String, exception: Exception?) : Nothing {
-        log("FATAL", message, exception)
+    override fun fatal(message: String, throwable: Throwable?) : Nothing {
+        log("FATAL", message, throwable)
         exitProcessCommon(3210)
     }
 

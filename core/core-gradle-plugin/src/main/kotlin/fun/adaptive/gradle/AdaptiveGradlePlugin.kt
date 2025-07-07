@@ -14,7 +14,7 @@ import org.jetbrains.kotlin.gradle.plugin.SubpluginOption
 import java.io.File
 import java.nio.file.Files
 
-const val PLUGIN_VERSION = "0.25.705-RC1"
+const val PLUGIN_VERSION = "0.25.712-SNAPHOT"
 const val KOTLIN_COMPILER_PLUGIN_ID = "adaptive"  // this is how the compiler identifies the plugin
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_GROUP = "fun.adaptive"
 const val KOTLIN_COMPILER_PLUGIN_ARTIFACT_NAME = "core-kotlin-plugin"
