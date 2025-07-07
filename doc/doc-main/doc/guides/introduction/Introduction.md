@@ -1,17 +1,12 @@
 # Introduction
 
-Adaptive is a new take on Kotlin Multiplatform, a greenfield development with the goal
-to let us comfortably write full-stack, pure-Kotlin applications without relying
-on third-party, platform-dependent libraries.
+**Welcome to the documentation of Adaptive!** 
 
-I know that writing everything myself is a controversial topic, and many will
-say: "Don't reinvent the wheel."
+As Adaptive is not exactly small, and it is not exactly mainstream, you might find the amount of 
+information overwhelming at first.
 
-While there's some truth to that, let me ask you:
+Do not worry, it is much more straightforward than it seems, mostly because I've built the
+project around a few basic concepts. Once you've got those, it is pretty simple.
 
-* Do F1 race cars run on the wooden wheels of medieval wagons?
-* Why are there 3 million packages on NPM?
-
-Currently, Adaptive is under the initial development, not ready for the broader
-public. It only includes what I’ve needed so far, I’ve taken some shortcuts,
-and—to be honest—I’ve made some bad decisions along the way that I haven’t fixed yet.
+I suggest you just click on the top-level sections of the [Documentation](tool://) tool
+to get an overview.

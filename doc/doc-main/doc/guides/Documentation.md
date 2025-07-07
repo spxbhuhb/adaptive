@@ -39,6 +39,7 @@ markers: grove-doc-toc
   - [Built-in UI container fragments](guide://)
   - [Built-in layout instructions](guide://)
   - [Split pane](guide://)
+  - [Wrap](guide://)
   - [Modal popup](guide://)
 - [Style system](guide://) 
   - [Built-in decoration instructions](guide://)
@@ -60,6 +61,11 @@ markers: grove-doc-toc
 - [High-level fragments](guide://)
   - [Form](guide://)
   - [Tree](guide://)
+  - [Canvas](guide://)
+  - [Grove Sheet](guide://)
+  - [Chart](guide://)
+- [Other fragments](guide://)
+  - [Paragraph](guide://)
 - [Multi-pane workspace](guide://) 
   - [Writing a tool pane](guide://)
   - [Writing a content pane](guide://)
@@ -92,6 +98,18 @@ markers: grove-doc-toc
 - [Service context](guide://)
 - [Service transport](guide://)
 - [Writing a service](guide://)
+
+## Authentication and authorization
+
+## Document
+
+- [Document](guide://)
+- [Markdown](guide://)
+- [Excel](guide://)
+
+## Charts
+
+## Grove
 
 ## Impressum
 

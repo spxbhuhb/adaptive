@@ -17,6 +17,7 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.badge.BadgeTheme
 import `fun`.adaptive.ui.badge.badge
+import `fun`.adaptive.ui.codefence.CodeFenceTheme
 import `fun`.adaptive.ui.codefence.codeFence
 import `fun`.adaptive.ui.generated.resources.content_copy
 import `fun`.adaptive.ui.generated.resources.copied
@@ -91,6 +92,10 @@ enum class CodeMode {
 
 }
 
+val topCodeFence = CodeFenceTheme().also {
+    it.codeFenceContainer = it.codeFenceContainerBase + borderTop(colors.outline)
+}
+
 @Adaptive
 fun examplePane(
     example: GroveDocExample
@@ -147,8 +152,8 @@ fun examplePane(
             }
 
             when (codeMode) {
-                CodeMode.Example -> codeFence(code = example.exampleCode, language = "kotlin")
-                CodeMode.Full -> codeFence(code = example.fullCode, language = "kotlin")
+                CodeMode.Example -> codeFence(code = example.exampleCode, language = "kotlin", theme = topCodeFence)
+                CodeMode.Full -> codeFence(code = example.fullCode, language = "kotlin", theme = topCodeFence)
                 CodeMode.Hidden -> {}
             }
         }

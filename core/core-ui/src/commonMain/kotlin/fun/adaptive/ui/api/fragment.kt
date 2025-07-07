@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
-import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
+import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphViewBackend
 import `fun`.adaptive.ui.fragment.structural.PopupSourceViewBackend
 
 @AdaptiveExpect(aui)
@@ -113,19 +113,19 @@ fun contextPopup(sourceViewBackend: PopupSourceViewBackend? = null, vararg instr
 
 @AdaptiveExpect(aui)
 fun splitPane(
-    configuration: SplitPaneViewBackend,
+    viewBackend: SplitPaneViewBackend,
     @Adaptive pane1: () -> Unit,
     @Adaptive divider: () -> Unit,
     @Adaptive pane2: () -> Unit,
     onChange: ((Double) -> Unit)? = null,
     vararg instructions: AdaptiveInstruction
 ): AdaptiveFragment {
-    manualImplementation(configuration, pane1, divider, pane2, onChange, instructions)
+    manualImplementation(viewBackend, pane1, divider, pane2, onChange, instructions)
 }
 
 @AdaptiveExpect(aui)
-fun paragraph(paragraph: Paragraph): AdaptiveFragment {
-    manualImplementation(paragraph)
+fun paragraph(viewBackend: ParagraphViewBackend): AdaptiveFragment {
+    manualImplementation(viewBackend)
 }
 
 @AdaptiveExpect(aui)

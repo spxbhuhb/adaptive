@@ -2,24 +2,32 @@
 
 [application](def://?inline)
 
-[lib-app](def://) provides a framework for client and server [applications](def://) in a somewhat simple, well-defined way.
+Adaptive provides a framework for client and server [applications](def://).
+
+The very basic classes are in [core-core](def://) but the majority of the application framework
+is in [lib-app](def://), including:
+
+- ready-to-go application bootstrap functions
+- server and client application classes
+- basic application [user interface](def://) items:
+  - sign-in, user account, user management, role management
+  - administration tool
+  - inspect tool
+
+Check [Built-in lib-app features](guide://) for detailed information.
 
 Note: you can build applications that use Adaptive without using `lib-app`. It is a convenience library
 that handles most of the common application building steps.
 
-[lib-app] uses three main concepts:
+## Basic concepts
+
+The application framework uses three concepts:
 
 - [application](def://)
+- [workspace](def://)
 - [application module](def://)
-- [application workspace](def://)
 
 ## Application
-
-An [application](def://):
-
-- in this context means a client or a server, regardless of the actual [platform](def://) the application runs on,
-- it is composed of [application modules](def://),
-- has exactly one [application workspace](def://).
 
 > [!IMPORTANT]
 > 
@@ -38,16 +46,18 @@ Application classes (Android/iOS is not ready yet, but will follow the same conc
     - [JvmServerApplication](class://)
   - [ClientApplication](class://)
     - [BasicBrowserClientApplication](class://)
-    - [WsBrowserClientApplication](class://)
+    - [MpwBrowserClientApplication](class://)
 
-## Application workspace
+## Workspace
 
-Each [application](def://) has an [application workspace](def://). In basic [client applications](def://),
-it may act as a placeholder, while in other cases it is a sophisticated implementation with full
-state and UI context management.
+Each [application](def://) has two [workspaces](def://):
 
-The [application workspace](def://) is stored in the [workspace](property://AbstractApplication) 
-property of [AbstractApplication](class://).
+[backend workspace](def://?inline)
+
+[frontend workspace](def://?inline)
+
+The [workspaces](def://) are stored in the [backendWorkspace](property://AbstractApplication) 
+and [frontendWorkspace](property://AbstractApplication) properties of [AbstractApplication](class://).
 
 The [application workspace](def://) can be whatever class you decide, but typically these are used:
 
@@ -57,6 +67,8 @@ The [application workspace](def://) can be whatever class you decide, but typica
     - [MultiPaneWorkspace](class://) for complex, IntelliJ like, multi-pane workspace [client applications](def://)
 
 ## Application Module
+
+[application module](def://?inline)
 
 An [application module](def://) groups the components of a feature together. [Applications](def://) are typically built
 by adding modules to the [application](def://).

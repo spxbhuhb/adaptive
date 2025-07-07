@@ -97,7 +97,7 @@ class AuiParagraph(
             position = "absolute"
             left = "${leftOffset}px"
             top = "${topOffset}px"
-            width = "${item.width}px"
+            width = "${ceil(item.width)}px" // ceil to avoid Safari ... at the end of text
             height = "${item.height}px"
             whiteSpace = "pre"
         }
@@ -121,16 +121,15 @@ class AuiParagraph(
         val entry = getEntry(instructionSetIndex)
         val metrics = entry.context.measureText(text)
 
-        // without the 0.05 Firefox and Chrome displays a '...' as they think that there is not enough space
-        // I don't really know why that happens, I guess it's some Double rounding issue
+        item.width = entry.renderData.surroundingHorizontal + metrics.width
 
-        item.width = entry.renderData.surroundingHorizontal + ceil(metrics.width) + 0.05
-
-        item.height = entry.renderData.surroundingVertical + ceil(
+        item.height = entry.renderData.surroundingVertical + (
             entry.textRenderData.lineHeight
                 ?: (entry.textRenderData.fontSize ?: uiAdapter.defaultTextRenderData.fontSize)?.value?.let { it * 1.5 }
                 ?: (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
         )
+
+        println("width: ${item.width}, height: ${item.height}, text: $text")
     }
 
     fun getEntry(index: Int): RenderCacheEntry {

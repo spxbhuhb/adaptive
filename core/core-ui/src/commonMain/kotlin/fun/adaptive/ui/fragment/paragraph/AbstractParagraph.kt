@@ -6,7 +6,7 @@ import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.layout.computeFinal
-import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
+import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphViewBackend
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphItem
 
 abstract class AbstractParagraph<RT, CRT : RT>(
@@ -17,7 +17,7 @@ abstract class AbstractParagraph<RT, CRT : RT>(
     adapter, parent, declarationIndex, 2
 ) {
 
-    val paragraph: Paragraph
+    val viewBackend: ParagraphViewBackend
         get() = get(1)
 
     var instructionSets = emptyList<AdaptiveInstructionGroup>()
@@ -43,7 +43,7 @@ abstract class AbstractParagraph<RT, CRT : RT>(
 
     fun computeRows(proposedWidth: Double): MutableList<Row> {
 
-        val paragraph = this.paragraph
+        val paragraph = this.viewBackend
         instructionSets = paragraph.instructionSets // so we avoid the continuous casting of state access
 
         val items = paragraph.items

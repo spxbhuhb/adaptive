@@ -6,6 +6,8 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.instruction.nop
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.instruction.DPixel
+import `fun`.adaptive.ui.instruction.decoration.Border
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
@@ -15,12 +17,11 @@ import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
 
-class CodeFenceTheme {
-
-    val fenceLineHeight = 20 // in dp
-
-    val lineHeight = 17.dp
-    val codeLineTopPadding = 3.dp
+open class CodeFenceTheme(
+    val fenceLineHeight : DPixel = 20.dp,
+    val lineHeight : DPixel = 17.dp,
+    val codeLineTopPadding : DPixel = 3.dp
+) {
 
     /**
      * Calculate the height of the code fence. This is necessary to because we want
@@ -28,7 +29,7 @@ class CodeFenceTheme {
      * when not, we want to size according to the lines. However, we also have to
      * scroll if the height is not enough.
      */
-    fun height(fragment: AdaptiveFragment, lineCount: Int): AdaptiveInstruction {
+    open fun height(fragment: AdaptiveFragment, lineCount: Int): AdaptiveInstruction {
 
         val uiAdapter = (fragment.adapter as? AbstractAuiAdapter<*, *>) ?: return nop
 
@@ -39,27 +40,30 @@ class CodeFenceTheme {
 
         val surrounding = uiAdapter.toDp(renderData.surroundingVertical + columnPadding.surroundingVertical).value
 
-        val fenceHeight = surrounding + lineCount * fenceLineHeight
+        val fenceHeight = surrounding + lineCount * fenceLineHeight.value
 
         return height { fenceHeight.dp }
     }
 
-    val columnVerticalPadding = instructionsOf(
+    var columnVerticalPadding = instructionsOf(
         paddingTop { 3.dp },
         paddingBottom { 6.dp }
     )
 
-    val codeFenceContainer = instructionsOf(
+    var codeFenceContainerBase = instructionsOf(
         maxWidth,
-        borders.outline,
-        backgrounds.surface,
         paddingRight { 8.dp },
         verticalScroll,
-        colTemplate(/*48.dp,*/ 1.fr),
+        colTemplate(/*48.dp,*/ 1.fr)
+    )
+
+    var codeFenceContainer = codeFenceContainerBase + instructionsOf(
+        borders.outline,
+        backgrounds.surface,
         cornerRadius { 2.dp }
     )
 
-    val lineNumberColumn = instructionsOf(
+    var lineNumberColumn = instructionsOf(
         width { 48.dp },
         backgrounds.surfaceVariant,
         borderRight(colors.lightOutline),
@@ -67,11 +71,11 @@ class CodeFenceTheme {
         paddingLeft { 10.dp }
     )
 
-    val lineNumberContainer = instructionsOf(
-        height { fenceLineHeight.dp }
+    var lineNumberContainer = instructionsOf(
+        height { fenceLineHeight }
     )
 
-    val lineNumberText = instructionsOf(
+    var lineNumberText = instructionsOf(
         fontName { "Courier New" },
         fontSize { 14.sp },
         paddingTop { codeLineTopPadding },
@@ -80,18 +84,18 @@ class CodeFenceTheme {
         normalFont
     )
 
-    val codeColumn = instructionsOf(
+    var codeColumn = instructionsOf(
         maxWidth,
         horizontalScroll,
         columnVerticalPadding,
         paddingLeft { 12.dp }
     )
 
-    val codeLineContainer = instructionsOf(
-        height { fenceLineHeight.dp }
+    var codeLineContainer = instructionsOf(
+        height { fenceLineHeight }
     )
 
-    val codeText = instructionsOf(
+    var codeText = instructionsOf(
         fontName { "Courier New" },
         fontSize { 14.sp },
         paddingTop { codeLineTopPadding },

@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.paragraph
-import `fun`.adaptive.ui.fragment.paragraph.model.Paragraph
+import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphViewBackend
 
 @Adaptive
 fun docParagraph(context: DocRenderContext, element: DocParagraph): AdaptiveFragment {
@@ -18,7 +18,7 @@ fun docParagraph(context: DocRenderContext, element: DocParagraph): AdaptiveFrag
     }
 
     paragraph(
-        Paragraph(
+        ParagraphViewBackend(
             context.styles,
             context.paragraphItems(element.content)
         )

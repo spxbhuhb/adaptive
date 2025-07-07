@@ -4,7 +4,7 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 
 @Adat
-class Paragraph(
+class ParagraphViewBackend(
     val instructionSets: List<AdaptiveInstructionGroup>,
     val items: List<ParagraphItem>
 )

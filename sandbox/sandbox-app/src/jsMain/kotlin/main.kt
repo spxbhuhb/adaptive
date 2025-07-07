@@ -9,6 +9,7 @@ import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
@@ -25,6 +26,7 @@ import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringSto
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaExample
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
+import `fun`.adaptive.sandbox.recipe.ui.text.paragraphLongExample
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.tree.treePlayground
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeValueExample
@@ -32,6 +34,8 @@ import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.fragment.paragraph.items.TextParagraphItem
+import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphViewBackend
 import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.input.color.colorInput
@@ -130,8 +134,13 @@ fun sandboxMain() {
 //                    text("FeedBack: $feedBack")
 //                    formBasicExample()
                     // quickFilterRecipe()
-
-                    treePlayground()
+                  markdown(
+                            """
+                                The paragraph has a list of styles (instance of [AdaptiveInstructionGroup](class://)), and 
+                                each item selects one of those styles to use.
+                            """.trimIndent()
+                    )
+                    //treePlayground()
 //                    button("hello") {
 //                        dialog(adapter(), "", ::modal)
 //                    }
