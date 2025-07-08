@@ -11,6 +11,10 @@ class JsonObject : JsonElement() {
 
     val value = mutableMapOf<String, JsonElement>()
 
+    operator fun get(key : String) = value[key]
+
+    operator fun set(key : String, value : JsonElement) { this.value[key] = value }
+
     override fun toString(): String {
         return "{${value.entries.joinToString(",") { "\"${it.key}\": ${it.value}" }}}"
     }

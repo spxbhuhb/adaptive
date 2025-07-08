@@ -13,6 +13,8 @@ abstract class AvValueDomainDef {
 
     inline fun status(def: () -> AvStatus) = def()
 
+    inline fun fragmentKey(def: () -> AvStatus) = def()
+
     @Suppress("NOTHING_TO_INLINE")
     inline fun tree(
         nodeMarker: AvMarker,
