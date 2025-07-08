@@ -17,6 +17,7 @@ abstract class ValueModule<FW : AbstractWorkspace, BW : AbstractWorkspace> : App
         + AvoMarkerRemove
         + AvoUpdate
         + AvoTransaction
+        + AvoRemove
 
         + AvSubscribeCondition
         + AvValue

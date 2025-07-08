@@ -63,6 +63,7 @@ open class AvRemoteListSubscriber<SPEC : Any>(
 
     override fun processRemove(value: AvValueId) {
         itemMap.remove(value)
+        cachedValue = null
     }
 
     override var value: List<AvValue<SPEC>>?
