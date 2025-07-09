@@ -128,8 +128,6 @@ class AuiParagraph(
                 ?: (entry.textRenderData.fontSize ?: uiAdapter.defaultTextRenderData.fontSize)?.value?.let { it * 1.5 }
                 ?: (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
         )
-
-        println("width: ${item.width}, height: ${item.height}, text: $text")
     }
 
     fun getEntry(index: Int): RenderCacheEntry {

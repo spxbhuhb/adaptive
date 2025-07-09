@@ -9,6 +9,9 @@ import `fun`.adaptive.markdown.compiler.tokenizeInternal
 import `fun`.adaptive.markdown.model.*
 import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 
+/**
+ * Transforms a Markdown AST into a [DocDocument].
+ */
 class MarkdownToDocVisitor(
     val ast: List<MarkdownElement>,
     val theme: DocumentTheme = DocumentTheme.default,
@@ -84,6 +87,7 @@ class MarkdownToDocVisitor(
 
         when {
             inline.inlineLink -> {
+                mask = mask or LINK
                 val match = inlineLinkRegex.matchEntire(inline.text) ?: return null
                 inlineStack += DocLink(mask.styleIndex, match.groupValues[1], match.groupValues[2])
             }
@@ -173,14 +177,16 @@ class MarkdownToDocVisitor(
 
         val out = mutableListOf<AdaptiveInstruction>()
 
-        if (mask and BOLD != 0) theme.bold.toMutableList(out)
-        if (mask and ITALIC != 0) theme.italic.toMutableList(out)
-        if (mask and CODE != 0) theme.inlineCode.toMutableList(out)
-
         val header = (mask and HEADER) shr 8
 
         when (header) {
-            0 -> theme.normal.toMutableList(out)
+            0 -> {
+                when {
+                    mask and CODE != 0 -> theme.inlineCode.toMutableList(out)
+                    mask and LINK != 0 -> theme.link.toMutableList(out)
+                    else -> theme.normal.toMutableList(out)
+                }
+            }
             1 -> theme.h1.toMutableList(out)
             2 -> theme.h2.toMutableList(out)
             3 -> theme.h3.toMutableList(out)
@@ -188,6 +194,9 @@ class MarkdownToDocVisitor(
             5 -> theme.h5.toMutableList(out)
             else -> theme.hN.toMutableList(out)
         }
+
+        if (mask and BOLD != 0) theme.bold.toMutableList(out)
+        if (mask and ITALIC != 0) theme.italic.toMutableList(out)
 
         return DocStyle(index, AdaptiveInstructionGroup(out))
     }

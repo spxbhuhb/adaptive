@@ -3,6 +3,14 @@ package `fun`.adaptive.sandbox
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.sandbox.recipe.demo.goodmorning.goodMorning
 import `fun`.adaptive.sandbox.recipe.demo.markdown.markdownDemoRecipe
+import `fun`.adaptive.sandbox.recipe.document.document.documentInlineExample
+import `fun`.adaptive.sandbox.recipe.document.document.documentRemoteExample
+import `fun`.adaptive.sandbox.recipe.document.markdown.actualizedFromMarkdownExample
+import `fun`.adaptive.sandbox.recipe.document.document.documentResourceExample
+import `fun`.adaptive.sandbox.recipe.document.markdown.markdownInlineExample
+import `fun`.adaptive.sandbox.recipe.document.markdown.markdownActualizeExample
+import `fun`.adaptive.sandbox.recipe.document.markdown.markdownHintExample
+import `fun`.adaptive.sandbox.recipe.document.markdown.markdownStyledExample
 import `fun`.adaptive.sandbox.recipe.ui.badge.*
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
@@ -112,6 +120,24 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // ----------------------------------------------------------------------------
 
         add("colorInputExample", ::colorInputExample)
+
+        // ----------------------------------------------------------------------------
+        // Document
+        // ----------------------------------------------------------------------------
+
+        add("documentResourceExample", ::documentResourceExample)
+        add("documentRemoteExample", ::documentRemoteExample)
+        add("documentInlineExample", ::documentInlineExample)
+
+        // ----------------------------------------------------------------------------
+        // Markdown
+        // ----------------------------------------------------------------------------
+
+        add("markdownInlineExample", ::markdownInlineExample)
+        add("markdownHintExample", ::markdownHintExample)
+        add("markdownStyledExample", ::markdownStyledExample)
+        add("markdownActualizeExample", ::markdownActualizeExample)
+        add("cookbook-actualized-example", ::actualizedFromMarkdownExample)
 
         // ----------------------------------------------------------------------------
         // Menu

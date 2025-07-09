@@ -13,20 +13,20 @@ class DocumentResourceSet(
 ) {
     companion object {
 
-        fun remoteDocument(url : String) =
+        fun remoteDocumentResource(url : String) =
             DocumentResourceSet(
                 REMOTE,
                 DocumentResource(url, emptySet())
             )
 
-        fun inlineDocument(name : String? = "<anonymous>", data : ByteArray) =
+        fun inlineDocumentResource(name : String? = "<anonymous>", data : ByteArray) =
             DocumentResourceSet(
                 INLINE + name
             ).also {
                 it.cachedContent = data
             }
 
-        fun inlineDocument(name : String? = "<anonymous>", content : String) =
+        fun inlineDocumentResource(name : String? = "<anonymous>", content : String) =
             DocumentResourceSet(
                 INLINE + name
             ).also {

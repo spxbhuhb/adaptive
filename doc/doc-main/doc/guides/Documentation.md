@@ -101,7 +101,7 @@ markers: grove-doc-toc
 
 ## Authentication and authorization
 
-## Document
+## Document, Markdown and Excel
 
 - [Document](guide://)
 - [Markdown](guide://)

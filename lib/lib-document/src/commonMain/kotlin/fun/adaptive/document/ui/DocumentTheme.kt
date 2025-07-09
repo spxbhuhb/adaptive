@@ -10,134 +10,144 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
+import `fun`.adaptive.ui.theme.textColors
 
-class DocumentTheme(
-    val baseFontSize : SPixel = 16.sp,
-    val textColor : Color = colors.onSurface
+open class DocumentTheme(
+    val baseFontSize: SPixel = 16.sp,
+    val textColor: Color = colors.onSurface,
+    val monoSpaceFont: String = "Courier New"
 ) {
 
     /**
      * The gap between blocks of content such as paragraphs.
      */
-    val blockGap = gap { 24.dp }
+    open val blockGap = gap { 24.dp }
 
-    val h1 = instructionsOf(
+    open var h1 = instructionsOf(
         fontSize { 28.sp },
         fontWeight { 500 },
         textColor(textColor),
     )
 
-    val h2 = instructionsOf(
+    open var h2 = instructionsOf(
         fontSize { 24.sp },
         fontWeight { 500 },
         textColor(textColor)
     )
 
-    val h3 = instructionsOf(
+    open var h3 = instructionsOf(
         fontSize { 20.sp },
         fontWeight { 500 },
         textColor(textColor)
     )
 
-    val h4 = instructionsOf(
+    open var h4 = instructionsOf(
         fontSize { 16.sp },
         fontWeight { 500 },
         textColor(textColor)
     )
 
-    val h5 = instructionsOf(
+    open var h5 = instructionsOf(
         fontSize { 12.sp },
         fontWeight { 500 },
         textColor(textColor)
     )
 
-    val hN = instructionsOf(
+    open var hN = instructionsOf(
         fontSize { 12.sp },
         fontWeight { 500 },
         textColor(textColor)
     )
 
-    val normal = instructionsOf(
+    open var normal = instructionsOf(
         fontSize { baseFontSize },
         textColor(textColor)
     )
 
-    val bold = instructionsOf(
+    open var bold = instructionsOf(
         semiBoldFont
     )
 
-    val italic = instructionsOf()
+    open var italic = instructionsOf()
 
-    val inlineCode = instructionsOf(
+    open var inlineCode = instructionsOf(
+        fontName { monoSpaceFont },
+        fontSize { baseFontSize },
+        textColor(textColor),
         backgrounds.lightOverlay,
         paddingHorizontal { 4.dp },
         cornerRadius { 3.dp }
     )
 
-    val paragraph = instructionsOf(
+    open var link = instructionsOf(
+        fontSize { baseFontSize },
+        textColors.primary
+    )
+
+    open var paragraph = instructionsOf(
         maxWidth
     )
 
-    val innerParagraph = emptyInstructions
+    open var innerParagraph = emptyInstructions
 
-    val codeFence = instructionsOf(
+    open var codeFence = instructionsOf(
 
     )
 
-    val rule = instructionsOf(
+    open var rule = instructionsOf(
         maxWidth,
         height { 2.dp },
         backgrounds.friendly,
         cornerRadius { 1.dp }
     )
 
-    val bulletListIndent = 12.dp
-    val numberListIndent = 16.dp
+    open var bulletListIndent = 12.dp
+    open var numberListIndent = 16.dp
 
-    val standaloneList = instructionsOf(
+    open var standaloneList = instructionsOf(
         gap { 2.dp }
     )
 
-    val innerList = instructionsOf(
+    open var innerList = instructionsOf(
         gap { 2.dp }
     )
 
-    val listBulletContainer = instructionsOf(
+    open var listBulletContainer = instructionsOf(
         paddingTop { 7.dp },
         paddingRight { 6.dp }
     )
 
-    val listBullet = instructionsOf(
+    open var listBullet = instructionsOf(
         backgroundColor(textColor),
         width { 5.dp },
         height { 5.dp },
         cornerRadius { 2.5.dp }
     )
 
-    val listNumberContainer = instructionsOf(
+    open var listNumberContainer = instructionsOf(
         paddingRight { 6.dp }
     )
 
-    val listNumber = instructionsOf(
+    open var listNumber = instructionsOf(
         fontSize { 14.sp },
         semiBoldFont,
         textColor(textColor),
     )
 
-    fun listPath(item: DocListItem): String =
+    open fun listPath(item: DocListItem): String =
         item.path.joinToString(".") + "."
 
-    val quote = instructionsOf()
+    open val quote = instructionsOf()
 
-    val quoteDecorationWidth = 4.dp
+    open val quoteDecorationWidth = 4.dp
 
-    val blockImage = instructionsOf()
+    open val blockImage = instructionsOf()
 
-    val blockFragment = instructionsOf()
+    open val blockFragment = instructionsOf()
 
     companion object {
-        val default = DocumentTheme()
-        val hint = DocumentTheme(baseFontSize = 12.sp, textColor = colors.onSurface)
+        var default = DocumentTheme()
+        var hint = DocumentTheme(baseFontSize = 12.sp, textColor = colors.onSurface)
     }
 
 }

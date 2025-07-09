@@ -9,4 +9,4 @@ is calculated by [ui layout](def://).
 - [instruction](def://)
 - [layout system](guide://)
 - [built-in layout instructions](guide://)
-- [how to write a UI fragment](guide://)
+- [Writing a UI fragment](guide://)

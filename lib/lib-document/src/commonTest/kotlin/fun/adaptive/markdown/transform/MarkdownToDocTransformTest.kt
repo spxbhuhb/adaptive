@@ -1,6 +1,10 @@
 package `fun`.adaptive.markdown.transform
 
+import `fun`.adaptive.document.model.DocLink
+import `fun`.adaptive.document.model.DocParagraph
+import `fun`.adaptive.document.model.DocText
 import `fun`.adaptive.document.visitor.DocDumpVisitor.Companion.dump
+import `fun`.adaptive.utility.debug
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -10,10 +14,12 @@ import kotlin.test.assertEquals
 class MarkdownToDocTransformTest {
 
     infix fun String.assertEqualsDump(expected: DocBuilder.() -> Unit) =
-        assertEquals(
-            DocBuilder().apply { expected() }.entries.joinToString("\n") { it.dump() },
-            MarkdownToDocVisitor(this).transform().blocks.joinToString("\n") { it.dump() }
-        )
+        MarkdownToDocVisitor(this).transform().also { doc ->
+            assertEquals(
+                DocBuilder().apply { expected() }.entries.joinToString("\n") { it.dump() },
+                doc.blocks.joinToString("\n") { it.dump() }
+            )
+        }
 
     @Test
     fun bulletListOne() {
@@ -32,6 +38,20 @@ class MarkdownToDocTransformTest {
             }
         }
     }
+
+    @Test
+    fun link() {
+        val source = """
+             [Hello](world://)
+        """.trimIndent()
+
+        source.assertEqualsDump {
+            + DocParagraph(- 1, listOf(DocLink(0, "Hello", "world://")), true)
+        }.also {
+            it.dump().debug()
+        }
+    }
+
 
     @Test
     fun blockImage() {

@@ -3,6 +3,9 @@ package `fun`.adaptive.markdown.transform
 import `fun`.adaptive.markdown.visitor.MarkdownVisitor
 import `fun`.adaptive.markdown.model.*
 
+/**
+ * Transforms a Markdown AST into Markdown text.
+ */
 class MarkdownToMarkdownVisitor : MarkdownVisitor<Unit, StringBuilder>() {
 
     var level = 0

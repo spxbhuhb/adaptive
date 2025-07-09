@@ -12,4 +12,4 @@ Border is a special case where a decoration is also part of the [layout surround
 
 - [instruction](def://)
 - [built-in decoration instructions](guide://)
-- [how to write a UI fragment](guide://)
+- [Writing a UI fragment](guide://)

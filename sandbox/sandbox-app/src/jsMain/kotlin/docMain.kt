@@ -3,7 +3,7 @@
  */
 
 import `fun`.adaptive.document.ui.basic.docDocument
-import `fun`.adaptive.resource.document.DocumentResourceSet.Companion.inlineDocument
+import `fun`.adaptive.resource.document.DocumentResourceSet.Companion.inlineDocumentResource
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.borders
@@ -17,7 +17,7 @@ fun docMain() {
         //docDocument(remoteDocument("http://127.0.0.1:3000/resources/fun.adaptive.cookbook/documents/markdown_demo.md"))
         //docDocument(inlineDocument(".md", "# Header\n\nJust some inline markdown".encodeToByteArray()))
 
-        docDocument(inlineDocument(".md", source))
+        docDocument(inlineDocumentResource(".md", source))
     }
 }
 

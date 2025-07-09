@@ -62,6 +62,14 @@ class DocDumpVisitor : DocVisitor<Unit, DocVisitorData>() {
 
     override fun visitDocument(docDocument: DocDocument, data: DocVisitorData) {
         data += "DOCUMENT"
+        data.level++
+        for (style in docDocument.styles) {
+            data += "STYLE  id=${style.id}  name=${style.name}"
+            for (instruction in style.instructions.toMutableList()) {
+                data.withIndent { "instruction: ${instruction.toString().replace("\n", "\\n")}" }
+            }
+        }
+        data.level--
         super.visitDocument(docDocument, data)
     }
 

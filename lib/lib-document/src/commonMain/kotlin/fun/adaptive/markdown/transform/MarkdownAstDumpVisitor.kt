@@ -5,6 +5,9 @@ import `fun`.adaptive.markdown.model.*
 import `fun`.adaptive.markdown.compiler.parseInternal
 import `fun`.adaptive.markdown.compiler.tokenizeInternal
 
+/**
+ * Dumps a Markdown AST for inspection.
+ */
 class MarkdownAstDumpVisitor() : MarkdownVisitor<Unit, MutableList<String>>() {
 
     var level = 0
