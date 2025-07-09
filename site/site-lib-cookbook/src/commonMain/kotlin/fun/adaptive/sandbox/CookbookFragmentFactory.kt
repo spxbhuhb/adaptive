@@ -11,6 +11,7 @@ import `fun`.adaptive.sandbox.recipe.document.markdown.markdownInlineExample
 import `fun`.adaptive.sandbox.recipe.document.markdown.markdownActualizeExample
 import `fun`.adaptive.sandbox.recipe.document.markdown.markdownHintExample
 import `fun`.adaptive.sandbox.recipe.document.markdown.markdownStyledExample
+import `fun`.adaptive.sandbox.recipe.document.xlsx.xlsxDownloadExample
 import `fun`.adaptive.sandbox.recipe.ui.badge.*
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasRecipe
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
@@ -247,6 +248,13 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("treeValueExample", ::treeValueExample)
 
         add("cookbook/tree/playground", ::treePlayground)
+
+        // ----------------------------------------------------------------------------
+        // Xlsx
+        // ----------------------------------------------------------------------------
+
+        add("xlsxDownloadExample", ::xlsxDownloadExample)
+
 
     }
 }

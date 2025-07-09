@@ -101,11 +101,11 @@ markers: grove-doc-toc
 
 ## Authentication and authorization
 
-## Document, Markdown and Excel
+## Document, Markdown and Xlsx
 
 - [Document](guide://)
 - [Markdown](guide://)
-- [Excel](guide://)
+- [Xlsx](guide://)
 
 ## Charts
 
