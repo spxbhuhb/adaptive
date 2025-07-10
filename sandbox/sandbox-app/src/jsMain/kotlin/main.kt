@@ -67,17 +67,6 @@ fun main() {
     // iotMain()
 }
 
-fun basicAppMain() {
-    basicBrowserClient {
-        localTransport = true
-        module { LibUiClientModule() }
-        module { GroveRuntimeModule() }
-        module { ValueClientModule() }
-        module { ChartModule() }
-        module { SandBoxClientModule() }
-    }
-}
-
 class Option(
     val text: String,
     val icon: GraphicsResourceSet

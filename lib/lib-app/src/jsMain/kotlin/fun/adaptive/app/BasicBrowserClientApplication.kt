@@ -36,7 +36,6 @@ open class BasicBrowserClientApplication(
                 BasicBrowserClientApplication(*builder.modules.toTypedArray())
                     .also {
                         it.wireFormatProvider = builder.wireFormatProvider
-                        it.localTransport = builder.localTransport
                     }
                     .main()
             }

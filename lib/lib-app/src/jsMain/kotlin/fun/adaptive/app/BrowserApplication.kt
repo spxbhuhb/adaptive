@@ -29,9 +29,6 @@ abstract class BrowserApplication<WT : FrontendWorkspace> : ClientApplication<WT
 
     var wireFormatProvider : WireFormatProvider = Proto
 
-    @Deprecated("use service transport registry")
-    var localTransport: Boolean = false
-
     override lateinit var transport: ServiceCallTransport
     override lateinit var backend: BackendAdapter
     override lateinit var frontend: AdaptiveAdapter
@@ -51,17 +48,11 @@ abstract class BrowserApplication<WT : FrontendWorkspace> : ClientApplication<WT
 
             wireFormatInit()
 
-            transport = if (localTransport) {
-                LocalServiceCallTransport()
-            } else {
-                webSocketTransport(window.location.origin, wireFormatProvider).also { it.start() }
-            }
+            transport = webSocketTransport(window.location.origin, wireFormatProvider).also { it.start() }
 
-            if (! localTransport) {
-                genericSessionOrNull = getService<AuthSessionApi>(transport).getSession()
-                if (genericSessionOrNull != null) {
-                    knownRoles = getService<AuthRoleApi>(transport).all()
-                }
+            genericSessionOrNull = getService<AuthSessionApi>(transport).getSession()
+            if (genericSessionOrNull != null) {
+                knownRoles = getService<AuthRoleApi>(transport).all()
             }
 
             backend = backend(transport) { adapter ->
