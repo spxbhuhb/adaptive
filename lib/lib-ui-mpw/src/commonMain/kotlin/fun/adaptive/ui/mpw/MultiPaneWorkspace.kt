@@ -16,7 +16,11 @@ import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.generated.resources.menu
 import `fun`.adaptive.ui.generated.resources.saveFail
 import `fun`.adaptive.ui.generated.resources.saveSuccess
+import `fun`.adaptive.ui.instruction.DPixel
+import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.EventModifier
+import `fun`.adaptive.ui.instruction.event.Keys
+import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
 import `fun`.adaptive.ui.instruction.layout.SplitVisibility
@@ -26,9 +30,11 @@ import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.*
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.snackbar.failNotification
+import `fun`.adaptive.ui.snackbar.infoNotification
 import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.firstInstance
+import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
 
@@ -36,7 +42,8 @@ open class MultiPaneWorkspace(
     backend: BackendAdapter,
     backendWorkspace: BackendWorkspace,
     scope: CoroutineScope = backend.scope,
-    transport: ServiceCallTransport = backend.transport
+    transport: ServiceCallTransport = backend.transport,
+    val toolSizeDefault : DPixel = 300.dp,
 ) : FrontendWorkspace(backend, backendWorkspace, scope, transport) {
 
     companion object {
@@ -49,6 +56,8 @@ open class MultiPaneWorkspace(
         const val WS_CENTER_PANE = "lib:ws:center"
         const val WSPANE_EMPTY = "lib:ws:nocontent"
     }
+
+    var workspaceFragment : AdaptiveFragment? = null
 
     val contentPaneBuilders = mutableMapOf<PaneContentType, MutableList<ContentPaneBuilder<*>>>()
 
@@ -101,7 +110,7 @@ open class MultiPaneWorkspace(
      * Top contains: top split
      * Bottom contains: bottom split
      */
-    val mainSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Vertical) }
+    val mainSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, toolSizeDefault.value, Orientation.Vertical) }
 
     /**
      * Left contains: bottom left pane
@@ -113,7 +122,7 @@ open class MultiPaneWorkspace(
      * Left contains: left split
      * Right contains: center and right split
      */
-    val topSplit = storeFor { SplitPaneViewBackend(SplitVisibility.Second, SplitMethod.FixFirst, 300.0, Orientation.Horizontal) }
+    val topSplit = storeFor { SplitPaneViewBackend(SplitVisibility.Second, SplitMethod.FixFirst, toolSizeDefault.value, Orientation.Horizontal) }
 
     /**
      * Top contains: left top pane
@@ -125,7 +134,7 @@ open class MultiPaneWorkspace(
      * Left contains: center pane
      * Right contains: right split
      */
-    var centerRightSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, 300.0, Orientation.Horizontal) }
+    var centerRightSplit = storeFor { SplitPaneViewBackend(SplitVisibility.First, SplitMethod.FixSecond, toolSizeDefault.value, Orientation.Horizontal) }
 
     /**
      * Top contains: right top pane
@@ -285,6 +294,11 @@ open class MultiPaneWorkspace(
         sideBarActions += this
     }
 
+    /**
+     * Find a tool backend that has class [T].
+     *
+     * @return the tool backend or null if no such backend exists in the workspace
+     */
     fun <T : PaneViewBackend<T>> toolBackend(kClass: KClass<T>): T? {
         for (pane in toolPanes) {
             @Suppress("UNCHECKED_CAST")
@@ -558,4 +572,28 @@ open class MultiPaneWorkspace(
         )
     }
 
+    // --------------------------------------------------------------------------------
+    // Keydown handlers
+    // --------------------------------------------------------------------------------
+
+    var lastShift : Long = vmNowMicro()
+
+    /**
+     * Function to call when Shift is pressed twice in 0.3 seconds.
+     */
+    var doubleShiftHandler : (() -> Unit)? = null
+
+    fun onKeydown(event : UIEvent) {
+        if (event.keyInfo?.key != Keys.SHIFT) return
+
+        val now = vmNowMicro()
+
+        if (now - lastShift > 300_000) {
+            lastShift = now
+            return
+        }
+
+        lastShift = now
+        doubleShiftHandler?.invoke()
+    }
 }

@@ -41,11 +41,12 @@ import `fun`.adaptive.sandbox.recipe.ui.layout.box.boxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.grid.gridRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneWrapperExample
-import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.workspaceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuBasic
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuContext
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuItemActions
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuPrimary
+import `fun`.adaptive.sandbox.recipe.ui.mpw.mpwAllPanesExample
+import `fun`.adaptive.sandbox.recipe.ui.mpw.mpwDoubleShiftExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.modalPopupCustom
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.modalPopupMultiPage
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.modalPopupStandard
@@ -82,7 +83,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:svg", ::svgRecipe)
         add("cookbook:recipe:tab", ::tabRecipe)
         add("cookbook:recipe:text", ::textRecipe)
-        add("cookbook:recipe:workspace", ::workspaceRecipe)
 
         add("cookbook:recipe:input:quick-filter", ::quickFilterRecipe)
 
@@ -207,6 +207,13 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("intInputRadixExample", ::intInputRadixExample)
         add("intInputRadixWithDecimalExample", ::intInputRadixWithDecimalExample)
         add("intInputUnitExample", ::intInputUnitExample)
+
+        // ----------------------------------------------------------------------------
+        // MPW
+        // ----------------------------------------------------------------------------
+
+        add("mpwAllPanesExample", ::mpwAllPanesExample)
+        add("mpwDoubleShiftExample", ::mpwDoubleShiftExample)
 
         // ----------------------------------------------------------------------------
         // Paragraph

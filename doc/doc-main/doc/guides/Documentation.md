@@ -86,6 +86,7 @@ markers: grove-doc-toc
   - [Writing a tool pane](guide://)
   - [Writing a content pane](guide://)
   - [Writing a value tree browser](guide://)
+  - [Examples](guide://lib-ui-mpw)
 - [Development tools](guide://)
 
 ## Data

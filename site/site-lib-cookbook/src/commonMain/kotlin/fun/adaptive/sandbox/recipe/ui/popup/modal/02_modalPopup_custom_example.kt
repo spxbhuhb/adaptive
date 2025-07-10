@@ -38,11 +38,11 @@ private fun customPopupContent(
     close: UiClose
 ) {
     column {
-        backgrounds.infoSurface .. padding { 16.dp }
+        backgrounds.warningSurface .. padding { 16.dp }
         onClick { close.uiClose() }
 
-        text("This popup does not use the standard styling.") .. textColors.onInfoSurface
-        text("Click inside the popup area to hide.") .. textColors.onInfoSurface
+        text("This popup does not use the standard styling.") .. textColors.onWarningSurface
+        text("Click inside the popup area to hide.") .. textColors.onWarningSurface
     }
 
 }

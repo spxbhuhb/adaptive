@@ -37,6 +37,12 @@ class UIEvent(
     val rawPosition: RawPosition
         get() = RawPosition(y, x)
 
+    val isEscape
+        get() = keyInfo?.key == "Escape" || keyInfo?.key == "Esc"
+
+    val isEnter
+        get() = keyInfo?.key == "Enter"
+
     operator fun contains(modifier: EventModifier): Boolean = modifier in modifiers
 
 
@@ -68,4 +74,5 @@ class UIEvent(
         val isComposing: Boolean,
         val repeat: Boolean
     )
+
 }

@@ -23,11 +23,17 @@ import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.utility.UUID
 
 @Adaptive
-fun multiPaneWorkspace(workspace: MultiPaneWorkspace) {
+fun multiPaneWorkspace(workspace: MultiPaneWorkspace) : AdaptiveFragment {
+
+    workspace.workspaceFragment = fragment()
+
     val isFullScreen = observe { workspace.isFullScreen }
 
-    grid {
-        maxSize .. if (isFullScreen) colTemplate(0.dp, 1.fr, 0.dp) else  colTemplate(DEFAULT.width, 1.fr, DEFAULT.width)
+    grid(instructions()) {
+        if (isFullScreen) colTemplate(0.dp, 1.fr, 0.dp) else  colTemplate(DEFAULT.width, 1.fr, DEFAULT.width)
+
+        tabIndex { -1 } .. focusFirst
+        onKeydown { workspace.onKeydown(it) }
 
         box {
             if (! isFullScreen) {
@@ -43,6 +49,8 @@ fun multiPaneWorkspace(workspace: MultiPaneWorkspace) {
             }
         }
     }
+
+    return fragment()
 }
 
 @Adaptive

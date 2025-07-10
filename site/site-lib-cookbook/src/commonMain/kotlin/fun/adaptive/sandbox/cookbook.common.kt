@@ -1,7 +1,7 @@
 package `fun`.adaptive.sandbox
 
 import `fun`.adaptive.cookbook.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.ui.layout.workspace.WorkspaceRecipePaneFragmentFactory
+import `fun`.adaptive.sandbox.recipe.ui.mpw.WorkspaceRecipePaneFragmentFactory
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.ui.LibFragmentFactory
 

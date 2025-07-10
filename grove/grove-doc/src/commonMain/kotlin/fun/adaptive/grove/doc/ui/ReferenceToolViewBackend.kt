@@ -63,6 +63,9 @@ class ReferenceToolViewBackend(
     fun findDefinitionByName(name : String) : AvValue<GroveDocSpec>? =
         tree.treeSubscriber.find { it.name == name && groveDocDomain.definition in it.markers }
 
+    fun filterByNamePart(name : String) =
+        tree.treeSubscriber.filter { name in it.nameLike.lowercase() && groveDocDomain.guide in it.markers}
+
     override fun resolve(navState: NavState): Pair<PaneContentType, PaneContentItem>? {
         if (navState.url.segmentsStartsWith("/documentation")) return null // FIXME hard coded URL segment
         return groveDocDomain.node to GroveDocContentItem(navState.url.segments.drop(2))

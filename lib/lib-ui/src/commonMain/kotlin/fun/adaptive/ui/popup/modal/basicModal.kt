@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.popup.PopupTheme
-import `fun`.adaptive.ui.popup.modal.components.modalCancelSave
+import `fun`.adaptive.ui.popup.modal.components.modalCancelOk
 import `fun`.adaptive.ui.popup.modal.components.modalPopupTitle
 import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.support.UiSave
@@ -33,7 +33,7 @@ fun basicModal(
                 theme.modalButtonsHeight,
                 {
                     if (_fixme_buttons == null) {
-                        modalCancelSave(close, theme, save)
+                        modalCancelOk(close, theme, save)
                     } else {
                         _fixme_buttons(close, theme, save)
                     }

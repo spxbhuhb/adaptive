@@ -1,4 +1,4 @@
-package `fun`.adaptive.sandbox.recipe.ui.layout.workspace
+package `fun`.adaptive.sandbox.recipe.ui.mpw
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -14,7 +14,6 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
-import `fun`.adaptive.ui.mpw.MultiPaneWorkspace.Companion.wsContext
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspaceMain
 import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspaceSideBarIcons
@@ -24,19 +23,26 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.utility.UUID
 
-class Context {
-    val someData = "Some data from the context"
-}
-
+/**
+ * # All panes
+ *
+ * This example shows a manually built workspace with all the panes. You typically
+ * don't create the workspace manually but use the application framework from
+ * `lib-app`.
+ */
 @Adaptive
-fun workspaceRecipe(): AdaptiveFragment {
+fun mpwAllPanesExample(): AdaptiveFragment {
 
-    val workspace = MultiPaneWorkspace(adapter().backend, NoBackendWorkspace())
-    workspace.contexts += Context()
+    val workspace = MultiPaneWorkspace(
+        adapter().backend,
+        NoBackendWorkspace(),
+        toolSizeDefault = 100.dp
+    )
+
     initPanes(workspace)
 
     box {
-        maxSize .. backgrounds.friendlyOpaque .. padding { 16.dp }
+        maxWidth .. height { 600.dp } .. backgrounds.friendlyOpaque .. padding { 16.dp }
 
         grid {
             maxSize .. colTemplate(DEFAULT.width, 1.fr, DEFAULT.width)
@@ -170,14 +176,22 @@ fun initPanes(workspace: MultiPaneWorkspace) {
         )
     )
 
-    workspace.center.value = workspace.toolPanes.first { it.paneDef.position == PanePosition.Center }.uuid
+    workspace.leftTop.value = workspace.toolPanes.first { it.paneDef.position == PanePosition.LeftTop }.uuid
+    workspace.leftMiddle.value = workspace.toolPanes.first { it.paneDef.position == PanePosition.LeftMiddle }.uuid
+    workspace.leftBottom.value = workspace.toolPanes.first { it.paneDef.position == PanePosition.LeftBottom }.uuid
+
+    workspace.rightTop.value = workspace.toolPanes.first { it.paneDef.position == PanePosition.RightTop }.uuid
+    workspace.rightMiddle.value = workspace.toolPanes.first { it.paneDef.position == PanePosition.RightMiddle }.uuid
+    workspace.rightBottom.value = workspace.toolPanes.first { it.paneDef.position == PanePosition.RightBottom }.uuid
+
+    workspace.updateSplits()
 }
 
 
 @Adaptive
 fun rightTop(): AdaptiveFragment {
     box {
-        padding { 16.dp }
+        maxWidth .. scroll .. padding { 16.dp }
         text("right top")
     }
     return fragment()
@@ -186,7 +200,7 @@ fun rightTop(): AdaptiveFragment {
 @Adaptive
 fun rightMiddle(): AdaptiveFragment {
     box {
-        padding { 16.dp }
+        maxWidth .. scroll .. padding { 16.dp }
         text("right middle")
     }
     return fragment()
@@ -195,7 +209,7 @@ fun rightMiddle(): AdaptiveFragment {
 @Adaptive
 fun bottomRight(): AdaptiveFragment {
     box {
-        padding { 16.dp }
+        maxWidth .. scroll .. padding { 16.dp }
         text("bottom right")
     }
     return fragment()
@@ -204,7 +218,7 @@ fun bottomRight(): AdaptiveFragment {
 @Adaptive
 fun leftTop(): AdaptiveFragment {
     box {
-        padding { 16.dp }
+        maxWidth .. scroll .. padding { 16.dp }
         text("left top")
     }
     return fragment()
@@ -213,7 +227,7 @@ fun leftTop(): AdaptiveFragment {
 @Adaptive
 fun leftMiddle1(): AdaptiveFragment {
     box {
-        padding { 16.dp }
+        maxWidth .. scroll .. padding { 16.dp }
         text("left middle - 1")
     }
     return fragment()
@@ -222,7 +236,7 @@ fun leftMiddle1(): AdaptiveFragment {
 @Adaptive
 fun leftMiddle2(): AdaptiveFragment {
     box {
-        padding { 16.dp }
+        maxWidth .. scroll .. padding { 16.dp }
         text("left middle - 2")
     }
     return fragment()
@@ -231,7 +245,7 @@ fun leftMiddle2(): AdaptiveFragment {
 @Adaptive
 fun leftMiddle3(): AdaptiveFragment {
     box {
-        padding { 16.dp }
+        maxWidth .. scroll .. padding { 16.dp }
         text("left middle - 3")
     }
     return fragment()
@@ -240,7 +254,7 @@ fun leftMiddle3(): AdaptiveFragment {
 @Adaptive
 fun bottomLeft(): AdaptiveFragment {
     box {
-        padding { 16.dp }
+        maxWidth .. scroll .. padding { 16.dp }
         text("bottom left")
     }
     return fragment()
@@ -248,13 +262,10 @@ fun bottomLeft(): AdaptiveFragment {
 
 @Adaptive
 fun center(): AdaptiveFragment {
-    val context = fragment().wsContext<Context>()
-
     box {
-        padding { 16.dp }
+        maxWidth .. scroll .. padding { 16.dp }
         column {
             text("center")
-            text(context.someData)
         }
     }
     return fragment()

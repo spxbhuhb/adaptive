@@ -2,7 +2,6 @@ package `fun`.adaptive.grove.doc.ui
 
 import `fun`.adaptive.foundation.value.observableOf
 import `fun`.adaptive.grove.doc.model.GroveDocSpec
-import `fun`.adaptive.grove.doc.model.GroveDocValue
 import `fun`.adaptive.grove.doc.model.groveDocDomain
 import `fun`.adaptive.markdown.transform.MarkdownToTreeVisitor
 import `fun`.adaptive.resource.graphics.Graphics
@@ -20,10 +19,8 @@ import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewBackend
-import `fun`.adaptive.ui.value.AvUiTreeViewBackend
 import `fun`.adaptive.utility.decodeFromUrl
 import `fun`.adaptive.utility.encodeToUrl
-import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.remote.AvRemoteValueSubscriber
 
 class DocToolViewBackend(
@@ -59,9 +56,17 @@ class DocToolViewBackend(
         item: TreeItem<String>,
         modifiers: Set<EventModifier>
     ) {
+        openDocument(item.data, modifiers)
+        TreeViewBackend.defaultSelectedFun(backend !!, item, modifiers)
+    }
+
+    fun openDocument(
+        data: String,
+        modifiers: Set<EventModifier>
+    ) {
         val referenceTool = workspace.toolBackend(ReferenceToolViewBackend::class) ?: return
 
-        val name = item.data.removeSuffix(".md").decodeFromUrl()
+        val name = data.removeSuffix(".md").decodeFromUrl()
 
         val value = when {
             name.startsWith(groveDocDomain.guide) -> referenceTool.findGuideByName(name.removePrefix(groveDocDomain.guide + "-"))
@@ -70,14 +75,13 @@ class DocToolViewBackend(
         }
 
         if (value == null) {
-            warningNotification("Cannot find guide: ${item.data}")
+            warningNotification("Cannot find guide: $data")
             return
         }
 
         val path = referenceTool.docPathNames(value)
 
         workspace.addContent(groveDocDomain.node, GroveDocContentItem(path), modifiers)
-        TreeViewBackend.defaultSelectedFun(backend !!, item, modifiers)
     }
 
     override fun resolve(navState: NavState): Pair<PaneContentType, PaneContentItem>? {

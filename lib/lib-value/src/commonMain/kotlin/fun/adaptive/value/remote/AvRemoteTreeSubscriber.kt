@@ -105,6 +105,9 @@ abstract class AvRemoteTreeSubscriber<SPEC : Any, TREE_ITEM>(
     fun find(condition : (AvValue<SPEC>) -> Boolean) : AvValue<SPEC>? =
         nodeMap.values.find { node -> node.value?.let { condition(it) } ?: false }?.let { return it.value!! }
 
+    fun filter(condition : (AvValue<SPEC>) -> Boolean) : List<AvValue<SPEC>> =
+        nodeMap.values.filter { node -> node.value?.let { condition(it) } ?: false }.mapNotNull { it.value }
+
     override fun onCommit() {
         refresh()
 

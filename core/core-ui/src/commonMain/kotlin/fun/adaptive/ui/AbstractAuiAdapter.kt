@@ -223,9 +223,17 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
     }
 
     // ------------------------------------------------------------------------------
-    // Scroll support
+    // Focus support
     // ------------------------------------------------------------------------------
 
+    open fun focus(fragment: AbstractAuiFragment<*>) {
+        // Asterisks prevents need for casting
+        unsupported()
+    }
+
+    // ------------------------------------------------------------------------------
+    // Scroll support
+    // ------------------------------------------------------------------------------
 
     /**
      * Get the scroll position of the fragment in the nearest scrollable
