@@ -1,3 +1,7 @@
+---
+status: review
+---
+
 # Scrolling
 
 Scrolling and scrollbar styling is a problematic topic, especially in browsers.
@@ -12,6 +16,49 @@ scroll
 
 To have scrolling work properly, you have to limit the size of the container in the
 scroll direction at least.
+
+When adding scroll, pay attention to where you add the instruction.
+
+This works, as you apply scroll to the column that contains the big stuff.
+
+```kotlin
+@Adaptive
+fun a() {
+    column {
+        scroll
+        bigStuff()
+    }
+}
+
+@Adaptive
+fun bigStuff() {
+    box(size(10000.dp, 10000.dp)) {  }
+}
+```
+
+This **DOES NOT WORK**. The reason is that the `box` is already big. It does not need
+to be scrolled to contain everything. The column that contains `bigStuff` is small,
+the content of that column has to be scrolled.
+
+```kotlin
+import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.ui.api.scroll
+
+@Adaptive
+fun a() {
+    column {
+        bigStuff()
+    }
+}
+
+@Adaptive 
+fun bigStuff() {
+    box(size(10000.dp, 10000.dp)) {
+        scroll
+        throw RuntimeException("THIS DOES NOT WORK")
+    }
+}
+```
 
 ## Scrollbar style in browsers
 

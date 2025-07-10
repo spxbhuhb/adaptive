@@ -13,7 +13,8 @@ import `fun`.adaptive.sandbox.recipe.document.markdown.markdownHintExample
 import `fun`.adaptive.sandbox.recipe.document.markdown.markdownStyledExample
 import `fun`.adaptive.sandbox.recipe.document.xlsx.xlsxDownloadExample
 import `fun`.adaptive.sandbox.recipe.ui.badge.*
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasRecipe
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPositionExample
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
@@ -69,7 +70,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:goodmorning", ::goodMorning)
 
         add("cookbook:recipe:box", ::boxRecipe)
-        add("cookbook:recipe:canvas", ::canvasRecipe)
         add("cookbook:recipe:checkbox", ::checkboxRecipe)
         add("cookbook:recipe:codefence", ::codeFenceRecipe)
         add("cookbook:recipe:event", ::eventRecipe)
@@ -85,6 +85,13 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:workspace", ::workspaceRecipe)
 
         add("cookbook:recipe:input:quick-filter", ::quickFilterRecipe)
+
+        // ----------------------------------------------------------------------------
+        // Canvas
+        // ----------------------------------------------------------------------------
+
+        add("canvasBasicExample", ::canvasBasicExample)
+        add("canvasPositionExample", ::canvasPositionExample)
 
         // ----------------------------------------------------------------------------
         // Container
@@ -212,10 +219,10 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Select Input
         // ----------------------------------------------------------------------------
 
-        add("cookbook/input/select/example/dropdown", ::selectInputDropdownExample)
-        add("cookbook/input/select/example/text", ::selectInputTextExample)
-        add("cookbook/input/select/example/icon-and-text", ::selectInputIconAndTextExample)
-        add("cookbook/input/select/example/checkbox", ::selectInputCheckboxExample)
+        add("selectInputDropdownExample", ::selectInputDropdownExample)
+        add("selectInputTextExample", ::selectInputTextExample)
+        add("selectInputIconAndTextExample", ::selectInputIconAndTextExample)
+        add("selectInputCheckboxExample", ::selectInputCheckboxExample)
 
         add("cookbook/input/select/playground", ::selectInputPlayground)
 

@@ -30,5 +30,7 @@ object GroveDocValueDomainDef : AvValueDomainDef() {
     val guide = marker { "guide" }
     val definition = marker { "definition" }
 
+    val todo = status { "todo" }
+    val review = status { "review" }
     val outdated = status { "outdated" }
 }

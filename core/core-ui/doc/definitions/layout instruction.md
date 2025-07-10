@@ -8,5 +8,5 @@ is calculated by [ui layout](def://).
 
 - [instruction](def://)
 - [layout](guide://)
-- [built-in layout instructions](guide://)
+- [layout instructions](guide://)
 - [Writing a UI fragment](guide://)

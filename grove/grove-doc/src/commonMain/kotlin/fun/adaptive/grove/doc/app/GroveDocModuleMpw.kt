@@ -48,6 +48,9 @@ class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : Grove
         add(INLINE_DEFINITION, ::inlineDefinition)
 
         badgeThemeMap[groveDocDomain.outdated] = BadgeTheme.error
+        badgeThemeMap[groveDocDomain.review] = BadgeTheme.warning
+        badgeThemeMap[groveDocDomain.todo] = BadgeTheme.important
+
         iconCache[groveDocDomain.node] = Graphics.menu_book
     }
 

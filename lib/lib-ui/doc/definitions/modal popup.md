@@ -7,4 +7,4 @@ It typically requires a user action to close and is used to display important in
 
 ## See also
 
-- [Modal popup](guide://)
+- [Modal](guide://)

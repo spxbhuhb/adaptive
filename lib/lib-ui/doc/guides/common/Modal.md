@@ -1,4 +1,4 @@
-# Modal popup
+# Modal
 
 [modal popup](def://?inline)
 

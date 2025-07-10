@@ -5,25 +5,11 @@ Select lets the user choose from options.
 There are many configuration and rendering options. You can create a dropdown style select, 
 a list of options or something like a choice-group, etc.
 
----
-
-## Hard-coded examples
-
-[Select input dropdown example](actualize:///cookbook/input/select/example/dropdown)
-
-[Select input text example](actualize:///cookbook/input/select/example/text)
-
-[Select input icon and text example](actualize:///cookbook/input/select/example/icon-and-text)
-
-[Select input checkbox example](actualize:///cookbook/input/select/example/checkbox)
-
----
-            
+[examples](actualize://example-group?name=selectInput)
+ 
 ## Playground
 
-[Select input playground](actualize:///cookbook/input/select/playground)
-
----
+[Select input playground](actualize://cookbook/input/select/playground)
 
 ## Details
 

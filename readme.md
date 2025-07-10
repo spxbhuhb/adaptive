@@ -7,7 +7,7 @@ say: "Don't reinvent the wheel."
 
 While there's some truth to that, let me ask you:
 
-* Do F1 race cars run on the wooden wheels of medieval wagons?
+* Do today's 40-ton trucks run on the wooden wheels of medieval wagons?
 * Why are there 3 million packages on NPM?
 
 Currently, Adaptive is under the initial development, not ready for the broader 

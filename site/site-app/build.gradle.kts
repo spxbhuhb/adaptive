@@ -87,6 +87,7 @@ kotlin {
         jsMain {
             dependencies {
                 implementation(libs.ktor.client.core)
+                implementation(libs.kotlinx.coroutines.debug)
             }
         }
 

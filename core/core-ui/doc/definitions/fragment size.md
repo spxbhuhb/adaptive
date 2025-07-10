@@ -5,7 +5,7 @@ Fragment size is the total width and height of a [UI fragment](def://), calculat
 ## See also
 
 - [layout](guide://)
-- [built-in layout instructions](guide://)
+- [layout instructions](guide://)
 - [built-in ui container fragments](guide://)
 - [layout instruction](def://)
 - [intrinsic size](def://)

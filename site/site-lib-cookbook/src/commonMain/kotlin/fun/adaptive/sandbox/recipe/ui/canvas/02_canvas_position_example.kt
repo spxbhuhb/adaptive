@@ -28,41 +28,11 @@ import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.time.Duration.Companion.milliseconds
 
+/**
+ * # Canvas positioning
+ */
 @Adaptive
-fun canvasRecipe(): AdaptiveFragment {
-    column {
-        maxSize .. verticalScroll
-        flowBox {
-            basicCanvas()
-            networkCanvas()
-        }
-    }
-
-    return fragment()
-}
-
-@Adaptive
-fun basicCanvas() {
-    val seconds = poll(50.milliseconds) { (now().toEpochMilliseconds() % 3600).toDouble() } ?: 0.0
-
-    box {
-        size(402.dp, 402.dp) .. borders.outline
-
-        canvas {
-            maxSize
-
-            circle(100.0, 100.0, seconds / 30.0) .. fill(Color(0x00ff00u, 0.3))
-            transform {
-                translate(100.0, 100.0) .. rotate((seconds / 10) * PI / 180, 0.0, 0.0)
-                fillText(0.0, 0.0, "Canvas") .. fill(0xff00ff)
-            }
-            line(200.0, 200.0, 400.0, 400.0) .. stroke(0x0000ff)
-        }
-    }
-}
-
-@Adaptive
-fun networkCanvas() {
+fun canvasPositionExample() : AdaptiveFragment {
     val positions = positionTree(root, centerX = 200.0, centerY = 200.0, radiusIncrement = 70.0)
 
     box {
@@ -76,6 +46,8 @@ fun networkCanvas() {
             }
         }
     }
+
+    return fragment()
 }
 
 data class TreeNode<T>(val value: T, val children: List<TreeNode<T>> = listOf())

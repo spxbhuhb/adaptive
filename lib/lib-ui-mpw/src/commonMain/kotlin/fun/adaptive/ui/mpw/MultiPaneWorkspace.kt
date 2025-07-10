@@ -436,7 +436,7 @@ open class MultiPaneWorkspace(
     ) {
         pane.load(item, modifiers)
         group.load(pane)
-        updateUrl(type, item)
+        //updateUrl(type, item)
     }
 
     fun addGroupContentPane(

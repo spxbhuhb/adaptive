@@ -1,6 +1,8 @@
 package `fun`.adaptive.sandbox.recipe.ui.input.select
 
 import `fun`.adaptive.adat.Adat
+import `fun`.adaptive.cookbook.generated.resources.eco
+import `fun`.adaptive.cookbook.generated.resources.zigbee
 import `fun`.adaptive.document.ui.direct.markdownHint
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -17,6 +19,7 @@ import `fun`.adaptive.ui.editor.selectEditorList
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.AdatFormViewBackend
 import `fun`.adaptive.ui.form.adatFormBackend
+import `fun`.adaptive.ui.generated.resources.account_box
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.input.select.SingleSelectInputViewBackend
@@ -25,10 +28,14 @@ import `fun`.adaptive.ui.input.select.selectInputBackend
 import `fun`.adaptive.ui.input.select.selectInputDropdown
 import `fun`.adaptive.ui.input.select.selectInputList
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.utility.UUID.Companion.uuid7
 import kotlin.math.min
 
 @Adaptive
-fun selectInputPlayground(): AdaptiveFragment {
+fun selectInputPlayground(
+    @Suppress("unused")
+    args : Map<String, String>
+): AdaptiveFragment {
 
     val form = observe { adatFormBackend(SelectPlaygroundConfig()) }
 
@@ -162,15 +169,14 @@ fun actualInputList(
     config: SelectPlaygroundConfig
 ): AdaptiveFragment {
     selectInputList(
-        backend,
-        {
-            when (config.itemRenderer) {
-                "Text only" -> selectInputOptionText(it)
-                "Icon and text" -> selectInputOptionIconAndText(it)
-                "Checkbox" -> selectInputOptionCheckbox(it)
-            }
+        backend
+    ) {
+        when (config.itemRenderer) {
+            "Text only" -> selectInputOptionText(it)
+            "Icon and text" -> selectInputOptionIconAndText(it)
+            "Checkbox" -> selectInputOptionCheckbox(it)
         }
-    ) .. instructions()
+    } .. instructions()
     return fragment()
 }
 
@@ -198,3 +204,15 @@ fun actualInputDropdown(
     ) .. instructions()
     return fragment()
 }
+
+private val networkOptions = listOf(
+    "Zigbee" to Graphics.zigbee,
+    "Modbus" to Graphics.account_box,
+    "SPXB" to Graphics.eco
+)
+
+private val roleOptions = listOf(
+    uuid7<Any>() to "Content Manager",
+    uuid7<Any>() to "Editor",
+    uuid7<Any>() to "Viewer"
+)

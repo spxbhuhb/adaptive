@@ -1,3 +1,7 @@
+---
+status: outdated
+---
+
 # Layout
 
 [ui layout](def://?inline)
@@ -86,4 +90,4 @@ Once calculated, the [UI rendering](def://) process applies this data to the [ac
 ## See also
 
 - [built-in UI container fragments](guide://)
-- [built-in layout instructions](guide://)
+- [layout instructions](guide://)

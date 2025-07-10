@@ -24,6 +24,11 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputCheckboxExample
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputDropdownExample
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputIconAndTextExample
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
+import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputTextExample
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaExample
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
 import `fun`.adaptive.sandbox.recipe.ui.text.paragraphLongExample
@@ -123,12 +128,12 @@ fun sandboxMain() {
 //                    text("FeedBack: $feedBack")
 //                    formBasicExample()
                     // quickFilterRecipe()
-                  markdown(
-                            """
-                                The paragraph has a list of styles (instance of [AdaptiveInstructionGroup](class://)), and 
-                                each item selects one of those styles to use.
-                            """.trimIndent()
-                    )
+//                  markdown(
+//                            """
+//                                The paragraph has a list of styles (instance of [AdaptiveInstructionGroup](class://)), and
+//                                each item selects one of those styles to use.
+//                            """.trimIndent()
+//                    )
                     //treePlayground()
 //                    button("hello") {
 //                        dialog(adapter(), "", ::modal)
@@ -136,6 +141,21 @@ fun sandboxMain() {
 //
 //                    modal("hello", { })
 
+
+                    //selectInputDropdownExample()
+
+                    markdown(
+                        """
+                            ## Hard-coded examples
+
+                            [Select input dropdown example](actualize://cookbook/input/select/example/dropdown)
+
+                            ---
+
+                            ## Playground
+
+                        """.trimIndent()
+                    )
                 }
             }
         } catch (ex: Exception) {
@@ -146,8 +166,8 @@ fun sandboxMain() {
 
 @Adaptive
 fun modal(
-    data : String,
-    close : UiClose
+    data: String,
+    close: UiClose
 ) {
     basicModal("stuff") {
         width { 600.dp }

@@ -1,3 +1,7 @@
+---
+status: review
+---
+
 # Popup
 
 Variations:
@@ -7,11 +11,11 @@ Variations:
     - Disappears if the mouse moves out of the container.
 - primary
     - Shows when the user clicks on the container with the primary button (main action).
-    - Remains shown if when the mouse moves out of the container.
+    - Remains showed if when the mouse moves out of the container.
     - Closes if the user clicks outside the popup.
 - context
     - Shows when the user clicks on the container with the secondary button (context menu).
-    - Remains shown if when the mouse moves out of the container.
+    - Remains showed if when the mouse moves out of the container.
     - Closes if the user clicks outside the popup.
 
 Sizing strategy is `fit.content` for all variations.

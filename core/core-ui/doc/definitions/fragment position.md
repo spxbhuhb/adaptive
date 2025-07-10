@@ -9,7 +9,7 @@ Fragment position consists of a `top` and `left` value, both relative to the top
 ## See also
 
 - [layout](guide://)
-- [built-in layout instructions](guide://)
+- [layout instructions](guide://)
 - [built-in ui container fragments](guide://)
 - [layout instruction](def://)
 - [intrinsic size](def://)
