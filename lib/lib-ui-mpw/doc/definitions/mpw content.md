@@ -10,5 +10,5 @@ MPW contents typically register [content panes](def://) with the workspace.
 
 ## See also
 
-- [what is a multi-pane workspace](guide://)
-- [how to implement a content pane](guide://)
+- [Multi-pane workspace](guide://)
+- [Writing a content pane](guide://)

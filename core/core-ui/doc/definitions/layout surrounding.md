@@ -12,4 +12,4 @@ of the fragment and [borders](def://) are drawn.
 
 ## See also
 
-- [layout system](guide://)
+- [layout](guide://)

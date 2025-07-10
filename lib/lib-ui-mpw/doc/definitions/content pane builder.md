@@ -13,5 +13,5 @@ Content pane builders are typically registered during application startup in the
 
 ## See also
 
-- [What is a multi-pane workspace](guide://)
-- [How to implement a content pane](guide://)
+- [Multi-pane workspace](guide://)
+- [Writing a content pane](guide://)

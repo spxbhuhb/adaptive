@@ -78,4 +78,4 @@ my.project
 # See also
 
 - [Documentation system](guide://)
-- [What is an application?](guide://)
+- [Application?](guide://)

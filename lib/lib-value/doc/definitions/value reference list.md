@@ -11,4 +11,4 @@ Value reference lists are heavily used when building [value trees](def://),
 
 ## See also
 
-- [building value trees](guide://)
+- [Value trees](guide://)

@@ -12,5 +12,5 @@ Application modules are typically added to the [application](def://) by the
 # See also
 
 - [application module definition](def://)
-- [What is an application](guide://)
-- [How to write an application module](guide://)
+- [Application](guide://)
+- [Writing an application module](guide://)

@@ -13,5 +13,5 @@ Tool panes typically consist of three parts:
 
 ## See also
 
-- [what is a multi-pane workspace](guide://)
+- [Multi-pane workspace](guide://)
 - [content pane](def://)

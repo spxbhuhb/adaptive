@@ -8,7 +8,7 @@ These provide many advanced functions such as deep copy, difference calculation,
 
 ## See also
 
-- [What is an Adat class](guide://)
-- [What is the Adat metadata](guide://)
-- [What are the Adat functions](guide://)
-- [How to write an Adat class](guide://)
+- [Adat classes](guide://)
+- [Adat metadata](guide://)
+- [Adat functions](guide://)
+- [Writing an Adat class](guide://)

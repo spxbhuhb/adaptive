@@ -9,5 +9,5 @@ Each value is an instance of the [AvValue](class://) class.
 - [value status](def://)
 - [marker](def://)
 - [value reference](def://)
-- [What is a value](guide://)
-- [What is a value store](guide://)
+- [Value](guide://)
+- [Value store](guide://)

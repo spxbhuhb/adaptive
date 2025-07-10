@@ -9,5 +9,5 @@ access control, subscription capabilities, and [persistence](def://).
 - [value](def://)
 - [value store](def://)
 - [value domain](def://)
-- [What is a value](guide://)
-- [What is a value store](guide://)
+- [Value](guide://)
+- [Value store](guide://)

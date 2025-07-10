@@ -84,4 +84,4 @@ values convenient.
 - [getTreeChildIds](function://AvComputeContext)
 - [getTreeSiblingIds](function://AvComputeContext)
 
-For details see [Building value trees](guide://).
+For details see [Value trees](guide://).

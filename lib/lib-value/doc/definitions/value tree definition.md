@@ -13,6 +13,6 @@ The value tree definitions serve as a reusable specification for:
 
 ## See also
 
-- [building value trees](guide://)
+- [Value trees](guide://)
 - [value domain definition](def://)
-- [how to define a value domain](guide://)
+- [Value domain](guide://)

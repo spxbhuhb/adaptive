@@ -9,5 +9,5 @@ Admin tool plugins have to be registered with the [admin tool](def://) to be sho
 ## See also
 
 - [multi-pane workspace](def://)
-- [what is a multi-pane workspace](guide://)
-- [writing an admin tool plugin](guide://)
+- [Multi-pane workspace](guide://)
+- [Admin tool](guide://)

@@ -1,4 +1,4 @@
-# What is a value store
+# Value store
 
 [value store](def://?inline)
 

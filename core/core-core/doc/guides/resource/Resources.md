@@ -1,4 +1,4 @@
-# Resource system
+# Resources
 
 [todo: clean up what is the resource subsystem](todo://)
 

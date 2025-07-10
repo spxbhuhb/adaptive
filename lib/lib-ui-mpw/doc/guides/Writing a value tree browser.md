@@ -8,7 +8,7 @@ straightforward:
 3. Implement the [tool pane](def://). 
 4. Implement the [content pane](def://).
 
-If you add a [tool pane action](def://) to the [tool pane](def://) possibly with a [context menu](def://),
+If you add a [tool pane action](def://) to the [tool pane](def://) possibly with a context [menu](guide://),
 you can easily add/reorder/remove values.
 
 ## Writing a spec class
@@ -20,7 +20,7 @@ You can store any kind of data supported by [Adat classes](def://).
 
 ## Writing a value tree definition
 
-Customize the example below based on [How to define a value domain](guide://) or
+Customize the example below based on [Value domain](guide://) or
 use [AvTreeDef](class://) to define a tree without a domain.
 
 Note the type alias for the [values](def://) the tree handles, it uses the [spec](def://)
@@ -31,7 +31,7 @@ you've just written.
 ## Implementing the tool pane
 
 Customize the [view backend](def://) and the [UI fragment](def://) in the examples below.
-based on [How to implement a tool pane](guide://).
+based on [Writing a tool pane](guide://).
 
 Remember to add the pane to your module definition as explained in the guide.
 
@@ -46,7 +46,7 @@ Remember to add the pane to your module definition as explained in the guide.
 ## Implementing the content pane
 
 Customize the [view backend](def://) and the [UI fragment](def://) in the examples below.
-based on [How to implement a content pane](guide://).
+based on [Writing a content pane](guide://).
 
 Remember to add the pane to your module definition as explained in the guide.
 

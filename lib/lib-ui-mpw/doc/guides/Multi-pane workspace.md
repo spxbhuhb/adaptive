@@ -120,7 +120,7 @@ To add a content pane, use the [addContent](function://MultiPaneWorkspace) funct
 
 [MultiPaneWorkspace](class://) stores the state of the workspace. When you use the application
 framework from [lib-app](def://), the workspace is automatically created during application startup.
-See [What is an application](guide://) for more information.
+See [Application](guide://) for more information.
 
 To create a [multi-pane workspace](def://) manually:
 
@@ -130,11 +130,11 @@ The [state variable](def://) `workspace` typically never changes, instead it con
 fragments can observe to react to changes.
 
 The [localContext](fragment://) fragment makes it possible for all inner fragments to find the workspace instance, 
-as the example below shows. See [How to provide and use a local context](guide://) for details about [local contexts](def://).
+as the example below shows. See [Local context](guide://) for details about [local contexts](def://).
 
 [findWorkspace](example://multiPaneWorkspaceExamples)
 
 ## See also
 
-- [How to implement a tool pane](guide://)
-- [How to implement a content pane](guide://)
+- [Writing a tool pane](guide://)
+- [Writing a content pane](guide://)

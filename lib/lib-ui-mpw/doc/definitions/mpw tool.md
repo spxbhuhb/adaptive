@@ -11,5 +11,5 @@ MPW tools typically register [tool panes](def://) with the workspace.
 
 ## See also
 
-- [what is a multi-pane workspace](guide://)
-- [how to implement a tool pane](guide://)
+- [Multi-pane workspace](guide://)
+- [Writing a tool pane](guide://)

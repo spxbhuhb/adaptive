@@ -1,4 +1,4 @@
-# Layout system
+# Layout
 
 [ui layout](def://?inline)
 

@@ -8,5 +8,5 @@ Remote value stores are typically used in [server applications](def://), but
 
 ## See also
 
-- [what is a value](guide://)
-- [what is a value store](guide://)
+- [Value](guide://)
+- [Value store](guide://)

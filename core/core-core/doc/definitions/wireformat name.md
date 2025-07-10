@@ -8,6 +8,6 @@ type identity across different modules, platforms, or versions.
 
 ## See also
 
-- [introduction to wireformat](guide://)
+- [Wireformat](guide://)
 - [wireformat implementation](def://)
 - [WireFormat](class://)

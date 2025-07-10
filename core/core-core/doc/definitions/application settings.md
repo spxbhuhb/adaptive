@@ -6,5 +6,5 @@ Application settings are typically loaded by [application entry functions](def:/
 
 ## See also
 
-- [What is an application](guide://)
+- [Application](guide://)
 - [settings](function://fun.adaptive.backend.setting.dsl.dsl)

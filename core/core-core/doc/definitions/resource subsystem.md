@@ -11,5 +11,5 @@ during [runtime](def://).
 
 ## See also
 
-- [Resource subsystem](guide://)
-- [writing an application module definition](guide://)
+- [Resources](guide://)
+- [Writing an application module](guide://)

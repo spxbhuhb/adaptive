@@ -16,7 +16,7 @@ encapsulating its semantic and structural identity.
 ## See also
 
 - [value](def://)
-- [what is a value](guide://)
-- [what is a value store](guide://)
-- [building value trees](guide://)
-- [how to define a value domain](guide://)
+- [Value](guide://)
+- [Value store](guide://)
+- [Value trees](guide://)
+- [Value domain](guide://)

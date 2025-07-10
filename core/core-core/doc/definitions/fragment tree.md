@@ -7,7 +7,7 @@ and presented by [Adapters](def://).
 
 ## See Also
 
-- [What is an adapter](guide://)
+- [Adapter](guide://)
 - [Fragment](guide://)
 - [AdaptiveFragment](class://)
 - [AdaptiveAdapter](class://)

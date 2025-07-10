@@ -10,5 +10,5 @@ Wireformat implementations are typically added to the [wireformat registry](def:
 
 ## See also
 
-- [introduction to wireformat](guide://)
-- [writing an application module definition](guide://)
+- [Wireformat](guide://)
+- [Writing an application module](guide://)

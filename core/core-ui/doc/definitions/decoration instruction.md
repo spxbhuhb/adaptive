@@ -11,5 +11,5 @@ Border is a special case where a decoration is also part of the [layout surround
 ## See also
 
 - [instruction](def://)
-- [built-in decoration instructions](guide://)
+- [decoration instructions](guide://)
 - [Writing a UI fragment](guide://)

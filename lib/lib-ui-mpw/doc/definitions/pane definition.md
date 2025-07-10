@@ -7,4 +7,4 @@ so the application knows the available [panes](def://) it can display the user.
 
 ## See also
 
-- [What is a multi-pane workspace](guide://)
+- [Multi-pane workspace](guide://)

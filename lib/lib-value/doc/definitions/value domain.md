@@ -14,7 +14,7 @@ Value domains serve to:
 
 # See also
 
-- [how to define a value domain](guide://)
-- [what is a value](guide://)
-- [what is a value store](guide://)
-- [building value trees](guide://)
+- [Value domain](guide://)
+- [Value](guide://)
+- [Value store](guide://)
+- [Value trees](guide://)

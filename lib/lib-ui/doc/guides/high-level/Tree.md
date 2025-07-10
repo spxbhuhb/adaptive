@@ -1,4 +1,4 @@
-# How to show trees
+# Tree
 
 Trees in [user interfaces](def://) are typically quite complex, especially if you want
 automatic updates, tree editing functions such as adding, removing and re-ordering nodes.

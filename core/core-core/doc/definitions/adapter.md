@@ -10,6 +10,6 @@ Each [fragment](def://) belongs to an adapter (it is impossible to create a frag
 
 ## See Also
 
-- [What is an adapter](guide://)
+- [Adapter](guide://)
 - [Fragment](guide://)
 - [AdaptiveAdapter](class://)

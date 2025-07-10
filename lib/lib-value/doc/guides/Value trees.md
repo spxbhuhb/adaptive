@@ -1,4 +1,4 @@
-# Building value trees
+# Value trees
 
 [value tree](def://?inline)
 
@@ -12,7 +12,7 @@ the [AvRefListSpec](class://) class.
 [value tree definitions](def://) are used to define how the [values](def://) in the tree are linked
 together.
 
-They are typically part of a [value domain definition](def://) (see [how to define a value domain](guide://)
+They are typically part of a [value domain definition](def://) (see [Value domain](guide://)
 for more information).
 
 Tree definitions are modeled by the [AvTreeDef](class://) that stores tree-specific
@@ -111,4 +111,4 @@ See the class used for the unit tests for an example:
 [AvUiTree](class://) and [tree](fragment://) from [lib-ui](def://) can be used to 
 display value trees with just a few lines of code.
 
-See [How to show trees](guide://) for more information.
+See [Tree](guide://lib-ui) for more information.

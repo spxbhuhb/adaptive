@@ -9,5 +9,5 @@ values and manage updates.
 
 ## See also
 
-- [what is a value](guide://)
-- [what is a value store](guide://)
+- [Value](guide://)
+- [Value store](guide://)

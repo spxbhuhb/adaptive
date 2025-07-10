@@ -9,7 +9,7 @@ are accessed remotely over a network.
 
 ## See also
 
-- [What is an application](guide://)
+- [Application](guide://)
 - [Application](def://)
 - [Client Application](def://)
 - [Service](def://)

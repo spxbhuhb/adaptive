@@ -81,5 +81,5 @@ Use `observe` to get a value from an `Observable`:
 
 ## See Also
 
-- [What is an instruction](guide://)
 - [Fragment](guide://)
+- [Instruction](guide://)

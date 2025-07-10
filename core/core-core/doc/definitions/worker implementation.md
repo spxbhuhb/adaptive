@@ -5,4 +5,4 @@ perform periodic tasks and/or provide functions to [service implementations](def
 
 - [application backend](def://)
 - [backend fragment implementation](def://)
-- [How to write a worker](guide://)
+- [Writing a worker](guide://)

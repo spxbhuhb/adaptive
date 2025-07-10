@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.instruction.emptyInstructions
+import `fun`.adaptive.foundation.value.observableOf
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.ktor.api.webSocketTransport
@@ -18,6 +19,7 @@ import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.LocalServiceCallTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.wireformat.WireFormatProvider
 import `fun`.adaptive.wireformat.api.Proto
 import kotlinx.browser.window
@@ -35,6 +37,17 @@ abstract class BrowserApplication<WT : FrontendWorkspace> : ClientApplication<WT
 
     override val backendWorkspace = BackendWorkspace(this)
     override lateinit var frontendWorkspace: WT
+
+    /**
+     * Current navigation state of the application
+     *
+     * - observable of `NavState`
+     * - initialized from `window.location.href`
+     * - changed by:
+     *   - browser `popstate` event
+     *   - [push](function://BrowserHistoryStateListener)
+     */
+    val navState = observableOf { NavState.parse(window.location.href) }
 
     val historyStateListener = BrowserHistoryStateListener(this)
 

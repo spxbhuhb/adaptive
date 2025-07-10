@@ -12,4 +12,4 @@ Content pane groups are shown in the center area of the [multi-pane workspace](d
 
 ## See also
 
-- [what is a multi-pane workspace](guide://)
+- [Multi-pane workspace](guide://)

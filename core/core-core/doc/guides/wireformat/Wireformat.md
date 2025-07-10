@@ -1,6 +1,6 @@
 # Wireformat
 
-[Wireformat](def://?inline)
+[wireformat](def://?inline)
 
 WireFormat supports [JSON](https://json.org) and [Protocol Buffers](https://protobuf.dev) out of the box, 
 protobuf being the default, JSON is provided for the faint-hearted.
@@ -23,7 +23,7 @@ As of now, [wireformat implementations](def://) have to be registered manually i
 This is a limitation of the Kotlin compiler incremental compiling. While workarounds are possible, I don't know if
 the effort to write them would be worth it.
 
-See [writing an application module definition](guide://) for examples about how to register implementations.
+See [Module definition](guide://) for examples about how to register implementations.
 
 ## Wireformat for enum classes
 
@@ -167,5 +167,5 @@ any "if this then that" conditions which would be hard to remember.
 ## See also
 
 - [Low-level JSON](guide://)
-- [Transform a JSON file](guide://)
+- [JSON transform](guide://)
 - [Protobuf implementation details](guide://)

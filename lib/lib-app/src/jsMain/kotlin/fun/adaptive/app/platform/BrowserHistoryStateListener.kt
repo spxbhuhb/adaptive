@@ -7,30 +7,38 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import org.w3c.dom.PopStateEvent
 
+/**
+ * Contains the current navigation state of the application and listens for the
+ * `popstate` browser event. When `popstate` happens, updates [BrowserApplication.navState].
+ */
 class BrowserHistoryStateListener(
     val application: BrowserApplication<*>
 ) {
 
-    var popState: NavState? = null
-
     init {
         window.addEventListener("popstate", { event ->
             event as PopStateEvent
-            popState = NavState.Companion.fromJson(event.state.toString().encodeToByteArray())
-
-            val title = popState?.title ?: ""
-            document.title = title
+            application.navState.value = NavState.fromJson(event.state.toString().encodeToByteArray()).also {
+                document.title = it.title ?: ""
+            }
         })
     }
 
-    fun push(newValue: NavState, oldValue: NavState?) {
-        if (popState == newValue) return // change right after the popstate should not push the state
-        if (oldValue == newValue) return
+    /**
+     * Change the navigation state of the application.
+     *
+     * - adds a [newState] to the browser history if it is different than he current one
+     * - sets the document title from the state
+     * - sets [navState]
+     */
+    fun push(newState: NavState) {
+        if (application.navState.value == newState) return // change right after the popstate should not push the state
 
-        val title = newValue.title ?: ""
+        val title = newState.title ?: ""
         document.title = title
 
-        window.history.pushState(newValue.encodeToJsonString(), newValue.title ?: "", newValue.url.toString())
+        window.history.pushState(newState.encodeToJsonString(), newState.title ?: "", newState.url.toString())
+        application.navState.value = newState
     }
 
 }

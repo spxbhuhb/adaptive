@@ -8,5 +8,5 @@ searches this registry for implementations when decoding serialized data.
 
 ## See also
 
-- [introduction to wireformat](guide://)
-- [writing an application module definition](guide://)
+- [Wireformat](guide://)
+- [Writing an application module](guide://)

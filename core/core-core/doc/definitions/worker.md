@@ -9,4 +9,4 @@ during startup by the [application module definition](def://).
 
 - [worker implementation](def://)
 - [application backend](def://)
-- [How to write a worker](guide://)
+- [Writing a worker](guide://)

@@ -18,4 +18,4 @@ Border is part of the [layout surrounding](def://) of the fragment.
 ## See also
 
 - [ui layout](def://)
-- [layout system](guide://)
+- [layout](guide://)

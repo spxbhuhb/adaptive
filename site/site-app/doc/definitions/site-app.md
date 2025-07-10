@@ -5,4 +5,5 @@
 
 ## See also
 
+- [site-lib-cookbook](def://)
 - [Project structure](guide://)

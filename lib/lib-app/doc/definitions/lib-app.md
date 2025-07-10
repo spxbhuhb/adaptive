@@ -8,6 +8,6 @@ some commonly used application components such as a list of users, password chan
 ## See also
 
 - [application](def://)
-- [What is an application](guide://)
-- [How to write an application](guid://)
+- [Application](guide://)
+- [Writing an application](guid://)
 - [Project structure](guide://)

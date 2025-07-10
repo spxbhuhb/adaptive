@@ -9,5 +9,5 @@ to it.
 
 ## See also
 
-- [What is a value](guide://)
-- [What is a value store](guide://)
+- [Value](guide://)
+- [Value store](guide://)

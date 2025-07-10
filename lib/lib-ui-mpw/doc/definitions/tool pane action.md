@@ -11,4 +11,4 @@ Tool pane actions are typically defined in the [view backend](def://) of the [to
 ## See also
 
 - [multi-pane workspace](def://)
-- [how to implement a tool pane](guide://)
+- [Writing a tool pane](guide://)

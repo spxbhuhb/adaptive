@@ -8,6 +8,6 @@ are lost.
 
 ## See also
 
-- [what is a value](guide://)
-- [what is a value store](guide://)
+- [Value](guide://)
+- [Value store](guide://)
 - [built-in persistence providers](guide://)

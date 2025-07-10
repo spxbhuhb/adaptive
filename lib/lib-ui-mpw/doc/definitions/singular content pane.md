@@ -11,4 +11,4 @@ reused to show different sections.
 ## See also
 
 - [multi-pane workspace](def://)
-- [what is a multi-pane workspace](guide://)
+- [Multi-pane workspace](guide://)

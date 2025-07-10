@@ -518,7 +518,7 @@ open class MultiPaneWorkspace(
     ) {
         for (resolver in urlResolvers) {
             val navState = resolver.toNavState(type, item) ?: continue
-            application.setUrl(navState.url.toString())
+            application.setNavState(navState.url.toString())
             break
         }
     }

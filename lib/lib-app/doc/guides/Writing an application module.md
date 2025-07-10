@@ -1,4 +1,4 @@
-# How to write an application module
+# Writing an application module
 
 This guide defines the classes needed to implement an [application module](def://) named
 `example` under the package `my.project`. It supports:
@@ -140,4 +140,4 @@ fun main() {
 
 # See also
 
-- [What is an application](guide://)
+- [Application](guide://)

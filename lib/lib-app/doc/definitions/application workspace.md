@@ -14,7 +14,7 @@ data handling and update processing.
 
 ## See also
 
-- [What is an application](guide://)
+- [Application](guide://)
 - [AbstractApplication](class://)
 - [AbstractWorkspace](class://)
 - [BackendWorkspace](class://)

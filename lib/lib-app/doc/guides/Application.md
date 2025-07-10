@@ -90,7 +90,7 @@ src/commonMain/kotlin/my/project
 
 - `example` is the top-level directory of the module.
 - `api` contains service API interface definitions.
-- `app` contains the application module definition classes, see [How to write an application module](guide://).
+- `app` contains the application module definition classes, see [Writing an application module](guide://).
 - `lib` contains function shared by components across the module
 - `model` contains the data model of the module, typically Adat classes and enumerations.
 - `server` contains server fragment implementations.
@@ -202,6 +202,6 @@ class ExampleWorker : WorkerImpl<ExampleWorker> {
 
 # See Also
 
-- [How to write a basic application](guide://)
-- [How to write a workspace-based application](guide://)
-- [How to write an application module](guide://)
+- [Writing a basic application](guide://)
+- [Writing an MPW application](guide://)
+- [Writing an application module](guide://)

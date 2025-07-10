@@ -1,4 +1,4 @@
-# How to define a value domain
+# Value domain
 
 [value domain](def://?inline)
 
@@ -29,4 +29,4 @@ This pattern ensures that:
 - [value](def://)
 - [value store](def://)
 - [value domain definition](def://)
-- [building value trees](guide://)
+- [Value trees](guide://)

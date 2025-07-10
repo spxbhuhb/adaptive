@@ -7,6 +7,6 @@ is calculated by [ui layout](def://).
 ## See also
 
 - [instruction](def://)
-- [layout system](guide://)
+- [layout](guide://)
 - [built-in layout instructions](guide://)
 - [Writing a UI fragment](guide://)

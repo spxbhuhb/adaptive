@@ -11,4 +11,4 @@ are typically created on-demand when the user first opens the pane.
 
 ## See also
 
-- [What is a multi-pane workspace](guide://)
+- [Multi-pane workspace](guide://)

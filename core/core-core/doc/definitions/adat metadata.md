@@ -4,7 +4,7 @@ Data that describes an [adat class](def://).
 
 ## See also
 
-- [What is the Adat metadata](guide://)
-- [What is an Adat class](guide://)
+- [Adat metadata](guide://)
+- [Adat classes](guide://)
 - [AdatClassMetadata](class://)
 - [AdatPropertyMetadata](class://)

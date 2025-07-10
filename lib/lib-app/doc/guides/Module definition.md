@@ -1,4 +1,4 @@
-# Writing a module definition
+# Module definition
 
 [application module definition](def://?inline)
 
@@ -39,7 +39,7 @@ Both `ExampleModuleClient` and `ExampleModuleServer` modules extend `ExampleModu
 consistent behavior across environments.
 
 `commonMainStringsStringStore0` is imported from the package of generated [resources](def://). See
-[Resource subsystem](guide://) for more information.
+[Resources](guide://) for more information.
 
 ## Frontend fragment registration
 

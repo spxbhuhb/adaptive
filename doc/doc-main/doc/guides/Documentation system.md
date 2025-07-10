@@ -99,7 +99,7 @@ Examples of non-code shorthands:
 
 ```markdown
 [value](def://)
-[what is a value](guide://)
+[Value](guide://)
 [markers](guide://what is a value)
 [some image](image://)
 ```

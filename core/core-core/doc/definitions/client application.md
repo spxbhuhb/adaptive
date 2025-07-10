@@ -6,7 +6,7 @@ displaying a [user interface](def://).
 
 # See also
 
-- [What is an application](guide://)
+- [Application](guide://)
 - [Application](def://)
 - [Server Application](def://)
 - [Service](def://)

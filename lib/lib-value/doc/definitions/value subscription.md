@@ -7,5 +7,5 @@ sync with server-side data without requiring polling.
 # See also
 
 - [value](def://)
-- [what is a value](guide://)
-- [what is a value store](guide://)
+- [Value](guide://)
+- [Value store](guide://)

@@ -5,5 +5,5 @@ a value store and provides convenience functions for value handling.
 
 # See also
 
-- [What is a value store](guide://)
-- [What is a value](guide://)
+- [Value store](guide://)
+- [Value](guide://)

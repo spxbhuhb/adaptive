@@ -7,4 +7,4 @@ It is the point of interaction between a human user and the [client application]
 
 - [Application](def://)
 - [Client Application](def://)
-- [How to write an application](guide://)
+- [Writing an application](guide://)

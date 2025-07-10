@@ -25,7 +25,7 @@ abstract class AbstractApplication<FW : AbstractWorkspace, BW : AbstractWorkspac
      * feature, applications may or may not implement it. The default implementation is an empty
      * function.
      */
-    open fun setUrl(url: String) {
+    open fun setNavState(url: String) {
 
     }
 }

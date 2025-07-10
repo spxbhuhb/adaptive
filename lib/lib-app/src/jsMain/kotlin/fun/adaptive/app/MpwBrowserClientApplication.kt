@@ -41,8 +41,8 @@ open class MpwBrowserClientApplication(
         super.frontendAdapterInit(adapter)
     }
 
-    override fun setUrl(url: String) {
-        historyStateListener.push(NavState.parse(url), null)
+    override fun setNavState(url: String) {
+        historyStateListener.push(NavState.parse(url))
     }
 
     companion object {

@@ -80,7 +80,7 @@ The admin tool provides a centralized list of administration plugins for [multi-
 
 The tool shows a list of the plugins, built automatically from the content of [plugins](property://AppAdminModuleMpw).
 
-See [writing an admin tool plugin](guide://) for more information.
+See [Admin tool](guide://) for more information.
 
 ## Inspect tool
 

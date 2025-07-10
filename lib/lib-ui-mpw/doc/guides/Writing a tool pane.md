@@ -39,7 +39,7 @@ notify the fragment which starts the standard [patching](def://) and updates the
 ### Adding the tool pane
 
 The [tool pane](def://) is usually added to the [application module definition](def://). For more
-information about [application modules](def://) see [What is an application](guide://).
+information about [application modules](def://) see [Application](guide://).
 
 Adding the tool pane involves these steps:
 

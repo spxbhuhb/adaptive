@@ -7,5 +7,5 @@ font and font size can be measured and has its own dimensions.
 ## See also
 
 - [fragment size](def://)
-- [layout system](guide://)
+- [layout](guide://)
 - [layout surrounding](def://)

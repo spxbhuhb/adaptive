@@ -9,4 +9,4 @@ on the screen.
 ## See also
 
 - [multi-pane workspace](def://)
-- [how to implement a tool pane](guide://)
+- [Writing a tool pane](guide://)
