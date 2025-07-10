@@ -79,11 +79,6 @@ kotlin {
             implementation(libs.androidx.constraintlayout)
             implementation(libs.android.material)
         }
-
-        jsMain.dependencies {
-            implementation(libs.kotlin.wrappers.web)
-        }
-
     }
 }
 

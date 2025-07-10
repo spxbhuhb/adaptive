@@ -15,7 +15,6 @@ import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.instruction.layout.Alignment
-import `fun`.adaptive.ui.platform.NavSupport
 import `fun`.adaptive.ui.platform.ResizeObserver
 import `fun`.adaptive.ui.platform.applyCustomScrollBar
 import `fun`.adaptive.ui.platform.getScrollbarWidth
@@ -269,13 +268,6 @@ class AuiBrowserAdapter(
             layoutContainer.receiver.scrollTo(targetLeft, targetTop)
         }
     }
-
-
-    // ------------------------------------------------------------------------------
-    // Nav Support
-    // ------------------------------------------------------------------------------
-
-    override val navSupport = NavSupport(this)
 
     // ------------------------------------------------------------------------------
     // Cleanup

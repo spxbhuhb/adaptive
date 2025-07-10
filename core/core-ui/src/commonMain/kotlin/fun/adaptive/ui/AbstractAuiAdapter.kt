@@ -4,13 +4,9 @@
 
 package `fun`.adaptive.ui
 
-import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.FragmentTask
+import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.emptyInstructions
-import `fun`.adaptive.foundation.nonLayoutTopLevelMessage
-import `fun`.adaptive.foundation.nonLayoutTopLevelPath
-import `fun`.adaptive.foundation.opsCheck
 import `fun`.adaptive.log.expectNotNull
 import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.reflect.typeSignature
@@ -28,7 +24,6 @@ import `fun`.adaptive.ui.platform.media.MediaMetrics
 import `fun`.adaptive.ui.platform.media.MediaMetricsProducer
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.render.model.TextRenderData
-import `fun`.adaptive.ui.support.navigation.AbstractNavSupport
 import `fun`.adaptive.utility.trimSignature
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
@@ -278,16 +273,6 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
     inline fun <reified RT> expectUiFragment(fragment: AdaptiveFragment): AbstractAuiFragment<RT>? {
         @Suppress("UNCHECKED_CAST")
         return expectNotNull(logger, fragment as? AbstractAuiFragment<RT>) { "Fragment is not an AuiFragment: ${fragment.typeSignature()}" }
-    }
-
-    // ------------------------------------------------------------------------------
-    // Navigation support
-    // ------------------------------------------------------------------------------
-
-    abstract val navSupport: AbstractNavSupport
-
-    fun navChange() {
-        trace("nav-change", navSupport.root.toString())
     }
 
     // ------------------------------------------------------------------------------

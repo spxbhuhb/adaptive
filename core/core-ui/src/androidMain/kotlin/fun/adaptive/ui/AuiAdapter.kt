@@ -29,7 +29,6 @@ import `fun`.adaptive.ui.platform.ContainerViewGroup
 import `fun`.adaptive.ui.platform.StructuralViewGroup
 import `fun`.adaptive.ui.platform.media.MediaMetrics
 import `fun`.adaptive.ui.render.model.*
-import `fun`.adaptive.ui.support.navigation.AbstractNavSupport
 
 open class AuiAdapter(
     val context: Context,
@@ -246,7 +245,4 @@ open class AuiAdapter(
         defaultResourceEnvironment.theme,
         manualTheme
     )
-
-    override val navSupport: AbstractNavSupport
-        get() = TODO("Not yet implemented")
 }

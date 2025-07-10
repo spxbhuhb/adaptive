@@ -15,7 +15,7 @@ open class ResourceFileSet<T : ResourceFile>(
     var lastResult: T? = null
 
     open val cacheResource
-        get() = false
+        get() = true
 
     var cachedContent: ByteArray? = null
 

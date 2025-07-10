@@ -87,9 +87,12 @@ open class AuiImage(
 
             renderData.innerWidth = innerWidth
             renderData.innerHeight = innerHeight
-
-            scheduleUpdate()
+        } else {
+            renderData.innerWidth = 0.0
+            renderData.innerHeight = 0.0
         }
+
+        scheduleUpdate()
     }
 
     override fun computeLayout(width: Double, height: Double) =
@@ -135,5 +138,9 @@ open class AuiImage(
         receiver.width = renderData.finalWidth.toInt()
         receiver.height = renderData.finalHeight.toInt()
         super.placeLayout(top, left)
+    }
+
+    override fun shouldUpdateSelf(): Boolean {
+        return false
     }
 }
