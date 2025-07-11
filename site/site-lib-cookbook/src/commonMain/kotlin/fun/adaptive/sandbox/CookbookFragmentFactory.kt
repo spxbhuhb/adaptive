@@ -18,6 +18,7 @@ import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorBasic
 import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorConfig
 import `fun`.adaptive.sandbox.recipe.ui.editor.enum_.enumEditorDropdownExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.enum_.enumEditorListExample
+import `fun`.adaptive.sandbox.recipe.ui.editor.status.statusEditorSingleExample
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
@@ -32,6 +33,7 @@ import `fun`.adaptive.sandbox.recipe.ui.input.datetime.dateTimeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.double_.*
 import `fun`.adaptive.sandbox.recipe.ui.input.integer.*
 import `fun`.adaptive.sandbox.recipe.ui.input.select.*
+import `fun`.adaptive.sandbox.recipe.ui.input.status.statusInputSingleExample
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaExample
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputPlayground
 import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
@@ -242,6 +244,13 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("selectInputCheckboxExample", ::selectInputCheckboxExample)
 
         add("cookbook/input/select/playground", ::selectInputPlayground)
+
+        // ----------------------------------------------------------------------------
+        // Status
+        // ----------------------------------------------------------------------------
+
+        add("statusInputSingleExample", ::statusInputSingleExample)
+        add("statusEditorSingleExample", ::statusEditorSingleExample)
 
         // ----------------------------------------------------------------------------
         // Text Input

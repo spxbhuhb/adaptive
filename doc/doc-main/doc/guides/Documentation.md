@@ -72,6 +72,7 @@ markers: grove-doc-toc
     - [Enum](guide://)
     - [Int input](guide://)
     - [Select input](guide://)
+    - [Status](guide://)
     - [Text input](guide://)
     - [Time input](guide://)
     - [TimeRange input](guide://)
