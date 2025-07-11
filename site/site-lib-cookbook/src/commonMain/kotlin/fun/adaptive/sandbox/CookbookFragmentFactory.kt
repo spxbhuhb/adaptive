@@ -49,17 +49,20 @@ import `fun`.adaptive.sandbox.recipe.ui.menu.menuItemActions
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuPrimary
 import `fun`.adaptive.sandbox.recipe.ui.mpw.mpwAllPanesExample
 import `fun`.adaptive.sandbox.recipe.ui.mpw.mpwDoubleShiftExample
+import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphLongExample
+import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphNavigatorExample
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.modalPopupCustom
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.modalPopupMultiPage
 import `fun`.adaptive.sandbox.recipe.ui.popup.modal.modalPopupStandard
-import `fun`.adaptive.sandbox.recipe.ui.popup.popupRecipe
+import `fun`.adaptive.sandbox.recipe.ui.popup.popupPlayground
+import `fun`.adaptive.sandbox.recipe.ui.producer.focusBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.producer.hoverBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.producer.mediaMetricsBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.sandbox.recipe.ui.snackbar.snackbarRecipe
 import `fun`.adaptive.sandbox.recipe.ui.svg.svgRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tab.tabRecipe
-import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphBasicExample
-import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphLongExample
-import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphNavigatorExample
 import `fun`.adaptive.sandbox.recipe.ui.text.textRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.tree.treePlayground
@@ -80,7 +83,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:grid", ::gridRecipe)
         add("cookbook:recipe:icon", ::iconRecipe)
         add("cookbook:recipe:markdown:demo", ::markdownDemoRecipe)
-        add("cookbook:recipe:popup", ::popupRecipe)
         add("cookbook:recipe:sidebar", ::sideBarRecipe)
         add("cookbook:recipe:snackbar", ::snackbarRecipe)
         add("cookbook:recipe:svg", ::svgRecipe)
@@ -235,6 +237,20 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("paragraphBasicExample", ::paragraphBasicExample)
         add("paragraphLongExample", ::paragraphLongExample)
         add("paragraphNavigatorExample", ::paragraphNavigatorExample)
+
+        // ----------------------------------------------------------------------------
+        // Popup
+        // ----------------------------------------------------------------------------
+
+        add("popupPlayground", ::popupPlayground)
+
+        // ----------------------------------------------------------------------------
+        // Producer
+        // ----------------------------------------------------------------------------
+
+        add("mediaMetricsBasicExample", ::mediaMetricsBasicExample)
+        add("hoverBasicExample", ::hoverBasicExample)
+        add("focusBasicExample", ::focusBasicExample)
 
         // ----------------------------------------------------------------------------
         // Select Input

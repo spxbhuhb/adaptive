@@ -28,8 +28,8 @@ fun mediaMetrics(
 /**
  * Produces:
  *
- * - `true` if the mouse hovers over any of the children of the fragment
- * - `false` when the mouse is outside all children of the fragment
+ * - `true` if the mouse hovers over any the fragment descendants
+ * - `false` when the mouse is outside all the fragment descendants
  */
 @Producer
 fun hover(
@@ -49,8 +49,8 @@ fun hover(
 /**
  * Produces:
  *
- * - `true` if any of the children of the fragment have focus
- * - `false` when none of the children of the fragment have focus
+ * - `true` if any of the fragment descendants have focus
+ * - `false` when none the fragment descendants have focus
  */
 @Producer
 fun focus(

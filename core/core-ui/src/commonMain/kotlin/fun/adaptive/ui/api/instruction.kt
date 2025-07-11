@@ -46,13 +46,14 @@ fun cornerRadius(all: DPixel) = CornerRadius(all)
 fun cornerRadius(topLeft: DPixel? = null, topRight: DPixel? = null, bottomLeft: DPixel? = null, bottomRight: DPixel? = null) = CornerRadius(topLeft, topRight, bottomLeft, bottomRight)
 
 fun cornerBottomLeftRadius(bottomLeft: DPixel) = cornerRadius(bottomLeft = bottomLeft)
-fun cornerBottomRadius(bottom: DPixel) = cornerRadius(bottomLeft = bottom, bottomRight = bottom)
 fun cornerBottomRightRadius(bottomRight: DPixel) = cornerRadius(bottomRight = bottomRight)
+fun cornerBottomRadius(bottom: DPixel) = cornerRadius(bottomLeft = bottom, bottomRight = bottom)
+inline fun cornerBottomRadius(bottom: () -> DPixel) = cornerRadius(bottomLeft = bottom(), bottomRight = bottom())
+
 fun cornerTopLeftRadius(topLeft: DPixel) = cornerRadius(topLeft = topLeft)
+fun cornerTopRightRadius(topRight: DPixel) = cornerRadius(topRight = topRight)
 fun cornerTopRadius(top: DPixel) = cornerRadius(topLeft = top, topRight = top)
 inline fun cornerTopRadius(top: () -> DPixel) = cornerRadius(topLeft = top(), topRight = top())
-
-fun cornerTopRightRadius(topRight: DPixel) = cornerRadius(topRight = topRight)
 
 fun dropShadow(color: Color, offsetX: DPixel, offsetY: DPixel, standardDeviation: DPixel) = DropShadow(color, offsetX, offsetY, standardDeviation)
 

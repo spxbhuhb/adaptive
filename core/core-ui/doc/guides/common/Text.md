@@ -13,10 +13,38 @@ text(12)
 
 ### Instructions
 
-```kotlin
-text("a", fontName("Courier New"))
-text("a", fontSize(12))
-text("a", lightFont)
-text("a", letterSpacing(- 2))
-text("a", noTextWrap)
+```text
+fontName(fontName: String)
+fontName(fontName: () -> String)
+
+fontSize(fontSize: SPixel)
+fontSize(fontSize: () -> SPixel)
+
+fontWeight(weight: Int) = FontWeight(weight)
+fontWeight(fontWeight: () -> Int)
+
+lineHeight(height: DPixel)
+lineHeight(height: () -> DPixel)
+
+fun letterSpacing(value: Double)
+
+fun textColor(value: Int)
+fun textColor(value: UInt)
+fun textColor(value: Color)
+
+thinFont
+extraLightFont
+lightFont
+normalFont
+mediumFont
+semiBoldFont
+boldFont
+extraBoldFont
+blackFont
+
+noSelect
+noTextWrap
+textWrap
+underline
+smallCaps
 ```

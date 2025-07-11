@@ -30,7 +30,7 @@ import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textSmall
 
 @Adaptive
-fun popupRecipe(): AdaptiveFragment {
+fun popupPlayground(): AdaptiveFragment {
 
     column {
         gap { 16.dp }

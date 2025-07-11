@@ -4,6 +4,14 @@ status: review
 
 # Popup
 
+You might also want to check [Modals](guide://) and [Menu](guide://) for specialized popups.
+
+# Playground
+
+[playground](actualize://popupPlayground)
+
+## Details
+
 Variations:
 
 - hover
@@ -34,7 +42,7 @@ box {
 }
 ```
 
-## Positioning
+### Positioning
 
 Use `popupAlign` to set the preferred position of the popup (default is `belowStart`).
 
@@ -52,7 +60,7 @@ The popup checks if there is enough space for display in the preferred position.
 If there is not enough space it tries to find another position. Check `PopupAlign`
 for the exact algorithm (I created that with ChatGPT, seems reasonable.)
 
-## Size
+### Size
 
 You can set the size of the popup with the usual sizing instructions.
 
@@ -65,7 +73,7 @@ the container it belongs to.
 > to change while the popup is shown.
 >
 
-## Hide programmatically
+### Hide programmatically
 
 Use the hide function passed to the builder.
 
