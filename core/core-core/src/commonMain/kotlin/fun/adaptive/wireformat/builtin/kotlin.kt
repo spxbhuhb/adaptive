@@ -180,13 +180,13 @@ object StringWireFormat : WireFormat<String> {
     override fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber: Int, fieldName: String) = decoder.stringOrNull(fieldNumber, fieldName)
 }
 
-open class EnumWireFormat<E : Enum<E>>(val entries: List<E>) : WireFormat<E> {
+open class EnumWireFormat<E : Enum<E>>(val enumEntries: List<E>) : WireFormat<E> {
     override val wireFormatName: String get() = "kotlin.Enum" // FIXME polymorphic enum
     override val wireFormatKind: WireFormatKind get() = WireFormatKind.Primitive
-    override fun wireFormatEncode(encoder: WireFormatEncoder, value: E): WireFormatEncoder = encoder.rawEnum(value, entries)
-    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): E = decoder !!.rawEnum(source, entries)
-    override fun wireFormatEncode(encoder: WireFormatEncoder, fieldNumber: Int, fieldName: String, value: E?) = encoder.enumOrNull(fieldNumber, fieldName, value, entries)
-    override fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber: Int, fieldName: String) = decoder.enumOrNull(fieldNumber, fieldName, entries)
+    override fun wireFormatEncode(encoder: WireFormatEncoder, value: E): WireFormatEncoder = encoder.rawEnum(value, enumEntries)
+    override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): E = decoder !!.rawEnum(source, enumEntries)
+    override fun wireFormatEncode(encoder: WireFormatEncoder, fieldNumber: Int, fieldName: String, value: E?) = encoder.enumOrNull(fieldNumber, fieldName, value, enumEntries)
+    override fun <ST> wireFormatDecode(decoder: WireFormatDecoder<ST>, fieldNumber: Int, fieldName: String) = decoder.enumOrNull(fieldNumber, fieldName, enumEntries)
 
     init {
         // TODO think about enum wire formats registering themselves in the registry automatically

@@ -1,6 +1,6 @@
 package `fun`.adaptive.sandbox.recipe.ui.filter
 
-import `fun`.adaptive.sandbox.support.E
+import `fun`.adaptive.sandbox.support.ExampleEnum
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -27,10 +27,10 @@ fun quickFilterRecipe() : AdaptiveFragment {
 @Adaptive
 fun simpleQuickFilter() {
 
-    val store = storeFor<QuickFilterModel<E>> {
+    val store = storeFor<QuickFilterModel<ExampleEnum>> {
         QuickFilterModel(
-            E.V1,
-            listOf(E.V1, E.V2, E.V3, E.V4, E.V5),
+            ExampleEnum.V1,
+            listOf(ExampleEnum.V1, ExampleEnum.V2, ExampleEnum.V3, ExampleEnum.V4, ExampleEnum.V5),
             { it.name }
         )
     }

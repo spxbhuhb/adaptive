@@ -5,12 +5,8 @@ import `fun`.adaptive.sandbox.recipe.demo.goodmorning.goodMorning
 import `fun`.adaptive.sandbox.recipe.demo.markdown.markdownDemoRecipe
 import `fun`.adaptive.sandbox.recipe.document.document.documentInlineExample
 import `fun`.adaptive.sandbox.recipe.document.document.documentRemoteExample
-import `fun`.adaptive.sandbox.recipe.document.markdown.actualizedFromMarkdownExample
 import `fun`.adaptive.sandbox.recipe.document.document.documentResourceExample
-import `fun`.adaptive.sandbox.recipe.document.markdown.markdownInlineExample
-import `fun`.adaptive.sandbox.recipe.document.markdown.markdownActualizeExample
-import `fun`.adaptive.sandbox.recipe.document.markdown.markdownHintExample
-import `fun`.adaptive.sandbox.recipe.document.markdown.markdownStyledExample
+import `fun`.adaptive.sandbox.recipe.document.markdown.*
 import `fun`.adaptive.sandbox.recipe.document.xlsx.xlsxDownloadExample
 import `fun`.adaptive.sandbox.recipe.ui.badge.*
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasBasicExample
@@ -20,6 +16,8 @@ import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorBasic
 import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorConfig
+import `fun`.adaptive.sandbox.recipe.ui.editor.enum_.enumEditorDropdownExample
+import `fun`.adaptive.sandbox.recipe.ui.editor.enum_.enumEditorListExample
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
@@ -138,6 +136,13 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("documentResourceExample", ::documentResourceExample)
         add("documentRemoteExample", ::documentRemoteExample)
         add("documentInlineExample", ::documentInlineExample)
+
+        // ----------------------------------------------------------------------------
+        // Enum
+        // ----------------------------------------------------------------------------
+
+        add("enumEditorDropdownExample", ::enumEditorDropdownExample)
+        add("enumEditorListExample", ::enumEditorListExample)
 
         // ----------------------------------------------------------------------------
         // Markdown

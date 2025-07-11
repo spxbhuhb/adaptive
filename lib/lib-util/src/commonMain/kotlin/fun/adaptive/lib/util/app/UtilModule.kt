@@ -1,5 +1,6 @@
 package `fun`.adaptive.lib.util.app
 
+import `fun`.adaptive.lib.util.datetime.TimeRange
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexEntry
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexHeader
 import `fun`.adaptive.lib.util.url.Url
@@ -14,6 +15,7 @@ open class UtilModule<FW : AbstractWorkspace, BW : AbstractWorkspace> : AppModul
         + TemporalIndexHeader
         + TemporalIndexEntry
         + Url
+        + TimeRange
     }
 
 }

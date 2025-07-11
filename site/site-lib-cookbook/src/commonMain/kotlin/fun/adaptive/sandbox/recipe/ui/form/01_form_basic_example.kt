@@ -9,15 +9,12 @@ import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.lib.util.datetime.TimeRange
-import `fun`.adaptive.sandbox.support.E
+import `fun`.adaptive.sandbox.support.ExampleEnum
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.codefence.codeFence
 import `fun`.adaptive.ui.editor.*
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.input.button.button
-import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
-import `fun`.adaptive.ui.input.select.item.selectInputOptionText
-import `fun`.adaptive.ui.input.select.item.selectInputValueText
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.snackbar.infoNotification
@@ -69,17 +66,8 @@ fun formBasicExample(): AdaptiveFragment {
 
                 colorEditor { template.color }
 
-                selectEditorDropdown(
-                    E.Companion.entries.toList(),
-                    { selectInputOptionText(it) },
-                    { selectInputValueText(it) }
-                ) { template.enum }
-
-                selectEditorList(
-                    E.Companion.entries.toList(),
-                    { selectInputOptionCheckbox(it) }
-                ) { template.enumOrNull }
-
+                enumEditorDropdown(ExampleEnum.entries) { template.enum }
+                enumEditorList(ExampleEnum.entries) { template.enum }
 
                 badgeEditor { template.badges }
 
@@ -115,8 +103,8 @@ class FormData(
     val dateTime : LocalDateTime = localDateTime(),
     val timeRange : TimeRange = TimeRange(),
     val color : Color = color(0xff0000),
-    val enum: E = E.V1,
-    val enumOrNull: E? = null,
+    val enum: ExampleEnum = ExampleEnum.V1,
+    val enumOrNull: ExampleEnum? = null,
     val badges : Set<String> = setOf("badge1", "badge2")
 ) {
     override fun descriptor() {
