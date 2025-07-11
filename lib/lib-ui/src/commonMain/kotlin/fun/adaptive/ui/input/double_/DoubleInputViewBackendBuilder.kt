@@ -2,9 +2,7 @@ package `fun`.adaptive.ui.input.double_
 
 import `fun`.adaptive.ui.input.InputViewBackendBuilder
 
-class DoubleInputViewBackendBuilder(
-    inputValue: Double?
-) : InputViewBackendBuilder<Double, DoubleInputViewBackend>(inputValue) {
+class DoubleInputViewBackendBuilder() : InputViewBackendBuilder<Double, DoubleInputViewBackend>() {
 
     var decimals : Int? = null
     var unit : String? = null

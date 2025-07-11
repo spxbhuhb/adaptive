@@ -1,4 +1,4 @@
-# Inputs
+# Inputs and editors
 
 There are three categories of inputs:
 

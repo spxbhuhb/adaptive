@@ -10,6 +10,11 @@ While there's some truth to that, let me ask you:
 * Do today's 40-ton trucks run on the wooden wheels of medieval wagons?
 * Why are there 3 million packages on NPM?
 
+I honestly believe that removing the complexity added by dependencies brings extreme
+benefits, especially considering AI code assistants. Also, this approach lets new
+programmers enter the Kotlin world without learning everything that is needed for
+a full-stack application.
+
 Currently, Adaptive is under the initial development, not ready for the broader 
 public. It only includes what I’ve needed so far, I’ve taken some shortcuts,
 and—to be honest—I’ve made some bad decisions along the way that I haven’t fixed yet.

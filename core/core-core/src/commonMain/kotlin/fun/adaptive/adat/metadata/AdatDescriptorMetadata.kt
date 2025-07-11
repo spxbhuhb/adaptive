@@ -17,6 +17,8 @@ data class AdatDescriptorMetadata(
 
     fun asBoolean() = parameters.toBooleanStrict()
 
+    fun asDouble() = parameters.toDouble()
+
     fun asInt() = parameters.toInt()
 
     fun asLong() = parameters.toLong()

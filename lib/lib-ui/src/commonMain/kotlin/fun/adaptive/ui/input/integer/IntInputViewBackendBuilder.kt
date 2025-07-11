@@ -2,9 +2,7 @@ package `fun`.adaptive.ui.input.integer
 
 import `fun`.adaptive.ui.input.InputViewBackendBuilder
 
-class IntInputViewBackendBuilder(
-    inputValue: Int?
-) : InputViewBackendBuilder<Int, IntInputViewBackend>(inputValue) {
+class IntInputViewBackendBuilder() : InputViewBackendBuilder<Int, IntInputViewBackend>() {
 
     val radix : Int? = null
     val showRadix10 : Boolean? = null

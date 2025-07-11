@@ -9,6 +9,9 @@ import `fun`.adaptive.adat.descriptor.general.Readonly
 import `fun`.adaptive.adat.descriptor.general.UseToString
 import `fun`.adaptive.adat.descriptor.kotlin.bool.BooleanDefault
 import `fun`.adaptive.adat.descriptor.kotlin.bool.BooleanValue
+import `fun`.adaptive.adat.descriptor.kotlin.double.DoubleDefault
+import `fun`.adaptive.adat.descriptor.kotlin.double.DoubleMaximum
+import `fun`.adaptive.adat.descriptor.kotlin.double.DoubleMinimum
 import `fun`.adaptive.adat.descriptor.kotlin.long.LongDefault
 import `fun`.adaptive.adat.descriptor.kotlin.long.LongMaximum
 import `fun`.adaptive.adat.descriptor.kotlin.long.LongMinimum
@@ -22,6 +25,10 @@ object DefaultDescriptorFactory : DescriptorFactory() {
         add("BooleanDefault") { BooleanDefault(it, it.asBoolean()) }
         add("BooleanValue") { BooleanValue(it, it.asBoolean()) }
 
+        add("DoubleMinimum") { DoubleMinimum(it, it.asDouble()) }
+        add("DoubleMaximum") { DoubleMaximum(it, it.asDouble()) }
+        add("DoubleDefault") { DoubleDefault(it, it.asDouble()) }
+        
         add("IntMinimum") { IntMinimum(it, it.asInt()) }
         add("IntMaximum") { IntMaximum(it, it.asInt()) }
         add("IntDefault") { IntDefault(it, it.asInt()) }

@@ -4,10 +4,11 @@
 
 ## Details
 
-Standalone input-based forms may be useful in special situations, check [Inputs](guide://)
-for more information about them.
+Editor-based forms offer an easy way to create a from for an Adat class.
 
-Editor-based forms offer an easy way to create a from for an Adat class:
+> [!NOTE]
+> Standalone input-based forms may be useful in special situations, 
+> check [Inputs and editors](guide://) for more information about them.
 
 ```kotlin
 @Adaptive
@@ -48,22 +49,6 @@ Points of interest:
 > * `saveFormButton` passes the copy to the function parameter 
 >
 
-## Available editors
-
-**primitive types**
-
-* `booleanEditor`
-* `doubleEditor`
-* `intEditor`
-* `textEditor`
-
-**selects**
-
-* `selectEditor`
-* `selectMappingEditor`
-* `multiSelectEditor`
-* `multiSelectMappingEditor`
-
 ## Label translation
 
 Field labels are translated automatically, assuming:
@@ -86,10 +71,10 @@ If there is no such key, the label will be the name of the property.
 
 ### Set a label manually
 
-Use the `editorLabel` instruction:
+Use the appropriate `editorConfig` instruction:
 
 ```kotlin
-doubleEditor { template.layout.top } .. width { 56.dp } .. editorLabel("TOP")
+doubleEditor { template.layout.top } .. width { 56.dp } .. doubleEditorConfig { label = "TOP" }
 ```
 
 ### Check data validity
@@ -113,4 +98,4 @@ button("Save") .. onClick {
   - editor input error (for example, text in a number input)
 - both have a parameter `touchAll` with default `true`
 - `touchAll` decorates all invalid fields
-- see [Inputs](guide://) for more details about validation and `touchAll`
+- see [Inputs and editors](guide://) for more details about validation and `touchAll`

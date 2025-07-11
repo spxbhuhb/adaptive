@@ -18,6 +18,8 @@ import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPositionExample
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
+import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorBasic
+import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorConfig
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
@@ -188,7 +190,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("dateInputExample", ::dateInputExample)
 
         // ----------------------------------------------------------------------------
-        // Double Input
+        // Double
         // ----------------------------------------------------------------------------
 
         add("doubleInputDefault", ::doubleInputDefault)
@@ -197,6 +199,9 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("doubleInputNoDec", ::doubleInputNoDec)
         add("doubleInputUnit", ::doubleInputUnit)
         add("doubleInputOnChange", ::doubleInputOnChange)
+
+        add("doubleEditorBasic", ::doubleEditorBasic)
+        add("doubleEditorConfig", ::doubleEditorConfig)
 
         // ----------------------------------------------------------------------------
         // Int Input
