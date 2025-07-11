@@ -43,7 +43,7 @@ markers: grove-doc-toc
   - [Decoration instructions](guide://)
   - [Colors](guide://)
   - [Themes](guide://)
-- [Fragments](guide://)
+- [UI Fragments](guide://)
   - [Common](guide://lib-ui)
     - [Badge](guide://) 
     - [Button](guide://)
@@ -114,9 +114,9 @@ markers: grove-doc-toc
 
 ## Communication
 
-- [Service context](guide://)
-- [Service transport](guide://)
-- [Writing a service](guide://)
+- [Services](guide://)
+  - [Service context](guide://)
+  - [Service transport](guide://)
 
 ## Authentication and authorization
 

@@ -3,7 +3,7 @@ package `fun`.adaptive.ui.navigation
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatCompanion
 import `fun`.adaptive.adat.store.AdatStore
-import `fun`.adaptive.lib.util.url.Url
+import `fun`.adaptive.utility.Url
 
 fun navState(vararg segments: String, title: String? = null, fullScreen: Boolean = false) =
     NavState(Url(segments = segments.toList()), title = title, fullScreen = fullScreen)

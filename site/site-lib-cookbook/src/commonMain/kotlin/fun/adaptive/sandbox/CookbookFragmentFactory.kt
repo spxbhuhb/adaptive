@@ -57,8 +57,9 @@ import `fun`.adaptive.sandbox.recipe.ui.sidebar.sideBarRecipe
 import `fun`.adaptive.sandbox.recipe.ui.snackbar.snackbarRecipe
 import `fun`.adaptive.sandbox.recipe.ui.svg.svgRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tab.tabRecipe
-import `fun`.adaptive.sandbox.recipe.ui.text.paragraphBasicExample
-import `fun`.adaptive.sandbox.recipe.ui.text.paragraphLongExample
+import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphLongExample
+import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphNavigatorExample
 import `fun`.adaptive.sandbox.recipe.ui.text.textRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.tree.treePlayground
@@ -233,6 +234,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
 
         add("paragraphBasicExample", ::paragraphBasicExample)
         add("paragraphLongExample", ::paragraphLongExample)
+        add("paragraphNavigatorExample", ::paragraphNavigatorExample)
 
         // ----------------------------------------------------------------------------
         // Select Input

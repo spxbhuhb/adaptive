@@ -1,8 +1,13 @@
-package `fun`.adaptive.lib.util.url
+package `fun`.adaptive.utility
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.utility.decodeFromUrl
-import `fun`.adaptive.utility.encodeToUrl
+import `fun`.adaptive.adat.AdatClass
+import `fun`.adaptive.adat.AdatCompanion
+import `fun`.adaptive.adat.descriptor.AdatDescriptorSet
+import `fun`.adaptive.adat.metadata.AdatClassMetadata
+import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
+import `fun`.adaptive.adat.wireformat.AdatClassWireFormat
+import `fun`.adaptive.wireformat.fromJson
 
 /**
  * Represents an RFC 3896 URL.
@@ -19,7 +24,7 @@ class Url(
     val parameters: Map<String, String> = emptyMap(),
     val tag: String = "",
     val custom: String = "",
-) {
+) : AdatClass {
 
     fun segmentsStartsWith(prefix: String): Boolean {
         val segments = prefix.split('/')
@@ -65,7 +70,41 @@ class Url(
         return result.toString()
     }
 
-    companion object {
+    // --------------------------------------------------------------------------------
+    // AdatClass overrides
+    // --------------------------------------------------------------------------------
+
+    override val adatCompanion: AdatCompanion<Url>
+        get() = Companion
+
+    override fun equals(other: Any?): Boolean = adatEquals(other)
+    override fun hashCode(): Int = adatHashCode()
+
+    override fun genGetValue(index: Int): Any? =
+        when (index) {
+            0 -> scheme
+            1 -> segments
+            2 -> parameters
+            3 -> tag
+            4 -> custom
+            else -> throw IndexOutOfBoundsException()
+        }
+    
+    fun copy(
+        scheme: String = this.scheme,
+        segments: List<String> = this.segments,
+        parameters: Map<String, String> = this.parameters,
+        tag: String = this.tag,
+        custom: String = this.custom
+    ): Url {
+        return Url(scheme, segments, parameters, tag, custom)
+    }
+
+    companion object : AdatCompanion<Url> {
+
+        @Suppress("UNCHECKED_CAST")
+        fun decodeFromString(a: String): Url =
+            a.encodeToByteArray().fromJson(this)
 
         private val regex = Regex(
             "(?:([a-zA-Z][a-zA-Z0-9+\\-.]*)://)?" + // scheme
@@ -117,6 +156,43 @@ class Url(
             } catch (ex: Exception) {
                 throw IllegalArgumentException("unable to parse URL: $url", ex)
             }
+        }
+
+        // --------------------------------------------------------------------------------
+        // AdatCompanion overrides
+        // --------------------------------------------------------------------------------
+
+        override val wireFormatName: String
+            get() = "fun.adaptive.utility.Url"
+
+        override val adatMetadata = AdatClassMetadata(
+            version = 1,
+            name = wireFormatName,
+            flags = 0,
+            properties = listOf(
+                AdatPropertyMetadata("scheme", 0, 0, "T"),
+                AdatPropertyMetadata("segments", 1, 0, "Lkotlin.collections.List<T>;"),
+                AdatPropertyMetadata("parameters", 2, 0, "Lkotlin.collections.Map<TT>;"),
+                AdatPropertyMetadata("tag", 3, 0, "T"),
+                AdatPropertyMetadata("custom", 4, 0, "T")
+            )
+        )
+
+        override val adatWireFormat: AdatClassWireFormat<Url>
+            get() = AdatClassWireFormat(this, adatMetadata)
+
+        override val adatDescriptors: Array<AdatDescriptorSet>
+            get() = adatMetadata.generateDescriptors()
+
+        override fun newInstance(values: Array<Any?>): Url {
+            @Suppress("UNCHECKED_CAST")
+            return Url(
+                scheme = values[0] as String,
+                segments = values[1] as List<String>,
+                parameters = values[2] as Map<String, String>,
+                tag = values[3] as String,
+                custom = values[4] as String
+            )
         }
     }
 }

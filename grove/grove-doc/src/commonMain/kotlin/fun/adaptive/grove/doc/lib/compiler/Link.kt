@@ -1,6 +1,6 @@
 package `fun`.adaptive.grove.doc.lib.compiler
 
-import `fun`.adaptive.lib.util.url.Url
+import `fun`.adaptive.utility.Url
 import kotlinx.io.files.Path
 
 /**

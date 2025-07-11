@@ -11,22 +11,20 @@ import `fun`.adaptive.ui.generated.resources.expandAll
 import `fun`.adaptive.ui.generated.resources.unfold_less
 import `fun`.adaptive.ui.generated.resources.unfold_more
 import `fun`.adaptive.ui.instruction.event.EventModifier
-import `fun`.adaptive.ui.mpw.MultiPaneUrlResolver
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
-import `fun`.adaptive.ui.mpw.model.*
-import `fun`.adaptive.ui.navigation.NavState
+import `fun`.adaptive.ui.mpw.model.AbstractPaneAction
+import `fun`.adaptive.ui.mpw.model.PaneAction
+import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.tree.TreeViewBackend
-import `fun`.adaptive.utility.decodeFromUrl
-import `fun`.adaptive.utility.encodeToUrl
 import `fun`.adaptive.value.remote.AvRemoteValueSubscriber
 
 class DocToolViewBackend(
     override val workspace: MultiPaneWorkspace,
     override val paneDef: PaneDef
-) : PaneViewBackend<DocToolViewBackend>(), MultiPaneUrlResolver {
+) : PaneViewBackend<DocToolViewBackend>() {
 
     val doc = AvRemoteValueSubscriber(workspace.backend, GroveDocSpec::class, groveDocDomain.groveDocToc)
     var treeBackend = observableOf<TreeViewBackend<String, DocToolViewBackend>?> { null }
@@ -66,32 +64,16 @@ class DocToolViewBackend(
     ) {
         val referenceTool = workspace.toolBackend(ReferenceToolViewBackend::class) ?: return
 
-        val name = data.removeSuffix(".md").decodeFromUrl()
-
-        val value = when {
-            name.startsWith(groveDocDomain.guide) -> referenceTool.findGuideByName(name.removePrefix(groveDocDomain.guide + "-"))
-            name.startsWith(groveDocDomain.definition) -> referenceTool.findDefinitionByName(name.removePrefix(groveDocDomain.definition + "-"))
-            else -> referenceTool.findGuideByName(name) ?: referenceTool.findDefinitionByName(name)
-        }
+        val value = referenceTool.findByUrl(data)
 
         if (value == null) {
-            warningNotification("Cannot find guide: $data")
+            warningNotification("Cannot find documentation: $data")
             return
         }
 
         val path = referenceTool.docPathNames(value)
 
         workspace.addContent(groveDocDomain.node, GroveDocContentItem(path), modifiers)
-    }
-
-    override fun resolve(navState: NavState): Pair<PaneContentType, PaneContentItem>? {
-        if (navState.url.segmentsStartsWith("/documentation")) return null // FIXME hard coded URL segment
-        return groveDocDomain.node to GroveDocContentItem(navState.url.segments.drop(2))
-    }
-
-    override fun toNavState(type: PaneContentType, item: PaneContentItem): NavState? {
-        if (type != groveDocDomain.node || item !is GroveDocContentItem) return null
-        return NavState.parse("/documentation/${item.path.joinToString("/") { it.encodeToUrl() }}") // FIXME hard coded URL segment
     }
 
 }

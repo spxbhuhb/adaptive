@@ -1,55 +1,26 @@
-# How to write a service
+---
+status: review
+---
 
-## 1. Write a Service API
+# Services
 
-**File**: `src/commonMain/kotlin/fun/adaptive/example/api/ExampleApi.kt`
+[service](def://?inline)
 
-### Purpose
+## Service API
 
-Service APIs describe the communication between a service consumer (client) and a 
-service provider (server).
-
-### Code
-
-```kotlin
-package `fun`.adaptive.example.api
-
-import `fun`.adaptive.example.model.ExampleData
-import `fun`.adaptive.service.ServiceApi
-
-@ServiceApi
-interface ExampleApi {
-
-    suspend fun getExampleData() : ExampleData
-
-    suspend fun saveExampleData(data: ExampleData)
-    
-}
-```
-
-### Explanation
-
-Adaptive service APIs are Kotlin interfaces with the `@ServiceApi` annotation. 
+[service api](def://?inline)
 
 The **suspend** functions define what the service provides.
 
 Service call arguments and return type can be anything that WireFormat supports.
 
-## 2. Get a Service Consumer
+[ExampleServiceApi](example://)
 
-### Purpose
+## Service Consumer
 
-Get an instance that can be used to call the service.
+[service consumer](def://?inline)
 
-### Code
-
-```kotlin
-val exampleService = getService<ExampleApi>(transport)
-
-exampleService.getExampleData().also { println(it) }
-```
-
-### Explanation
+[serviceConsumerExample](example://)
 
 The `getService` function:
 

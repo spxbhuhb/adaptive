@@ -1,6 +1,7 @@
 package `fun`.adaptive.runtime
 
 import `fun`.adaptive.resource.string.StringStoreResourceSet
+import `fun`.adaptive.utility.Url
 import `fun`.adaptive.utility.firstInstance
 import `fun`.adaptive.utility.firstInstanceOrNull
 
@@ -25,7 +26,14 @@ abstract class AbstractApplication<FW : AbstractWorkspace, BW : AbstractWorkspac
      * feature, applications may or may not implement it. The default implementation is an empty
      * function.
      */
-    open fun setNavState(url: String) {
+    open fun setNavState(url: Url) {
+
+    }
+
+    /**
+     * A callback that is called when the application navigation state changes.
+     */
+    open fun onNavStateChange(callback : (url : Url) -> Unit) {
 
     }
 }

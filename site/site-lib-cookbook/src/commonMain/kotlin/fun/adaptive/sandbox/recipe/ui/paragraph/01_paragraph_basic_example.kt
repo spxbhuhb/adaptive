@@ -1,6 +1,5 @@
-package `fun`.adaptive.sandbox.recipe.ui.text
+package `fun`.adaptive.sandbox.recipe.ui.paragraph
 
-import `fun`.adaptive.sandbox.support.example
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -9,10 +8,6 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.fragment.paragraph.items.LinkParagraphItem
 import `fun`.adaptive.ui.fragment.paragraph.items.TextParagraphItem
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphViewBackend
-import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.theme.textColors
 
 /**
  * # Basic paragraph

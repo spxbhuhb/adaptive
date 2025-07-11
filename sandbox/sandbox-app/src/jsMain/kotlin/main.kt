@@ -2,18 +2,12 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import `fun`.adaptive.app.BasicBrowserClientApplication.Companion.basicBrowserClient
-import `fun`.adaptive.app.ws.SandBoxClientModule
 import `fun`.adaptive.backend.backend
-import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.adapter
-import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
-import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.lib.util.log.CollectedLogData
 import `fun`.adaptive.lib.util.log.CollectedLogItem
 import `fun`.adaptive.lib.util.log.CollectingLogger
@@ -23,28 +17,10 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputCheckboxExample
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputDropdownExample
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputIconAndTextExample
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputPlayground
-import `fun`.adaptive.sandbox.recipe.ui.input.select.selectInputTextExample
-import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputAreaExample
-import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
-import `fun`.adaptive.sandbox.recipe.ui.text.paragraphLongExample
-import `fun`.adaptive.sandbox.recipe.ui.tree.treeBasicExample
-import `fun`.adaptive.sandbox.recipe.ui.tree.treePlayground
-import `fun`.adaptive.sandbox.recipe.ui.tree.treeValueExample
 import `fun`.adaptive.ui.LibFragmentFactory
-import `fun`.adaptive.ui.LibUiClientModule
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
-import `fun`.adaptive.ui.fragment.paragraph.items.TextParagraphItem
-import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphViewBackend
-import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.input.button.submitButton
-import `fun`.adaptive.ui.input.color.colorInput
-import `fun`.adaptive.ui.input.color.colorInputBackend
 import `fun`.adaptive.ui.input.datetime.dateTimeInputBackend
 import `fun`.adaptive.ui.input.integer.intInput
 import `fun`.adaptive.ui.input.integer.intInputBackend
@@ -52,15 +28,12 @@ import `fun`.adaptive.ui.input.long_.longInput
 import `fun`.adaptive.ui.input.long_.longInputBackend
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.input.text.textInputBackend
-import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.popup.modal.basicModal
-import `fun`.adaptive.ui.popup.modal.dialog
 import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.value.app.ValueClientModule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

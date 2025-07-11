@@ -8,13 +8,14 @@ import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneContentItem
 import `fun`.adaptive.ui.mpw.model.PaneDef
+import `fun`.adaptive.ui.support.UiNavigator
 import `fun`.adaptive.value.AvValue
 
 class DocContentViewBackend(
     override val workspace: MultiPaneWorkspace,
     override val paneDef: PaneDef,
     var content : GroveDocContentItem
-) : PaneViewBackend<DocContentViewBackend>() {
+) : PaneViewBackend<DocContentViewBackend>(), UiNavigator {
 
     val service = getService<GroveDocApi>(backend.transport)
 
@@ -34,6 +35,15 @@ class DocContentViewBackend(
 
     suspend fun getDefinition(name : String) : AvValue<GroveDocSpec>? {
         return service.getDefinition(name)
+    }
+
+    override fun onUrlTarget(url: String): Boolean {
+        if (url.startsWith("https://") || url.startsWith("http://")) return false
+
+        val tool = workspace.toolBackend(DocToolViewBackend::class) ?: return false
+        tool.openDocument(url, emptySet())
+
+        return true
     }
 
 }

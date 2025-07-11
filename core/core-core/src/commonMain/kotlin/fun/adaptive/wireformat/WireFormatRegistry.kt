@@ -10,6 +10,7 @@ import `fun`.adaptive.adat.metadata.AdatPropertyMetadata
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.registry.Registry
 import `fun`.adaptive.service.model.DisconnectException
+import `fun`.adaptive.utility.Url
 import `fun`.adaptive.wireformat.builtin.*
 import `fun`.adaptive.wireformat.signature.WireFormatTypeArgument
 
@@ -67,6 +68,8 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
         this += AdaptiveInstructionGroup
 
         this += DisconnectException
+
+        this += Url
     }
 
     operator fun plusAssign(wireFormat: WireFormat<*>) {

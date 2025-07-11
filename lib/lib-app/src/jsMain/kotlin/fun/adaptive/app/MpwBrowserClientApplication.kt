@@ -8,6 +8,7 @@ import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.navigation.NavState
+import `fun`.adaptive.utility.Url
 import kotlinx.browser.window
 
 open class MpwBrowserClientApplication(
@@ -30,7 +31,7 @@ open class MpwBrowserClientApplication(
 
         frontendWorkspaceInit(frontendWorkspace)
 
-        frontendWorkspace.loadUrl(window.location.href)
+        frontendWorkspace.loadUrl(navState.value.url)
 
         frontendWorkspace.updateSplits()
 
@@ -41,8 +42,12 @@ open class MpwBrowserClientApplication(
         super.frontendAdapterInit(adapter)
     }
 
-    override fun setNavState(url: String) {
-        historyStateListener.push(NavState.parse(url))
+    override fun setNavState(url: Url) {
+        historyStateListener.push(NavState(url))
+    }
+
+    override fun onNavStateChange(callback: (Url) -> Unit) {
+        navState.addListener { callback(it.url) } // FIXME clean up NavState / URL / application
     }
 
     companion object {

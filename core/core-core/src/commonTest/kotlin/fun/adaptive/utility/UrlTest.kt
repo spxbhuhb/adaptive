@@ -1,12 +1,12 @@
-package `fun`.adaptive.lib.util.url
+package `fun`.adaptive.utility
 
+import `fun`.adaptive.adat.decodeFromJson
+import `fun`.adaptive.adat.encodeToJsonString
 import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertTrue
-import kotlin.text.get
-import kotlin.toString
 
 class UrlTest {
 
@@ -199,5 +199,13 @@ class UrlTest {
             assertEquals(url.tag, reparsedUrl.tag)
             assertEquals(url.custom, reparsedUrl.custom)
         }
+    }
+
+    @Test
+    @JsName("encodeAndDecodeJson")
+    fun `encode and decode JSON`() {
+        val url = Url.parse("http://host/path/to/resource?key1=value1&key2=value2#tag|custom")
+
+        assertEquals(url, Url.decodeFromJson(url.encodeToJsonString()))
     }
 }

@@ -3,6 +3,7 @@ package `fun`.adaptive.ui.mpw
 import `fun`.adaptive.ui.mpw.model.PaneContentItem
 import `fun`.adaptive.ui.mpw.model.PaneContentType
 import `fun`.adaptive.ui.navigation.NavState
+import `fun`.adaptive.utility.Url
 
 /**
  * Maps between [NavState] and MPW items.
@@ -14,7 +15,7 @@ interface MultiPaneUrlResolver {
      *
      * @return  The resolved item to load into a content pane or null if the resolver cannot resolve the item.
      */
-    fun resolve(navState: NavState) : Pair<PaneContentType, PaneContentItem>?
+    fun resolve(url: Url) : Pair<PaneContentType, PaneContentItem>?
 
     /**
      * Converts the given item into a corresponding navigation state.

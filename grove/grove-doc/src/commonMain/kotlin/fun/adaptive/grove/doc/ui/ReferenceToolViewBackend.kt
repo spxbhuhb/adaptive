@@ -19,8 +19,11 @@ import `fun`.adaptive.ui.mpw.model.PaneContentItem
 import `fun`.adaptive.ui.mpw.model.PaneContentType
 import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.navigation.NavState
+import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.tree.TreeItem
 import `fun`.adaptive.ui.value.AvUiTreeViewBackend
+import `fun`.adaptive.utility.Url
+import `fun`.adaptive.utility.decodeFromUrl
 import `fun`.adaptive.utility.encodeToUrl
 import `fun`.adaptive.value.AvValue
 
@@ -57,21 +60,37 @@ class ReferenceToolViewBackend(
         return tree.treeSubscriber.pathNames(item)
     }
 
-    fun findGuideByName(name : String) : AvValue<GroveDocSpec>? =
-        tree.treeSubscriber.find { it.name == name && groveDocDomain.guide in it.markers }
+    fun findByUrl(url: String): AvValue<GroveDocSpec>? {
+        val name = url.decodeFromUrl()
 
-    fun findDefinitionByName(name : String) : AvValue<GroveDocSpec>? =
-        tree.treeSubscriber.find { it.name == name && groveDocDomain.definition in it.markers }
+        val value = when {
+            name.startsWith(groveDocDomain.guide) -> findGuideByName(name.removePrefix(groveDocDomain.guide + "://"))
+            name.startsWith(groveDocDomain.definition) -> findDefinitionByName(name.removePrefix(groveDocDomain.definition + "://"))
+            else -> findGuideByName(name) ?: findDefinitionByName(name)
+        }
 
-    fun filterByNamePart(name : String) =
-        tree.treeSubscriber.filter { name in it.nameLike.lowercase() && groveDocDomain.guide in it.markers}
-
-    override fun resolve(navState: NavState): Pair<PaneContentType, PaneContentItem>? {
-        if (navState.url.segmentsStartsWith("/documentation")) return null // FIXME hard coded URL segment
-        return groveDocDomain.node to GroveDocContentItem(navState.url.segments.drop(2))
+        return value
     }
 
-    override fun toNavState(type : PaneContentType, item: PaneContentItem): NavState? {
+    fun findGuideByName(name: String): AvValue<GroveDocSpec>? =
+        tree.treeSubscriber.find { it.name == name && groveDocDomain.guide in it.markers }
+
+    fun findDefinitionByName(name: String): AvValue<GroveDocSpec>? =
+        tree.treeSubscriber.find { it.name == name && groveDocDomain.definition in it.markers }
+
+    fun filterByNamePart(name: String) =
+        tree.treeSubscriber.filter { name in it.nameLike.lowercase() && groveDocDomain.guide in it.markers }
+
+
+    override fun resolve(url: Url): Pair<PaneContentType, PaneContentItem>? {
+        if (! url.segmentsStartsWith("/documentation")) return null // FIXME hard coded URL segment
+        val path = url.segments.drop(2) // drop the empty segment and documentation
+        // path should be at least <subproject>/<type>/<name>
+        if (path.size < 3) return null
+        return groveDocDomain.node to GroveDocContentItem(path)
+    }
+
+    override fun toNavState(type: PaneContentType, item: PaneContentItem): NavState? {
         if (type != groveDocDomain.node || item !is GroveDocContentItem) return null
         return NavState.parse("/documentation/${item.path.joinToString("/") { it.encodeToUrl() }}") // FIXME hard coded URL segment
     }

@@ -82,7 +82,6 @@ class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : Grove
         val docToolBackend = DocToolViewBackend(workspace, docToolPaneDef)
 
         addToolPane { docToolBackend }
-        addUrlResolver(docToolBackend)
 
         val referenceToolPaneDef = PaneDef(
             UUID("83687ee3-c871-44f1-9b91-6289e59bbbc0"),
@@ -95,7 +94,6 @@ class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : Grove
         val referenceToolBackend = ReferenceToolViewBackend(workspace, referenceToolPaneDef)
 
         addToolPane { referenceToolBackend }
-        addUrlResolver(referenceToolBackend)
     }
 
 }

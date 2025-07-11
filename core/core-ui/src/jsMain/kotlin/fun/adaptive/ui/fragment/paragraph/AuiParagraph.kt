@@ -5,6 +5,8 @@ package `fun`.adaptive.ui.fragment.paragraph
 
 import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.api.firstContext
+import `fun`.adaptive.foundation.api.firstContextOrNull
 import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.fragment.layout.SizingProposal
@@ -16,6 +18,7 @@ import `fun`.adaptive.ui.render.BrowserLayoutApplier
 import `fun`.adaptive.ui.render.BrowserTextApplier
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.render.model.TextRenderData
+import `fun`.adaptive.ui.support.UiNavigator
 import kotlinx.browser.document
 import kotlinx.dom.clear
 import org.w3c.dom.*
@@ -80,6 +83,14 @@ class AuiParagraph(
         val anchor = document.createElement("a") as HTMLAnchorElement
         anchor.innerText = item.text
         anchor.href = item.href
+        anchor.addEventListener("click", {
+            val navigator = firstContextOrNull<UiNavigator>() ?: return@addEventListener
+            val handled = navigator.onUrlTarget(anchor.href)
+            if (handled) {
+                it.preventDefault()
+                it.stopPropagation()
+            }
+        })
         addElement(anchor, item, leftOffset, topOffset)
     }
 
@@ -127,7 +138,7 @@ class AuiParagraph(
             entry.textRenderData.lineHeight
                 ?: (entry.textRenderData.fontSize ?: uiAdapter.defaultTextRenderData.fontSize)?.value?.let { it * 1.5 }
                 ?: (metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent)
-        )
+            )
     }
 
     fun getEntry(index: Int): RenderCacheEntry {

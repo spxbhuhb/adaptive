@@ -47,7 +47,7 @@ abstract class BrowserApplication<WT : FrontendWorkspace> : ClientApplication<WT
      *   - browser `popstate` event
      *   - [push](function://BrowserHistoryStateListener)
      */
-    val navState = observableOf { NavState.parse(window.location.href) }
+    override val navState = observableOf { NavState.parse(window.location.href) }
 
     val historyStateListener = BrowserHistoryStateListener(this)
 

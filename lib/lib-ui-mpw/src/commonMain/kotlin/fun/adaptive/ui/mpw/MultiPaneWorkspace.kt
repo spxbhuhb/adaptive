@@ -28,11 +28,10 @@ import `fun`.adaptive.ui.mpw.backends.ContentPaneGroupViewBackend
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
 import `fun`.adaptive.ui.mpw.model.*
-import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.snackbar.failNotification
-import `fun`.adaptive.ui.snackbar.infoNotification
 import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.Url
 import `fun`.adaptive.utility.firstInstance
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineScope
@@ -287,7 +286,11 @@ open class MultiPaneWorkspace(
     // --------------------------------------------------------------------------------
 
     inline fun addToolPane(paneBackend: () -> PaneViewBackend<*>) {
-        toolPanes += paneBackend()
+        val backend = paneBackend()
+        toolPanes += backend
+        if (backend is MultiPaneUrlResolver) {
+            urlResolvers += backend
+        }
     }
 
     operator fun SideBarAction.unaryPlus() {
@@ -450,7 +453,7 @@ open class MultiPaneWorkspace(
     ) {
         pane.load(item, modifiers)
         group.load(pane)
-        //updateUrl(type, item)
+        updateUrl(type, item)
     }
 
     fun addGroupContentPane(
@@ -493,30 +496,35 @@ open class MultiPaneWorkspace(
 
     private val itemTypes = mutableMapOf<PaneContentType, WsItemConfig>()
 
-    /**
-     * Add a URL resolver which is able to resolve the given URL into an item
-     * to be loaded into a content pane.
-     */
-    fun addUrlResolver(resolver: MultiPaneUrlResolver) {
-        urlResolvers += resolver
+    fun addItemConfig(type: PaneContentType, icon: GraphicsResourceSet, tooltip: String? = null) {
+        itemTypes[type] = WsItemConfig(type, icon, tooltip)
+    }
+
+    fun getItemConfig(type: PaneContentType) = itemTypes[type] ?: WsItemConfig.DEFAULT
+
+    // --------------------------------------------------------------------------------
+    // URL and NavState
+    // --------------------------------------------------------------------------------
+
+    init {
+        application.onNavStateChange { url -> loadUrl(url) }
     }
 
     /**
      * Resolve a URL to a workspace item to load into a content pane.
      */
-    fun resolveUrl(url: String): Pair<PaneContentType,Any>? {
-        val navState = NavState.parse(url)
-        if (navState.url.segments.isEmpty()) return null
+    fun resolveUrl(url: Url): Pair<PaneContentType,Any>? {
+        if (url.segments.isEmpty()) return null
 
         for (resolver in urlResolvers) {
-            val typeAndItem = resolver.resolve(navState)
+            val typeAndItem = resolver.resolve(url)
             if (typeAndItem != null) return typeAndItem
         }
 
         return null
     }
 
-    fun loadUrl(url: String) {
+    fun loadUrl(url: Url) {
         resolveUrl(url)?.let {
             addContent(it.first, it.second, emptySet())
         }
@@ -532,16 +540,10 @@ open class MultiPaneWorkspace(
     ) {
         for (resolver in urlResolvers) {
             val navState = resolver.toNavState(type, item) ?: continue
-            application.setNavState(navState.url.toString())
+            application.setNavState(navState.url)
             break
         }
     }
-
-    fun addItemConfig(type: PaneContentType, icon: GraphicsResourceSet, tooltip: String? = null) {
-        itemTypes[type] = WsItemConfig(type, icon, tooltip)
-    }
-
-    fun getItemConfig(type: PaneContentType) = itemTypes[type] ?: WsItemConfig.DEFAULT
 
     // --------------------------------------------------------------------------------
     // User feedback

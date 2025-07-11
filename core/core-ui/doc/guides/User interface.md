@@ -4,7 +4,7 @@
 
 ## Platform support
 
-Adaptive user interfaces can run on a [platform](def:://) when there is an [adapter](def://)
+Adaptive user interfaces can run on a [platform](def://) when there is an [adapter](def://)
 for the given platform and the basic [platform-dependent](def://) [ui fragments](def://) are
 implemented.
 

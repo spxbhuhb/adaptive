@@ -1,7 +1,8 @@
 package `fun`.adaptive.grove.doc.lib.compiler
 
 import `fun`.adaptive.grove.doc.app.GroveDocModuleMpw
-import `fun`.adaptive.lib.util.url.Url.Companion.parseUrl
+import `fun`.adaptive.grove.doc.model.groveDocDomain
+import `fun`.adaptive.utility.Url.Companion.parseUrl
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
 import `fun`.adaptive.markdown.model.*
 import `fun`.adaptive.markdown.visitor.MarkdownTransformerVoid
@@ -14,15 +15,15 @@ import kotlinx.io.files.Path
  *
  * AI training data set target transforms:
  *
- * - "def" and "guide" links as-is,
+ * - "def", "definition" and "guide" links as-is,
  * - "class", "property", "function" links as-is,
  * - "example" and "dirTree" links into code fences.
- * - "actualize" with "example-group" turns into markdown of function docs and code fence
+ * - "actualize" with "example-group" turns into Markdown of function docs and code fence
  *
  * Human-readable Markdown target transforms:
  *
- * - "def" and "guide" links into MD file names,
- * - "class", "property", "function" links into GitHub links,
+ * - "def", "definition" and "guide" links as-is
+ * - "class", "property", "function", "interface" links into GitHub links,
  * - "example" and "dirTree" links into code fences.
  */
 class MarkdownResolveTransform(
@@ -65,7 +66,7 @@ class MarkdownResolveTransform(
 
             "example" -> replaceExample(link)
 
-            "def" -> {
+            "def", groveDocDomain.definition -> {
                 if ("inline" in link.arguments) {
                     inlineDef(link)
                 } else {
@@ -260,8 +261,8 @@ class MarkdownResolveTransform(
         if (training) return link.original
 
         when (link.scheme) {
-            "def" -> "definition-" + resolveDef(link.name)
-            "guide" -> "guide-" + resolveGuide(link.name)
+            "def", groveDocDomain.definition -> "${groveDocDomain.definition}://" + resolveDef(link.name).removeSuffix(".md")
+            "guide" -> "${groveDocDomain.guide}://" + resolveGuide(link.name).removeSuffix(".md")
             "api" -> resolveClass(link)
             "class" -> resolveClass(link)
             "property" -> resolveClass(link)

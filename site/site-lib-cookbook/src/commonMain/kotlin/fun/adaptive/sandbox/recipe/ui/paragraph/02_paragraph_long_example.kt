@@ -1,4 +1,4 @@
-package `fun`.adaptive.sandbox.recipe.ui.text
+package `fun`.adaptive.sandbox.recipe.ui.paragraph
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
@@ -8,9 +8,6 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.fragment.paragraph.items.TextParagraphItem
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphViewBackend
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
-import `fun`.adaptive.ui.theme.textColors
 
 /**
  * # Long paragraph
