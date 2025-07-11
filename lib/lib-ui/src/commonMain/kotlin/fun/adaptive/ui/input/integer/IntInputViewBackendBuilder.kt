@@ -4,8 +4,8 @@ import `fun`.adaptive.ui.input.InputViewBackendBuilder
 
 class IntInputViewBackendBuilder() : InputViewBackendBuilder<Int, IntInputViewBackend>() {
 
-    val radix : Int? = null
-    val showRadix10 : Boolean? = null
+    var radix : Int? = null
+    var showRadix10 : Boolean? = null
     var unit : String? = null
 
     override fun toBackend() =
