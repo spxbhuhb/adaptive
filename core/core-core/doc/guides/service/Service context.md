@@ -58,5 +58,5 @@ In this example:
 
 ## See Also
 
-- [Writing a service](guide://)
+- [Services](guide://)
 - [Service transport](guide://)

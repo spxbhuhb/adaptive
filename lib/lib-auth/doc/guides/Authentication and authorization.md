@@ -1,4 +1,11 @@
-# Auth
+---
+status: review
+---
+
+# Authentication and authorization
+
+- [lib-auth](def://) provides the backends for authentication and authorization
+- [lib-app](def://) provides some frontends, see [Built-in lib-app features](guide://)
 
 User authentication, authorization and management features. Provides APIs:
 
@@ -8,7 +15,7 @@ User authentication, authorization and management features. Provides APIs:
 
 It is **very important** that most of `lib-auth` works with principals, not accounts.
 
-There is a very basic account implementation for testing purposes, see [basic account](#basic-account),
+There is a very basic account implementation for testing purposes, see basic account below.
 but the main focus of the module is to provide authentication and authorization.
 
 - Authentication is based on *principals* and *credentials*.

@@ -12,4 +12,4 @@ functions provided by [client applications](def://).
 ## See also
 
 - [Service API](def://)
-- [Writing a service](guide://)
+- [Services](guide://)

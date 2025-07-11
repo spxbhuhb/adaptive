@@ -28,7 +28,7 @@ markers: grove-doc-toc
   - [Navigation](guide://lib-ui-mpw)
   - [Admin tool](guide://)
 - [Server](guide://)
-  - [Writing a service](guide://)
+  - [Services](guide://)
   - [Writing a worker](guide://)
 
 ## User interface
