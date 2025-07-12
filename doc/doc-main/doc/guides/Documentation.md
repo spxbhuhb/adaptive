@@ -132,7 +132,7 @@ markers: grove-doc-toc
 - [Markdown](guide://)
 - [Xlsx](guide://)
 
-## Charts
+## Chart
 
 ## Grove
 

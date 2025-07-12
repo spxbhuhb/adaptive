@@ -27,6 +27,7 @@ includeBuild("../../grove/grove-runtime")
 
 includeBuild("../../lib/lib-app")
 includeBuild("../../lib/lib-auth")
+includeBuild("../../lib/lib-chart")
 includeBuild("../../lib/lib-document")
 includeBuild("../../lib/lib-graphics")
 includeBuild("../../lib/lib-ktor")

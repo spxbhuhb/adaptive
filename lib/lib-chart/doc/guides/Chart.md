@@ -1,5 +1,7 @@
 # Chart
 
+[example](actualize://example-group?name=chart)
+
 ## Rendering
 
 Chart rendering uses a canvas. `placeLayout` of the canvas fragment passes the size of the canvas to its 

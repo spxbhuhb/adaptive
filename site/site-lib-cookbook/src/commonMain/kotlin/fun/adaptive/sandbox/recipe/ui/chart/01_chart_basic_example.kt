@@ -1,4 +1,5 @@
-package `fun`.adaptive.sandbox.recipe.chart
+package `fun`.adaptive.sandbox.recipe.ui.chart
+
 
 import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.chart.calculation.CalculationContext
@@ -7,11 +8,14 @@ import `fun`.adaptive.chart.normalization.InstantDoubleNormalizer
 import `fun`.adaptive.chart.ui.temporal.doubleVerticalAxisMarkers
 import `fun`.adaptive.chart.ui.temporal.temporalHorizontalAxisMarkers
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.actualize
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.api.canvas
 import `fun`.adaptive.graphics.canvas.api.stroke
+import `fun`.adaptive.resource.language.localized
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
@@ -19,6 +23,40 @@ import `fun`.adaptive.ui.instruction.dp
 import kotlinx.datetime.Clock.System.now
 import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.minutes
+
+/**
+ * # Basic chart
+ */
+@Adaptive
+fun chartBasicExample(): AdaptiveFragment {
+    var chart = true
+
+    column {
+        maxWidth .. height { 400.dp } .. padding { 10.dp }
+        button("toggle") .. onClick { chart = ! chart }
+
+        if (chart) {
+            canvas { canvasSize ->
+                maxSize
+
+                for (axis in context.axes) {
+                    actualize(axis.renderer, null, emptyInstructions, context, axis, canvasSize)
+                }
+
+                for (item in context.items) {
+                    actualize(item.renderKey, null, emptyInstructions, context, item, canvasSize)
+                }
+            }
+        } else {
+            column {
+                maxSize .. verticalScroll
+                multiTable()
+            }
+        }
+    }
+
+    return fragment()
+}
 
 val xAxis = ChartAxis<Instant, Double, Unit>(
     size = 49.0,
@@ -71,39 +109,11 @@ val context = ChartRenderContext<Instant, Double, Unit>(
 )
 
 @Adaptive
-fun lineChart(/*chart : Chart*/) {
-    var chart = true
-
-    column {
-        maxSize .. padding { 10.dp }
-        button("toggle") .. onClick { chart = !chart }
-
-        if (chart) {
-            canvas { canvasSize ->
-                maxSize
-
-                for (axis in context.axes) {
-                    actualize(axis.renderer, null, emptyInstructions, context, axis, canvasSize)
-                }
-
-                for (item in context.items) {
-                    actualize(item.renderKey, null, emptyInstructions, context, item, canvasSize)
-                }
-            }
-        } else {
-            column {
-                multiTable()
-            }
-        }
-    }
-}
-
-@Adaptive
 fun multiTable() {
     val iStart = now()
     val iEnd = iStart + 15.minutes
 
-    val cc = CalculationContext<Instant,Double, Unit>(
+    val cc = CalculationContext<Instant, Double, Unit>(
         Instant.parse("2024-01-01T12:00:00.0Z"),
         Instant.parse("2024-01-01T15:00:00.0Z"),
         context.normalizer.normalizedInterval(iStart, iEnd),
@@ -118,9 +128,9 @@ fun multiTable() {
     for (i in 0 until markerColumn.size) {
         row {
             gap { 16.dp }
-            text(markerColumn[i])
+            text(markerColumn[i]?.localized() ?: "") .. width { 140.dp }
             for (valueColumn in valueColumns) {
-                text(valueColumn.cells[i])
+                text(valueColumn.cells[i]) .. width { 50.dp }
             }
         }
     }

@@ -3,7 +3,6 @@
  */
 
 import `fun`.adaptive.backend.backend
-import `fun`.adaptive.document.ui.direct.markdown
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
@@ -17,21 +16,13 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.sandbox.recipe.chart.lineChart
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.input.button.submitButton
-import `fun`.adaptive.ui.input.datetime.dateTimeInputBackend
-import `fun`.adaptive.ui.input.integer.intInput
-import `fun`.adaptive.ui.input.integer.intInputBackend
-import `fun`.adaptive.ui.input.long_.longInput
-import `fun`.adaptive.ui.input.long_.longInputBackend
-import `fun`.adaptive.ui.input.text.textInput
-import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.popup.modal.basicModal
-import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
@@ -41,7 +32,7 @@ import kotlinx.coroutines.launch
 fun main() {
     //virtualizedMain()
     //basicAppMain()
-    sandboxMain()
+    //sandboxMain()
     // iotMain()
 }
 
@@ -87,85 +78,14 @@ fun sandboxMain() {
                     fontWeight = 300
                 }
 
-                var feedBack: String = ""
-                val backend = observe {
-                    dateTimeInputBackend {
-                        onChange = { feedBack = it.toString() }
-                    }
-                }
-
                 column {
                     maxSize .. margin { 16.dp } .. padding { 16.dp } .. gap { 16.dp } .. verticalScroll .. backgrounds.friendlyOpaque
-
-//                    doubleInput(doubleInputBackend(12.3) { unit = "min" }) .. width { 100.dp} .. backgrounds.surfaceVariant
-//                    text("FeedBack: $feedBack")
-//                    formBasicExample()
-                    // quickFilterRecipe()
-//                  markdown(
-//                            """
-//                                The paragraph has a list of styles (instance of [AdaptiveInstructionGroup](class://)), and
-//                                each item selects one of those styles to use.
-//                            """.trimIndent()
-//                    )
-                    //treePlayground()
-//                    button("hello") {
-//                        dialog(adapter(), "", ::modal)
-//                    }
-//
-//                    modal("hello", { })
-
-
-                    //selectInputDropdownExample()
-
-                    markdown(
-                        """
-                            ## Hard-coded examples
-
-                            [Select input dropdown example](actualize://cookbook/input/select/example/dropdown)
-
-                            ---
-
-                            ## Playground
-
-                        """.trimIndent()
-                    )
+                    lineChart()
                 }
             }
         } catch (ex: Exception) {
             rootUiLogger.error(ex)
         }
-    }
-}
-
-@Adaptive
-fun modal(
-    data: String,
-    close: UiClose
-) {
-    basicModal("stuff") {
-        width { 600.dp }
-
-        column {
-            padding { 24.dp } .. gap { 16.dp } .. maxWidth
-
-            markdown("""**Kulcs, csatorna, PAN és EPAN változtatásánál a korábban csatlakoztatott eszközök le fognak szakadni a hálózatról és mindegyiket újra kell csatlakozatni.**""".trimIndent())
-
-            textInput(textInputBackend("hello") { label = "hello" })
-            textInput(textInputBackend("hello") { label = "hello" })
-
-            row {
-                gap { 16.dp }
-                intInput(intInputBackend(12) { label = "hello" }) .. width { 100.dp }
-                intInput(intInputBackend(12) { label = "hello" }) .. width { 100.dp }
-                longInput(longInputBackend(12) { label = "hello" }) .. width { 200.dp }
-            }
-
-            row {
-                gap { 16.dp }
-                intInput(intInputBackend(12) { label = "hello" }) .. width { 100.dp }
-            }
-        }
-
     }
 }
 

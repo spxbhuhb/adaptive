@@ -5,6 +5,8 @@ import `fun`.adaptive.chart.model.ChartMarker
 import `fun`.adaptive.chart.model.ChartRenderContext
 import `fun`.adaptive.chart.normalization.AbstractDoubleNormalizer
 import `fun`.adaptive.ui.fragment.layout.RawSize
+import `fun`.adaptive.utility.format
+import kotlin.math.abs
 import kotlin.math.floor
 import kotlin.math.log10
 import kotlin.math.pow
@@ -21,16 +23,22 @@ fun <YT : Comparable<YT>> doubleVerticalAxisMarkers(
 
     val normalizer = context.normalizer as? AbstractDoubleNormalizer ?: return emptyList()
 
+    val yStart = normalizer.yStart / context.plotSpaceRatio
+    val yEnd = normalizer.yEnd / context.plotSpaceRatio
+
+    // Determine the appropriate number of decimal places based on the data range
+    val decimalPlaces = determineDecimalPlaces(yStart, yEnd)
+
     calculateMarkerPositions(
         availableHeight,
         approxLabelSpacing,
-        normalizer.yStart / context.plotSpaceRatio,
-        normalizer.yEnd / context.plotSpaceRatio
+        yStart,
+        yEnd
     ).map { (offset, value) ->
 
         ChartMarker(
             offset = availableHeight - offset,
-            labelText = value.toString(),
+            labelText = value.format(decimals = decimalPlaces, hideZeroDecimals = true),
             guide = true
         )
 
@@ -94,4 +102,32 @@ fun niceNumber(range: Double, round: Boolean): Double {
         }
     }
     return niceFraction * 10.0.pow(exponent)
+}
+
+/**
+ * Determines the appropriate number of decimal places to display based on the range of values.
+ *
+ * @param min The minimum value in the range
+ * @param max The maximum value in the range
+ * @return The number of decimal places to display
+ */
+fun determineDecimalPlaces(min: Double, max: Double): Int {
+    // Handle special cases
+    if (min.isNaN() || max.isNaN() || min.isInfinite() || max.isInfinite()) {
+        return 1 // Default to 1 decimal place for special cases
+    }
+
+    val range = abs(max - min)
+
+    // For very small ranges, we need more precision
+    return when {
+        range == 0.0 -> 1 // Default to 1 decimal place if range is 0
+        range >= 100 -> 0 // No decimals for large ranges
+        range >= 10 -> 1 // 1 decimal for medium ranges
+        range >= 1 -> 2 // 2 decimals for smaller ranges
+        range >= 0.1 -> 3 // 3 decimals for very small ranges
+        range >= 0.01 -> 4 // 4 decimals for tiny ranges
+        range >= 0.001 -> 5 // 5 decimals for extremely small ranges
+        else -> 6 // 6 decimals for microscopic ranges
+    }
 }

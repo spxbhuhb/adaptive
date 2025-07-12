@@ -11,6 +11,7 @@ import `fun`.adaptive.sandbox.recipe.document.xlsx.xlsxDownloadExample
 import `fun`.adaptive.sandbox.recipe.ui.badge.*
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPositionExample
+import `fun`.adaptive.sandbox.recipe.ui.chart.chartBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
@@ -97,6 +98,12 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
 
         add("canvasBasicExample", ::canvasBasicExample)
         add("canvasPositionExample", ::canvasPositionExample)
+
+        // ----------------------------------------------------------------------------
+        // Chart
+        // ----------------------------------------------------------------------------
+
+        add("chartBasicExample", ::chartBasicExample)
 
         // ----------------------------------------------------------------------------
         // Container

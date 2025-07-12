@@ -6,6 +6,7 @@ import `fun`.adaptive.app.MpwBrowserClientApplication.Companion.wsBrowserClient
 import `fun`.adaptive.app.app.AppMainModuleMpw
 import `fun`.adaptive.app.ui.mpw.inspect.AppInspectModuleMpw
 import `fun`.adaptive.auth.app.NoAuthClientModule
+import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.grove.doc.app.GroveDocModuleMpw
 import `fun`.adaptive.sandbox.app.CookbookClientModule
@@ -22,7 +23,7 @@ fun main() {
         module { GroveRuntimeModule() }
         module { NoAuthClientModule() }
         module { ValueClientModule() }
-        //module { ChartWsModule() }
+        module { ChartModule() }
         module { CookbookClientModule() }
         module { GroveDocModuleMpw() }
         module { SiteWsModule() }
