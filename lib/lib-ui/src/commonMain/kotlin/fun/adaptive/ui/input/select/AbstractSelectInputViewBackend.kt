@@ -12,6 +12,7 @@ import `fun`.adaptive.ui.fragment.structural.AbstractPopup
 import `fun`.adaptive.ui.fragment.structural.PopupSourceViewBackend
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.input.InputViewBackend
+import `fun`.adaptive.ui.input.select.mapping.SelectInputMapping
 import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.Keys
@@ -20,20 +21,26 @@ import `fun`.adaptive.ui.instruction.layout.Alignment
 import kotlin.properties.Delegates.observable
 import kotlin.reflect.KProperty
 
-abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
-    value: SVT? = null,
-    val mapping: SelectOptionMapping<IVT, OT>,
+/**
+ * @param   INPUT_VALUE_TYPE   Type of [inputValue], can be [ITEM_TYPE] or `Set<ITEM_TYPE>` (for multi-select)
+ * @param   ITEM_TYPE          Type of one select item.
+ * @param   OPTION_TYPE        Type of select options.
+ */
+abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>(
+    value: INPUT_VALUE_TYPE? = null,
+    val optionToItemMapping: SelectOptionMapping<ITEM_TYPE, OPTION_TYPE>,
+    val inputToItemMapping: SelectInputMapping<INPUT_VALUE_TYPE, ITEM_TYPE>,
     label: String? = null,
     isSecret: Boolean = false
-) : InputViewBackend<SVT, AbstractSelectInputViewBackend<SVT, IVT, OT>>(
+) : InputViewBackend<INPUT_VALUE_TYPE, AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>>(
     value, label, isSecret
 ), PopupSourceViewBackend {
 
-    var options by observable(emptyList<OT>(), ::notify)
+    var options by observable(emptyList<OPTION_TYPE>(), ::notify)
     var isMultiSelect by observable(false, ::notify)
 
-    var toText by observable<(OT) -> String>({ it.toString() }, ::notify)
-    var toIcon by observable<(OT) -> GraphicsResourceSet>({ Graphics.empty }, ::notify)
+    var toText by observable<(OPTION_TYPE) -> String>({ it.toString() }, ::notify)
+    var toIcon by observable<(OPTION_TYPE) -> GraphicsResourceSet>({ Graphics.empty }, ::notify)
 
     var selectInputTheme: SelectInputTheme = SelectInputTheme.default
     var withSurfaceContainer: Boolean = false
@@ -42,7 +49,7 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
     var items by observable(listOf<SelectItem>(), ::notify)
 
     val selectedItems = mutableSetOf<SelectItem>()
-    val selectedValues = mutableSetOf<IVT>()
+    val selectedValues = mutableSetOf<ITEM_TYPE>()
 
     /**
      * Dropdown open, initial list display and keyboard navigation uses [scrollAlignment]
@@ -62,7 +69,7 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
         if (isDisabled) return
 
         val itemValue = item.itemValue
-        val oldValue = selectedItems.map { it.itemValue }.toSet()
+        val oldValue = inputValue
 
         if (itemValue in selectedValues) {
             if (isNullable || isMultiSelect) {
@@ -92,7 +99,7 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
         updateInputValue(oldValue)
     }
 
-    abstract fun updateInputValue(oldValue: Set<IVT>)
+    abstract fun updateInputValue(oldValue: INPUT_VALUE_TYPE?)
 
     fun optionListContainerInstructions(focused: Boolean): AdaptiveInstruction =
         if (withSurfaceContainer) {
@@ -122,12 +129,12 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
     }
 
     inner class SelectItem(
-        option: OT,
-        val itemValue: IVT,
+        option: OPTION_TYPE,
+        val itemValue: ITEM_TYPE,
         selected: Boolean = false
     ) : SelfObservable<SelectItem>() {
 
-        var option: OT by observable(option, ::notify)
+        var option: OPTION_TYPE by observable(option, ::notify)
         var isSelected: Boolean by observable(selected, ::notify)
 
         /**
@@ -164,7 +171,7 @@ abstract class AbstractSelectInputViewBackend<SVT, IVT, OT>(
         if (property.name == ::options.name) {
             selectedItems.clear()
             items = options.map {
-                val itemValue = mapping.optionToValue(it)
+                val itemValue = optionToItemMapping.optionToValue(it)
                 SelectItem(it, itemValue, itemValue in selectedValues).also { item ->
                     if (item.isSelected) selectedItems += item
                 }

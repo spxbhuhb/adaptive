@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.support.scroll.scrollIntoView
 @Adaptive
 fun <OT> selectInputOptionCheckbox(
     item: AbstractSelectInputViewBackend<*,*,OT>.SelectItem,
-    toText : ((OT) -> String)? = null
+    toText : (OT.() -> String)? = null
 ) {
     val hover = hover()
     val observed = observe { item }

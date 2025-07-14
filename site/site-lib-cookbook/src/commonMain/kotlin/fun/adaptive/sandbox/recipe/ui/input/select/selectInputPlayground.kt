@@ -165,7 +165,7 @@ fun selectInputPlaygroundResult(config: SelectPlaygroundConfig) {
 
 @Adaptive
 fun actualInputList(
-    backend: SingleSelectInputViewBackend<Option, Option>,
+    backend: SingleSelectInputViewBackend<Option, Option, Option>, // FIXME the first option here is a lie actually, considering multi-select
     config: SelectPlaygroundConfig
 ): AdaptiveFragment {
     selectInputList(
@@ -182,7 +182,7 @@ fun actualInputList(
 
 @Adaptive
 fun actualInputDropdown(
-    backend: SingleSelectInputViewBackend<Option, Option>,
+    backend: SingleSelectInputViewBackend<*, Option, Option>,
     config: SelectPlaygroundConfig
 ): AdaptiveFragment {
     selectInputDropdown(

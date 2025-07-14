@@ -26,26 +26,30 @@ class OriginalFunctionTransform(
      * Transforms a function annotated with `@Adaptive` into an Adaptive fragment class.
      */
     override fun visitFunctionNew(declaration: IrFunction): IrFunction {
-        if (declaration.isAnonymousFunction || declaration.name == SpecialNames.ANONYMOUS) return declaration
+        try {
+            if (declaration.isAnonymousFunction || declaration.name == SpecialNames.ANONYMOUS) return declaration
 
-        if (! declaration.isAdaptive) {
-            return declaration
-        }
-
-        val body = checkNotNull(declaration.body) { "missing function body\${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
-
-        // do not transform manual implementations
-        if (body.statements.size == 1) {
-            val statement = body.statements[0]
-            if (statement is IrCall && statement.symbol == pluginContext.manualImplementation) {
+            if (! declaration.isAdaptive) {
                 return declaration
             }
+
+            val body = checkNotNull(declaration.body) { "missing function body\${declaration.dumpKotlinLike()}\n${declaration.dump()}" }
+
+            // do not transform manual implementations
+            if (body.statements.size == 1) {
+                val statement = body.statements[0]
+                if (statement is IrCall && statement.symbol == pluginContext.manualImplementation) {
+                    return declaration
+                }
+            }
+
+            // this is the actual transform
+            IrFunction2ArmClass(pluginContext, declaration, false).transform()
+
+            return declaration
+        } catch (e: Throwable) {
+            throw IllegalStateException("error transforming function ${declaration.name}\n${declaration.dump()}", e)
         }
-
-        // this is the actual transform
-        IrFunction2ArmClass(pluginContext, declaration, false).transform()
-
-        return declaration
     }
 
 }

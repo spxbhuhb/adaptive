@@ -7,6 +7,7 @@ import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.model.AvRefLabels
 import `fun`.adaptive.value.model.AvTreeDef
+import `fun`.adaptive.value.util.PathAndValue
 import kotlin.reflect.KClass
 
 /**
@@ -83,11 +84,6 @@ abstract class AvRemoteTreeSubscriber<SPEC : Any, TREE_ITEM>(
     operator fun get(valueId: AvValueId) = nodeMap[valueId]?.value
 
     fun values() = nodeMap.values.mapNotNull { it.value }
-
-    class PathAndValue<SPEC>(
-        val path: List<String>,
-        val value: AvValue<SPEC>
-    )
 
     fun flatPathAndValueList() : List<PathAndValue<SPEC>> {
         val result = mutableListOf<PathAndValue<SPEC>>()

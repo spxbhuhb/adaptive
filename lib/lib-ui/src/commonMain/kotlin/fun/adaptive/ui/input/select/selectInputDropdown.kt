@@ -17,12 +17,12 @@ import `fun`.adaptive.ui.instruction.layout.SizeBase
 import `fun`.adaptive.ui.instruction.layout.SizeStrategy
 
 @Adaptive
-fun <IT, OT> selectInputDropdown(
-    viewBackend: AbstractSelectInputViewBackend<IT, IT, OT>,
+fun <INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE> selectInputDropdown(
+    viewBackend: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>,
     @Adaptive
-    _fixme_option: (option: AbstractSelectInputViewBackend<IT, IT, OT>.SelectItem) -> Unit,
+    _fixme_option: (option: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
     @Adaptive
-    _fixme_value: (option: AbstractSelectInputViewBackend<IT, IT, OT>.SelectItem) -> Unit
+    _fixme_value: (option: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit
 ): AdaptiveFragment {
 
     val focus = focus()

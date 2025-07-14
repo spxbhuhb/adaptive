@@ -112,7 +112,7 @@ fun roles() {
 
     column {
         padding { 16.dp } .. width { 300.dp } .. height { 300.dp }
-        multiSelectMappingEditorList(knownRoles, AvItemSelectMapping(), { selectInputOptionCheckbox(it) { r -> r.nameLike } }) { template.roles } .. maxSize
+        multiSelectMappingEditorList(knownRoles, AvItemSelectMapping(), { selectInputOptionCheckbox(it) { nameLike } }) { template.roles } .. maxSize
     }
 }
 

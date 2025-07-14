@@ -12,7 +12,8 @@ import `fun`.adaptive.ui.support.scroll.scrollIntoView
 
 @Adaptive
 fun <OT> selectInputOptionText(
-    item: AbstractSelectInputViewBackend<*,*,OT>.SelectItem
+    item: AbstractSelectInputViewBackend<*,*,OT>.SelectItem,
+    toText : (OT.() -> String)? = null
 ) {
     val hover = hover()
     val observed = observe { item }
@@ -22,7 +23,7 @@ fun <OT> selectInputOptionText(
         observed.optionContainerInstructions(hover)
         onClick { observed.toggle() }
 
-        text(observed) .. observed.optionTextInstructions()
+        text(toText?.invoke(observed.option) ?: observed) .. observed.optionTextInstructions()
     }
 
     if (observed.isSelected) {

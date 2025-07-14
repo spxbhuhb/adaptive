@@ -8,12 +8,13 @@ import `fun`.adaptive.ui.input.select.AbstractSelectInputViewBackend
 
 @Adaptive
 fun <OT> selectInputValueIconAndText(
-    item: AbstractSelectInputViewBackend<*,*,OT>.SelectItem
+    item: AbstractSelectInputViewBackend<*,*,OT>.SelectItem,
+    toText : (OT.() -> String)? = null
 ) {
     row {
         item.valueContainerInstructions()
 
         icon(item.icon()) .. item.valueIconInstructions()
-        text(item) .. item.valueTextInstructions()
+        text(toText?.invoke(item.option) ?: item) .. item.valueTextInstructions()
     }
 }

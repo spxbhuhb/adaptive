@@ -9,7 +9,8 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
 import `fun`.adaptive.ui.input.select.AbstractSelectInputViewBackend
 import `fun`.adaptive.ui.input.select.MultiSelectInputViewBackend
-import `fun`.adaptive.ui.input.select.mapping.IdentityMapping
+import `fun`.adaptive.ui.input.select.mapping.IdentityMultiInputMapping
+import `fun`.adaptive.ui.input.select.mapping.IdentityOptionMapping
 import `fun`.adaptive.ui.input.select.multiSelectInputList
 
 @Adaptive
@@ -25,7 +26,13 @@ fun <T> multiSelectEditorList(
 
     multiSelectInputList(
         fragment().viewBackendFor(binding) { value, label, isSecret ->
-            MultiSelectInputViewBackend(value, IdentityMapping(), label, isSecret).also {
+            MultiSelectInputViewBackend(
+                value,
+                IdentityOptionMapping(),
+                IdentityMultiInputMapping(),
+                label,
+                isSecret
+            ).also {
                 it.withSurfaceContainer = true
                 it.isMultiSelect = true
             }

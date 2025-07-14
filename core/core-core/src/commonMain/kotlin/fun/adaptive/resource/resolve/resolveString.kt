@@ -11,6 +11,9 @@ fun AbstractWorkspace.resolveString(key : StringResourceKey) : String =
 fun AdaptiveFragment.resolveString(key : StringResourceKey) : String =
     adapter.application?.resolveString(key) ?: key
 
+fun AdaptiveFragment.resolveStringOrNull(key : StringResourceKey) : String? =
+    adapter.application?.resolveString(key)
+
 fun AbstractApplication<*,*>.resolveString(key : StringResourceKey) : String =
     resolveStringOrNull(key) ?: key
 

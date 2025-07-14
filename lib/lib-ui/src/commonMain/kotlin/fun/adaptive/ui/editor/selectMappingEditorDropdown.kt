@@ -9,6 +9,7 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
 import `fun`.adaptive.ui.input.select.AbstractSelectInputViewBackend
 import `fun`.adaptive.ui.input.select.SingleSelectInputViewBackend
+import `fun`.adaptive.ui.input.select.mapping.IdentityInputMapping
 import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
 import `fun`.adaptive.ui.input.select.selectInputDropdown
 
@@ -28,7 +29,13 @@ fun <VT, OT> selectMappingEditorDropdown(
 
     selectInputDropdown(
         fragment().viewBackendFor(binding) { value, label, isSecret ->
-            SingleSelectInputViewBackend(value, mapping, label, isSecret).also {
+            SingleSelectInputViewBackend(
+                value,
+                mapping,
+                IdentityInputMapping(),
+                label,
+                isSecret
+            ).also {
                 it.options = options
                 it.withSurfaceContainer = true
             }

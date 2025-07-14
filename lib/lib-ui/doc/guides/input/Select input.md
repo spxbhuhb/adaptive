@@ -5,7 +5,14 @@ Select lets the user choose from options.
 There are many configuration and rendering options. You can create a dropdown style select, 
 a list of options or something like a choice-group, etc.
 
+## Input examples
+
 [examples](actualize://example-group?name=selectInput)
+
+## Editor examples
+
+[examples](actualize://example-group?name=selectEditor)
+
  
 ## Playground
 

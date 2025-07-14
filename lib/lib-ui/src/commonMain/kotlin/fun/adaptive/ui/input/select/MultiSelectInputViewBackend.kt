@@ -1,14 +1,16 @@
 package `fun`.adaptive.ui.input.select
 
+import `fun`.adaptive.ui.input.select.mapping.SelectInputMapping
 import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
 
-class MultiSelectInputViewBackend<IVT,OT>(
-    value: Set<IVT>? = null,
-    mapping : SelectOptionMapping<IVT, OT>,
+class MultiSelectInputViewBackend<ITEM_TYPE, OPTION_TYPE>(
+    value: Set<ITEM_TYPE>? = null,
+    optionToItemMapping: SelectOptionMapping<ITEM_TYPE, OPTION_TYPE>,
+    inputToItemMapping: SelectInputMapping<Set<ITEM_TYPE>, ITEM_TYPE>,
     label: String? = null,
     isSecret: Boolean = false
-) : AbstractSelectInputViewBackend<Set<IVT>, IVT, OT>(
-    value, mapping, label, isSecret
+) : AbstractSelectInputViewBackend<Set<ITEM_TYPE>, ITEM_TYPE, OPTION_TYPE>(
+    value, optionToItemMapping, inputToItemMapping, label, isSecret
 ) {
     init {
         if (value != null) {
@@ -16,7 +18,7 @@ class MultiSelectInputViewBackend<IVT,OT>(
         }
     }
 
-    override fun updateInputValue(oldValue: Set<IVT>) {
+    override fun updateInputValue(oldValue: Set<ITEM_TYPE>?) {
         inputValue = selectedValues
     }
 
