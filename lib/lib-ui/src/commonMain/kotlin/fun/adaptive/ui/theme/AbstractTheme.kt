@@ -21,6 +21,10 @@ abstract class AbstractTheme {
         normalFont
     )
 
+    open val inputTabIndex = 1000
+
+    open val buttonTabIndex = 2000
+
     open val inputCornerRadiusDp = 4.dp
 
     open val inputCornerRadius = cornerRadius { inputCornerRadiusDp }

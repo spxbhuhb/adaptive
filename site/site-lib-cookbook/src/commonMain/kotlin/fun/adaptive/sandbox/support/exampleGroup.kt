@@ -103,7 +103,7 @@ fun examplePane(
     var codeMode = CodeMode.Hidden
 
     column {
-       maxWidth .. borders.outline .. cornerRadius { 4.dp }
+        maxWidth .. borders.outline .. cornerRadius { 4.dp }
 
         row {
             maxWidth .. borderBottom(colors.outline)
@@ -138,17 +138,18 @@ fun examplePane(
                 row {
                     paddingHorizontal { 8.dp } .. gap { 8.dp }
 
-                    actionIcon(Graphics.code, codeMode.hintFor(CodeMode.Example), theme = denseIconTheme) ..
-                        onClick { codeMode = codeMode.toggleTo(CodeMode.Example) }
+                    actionIcon(Graphics.code, codeMode.hintFor(CodeMode.Example), theme = denseIconTheme) {
+                        codeMode = codeMode.toggleTo(CodeMode.Example)
+                    }
 
-                    actionIcon(Graphics.full_code, codeMode.hintFor(CodeMode.Full), theme = denseIconTheme) ..
-                        onClick { codeMode = codeMode.toggleTo(CodeMode.Full) }
+                    actionIcon(Graphics.full_code, codeMode.hintFor(CodeMode.Full), theme = denseIconTheme) {
+                        codeMode = codeMode.toggleTo(CodeMode.Full)
+                    }
                 }
 
-                actionIcon(Graphics.content_copy, Strings.copyToClipboard, theme = denseIconTheme) ..
-                    onClick(Strings.copied) {
-                        copyToClipboard(if (codeMode == CodeMode.Full) example.fullCode else example.exampleCode)
-                    }
+                actionIcon(Graphics.content_copy, Strings.copyToClipboard, theme = denseIconTheme, actionFeedbackText = Strings.copied) {
+                    copyToClipboard(if (codeMode == CodeMode.Full) example.fullCode else example.exampleCode)
+                }
             }
 
             when (codeMode) {

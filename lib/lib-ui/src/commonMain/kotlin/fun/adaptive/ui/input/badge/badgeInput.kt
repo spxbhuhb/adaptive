@@ -34,12 +34,10 @@ fun badgeInput(
                 singleLineTextInput(value = textInputValue, onChange = { v -> textInputValue = v }) ..
                     observed.containerThemeInstructions(focus) ..
                     observed.inputTheme.singleLine ..
-                    onKeydown { event ->
-                        if (event.keyInfo?.key == Keys.ENTER) {
-                            event.preventDefault()
-                            viewBackend.addBadge(textInputValue)
-                            textInputValue = ""
-                        }
+                    onEnter { event ->
+                        event.preventDefault()
+                        viewBackend.addBadge(textInputValue)
+                        textInputValue = ""
                     }
 
                 actionIcon(Graphics.add, theme = denseIconTheme) { viewBackend.addBadge(textInputValue); textInputValue = "" }

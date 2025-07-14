@@ -5,10 +5,10 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.api.backgroundColor
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.fr
+import `fun`.adaptive.ui.theme.AbstractTheme
 import `fun`.adaptive.ui.theme.colors
 
-class ColorInputTheme {
+class ColorInputTheme : AbstractTheme() {
 
     val exampleSize = 160.dp
     val colorPaneWidth = 360.dp
@@ -58,7 +58,7 @@ class ColorInputTheme {
     )
 
     var hueSlider = instructionsOf(
-        tabIndex { 0 },
+        tabIndex { inputTabIndex },
         maxWidth,
         height(8.dp),
         cornerRadius { 4.dp }

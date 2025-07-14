@@ -26,7 +26,7 @@ open class TreeTheme(
     open val itemPadding : DPixel = 4.dp,
 ) {
     open val container = instructionsOf(
-        tabIndex { 0 },
+        tabIndex { -1 },
         alignItems.startCenter,
         fillStrategy.resizeToMax,
     )

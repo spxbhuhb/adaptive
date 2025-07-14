@@ -29,7 +29,7 @@ fun <IT, CT> tree(
     val observed = observe { viewBackend }
 
     column(observed.theme.container, instructions()) {
-        onKeydown { observed.onKeyDown(it) }
+        onKeyDown { observed.onKeyDown(it) }
 
         for (item in observed.topItems) {
             node(observed, item, 0.dp, _KT_74337_contextMenuBuilder)

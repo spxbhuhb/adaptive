@@ -19,7 +19,7 @@ class SelectInputTheme : AbstractTheme() {
     // List
 
     var listContainer = instructionsOf(
-        tabIndex { 0 },
+        tabIndex { inputTabIndex },
         verticalScroll,
         fillStrategy.resizeToMax
     )

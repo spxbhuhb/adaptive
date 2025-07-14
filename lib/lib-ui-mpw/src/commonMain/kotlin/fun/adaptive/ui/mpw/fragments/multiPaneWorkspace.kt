@@ -33,7 +33,7 @@ fun multiPaneWorkspace(workspace: MultiPaneWorkspace) : AdaptiveFragment {
         if (isFullScreen) colTemplate(0.dp, 1.fr, 0.dp) else  colTemplate(DEFAULT.width, 1.fr, DEFAULT.width)
 
         tabIndex { -1 } .. focusFirst
-        onKeydown { workspace.onKeydown(it) }
+        onKeyDown { workspace.onKeydown(it) }
 
         box {
             if (! isFullScreen) {

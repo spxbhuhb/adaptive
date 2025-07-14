@@ -34,7 +34,7 @@ fun ufdCenter(): AdaptiveFragment {
 
         row {
             maxSize .. borderBottom(DEFAULT.toolBorderColor) .. spaceBetween
-            onKeydown { it.preventDefault(); viewBackend.onKeyDown(it.keyInfo !!, it.modifiers) }
+            onKeyDown { it.preventDefault(); viewBackend.onKeyDown(it.keyInfo !!, it.modifiers) }
 
             row {
                 alignSelf.startCenter

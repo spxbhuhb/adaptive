@@ -34,7 +34,7 @@ fun <IT, OT> selectInputDropdown(
         column(instructions()) {
             observed.dropdownSelectedContainerInstructions(focus)
 
-            onKeydown { event -> observed.onDropdownSelectedKeydown(event) }
+            onKeyDown { event -> observed.onDropdownSelectedKeydown(event) }
 
             grid {
                 theme.valueContainer
@@ -58,7 +58,7 @@ fun <IT, OT> selectInputDropdown(
                         theme.dropdownOptionsContainer .. SizeStrategy(horizontalBase = SizeBase.Content, minWidth = 300.dp)
 
                         onMove { observed.onPointerMove() }
-                        onKeydown { event -> observed.onListKeydown(event, hide) }
+                        onKeyDown { event -> observed.onListKeydown(event, hide) }
 
                         for (item in observed.items) {
                             _fixme_option(item)

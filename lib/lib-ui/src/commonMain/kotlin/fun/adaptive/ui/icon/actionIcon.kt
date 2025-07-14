@@ -7,21 +7,35 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.support.UiEventHandler
 
 @Adaptive
 fun actionIcon(
     icon: GraphicsResourceSet,
     tooltip: String? = null,
     theme: IconTheme = onSurfaceIconTheme,
-    onClickFun: (() -> Unit)? = null
+    actionFeedbackText: String? = null,
+    actionFeedbackIcon: GraphicsResourceSet? = null,
+    actionHandler: UiEventHandler? = null
 ): AdaptiveFragment {
+    val focus = focus()
     val hover = hover()
+
+    val border = theme.border(focus)
     val background = theme.background(hover)
     val svgColors = theme.svgColors(hover)
 
-    box(theme.actionIconContainer, background) {
-        svg(icon, theme.actionIcon, svgColors, alignSelf.center) ..
-            if (onClickFun != null) instructions() + onClick { onClickFun.invoke() } else instructions()
+    box(theme.actionIconContainer, background, border) {
+        if (actionHandler != null) {
+            instructions().addAll(
+                onClick(feedbackText = actionFeedbackText, feedbackIcon = actionFeedbackIcon) { e -> actionHandler(e) },
+                onEnter(feedbackText = actionFeedbackText, feedbackIcon = actionFeedbackIcon) { e -> actionHandler(e) }
+            )
+        } else {
+            instructions()
+        }
+
+        svg(icon, theme.actionIcon, svgColors, alignSelf.center)
 
         if (tooltip != null) {
             hoverPopup(theme.tooltip) {

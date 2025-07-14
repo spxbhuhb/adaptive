@@ -142,7 +142,7 @@ fun hueSlider(
                     updateBackend(viewBackend, 360.0 * event.x / event.fragment.renderData.finalWidth)
                 }
 
-                onKeydown { event ->
+                onKeyDown { event ->
                     when (event.keyInfo?.key) {
                         Keys.ARROW_LEFT -> updateBackend(viewBackend, null, - 1.0)
                         Keys.ARROW_RIGHT -> updateBackend(viewBackend, null, 1.0)

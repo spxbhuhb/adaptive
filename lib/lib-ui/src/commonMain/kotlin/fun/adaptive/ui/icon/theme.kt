@@ -8,6 +8,7 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.theme.AbstractTheme
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
@@ -62,7 +63,8 @@ class IconTheme(
     val containerSize: DPixel = 34.dp,
     val margin: DPixel = 0.dp,
     val cornerRadius: DPixel = 16.dp
-) {
+) : AbstractTheme() {
+
     val icon = instructionsOf(
         fill(color),
         svgHeight(iconSize),
@@ -81,7 +83,7 @@ class IconTheme(
         margin(margin),
         cornerRadius(cornerRadius),
         alignItems.center,
-        tabIndex { 0 }
+        tabIndex { inputTabIndex }
     )
 
     val tooltip = instructionsOf(
@@ -101,9 +103,17 @@ class IconTheme(
         noSelect
     )
 
-    val nonHoverBackground = backgroundColor(colors.surface.opaque(0.0))
+    val focusBorder = border(colors.focusColor, 1.dp)
+
+    val nonFocusBorder = border(colors.transparent, 1.dp)
+
+    val nonHoverBackground = backgroundColor(colors.transparent)
 
     val hoverBackground = backgroundColor(colors.reverse.opaque(0.1))
+
+    fun border(focus : Boolean) = instructionsOf(
+       if (focus) focusBorder else nonFocusBorder
+    )
 
     fun background(hover: Boolean) =
         if (hover) hoverBackground else nonHoverBackground

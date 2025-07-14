@@ -35,11 +35,18 @@ fun button(
         AdaptiveInstructionGroup(i.filter { it is AlignSelf })
 
         row(observed.innerContainerInstructions(focus)) {
-            AdaptiveInstructionGroup(i.filter { it !is AlignSelf }).let {
-                if (onClickFun != null) it .. onClick { e -> onClickFun.invoke(e) } else it
+            AdaptiveInstructionGroup(i.filter { it !is AlignSelf }).let { filtered ->
+                if (onClickFun != null) {
+                    filtered.addAll(
+                        onClick { e -> onClickFun.invoke(e) },
+                        onEnter { e -> onClickFun.invoke(e) },
+                    )
+                } else {
+                    filtered
+                }
             }
 
-            onKeydown { observed.onKeydown(it) }
+            onKeyDown { observed.onKeydown(it) }
             if (icon != null) svg(icon) .. observed.iconThemeInstructions(focus)
             text(label) .. observed.textThemeInstructions(focus)
         }

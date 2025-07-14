@@ -22,6 +22,13 @@ onSecondaryUp(handler: UiEventHandler)
 
 onKeydown(handler: UiEventHandler)
 
+onEnter(
+    feedbackText: String? = null,
+    feedbackIcon: GraphicsResourceSet? = null,
+    handler: UiEventHandler
+)
+
+
 noPointerEvents
 enablePointerEvents
 ```

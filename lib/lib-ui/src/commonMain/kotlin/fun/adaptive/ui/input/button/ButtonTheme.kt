@@ -38,7 +38,7 @@ class ButtonTheme : AbstractTheme() {
 
     val normalInnerContainer = instructionsOf(
         innerContainerBase,
-        tabIndex { 0 },
+        tabIndex { buttonTabIndex },
         backgrounds.surface,
         border(colors.outline, 1.dp),
         padding(1.dp, 17.dp, 1.dp, 17.dp),
@@ -46,7 +46,7 @@ class ButtonTheme : AbstractTheme() {
 
     val focusNormalInnerContainer = instructionsOf(
         innerContainerBase,
-        tabIndex { 0 },
+        tabIndex { buttonTabIndex },
         backgrounds.surface,
         border(colors.focusColor, 2.dp)
     )
@@ -67,7 +67,7 @@ class ButtonTheme : AbstractTheme() {
 
     val submitInnerContainer = instructionsOf(
         innerContainerBase,
-        tabIndex { 0 },
+        tabIndex { buttonTabIndex },
         backgrounds.focusSurface
     )
 
@@ -79,7 +79,7 @@ class ButtonTheme : AbstractTheme() {
 
     val focusSubmitInnerContainer = instructionsOf(
         innerContainerBase,
-        tabIndex { 0 },
+        tabIndex { buttonTabIndex },
         backgrounds.focusSurface
     )
 
@@ -91,7 +91,7 @@ class ButtonTheme : AbstractTheme() {
 
     val dangerInnerContainer = instructionsOf(
         innerContainerBase,
-        tabIndex { 0 },
+        tabIndex { buttonTabIndex },
         backgrounds.failSurface
     )
 
@@ -103,7 +103,7 @@ class ButtonTheme : AbstractTheme() {
 
     val focusDangerInnerContainer = instructionsOf(
         innerContainerBase,
-        tabIndex { 0 },
+        tabIndex { buttonTabIndex },
         backgrounds.failSurface
     )
 

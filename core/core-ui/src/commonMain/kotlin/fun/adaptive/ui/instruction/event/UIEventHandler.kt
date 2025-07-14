@@ -5,13 +5,26 @@
 package `fun`.adaptive.ui.instruction.event
 
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 
 interface UIEventHandler : AdaptiveInstruction {
 
     val handler: (event: UIEvent) -> Unit
 
-    fun execute(event: UIEvent) {
+    val feedbackText: String?
+        get() = null
+
+    val feedbackIcon: GraphicsResourceSet?
+        get() = null
+
+    /**
+     * Execute [handler] the event and patch the fragment if dirty.
+     *
+     * @return  true if the event handler has been executed, false otherwise
+     */
+    fun execute(event: UIEvent): Boolean {
         handler(event)
         event.patchIfDirty()
+        return true
     }
 }

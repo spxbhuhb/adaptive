@@ -21,7 +21,7 @@ class InputTheme : AbstractTheme() {
     val base = instructionsOf(
         inputCornerRadius,
         inputFont,
-        tabIndex { 0 }
+        tabIndex { inputTabIndex }
     )
 
     val enabled = base + instructionsOf(

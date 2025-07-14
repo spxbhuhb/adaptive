@@ -6,6 +6,7 @@ import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.theme.AbstractTheme
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.iconColors
@@ -14,12 +15,12 @@ import `fun`.adaptive.ui.theme.textColors
 class BooleanInputTheme(
     containerSize: DPixel,
     contentSize: DPixel
-) {
+) : AbstractTheme() {
 
     var container = instructionsOf(
         size(containerSize),
         alignItems.center,
-        tabIndex { 0 }
+        tabIndex { inputTabIndex }
     )
 
     var active = instructionsOf(

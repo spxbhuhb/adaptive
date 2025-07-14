@@ -400,7 +400,7 @@ abstract class AdaptiveFragment(
         producer.binding?.let { setDirty(it.indexInTargetState) }
 
         if (producer.actual) {
-            actualProducers ?: mutableListOf<AdaptiveProducer<*>>().also { actualProducers = it }
+            (actualProducers ?: mutableListOf<AdaptiveProducer<*>>().also { actualProducers = it })
                 .add(producer)
         }
 

@@ -28,7 +28,7 @@ fun statusInputSingle(
 
             onClick { observed.toggle() }
 
-            onKeydown { event ->
+            onKeyDown { event ->
                 if (event.keyInfo?.key == Keys.SPACE) {
                     event.preventDefault()
                     observed.toggle()

@@ -28,7 +28,7 @@ fun booleanInput(
 
             onClick { observed.inputValue = (observed.inputValue != true) }
 
-            onKeydown { event ->
+            onKeyDown { event ->
                 if (event.keyInfo?.key == Keys.SPACE) {
                     event.preventDefault()
                     observed.inputValue = (observed.inputValue != true)

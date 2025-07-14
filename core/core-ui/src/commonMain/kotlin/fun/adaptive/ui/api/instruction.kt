@@ -26,9 +26,9 @@ inline fun backgroundColor(color: () -> Color) = BackgroundColor(color())
 fun backgroundGradient(startPosition: Position, endPosition: Position, start: Color, end: Color) = BackgroundGradient(startPosition, endPosition, start, end)
 fun leftToRightGradient(leftColor: Color, rightColor: Color) = BackgroundGradient(BackgroundGradient.LEFT, BackgroundGradient.RIGHT, leftColor, rightColor)
 
-inline fun border(color : () -> Color) = Border(color(), 1.dp, 1.dp, 1.dp, 1.dp)
+inline fun border(color: () -> Color) = Border(color(), 1.dp, 1.dp, 1.dp, 1.dp)
 fun border(color: Color, width: DPixel = 1.dp) = Border(color, width, width, width, width)
-fun border(color: Color, top: DPixel = 1.dp, right: DPixel = 1.dp, bottom: DPixel = 1.dp, left: DPixel = 1.dp ) = Border(color, top, right, bottom, left)
+fun border(color: Color, top: DPixel = 1.dp, right: DPixel = 1.dp, bottom: DPixel = 1.dp, left: DPixel = 1.dp) = Border(color, top, right, bottom, left)
 fun borderBottom(color: Color, width: DPixel = 1.dp) = Border(color, null, null, width, null)
 fun borderLeft(color: Color, width: DPixel = 1.dp) = Border(color, null, null, null, width)
 fun borderRight(color: Color, width: DPixel = 1.dp) = Border(color, null, width, null, null)
@@ -36,12 +36,12 @@ fun borderTop(color: Color, width: DPixel = 1.dp) = Border(color, width, null, n
 
 val noBorder = Border(color(0u), 0.dp, null, null, null)
 
-inline fun color(value : () -> Int) = Color(value().toUInt())
+inline fun color(value: () -> Int) = Color(value().toUInt())
 fun color(color: String) = Color.decodeFromHex(color)
 fun color(color: Int, opacity: Double = 1.0) = Color(color.toUInt(), opacity)
 fun color(color: UInt, opacity: Double = 1.0) = Color(color, opacity)
 
-inline fun cornerRadius(all : () -> DPixel) = CornerRadius(all())
+inline fun cornerRadius(all: () -> DPixel) = CornerRadius(all())
 fun cornerRadius(all: DPixel) = CornerRadius(all)
 fun cornerRadius(topLeft: DPixel? = null, topRight: DPixel? = null, bottomLeft: DPixel? = null, bottomRight: DPixel? = null) = CornerRadius(topLeft, topRight, bottomLeft, bottomRight)
 
@@ -82,7 +82,13 @@ fun onPrimaryUp(handler: UiEventHandler) = OnPrimaryUp(handler)
 fun onSecondaryDown(handler: UiEventHandler) = OnSecondaryDown(handler)
 fun onSecondaryUp(handler: UiEventHandler) = OnSecondaryUp(handler)
 
-fun onKeydown(handler: UiEventHandler) = OnKeyDown(handler)
+fun onKeyDown(handler: UiEventHandler) = OnKeyDown(handler)
+
+fun onEnter(
+    feedbackText: String? = null,
+    feedbackIcon: GraphicsResourceSet? = null,
+    handler: UiEventHandler
+) = OnKeyDown(handler, feedbackText, feedbackIcon, Keys.ENTER)
 
 val noPointerEvents = PointerEvents(false)
 val enablePointerEvents = PointerEvents(true)
@@ -118,7 +124,7 @@ object sizeStrategy {
 
 object fillStrategy {
     val constrain = FillStrategy(constrain = true, reverse = false, resizeToMax = false)
-    val constrainReverse =  FillStrategy(constrain = true, reverse = true, resizeToMax = false)
+    val constrainReverse = FillStrategy(constrain = true, reverse = true, resizeToMax = false)
     val resizeToMax = FillStrategy(constrain = false, reverse = false, resizeToMax = true)
     val none = FillStrategy(constrain = false, reverse = false, resizeToMax = false)
 }
@@ -183,8 +189,8 @@ fun zIndex(value: () -> Int): ZIndex = ZIndex(value())
 fun flowItemLimit(limit: Int) = FlowItemLimit(limit)
 fun flowItemLimit(limit: () -> Int) = FlowItemLimit(limit())
 
-fun colTemplate(vararg tracks: GridTrack, extend : GridTrack? = null) = GridColTemplate(tracks, extend)
-fun rowTemplate(vararg tracks: GridTrack, extend : GridTrack? = null) = GridRowTemplate(tracks, extend)
+fun colTemplate(vararg tracks: GridTrack, extend: GridTrack? = null) = GridColTemplate(tracks, extend)
+fun rowTemplate(vararg tracks: GridTrack, extend: GridTrack? = null) = GridRowTemplate(tracks, extend)
 
 infix fun GridTrack.repeat(count: Int): GridRepeat = GridRepeat(count, this)
 
@@ -262,7 +268,7 @@ fun <T> toText(toTextFun: (T) -> String) = ToText(toTextFun)
 
 /**
  * ```text
- * -1    not focusable
+ * -1    only programmatically focusable
  * 0     in order in document source
  * N     before m > N but after 0
  * ```
@@ -273,6 +279,7 @@ val focusFirst = FocusFirst()
 
 @Deprecated("use InputValueBackend.isDisabled")
 val disabled = Disabled()
+
 @Deprecated("use InputValueBackend.isSecret")
 val secret = Secret()
 
@@ -281,4 +288,4 @@ val secret = Secret()
 // ------------------------------------------------------------------------------------
 
 inline fun transferData(data: () -> Any?) = TransferData(data())
-fun onDrop(focusOnDrop : Boolean = false, handler: UiEventHandler) = OnDrop(focusOnDrop, handler)
+fun onDrop(focusOnDrop: Boolean = false, handler: UiEventHandler) = OnDrop(focusOnDrop, handler)

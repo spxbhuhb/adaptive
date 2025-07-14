@@ -59,6 +59,10 @@ class AdaptiveInstructionGroup(
         return AdaptiveInstructionGroup(this.instructions + instruction)
     }
 
+    fun addAll(vararg instructions : AdaptiveInstruction): AdaptiveInstructionGroup {
+        return AdaptiveInstructionGroup(this.instructions + instructions)
+    }
+
     fun removeAll(condition: (AdaptiveInstruction) -> Boolean): AdaptiveInstructionGroup {
         val newInstructions = mutableListOf<AdaptiveInstruction>()
 

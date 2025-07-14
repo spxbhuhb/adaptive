@@ -8,7 +8,7 @@
 
 ## Details
 
-All button functions accept these parameters (except theme, which 
+All button functions accept these parameters (except `theme`, which 
 is available only for the basic [button](function://):
 
 - `label` - the label of the button, optional
@@ -16,6 +16,10 @@ is available only for the basic [button](function://):
 - `viewBackend` - view backend, optional, one will be created if not passed
 - `theme` - theme to use, optional, variants use different themes
 - `onClickFun` - the function to call when the button is clicked, optional
+
+### Behavior
+
+Buttons are focusable and handle the `Enter` key the same way they handle click.
 
 ### Sizing
 

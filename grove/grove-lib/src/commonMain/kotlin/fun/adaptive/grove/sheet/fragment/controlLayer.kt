@@ -43,9 +43,9 @@ fun controlLayer(controller: SheetViewBackend) {
                 controller.onTransformEnd(it.position, EventModifier.SHIFT in it)
             }
 
-            onKeydown { event ->
+            onKeyDown { event ->
                 event.preventDefault()
-                controller.onKeyDown(event.keyInfo ?: return@onKeydown, event.modifiers)
+                controller.onKeyDown(event.keyInfo ?: return@onKeyDown, event.modifiers)
             }
 
             if (controlFrame != Frame.NaF) {

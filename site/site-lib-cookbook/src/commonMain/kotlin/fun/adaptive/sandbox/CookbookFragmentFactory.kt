@@ -23,7 +23,11 @@ import `fun`.adaptive.sandbox.recipe.ui.editor.status.statusEditorSingleExample
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
-import `fun`.adaptive.sandbox.recipe.ui.icon.iconRecipe
+import `fun`.adaptive.sandbox.recipe.ui.icon.iconActionExample
+import `fun`.adaptive.sandbox.recipe.ui.icon.iconDefaultExample
+import `fun`.adaptive.sandbox.recipe.ui.icon.iconDenseExample
+import `fun`.adaptive.sandbox.recipe.ui.icon.iconPrimaryExample
+import `fun`.adaptive.sandbox.recipe.ui.icon.iconTableExample
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeBasicInput
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedNoLabel
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedUnremovable
@@ -82,7 +86,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:codefence", ::codeFenceRecipe)
         add("cookbook:recipe:event", ::eventRecipe)
         add("cookbook:recipe:grid", ::gridRecipe)
-        add("cookbook:recipe:icon", ::iconRecipe)
+        add("cookbook:recipe:icon", ::iconActionExample)
         add("cookbook:recipe:markdown:demo", ::markdownDemoRecipe)
         add("cookbook:recipe:sidebar", ::sideBarRecipe)
         add("cookbook:recipe:snackbar", ::snackbarRecipe)
@@ -91,33 +95,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:text", ::textRecipe)
 
         add("cookbook:recipe:input:quick-filter", ::quickFilterRecipe)
-
-        // ----------------------------------------------------------------------------
-        // Canvas
-        // ----------------------------------------------------------------------------
-
-        add("canvasBasicExample", ::canvasBasicExample)
-        add("canvasPositionExample", ::canvasPositionExample)
-
-        // ----------------------------------------------------------------------------
-        // Chart
-        // ----------------------------------------------------------------------------
-
-        add("chartBasicExample", ::chartBasicExample)
-
-        // ----------------------------------------------------------------------------
-        // Container
-        // ----------------------------------------------------------------------------
-
-        add("cookbook/container/playground", ::containerPlayground)
-        add("cookbook/example/split-pane-proportional", ::splitPaneProportionalExample)
-        add("cookbook/example/split-pane-wrapper", ::splitPaneWrapperExample)
-
-        // ----------------------------------------------------------------------------
-        // Form
-        // ----------------------------------------------------------------------------
-
-        add("formBasicExample", ::formBasicExample)
 
         // ----------------------------------------------------------------------------
         // Badge
@@ -136,10 +113,31 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("badgeInputInitializedUnremovable", ::badgeInputInitializedUnremovable)
 
         // ----------------------------------------------------------------------------
+        // Canvas
+        // ----------------------------------------------------------------------------
+
+        add("canvasBasicExample", ::canvasBasicExample)
+        add("canvasPositionExample", ::canvasPositionExample)
+
+        // ----------------------------------------------------------------------------
+        // Chart
+        // ----------------------------------------------------------------------------
+
+        add("chartBasicExample", ::chartBasicExample)
+
+        // ----------------------------------------------------------------------------
         // Color input
         // ----------------------------------------------------------------------------
 
         add("colorInputExample", ::colorInputExample)
+
+        // ----------------------------------------------------------------------------
+        // Container
+        // ----------------------------------------------------------------------------
+
+        add("cookbook/container/playground", ::containerPlayground)
+        add("cookbook/example/split-pane-proportional", ::splitPaneProportionalExample)
+        add("cookbook/example/split-pane-wrapper", ::splitPaneWrapperExample)
 
         // ----------------------------------------------------------------------------
         // Document
@@ -155,6 +153,22 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
 
         add("enumEditorDropdownExample", ::enumEditorDropdownExample)
         add("enumEditorListExample", ::enumEditorListExample)
+
+        // ----------------------------------------------------------------------------
+        // Form
+        // ----------------------------------------------------------------------------
+
+        add("formBasicExample", ::formBasicExample)
+
+        // ----------------------------------------------------------------------------
+        // Icon
+        // ----------------------------------------------------------------------------
+
+        add("iconDefaultExample", ::iconDefaultExample)
+        add("iconActionExample", ::iconActionExample)
+        add("iconPrimaryExample", ::iconPrimaryExample)
+        add("iconTableExample", ::iconTableExample)
+        add("iconDenseExample", ::iconDenseExample)
 
         // ----------------------------------------------------------------------------
         // Markdown

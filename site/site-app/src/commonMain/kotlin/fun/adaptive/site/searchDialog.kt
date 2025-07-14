@@ -48,7 +48,7 @@ fun searchDialog(
             backgrounds.surfaceVariant
             padding(16.dp)
 
-            onKeydown {
+            onKeyDown {
                 if (it.isEscape) close.uiClose()
                 if (it.isEnter) openDocument(selectBackend.options.firstOrNull(), workspace, close)
             }

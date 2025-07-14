@@ -11,8 +11,8 @@ import `fun`.adaptive.ui.render.event
 @Adat
 class OnClick(
     override val handler: (event: UIEvent) -> Unit,
-    val feedbackText: String? = null,
-    val feedbackIcon: GraphicsResourceSet? = null
+    override val feedbackText: String? = null,
+    override val feedbackIcon: GraphicsResourceSet? = null
 ) : UIEventHandler {
     override fun applyTo(subject: Any) {
         event(subject) { it.onClick = this }

@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.focus
-import `fun`.adaptive.ui.api.onKeydown
+import `fun`.adaptive.ui.api.onKeyDown
 import `fun`.adaptive.ui.api.onMove
 import `fun`.adaptive.ui.input.decoratedInput
 
@@ -25,7 +25,7 @@ fun <IT,OT> multiSelectInputList(
             viewBackend.optionListContainerInstructions(focus)
 
             onMove { observed.onPointerMove() }
-            onKeydown { event -> viewBackend.onListKeydown(event) }
+            onKeyDown { event -> viewBackend.onListKeydown(event) }
 
             for (item in observed.items) {
                 _fixme_option(item)

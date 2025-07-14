@@ -5,6 +5,7 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.api.popupAlign
+import `fun`.adaptive.ui.fragment.layout.AbstractContainer
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.fragment.structural.AuiFeedbackPopup
 import `fun`.adaptive.ui.instruction.event.*
@@ -79,11 +80,11 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
                 null
             }
 
-            eventHandler.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event), { event.preventDefault() }, { event.stopPropagation() }))
+            val doFeedback = eventHandler.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event), { event.preventDefault() }, { event.stopPropagation() }))
 
 //            event.preventDefault()
 
-            if (eventHandler is OnClick) {
+            if (doFeedback) {
                 feedback(fragment, eventHandler)
             }
         }
@@ -138,21 +139,26 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
         }
     }
 
-    fun feedback(fragment: AbstractAuiFragment<HTMLElement>, eventHandler: OnClick) {
+    fun feedback(fragment: AbstractAuiFragment<HTMLElement>, eventHandler: UIEventHandler) {
         if (eventHandler.feedbackText == null && eventHandler.feedbackIcon == null) return
 
-        fragment.renderData.layoutFragment?.let { layoutFragment ->
+        val feedbackBase = if (fragment is AbstractContainer<*, *> && ! fragment.isStructural) {
+            fragment
+        } else {
+            fragment.renderData.layoutFragment
+        }
 
-            AuiFeedbackPopup(
-                fragment.uiAdapter as AuiBrowserAdapter,
-                layoutFragment,
-                eventHandler.feedbackText,
-                eventHandler.feedbackIcon
-            ).also {
-                it.setStateVariable(0, instructionsOf(popupAlign.afterAbove))
-                it.create()
-                it.mount()
-            }
+        if (feedbackBase == null) return
+
+        AuiFeedbackPopup(
+            fragment.uiAdapter as AuiBrowserAdapter,
+            feedbackBase,
+            eventHandler.feedbackText,
+            eventHandler.feedbackIcon
+        ).also {
+            it.setStateVariable(0, instructionsOf(popupAlign.afterAbove))
+            it.create()
+            it.mount()
         }
 
     }
