@@ -345,9 +345,7 @@ GroveDocCompiler(
             val explanationMatch = explanationRegex.find(docContent)
             explanationMatch?.let {
                 explanation = it.groupValues[1].trim().lines()
-                    .map { line -> line.trim().removePrefix("*").trim() }
-                    .filter { line -> line.isNotEmpty() }
-                    .joinToString("\n")
+                    .joinToString("\n") { line -> line.trim().removePrefix("*").trim() }
             }
 
             // Extract example code (everything after the documentation comment)
