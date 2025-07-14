@@ -1,16 +1,16 @@
 package `fun`.adaptive.resource.language
 
-import kotlinx.datetime.Instant
-import kotlinx.datetime.LocalDateTime
-import kotlinx.datetime.LocalTime
-import kotlinx.datetime.TimeZone
-import kotlinx.datetime.toLocalDateTime
+import kotlinx.datetime.*
+import kotlin.time.Duration
 
 fun Instant.localized() =
     toLocalDateTime(TimeZone.currentSystemDefault()).toString().replace("T", " ").substringBefore('.')
 
 fun LocalTime.localizedHourAndMinute() =
     "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
+
+fun Duration.localized() =
+    toString()
 
 fun String.parseLocalizedHourAndMinuteOrNull(): LocalTime? {
     val trimmed = this.trim()

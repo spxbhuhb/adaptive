@@ -82,6 +82,36 @@ abstract class AvRemoteTreeSubscriber<SPEC : Any, TREE_ITEM>(
 
     operator fun get(valueId: AvValueId) = nodeMap[valueId]?.value
 
+    fun values() = nodeMap.values.mapNotNull { it.value }
+
+    class PathAndValue<SPEC>(
+        val path: List<String>,
+        val value: AvValue<SPEC>
+    )
+
+    fun flatPathAndValueList() : List<PathAndValue<SPEC>> {
+        val result = mutableListOf<PathAndValue<SPEC>>()
+
+        fun traverseNode(nodeId: AvValueId, currentPath: List<String>) {
+            val node = nodeMap[nodeId] ?: return
+            val value = node.value ?: return
+
+            val nodePath = currentPath + value.nameLike
+
+            result.add(PathAndValue(nodePath, value))
+
+            node.childIds?.forEach { childId ->
+                traverseNode(childId, nodePath)
+            }
+        }
+
+        tops.keys.forEach { topId ->
+            traverseNode(topId, emptyList())
+        }
+
+        return result
+    }
+
     /**
      * The list that contains [childId]. This is the value of the
      * child reference list or the top value id list if [childId] is a top

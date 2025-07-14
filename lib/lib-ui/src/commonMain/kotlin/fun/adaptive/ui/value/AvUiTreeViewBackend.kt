@@ -51,4 +51,8 @@ class AvUiTreeViewBackend<SPEC : Any>(
     override fun dispose(fragment: AdaptiveFragment, index: Int) {
         treeSubscriber.stop()
     }
+
+    fun flatPathAndValueList() =
+        treeSubscriber.flatPathAndValueList()
+
 }
