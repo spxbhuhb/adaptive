@@ -35,10 +35,10 @@ fun <T> selectEditorDropdown(
                 label,
                 isSecret
             ).also {
-                it.options = options
+                // it.options = options
                 it.withSurfaceContainer = true
             }
-        },
+        }.also { if (it.options !== options) it.options = options },
         _fixme_itemFun,
         _fixme_valueFun,
     ) .. instructions()

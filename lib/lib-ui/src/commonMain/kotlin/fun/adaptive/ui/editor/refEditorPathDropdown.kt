@@ -24,7 +24,7 @@ import `fun`.adaptive.value.util.PathAndValue
 @Adaptive
 fun <SPEC> refEditorPathDropdown(
     refLabel: AvRefLabel,
-    options: List<PathAndValue<SPEC>>,
+    options: List<PathAndValue<SPEC>>?,
     binding: AdaptiveStateVariableBinding<Map<AvRefLabel, AvValueId>?>? = null,
     @Suppress("unused")
     @PropertySelector
@@ -40,10 +40,10 @@ fun <SPEC> refEditorPathDropdown(
                 fragment().resolveStringOrNull(refLabel) ?: label,
                 isSecret
             ).also {
-                it.options = options
+                // it.options = options
                 it.withSurfaceContainer = true
             }
-        },
+        }.also { if (it.options !== options) it.options = options ?: emptyList() },
         { selectInputOptionText(it) { path.reversed().joinToString(" / ") } },
         { selectInputValueText(it) { path.reversed().joinToString(" / ") } }
     ) .. instructions()

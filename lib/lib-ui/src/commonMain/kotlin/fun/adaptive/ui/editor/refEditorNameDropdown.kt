@@ -36,10 +36,10 @@ fun <SPEC> refEditorNameDropdown(
                 fragment().resolveStringOrNull(refLabel) ?: label,
                 isSecret
             ).also {
-                it.options = options ?: emptyList()
+                // it.options = options ?: emptyList()
                 it.withSurfaceContainer = true
             }
-        },
+        }.also { if (it.options !== options) it.options = options ?: emptyList() },
         { selectInputOptionText(it) { it.option.nameLike } },
         { selectInputValueText(it) { it.option.nameLike } }
     ) .. instructions()

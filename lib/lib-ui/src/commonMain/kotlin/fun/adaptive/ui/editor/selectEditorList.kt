@@ -33,10 +33,10 @@ fun <T> selectEditorList(
                 label,
                 isSecret
             ).also {
-                it.options = options
+                //it.options = options
                 it.withSurfaceContainer = true
             }
-        },
+        }.also { if (it.options !== options) it.options = options },
         _fixme_itemFun,
     ) .. instructions()
 

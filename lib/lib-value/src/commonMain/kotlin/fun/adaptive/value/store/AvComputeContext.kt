@@ -741,6 +741,19 @@ class AvComputeContext(
         return "$prefix${(max + 1).p04}"
     }
 
+    /**
+     * Updates the contents of the current map with a value from another map based on the provided reference label.
+     * If the `other` map contains a value for the `refLabel`, it will be added to or updated in the current map.
+     * Otherwise, the entry for the `refLabel` will be removed from the current map.
+     *
+     * @param other The map to retrieve the value from. Can be null.
+     * @param refLabel The key used to fetch or update the value in the maps.
+     */
+    fun MutableMap<AvRefLabel, AvValueId>.updateFrom(other: Map<AvRefLabel, AvValueId>?, refLabel: AvRefLabel) {
+        val value = other?.get(refLabel)
+        if (value == null) remove(refLabel) else this[refLabel] = value
+    }
+
     @Deprecated("use get(marker) instead", ReplaceWith("get(marker)"))
     fun queryByMarker(marker: AvMarker): List<AvValue<*>> =
         store.unsafeQueryByMarker(marker)
