@@ -22,7 +22,7 @@ class PaneMenuAction<T>(
     fun selected(workspace: MultiPaneWorkspace, pane: PaneDef, menuItem: MenuItem<*>, modifiers: Set<EventModifier>) {
         @Suppress("UNCHECKED_CAST")
         selectedFun(
-            PaneMenuActionArguments<T>(workspace, pane, menuItem as MenuItem<T>, modifiers)
+            PaneMenuActionArguments(workspace, pane, menuItem as MenuItem<T>, modifiers)
         )
     }
 }

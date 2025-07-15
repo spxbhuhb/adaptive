@@ -4,15 +4,16 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.onClick
+import `fun`.adaptive.ui.api.row
+import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.generated.resources.hide
 import `fun`.adaptive.ui.generated.resources.remove
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseVariantIconTheme
 import `fun`.adaptive.ui.input.InputContext
-import `fun`.adaptive.ui.menu.menu
 import `fun`.adaptive.ui.menu.menuBackend
-import `fun`.adaptive.ui.menu.withContextMenu
+import `fun`.adaptive.ui.menu.withPrimaryMenu
 import `fun`.adaptive.ui.mpw.MultiPaneTheme
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneMenuAction
@@ -63,7 +64,7 @@ private fun paneMenuAction(
         action.selected(paneBackend.workspace, paneBackend.paneDef, it.item, it.modifiers)
     }
 
-    withContextMenu(menuBackend) {
+    withPrimaryMenu(menuBackend) {
         actionIcon(action.icon, tooltip = action.tooltip, theme = denseVariantIconTheme)
     }
 }

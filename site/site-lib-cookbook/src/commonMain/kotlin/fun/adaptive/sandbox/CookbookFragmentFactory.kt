@@ -26,11 +26,7 @@ import `fun`.adaptive.sandbox.recipe.ui.editor.status.statusEditorSingleExample
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
-import `fun`.adaptive.sandbox.recipe.ui.icon.iconActionExample
-import `fun`.adaptive.sandbox.recipe.ui.icon.iconDefaultExample
-import `fun`.adaptive.sandbox.recipe.ui.icon.iconDenseExample
-import `fun`.adaptive.sandbox.recipe.ui.icon.iconPrimaryExample
-import `fun`.adaptive.sandbox.recipe.ui.icon.iconTableExample
+import `fun`.adaptive.sandbox.recipe.ui.icon.*
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeBasicInput
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedNoLabel
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedUnremovable
@@ -57,6 +53,7 @@ import `fun`.adaptive.sandbox.recipe.ui.menu.menuItemActions
 import `fun`.adaptive.sandbox.recipe.ui.menu.menuPrimary
 import `fun`.adaptive.sandbox.recipe.ui.mpw.mpwAllPanesExample
 import `fun`.adaptive.sandbox.recipe.ui.mpw.mpwDoubleShiftExample
+import `fun`.adaptive.sandbox.recipe.ui.mpw.mpwToolPaneExampleWrapper
 import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphLongExample
 import `fun`.adaptive.sandbox.recipe.ui.paragraph.paragraphNavigatorExample
@@ -253,6 +250,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // ----------------------------------------------------------------------------
 
         add("mpwAllPanesExample", ::mpwAllPanesExample)
+        add("mpwToolPaneExample", ::mpwToolPaneExampleWrapper)
         add("mpwDoubleShiftExample", ::mpwDoubleShiftExample)
 
         // ----------------------------------------------------------------------------
