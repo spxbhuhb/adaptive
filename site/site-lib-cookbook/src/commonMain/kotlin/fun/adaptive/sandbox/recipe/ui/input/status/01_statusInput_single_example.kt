@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.instruction.dp
  * # Toggle a single status
  *
  * - label is **NOT** set automatically
- * - use backend builder to set ot
+ * - use backend builder to set it
  */
 @Adaptive
 fun statusInputSingleExample(): AdaptiveFragment {

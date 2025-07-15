@@ -40,15 +40,25 @@ fun exampleGroup(
 
     val examplesOrNull = fetch { getService<GroveDocApi>(adapter().transport).getExampleGroup(args["name"] ?: "<no-name>") }
 
+    val filter = args["filter"]
+
     loading(examplesOrNull) { examples ->
-        examplePanes(args["name"], examples)
+        examplePanes(
+            args["name"],
+            args["ui"]?.toBooleanStrict() ?: true,
+            examples.filter { filter == null || it.repoPath.contains(filter, ignoreCase = true) }
+        )
     }
 
     return fragment()
 }
 
 @Adaptive
-fun examplePanes(groupName: String?, examples: List<GroveDocExample>): AdaptiveFragment {
+fun examplePanes(
+    groupName: String?,
+    ui : Boolean,
+    examples: List<GroveDocExample>
+): AdaptiveFragment {
     when {
         groupName == null -> {
             todo("no example group name is provided, check the URL")
