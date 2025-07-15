@@ -74,6 +74,7 @@ import `fun`.adaptive.sandbox.recipe.ui.text.textRecipe
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.tree.treePlayground
 import `fun`.adaptive.sandbox.recipe.ui.tree.treeValueExample
+import `fun`.adaptive.sandbox.recipe.ui.value.valueViewBackendTreeExample
 import `fun`.adaptive.sandbox.support.exampleGroup
 
 object CookbookFragmentFactory : FoundationFragmentFactory() {
@@ -325,6 +326,12 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("treeValueExample", ::treeValueExample)
 
         add("cookbook/tree/playground", ::treePlayground)
+
+        // ----------------------------------------------------------------------------
+        // Value
+        // ----------------------------------------------------------------------------
+
+        add("valueViewBackendTreeExample", ::valueViewBackendTreeExample)
 
         // ----------------------------------------------------------------------------
         // Xlsx

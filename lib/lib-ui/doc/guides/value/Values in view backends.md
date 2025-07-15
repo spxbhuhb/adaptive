@@ -1,3 +1,3 @@
 # Values in view backends
 
-[examples](actualize://example-group?name=viewBackendValues&ui=false)
+[examples](actualize://example-group?name=valueViewBackend)

@@ -6,9 +6,6 @@ import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.generated.resources.arrow_drop_down
-import `fun`.adaptive.ui.generated.resources.arrow_right
-import `fun`.adaptive.ui.generated.resources.chevron_right
 import `fun`.adaptive.ui.generated.resources.keyboard_arrow_down
 import `fun`.adaptive.ui.generated.resources.keyboard_arrow_right
 import `fun`.adaptive.ui.instruction.DPixel
@@ -17,7 +14,6 @@ import `fun`.adaptive.ui.instruction.layout.SizeBase
 import `fun`.adaptive.ui.instruction.layout.SizeStrategy
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.background
-import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.foreground
 
 open class TreeTheme(
@@ -83,7 +79,7 @@ open class TreeTheme(
         fill(foreground(selected, focus = focus).color)
 
     companion object {
-        var DEFAULT = TreeTheme()
+        var default = TreeTheme()
         var list = TreeTheme(indent = 0.dp, itemPadding = 8.dp)
     }
 }

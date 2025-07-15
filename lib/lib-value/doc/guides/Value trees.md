@@ -108,7 +108,7 @@ See the class used for the unit tests for an example:
 
 ## Displaying value trees
 
-[AvUiTree](class://) and [tree](fragment://) from [lib-ui](def://) can be used to 
+[AvUiTreeSupport](class://) and [tree](fragment://) from [lib-ui](def://) can be used to 
 display value trees with just a few lines of code.
 
 See [Tree](guide://lib-ui) for more information.

@@ -10,16 +10,16 @@ import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.model.AvTreeDef
 import kotlin.reflect.KClass
 
-class AvUiTreeViewBackend<SPEC : Any>(
+class AvUiTreeSupport<SPEC : Any>(
     backend: BackendAdapter,
     specClass: KClass<SPEC>,
     treeDef: AvTreeDef,
-    selectedFun: (backend: AvUiTreeViewBackend<SPEC>, TreeItem<AvValue<SPEC>>, Set<EventModifier>) -> Unit,
+    selectedFun: (backend: AvUiTreeSupport<SPEC>, TreeItem<AvValue<SPEC>>, Set<EventModifier>) -> Unit,
     sortNodesFun: (List<TreeItem<AvValue<SPEC>>>) -> List<TreeItem<AvValue<SPEC>>> = { it }
 ) : LifecycleBound {
 
     @Suppress("UNCHECKED_CAST")
-    val treeBackend = TreeViewBackend<AvValue<SPEC>, AvUiTreeViewBackend<SPEC>>(
+    val treeBackend = TreeViewBackend<AvValue<SPEC>, AvUiTreeSupport<SPEC>>(
         emptyList(),
         selectedFun = { b, item, modifiers ->
             selectedFun(this, item, modifiers)
@@ -37,7 +37,9 @@ class AvUiTreeViewBackend<SPEC : Any>(
     )
 
     init {
-        treeSubscriber.addListener { treeBackend.topItems = sortNodesFun(it) }
+        treeSubscriber.addListener {
+            treeBackend.topItems = sortNodesFun(it)
+        }
     }
 
     fun expandAll() {
@@ -48,8 +50,12 @@ class AvUiTreeViewBackend<SPEC : Any>(
         treeBackend.topItems.forEach { it.collapseAll() }
     }
 
-    override fun dispose(fragment: AdaptiveFragment, index: Int) {
+    fun dispose() {
         treeSubscriber.stop()
+    }
+
+    override fun dispose(fragment: AdaptiveFragment, index: Int) {
+        dispose()
     }
 
     fun flatPathAndValueList() =

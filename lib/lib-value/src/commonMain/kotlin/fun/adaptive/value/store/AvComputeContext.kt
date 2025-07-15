@@ -383,7 +383,6 @@ class AvComputeContext(
         buildFun: () -> AvValue<T>
     ): AvValue<T> {
         val value = buildFun()
-        this += value
         linkTreeNode(treeDef, parentId, value)
         return value
     }
@@ -496,11 +495,11 @@ class AvComputeContext(
         treeDef: AvTreeDef,
         node: AvValue<*>
     ) {
-        if (treeDef.rootListMarker == null) return
-
         if (node.markersOrNull?.contains(treeDef.nodeMarker) != true) {
             this += node.copy(markersOrNull = node.mutableMarkers().also { it += treeDef.nodeMarker })
         }
+
+        if (treeDef.rootListMarker == null) return
 
         val nodeId = node.uuid
 

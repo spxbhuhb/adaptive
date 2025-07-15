@@ -12,6 +12,8 @@ import `fun`.adaptive.grove.doc.app.GroveDocModuleServer
 import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.lib.util.app.UtilModule
 import `fun`.adaptive.persistence.ensure
+import `fun`.adaptive.sandbox.app.CookbookModule
+import `fun`.adaptive.site.app.SiteModuleServer
 import `fun`.adaptive.value.app.ValueServerModule
 import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.io.files.Path
@@ -28,6 +30,8 @@ fun main() {
         module { NoAuthServerModule() }
         module { KtorJvmServerModule() }
         module { GroveDocModuleServer() }
+        module { CookbookModule() }
+        module { SiteModuleServer() }
         module { AppMainModuleServer() }
     }
 

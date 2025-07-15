@@ -9,11 +9,7 @@ import `fun`.adaptive.sandbox.recipe.ui.mpw.WorkspaceRecipePaneFragmentFactory
 import `fun`.adaptive.sandbox.support.ExampleEnum
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
-open class CookbookClientModule<FW : AbstractWorkspace, BW : AbstractWorkspace> : AppModule<FW,BW>() {
-
-    override fun wireFormatInit(registry: WireFormatRegistry) = with(registry) {
-        + ExampleEnum
-    }
+class CookbookModuleClient<FW : AbstractWorkspace, BW : AbstractWorkspace> : CookbookModule<FW,BW>() {
 
     override fun resourceInit() {
         application.stringStores += commonMainStringsStringStore0

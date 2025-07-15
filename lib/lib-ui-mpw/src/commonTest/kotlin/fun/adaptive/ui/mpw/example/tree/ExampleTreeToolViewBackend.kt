@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.mpw.model.AbstractPaneAction
 import `fun`.adaptive.ui.mpw.model.PaneAction
 import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.value.AvUiTreeViewBackend
+import `fun`.adaptive.ui.value.AvUiTreeSupport
 import `fun`.adaptive.value.AvValue
 
 class ExampleTreeToolViewBackend(
@@ -21,7 +21,7 @@ class ExampleTreeToolViewBackend(
     override val paneDef: PaneDef
 ) : PaneViewBackend<ExampleTreeToolViewBackend>() {
 
-    val tree = AvUiTreeViewBackend(workspace.backend, ExampleTreeValueSpec::class, avDomain.treeDef, ::selectedFun)
+    val tree = AvUiTreeSupport(workspace.backend, ExampleTreeValueSpec::class, avDomain.treeDef, ::selectedFun)
 
     override fun getPaneActions(): List<AbstractPaneAction> {
         return listOf(
@@ -32,7 +32,7 @@ class ExampleTreeToolViewBackend(
 
     fun selectedFun(
         @Suppress("unused")
-        backend: AvUiTreeViewBackend<ExampleTreeValueSpec>,
+        backend: AvUiTreeSupport<ExampleTreeValueSpec>,
         item: TreeItem<AvValue<ExampleTreeValueSpec>>,
         modifiers: Set<EventModifier>
     ) {

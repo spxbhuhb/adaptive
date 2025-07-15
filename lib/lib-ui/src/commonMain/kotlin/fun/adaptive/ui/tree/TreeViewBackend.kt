@@ -18,7 +18,7 @@ class TreeViewBackend<IT, CT>(
     val context: CT,
     val selectedFun: TreeItemSelectedFun<IT, CT>? = null,
     val keyDownFun: TreeKeyDownFun<IT, CT>? = null,
-    val theme: TreeTheme = TreeTheme.DEFAULT,
+    val theme: TreeTheme = TreeTheme.default,
     val multiSelect: Boolean = false,
     val singleClickOpen: Boolean = false,
     val doubleClickOpen: Boolean = true,

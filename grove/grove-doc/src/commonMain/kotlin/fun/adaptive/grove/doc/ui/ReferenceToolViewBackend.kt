@@ -19,9 +19,8 @@ import `fun`.adaptive.ui.mpw.model.PaneContentItem
 import `fun`.adaptive.ui.mpw.model.PaneContentType
 import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.navigation.NavState
-import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.ui.tree.TreeItem
-import `fun`.adaptive.ui.value.AvUiTreeViewBackend
+import `fun`.adaptive.ui.value.AvUiTreeSupport
 import `fun`.adaptive.utility.Url
 import `fun`.adaptive.utility.decodeFromUrl
 import `fun`.adaptive.utility.encodeToUrl
@@ -32,7 +31,7 @@ class ReferenceToolViewBackend(
     override val paneDef: PaneDef
 ) : PaneViewBackend<ReferenceToolViewBackend>(), MultiPaneUrlResolver {
 
-    val tree = AvUiTreeViewBackend(workspace.backend, GroveDocSpec::class, groveDocDomain.treeDef, ::selectedFun, ::sortChildrenFun)
+    val tree = AvUiTreeSupport(workspace.backend, GroveDocSpec::class, groveDocDomain.treeDef, ::selectedFun, ::sortChildrenFun)
 
     override fun getPaneActions(): List<AbstractPaneAction> {
         return listOf(
@@ -43,7 +42,7 @@ class ReferenceToolViewBackend(
 
     fun selectedFun(
         @Suppress("unused")
-        backend: AvUiTreeViewBackend<GroveDocSpec>,
+        backend: AvUiTreeSupport<GroveDocSpec>,
         item: TreeItem<GroveDocValue>,
         modifiers: Set<EventModifier>
     ) {
