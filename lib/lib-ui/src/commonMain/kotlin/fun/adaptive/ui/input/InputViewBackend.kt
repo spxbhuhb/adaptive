@@ -18,10 +18,15 @@ import kotlin.reflect.KProperty
 /**
  * View backend for input fragments.
  *
+ * @property  selector    Used to separate backends which work on the same property but change it
+ *                        different ways. For example, `refsOrNull` of a value can be edited for
+ *                        many different reference labels. The editors of the different labels each
+ *                        should have its own backend.
+ *
  * @property  inputValue  The current, type safe value of the input. This might not be what the user
  *                        sees in cases where the input can hold invalid values. See the explanation above.
  *
- * @property  isTouched     When true, at least one of the observable properties has been changed.
+ * @property  isTouched   When true, at least one of the observable properties has been changed.
  *                        This lets the theme decide on user feedback as you typically do not want
  *                        mandatory or constrained fields to give feedback before the user touches
  *                        them (or tries to submit the value).
@@ -43,6 +48,8 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
     override var value : BT
         get() = this as BT
         set(_) = unsupported()
+
+    var selector : Any? = null
 
     var inputValue by observable(value, ::notify)
 

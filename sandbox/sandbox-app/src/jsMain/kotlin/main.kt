@@ -17,6 +17,7 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.chart.lineChart
+import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefMultiExample
 import `fun`.adaptive.sandbox.recipe.ui.table.tableBasicExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
@@ -78,7 +79,7 @@ fun sandboxMain() {
 
                 column {
                     maxSize .. padding { 16.dp }
-                    tableBasicExample()
+                    selectEditorRefMultiExample()
                 }
             }
         } catch (ex: Exception) {

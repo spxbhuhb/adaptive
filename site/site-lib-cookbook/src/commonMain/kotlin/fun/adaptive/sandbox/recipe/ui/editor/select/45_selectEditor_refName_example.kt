@@ -17,6 +17,8 @@ import `fun`.adaptive.value.util.PathAndValue
  *
  * Use [refEditorNameDropdown](fragment://) to select a [value reference](def://) from a
  * list of [AvValue](class://) instances.
+ *
+ * Label of the field is the localized reference label (or the reference label if there is no localization).
  */
 @Adaptive
 fun selectEditorRefNameExample(): AdaptiveFragment {

@@ -42,9 +42,10 @@ class AdatFormViewBackend<T : AdatClass>(
 
     override fun <T, BT : InputViewBackend<T, BT>> backendFor(
         binding: AdaptiveStateVariableBinding<T>?,
+        selector : Any?,
         newBackendFun: (value: T?, label: String?, secret: Boolean) -> BT
     ): BT {
-        return super.backendFor(binding, newBackendFun).also {
+        return super.backendFor(binding, selector, newBackendFun).also {
             if (it.path in failPaths) it.isInConstraintError = true
         }
     }

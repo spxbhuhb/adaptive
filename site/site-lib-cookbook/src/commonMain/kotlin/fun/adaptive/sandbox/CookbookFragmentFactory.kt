@@ -20,6 +20,7 @@ import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorConfig
 import `fun`.adaptive.sandbox.recipe.ui.editor.enum_.enumEditorDropdownExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.enum_.enumEditorListExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefManualExample
+import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefMultiExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefNameExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefPathExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.status.statusEditorSingleExample
@@ -285,6 +286,8 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("selectInputCheckboxExample", ::selectInputCheckboxExample)
 
         add("selectEditorRefNameExample", ::selectEditorRefNameExample)
+        add("selectEditorRefMultiExample", ::selectEditorRefMultiExample)
+
         add("selectEditorRefPathExample", ::selectEditorRefPathExample)
         add("selectEditorRefManualExample", ::selectEditorRefManualExample)
 

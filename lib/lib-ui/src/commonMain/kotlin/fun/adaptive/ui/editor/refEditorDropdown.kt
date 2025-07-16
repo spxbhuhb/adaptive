@@ -38,12 +38,12 @@ fun <OPTION_TYPE> refEditorDropdown(
 ): AdaptiveFragment {
 
     selectInputDropdown(
-        fragment().viewBackendFor(binding) { value, label, isSecret ->
+        fragment().viewBackendFor(binding, refLabel) { value, label, isSecret ->
             SingleSelectInputViewBackend(
                 value,
                 optionToItemMapping,
                 inputToItemMapping,
-                fragment().resolveStringOrNull(refLabel) ?: label,
+                fragment().resolveStringOrNull(refLabel) ?: refLabel,
                 isSecret
             ).also {
                 //it.options = options

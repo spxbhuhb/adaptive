@@ -18,8 +18,12 @@ open class FormViewBackend() {
 
     val inputBackends = mutableListOf<InputViewBackend<*, *>>()
 
+    /**
+     * @property selector When specified, any existing backens
+     */
     open fun <T, BT : InputViewBackend<T, BT>> backendFor(
         binding: AdaptiveStateVariableBinding<T>?,
+        selector : Any? = null,
         newBackendFun: (value: T?, label: String?, secret: Boolean) -> BT
     ): BT {
         fun unbound() = newBackendFun(null, null, false)
@@ -29,7 +33,7 @@ open class FormViewBackend() {
 
         val (propertyContainerInstance, propertyMetadata) = getProperty(companion, path) ?: return unbound()
 
-        val existing = inputBackends.firstOrNull { it.path == path }
+        val existing = inputBackends.firstOrNull { it.path == path && it.selector == selector }
 
         @Suppress("UNCHECKED_CAST")
         if (existing != null) return existing as BT
@@ -103,9 +107,10 @@ open class FormViewBackend() {
     companion object {
         fun <T, BT : InputViewBackend<T, BT>> AdaptiveFragment.viewBackendFor(
             binding: AdaptiveStateVariableBinding<T>?,
+            selector : Any? = null,
             newBackendFun: (value: T?, label: String?, secret: Boolean) -> BT
         ): BT {
-            return firstContextOrNull<FormViewBackend>()?.backendFor(binding, newBackendFun) ?: newBackendFun(null, null, false)
+            return firstContextOrNull<FormViewBackend>()?.backendFor(binding, selector, newBackendFun) ?: newBackendFun(null, null, false)
         }
     }
 

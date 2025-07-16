@@ -32,12 +32,12 @@ fun <SPEC> refEditorPathDropdown(
 ): AdaptiveFragment {
 
     selectInputDropdown(
-        fragment().viewBackendFor(binding) { value, label, isSecret ->
+        fragment().viewBackendFor(binding, refLabel) { value, label, isSecret ->
             SingleSelectInputViewBackend<Map<AvRefLabel, AvValueId>, AvValueId, PathAndValue<SPEC>>(
                 value,
                 { it.value.uuid },
                 RefMapInputMapping(refLabel),
-                fragment().resolveStringOrNull(refLabel) ?: label,
+                fragment().resolveStringOrNull(refLabel) ?: refLabel,
                 isSecret
             ).also {
                 // it.options = options

@@ -10,7 +10,7 @@ import `fun`.adaptive.ui.api.text
 @Adaptive
 fun traceWithContextExample() {
     adapter().traceWithContext = true
-    localContext(FragmentTraceContext) { // all fragments inside this context will be traced
+    localContext(FragmentTraceContext()) { // all fragments inside this context will be traced
         column {
             text("Hello World!")
         }
