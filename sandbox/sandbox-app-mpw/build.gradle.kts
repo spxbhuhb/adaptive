@@ -60,6 +60,8 @@ kotlin {
                 implementation(libs.adaptive.lib.ui.mpw)
                 implementation(libs.adaptive.lib.util)
                 implementation(libs.adaptive.lib.value)
+
+                implementation(libs.adaptive.site.lib.cookbook)
             }
         }
 

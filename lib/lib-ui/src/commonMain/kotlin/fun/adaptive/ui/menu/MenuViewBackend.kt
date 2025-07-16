@@ -20,7 +20,13 @@ class MenuViewBackend<T>(
     var autoClose by observable(true, ::notify)
 
     override var isPopupOpen: Boolean = false
+        set(v) {
+            field = v
+            onPopupOpenChanged?.invoke(v)
+        }
 
     override var hidePopup: (() -> Unit)? = null
+
+    var onPopupOpenChanged: ((Boolean) -> Unit)? = null
 
 }

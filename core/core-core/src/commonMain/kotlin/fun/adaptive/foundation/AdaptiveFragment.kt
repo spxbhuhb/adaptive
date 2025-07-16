@@ -572,8 +572,16 @@ abstract class AdaptiveFragment(
         )
     }
 
-    fun shouldTrace(point: String): Boolean =
-        (adapter.traceWithContext && firstContextOrNull<FragmentTraceContext>() != null) || tracePatterns.any { it.matches(point) }
+    fun shouldTrace(point: String): Boolean {
+        if (adapter.traceWithContext) {
+            val traceContext = firstContextOrNull<FragmentTraceContext>()
+            if (traceContext != null) {
+                val pattern = traceContext.fragmentNamePattern ?: return true
+                return pattern.lowercase() in (this::class.simpleName?.lowercase() ?: "")
+            }
+        }
+        return (tracePatterns.isNotEmpty() && tracePatterns.any { it.matches(point) })
+    }
 
     fun trace(point: String) {
         if (shouldTrace(point)) adapter.trace(this, point, "")

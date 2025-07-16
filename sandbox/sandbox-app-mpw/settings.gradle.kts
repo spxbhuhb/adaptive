@@ -33,3 +33,5 @@ includeBuild("../../lib/lib-ui")
 includeBuild("../../lib/lib-ui-mpw")
 includeBuild("../../lib/lib-util")
 includeBuild("../../lib/lib-value")
+
+includeBuild("../../site/site-lib-cookbook")

@@ -1,3 +1,5 @@
 package `fun`.adaptive.foundation
 
-object FragmentTraceContext
+class FragmentTraceContext(
+    val fragmentNamePattern : String? = null
+)
