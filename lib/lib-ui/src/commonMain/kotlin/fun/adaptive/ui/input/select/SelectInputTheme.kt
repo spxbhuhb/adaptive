@@ -5,6 +5,7 @@ import `fun`.adaptive.graphics.canvas.api.fill
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.decoration.BackgroundColor
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
@@ -14,7 +15,9 @@ import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.ui.theme.textColors
 
-class SelectInputTheme : AbstractTheme() {
+class SelectInputTheme(
+    val optionHeight: DPixel = 26.dp
+) : AbstractTheme() {
 
     // List
 
@@ -64,7 +67,7 @@ class SelectInputTheme : AbstractTheme() {
 
     var optionContainerBase = instructionsOf(
         maxWidth,
-        height { 26.dp },
+        height { optionHeight },
         alignItems.startCenter,
         padding(4.dp, 8.dp, 4.dp, 8.dp),
         gap { 8.dp }

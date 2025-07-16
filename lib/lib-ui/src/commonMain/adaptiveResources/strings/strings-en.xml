@@ -3,36 +3,32 @@
   -->
 
 <resources>
-    <string name="invalidFields">There are still invalid fields.</string>
-    <string name="saveSuccess">Successfully saved.</string>
-    <string name="saveFail">Error, save failed.</string>
-
-    <string name="home">Home</string>
     <string name="account">Account</string>
-    <string name="signOut">Sign Out</string>
-
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
-    <string name="save">Save</string>
-    <string name="hide">Hide</string>
-    <string name="edit">Edit</string>
-    <string name="notSet">not set</string>
-    <string name="copied">Copied</string>
-    <string name="noValueSelected">no value selected</string>
-    <string name="filterPlaceholder">filter</string>
-    <string name="settings">settings</string>
     <string name="actions">Actions</string>
-
-    <string name="copyToClipboard">Copy to clipboard</string>
-
-    <string name="executionError">Failed to execute the operation.</string>
-
-    <string name="pleaseSelectFromList">Please select from the list on the left.</string>
-
-    <string name="expandAll">Expand All</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
     <string name="collapseAll">Collapse All</string>
-
+    <string name="copied">Copied</string>
+    <string name="copyToClipboard">Copy to clipboard</string>
+    <string name="duplicate">Make copy</string>
+    <string name="edit">Edit</string>
     <string name="example">Example</string>
+    <string name="executionError">Failed to execute the operation.</string>
+    <string name="expandAll">Expand All</string>
+    <string name="filterPlaceholder">filter</string>
+    <string name="hide">Hide</string>
+    <string name="home">Home</string>
+    <string name="invalidFields">There are still invalid fields.</string>
+    <string name="noValueSelected">no value selected</string>
+    <string name="notSet">not set</string>
+    <string name="ok">OK</string>
+    <string name="pleaseSelectFromList">Please select from the list on the left.</string>
+    <string name="remove">Remove</string>
+    <string name="save">Save</string>
+    <string name="saveFail">Error, save failed.</string>
+    <string name="saveSuccess">Successfully saved.</string>
+    <string name="settings">settings</string>
+    <string name="signOut">Sign Out</string>
 
     <string name="january">January</string>
     <string name="february">February</string>

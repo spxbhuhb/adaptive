@@ -4,15 +4,12 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.Independent
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.graphics.svg.api.svgHeight
-import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.defaultResourceEnvironment
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.*
 import `fun`.adaptive.ui.icon.actionIcon
-import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.input.button.button

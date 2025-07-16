@@ -15,6 +15,7 @@ import `fun`.adaptive.sandbox.recipe.ui.chart.chartBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
+import `fun`.adaptive.sandbox.recipe.ui.container.editableListBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorBasic
 import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorConfig
 import `fun`.adaptive.sandbox.recipe.ui.editor.enum_.enumEditorDropdownExample
@@ -237,6 +238,12 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("doubleEditorConfig", ::doubleEditorConfig)
 
         // ----------------------------------------------------------------------------
+        // Editable list
+        // ----------------------------------------------------------------------------
+
+        add("editableListBasicExample", ::editableListBasicExample)
+
+        // ----------------------------------------------------------------------------
         // Int Input
         // ----------------------------------------------------------------------------
 
@@ -284,6 +291,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("selectInputTextExample", ::selectInputTextExample)
         add("selectInputIconAndTextExample", ::selectInputIconAndTextExample)
         add("selectInputCheckboxExample", ::selectInputCheckboxExample)
+        add("selectInputCustomExample", ::selectInputCustomExample)
 
         add("selectEditorRefNameExample", ::selectEditorRefNameExample)
         add("selectEditorRefMultiExample", ::selectEditorRefMultiExample)

@@ -26,7 +26,10 @@ class DocToolViewBackend(
     override val paneDef: PaneDef
 ) : PaneViewBackend<DocToolViewBackend>() {
 
+    // this is Documentation.md from doc-main
     val doc = AvRemoteValueSubscriber(workspace.backend, GroveDocSpec::class, groveDocDomain.groveDocToc)
+
+    // this is the content of Documentation.md transformed by MarkdownTreeVisitor
     var treeBackend = observableOf<TreeViewBackend<String, DocToolViewBackend>?> { null }
 
     init {
@@ -38,6 +41,7 @@ class DocToolViewBackend(
                 selectedFun = ::selectedFun,
                 handleAtEnd = true
             )
+            notifyListeners()
         }
     }
 

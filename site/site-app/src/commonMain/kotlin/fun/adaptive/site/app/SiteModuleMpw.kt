@@ -2,6 +2,7 @@ package `fun`.adaptive.site.app
 
 import `fun`.adaptive.app.ui.mpw.mpwAppMainModule
 import `fun`.adaptive.foundation.AdaptiveAdapter
+import `fun`.adaptive.grove.doc.ui.DocToolViewBackend
 import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.site.searchDialog
@@ -20,5 +21,9 @@ class SiteModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace>() : AppModu
         workspace.doubleShiftHandler = {
             dialog(workspace, workspace, ::searchDialog)
         }
+
+        workspace.leftTop.value = workspace.toolPanes.first { it is DocToolViewBackend }.uuid
+
+        workspace.updateSplits()
     }
 }

@@ -12,7 +12,6 @@ import `fun`.adaptive.ui.generated.resources.add
 import `fun`.adaptive.ui.icon.actionIcon
 import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.input.decoratedInput
-import `fun`.adaptive.ui.instruction.event.Keys
 
 @Adaptive
 fun badgeInput(

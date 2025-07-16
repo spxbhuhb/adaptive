@@ -22,6 +22,7 @@ import `fun`.adaptive.sandbox.recipe.ui.table.tableBasicExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.container.editableList
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
@@ -79,7 +80,9 @@ fun sandboxMain() {
 
                 column {
                     maxSize .. padding { 16.dp }
-                    selectEditorRefMultiExample()
+                    editableList(listOf("1","2","3")) { option ->
+                        text("custom option render for $option")
+                    }
                 }
             }
         } catch (ex: Exception) {
