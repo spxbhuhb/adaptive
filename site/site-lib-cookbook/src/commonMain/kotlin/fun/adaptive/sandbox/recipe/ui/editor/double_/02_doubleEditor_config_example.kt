@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.instruction.dp
  * - override defaults with `doubleInputConfig`
  */
 @Adaptive
-fun doubleEditorConfig(): AdaptiveFragment {
+fun doubleEditorConfigExample(): AdaptiveFragment {
 
     val template = ConfigExampleData(12.3)
     val formBackend = adatFormBackend(template)
@@ -29,6 +29,7 @@ fun doubleEditorConfig(): AdaptiveFragment {
             placeholder = "Overridden placeholder"
             decimals = 3
             unit = "m²"
+            validateFun = { it != null && it < 100.0 }
         }
     }
 
@@ -38,10 +39,4 @@ fun doubleEditorConfig(): AdaptiveFragment {
 @Adat
 private class ConfigExampleData(
     val doubleValue : Double
-){
-    override fun descriptor() {
-        properties {
-            doubleValue maximum 100.0
-        }
-    }
-}
+)

@@ -17,7 +17,7 @@ import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
 import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.sandbox.recipe.ui.container.editableListBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorBasic
-import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorConfig
+import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorConfigExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.enum_.enumEditorDropdownExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.enum_.enumEditorListExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefManualExample
@@ -235,7 +235,7 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("doubleInputOnChange", ::doubleInputOnChange)
 
         add("doubleEditorBasic", ::doubleEditorBasic)
-        add("doubleEditorConfig", ::doubleEditorConfig)
+        add("doubleEditorConfigExample", ::doubleEditorConfigExample)
 
         // ----------------------------------------------------------------------------
         // Editable list

@@ -16,6 +16,7 @@ class DoubleInputConfig(
             placeholder?.let { if (subject.placeholder != it) subject.placeholder = it }
             decimals?.let { if (subject.decimals != it) subject.decimals = it }
             unit?.let { if (subject.unit != it) subject.unit = it }
+            validateFun?.let { if (subject.validateFun != it) subject.validateFun = it }
         }
     }
 

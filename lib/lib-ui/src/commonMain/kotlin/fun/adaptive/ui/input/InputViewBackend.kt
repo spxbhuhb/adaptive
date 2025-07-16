@@ -31,9 +31,16 @@ import kotlin.reflect.KProperty
  *                        mandatory or constrained fields to give feedback before the user touches
  *                        them (or tries to submit the value).
  *
- *  @property  isInputDisabled  True when this specific input is disabled.
+ * @property  isInConversionError        When the input field cannot convert the value,
+ *                                       for example, a non-numerical text into a number.
  *
- *  @property  isFormDisabled   True when the whole form is disabled and in result this input should be disabled as well.
+ * @property  isInLocalValidationError   When there is a `validateFun` specified, and it returns with false.
+ *
+ * @property  isInConstraintError        When the constraints specified by the metadata are not met.
+ *
+ * @property  isInputDisabled  True when this specific input is disabled.
+ *
+ * @property  isFormDisabled   True when the whole form is disabled and in result this input should be disabled as well.
  */
 @Suppress("EqualsOrHashCode")
 abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
@@ -54,6 +61,7 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
     var inputValue by observable(value, ::notify)
 
     var isInConstraintError by observable(false, ::notify)
+    var isInLocalValidationError by observable(false, ::notify)
     var isInConversionError by observable(false, ::notify)
 
     var isInputDisabled by observable(false, ::notify)
@@ -82,7 +90,7 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
         get() = isInputDisabled || isFormDisabled
 
     val isInvalid: Boolean
-        get() = isInConstraintError || isInConversionError
+        get() = isInConstraintError || isInConversionError || isInLocalValidationError
 
     open fun containerThemeInstructions(focus: Boolean) =
         when {
@@ -113,8 +121,8 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
 
             val valid = validateFun?.invoke(inputValue) ?: true
 
-            if (! valid && ! isInConstraintError) isInConstraintError = true
-            if (valid && isInConstraintError) isInConstraintError = false
+            if (! valid && ! isInLocalValidationError) isInLocalValidationError = true
+            if (valid && isInLocalValidationError) isInLocalValidationError = false
 
             formBackend?.onInputValueChange(this)
         }

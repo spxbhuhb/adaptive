@@ -17,6 +17,7 @@ class IntInputConfig(
             radix?.let { if (subject.radix != it) subject.radix = it }
             showRadix10?.let { if (subject.showRadix10 != it) subject.showRadix10 = it }
             unit?.let { if (subject.unit != it) subject.unit = it }
+            validateFun?.let { if (subject.validateFun != it) subject.validateFun = it}
         }
     }
 
