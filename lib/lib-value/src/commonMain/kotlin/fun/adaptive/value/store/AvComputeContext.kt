@@ -383,7 +383,7 @@ class AvComputeContext(
         buildFun: () -> AvValue<T>
     ): AvValue<T> {
         val value = buildFun()
-        linkTreeNode(treeDef, parentId, value)
+        linkTreeNode(treeDef, parentId, value, newValue = true)
         return value
     }
 
@@ -402,7 +402,7 @@ class AvComputeContext(
         parentId: AvValueId? = null,
         child: AvValue<*>
     ) {
-        linkTreeNode(treeDef, parentId, child)
+        linkTreeNode(treeDef, parentId, child, newValue = true)
     }
 
     /**
@@ -423,7 +423,7 @@ class AvComputeContext(
         parentId: AvValueId?,
         childId: AvValueId
     ) {
-        linkTreeNode(treeDef, parentId, store.unsafeGet(childId))
+        linkTreeNode(treeDef, parentId, store.unsafeGet(childId), newValue = false)
     }
 
     /**
@@ -442,13 +442,14 @@ class AvComputeContext(
     fun linkTreeNode(
         treeDef: AvTreeDef,
         parentId: AvValueId?,
-        child: AvValue<*>
+        child: AvValue<*>,
+        newValue : Boolean
     ) {
         val childId = child.uuid
         check(parentId != childId) { "cannot add a node to itself" }
 
         if (parentId == null) {
-            addRootTreeNode(treeDef, child)
+            addRootTreeNode(treeDef, child, newValue)
             return
         }
 
@@ -493,9 +494,10 @@ class AvComputeContext(
 
     private fun addRootTreeNode(
         treeDef: AvTreeDef,
-        node: AvValue<*>
+        node: AvValue<*>,
+        newValue : Boolean
     ) {
-        if (node.markersOrNull?.contains(treeDef.nodeMarker) != true) {
+        if (newValue || node.markersOrNull?.contains(treeDef.nodeMarker) != true) {
             this += node.copy(markersOrNull = node.mutableMarkers().also { it += treeDef.nodeMarker })
         }
 
