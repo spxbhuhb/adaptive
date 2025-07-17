@@ -2,8 +2,11 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.api.localContext
+import `fun`.adaptive.foundation.instruction.nop
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
@@ -19,14 +22,20 @@ import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringSto
 import `fun`.adaptive.sandbox.recipe.chart.lineChart
 import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefMultiExample
 import `fun`.adaptive.sandbox.recipe.ui.table.tableBasicExample
+import `fun`.adaptive.sandbox.support.ExampleEnum
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.container.editableList
+import `fun`.adaptive.ui.editor.enumEditorDropdown
+import `fun`.adaptive.ui.editor.enumEditorList
+import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.testing.LayoutTraceContext
 import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -40,6 +49,14 @@ class Option(
     val text: String,
     val icon: GraphicsResourceSet
 )
+
+
+@Adat
+class T(
+    val e : ExampleEnum = ExampleEnum.V1,
+    val e2 : ExampleEnum = ExampleEnum.V2
+)
+
 
 fun sandboxMain() {
 
@@ -78,10 +95,30 @@ fun sandboxMain() {
                     fontWeight = 300
                 }
 
-                column {
-                    maxSize .. padding { 16.dp }
-                    editableList(listOf("1","2","3")) { option ->
-                        text("custom option render for $option")
+                val form = adatFormBackend(T())
+                val template = T()
+                adapter.traceWithContext = true
+
+                row {
+                    column {
+                        for (i in 0..100) {
+                            box(if (i % 2 == 0) backgrounds.friendly else nop) {
+                                width { 30.dp }
+                                height { 10.dp }
+                            }
+                        }
+                    }
+                    column {
+                        padding { 16.dp } .. width { 200.dp } .. borders.outline
+                        localContext(form) {
+                            row {
+                                paddingLeft { 16.dp }
+                                enumEditorDropdown(ExampleEnum.entries) { template.e }
+                            }
+                            localContext(LayoutTraceContext) {
+                                enumEditorList(ExampleEnum.entries) { template.e }
+                            }
+                        }
                     }
                 }
             }

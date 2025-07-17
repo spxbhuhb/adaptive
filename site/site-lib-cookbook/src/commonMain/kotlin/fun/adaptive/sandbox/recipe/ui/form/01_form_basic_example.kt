@@ -67,7 +67,7 @@ fun formBasicExample(): AdaptiveFragment {
                 colorEditor { template.color }
 
                 enumEditorDropdown(ExampleEnum.entries) { template.enum }
-                enumEditorList(ExampleEnum.entries) { template.enum }
+                enumEditorList(ExampleEnum.entries) { template.enumOrNull }
 
                 badgeEditor { template.badges }
 
