@@ -14,6 +14,7 @@ class LinkParagraphItem(
     override var width: Double = 0.0
     override var height: Double = 0.0
     override var baseline: Double = 0.0
+    override var surroundingHorizontal: Double = 0.0
 
     override val isWhitespace: Boolean
         get() = text.isBlank()
@@ -28,7 +29,7 @@ class LinkParagraphItem(
         if (other.href != href) return null
 
         return LinkParagraphItem(text + other.text, href, instructionSetIndex).also {
-            it.width = width + other.width
+            it.width = width + other.width - other.surroundingHorizontal
             it.height = maxOf(height, other.height)
             it.baseline = maxOf(baseline, other.baseline)
         }

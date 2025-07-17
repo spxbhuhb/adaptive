@@ -9,6 +9,7 @@ abstract class ParagraphItem {
     abstract var width: Double
     abstract var height: Double
     abstract var baseline: Double
+    abstract var surroundingHorizontal : Double
 
     abstract val isWhitespace: Boolean
 

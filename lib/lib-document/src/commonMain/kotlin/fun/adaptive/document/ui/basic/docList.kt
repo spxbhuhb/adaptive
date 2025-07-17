@@ -33,13 +33,12 @@ fun docList(context: DocRenderContext, list: DocList): AdaptiveFragment {
 private fun label(context: DocRenderContext, item: DocListItem) {
     val theme = context.theme
 
-    val offset = if (item.bullet) 4.dp else 0.dp
-    val indent = (if (item.bullet) theme.bulletListIndent else theme.numberListIndent) * (item.path.size - 1)
-    val labelPadding = paddingLeft { indent + offset }
+    val labelMargin = marginLeft {
+        (if (item.bullet) theme.bulletListIndent else theme.numberListIndent) * (item.path.size - 1)
+    }
 
     row {
-        labelPadding
-
+        labelMargin
         if (item.bullet) theme.listBulletContainer else theme.listNumberContainer
 
         if (item.bullet) {

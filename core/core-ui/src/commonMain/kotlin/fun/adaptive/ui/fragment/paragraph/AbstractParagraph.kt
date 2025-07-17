@@ -59,6 +59,8 @@ abstract class AbstractParagraph<RT, CRT : RT>(
             val itemWidth = item.width
             val itemHeight = item.height
 
+            // println("item: $item, width=$itemWidth, height=$itemHeight, surrounding=${item.surroundingHorizontal}")
+
             if (rowWidth + itemWidth > proposedWidth) {
 
                 // drop white spaces at the end of the line
@@ -88,16 +90,17 @@ abstract class AbstractParagraph<RT, CRT : RT>(
                 continue
             }
 
-            rowWidth += itemWidth
-            rowHeight = maxOf(rowHeight, itemHeight)
-
             val merged = lastItem?.merge(this, item)
 
             if (merged != null) {
                 rowItems[rowItems.lastIndex] = merged
+                rowWidth += merged.width - lastItem.width
+                rowHeight = maxOf(rowHeight, merged.height)
                 lastItem = merged
             } else {
                 rowItems += item
+                rowWidth += itemWidth
+                rowHeight = maxOf(rowHeight, itemHeight)
                 lastItem = item
             }
         }

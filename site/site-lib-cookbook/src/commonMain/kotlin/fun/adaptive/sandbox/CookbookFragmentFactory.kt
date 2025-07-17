@@ -2,7 +2,6 @@ package `fun`.adaptive.sandbox
 
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.sandbox.recipe.demo.goodmorning.goodMorning
-import `fun`.adaptive.sandbox.recipe.demo.markdown.markdownDemoRecipe
 import `fun`.adaptive.sandbox.recipe.document.document.documentInlineExample
 import `fun`.adaptive.sandbox.recipe.document.document.documentRemoteExample
 import `fun`.adaptive.sandbox.recipe.document.document.documentResourceExample
@@ -90,7 +89,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("cookbook:recipe:event", ::eventRecipe)
         add("cookbook:recipe:grid", ::gridRecipe)
         add("cookbook:recipe:icon", ::iconActionExample)
-        add("cookbook:recipe:markdown:demo", ::markdownDemoRecipe)
         add("cookbook:recipe:sidebar", ::sideBarRecipe)
         add("cookbook:recipe:snackbar", ::snackbarRecipe)
         add("cookbook:recipe:svg", ::svgRecipe)
@@ -181,6 +179,11 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("markdownHintExample", ::markdownHintExample)
         add("markdownStyledExample", ::markdownStyledExample)
         add("markdownActualizeExample", ::markdownActualizeExample)
+        add("markdownCompleteExample", ::markdownCompleteExample)
+        add("markdownCompleteHintExample", ::markdownCompleteHintExample)
+
+
+        // this is used by markdownActualizeExample
         add("cookbook-actualized-example", ::actualizedFromMarkdownExample)
 
         // ----------------------------------------------------------------------------

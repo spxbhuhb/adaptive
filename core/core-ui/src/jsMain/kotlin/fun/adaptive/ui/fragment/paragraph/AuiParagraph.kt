@@ -36,6 +36,7 @@ class AuiParagraph(
     class RenderCacheEntry(
         val renderData: AuiRenderData,
         val textRenderData: TextRenderData,
+        val canvas : HTMLCanvasElement,
         val context: CanvasRenderingContext2D
     )
 
@@ -110,6 +111,7 @@ class AuiParagraph(
             top = "${topOffset}px"
             width = "${ceil(item.width)}px" // ceil to avoid Safari ... at the end of text
             height = "${item.height}px"
+            lineHeight = "${item.height}px"
             whiteSpace = "pre"
         }
 
@@ -132,7 +134,9 @@ class AuiParagraph(
         val entry = getEntry(instructionSetIndex)
         val metrics = entry.context.measureText(text)
 
-        item.width = entry.renderData.surroundingHorizontal + metrics.width
+        val surroundingHorizontal = entry.renderData.surroundingHorizontal
+        item.surroundingHorizontal = surroundingHorizontal
+        item.width = surroundingHorizontal + metrics.width
 
         item.height = entry.renderData.surroundingVertical + (
             entry.textRenderData.lineHeight
@@ -146,22 +150,20 @@ class AuiParagraph(
         if (cached != null) return cached
 
         val renderData = AuiRenderData(uiAdapter, null, instructionSets[index])
-        val context = measureCanvas.getContext("2d") as CanvasRenderingContext2D
+        val canvas = document.createElement("canvas") as HTMLCanvasElement
+        val context = canvas.getContext("2d") as CanvasRenderingContext2D
         val textRenderData = renderData.text ?: uiAdapter.defaultTextRenderData
 
         RenderCacheEntry(
             renderData,
             textRenderData,
+            canvas,
             context
         ).also {
             renderCache[index] = it
             context.font = textRenderData.toCssString(uiAdapter.defaultTextRenderData)
             return it
         }
-    }
-
-    companion object {
-        val measureCanvas = document.createElement("canvas") as HTMLCanvasElement
     }
 
 }

@@ -11,7 +11,7 @@ import kotlin.collections.iterator
 /**
  * # Markdown Actualize
  *
- * - To include actual live fragments in your Markdown us the `actualize` scheme.
+ * - To include actual live fragments in your Markdown use the `actualize` scheme.
  * - You can pass parameters which the fragment receives in a map (parameters are optional).
  * - You have to register the fragment in the registry for this to work.
  */

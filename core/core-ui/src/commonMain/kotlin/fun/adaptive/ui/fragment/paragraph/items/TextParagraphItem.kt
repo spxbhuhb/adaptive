@@ -13,6 +13,7 @@ class TextParagraphItem(
     override var width: Double = 0.0
     override var height: Double = 0.0
     override var baseline: Double = 0.0
+    override var surroundingHorizontal: Double = 0.0
 
     override val isWhitespace: Boolean
         get() = text.isBlank()
@@ -26,7 +27,7 @@ class TextParagraphItem(
         if (other !is TextParagraphItem) return null
 
         return TextParagraphItem(text + other.text, instructionSetIndex).also {
-            it.width = width + other.width
+            it.width = width + other.width - other.surroundingHorizontal
             it.height = maxOf(height, other.height)
             it.baseline = maxOf(baseline, other.baseline)
         }

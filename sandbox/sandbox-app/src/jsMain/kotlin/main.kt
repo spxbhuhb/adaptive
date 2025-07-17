@@ -4,6 +4,8 @@
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.backend.backend
+import `fun`.adaptive.document.ui.direct.markdown
+import `fun`.adaptive.document.ui.direct.markdownHint
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.instruction.nop
@@ -20,6 +22,7 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.chart.lineChart
+import `fun`.adaptive.sandbox.recipe.document.markdown.markdownCompleteExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefMultiExample
 import `fun`.adaptive.sandbox.recipe.ui.table.tableBasicExample
 import `fun`.adaptive.sandbox.support.ExampleEnum
@@ -49,14 +52,6 @@ class Option(
     val text: String,
     val icon: GraphicsResourceSet
 )
-
-
-@Adat
-class T(
-    val e : ExampleEnum = ExampleEnum.V1,
-    val e2 : ExampleEnum = ExampleEnum.V2
-)
-
 
 fun sandboxMain() {
 
@@ -95,10 +90,6 @@ fun sandboxMain() {
                     fontWeight = 300
                 }
 
-                val form = adatFormBackend(T())
-                val template = T()
-                adapter.traceWithContext = true
-
                 row {
                     column {
                         for (i in 0..100) {
@@ -109,16 +100,10 @@ fun sandboxMain() {
                         }
                     }
                     column {
-                        padding { 16.dp } .. width { 200.dp } .. borders.outline
-                        localContext(form) {
-                            row {
-                                paddingLeft { 16.dp }
-                                enumEditorDropdown(ExampleEnum.entries) { template.e }
-                            }
-                            localContext(LayoutTraceContext) {
-                                enumEditorList(ExampleEnum.entries) { template.e }
-                            }
-                        }
+                        padding { 16.dp } .. width { 680.dp } .. borders.outline
+                        markdownHint("""
+                            use `removable = true` AND
+                        """.trimIndent())
                     }
                 }
             }

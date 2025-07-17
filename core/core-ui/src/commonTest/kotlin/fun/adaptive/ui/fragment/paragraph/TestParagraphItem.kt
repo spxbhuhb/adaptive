@@ -6,6 +6,7 @@ class TestParagraphItem(
     override var width: Double,
     override var height: Double,
     override var baseline: Double = 0.0,
+    override var surroundingHorizontal: Double = 0.0,
     override val instructionSetIndex: Int = 0,
     override val isWhitespace: Boolean = false,
     val mergeFun: (other: ParagraphItem) -> ParagraphItem? = { null }

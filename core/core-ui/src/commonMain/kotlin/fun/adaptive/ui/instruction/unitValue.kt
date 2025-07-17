@@ -127,6 +127,9 @@ val Double.sp: SPixel
 class SPixel(
     val value: Double
 ) {
+
+    operator fun times(value: Double) = SPixel(this.value * value)
+
     override fun toString(): String {
         return "${value}sp"
     }
