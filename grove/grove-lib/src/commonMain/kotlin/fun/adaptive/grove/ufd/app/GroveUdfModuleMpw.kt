@@ -6,8 +6,16 @@ import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.value.observableOf
+import `fun`.adaptive.grove.generated.resources.cards
 import `fun`.adaptive.grove.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.grove.generated.resources.components
+import `fun`.adaptive.grove.generated.resources.data_table
+import `fun`.adaptive.grove.generated.resources.instructions
 import `fun`.adaptive.grove.generated.resources.palette
+import `fun`.adaptive.grove.generated.resources.stack_group
+import `fun`.adaptive.grove.generated.resources.stack_off
+import `fun`.adaptive.grove.generated.resources.state
+import `fun`.adaptive.grove.generated.resources.stroke_partial
 import `fun`.adaptive.grove.hydration.lfm.LfmConst
 import `fun`.adaptive.grove.hydration.lfm.LfmDescendant
 import `fun`.adaptive.grove.hydration.lfm.LfmMapping
@@ -90,6 +98,45 @@ class GroveUdfModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace>() : App
             )
         }
 
+        addToolPane {
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID("4aaa4d8a-8df7-4510-acfa-d42846ce6460"),
+                    Strings.components,
+                    Graphics.cards,
+                    PanePosition.LeftMiddle,
+                    COMPONENTS_TOOL_KEY
+                )
+            )
+        }
+
+        addToolPane {
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID("986680dd-8008-4f56-aba3-262732aa2db3"),
+                    Strings.state,
+                    Graphics.data_table,
+                    PanePosition.RightMiddle,
+                    STATE_TOOL_KEY
+                )
+            )
+        }
+
+        addToolPane {
+            UnitPaneViewBackend(
+                workspace,
+                PaneDef(
+                    UUID("7f9d55b9-8a43-457d-9ea3-ecd5ef913ed5"),
+                    Strings.instructions,
+                    Graphics.stroke_partial,
+                    PanePosition.RightMiddle,
+                    INSTRUCTIONS_TOOL_KEY
+                )
+            )
+        }
+
         addContentPaneBuilder(
             WSIT_UFD_FRAGMENT, { type, item -> item as? LfmDescendant }
         ) { item ->
@@ -107,9 +154,9 @@ class GroveUdfModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace>() : App
         }
 
         + SideBarAction(
-            "stuff",
-            Graphics.menu,
-            PanePosition.LeftBottom,
+            "Open UDF",
+            Graphics.stack_group,
+            PanePosition.LeftMiddle,
             Int.MAX_VALUE - 1,
             null
         ) {

@@ -12,9 +12,9 @@ import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.value.observe
+import `fun`.adaptive.grove.ufd.model.LayoutConfig
 import `fun`.adaptive.sandbox.support.configureForm
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.editor.booleanEditor
 import `fun`.adaptive.ui.editor.colorEditor
 import `fun`.adaptive.ui.editor.dPixelEditor
 import `fun`.adaptive.ui.editor.doubleEditor
@@ -27,7 +27,9 @@ import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
 import `fun`.adaptive.ui.instruction.decoration.Border
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.layout.*
+import `fun`.adaptive.ui.instruction.layout.Orientation
+import `fun`.adaptive.ui.instruction.layout.SplitMethod
+import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 import `fun`.adaptive.ui.splitpane.SplitPaneTheme
 import `fun`.adaptive.ui.splitpane.verticalSplitDivider
 import `fun`.adaptive.ui.theme.backgrounds
@@ -67,24 +69,6 @@ class PlaygroundConfig(
     }
 }
 
-@Adat
-class LayoutConfig(
-    val top: Double = 20.0,
-    val left: Double = 20.0,
-    val width: Double = 40.0,
-    val height: Double = 40.0,
-    val margin: Margin = Margin.NONE,
-    val padding: Padding = Padding.NONE,
-    val useMaxWidth: Boolean = true,
-    val useMaxHeight: Boolean = false
-) {
-    fun toInstructions(): AdaptiveInstructionGroup =
-        instructionsOf(
-            position(top.dp, left.dp),
-            if (useMaxWidth) maxWidth else width { width.dp },
-            if (useMaxHeight) maxHeight else height { height.dp }
-        )
-}
 
 @Adat
 class DecorationConfig(
@@ -125,8 +109,6 @@ fun containerPlaygroundForm(
 
             row {
                 gap { 16.dp }
-                booleanEditor { template.layout.useMaxWidth } .. width { 120.dp }
-                booleanEditor { template.layout.useMaxHeight } .. width { 120.dp }
             }
 
             column {
