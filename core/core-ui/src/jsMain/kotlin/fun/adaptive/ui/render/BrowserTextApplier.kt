@@ -43,7 +43,7 @@ object BrowserTextApplier : TextRenderApplier<HTMLElement>() {
     }
 
     override fun applyWrap(receiver: HTMLElement, wrap: Boolean?) {
-        receiver.style.setProperty("text-wrap", if (wrap == true) "wrap" else "nowrap")
+        //receiver.style.setProperty("text-wrap", if (wrap == true) "wrap" else "nowrap")
     }
 
     override fun applyColor(receiver: HTMLElement, color: Color?) {
