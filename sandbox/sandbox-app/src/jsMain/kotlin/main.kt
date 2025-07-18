@@ -23,6 +23,7 @@ import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.chart.lineChart
 import `fun`.adaptive.sandbox.recipe.document.markdown.markdownCompleteExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasMeterExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefMultiExample
 import `fun`.adaptive.sandbox.recipe.ui.table.tableBasicExample
 import `fun`.adaptive.sandbox.support.ExampleEnum
@@ -101,9 +102,7 @@ fun sandboxMain() {
                     }
                     column {
                         padding { 16.dp } .. width { 680.dp } .. borders.outline
-                        markdownHint("""
-                            use `removable = true` AND
-                        """.trimIndent())
+                        canvasMeterExample()
                     }
                 }
             }
