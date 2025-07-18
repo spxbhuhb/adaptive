@@ -8,6 +8,7 @@ import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.runtime.FrontendWorkspace
 
 open class BasicBrowserClientApplication(
+    override val version: String,
     vararg modules: AppModule<FrontendWorkspace, BackendWorkspace>
 ) : BrowserApplication<FrontendWorkspace>() {
 
@@ -27,13 +28,17 @@ open class BasicBrowserClientApplication(
 
     companion object {
 
-        fun basicBrowserClient(start: Boolean = true, buildFun: ApplicationBuilder<FrontendWorkspace, BackendWorkspace>.() -> Unit) {
+        fun basicBrowserClient(
+            version: String = "0.0.1",
+            start: Boolean = true,
+            buildFun: ApplicationBuilder<FrontendWorkspace, BackendWorkspace>.() -> Unit
+        ) {
             val builder = ApplicationBuilder<FrontendWorkspace, BackendWorkspace>()
 
             builder.buildFun()
 
             if (start) {
-                BasicBrowserClientApplication(*builder.modules.toTypedArray())
+                BasicBrowserClientApplication(version, *builder.modules.toTypedArray())
                     .also {
                         it.wireFormatProvider = builder.wireFormatProvider
                     }

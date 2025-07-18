@@ -23,6 +23,8 @@ class TestServerApplication(
         this.modules += builder.modules
     }
 
+    override val version: String = "0.0.1"
+
     override val frontendWorkspace: NoFrontendWorkspace
         get() = unsupported()
 

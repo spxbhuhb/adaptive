@@ -18,7 +18,6 @@ import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
 import `fun`.adaptive.ui.value.iconCache
 import `fun`.adaptive.utility.UUID
-import `fun`.adaptive.utility.encodeToUrl
 
 class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : GroveDocModule<FW, BW>() {
 
@@ -73,7 +72,7 @@ class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : Grove
 
         val docToolPaneDef = PaneDef(
             UUID("add25359-772e-45d8-bdf1-2f53ea9e1634"),
-            Strings.documentation,
+            Strings.documentation + " - v" + application.version,
             Graphics.documentation,
             PanePosition.LeftTop,
             DOC_TOOL

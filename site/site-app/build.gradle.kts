@@ -176,3 +176,19 @@ tasks.register("release") {
             .waitFor()
     }
 }
+
+val fileWithVersion = project.file("src/commonMain/kotlin/fun/adaptive/site/version.kt")
+
+tasks.register("updateVersion") {
+    group = "adaptive"
+    doFirst {
+        fileWithVersion.writeText("""
+            package `fun`.adaptive.site
+            
+            val appVersion = "$version"
+        """.trimIndent()
+        )
+    }
+}
+
+tasks["build"].dependsOn("updateVersion")

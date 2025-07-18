@@ -14,6 +14,7 @@ import `fun`.adaptive.lib.util.app.UtilModule
 import `fun`.adaptive.persistence.ensure
 import `fun`.adaptive.sandbox.app.CookbookModule
 import `fun`.adaptive.site.app.SiteModuleServer
+import `fun`.adaptive.site.appVersion
 import `fun`.adaptive.value.app.ValueServerModule
 import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.io.files.Path
@@ -24,7 +25,7 @@ fun main() {
         propertyFile(optional = false) { "./etc/site.properties" }
     }
 
-    jvmServer {
+    jvmServer(appVersion) {
         module { UtilModule() }
         module { ValueServerModule(FilePersistence(Path("./var/values").ensure())) }
         module { NoAuthServerModule() }

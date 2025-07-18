@@ -9,9 +9,9 @@ import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.utility.Url
-import kotlinx.browser.window
 
 open class MpwBrowserClientApplication(
+    override val version: String,
     vararg modules: AppModule<MultiPaneWorkspace, BackendWorkspace>
 ) : BrowserApplication<MultiPaneWorkspace>() {
 
@@ -51,13 +51,17 @@ open class MpwBrowserClientApplication(
     }
 
     companion object {
-        fun wsBrowserClient(start: Boolean = true, buildFun: ApplicationBuilder<MultiPaneWorkspace, BackendWorkspace>.() -> Unit) {
+        fun wsBrowserClient(
+            version : String = "0.0.1",
+            start: Boolean = true,
+            buildFun: ApplicationBuilder<MultiPaneWorkspace, BackendWorkspace>.() -> Unit
+        ) {
             val builder = ApplicationBuilder<MultiPaneWorkspace, BackendWorkspace>()
 
             builder.buildFun()
 
             if (start) {
-                MpwBrowserClientApplication(*builder.modules.toTypedArray()).main()
+                MpwBrowserClientApplication(version, *builder.modules.toTypedArray()).main()
             }
         }
     }

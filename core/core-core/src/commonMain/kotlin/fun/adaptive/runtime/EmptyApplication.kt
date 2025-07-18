@@ -4,6 +4,9 @@ import `fun`.adaptive.foundation.unsupported
 
 class EmptyApplication : AbstractApplication<AbstractWorkspace, AbstractWorkspace>() {
 
+    override val version: String
+        get() = unsupported()
+
     override val backendWorkspace: AbstractWorkspace
         get() = unsupported()
 

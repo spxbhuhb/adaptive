@@ -15,6 +15,7 @@ import `fun`.adaptive.runtime.NoFrontendWorkspace
 import kotlinx.coroutines.runBlocking
 
 class JvmServerApplication(
+    override val version: String,
     vararg modules: AppModule<AbstractWorkspace, BackendWorkspace>
 ) : AbstractServerApplication<AbstractWorkspace, BackendWorkspace>() {
 
@@ -62,13 +63,17 @@ class JvmServerApplication(
 
     companion object {
 
-        fun jvmServer(start: Boolean = true, buildFun: ApplicationBuilder<AbstractWorkspace, BackendWorkspace>.() -> Unit) {
+        fun jvmServer(
+            version : String = "0.0.1",
+            start: Boolean = true,
+            buildFun: ApplicationBuilder<AbstractWorkspace, BackendWorkspace>.() -> Unit
+        ) {
             val builder = ApplicationBuilder<AbstractWorkspace, BackendWorkspace>()
 
             builder.buildFun()
 
             if (start) {
-                JvmServerApplication(*builder.modules.toTypedArray()).main()
+                JvmServerApplication(version, *builder.modules.toTypedArray()).main()
             }
         }
 
