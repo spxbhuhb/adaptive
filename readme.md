@@ -1,3 +1,6 @@
+[![Maven Central](https://img.shields.io/maven-central/v/hu.simplexion.adaptive/adaptive-core)](https://mvnrepository.com/artifact/hu.simplexion.adaptive/adaptive-core)
+[![GitHub License](https://img.shields.io/badge/license-Apache%20License%202.0-blue.svg?style=flat)](http://www.apache.org/licenses/LICENSE-2.0)
+
 Adaptive is a new take on Kotlin Multiplatform, a greenfield development with the goal
 to let us comfortably write full-stack, pure-Kotlin applications without relying
 on third-party, platform-dependent libraries.
