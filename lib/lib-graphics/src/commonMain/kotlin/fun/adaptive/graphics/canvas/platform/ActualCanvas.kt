@@ -19,6 +19,10 @@ interface ActualCanvas {
 
     val height : Double
 
+    var shouldRedraw: Boolean
+
+    fun setSize(width: Double, height: Double)
+
     fun apply(renderData: CanvasRenderData?) {
         if (renderData == null) return
 

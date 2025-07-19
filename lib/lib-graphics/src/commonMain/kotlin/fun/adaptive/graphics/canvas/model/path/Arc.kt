@@ -7,6 +7,19 @@ package `fun`.adaptive.graphics.canvas.model.path
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.graphics.canvas.platform.ActualPath
 
+/**
+ * @property x1 Start point X.
+ * @property y1 Start point Y.
+ * @property x2 End point X.
+ * @property y2 End point Y.
+ * @property rx X-radius of the ellipse.
+ * @property ry Y-radius of the ellipse.
+ * @property xAxisRotation Rotation of the ellipse's x-axis in degrees.
+ * @property largeArcFlag 0 for small arc, 1 for large arc.
+ * @property sweepFlag 0 for counter-clockwise, 1 for clockwise.
+ *
+ * @see https://www.w3.org/TR/SVG/paths.html#PathDataEllipticalArcCommands
+ */
 @Adat
 class Arc(
     val rx: Double,

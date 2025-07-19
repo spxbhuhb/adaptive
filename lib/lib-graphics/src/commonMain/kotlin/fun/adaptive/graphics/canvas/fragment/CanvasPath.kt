@@ -28,7 +28,7 @@ open class CanvasPath(
     override fun genPatchInternal(): Boolean {
         super.genPatchInternal()
 
-        if (getCreateClosureDirtyMask() != 0) {
+        if (haveToPatch(commands) || haveToPatch(init)) {
             path = canvas.newPath()
             init?.apply(path)
             commands.forEach { it.apply(path) }

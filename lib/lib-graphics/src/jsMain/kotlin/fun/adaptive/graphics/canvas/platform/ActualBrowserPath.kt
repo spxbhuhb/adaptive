@@ -24,62 +24,139 @@ class ActualBrowserPath : ActualPath {
         receiver.closePath()
     }
 
-    override fun arcTo(arc: Arc) {
+    /**
+     * Converts SVG arc parameters to HTML Canvas ellipse parameters.
+     * Based on the W3C SVG 1.1 Specification, Appendix F.6.
+     */
+    override fun arcTo(
+        arc : Arc
+    ) {
+        val rx = arc.rx
+        val ry = arc.ry
+        val xAxisRotation = arc.xAxisRotation
+        val largeArcFlag = arc.largeArcFlag
+        val sweepFlag = arc.sweepFlag
         val x1 = arc.x1
         val y1 = arc.y1
         val x2 = arc.x2
         val y2 = arc.y2
-        var rx = arc.rx
-        var ry = arc.ry
 
-        val rxS = rx * rx
-        val ryS = ry * ry
+        val phi_rad = xAxisRotation * (PI / 180) // Convert degrees to radians
 
-        require(rx > 0 && ry > 0) { "rx or ry is <= 0" }
+        // Ensure radii are positive
+        var currentRx = abs(rx)
+        var currentRy = abs(ry)
 
-        val p = arc.xAxisRotation / 180 * PI
-        val xM = (x1 - x2) / 2
-        val yM = (y1 - y2) / 2
-
-        val x1p = cos(p) * xM + sin(p) * yM
-        val y1p = - sin(p) * xM + cos(p) * yM
-
-        val x1pS = x1p * x1p
-        val y1pS = y1p * y1p
-
-        val radiusCheckValue = x1pS / rxS + y1pS / ryS
-        if (radiusCheckValue > 1) {
-            // Radius is too small to build an arc!
-            // Check out radius correction in the W3C document
-            // https://www.w3.org/TR/SVG11/implnote.html#ArcCorrectionOutOfRangeRadii
-            val rr = sqrt(radiusCheckValue)
-            rx *= rr
-            ry *= rr
+        // Handle degenerate cases
+        if (currentRx == 0.0 || currentRy == 0.0) {
+            receiver.moveTo(x1, y1)
+            receiver.lineTo(x2, y2)
+            return
+        }
+        if (x1 == x2 && y1 == y2) {
+            //println("Degenerate arc: Start and end points are identical.")
+            return
         }
 
-        val s = if (arc.largeArcFlag != arc.sweepFlag) 1 else - 1
+        // Step 3: Transform endpoints to an aligned coordinate system
+        val dx = (x1 - x2) / 2
+        val dy = (y1 - y2) / 2
 
-        // the abs is here because Double may act strange and result in -1.4210854715202004e-14
-        // that is basically zero, but sqrt returns with NaN because it's negative
-        val sq = sqrt(abs(rxS * ryS - rxS * y1pS - ryS * x1pS) / (rxS * y1pS + ryS * x1pS))
+        val x1_prime = cos(phi_rad) * dx + sin(phi_rad) * dy
+        val y1_prime = -sin(phi_rad) * dx + cos(phi_rad) * dy
 
-        val cxp = s * sq * rx * y1p / ry
-        val cyp = s * sq * - ry * x1p / rx
+        // Step 4: Adjust radii if too small
+        var lambda = (x1_prime * x1_prime) / (currentRx * currentRx) + (y1_prime * y1_prime) / (currentRy * currentRy)
+        if (lambda > 1) {
+            lambda = sqrt(lambda)
+            currentRx *= lambda
+            currentRy *= lambda
+        }
 
-        val xmd = (x1 + x2) / 2
-        val ymd = (y1 + y2) / 2
-        val cx = cos(p) * cxp - sin(p) * cyp + xmd
-        val cy = sin(p) * cxp + cos(p) * cyp + ymd
+        // Step 5: Calculate the center of the ellipse in the transformed coordinate system
+        val numerator = currentRx * currentRx * currentRy * currentRy - x1_prime * x1_prime * currentRy * currentRy - y1_prime * y1_prime * currentRx * currentRx
+        val denominator = x1_prime * x1_prime * currentRy * currentRy + y1_prime * y1_prime * currentRx * currentRx
 
-        val startAngle = angle(1.0, 0.0, x1 - cx, y1 - cy) - p
-        val deltaAngle = angle(x1 - cx, y1 - cy, x2 - cx, y2 - cy)
+        var coeff = sqrt(abs(numerator / denominator)) // Use abs for robustness against tiny negative floats
 
-        receiver.ellipse(cx, cy, rx, ry, p, startAngle, startAngle + deltaAngle, arc.sweepFlag == 0)
+        if (largeArcFlag == sweepFlag) {
+            coeff = -coeff
+        }
+
+        val cx_prime = coeff * (currentRx * y1_prime / currentRy)
+        val cy_prime = coeff * (-currentRy * x1_prime / currentRx)
+
+        // Step 6: Transform the center back to the original coordinate system
+        val x_mid = (x1 + x2) / 2
+        val y_mid = (y1 + y2) / 2
+
+        val cx = x_mid + cos(phi_rad) * cx_prime - sin(phi_rad) * cy_prime
+        val cy = y_mid + sin(phi_rad) * cx_prime + cos(phi_rad) * cy_prime
+
+        // Step 7: Calculate start and end angles
+        val start_vector_x = (x1_prime - cx_prime) / currentRx
+        val start_vector_y = (y1_prime - cy_prime) / currentRy
+        val end_vector_x = (-x1_prime - cx_prime) / currentRx // x2_prime = -x1_prime, y2_prime = -y1_prime in this system
+        val end_vector_y = (-y1_prime - cy_prime) / currentRy
+
+        val startAngle = angle(1.0, 0.0, start_vector_x, start_vector_y)
+        var endAngle = angle(1.0, 0.0, end_vector_x, end_vector_y)
+
+        // Step 8: Adjust endAngle based on sweepFlag
+        // Ensure the arc sweeps in the correct direction
+        val twoPI = 2 * PI
+        if (sweepFlag == 0) { // Counter-clockwise
+            if (endAngle > startAngle) {
+                endAngle -= twoPI
+            }
+        } else { // Clockwise
+            if (endAngle < startAngle) {
+                endAngle += twoPI
+            }
+        }
+
+        // Step 9: Determine counterclockwise for Canvas
+        val counterclockwise = (sweepFlag == 0)
+
+        receiver.ellipse(
+            x = cx,
+            y = cy,
+            radiusX = currentRx,
+            radiusY = currentRy,
+            rotation = phi_rad, // xAxisRotation in radians
+            startAngle = startAngle,
+            endAngle = endAngle,
+            anticlockwise = counterclockwise
+        )
     }
 
-    fun angle(ux: Double, uy: Double, vx: Double, vy: Double) =
-        (if (ux * vy >= uy * vx) 1 else - 1) *
-            acos((ux * vx + uy * vy) / (sqrt(ux * ux + uy * uy) * sqrt(vx * vx + vy * vy)))
+    /**
+     * Helper function to calculate the angle between two vectors.
+     * Used in the SVG arc to ellipse conversion.
+     *
+     * @param ux X component of the first vector.
+     * @param uy Y component of the first vector.
+     * @param vx X component of the second vector.
+     * @param vy Y component of the second vector.
+     * @return The angle in radians.
+     */
+    fun angle(ux: Double, uy: Double, vx: Double, vy: Double): Double {
+        val dot = ux * vx + uy * vy
+        val magU = sqrt(ux * ux + uy * uy)
+        val magV = sqrt(vx * vx + vy * vy)
+
+        // Clamp to avoid floating point errors causing acos to return NaN
+        var arg = dot / (magU * magV)
+        arg = max(-1.0, min(1.0, arg))
+
+        var a = acos(arg)
+
+        // Determine the sign of the angle
+        if (ux * vy - uy * vx < 0) {
+            a = -a
+        }
+        return a
+    }
 
     override fun cubicCurve(x1: Double, y1: Double, x2: Double, y2: Double, x: Double, y: Double) {
         receiver.bezierCurveTo(x1, y1, x2, y2, x, y)

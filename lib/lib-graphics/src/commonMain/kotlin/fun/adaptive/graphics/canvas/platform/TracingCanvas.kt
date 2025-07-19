@@ -21,6 +21,22 @@ class TracingCanvas<T : ActualCanvas>(
     override val height: Double
         get() = canvas.height
 
+    override var shouldRedraw
+        get() = canvas.shouldRedraw
+        set(value) {
+            canvas.shouldRedraw = value
+        }
+
+    override fun setSize(width: Double, height: Double) {
+        dump { "setSize: $width, $height" }
+        canvas.setSize(width, height)
+    }
+
+    override fun redrawNeeded() {
+        dump { "redrawNeeded" }
+        canvas.redrawNeeded()
+    }
+
     override fun apply(renderData: CanvasRenderData?) {
         dump { "apply: $renderData" }
         super.apply(renderData)

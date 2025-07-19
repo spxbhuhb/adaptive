@@ -2,12 +2,8 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.backend.backend
-import `fun`.adaptive.document.ui.direct.markdown
-import `fun`.adaptive.document.ui.direct.markdownHint
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.instruction.nop
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
@@ -21,25 +17,15 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.chart.lineChart
-import `fun`.adaptive.sandbox.recipe.document.markdown.markdownCompleteExample
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasMeterExample
-import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefMultiExample
-import `fun`.adaptive.sandbox.recipe.ui.table.tableBasicExample
-import `fun`.adaptive.sandbox.support.ExampleEnum
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathArcExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathRectangleExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
-import `fun`.adaptive.ui.container.editableList
-import `fun`.adaptive.ui.editor.enumEditorDropdown
-import `fun`.adaptive.ui.editor.enumEditorList
-import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.testing.LayoutTraceContext
 import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -93,17 +79,15 @@ fun sandboxMain() {
 
                 row {
                     column {
-                        for (i in 0..100) {
+                        for (i in 0 .. 100) {
                             box(if (i % 2 == 0) backgrounds.friendly else nop) {
                                 width { 30.dp }
                                 height { 10.dp }
                             }
                         }
                     }
-                    column {
-                        padding { 16.dp } .. width { 680.dp } .. borders.outline
-                        canvasMeterExample()
-                    }
+
+                    canvasPathArcExample()
                 }
             }
         } catch (ex: Exception) {

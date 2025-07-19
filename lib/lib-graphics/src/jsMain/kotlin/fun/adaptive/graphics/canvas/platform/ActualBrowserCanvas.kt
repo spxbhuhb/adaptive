@@ -31,7 +31,7 @@ class ActualBrowserCanvas : ActualCanvas {
 
     var saveIds = mutableListOf<Long>()
 
-    var shouldRedraw: Boolean = true
+    override var shouldRedraw: Boolean = true
 
     override val width
         get() = currentWidth
@@ -55,7 +55,7 @@ class ActualBrowserCanvas : ActualCanvas {
     fun newContext(element: HTMLCanvasElement) =
         element.getContext("2d") as CanvasRenderingContext2D
 
-    fun setSize(width: Double, height: Double) {
+    override fun setSize(width: Double, height: Double) {
         if (width == currentWidth && height == currentHeight) return
 
         currentWidth = width
