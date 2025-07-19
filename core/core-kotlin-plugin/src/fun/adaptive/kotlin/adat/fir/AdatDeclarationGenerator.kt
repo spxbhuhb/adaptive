@@ -11,6 +11,7 @@ import `fun`.adaptive.kotlin.adat.Names
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
+import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
 import org.jetbrains.kotlin.fir.declarations.primaryConstructorIfAny
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
@@ -65,6 +66,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         }
     }
 
+    @OptIn(SymbolInternals::class)
     private fun generateCompanionDeclaration(owner: FirRegularClassSymbol): FirRegularClassSymbol? {
         if (owner.companionObjectSymbol != null || owner.isCompanion) return null
 
@@ -96,6 +98,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         SpecialNames.INIT
     )
 
+    @OptIn(DirectDeclarationsAccess::class)
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
         val names = classSymbol.declarationSymbols.mapNotNull { if (it is FirNamedFunctionSymbol && ! it.name.isSpecial) it.name else null }
 

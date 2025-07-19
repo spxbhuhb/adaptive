@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
+import `fun`.adaptive.kotlin.common.firstRegularParameter
 import `fun`.adaptive.kotlin.foundation.Indices
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmDetachExpression
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmSequence
@@ -36,7 +37,7 @@ class ArmSequenceBuilder(
     fun patchCondition(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression =
         irCall(
             symbol = pluginContext.haveToPatch,
-            dispatchReceiver = irGet(patchFun.valueParameters[0]),
+            dispatchReceiver = irGet(patchFun.firstRegularParameter),
             args = arrayOf(
                 irGet(closureMask),
                 irConst(0) // sequence is hard-coded (for now)

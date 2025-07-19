@@ -5,6 +5,7 @@ package `fun`.adaptive.kotlin.adat.ir.adatclass
 
 import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
 import `fun`.adaptive.kotlin.adat.ir.metadata.PropertyData
+import `fun`.adaptive.kotlin.common.firstRegularParameter
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.IrBlockBodyBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
@@ -12,6 +13,7 @@ import org.jetbrains.kotlin.ir.builders.irDelegatingConstructorCall
 import org.jetbrains.kotlin.ir.builders.irTemporary
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
@@ -32,7 +34,7 @@ fun AdatIrBuilder.arrayConstructor(
 
     constructor.body = DeclarationIrBuilder(pluginContext.irContext, constructor.symbol).irBlockBody {
 
-        val values = constructor.valueParameters.first()
+        val values = constructor.firstRegularParameter
 
         + irDelegatingConstructorCall(
             primary
@@ -40,13 +42,11 @@ fun AdatIrBuilder.arrayConstructor(
             for ((index, property) in properties.withIndex()) {
                 val backingField = property.property.backingField !! // TODO handle properties without backing fields?
 
-                it.putValueArgument(
-                    index,
+                it.arguments[index] =
                     irImplicitAs(
                         backingField.type,
                         valueOrDefault(this, values, property, primary, constructor)
                     )
-                )
             }
         }
     }
@@ -75,7 +75,7 @@ private fun AdatIrBuilder.valueOrDefault(
     // get the parameter from the primary constructor, return with array value
     // if there is no default specified
 
-    val defaultValue = primary.valueParameters.firstOrNull { it.name == property.property.name }?.defaultValue
+    val defaultValue = primary.parameters.firstOrNull { it.kind == IrParameterKind.Regular && it.name == property.property.name }?.defaultValue
     if (defaultValue == null) return call
 
     // here we have a non-nullable, default valued constructor parameter, have to copy the

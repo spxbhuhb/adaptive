@@ -5,6 +5,8 @@ package `fun`.adaptive.kotlin.adat.ir.adatclass
 
 import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
 import `fun`.adaptive.kotlin.adat.ir.metadata.PropertyData
+import `fun`.adaptive.kotlin.common.firstRegularParameter
+import `fun`.adaptive.kotlin.common.secondRegularParameter
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irWhen
@@ -35,12 +37,12 @@ private fun AdatIrBuilder.transformProperty(genSetValueFunction: IrSimpleFunctio
     if (property.property.isVar) {
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            irEqual(irGet(genSetValueFunction.valueParameters.first()), irConst(property.metadata.index)),
+            irEqual(irGet(genSetValueFunction.firstRegularParameter), irConst(property.metadata.index)),
             irSetValue(
                 property.property,
                 irImplicitAs(
                     property.property.getter !!.returnType,
-                    irGet(genSetValueFunction.valueParameters[1])
+                    irGet(genSetValueFunction.secondRegularParameter)
                 ),
                 irGet(genSetValueFunction.dispatchReceiverParameter !!)
             )

@@ -2,7 +2,6 @@ package `fun`.adaptive.adat.testing
 
 import `fun`.adaptive.adat.AdatChange
 import `fun`.adaptive.adat.AdatClass
-import `fun`.adaptive.adat.AdatCompanionResolve
 import `fun`.adaptive.adat.AdatContext
 import `fun`.adaptive.adat.api.deepCopy
 import `fun`.adaptive.adat.api.validateForContext
@@ -53,7 +52,6 @@ fun <A : AdatClass> testStoreOrNull(
  * A producer to be used for testing with companion resolution.
  */
 @Producer
-@AdatCompanionResolve
 @Suppress("unused") // used by plugin test code
 fun <A : AdatClass> testStoreOrNullWithCompanion(
     onChange: ((newValue: A) -> Unit)? = null,

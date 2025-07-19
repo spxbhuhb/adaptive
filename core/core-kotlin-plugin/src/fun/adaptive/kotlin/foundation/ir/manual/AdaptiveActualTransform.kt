@@ -3,7 +3,9 @@
  */
 package `fun`.adaptive.kotlin.foundation.ir.manual
 
+import `fun`.adaptive.kotlin.common.firstRegularParameter
 import `fun`.adaptive.kotlin.common.property
+import `fun`.adaptive.kotlin.common.regularParameterCount
 import `fun`.adaptive.kotlin.foundation.ClassIds
 import `fun`.adaptive.kotlin.foundation.Names
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
@@ -99,9 +101,9 @@ class AdaptiveActualTransform(
                     getter.returnType,
                     typeArgumentsCount = 1
                 ).also { call ->
-                    call.dispatchReceiver = irGet(getter.dispatchReceiverParameter !!)
-                    call.putTypeArgument(0, getter.returnType)
-                    call.putValueArgument(0, irInt(index))
+                    call.typeArguments[0] = getter.returnType
+                    call.arguments[0] = irGet(getter.dispatchReceiverParameter !!)
+                    call.arguments[1] = irInt(index)
                 }
             )
         }
@@ -117,9 +119,9 @@ class AdaptiveActualTransform(
                     property.getter !!.returnType,
                     typeArgumentsCount = 0
                 ).also { call ->
-                    call.dispatchReceiver = irGet(setter.dispatchReceiverParameter !!)
-                    call.putValueArgument(0, irInt(index))
-                    call.putValueArgument(1, irGet(setter.valueParameters.first()))
+                    call.arguments[0] = irGet(setter.dispatchReceiverParameter !!)
+                    call.arguments[1] = irInt(index)
+                    call.arguments[2] = irGet(setter.firstRegularParameter)
                 }
             )
         }
@@ -138,8 +140,8 @@ class AdaptiveActualTransform(
         val functions = declaration.functions
 
         val haveToPatches = functions.filter { it.name == Names.HAVE_TO_PATCH }
-        val haveToPatchMask = haveToPatches.single { it.valueParameters.size == 2 }
-        val haveToPatchVariable = haveToPatches.single { it.valueParameters.size == 1 }
+        val haveToPatchMask = haveToPatches.single { it.regularParameterCount == 2 }
+        val haveToPatchVariable = haveToPatches.single { it.regularParameterCount == 1 }
 
         val dirtyMask = declaration.property(Names.DIRTY_MASK)
 

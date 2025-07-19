@@ -10,6 +10,7 @@ import `fun`.adaptive.kotlin.adat.Names
 import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
 import `fun`.adaptive.kotlin.adat.ir.AdatPluginContext
 import `fun`.adaptive.kotlin.adat.ir.immutable.isImmutable
+import `fun`.adaptive.kotlin.common.regularParameter
 import `fun`.adaptive.kotlin.wireformat.Signature
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -17,15 +18,17 @@ import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
-import org.jetbrains.kotlin.ir.util.*
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
+import org.jetbrains.kotlin.ir.util.isFakeOverride
+import org.jetbrains.kotlin.ir.util.isNullable
+import org.jetbrains.kotlin.ir.util.isSubtypeOfClass
+import org.jetbrains.kotlin.ir.util.primaryConstructor
+import org.jetbrains.kotlin.ir.visitors.IrVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
-import kotlin.collections.map
 
 class MetadataVisitor(
     override val pluginContext: AdatPluginContext,
     val adatClass: IrClass
-) : IrElementVisitorVoid, AdatIrBuilder {
+) : IrVisitorVoid(), AdatIrBuilder {
 
     val properties = mutableListOf<PropertyData>()
     val descriptors = mutableListOf<Pair<String, List<AdatDescriptorMetadata>>>()
@@ -89,7 +92,7 @@ class MetadataVisitor(
             flags = flags or AdatPropertyMetadata.NULLABLE
         }
 
-        val defaultValue = constructor.valueParameters.firstOrNull { it.name == declaration.name }?.defaultValue
+        val defaultValue = constructor.regularParameter(declaration.name).defaultValue
 
         if (defaultValue != null) {
             flags = flags or AdatPropertyMetadata.HAS_DEFAULT

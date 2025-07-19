@@ -3,22 +3,19 @@
  */
 package `fun`.adaptive.kotlin.service.ir.impl
 
-import `fun`.adaptive.kotlin.common.AbstractIrBuilder
-import `fun`.adaptive.kotlin.common.functionByName
-import `fun`.adaptive.kotlin.common.transformProperty
+import `fun`.adaptive.kotlin.common.*
 import `fun`.adaptive.kotlin.service.FqNames
-import `fun`.adaptive.kotlin.service.Indices
 import `fun`.adaptive.kotlin.service.Names
 import `fun`.adaptive.kotlin.service.Strings
 import `fun`.adaptive.kotlin.service.ir.ServicesPluginContext
 import `fun`.adaptive.kotlin.service.ir.util.IrClassBaseBuilder
 import `fun`.adaptive.kotlin.wireformat.Signature
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
-import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
+import org.jetbrains.kotlin.ir.builders.declarations.buildReceiverParameter
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrBranch
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -27,7 +24,10 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrDelegatingConstructorCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrElseBranchImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
-import org.jetbrains.kotlin.ir.types.*
+import org.jetbrains.kotlin.ir.types.classFqName
+import org.jetbrains.kotlin.ir.types.classOrNull
+import org.jetbrains.kotlin.ir.types.defaultType
+import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.util.*
 
 class ImplClassTransform(
@@ -102,7 +102,7 @@ class ImplClassTransform(
         // with a body that calls the new primary with a null context
 
         val oldPrimary = constructors.first()
-        require(oldPrimary.valueParameters.isEmpty()) { "Service implementation constructor must not have any parameters. ${transformedClass.kotlinFqName}" }
+        require(oldPrimary.regularParameterCount == 0) { "Service implementation constructor must not have any parameters. ${transformedClass.kotlinFqName}" }
 
         oldPrimary.isPrimary = false
 
@@ -114,7 +114,7 @@ class ImplClassTransform(
                 newPrimary.symbol,
                 typeArgumentsCount = 0
             ).also {
-                it.putValueArgument(0, irNull())
+                it.arguments[0] = irNull()
             }
         }
     }
@@ -126,7 +126,7 @@ class ImplClassTransform(
         dispatch.isFakeOverride = false
         dispatch.origin = IrDeclarationOrigin.DEFINED
 
-        dispatch.addDispatchReceiver {// replace the interface in the dispatcher with the class
+        dispatch.buildReceiverParameter { // replace the interface in the dispatcher with the class
             type = transformedClass.defaultType
         }
 
@@ -135,13 +135,13 @@ class ImplClassTransform(
                 irBlock(
                     origin = IrStatementOrigin.WHEN
                 ) {
-                    val funName = irTemporary(irGet(dispatch.valueParameters[Indices.DISPATCH_FUN_NAME]))
+                    val funName = irTemporary(irGet(dispatch.firstRegularParameter))
                     + irCall(
                         pluginContext.wireFormatCache.pack,
                         irWhen(
                             pluginContext.wireFormatCache.wireFormatEncoder.defaultType,
                             implementedServiceFunctions.map { dispatchBranch(dispatch, it, funName) }
-                                + irInvalidIndexBranch(dispatch, irGet(dispatch.valueParameters[Indices.DISPATCH_FUN_NAME]))
+                                + irInvalidIndexBranch(dispatch, irGet(dispatch.firstRegularParameter))
                         )
                     )
                 }
@@ -168,14 +168,13 @@ class ImplClassTransform(
 
     fun IrBlockBodyBuilder.callServiceFunction(dispatch: IrSimpleFunction, serviceFunction: IrSimpleFunction): IrExpression =
         irCall(
-            serviceFunction.symbol,
-            dispatchReceiver = irGet(dispatch.dispatchReceiverParameter !!)
+            serviceFunction.symbol
         ).also {
-            serviceFunction.valueParameters.forEachIndexed { fieldNumber, valueParameter ->
-                it.putValueArgument(
-                    fieldNumber,
-                    pluginContext.wireFormatCache.decode(fieldNumber + 1, valueParameter) { irGet(dispatch.valueParameters[Indices.DISPATCH_PAYLOAD]) }
-                )
+            it.arguments[0] = irGet(dispatch.dispatchReceiverParameter !!)
+            var fieldNumber = 1
+            serviceFunction.parameters.forEach { parameter ->
+                if (parameter.kind != IrParameterKind.Regular) return@forEach
+                it.arguments[parameter] = pluginContext.wireFormatCache.decode(fieldNumber++, parameter) { irGet(dispatch.secondRegularParameter) }
             }
         }
 
@@ -189,8 +188,8 @@ class ImplClassTransform(
                 transformedClass.functionByName { "unknownFunction" },
                 typeArgumentsCount = 0
             ).also {
-                it.dispatchReceiver = irGet(fromFun.dispatchReceiverParameter !!)
-                it.putValueArgument(0, getFunName)
+                it.arguments[0] = irGet(fromFun.dispatchReceiverParameter !!)
+                it.arguments[1] = getFunName
             }
         )
 
@@ -222,7 +221,7 @@ class ImplClassTransform(
             pluginContext,
             declaration,
             backingField = true
-        ) { irGet(constructor.valueParameters.first()) }
+        ) { irGet(constructor.firstRegularParameter) }
 
         return declaration
     }

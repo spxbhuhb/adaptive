@@ -4,6 +4,9 @@
 
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
+import `fun`.adaptive.kotlin.common.firstRegularParameter
+import `fun`.adaptive.kotlin.common.regularParameterCount
+import `fun`.adaptive.kotlin.common.secondRegularParameter
 import `fun`.adaptive.kotlin.foundation.Indices
 import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmCall
@@ -31,10 +34,10 @@ class ArmCallBuilder(
             armCall.isExpectCall -> {
                 irCall(
                     pluginContext.adapterActualizeFun,
-                    irGetValue(pluginContext.adapter, irGet(buildFun.valueParameters[Indices.BUILD_PARENT])),
+                    irGetValue(pluginContext.adapter, irGet(buildFun.firstRegularParameter)),
                     irConst(armCall.getExpectName()),
-                    irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
-                    irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]),
+                    irGet(buildFun.firstRegularParameter),
+                    irGet(buildFun.secondRegularParameter),
                     irConst(armCall.arguments.count())
                 )
             }
@@ -45,8 +48,8 @@ class ArmCallBuilder(
                 irCall(
                     armCall.irCall.symbol,
                     dispatchReceiver = null,
-                    irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
-                    irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
+                    irGet(buildFun.firstRegularParameter),
+                    irGet(buildFun.secondRegularParameter)
                 )
             }
 
@@ -59,21 +62,21 @@ class ArmCallBuilder(
                     typeArgumentsCount = 0,
                     constructorTypeArgumentsCount = 0
                 ).also {
-                    it.putValueArgument(0, irGet(buildFun.valueParameters[Indices.BUILD_PARENT]))
-                    it.putValueArgument(1, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
-                    it.putValueArgument(2, irConst(armCall.arguments.count()))
-                    it.putValueArgument(3, irGetFragmentFactory(buildFun))
+                    it.arguments[0] = irGet(buildFun.firstRegularParameter)
+                    it.arguments[1] = irGet(buildFun.secondRegularParameter)
+                    it.arguments[2] = irConst(armCall.arguments.count())
+                    it.arguments[3] =  irGetFragmentFactory(buildFun)
                 }
             }
         }
 
     private fun fixFunSignature(owner: IrSimpleFunction) {
-        if (owner.valueParameters.size == 2
-            && owner.valueParameters[0].type == pluginContext.adaptiveFragmentType
-            && owner.valueParameters[1].type == irBuiltIns.intType
+        if (owner.regularParameterCount == 2
+            && owner.firstRegularParameter.type == pluginContext.adaptiveFragmentType
+            && owner.secondRegularParameter.type == irBuiltIns.intType
         ) return
 
-        owner.valueParameters = emptyList()
+        owner.parameters = emptyList()
         owner.addValueParameter(Strings.PARENT, pluginContext.adaptiveFragmentType)
         owner.addValueParameter(Strings.DECLARATION_INDEX, irBuiltIns.intType)
 
@@ -127,7 +130,7 @@ class ArmCallBuilder(
     }
 
     override fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrExpression {
-        val fragmentParameter = patchFun.valueParameters.first()
+        val fragmentParameter = patchFun.firstRegularParameter
 
         IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType)
             .also { block ->

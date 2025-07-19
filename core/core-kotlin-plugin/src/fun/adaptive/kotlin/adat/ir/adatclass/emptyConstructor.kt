@@ -5,13 +5,13 @@ package `fun`.adaptive.kotlin.adat.ir.adatclass
 
 import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
 import `fun`.adaptive.kotlin.adat.ir.metadata.PropertyData
-import `fun`.adaptive.kotlin.adat.ir.sensible.sensibleDefault
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irDelegatingConstructorCall
 import org.jetbrains.kotlin.ir.builders.irSetField
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrConstructor
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.util.constructors
 import org.jetbrains.kotlin.ir.util.deepCopyWithSymbols
 import org.jetbrains.kotlin.ir.util.superClass
@@ -30,18 +30,18 @@ fun AdatIrBuilder.emptyConstructor(
     constructor.body = DeclarationIrBuilder(pluginContext.irContext, constructor.symbol).irBlockBody {
 
         + irDelegatingConstructorCall(
-            adatClass.superClass?.constructors?.first { it.valueParameters.isEmpty() } ?: irBuiltIns.anyClass.constructors.first().owner
+            adatClass.superClass?.constructors
+                ?.first { it.parameters.none { it.kind == IrParameterKind.Regular } }
+                ?: irBuiltIns.anyClass.constructors.first().owner
         )
 
-        for (parameter in primary.valueParameters) {
-
+        for (parameter in primary.parameters) {
+            if (parameter.kind != IrParameterKind.Regular) continue
             val propertyData = properties.firstOrNull { it.property.name == parameter.name } ?: continue
 
             val defaultValue = parameter.defaultValue
 
-            val initializer =
-                defaultValue?.deepCopyWithSymbols(primary)?.expression
-                    ?: sensibleDefault(propertyData.metadata.signature)
+            val initializer = defaultValue?.deepCopyWithSymbols(primary)?.expression
 
             if (initializer != null) {
                 + irSetField(

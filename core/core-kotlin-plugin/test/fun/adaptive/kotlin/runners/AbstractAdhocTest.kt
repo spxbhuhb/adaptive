@@ -13,7 +13,6 @@ import org.jetbrains.kotlin.test.backend.handlers.IrTreeVerifierHandler
 import org.jetbrains.kotlin.test.backend.handlers.JvmBoxRunner
 import org.jetbrains.kotlin.test.backend.ir.JvmIrBackendFacade
 import org.jetbrains.kotlin.test.builders.TestConfigurationBuilder
-import org.jetbrains.kotlin.test.builders.fir2IrStep
 import org.jetbrains.kotlin.test.builders.irHandlersStep
 import org.jetbrains.kotlin.test.builders.jvmArtifactsHandlersStep
 import org.jetbrains.kotlin.test.directives.CodegenTestDirectives.DUMP_IR
@@ -57,7 +56,7 @@ open class AbstractAdhocTest : BaseTestRunner(), RunnerWithTargetBackendForTestG
             }
 
             commonFirWithPluginFrontendConfiguration(dumpFir = dumps)
-            fir2IrStep()
+            // fir2IrStep()
             irHandlersStep {
                 if (dumps) {
                     useHandlers(

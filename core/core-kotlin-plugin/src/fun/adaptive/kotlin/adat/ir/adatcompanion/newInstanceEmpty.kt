@@ -4,6 +4,7 @@
 package `fun`.adaptive.kotlin.adat.ir.adatcompanion
 
 import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
+import `fun`.adaptive.kotlin.common.regularParameterCount
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
@@ -24,7 +25,7 @@ fun AdatIrBuilder.newInstanceEmpty(
             IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 newInstanceFunction.returnType,
-                companionClass.parentAsClass.constructors.first { it.valueParameters.isEmpty() }.symbol,
+                companionClass.parentAsClass.constructors.first { it.regularParameterCount == 0 }.symbol,
                 0, 0
             )
         )

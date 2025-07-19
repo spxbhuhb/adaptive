@@ -9,7 +9,9 @@ import `fun`.adaptive.kotlin.foundation.ir.arm.ArmValueProducer
 import `fun`.adaptive.kotlin.foundation.ir.util.adatCompanionOrNull
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.IrBlockBodyBuilder
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -73,9 +75,11 @@ open class ArmInternalStateVariableBuilder(
      */
     fun transformProducer(dirtyMask: IrVariable, producerCall: IrCall, patchFun: IrSimpleFunction): IrExpression {
 
-        for ((index, valueParam) in producerCall.symbol.owner.valueParameters.withIndex()) {
-            if (! valueParam.type.isSubtypeOfClass(pluginContext.adaptiveStateVariableBindingClass)) continue
-            setBindingParameter(producerCall, index, patchFun)
+        for (parameter in producerCall.symbol.owner.parameters) {
+            if (parameter.kind != IrParameterKind.Regular) continue
+            if (! parameter.type.isSubtypeOfClass(pluginContext.adaptiveStateVariableBindingClass)) continue
+            setBindingParameter(producerCall, parameter, patchFun)
+            break // TODO think about breaking after the first binding, I think it's fine
         }
 
         // set the dirty mask we use in internal-patch
@@ -89,7 +93,7 @@ open class ArmInternalStateVariableBuilder(
         }
     }
 
-    private fun setBindingParameter(call: IrCall, index: Int, patchFun: IrSimpleFunction) {
+    private fun setBindingParameter(call: IrCall, parameter: IrValueParameter, patchFun: IrSimpleFunction) {
 
         // if the producer return value is an adat class we have to find the companion
         // object and pass it to `localBinding`
@@ -99,15 +103,14 @@ open class ArmInternalStateVariableBuilder(
 
         if (returnType.isTypeParameter()) {
             val typeArgIndex = call.symbol.owner.typeParameters.indexOfFirst { it.symbol == returnType.classifier }
-            val typeArg = call.getTypeArgument(typeArgIndex)
+            val typeArg = call.typeArguments[typeArgIndex]
             checkNotNull(typeArg)
             producedType = typeArg
         } else {
             producedType = returnType.typeOrFail
         }
 
-        call.putValueArgument(
-            index,
+        call.arguments[parameter] =
             irCall(
                 pluginContext.localBinding,
                 dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),
@@ -117,7 +120,6 @@ open class ArmInternalStateVariableBuilder(
                     adatCompanionOrNull(producedType)
                 )
             )
-        )
     }
 
     /**

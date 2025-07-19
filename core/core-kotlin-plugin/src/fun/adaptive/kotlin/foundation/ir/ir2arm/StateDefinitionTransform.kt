@@ -12,6 +12,7 @@ import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.ir.IrElement
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.declarations.IrDeclaration
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
@@ -65,23 +66,25 @@ class StateDefinitionTransform(
     }
 
     fun transformParameters() {
-        armClass.originalFunction.valueParameters.forEach { valueParameter ->
+        var index = 0
+        armClass.originalFunction.parameters.forEach { parameter ->
+            if (parameter.kind != IrParameterKind.Regular) return@forEach
 
             // for entry points the first parameter of the function is the adapter which
             // we don't want to add to the root fragment as a state variable
-            if (valueParameter.index < skipParameters) return@forEach
+            if (index++ < skipParameters) return@forEach
 
             // access selector function is not part of the state, it is for the plugin to know
             // which state variable to access
             // TODO add FIR checker to make sure the selector and the binding type arguments are the same
 
-            if (valueParameter.type.isAccessSelector(valueParameter, armClass.stateVariables.lastOrNull()?.type)) {
+            if (parameter.type.isAccessSelector(parameter, armClass.stateVariables.lastOrNull()?.type)) {
                 return@forEach
             }
 
             // Instructions are added before `transformParameters`. They are the first state variable by definition.
 
-            if (valueParameter.isInstructions) {
+            if (parameter.isInstructions) {
                 return@forEach
             }
 
@@ -89,23 +92,23 @@ class StateDefinitionTransform(
                 armClass,
                 stateVariableIndex,
                 stateVariableIndex,
-                valueParameter.name.identifier,
-                valueParameter.type,
-                valueParameter.isInstructions,
-                valueParameter.symbol
+                parameter.name.identifier,
+                parameter.type,
+                parameter.isInstructions,
+                parameter.symbol
             ).apply {
-                register(valueParameter)
+                register(parameter)
 
                 //        EXPRESSION_BODY
                 //          CALL 'public final fun emptyArray <T> (): kotlin.Array<T of kotlin.emptyArray> [inline] declared in kotlin' type=kotlin.Array<`fun`.adaptive.foundation.instruction.AdaptiveInstruction> origin=null
                 //            <T>: `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 
 
-                if (valueParameter.isVararg && valueParameter.defaultValue == null) {
+                if (parameter.isVararg && parameter.defaultValue == null) {
 
                     val call: IrCall =
 
-                        if (valueParameter.isInstructions) {
+                        if (parameter.isInstructions) {
                             IrCallImpl(
                                 UNDEFINED_OFFSET,
                                 UNDEFINED_OFFSET,
@@ -117,11 +120,11 @@ class StateDefinitionTransform(
                             IrCallImpl(
                                 UNDEFINED_OFFSET,
                                 UNDEFINED_OFFSET,
-                                irBuiltIns.arrayClass.typeWith(valueParameter.varargElementType !!),
+                                irBuiltIns.arrayClass.typeWith(parameter.varargElementType !!),
                                 pluginContext.kotlinSymbols.emptyArray,
                                 typeArgumentsCount = 1
                             ).also {
-                                it.putTypeArgument(0, valueParameter.varargElementType !!)
+                                it.typeArguments[0] = parameter.varargElementType !!
                             }
                         }
 
@@ -133,7 +136,7 @@ class StateDefinitionTransform(
                         )
 
                 } else {
-                    val defaultValue = valueParameter.defaultValue ?: return@forEach
+                    val defaultValue = parameter.defaultValue ?: return@forEach
 
                     armClass.stateDefinitionStatements +=
                         ArmDefaultValueStatement(

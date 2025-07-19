@@ -11,6 +11,7 @@ import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.util.defaultType
+import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.parentAsClass
 
 class TypeSignatureTransform(
@@ -22,13 +23,13 @@ class TypeSignatureTransform(
             return super.visitCall(expression)
         }
 
-        val receiver = expression.extensionReceiver
+        val receiver = expression.symbol.owner.dispatchReceiverParameter
         var type : IrType
 
         if (receiver != null) {
             type = receiver.type
         } else {
-            type = checkNotNull(expression.getTypeArgument(0))
+            type = checkNotNull(expression.typeArguments[0]) { "missing type argument in ${expression.symbol.owner.name} ${expression.dumpKotlinLike()}" }
         }
 
         type.classOrNull?.let {

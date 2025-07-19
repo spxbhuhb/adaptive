@@ -7,6 +7,7 @@ package `fun`.adaptive.kotlin.wireformat
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
 import `fun`.adaptive.kotlin.common.asClassId
 import `fun`.adaptive.kotlin.common.functionByName
+import `fun`.adaptive.kotlin.common.regularParameterCount
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
@@ -46,7 +47,7 @@ class GenericWireFormat(
         check(symbol.owner.isSubclassOf(pluginContext.wireFormatClass.owner)) { "class ${classId.asFqNameString()} does not implement ${ClassIds.WIREFORMAT}" }
 
         val typeParameterCount = symbol.owner.typeParameters.size
-        constructor = symbol.constructors.first { it.owner.valueParameters.size == typeParameterCount }
+        constructor = symbol.constructors.first { it.owner.regularParameterCount == typeParameterCount }
     }
 
     fun buildWireFormat(builder: AbstractIrBuilder, arguments: List<SignatureWireFormat>): IrExpression =
@@ -58,19 +59,17 @@ class GenericWireFormat(
             constructorTypeArgumentsCount = 0
         ).also {
             arguments.forEachIndexed { index, argument ->
-                it.putValueArgument(
-                    index,
+                it.arguments[index] =
                     IrConstructorCallImpl(
                         SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                         pluginContext.wireFormatTypeArgument.defaultType,
                         pluginContext.wireFormatTypeArgument.constructors.first(),
                         typeArgumentsCount = 0,
                         constructorTypeArgumentsCount = 0
-                    ).also {
-                        it.putValueArgument(0, argument.buildWireFormat(builder))
-                        it.putValueArgument(1, builder.irConst(argument.nullable))
+                    ).also { ccall ->
+                        ccall.arguments[0] = argument.buildWireFormat(builder)
+                        ccall.arguments[1] = builder.irConst(argument.nullable)
                     }
-                )
             }
         }
 }

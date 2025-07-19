@@ -3,6 +3,8 @@
  */
 package `fun`.adaptive.kotlin.foundation.ir.ir2arm
 
+import `fun`.adaptive.kotlin.common.lastRegularArgument
+import `fun`.adaptive.kotlin.common.regularArgumentCount
 import `fun`.adaptive.kotlin.foundation.FqNames
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmEntryPoint
@@ -32,9 +34,9 @@ class EntryPointTransform(
             return super.visitCall(expression)
         }
 
-        check(expression.valueArgumentsCount != 0) { "${expression.symbol} value arguments count == 0" }
+        check(expression.regularArgumentCount != 0) { "${expression.symbol} value arguments count == 0" }
 
-        val block = expression.getValueArgument(expression.valueArgumentsCount - 1)
+        val block = expression.lastRegularArgument
 
         check(block is IrFunctionExpression) { "${expression.symbol} last parameter is not a function expression" }
 

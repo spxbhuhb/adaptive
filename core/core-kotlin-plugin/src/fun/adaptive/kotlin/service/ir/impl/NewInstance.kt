@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.kotlin.service.ir.impl
 
+import `fun`.adaptive.kotlin.common.firstRegularParameter
 import `fun`.adaptive.kotlin.service.Strings
 import `fun`.adaptive.kotlin.service.ir.ServicesPluginContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
@@ -40,7 +41,7 @@ class NewInstance(
                     typeArgumentsCount = 0,
                     constructorTypeArgumentsCount = 0
                 ).also {
-                    it.putValueArgument(0, irGet(valueParameters.first()))
+                    it.arguments[0] = irGet(firstRegularParameter)
                 }
             )
 

@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.analysis.checkers.toClassLikeSymbol
+import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
 import org.jetbrains.kotlin.fir.declarations.fullyExpandedClass
 import org.jetbrains.kotlin.fir.declarations.utils.isSuspend
 import org.jetbrains.kotlin.fir.extensions.*
@@ -91,6 +92,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     private fun collectFunctions(classId: ClassId) =
         collectFunctions(session.symbolProvider.getClassLikeSymbolByClassId(classId) !!)
 
+    @OptIn(DirectDeclarationsAccess::class)
     private fun collectFunctions(classLikeSymbol: FirClassLikeSymbol<*>): Set<Name> {
         val expandedClass = classLikeSymbol.fullyExpandedClass(session) !!
 

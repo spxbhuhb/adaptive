@@ -6,6 +6,7 @@ package `fun`.adaptive.kotlin.service.ir.consumer
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
 import `fun`.adaptive.kotlin.common.functionByName
 import `fun`.adaptive.kotlin.common.property
+import `fun`.adaptive.kotlin.common.regularParameterCount
 import `fun`.adaptive.kotlin.service.Names
 import `fun`.adaptive.kotlin.service.ServicesPluginKey
 import `fun`.adaptive.kotlin.service.Strings
@@ -103,19 +104,21 @@ class ConsumerClassTransform(
             dispatchReceiver = irGet(function.dispatchReceiverParameter !!)
         ).also { it.origin = IrStatementOrigin.GET_PROPERTY }
 
-        if (function.valueParameters.isEmpty()) return payload
+        if (function.regularParameterCount == 0) return payload
 
         payload = irCall(
             pluginContext.wireFormatCache.pluginContext.pseudoInstanceStart,
             dispatchReceiver = payload
         )
 
-        function.valueParameters.forEachIndexed { fieldNumber, valueParameter ->
+        var fieldNumber = 1
+
+        function.parameters.forEach { parameter ->
             payload = pluginContext.wireFormatCache.encode(
                 payload,
-                fieldNumber + 1,
-                valueParameter.name.identifier,
-                irGet(valueParameter)
+                fieldNumber++,
+                parameter.name.identifier,
+                irGet(parameter)
             )
         }
 

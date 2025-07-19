@@ -4,6 +4,9 @@
 package `fun`.adaptive.kotlin.foundation.ir.reference
 
 import `fun`.adaptive.kotlin.common.AdaptiveFqNames.PLUGIN_REFERENCE
+import `fun`.adaptive.kotlin.common.firstRegularArgument
+import `fun`.adaptive.kotlin.common.firstRegularParameter
+import `fun`.adaptive.kotlin.common.secondRegularArgument
 import `fun`.adaptive.kotlin.foundation.ClassIds
 import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
@@ -11,6 +14,7 @@ import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
@@ -68,9 +72,9 @@ class FunctionPropertyTransform(
             pluginContext.addTransformed,
             typeArgumentsCount = 0
         ).apply {
-            dispatchReceiver = expression.dispatchReceiver
-            putValueArgument(0, expression.getValueArgument(0))
-            putValueArgument(1, visitFunctionReference(expression.getValueArgument(1) as IrFunctionReference))
+            arguments[0] = expression.dispatchReceiver
+            arguments[1] = expression.firstRegularArgument
+            arguments[2] = visitFunctionReference(expression.secondRegularArgument as IrFunctionReference)
         }
     }
 
@@ -110,7 +114,7 @@ class FunctionPropertyTransform(
         getter.body?.transform(GetterReturnTypeTransform(pluginContext), null)
 
         declaration.setter?.let { setter ->
-            setter.valueParameters[0].type = newType
+            setter.firstRegularParameter.type = newType
         }
 
         return super.visitPropertyNew(declaration)
@@ -121,11 +125,11 @@ class FunctionPropertyTransform(
         val name = property.name
 
         val isAdaptive = when (parent) {
-            is IrSimpleFunction -> parent.valueParameters
-            is IrClass -> parent.primaryConstructor?.valueParameters
+            is IrSimpleFunction -> parent.parameters
+            is IrClass -> parent.primaryConstructor?.parameters
             else -> null
         }
-            ?.first { it.symbol.owner.name == name }?.hasAnnotation(ClassIds.ADAPTIVE)
+            ?.first { it.kind == IrParameterKind.Regular && it.symbol.owner.name == name }?.hasAnnotation(ClassIds.ADAPTIVE)
 
         return isAdaptive == true
     }

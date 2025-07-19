@@ -6,10 +6,8 @@
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.kotlin.common.property
-import `fun`.adaptive.kotlin.common.propertyGetter
+import `fun`.adaptive.kotlin.common.*
 import `fun`.adaptive.kotlin.foundation.FoundationPluginKey
-import `fun`.adaptive.kotlin.foundation.Indices
 import `fun`.adaptive.kotlin.foundation.Names
 import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
@@ -117,10 +115,10 @@ class ArmClassBuilder(
                 pluginContext.adaptiveFragmentClass.constructors.first(),
                 typeArgumentsCount = 0
             ).apply {
-                putValueArgument(0, irGet(constructorFun.valueParameters[0]))
-                putValueArgument(1, irGet(constructorFun.valueParameters[1]))
-                putValueArgument(2, irGet(constructorFun.valueParameters[2]))
-                putValueArgument(3, irConst(armClass.stateVariables.size))
+                arguments[0] = irGet(constructorFun.firstRegularParameter)
+                arguments[1] = irGet(constructorFun.secondRegularParameter)
+                arguments[2] = irGet(constructorFun.thirdRegularParameter)
+                arguments[3] = irConst(armClass.stateVariables.size)
             }
 
             statements += IrInstanceInitializerCallImpl(
@@ -180,7 +178,7 @@ class ArmClassBuilder(
         buildFun.origin = IrDeclarationOrigin.DEFINED
         buildFun.isFakeOverride = false
 
-        buildFun.dispatchReceiverParameter = buildFun.buildReceiverParameter {
+        buildFun.buildReceiverParameter {
             this.origin = IrDeclarationOrigin.INSTANCE_RECEIVER
             this.type = irClass.defaultType
         }
@@ -202,7 +200,7 @@ class ArmClassBuilder(
 
     private fun IrBlockBodyBuilder.genBuildCreate(fragment: IrVariable, buildFun: IrFunction) {
         val condition = irEqual(
-            irAnd(irGet(buildFun.valueParameters[2]), irConst(AdaptiveFragment.DETACHED_MASK)),
+            irAnd(irGet(buildFun.thirdRegularParameter), irConst(AdaptiveFragment.DETACHED_MASK)),
             irConst(0)
         )
 
@@ -230,7 +228,7 @@ class ArmClassBuilder(
                 branches += genBuildWhenBranch(buildFun, it)
             }
 
-            branches += irInvalidIndexBranch(buildFun, irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]))
+            branches += irInvalidIndexBranch(buildFun, irGet(buildFun.secondRegularParameter))
         }
 
     private fun genBuildWhenBranch(buildFun: IrSimpleFunction, renderingStatement: ArmRenderingStatement) =
@@ -238,7 +236,7 @@ class ArmClassBuilder(
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irEqual(
-                irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX]),
+                irGet(buildFun.secondRegularParameter),
                 irConst(renderingStatement.index)
             ),
             renderingStatement.branchBuilder(this@ArmClassBuilder).genBuildConstructorCall(buildFun)
@@ -254,7 +252,7 @@ class ArmClassBuilder(
         patchFun.origin = IrDeclarationOrigin.DEFINED
         patchFun.isFakeOverride = false
 
-        patchFun.dispatchReceiverParameter = patchFun.buildReceiverParameter {
+        patchFun.buildReceiverParameter {
             this.origin = IrDeclarationOrigin.INSTANCE_RECEIVER
             this.type = irClass.defaultType
         }
@@ -268,7 +266,7 @@ class ArmClassBuilder(
                     pluginContext.getCreateClosureDirtyMask,
                     typeArgumentsCount = 0
                 ).also {
-                    it.dispatchReceiver = irGet(patchFun.valueParameters[Indices.PATCH_DESCENDANT_FRAGMENT])
+                    it.dispatchReceiver = irGet(patchFun.firstRegularParameter)
                 }
             )
 
@@ -279,7 +277,7 @@ class ArmClassBuilder(
                     pluginContext.index.single().owner.getter !!.symbol,
                     typeArgumentsCount = 0
                 ).also {
-                    it.dispatchReceiver = irGet(patchFun.valueParameters[Indices.PATCH_DESCENDANT_FRAGMENT])
+                    it.dispatchReceiver = irGet(patchFun.firstRegularParameter)
                 }
             )
 
@@ -321,7 +319,7 @@ class ArmClassBuilder(
         patchFun.origin = IrDeclarationOrigin.DEFINED
         patchFun.isFakeOverride = false
 
-        patchFun.dispatchReceiverParameter = patchFun.buildReceiverParameter {
+        patchFun.buildReceiverParameter {
             this.origin = IrDeclarationOrigin.INSTANCE_RECEIVER
             this.type = irClass.defaultType
         }
@@ -382,8 +380,8 @@ class ArmClassBuilder(
                 irClass.getPropertySetter("dirtyMask") !!,
                 typeArgumentsCount = 0
             ).also {
-                it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
-                it.putValueArgument(0, irGet(dirtyMask))
+                it.arguments[0] = irGet(patchFun.dispatchReceiverParameter !!)
+                it.arguments[1] = irGet(dirtyMask)
             }
 
             + irReturn(irConst(true))
@@ -410,11 +408,8 @@ class ArmClassBuilder(
                 irClass.getSimpleFunction(Strings.INVALID_INDEX) !!,
                 typeArgumentsCount = 0
             ).also {
-                it.dispatchReceiver = irGet(fromFun.dispatchReceiverParameter !!)
-                it.putValueArgument(
-                    Indices.INVALID_INDEX_INDEX,
-                    getIndex
-                )
+                it.arguments[0]  = irGet(fromFun.dispatchReceiverParameter !!)
+                it.arguments[1] = getIndex
             }
         )
 
@@ -434,7 +429,7 @@ class ArmClassBuilder(
         val irClass = armClass.irClass
 
         with(armClass.originalFunction) {
-            valueParameters = emptyList()
+            parameters = emptyList()
 
             val parent = addValueParameter(Strings.PARENT, pluginContext.adaptiveFragmentType)
             val index = addValueParameter(Strings.DECLARATION_INDEX, irBuiltIns.intType)
@@ -451,9 +446,9 @@ class ArmClassBuilder(
                         typeArgumentsCount = 0,
                         constructorTypeArgumentsCount = 0
                     ).also {
-                        it.putValueArgument(0, irGetValue(pluginContext.adapter, irGet(parent)))
-                        it.putValueArgument(1, irGet(parent))
-                        it.putValueArgument(2, irGet(index))
+                        it.arguments[0] = irGetValue(pluginContext.adapter, irGet(parent))
+                        it.arguments[1] = irGet(parent)
+                        it.arguments[2] = irGet(index)
                     }
                 )
             }

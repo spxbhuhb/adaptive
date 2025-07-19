@@ -4,7 +4,6 @@
 
 package `fun`.adaptive.kotlin.common
 
-import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
@@ -48,10 +47,10 @@ interface AbstractIrBuilder {
         irFactory.createValueParameter(
             SYNTHETIC_OFFSET,
             SYNTHETIC_OFFSET,
-            IrDeclarationOrigin.INSTANCE_RECEIVER,
-            symbol = IrValueParameterSymbolImpl(),
+            origin = IrDeclarationOrigin.INSTANCE_RECEIVER,
+            kind = IrParameterKind.DispatchReceiver,
             name = SpecialNames.THIS,
-            index = UNDEFINED_PARAMETER_INDEX,
+            symbol = IrValueParameterSymbolImpl(),
             type = IrSimpleTypeImpl(symbol, false, emptyList(), emptyList()),
             varargElementType = null,
             isCrossinline = false,
@@ -118,7 +117,7 @@ interface AbstractIrBuilder {
             it.parent = parent
             it.correspondingPropertySymbol = symbol
 
-            val receiver = it.addDispatchReceiver {
+            val receiver = it.buildReceiverParameter {
                 type = parentAsClass.defaultType
             }
 
@@ -147,7 +146,7 @@ interface AbstractIrBuilder {
             IrDeclarationOrigin.DEFINED
         }
 
-        getter.addDispatchReceiver {
+        getter.buildReceiverParameter {
             type = irClass.defaultType
         }
 
@@ -192,7 +191,7 @@ interface AbstractIrBuilder {
             typeArgumentsCount = 0,
             origin = IrStatementOrigin.GET_PROPERTY
         ).apply {
-            dispatchReceiver = receiver
+            arguments[0] = receiver
         }
 
     fun irSetValue(irProperty: IrProperty, value: IrExpression, receiver: IrExpression?): IrCall =
@@ -202,8 +201,8 @@ interface AbstractIrBuilder {
             irProperty.setter !!.symbol,
             typeArgumentsCount = 0
         ).apply {
-            dispatchReceiver = receiver
-            putValueArgument(0, value)
+            arguments[0] = receiver
+            arguments[1] = value
         }
 
     // --------------------------------------------------------------------------------------------------------
@@ -399,10 +398,11 @@ interface AbstractIrBuilder {
             symbol.owner.returnType,
             symbol as IrSimpleFunctionSymbol,
             symbol.owner.typeParameters.size
-        ).also {
-            if (dispatchReceiver != null) it.dispatchReceiver = dispatchReceiver
-            args.forEachIndexed { index, arg ->
-                it.putValueArgument(index, arg)
+        ).also { call ->
+            var index = 0
+            if (dispatchReceiver != null) call.arguments[index++] = dispatchReceiver
+            args.forEach { arg ->
+                call.arguments[index++] = arg
             }
         }
     }
@@ -437,28 +437,26 @@ interface AbstractIrBuilder {
             irBuiltIns.arrayOf,
             typeArgumentsCount = 1
         ).apply {
-            putTypeArgument(0, irBuiltIns.stringType)
-            putValueArgument(0,
-                IrVarargImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    type,
-                    irBuiltIns.stringType
-                ).also {
-                    it.elements += elements
-                }
-            )
+            typeArguments[0] = irBuiltIns.stringType
+            arguments[0] = IrVarargImpl(
+                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                type,
+                irBuiltIns.stringType
+            ).also {
+                it.elements += elements
+            }
         }
     }
 
     @OptIn(InternalSymbolFinderAPI::class)
-    fun irIntArrayOf(values : Iterable<Int>) : IrCall =
+    fun irIntArrayOf(values: Iterable<Int>): IrCall =
         IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.intArray.defaultType,
             irContext.irBuiltIns.symbolFinder.findFunctions(Name.identifier("intArrayOf")).single(),
             typeArgumentsCount = 0
         ).apply {
-            putValueArgument(0,
+            arguments[0] =
                 IrVarargImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     irBuiltIns.intArray.defaultType,
@@ -466,7 +464,6 @@ interface AbstractIrBuilder {
                 ).apply {
                     elements += values.map { irConst(it) }
                 }
-            )
         }
 
 }

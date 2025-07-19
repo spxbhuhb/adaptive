@@ -5,7 +5,8 @@
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
-import `fun`.adaptive.kotlin.foundation.Indices
+import `fun`.adaptive.kotlin.common.firstRegularParameter
+import `fun`.adaptive.kotlin.common.secondRegularParameter
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClass
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClosure
@@ -42,9 +43,9 @@ open class ClassBoundIrBuilder(
     ) =
         irCall(
             target,
-            irGetValue(pluginContext.adapter, irGet(buildFun.valueParameters[Indices.BUILD_PARENT])),
-            irGet(buildFun.valueParameters[Indices.BUILD_PARENT]),
-            irGet(buildFun.valueParameters[Indices.BUILD_DECLARATION_INDEX])
+            irGetValue(pluginContext.adapter, irGet(buildFun.firstRegularParameter)),
+            irGet(buildFun.firstRegularParameter),
+            irGet(buildFun.secondRegularParameter)
         )
 
     /**
@@ -61,9 +62,9 @@ open class ClassBoundIrBuilder(
                 typeArgumentsCount = 0,
                 constructorTypeArgumentsCount = 0
             ).also {
-                it.putValueArgument(0, irGet(patchFun.dispatchReceiverParameter !!))
-                it.putValueArgument(1, irConst(index))
-                it.putValueArgument(2, irNull())
+                it.arguments[0] = irGet(patchFun.dispatchReceiverParameter !!)
+                it.arguments[1] = irConst(index)
+                it.arguments[2] = irNull()
             }
 
         return constructorCall
@@ -77,18 +78,9 @@ open class ClassBoundIrBuilder(
             pluginContext.setStateVariable,
             typeArgumentsCount = 0
         ).also { call ->
-
-            call.dispatchReceiver = irGet(patchFun.valueParameters.first())
-
-            call.putValueArgument(
-                Indices.SET_STATE_VARIABLE_INDEX,
-                irConst(stateVariableIndex)
-            )
-
-            call.putValueArgument(
-                Indices.SET_STATE_VARIABLE_VALUE,
-                value
-            )
+            call.arguments[0] = irGet(patchFun.firstRegularParameter)
+            call.arguments[1] = irConst(stateVariableIndex)
+            call.arguments[2] = value
         }
 
     fun irSetStateVariable(patchFun: IrSimpleFunction, stateVariableIndex: Int, value: IrExpression) =
@@ -99,18 +91,9 @@ open class ClassBoundIrBuilder(
             pluginContext.setStateVariable,
             typeArgumentsCount = 0
         ).also { call ->
-
-            call.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
-
-            call.putValueArgument(
-                Indices.SET_STATE_VARIABLE_INDEX,
-                irConst(stateVariableIndex)
-            )
-
-            call.putValueArgument(
-                Indices.SET_STATE_VARIABLE_VALUE,
-                value
-            )
+            call.arguments[0] = irGet(patchFun.dispatchReceiverParameter !!)
+            call.arguments[1] = irConst(stateVariableIndex)
+            call.arguments[2] = value
         }
 
     fun irGetThisStateVariable(patchFun: IrSimpleFunction, stateVariableIndex: Int) =
@@ -119,14 +102,9 @@ open class ClassBoundIrBuilder(
             irBuiltIns.anyNType,
             pluginContext.getThisClosureVariable,
             typeArgumentsCount = 0
-        ).also {
-
-            it.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!)
-
-            it.putValueArgument(
-                Indices.GET_CLOSURE_VARIABLE_INDEX,
-                irConst(stateVariableIndex)
-            )
+        ).also {  call ->
+            call.arguments[0] = irGet(patchFun.dispatchReceiverParameter !!)
+            call.arguments[1] = irConst(stateVariableIndex)
         }
 
     fun genPatchInternalConditionForMask(patchFun: IrSimpleFunction, dirtyMask: IrVariable, dependencies: ArmDependencies): IrExpression =

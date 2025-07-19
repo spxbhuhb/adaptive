@@ -4,6 +4,7 @@
 package `fun`.adaptive.kotlin.foundation.ir.manual
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
+import `fun`.adaptive.kotlin.common.firstRegularArgument
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.declarations.IrProperty
@@ -24,7 +25,7 @@ class HaveToPatchTransform(
     override fun visitCall(expression: IrCall): IrExpression {
         if (expression.symbol != haveToPatchVariable) return super.visitCall(expression)
 
-        val index = propertyMap[(expression.getValueArgument(0) as IrCall).symbol]
+        val index = propertyMap[(expression.firstRegularArgument as IrCall).symbol]
         check(index != null) { "cannot find state variable index for ${expression.dumpKotlinLike()}" }
 
         return irCall(

@@ -16,7 +16,7 @@ import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.util.hasAnnotation
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
+import org.jetbrains.kotlin.ir.visitors.IrVisitorVoid
 
 /**
  * Sets dispatch receiver and parameters of the `getProducedValue` call are not set, that
@@ -33,8 +33,8 @@ class ProducerPostProcessTransform(
 
     override fun visitCall(expression: IrCall) : IrExpression {
         if (expression.symbol == pluginContext.getProducedValue) {
-            expression.dispatchReceiver = irGet(patchFun.dispatchReceiverParameter!!)
-            expression.putValueArgument(0, irConst(stateVariable.indexInState))
+            expression.arguments[0] = irGet(patchFun.dispatchReceiverParameter!!)
+            expression.arguments[1] = irConst(stateVariable.indexInState)
         }
         return super.visitCall(expression)
      }

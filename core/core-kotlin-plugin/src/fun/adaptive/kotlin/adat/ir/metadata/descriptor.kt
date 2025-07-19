@@ -3,6 +3,9 @@ package `fun`.adaptive.kotlin.adat.ir.metadata
 import `fun`.adaptive.adat.metadata.AdatDescriptorMetadata
 import `fun`.adaptive.kotlin.adat.FqNames
 import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
+import `fun`.adaptive.kotlin.common.firstExtensionReceiverOrNull
+import `fun`.adaptive.kotlin.common.firstRegularArgument
+import `fun`.adaptive.kotlin.common.regularArgumentCount
 import `fun`.adaptive.kotlin.common.removeCoercionToUnit
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
@@ -22,14 +25,14 @@ import org.jetbrains.kotlin.ir.util.statements
 fun AdatIrBuilder.descriptor(
     adatClass: IrClass,
     descriptorFunction: IrFunction,
-    result : MutableList<Pair<String,List<AdatDescriptorMetadata>>>
+    result: MutableList<Pair<String, List<AdatDescriptorMetadata>>>
 ) {
     for (statement in getStatements(adatClass, descriptorFunction)) {
         result += collectPropertyDescriptors(adatClass, statement)
     }
 
     // the descriptor body is moved into the metadata
-    descriptorFunction.body = DeclarationIrBuilder(irContext, descriptorFunction.symbol).irBlockBody {  }
+    descriptorFunction.body = DeclarationIrBuilder(irContext, descriptorFunction.symbol).irBlockBody { }
 }
 
 private fun AdatIrBuilder.getStatements(
@@ -46,7 +49,7 @@ private fun AdatIrBuilder.getStatements(
 
     require(properties.symbol == pluginContext.propertiesFun) { "descriptor function body must have a single 'properties' call in ${adatClass.fqNameWhenAvailable}" }
 
-    val propertiesArg = properties.getValueArgument(0)
+    val propertiesArg = properties.firstRegularArgument
     require(propertiesArg is IrFunctionExpression) { "properties call must have a function expression argument in ${adatClass.fqNameWhenAvailable}" }
 
     val propertiesBody = propertiesArg.function.body
@@ -82,7 +85,7 @@ private fun collectPropertyDescriptors(
             is IrCall -> {
                 val owner = current.symbol.owner
 
-                val receiver = current.extensionReceiver
+                val receiver = current.firstExtensionReceiverOrNull
 
                 if (receiver != null) {
 
@@ -91,7 +94,7 @@ private fun collectPropertyDescriptors(
                         encodeDescriptorParameters(current)
                     )
 
-                    current = current.extensionReceiver
+                    current = current.firstExtensionReceiverOrNull
 
                 } else {
 
@@ -115,9 +118,9 @@ private fun collectPropertyDescriptors(
 }
 
 private fun encodeDescriptorParameters(current: IrCall): String {
-    check(current.valueArgumentsCount == 1) { "only single parameter descriptors are supported: ${current.dumpKotlinLike()}" }
+    check(current.regularArgumentCount == 1) { "only single parameter descriptors are supported: ${current.dumpKotlinLike()}" }
 
-    val const = current.getValueArgument(0)
+    val const = current.firstRegularArgument
     check(const is IrConstImpl) { "only constants are supported as descriptor parameters: ${current.dumpKotlinLike()}" }
 
     return const.value.toString()
