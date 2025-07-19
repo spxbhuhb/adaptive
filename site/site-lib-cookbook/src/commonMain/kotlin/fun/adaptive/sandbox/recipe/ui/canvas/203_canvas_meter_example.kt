@@ -19,24 +19,6 @@ import kotlin.math.PI
 import kotlin.math.cos
 import kotlin.math.sin
 import kotlin.time.Duration.Companion.milliseconds
-
-// Define a class to hold meter parameters
-data class MeterParams(
-    val startAngle: Double = 0.0,
-    val endAngle: Double = PI,
-    val minValue: Double = 0.0,
-    val maxValue: Double = 240.0,
-    val outerRadius: Double = 150.0,
-    val innerRadius: Double = 100.0,
-    val centerX: Double = 200.0,
-    val centerY: Double = 200.0,
-    val numTicks: Int = 12,
-    val sections: List<Triple<Double,Double, Color>> = listOf(
-        Triple(0.0, 0.5, Color(0x00AA00u, 0.5)),  // First 50% is green
-        Triple(0.5, 0.8, Color(0xFFAA00u, 0.5)),  // Next 30% is yellow
-        Triple(0.8, 1.0, Color(0xAA0000u, 0.5))   // Last 20% is red
-    )
-)
 /**
  * # A meter
  * 
@@ -123,6 +105,25 @@ fun canvasMeterExample() : AdaptiveFragment {
     return fragment()
 }
 
+
+// Define a class to hold meter parameters
+class MeterParams(
+    val startAngle: Double = 0.0,
+    val endAngle: Double = PI,
+    val minValue: Double = 0.0,
+    val maxValue: Double = 240.0,
+    val outerRadius: Double = 150.0,
+    val innerRadius: Double = 100.0,
+    val centerX: Double = 200.0,
+    val centerY: Double = 200.0,
+    val numTicks: Int = 12,
+    val sections: List<Triple<Double,Double, Color>> = listOf(
+        Triple(0.0, 0.5, Color(0x00AA00u, 0.5)),  // First 50% is green
+        Triple(0.5, 0.8, Color(0xFFAA00u, 0.5)),  // Next 30% is yellow
+        Triple(0.8, 1.0, Color(0xAA0000u, 0.5))   // Last 20% is red
+    )
+)
+
 /**
  * Draws a zone segment of the meter.
  */
@@ -152,10 +153,10 @@ fun drawZone(
                 xAxisRotation = 0.0,
                 largeArcFlag = if (endAngle - startAngle > PI) 1 else 0,
                 sweepFlag = 1, // Clockwise
-                x1 = startX,
-                y1 = startY,
                 x2 = endX,
-                y2 = endY
+                y2 = endY,
+                x1 = startX,
+                y1 = startY
             ),
             LineTo(centerX, centerY)
         )

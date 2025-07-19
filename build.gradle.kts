@@ -46,12 +46,13 @@ registerTask("publishing:publish")
 registerTask("other:kotlinUpgradeYarnLock")
 registerTask("verification:jvmTest")
 
-fun shorthand(buildName : String, taskName : String, shorthand:String) {
+fun shorthand(buildName : String, taskName : String, shorthand:String, first: () -> Unit = {}) {
     tasks.register(shorthand) {
         group = "aaa"
         gradle.includedBuilds.forEach { build ->
             if (build.name != buildName) return@forEach
             dependsOn(build.task(":$taskName"))
+            doFirst { first() }
         }
     }
 }
@@ -64,7 +65,9 @@ shorthand("sandbox-app", "jvmRun", "sandbox-jvm")
 shorthand("sandbox-app-mpw", "jsBrowserDevelopmentRun", "mpw-js")
 shorthand("sandbox-app-mpw", "jvmRun", "mpw-jvm")
 shorthand("site-app", "jsBrowserDevelopmentRun", "site-js")
-shorthand("site-app", "jvmRun", "site-jvm")
+shorthand("site-app", "jvmRun", "site-jvm") {
+    project.file("site/site-app/var/values").deleteRecursively()
+}
 shorthand("grove-doc", "compileAdaptiveDocumentation", "doc")
 
 // If you add a shorthand, and it does not start the jvm/js double-check the project

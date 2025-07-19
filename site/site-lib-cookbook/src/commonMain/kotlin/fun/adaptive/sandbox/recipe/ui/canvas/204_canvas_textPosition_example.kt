@@ -1,7 +1,12 @@
+package `fun`.adaptive.sandbox.recipe.ui.canvas
+
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.graphics.canvas.api.*
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.margin
+import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.popupAlign
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.dp
@@ -9,13 +14,25 @@ import `fun`.adaptive.ui.instruction.layout.PopupAlign
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 
+/**
+ * # Positioning text
+ *
+ * > [!IMPORTANT]
+ * >
+ * > PopupAlign is used here but I'll change the name to something more general
+ * > in the future.
+ */
 @Adaptive
-fun dotAndTextMain() {
+fun canvasTextPositionExample() : AdaptiveFragment {
+
     val guideStroke = stroke(colors.friendly.opaque(0.3))
+
     box {
         size(422.dp, 422.dp) .. borders.outline .. margin { 10.dp }
 
         canvas {
+            maxSize
+
             transform {
                 translate(100.0, 0.0)
 
@@ -52,6 +69,8 @@ fun dotAndTextMain() {
 
         }
     }
+
+    return fragment()
 }
 
 
@@ -63,7 +82,6 @@ fun dotAndText(x: Double, y: Double, alignment: PopupAlign?) {
         translate(x, y)
 
         circle(0.0, 0.0, 1.0) .. fill(0x000000)
-        fillText(0.0, 00.0, text, alignment) .. fill(colors.angry)
+        fillText(0.0, 0.0, text, alignment) .. fill(colors.angry)
     }
 }
-

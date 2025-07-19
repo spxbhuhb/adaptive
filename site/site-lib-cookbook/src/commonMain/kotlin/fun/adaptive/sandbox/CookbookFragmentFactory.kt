@@ -8,11 +8,15 @@ import `fun`.adaptive.sandbox.recipe.document.document.documentResourceExample
 import `fun`.adaptive.sandbox.recipe.document.markdown.*
 import `fun`.adaptive.sandbox.recipe.document.xlsx.xlsxDownloadExample
 import `fun`.adaptive.sandbox.recipe.ui.badge.*
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasBasicAnimationExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasLineExample
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasMeterExample
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathArcExample
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathRectangleExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathCubicCurveExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathLineToExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathQuadraticCurveExample
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPositionExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasTextPositionExample
 import `fun`.adaptive.sandbox.recipe.ui.chart.chartBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
@@ -121,11 +125,15 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // Canvas
         // ----------------------------------------------------------------------------
 
-        add("canvasBasicExample", ::canvasBasicExample)
+        add("canvasLineExample", ::canvasLineExample)
+        add("canvasBasicAnimationExample", ::canvasBasicAnimationExample)
         add("canvasPositionExample", ::canvasPositionExample)
         add("canvasMeterExample", ::canvasMeterExample)
-        add("canvasPathRectangleExample", ::canvasPathRectangleExample)
+        add("canvasPathLineToExample", ::canvasPathLineToExample)
         add("canvasPathArcExample", ::canvasPathArcExample)
+        add("canvasPathCubicCurveExample", ::canvasPathCubicCurveExample)
+        add("canvasPathQuadraticCurveExample", ::canvasPathQuadraticCurveExample)
+        add("canvasTextPositionExample", ::canvasTextPositionExample)
 
         // ----------------------------------------------------------------------------
         // Chart

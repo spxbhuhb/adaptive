@@ -438,10 +438,10 @@ private fun arcAbsolute(parameters: List<StringBuilder>, parameterCount: Int, po
             xAxisRotation = parameters.toDouble(parameterIndex ++),
             largeArcFlag = parameters.toInt(parameterIndex ++),
             sweepFlag = parameters.toInt(parameterIndex ++),
-            x1 = position.first,
-            y1 = position.second,
             x2 = parameters.toDouble(parameterIndex ++),
-            y2 = parameters.toDouble(parameterIndex ++)
+            y2 = parameters.toDouble(parameterIndex ++),
+            x1 = position.first,
+            y1 = position.second
         )
         commands.add(lastCommand)
     }
@@ -461,10 +461,10 @@ private fun arcRelative(parameters: List<StringBuilder>, parameterCount: Int, po
             xAxisRotation = parameters.toDouble(parameterIndex ++),
             largeArcFlag = parameters.toInt(parameterIndex ++),
             sweepFlag = parameters.toInt(parameterIndex ++),
-            x1 = x,
-            y1 = y,
             x2 = x + parameters.toDouble(parameterIndex ++),
-            y2 = y + parameters.toDouble(parameterIndex ++)
+            y2 = y + parameters.toDouble(parameterIndex ++),
+            x1 = x,
+            y1 = y
         )
         commands.add(lastCommand)
     }

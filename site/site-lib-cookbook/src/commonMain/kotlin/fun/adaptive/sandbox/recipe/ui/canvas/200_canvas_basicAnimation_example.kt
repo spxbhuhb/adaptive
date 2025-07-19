@@ -14,25 +14,20 @@ import `fun`.adaptive.graphics.canvas.api.stroke
 import `fun`.adaptive.graphics.canvas.api.transform
 import `fun`.adaptive.graphics.canvas.api.translate
 import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.flowBox
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.size
-import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.borders
 import kotlinx.datetime.Clock.System.now
 import kotlin.math.PI
-import kotlin.math.cos
-import kotlin.math.sin
 import kotlin.time.Duration.Companion.milliseconds
 
 /**
- * # Basic canvas
+ * # Basic animation
  */
 @Adaptive
-fun canvasBasicExample() : AdaptiveFragment {
+fun canvasBasicAnimationExample() : AdaptiveFragment {
     val seconds = poll(50.milliseconds) { (now().toEpochMilliseconds() % 3600).toDouble() } ?: 0.0
 
     box {

@@ -17,8 +17,8 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathArcExample
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathRectangleExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathCubicCurveExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathQuadraticCurveExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
@@ -87,7 +87,7 @@ fun sandboxMain() {
                         }
                     }
 
-                    canvasPathArcExample()
+                    canvasPathQuadraticCurveExample()
                 }
             }
         } catch (ex: Exception) {

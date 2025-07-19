@@ -12,16 +12,26 @@ class ActualBrowserPath : ActualPath {
 
     val receiver = Path2D()
 
+    var lastX = 0.0
+
+    var lastY = 0.0
+
     override fun moveTo(x: Double, y: Double) {
         receiver.moveTo(x, y)
+        lastX = x
+        lastY = y
     }
 
     override fun lineTo(x: Double, y: Double) {
         receiver.lineTo(x, y)
+        lastX = x
+        lastY = y
     }
 
     override fun closePath(x1: Double, y1: Double, x2: Double, y2: Double) {
         receiver.closePath()
+        lastX = x2 // FIXME closePath for browser canvas is inconsistent
+        lastY = y2
     }
 
     /**
@@ -36,10 +46,13 @@ class ActualBrowserPath : ActualPath {
         val xAxisRotation = arc.xAxisRotation
         val largeArcFlag = arc.largeArcFlag
         val sweepFlag = arc.sweepFlag
-        val x1 = arc.x1
-        val y1 = arc.y1
+        val x1 = arc.x1 ?: lastX
+        val y1 = arc.y1 ?: lastY
         val x2 = arc.x2
         val y2 = arc.y2
+
+        lastX = x2
+        lastY = y2
 
         val phi_rad = xAxisRotation * (PI / 180) // Convert degrees to radians
 
@@ -158,16 +171,40 @@ class ActualBrowserPath : ActualPath {
         return a
     }
 
+    /**
+     * Draws a cubic Bézier curve from the current point to the specified end point `(x, y)`
+     * using two control points `(x1, y1)` and `(x2, y2)`.
+     *
+     * @param x1 The x-coordinate of the first control point.
+     * @param y1 The y-coordinate of the first control point.
+     * @param x2 The x-coordinate of the second control point.
+     * @param y2 The y-coordinate of the second control point.
+     * @param x The x-coordinate of the end point of the curve.
+     * @param y The y-coordinate of the end point of the curve.
+     */
     override fun cubicCurve(x1: Double, y1: Double, x2: Double, y2: Double, x: Double, y: Double) {
         receiver.bezierCurveTo(x1, y1, x2, y2, x, y)
+        lastX = x
+        lastY = y
     }
 
     override fun smoothCubicCurve(x2: Double, y2: Double, x: Double, y: Double) {
         TODO("Not yet implemented")
     }
 
+    /**
+     * Draws a quadratic Bézier curve from the current point to the specified end point `(x, y)`
+     * using one control point `(x1, y1)`.
+     *
+     * @param x1 The x-coordinate of the control point.
+     * @param y1 The y-coordinate of the control point.
+     * @param x The x-coordinate of the end point of the curve.
+     * @param y The y-coordinate of the end point of the curve.
+     */
     override fun quadraticCurve(x1: Double, y1: Double, x: Double, y: Double) {
         receiver.quadraticCurveTo(x1, y1, x, y)
+        lastX = x
+        lastY = y
     }
 
     override fun smoothQuadraticCurve(x: Double, y: Double) {
