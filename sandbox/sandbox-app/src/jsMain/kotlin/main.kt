@@ -19,12 +19,14 @@ import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathCubicCurveExample
 import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathQuadraticCurveExample
+import `fun`.adaptive.sandbox.recipe.ui.table.tableBasicExample
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.table.table
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
@@ -87,7 +89,7 @@ fun sandboxMain() {
                         }
                     }
 
-                    canvasPathQuadraticCurveExample()
+                    tableBasicExample()
                 }
             }
         } catch (ex: Exception) {

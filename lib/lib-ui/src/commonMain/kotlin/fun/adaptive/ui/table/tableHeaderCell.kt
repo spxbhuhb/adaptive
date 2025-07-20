@@ -10,18 +10,18 @@ import `fun`.adaptive.ui.icon.denseIconTheme
 import `fun`.adaptive.ui.menu.itemActionsMenu
 
 @Adaptive
-fun tableHeaderCell(
-    cellDef: TableCellDef
+fun <ITEM> tableHeaderCell(
+    cellDef: TableCellDef<ITEM,*>
 ) : AdaptiveFragment {
 
     val hover = hover()
     val theme = cellDef.table.tableTheme
     val observed = observe { cellDef }
 
-    grid {
-        theme.headerCell .. width { observed.size }
+    row {
+        theme.headerCell .. width { observed.width }
 
-        text(observed.name) .. theme.headerCellText .. maxWidth
+        text(observed.label) .. theme.headerCellText .. maxWidth
 
         row {
             theme.headerActionContainer
