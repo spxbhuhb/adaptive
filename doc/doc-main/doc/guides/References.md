@@ -7,7 +7,7 @@ Getting started
 Compiler docs:
 
 * Description of FIR: https://github.com/JetBrains/kotlin/blob/master/docs/fir
-* FIR plugin prototype: https://github.com/JetBrains/kotlin/blob/master/plugins/fir-plugin-prototype
+* FIR plugin prototype: https://github.com/JetBrains/kotlin/blob/master/plugins/plugin-sandbox
 * FIR checkers: https://github.com/JetBrains/kotlin/blob/master/compiler/fir/checkers/module.md
 * Tree generator: https://github.com/JetBrains/kotlin/blob/master/compiler/ir/ir.tree/tree-generator/ReadMe.md
 * Kotlin spec: https://github.com/JetBrains/kotlin/blob/master/spec-docs
