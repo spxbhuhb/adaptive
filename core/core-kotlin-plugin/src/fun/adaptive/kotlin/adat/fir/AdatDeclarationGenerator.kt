@@ -15,6 +15,8 @@ import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
 import org.jetbrains.kotlin.fir.declarations.primaryConstructorIfAny
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
+import org.jetbrains.kotlin.fir.expressions.FirEmptyArgumentList
+import org.jetbrains.kotlin.fir.expressions.builder.buildDelegatedConstructorCall
 import org.jetbrains.kotlin.fir.expressions.impl.FirEmptyExpressionBlock
 import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
@@ -22,10 +24,12 @@ import org.jetbrains.kotlin.fir.plugin.createCompanionObject
 import org.jetbrains.kotlin.fir.plugin.createConstructor
 import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createMemberProperty
+import org.jetbrains.kotlin.fir.references.builder.buildResolvedNamedReference
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.getSuperTypes
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.*
+import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.name.CallableId
@@ -132,12 +136,26 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
             emptyList()
         }
 
+    @OptIn(DirectDeclarationsAccess::class)
     private fun generateClassConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
         val result = mutableListOf<FirConstructorSymbol>()
 
         // FIXME duplicate array constructor
-        result += createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true) {
+        result += createConstructor(context.owner, AdatPluginKey, isPrimary = false) {
             valueParameter(Names.VALUES, nullableAnyArrayType)
+        }.also { constructor ->
+            constructor.replaceDelegatedConstructor(
+                buildDelegatedConstructorCall {
+                    constructedTypeRef = context.owner.defaultType().toFirResolvedTypeRef()
+                    val primary = context.owner.declarationSymbols.firstOrNull { it is FirConstructorSymbol && it.isPrimary } as? FirConstructorSymbol
+                    calleeReference = buildResolvedNamedReference {
+                        name = primary!!.name
+                        resolvedSymbol = primary
+                    }
+                    argumentList = FirEmptyArgumentList
+                    isThis = true
+                }
+            )
         }.symbol
 
         return result
