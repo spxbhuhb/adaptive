@@ -15,7 +15,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 
 class TestServiceTransport(
-    val serviceImpl: ServiceImpl<*>? = null,
+    var serviceImpl: ServiceImpl<*>? = null,
     val peerTransport: TestServiceTransport? = null,
     val dump: Boolean = false,
     override val wireFormatProvider: WireFormatProvider = Proto
@@ -31,11 +31,12 @@ class TestServiceTransport(
         return ServiceContext(transport = peerTransport ?: this)
     }
 
-    override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray =
-        if (serviceImpl != null) {
+    override suspend fun dispatch(context: ServiceContext, serviceName: String, funName: String, decoder: WireFormatDecoder<*>): ByteArray {
+        return if (serviceImpl != null) {
             try {
-                serviceImpl.newInstance(context).dispatch(funName, decoder)
-            } catch (ex : Exception) {
+                // FIXME dirty nullable check
+                serviceImpl !!.newInstance(context).dispatch(funName, decoder)
+            } catch (ex: Exception) {
                 ex.printStackTrace()
                 throw ex
             }
@@ -43,6 +44,7 @@ class TestServiceTransport(
             checkNotNull(serviceImplFactory[serviceName, context]) { "missing service: $serviceName" }
                 .dispatch(funName, decoder)
         }
+    }
 
     override suspend fun disconnect() {
 

@@ -20,6 +20,7 @@ import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
@@ -113,7 +114,9 @@ class ConsumerClassTransform(
 
         var fieldNumber = 1
 
-        function.parameters.forEach { parameter ->
+        for (parameter in function.parameters) {
+            if (parameter.kind != IrParameterKind.Regular) continue
+
             payload = pluginContext.wireFormatCache.encode(
                 payload,
                 fieldNumber++,

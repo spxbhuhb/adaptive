@@ -10,6 +10,7 @@ object Strings {
     const val SERVICES_PACKAGE = "fun.adaptive.service"
     const val SERVICES_API_PACKAGE = "fun.adaptive.service.api"
     const val SERVICES_TRANSPORT_PACKAGE = "fun.adaptive.service.transport"
+    const val BACKEND_PACKAGE = "fun.adaptive.backend"
     const val BACKEND_BUILTIN_PACKAGE = "fun.adaptive.backend.builtin"
 
     const val SERVICE_API = "ServiceApi"
@@ -45,11 +46,16 @@ object Names {
     val CONSUMER = Strings.CONSUMER.name()
     val SERVICE_CONTEXT_PROPERTY = Strings.SERVICE_CONTEXT_PROPERTY.name()
     val SERVICE_CALL_TRANSPORT_PROPERTY = Strings.SERVICE_CALL_TRANSPORT_PROPERTY.name()
+    val FRAGMENT = Strings.FRAGMENT.name()
+    val NEW_INSTANCE = Strings.NEW_INSTANCE.name()
+
+    val SERVICE_CONTEXT_PARAMETER = "serviceContext".name()
 }
 
 object FqNames : NamesBase(Strings.SERVICES_PACKAGE) {
     val SERVICES_TRANSPORT_PACKAGE = Strings.SERVICES_TRANSPORT_PACKAGE.fqName()
     val BACKEND_BUILTIN_PACKAGE = Strings.BACKEND_BUILTIN_PACKAGE.fqName()
+    val BACKEND_PACKAGE = Strings.BACKEND_PACKAGE.fqName()
     val SERVICE_API = defaultPackage.child(Strings.SERVICE_API.name())
 }
 
@@ -58,17 +64,10 @@ object ClassIds : NamesBase(Strings.SERVICES_PACKAGE) {
     val SERVICE_IMPL = Strings.SERVICE_IMPL.classId { FqNames.BACKEND_BUILTIN_PACKAGE }
     val SERVICE_CONTEXT = Strings.SERVICE_CONTEXT.classId()
     val SERVICE_CALL_TRANSPORT = Strings.SERVICE_CALL_TRANSPORT.classId { FqNames.SERVICES_TRANSPORT_PACKAGE }
+    val BACKEND_FRAGMENT = "BackendFragment".classId { FqNames.BACKEND_PACKAGE }
+
 }
 
 object CallableIds : NamesBase(Strings.SERVICES_API_PACKAGE) {
     val GET_SERVICE = Strings.GET_SERVICE.callableId()
-}
-
-object Indices {
-    const val DISPATCH_FUN_NAME = 0
-    const val DISPATCH_PAYLOAD = 1
-
-    const val CALL_SERVICE_NAME = 0
-    const val CALL_FUN_NAME = 1
-    const val CALL_PAYLOAD = 2
 }

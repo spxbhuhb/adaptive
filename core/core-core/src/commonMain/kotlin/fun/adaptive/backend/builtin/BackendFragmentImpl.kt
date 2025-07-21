@@ -18,8 +18,8 @@ abstract class BackendFragmentImpl {
      * functions such as `store`, `service` and `worker`.
      */
     open var fragment: BackendFragment?
-        get() = manualOrPlugin("backendAdapter")
-        set(value) = manualOrPlugin("backendAdapter", value)
+        get() = manualOrPlugin("fragment")
+        set(value) = manualOrPlugin("fragment", value)
 
     /**
      * Adapter of the adaptive backend if the fragment is part of one.

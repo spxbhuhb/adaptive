@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.kotlin.service.fir
 
+import `fun`.adaptive.kotlin.adat.AdatPluginKey
 import `fun`.adaptive.kotlin.common.isFromPlugin
 import `fun`.adaptive.kotlin.service.*
 import org.jetbrains.kotlin.descriptors.ClassKind
@@ -11,7 +12,9 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.analysis.checkers.toClassLikeSymbol
 import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
+import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
 import org.jetbrains.kotlin.fir.declarations.fullyExpandedClass
+import org.jetbrains.kotlin.fir.declarations.hasAnnotation
 import org.jetbrains.kotlin.fir.declarations.utils.isSuspend
 import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
@@ -20,12 +23,14 @@ import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createMemberProperty
 import org.jetbrains.kotlin.fir.plugin.createNestedClass
 import org.jetbrains.kotlin.fir.resolve.defaultType
+import org.jetbrains.kotlin.fir.resolve.getSuperTypes
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.scopes.FirScope
 import org.jetbrains.kotlin.fir.scopes.getFunctions
 import org.jetbrains.kotlin.fir.scopes.impl.declaredMemberScope
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.*
+import org.jetbrains.kotlin.fir.types.classId
 import org.jetbrains.kotlin.fir.types.coneType
 import org.jetbrains.kotlin.fir.types.constructType
 import org.jetbrains.kotlin.name.CallableId
@@ -58,10 +63,18 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CALL_TRANSPORT) !!.constructType(emptyArray(), true)
     }
 
+    val serviceContextType by lazy {
+        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CONTEXT) !!.constructType(emptyArray(), true)
+    }
+
+    val backendFragmentType by lazy {
+        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.BACKEND_FRAGMENT) !!.constructType(emptyArray(), true)
+    }
+
     @OptIn(SymbolInternals::class)
     override fun getNestedClassifiersNames(classSymbol: FirClassSymbol<*>, context: NestedClassGenerationContext): Set<Name> {
         if (classSymbol.fir.classKind != ClassKind.INTERFACE) return emptySet()
-        if (!session.predicateBasedProvider.matches(SERVICE_API_PREDICATE, classSymbol)) return emptySet()
+        if (! session.predicateBasedProvider.matches(SERVICE_API_PREDICATE, classSymbol)) return emptySet()
         return setOf(Names.CONSUMER)
     }
 
@@ -79,14 +92,31 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         }.symbol
     }
 
-    override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
-        if (context.isForeign) return emptySet()
+    private val consumerCallableNames = setOf(
+        Names.SERVICE_NAME,
+        Names.SERVICE_CALL_TRANSPORT_PROPERTY,
+        SpecialNames.INIT
+    )
 
-        return setOf(
-            Names.SERVICE_NAME,
-            Names.SERVICE_CALL_TRANSPORT_PROPERTY,
-            SpecialNames.INIT
-        ) + collectFunctions(classSymbol.getContainingClassSymbol() !!.classId)
+    private val implCallableNames = setOf(
+        Names.SERVICE_NAME,
+        Names.SERVICE_CONTEXT_PROPERTY,
+        Names.SERVICE_CALL_TRANSPORT_PROPERTY,
+        Names.FRAGMENT,
+        SpecialNames.INIT
+    )
+
+    @OptIn(DirectDeclarationsAccess::class)
+    override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
+        val names = classSymbol.declarationSymbols.mapNotNull { if (it is FirNamedFunctionSymbol && ! it.name.isSpecial) it.name else null }
+
+        val callableNames = when {
+            classSymbol.isServiceApi -> consumerCallableNames - names + collectFunctions(classSymbol.getContainingClassSymbol() !!.classId)
+            classSymbol.isServiceImpl -> implCallableNames - names
+            else -> emptySet()
+        }
+
+        return callableNames
     }
 
     private fun collectFunctions(classId: ClassId) =
@@ -120,6 +150,19 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         if (context.isForeign) return emptyList()
 
         return when (callableId.callableName) {
+            Names.FRAGMENT -> {
+                listOf(
+                    createMemberProperty(
+                        context !!.owner,
+                        ServicesPluginKey,
+                        Names.FRAGMENT,
+                        backendFragmentType,
+                        isVal = false,
+                        hasBackingField = true
+                    ).symbol
+                )
+            }
+
             Names.SERVICE_NAME -> {
                 listOf(
                     createMemberProperty(
@@ -156,6 +199,16 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         requireNotNull(context)
 
         val functionName = callableId.callableName
+
+        when (functionName) {
+            Names.NEW_INSTANCE -> {
+                listOf(
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, context.owner.defaultType()) {
+                        valueParameter(Names.SERVICE_CONTEXT_PARAMETER, serviceContextType)
+                    }.symbol
+                )
+            }
+        }
 
         val interfaceFunctions = context.owner.resolvedSuperTypeRefs
             .map { session.getClassDeclaredFunctionSymbols(it.toClassLikeSymbol(session) !!.classId, functionName) }
@@ -199,4 +252,10 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
 
     val MemberGenerationContext?.isForeign
         get() = ! isFromPlugin(ServicesPluginKey)
+
+    val FirClassSymbol<*>.isServiceApi
+        get() = session.predicateBasedProvider.matches(SERVICE_API_PREDICATE, this)
+
+    val FirClassSymbol<*>.isServiceImpl
+        get() = getSuperTypes(session).any { it.classId == ClassIds.SERVICE_IMPL }
 }
