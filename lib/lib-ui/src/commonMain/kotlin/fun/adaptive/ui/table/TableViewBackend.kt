@@ -35,8 +35,7 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
             label = label,
             width = width,
             instructions = emptyInstructions,
-            getFun = getFun,
-            renderFun = ::tableItemToString
+            getFun = getFun
         ).also { cell ->
             if (menu != null) cell.rowMenu = menu
         }.apply(buildFun) as TableCellDef<ITEM, Any>

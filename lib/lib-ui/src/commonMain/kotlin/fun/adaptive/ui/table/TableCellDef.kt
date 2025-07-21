@@ -14,8 +14,8 @@ class TableCellDef<ITEM, CELL_DATA>(
     width: DPixel,
     instructions: AdaptiveInstructionGroup,
     val getFun: (ITEM) -> CELL_DATA,
-    @Adaptive
-    renderFun: (TableCellDef<ITEM, CELL_DATA>, ITEM) -> AdaptiveFragment
+//    @Adaptive
+//    renderFun: (TableCellDef<ITEM, CELL_DATA>, ITEM) -> AdaptiveFragment
 ) : SelfObservable<TableCellDef<ITEM, CELL_DATA>>() {
 
     var label by observable(label, ::notify)
@@ -27,7 +27,7 @@ class TableCellDef<ITEM, CELL_DATA>(
     var rowMenu by observable(emptyList<MenuItemBase<Any>>(), ::notify)
 
     var instructions by observable(instructions, ::notify)
-    var renderFun by observable(renderFun, ::notify)
+    //var renderFun by observable(renderFun, ::notify)
 
     var sorting by observable(Sorting.None, ::notify)
 

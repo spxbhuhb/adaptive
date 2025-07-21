@@ -5,10 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.verticalScroll
-import `fun`.adaptive.ui.loading.loading
-import `fun`.adaptive.utility.debug
 
 @Adaptive
 fun <ITEM> table(
@@ -51,6 +48,6 @@ fun <ITEM, CELL_DATA> tableCell(
     cellDef: TableCellDef<ITEM, CELL_DATA>,
     item: TableItem<ITEM>
 ) : AdaptiveFragment {
-    cellDef.renderFun(cellDef, item.data)
+   // cellDef.renderFun(cellDef, item.data)
     return fragment()
 }
