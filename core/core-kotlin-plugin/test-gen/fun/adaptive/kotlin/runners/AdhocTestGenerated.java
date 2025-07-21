@@ -20,4 +20,10 @@ public class AdhocTestGenerated extends AbstractAdhocTest {
   public void testAllFilesPresentInAdhoc() {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/adhoc"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
   }
+
+  @Test
+  @TestMetadata("basic.kt")
+  public void testBasic() {
+    runTest("testData/adhoc/basic.kt");
+  }
 }
