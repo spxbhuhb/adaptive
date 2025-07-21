@@ -31,6 +31,7 @@ import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.*
 import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.classId
+import org.jetbrains.kotlin.fir.types.coneTypeSafe
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.Name
@@ -149,7 +150,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                     constructedTypeRef = context.owner.defaultType().toFirResolvedTypeRef()
                     val primary = context.owner.declarationSymbols.firstOrNull { it is FirConstructorSymbol && it.isPrimary } as? FirConstructorSymbol
                     calleeReference = buildResolvedNamedReference {
-                        name = primary!!.name
+                        name = primary !!.name
                         resolvedSymbol = primary
                     }
                     argumentList = FirEmptyArgumentList
@@ -290,13 +291,21 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                         for (parameter in context.owner.fir.primaryConstructorIfAny(session) !!.valueParameterSymbols) {
                             valueParameter(parameter.name, parameter.resolvedReturnType, hasDefaultValue = true)
                         }
-                    }.also{
+                    }.also { func ->
                         // The empty expression block here is to let the FIR analysis complete without an error.
                         // Without it the `hasDefaultValue = true` above will generate an STUB and that STUB
                         // causes an error later. I will replace the whole stuff in IR anyway, so it is not really
                         // important to have a proper value generated here (I hope).
-                        it.replaceValueParameters(
-                            it.valueParameters.map { it.replaceDefaultValue(FirEmptyExpressionBlock()); it }
+                        func.replaceValueParameters(
+                            func.valueParameters.map { param ->
+                                param.replaceDefaultValue(
+                                    FirEmptyExpressionBlock().also { block ->
+                                        block.replaceConeTypeOrNull(param.returnTypeRef.coneTypeSafe())
+                                    }
+                                )
+
+                                param
+                            }
                         )
                     }.symbol
                 )

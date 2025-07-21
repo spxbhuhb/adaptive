@@ -42,6 +42,7 @@ fun AdatIrBuilder.copy(
             ).also {
                 var index = 0
                 for (parameter in copyFunction.parameters) {
+                    if (parameter.kind != IrParameterKind.Regular) continue
                     it.arguments[index++] = irGet(parameter)
                 }
             }

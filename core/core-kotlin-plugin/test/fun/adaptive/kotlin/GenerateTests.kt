@@ -7,6 +7,7 @@ package `fun`.adaptive.kotlin
 import `fun`.adaptive.kotlin.runners.AbstractAdhocTest
 import `fun`.adaptive.kotlin.runners.AbstractBoxTest
 import `fun`.adaptive.kotlin.runners.AbstractDiagnosticTest
+import `fun`.adaptive.kotlin.runners.AbstractJvmBoxTest
 import org.jetbrains.kotlin.generators.generateTestGroupSuiteWithJUnit5
 
 fun main() {
@@ -17,7 +18,7 @@ fun main() {
                 model("diagnostics")
             }
 
-            testClass<AbstractBoxTest> {
+            testClass<AbstractJvmBoxTest> {
                 model("box")
             }
 
