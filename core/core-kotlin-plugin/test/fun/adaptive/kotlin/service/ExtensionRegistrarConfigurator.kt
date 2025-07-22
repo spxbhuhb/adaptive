@@ -26,7 +26,7 @@ class ExtensionRegistrarConfigurator(testServices: TestServices) : EnvironmentCo
         configuration: CompilerConfiguration
     ) {
         val options = AdaptiveOptions(
-            pluginDebug = true,
+            pluginDebug = false,
             debugFilter = Regex(".*"),
             pluginLogDir = null, // File("testData/log"),
             dumpKotlinLike = false,

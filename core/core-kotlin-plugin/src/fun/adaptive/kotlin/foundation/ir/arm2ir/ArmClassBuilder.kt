@@ -23,7 +23,6 @@ import org.jetbrains.kotlin.ir.builders.*
 import org.jetbrains.kotlin.ir.builders.declarations.addConstructor
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.builders.declarations.buildClass
-import org.jetbrains.kotlin.ir.builders.declarations.buildReceiverParameter
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrConstKind
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -178,10 +177,7 @@ class ArmClassBuilder(
         buildFun.origin = IrDeclarationOrigin.DEFINED
         buildFun.isFakeOverride = false
 
-        buildFun.buildReceiverParameter {
-            this.origin = IrDeclarationOrigin.INSTANCE_RECEIVER
-            this.type = irClass.defaultType
-        }
+        buildFun.replaceDispatchReceiver(irClass.defaultType)
 
         buildFun.body = DeclarationIrBuilder(irContext, buildFun.symbol).irBlockBody {
 
@@ -252,10 +248,7 @@ class ArmClassBuilder(
         patchFun.origin = IrDeclarationOrigin.DEFINED
         patchFun.isFakeOverride = false
 
-        patchFun.buildReceiverParameter {
-            this.origin = IrDeclarationOrigin.INSTANCE_RECEIVER
-            this.type = irClass.defaultType
-        }
+        patchFun.replaceDispatchReceiver(irClass.defaultType)
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 
@@ -319,10 +312,7 @@ class ArmClassBuilder(
         patchFun.origin = IrDeclarationOrigin.DEFINED
         patchFun.isFakeOverride = false
 
-        patchFun.buildReceiverParameter {
-            this.origin = IrDeclarationOrigin.INSTANCE_RECEIVER
-            this.type = irClass.defaultType
-        }
+        patchFun.replaceDispatchReceiver(irClass.defaultType)
 
         patchFun.body = DeclarationIrBuilder(irContext, patchFun.symbol).irBlockBody {
 

@@ -5,11 +5,9 @@ package `fun`.adaptive.kotlin.service.ir.impl
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
 import `fun`.adaptive.kotlin.service.ir.ServicesPluginContext
-import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.builders.declarations.addFunction
-import org.jetbrains.kotlin.ir.builders.declarations.buildReceiverParameter
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
@@ -56,10 +54,7 @@ abstract class AbstractFun(
 
             function.overriddenSymbols = listOf(funOverridden)
 
-            function.buildReceiverParameter {
-                type = transformedClass.defaultType
-            }
-
+            function.replaceDispatchReceiver(transformedClass.defaultType)
             function.addParameters()
             function.buildBody()
         }

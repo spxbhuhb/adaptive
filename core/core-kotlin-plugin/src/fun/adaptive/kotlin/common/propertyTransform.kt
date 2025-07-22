@@ -8,7 +8,6 @@ import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.declarations.buildField
-import org.jetbrains.kotlin.ir.builders.declarations.buildReceiverParameter
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrExpression
@@ -74,9 +73,7 @@ class PropertyTransform(
         func.origin = IrDeclarationOrigin.DEFAULT_PROPERTY_ACCESSOR
         func.isFakeOverride = false
 
-        func.buildReceiverParameter {
-            type = property.parentAsClass.defaultType
-        }
+        func.replaceDispatchReceiver(property.parentAsClass.defaultType)
 
         func.body = DeclarationIrBuilder(irContext, func.symbol).irBlockBody {
             + IrSetFieldImpl(
