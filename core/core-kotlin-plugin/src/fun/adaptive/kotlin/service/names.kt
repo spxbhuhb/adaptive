@@ -14,6 +14,7 @@ object Strings {
     const val BACKEND_BUILTIN_PACKAGE = "fun.adaptive.backend.builtin"
 
     const val SERVICE_API = "ServiceApi"
+    const val SERVICE_PROVIDER = "ServiceProvider"
 
     const val SERVICE_CONSUMER = "ServiceConsumer"
     const val SERVICE_NAME = "serviceName"
@@ -48,8 +49,11 @@ object Names {
     val SERVICE_CALL_TRANSPORT_PROPERTY = Strings.SERVICE_CALL_TRANSPORT_PROPERTY.name()
     val FRAGMENT = Strings.FRAGMENT.name()
     val NEW_INSTANCE = Strings.NEW_INSTANCE.name()
+    val DISPATCH = Strings.DISPATCH.name()
 
     val SERVICE_CONTEXT_PARAMETER = "serviceContext".name()
+    val FUN_NAME = "funName".name()
+    val PAYLOAD = "payload".name()
 }
 
 object FqNames : NamesBase(Strings.SERVICES_PACKAGE) {
@@ -57,6 +61,8 @@ object FqNames : NamesBase(Strings.SERVICES_PACKAGE) {
     val BACKEND_BUILTIN_PACKAGE = Strings.BACKEND_BUILTIN_PACKAGE.fqName()
     val BACKEND_PACKAGE = Strings.BACKEND_PACKAGE.fqName()
     val SERVICE_API = defaultPackage.child(Strings.SERVICE_API.name())
+    val SERVICE_PROVIDER = defaultPackage.child(Strings.SERVICE_PROVIDER.name())
+    val WIREFORMAT_PACKAGE = "fun.adaptive.wireformat".fqName()
 }
 
 object ClassIds : NamesBase(Strings.SERVICES_PACKAGE) {
@@ -65,7 +71,8 @@ object ClassIds : NamesBase(Strings.SERVICES_PACKAGE) {
     val SERVICE_CONTEXT = Strings.SERVICE_CONTEXT.classId()
     val SERVICE_CALL_TRANSPORT = Strings.SERVICE_CALL_TRANSPORT.classId { FqNames.SERVICES_TRANSPORT_PACKAGE }
     val BACKEND_FRAGMENT = "BackendFragment".classId { FqNames.BACKEND_PACKAGE }
-
+    val KOTLIN_BYTEARRAY = "ByteArray".classId { "kotlin".fqName() }
+    val WIREFORMAT_DECODER = "WireFormatDecoder".classId { FqNames.WIREFORMAT_PACKAGE }
 }
 
 object CallableIds : NamesBase(Strings.SERVICES_API_PACKAGE) {

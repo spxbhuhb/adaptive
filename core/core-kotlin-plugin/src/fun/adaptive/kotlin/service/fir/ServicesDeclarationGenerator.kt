@@ -12,9 +12,7 @@ import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.analysis.checkers.toClassLikeSymbol
 import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
-import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
 import org.jetbrains.kotlin.fir.declarations.fullyExpandedClass
-import org.jetbrains.kotlin.fir.declarations.hasAnnotation
 import org.jetbrains.kotlin.fir.declarations.utils.isSuspend
 import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
@@ -23,14 +21,13 @@ import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createMemberProperty
 import org.jetbrains.kotlin.fir.plugin.createNestedClass
 import org.jetbrains.kotlin.fir.resolve.defaultType
-import org.jetbrains.kotlin.fir.resolve.getSuperTypes
 import org.jetbrains.kotlin.fir.resolve.providers.symbolProvider
 import org.jetbrains.kotlin.fir.scopes.FirScope
 import org.jetbrains.kotlin.fir.scopes.getFunctions
 import org.jetbrains.kotlin.fir.scopes.impl.declaredMemberScope
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.*
-import org.jetbrains.kotlin.fir.types.classId
+import org.jetbrains.kotlin.fir.types.ConeStarProjection
 import org.jetbrains.kotlin.fir.types.coneType
 import org.jetbrains.kotlin.fir.types.constructType
 import org.jetbrains.kotlin.name.CallableId
@@ -50,9 +47,11 @@ import org.jetbrains.kotlin.name.SpecialNames
 class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
     val SERVICE_API_PREDICATE = LookupPredicate.create { annotated(FqNames.SERVICE_API) }
+    val SERVICE_PROVIDER_PREDICATE = LookupPredicate.create { annotated(FqNames.SERVICE_PROVIDER) }
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
         register(SERVICE_API_PREDICATE)
+        register(SERVICE_PROVIDER_PREDICATE)
     }
 
     val serviceConsumerType by lazy {
@@ -63,12 +62,24 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CALL_TRANSPORT) !!.constructType(emptyArray(), true)
     }
 
-    val serviceContextType by lazy {
+    val serviceContextNullableType by lazy {
         session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CONTEXT) !!.constructType(emptyArray(), true)
+    }
+
+    val serviceContextType by lazy {
+        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CONTEXT) !!.constructType(emptyArray(), false)
     }
 
     val backendFragmentType by lazy {
         session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.BACKEND_FRAGMENT) !!.constructType(emptyArray(), true)
+    }
+
+    val byteArrayType by lazy {
+        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.KOTLIN_BYTEARRAY) !!.constructType(emptyArray(), true)
+    }
+
+    val wireFormatDecoderType by lazy {
+        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.WIREFORMAT_DECODER) !!.constructType(arrayOf(ConeStarProjection), false)
     }
 
     @OptIn(SymbolInternals::class)
@@ -98,12 +109,13 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         SpecialNames.INIT
     )
 
-    private val implCallableNames = setOf(
+    // provides uses transport from context, so we don't have to override it
+    private val providerCallableNames = setOf(
         Names.SERVICE_NAME,
         Names.SERVICE_CONTEXT_PROPERTY,
-        Names.SERVICE_CALL_TRANSPORT_PROPERTY,
         Names.FRAGMENT,
-        SpecialNames.INIT
+        Names.NEW_INSTANCE,
+        Names.DISPATCH
     )
 
     @OptIn(DirectDeclarationsAccess::class)
@@ -111,9 +123,11 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         val names = classSymbol.declarationSymbols.mapNotNull { if (it is FirNamedFunctionSymbol && ! it.name.isSpecial) it.name else null }
 
         val callableNames = when {
-            classSymbol.isServiceApi -> consumerCallableNames - names + collectFunctions(classSymbol.getContainingClassSymbol() !!.classId)
-            classSymbol.isServiceImpl -> implCallableNames - names
-            else -> emptySet()
+            classSymbol.isServiceApi -> emptySet()
+            classSymbol.isServiceProvider -> providerCallableNames - names
+            context.isForeign -> emptySet()
+            // this is the consumer class
+            else -> consumerCallableNames - names + collectFunctions(classSymbol.getContainingClassSymbol() !!.classId)
         }
 
         return callableNames
@@ -141,28 +155,17 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     }
 
     override fun generateConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
+        // consumer only
         return listOf(
             createConstructor(context.owner, ServicesPluginKey, isPrimary = true, generateDelegatedNoArgConstructorCall = true).symbol
         )
     }
 
     override fun generateProperties(callableId: CallableId, context: MemberGenerationContext?): List<FirPropertySymbol> {
-        if (context.isForeign) return emptyList()
+        if (! context.isServiceProvider && context.isForeign) return emptyList()
 
         return when (callableId.callableName) {
-            Names.FRAGMENT -> {
-                listOf(
-                    createMemberProperty(
-                        context !!.owner,
-                        ServicesPluginKey,
-                        Names.FRAGMENT,
-                        backendFragmentType,
-                        isVal = false,
-                        hasBackingField = true
-                    ).symbol
-                )
-            }
-
+            // consumer and provider
             Names.SERVICE_NAME -> {
                 listOf(
                     createMemberProperty(
@@ -176,6 +179,7 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
                 )
             }
 
+            // consumer and provider
             Names.SERVICE_CALL_TRANSPORT_PROPERTY -> {
                 listOf(
                     createMemberProperty(
@@ -189,33 +193,78 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
                 )
             }
 
+            // provider
+            Names.FRAGMENT -> {
+                listOf(
+                    createMemberProperty(
+                        context !!.owner,
+                        ServicesPluginKey,
+                        Names.FRAGMENT,
+                        backendFragmentType,
+                        isVal = false,
+                        hasBackingField = true
+                    ).symbol
+                )
+            }
+
+            // provider
+            Names.SERVICE_CONTEXT_PROPERTY -> {
+                listOf(
+                    createMemberProperty(
+                        context !!.owner,
+                        ServicesPluginKey,
+                        Names.SERVICE_CONTEXT_PROPERTY,
+                        serviceContextNullableType,
+                        isVal = false,
+                        hasBackingField = true
+                    ).symbol
+                )
+            }
+
             else -> emptyList()
         }
     }
 
     @OptIn(SymbolInternals::class)
     override fun generateFunctions(callableId: CallableId, context: MemberGenerationContext?): List<FirNamedFunctionSymbol> {
-        if (context.isForeign) return emptyList()
         requireNotNull(context)
 
         val functionName = callableId.callableName
 
-        when (functionName) {
-            Names.NEW_INSTANCE -> {
-                listOf(
+        if (context.isServiceProvider) {
+            when (functionName) {
+                Names.NEW_INSTANCE -> {
                     createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, context.owner.defaultType()) {
                         valueParameter(Names.SERVICE_CONTEXT_PARAMETER, serviceContextType)
                     }.symbol
-                )
+                }
+
+                Names.DISPATCH -> {
+                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, byteArrayType) {
+                        //funName: String, payload: WireFormatDecoder<*>
+                        valueParameter(Names.FUN_NAME, session.builtinTypes.stringType.coneType)
+                        valueParameter(Names.PAYLOAD, wireFormatDecoderType)
+                        status {
+                            isSuspend = true
+                        }
+                    }.symbol
+                }
+
+                else -> null
+            }.also {
+                return if (it != null) listOf(it) else emptyList()
             }
         }
+
+        // to skip the service API interface
+        if (context.isForeign) return emptyList()
 
         val interfaceFunctions = context.owner.resolvedSuperTypeRefs
             .map { session.getClassDeclaredFunctionSymbols(it.toClassLikeSymbol(session) !!.classId, functionName) }
             .flatten()
             .filter { it.name.identifier != Strings.CALL_SERVICE }
 
-        return interfaceFunctions.map { interfaceFunction ->
+        interfaceFunctions.map { interfaceFunction ->
             createMemberFunction(context.owner, ServicesPluginKey, callableId.callableName, interfaceFunction.resolvedReturnType) {
                 status {
                     isSuspend = true
@@ -236,6 +285,8 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
                     }
                 }
             }.symbol
+        }.also {
+            return it
         }
     }
 
@@ -250,12 +301,16 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         return classMemberScope?.getFunctions(name).orEmpty()
     }
 
-    val MemberGenerationContext?.isForeign
-        get() = ! isFromPlugin(ServicesPluginKey)
-
     val FirClassSymbol<*>.isServiceApi
         get() = session.predicateBasedProvider.matches(SERVICE_API_PREDICATE, this)
 
-    val FirClassSymbol<*>.isServiceImpl
-        get() = getSuperTypes(session).any { it.classId == ClassIds.SERVICE_IMPL }
+    val FirClassSymbol<*>.isServiceProvider
+        get() = session.predicateBasedProvider.matches(SERVICE_PROVIDER_PREDICATE, this)
+
+    val MemberGenerationContext?.isForeign
+        get() = ! isFromPlugin(ServicesPluginKey)
+
+    val MemberGenerationContext?.isServiceProvider
+        get() = this?.owner?.isServiceProvider == true
+
 }

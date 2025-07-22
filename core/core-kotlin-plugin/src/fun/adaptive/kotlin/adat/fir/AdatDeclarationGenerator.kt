@@ -39,9 +39,10 @@ import org.jetbrains.kotlin.name.SpecialNames
 
 class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
+    val ADAT_PREDICATE = LookupPredicate.create { annotated(FqNames.ADAT_ANNOTATION) }
+
     val nullableAnyType = ClassIds.KOTLIN_ANY.constructClassLikeType(emptyArray(), true)
     val nullableAnyArrayType = ClassIds.KOTLIN_ARRAY.constructClassLikeType(arrayOf(nullableAnyType), false)
-    val ADAT_PREDICATE = LookupPredicate.create { annotated(FqNames.ADAT_ANNOTATION) }
     val descriptorSetType = ClassIds.KOTLIN_ARRAY.constructClassLikeType(arrayOf(ClassIds.ADAT_DESCRIPTOR_SET.defaultType(emptyList())), false)
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {

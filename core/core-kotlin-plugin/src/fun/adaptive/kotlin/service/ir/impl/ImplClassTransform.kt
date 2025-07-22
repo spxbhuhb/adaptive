@@ -121,14 +121,6 @@ class ImplClassTransform(
 
     fun generateDispatch() {
         val dispatch = checkNotNull(transformedClass.getSimpleFunction(Strings.DISPATCH)).owner
-        if (! dispatch.isFakeOverride) return
-
-        dispatch.isFakeOverride = false
-        dispatch.origin = IrDeclarationOrigin.DEFINED
-
-        dispatch.buildReceiverParameter { // replace the interface in the dispatcher with the class
-            type = transformedClass.defaultType
-        }
 
         dispatch.body = DeclarationIrBuilder(irContext, dispatch.symbol).irBlockBody {
             + irReturn(

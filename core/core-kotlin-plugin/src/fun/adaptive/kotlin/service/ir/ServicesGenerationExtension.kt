@@ -19,9 +19,9 @@ class ServicesGenerationExtension(
 
     override fun generate(moduleFragment: IrModuleFragment, pluginContext: IrPluginContext) {
         ServicesPluginContext(pluginContext, options).apply {
-            //moduleFragment.transformChildrenVoid(ServicesClassTransform(this))
-            //moduleFragment.transformChildrenVoid(GetConsumerTransform(this))
-            //debug("DUMP AFTER") { "\n\n" + moduleFragment.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
+            moduleFragment.transformChildrenVoid(ServicesClassTransform(this))
+            moduleFragment.transformChildrenVoid(GetConsumerTransform(this))
+            debug("DUMP AFTER") { "\n\n" + moduleFragment.dumpKotlinLike(KotlinLikeDumpOptions(printFakeOverridesStrategy = FakeOverridesStrategy.NONE)) }
             //debug("DUMP AFTER") { "\n\n" + moduleFragment.dump() }
         }
     }
