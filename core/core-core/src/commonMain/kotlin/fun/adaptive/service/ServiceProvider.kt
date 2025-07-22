@@ -1,3 +1,3 @@
 package `fun`.adaptive.service
 
-annotation class ServiceProvider()
+annotation class ServiceProvider

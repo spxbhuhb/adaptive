@@ -1,6 +1,7 @@
 package `fun`.adaptive.value.embedded
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.value.AvMarker
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvSubscriptionId
@@ -10,6 +11,7 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.operation.AvValueOperation
 
+@ServiceProvider
 class AvEmbeddedClientService : ServiceImpl<AvEmbeddedClientService>(), AvValueApi {
 
     val worker by workerImpl<AvValueWorker>()

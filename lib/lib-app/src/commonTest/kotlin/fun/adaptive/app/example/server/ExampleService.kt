@@ -4,7 +4,9 @@ package `fun`.adaptive.app.example.server
 
 import `fun`.adaptive.app.example.ExampleApi
 import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.service.ServiceProvider
 
+@ServiceProvider
 class ExampleService : ServiceImpl<ExampleService>(), ExampleApi {
 
     override suspend fun exampleFun() {

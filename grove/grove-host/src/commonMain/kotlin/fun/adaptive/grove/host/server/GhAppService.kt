@@ -6,9 +6,11 @@ import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.grove.host.api.GhAppApi
 import `fun`.adaptive.grove.host.model.AppSpec
 import `fun`.adaptive.grove.host.model.HostMarkers
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.util.serviceSubscribe
 
+@ServiceProvider
 class GhAppService : ServiceImpl<GhAppService>(), GhAppApi {
 
     val valueWorker by workerImpl<AvValueWorker>()

@@ -7,7 +7,9 @@ import `fun`.adaptive.auth.model.AuthRoleId
 import `fun`.adaptive.auth.model.Session
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.foundation.unsupported
+import `fun`.adaptive.service.ServiceProvider
 
+@ServiceProvider
 class AuthNullSessionService : AuthSessionApi, ServiceImpl<AuthNullSessionService>() {
 
     override suspend fun owner(): AuthPrincipalId? {

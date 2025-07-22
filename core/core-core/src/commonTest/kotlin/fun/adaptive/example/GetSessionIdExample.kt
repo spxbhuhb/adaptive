@@ -3,7 +3,9 @@
 package `fun`.adaptive.example
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.service.ServiceProvider
 
+@ServiceProvider
 class GetSessionIdExample : ServiceImpl<ExampleServiceImpl>() {
 
     fun getSessionIdExample() {

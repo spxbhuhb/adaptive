@@ -14,6 +14,7 @@ import `fun`.adaptive.backend.builtin.worker
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.service.ServiceApi
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallException
 import `fun`.adaptive.service.transport.ServiceCallTransport
@@ -29,6 +30,7 @@ interface NumberApi {
     suspend fun ensureEven(i: Int, illegal: Boolean)
 }
 
+@ServiceProvider
 class NumberService : NumberApi, ServiceImpl<NumberService>() {
 
     override suspend fun ensureEven(i: Int, illegal: Boolean) {

@@ -4,6 +4,7 @@ import `fun`.adaptive.backend.BackendFragment
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.ServiceConsumer
 import `fun`.adaptive.service.ServiceContext
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.testing.TestServiceTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
@@ -43,6 +44,7 @@ val testServiceConsumer: TestService1 = getService<TestService1>(
     consumer = TestService1.Consumer()
 )
 
+@ServiceProvider
 class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
 
     override var fragment: BackendFragment? = null
@@ -84,7 +86,7 @@ class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
 
 fun box(): String {
     var response: String
-    runBlocking<Unit>{
+    runBlocking{
         response = testServiceConsumer.testFun(arg1 = 1, arg2 = "hello")
         println("  22222  response=$response")
     }

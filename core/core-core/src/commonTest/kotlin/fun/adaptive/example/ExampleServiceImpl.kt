@@ -3,6 +3,7 @@
 package `fun`.adaptive.example
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
-import `fun`.adaptive.backend.builtin.WorkerImpl
+import `fun`.adaptive.service.ServiceProvider
 
+@ServiceProvider
 class ExampleServiceImpl : ServiceImpl<ExampleServiceImpl>()

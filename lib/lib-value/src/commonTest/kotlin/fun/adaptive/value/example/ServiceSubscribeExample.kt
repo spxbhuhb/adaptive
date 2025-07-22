@@ -2,6 +2,7 @@ package `fun`.adaptive.value.example
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.ServiceApi
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvSubscriptionId
@@ -14,6 +15,7 @@ interface ExampleApi {
     suspend fun serviceFunForUnsubscribe(subscriptionId: AvSubscriptionId)
 }
 
+@ServiceProvider
 class ServiceSubscribeExample : ServiceImpl<ServiceSubscribeExample>(), ExampleApi {
 
     val valueWorker by workerImpl<AvValueWorker>()
