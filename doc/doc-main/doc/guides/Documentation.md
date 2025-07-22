@@ -142,6 +142,10 @@ markers: grove-doc-toc
 
 ## Grove
 
+## Other
+
+- [References](guide://)
+
 ## Impressum
 
 - [Credits](guide://)

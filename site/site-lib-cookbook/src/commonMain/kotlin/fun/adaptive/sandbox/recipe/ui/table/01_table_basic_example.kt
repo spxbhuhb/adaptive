@@ -2,20 +2,17 @@ package `fun`.adaptive.sandbox.recipe.ui.table
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.FragmentTraceContext
+import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.fragment.paragraph.items.LinkParagraphItem
-import `fun`.adaptive.ui.fragment.paragraph.items.TextParagraphItem
-import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphViewBackend
 import `fun`.adaptive.ui.generated.resources.north
 import `fun`.adaptive.ui.generated.resources.south
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.menu.MenuItem
-import `fun`.adaptive.ui.menu.MenuItemBase
-import `fun`.adaptive.ui.table.TableCellDef
-import `fun`.adaptive.ui.table.TableViewBackend
+import `fun`.adaptive.ui.table.TableItem
+import `fun`.adaptive.ui.table.TableViewBackend.Companion.tableViewBackend
 import `fun`.adaptive.ui.table.table
 
 /**
@@ -24,25 +21,39 @@ import `fun`.adaptive.ui.table.table
 @Adaptive
 fun tableBasicExample(): AdaptiveFragment {
 
-    val backend = TableViewBackend().apply {
-        cells += TableCellDef(
-            this,
-            "Cell 1",
-            100.dp
-        ).also {
-            it.rowMenu = listOf(
+    val backend = tableViewBackend<TableItemData> {
+
+        cell(
+            label = "Cell 1",
+            width = 200.dp,
+            getFun = { it.int1 },
+            menu = listOf(
                 MenuItem(Graphics.south, "Sort descending", "Sort descending"),
                 MenuItem(Graphics.north, "Sort ascending", "Sort ascending")
             )
-        }
-        cells += TableCellDef(
-            this,
-            "Cell 2",
-            100.dp
         )
+
+        cell(
+            "Cell 2",
+            200.dp,
+            getFun = { it.int2 }
+        )
+
+        viewportItems = mutableListOf(
+            TableItem(TableItemData()),
+        )
+
     }
 
-    table(backend)
+    adapter().traceWithContext = true
+    localContext(FragmentTraceContext()) {
+        table(backend)
+    }
 
     return fragment()
 }
+
+class TableItemData(
+    val int1 : Int = 12,
+    val int2 : Int = 34
+)
