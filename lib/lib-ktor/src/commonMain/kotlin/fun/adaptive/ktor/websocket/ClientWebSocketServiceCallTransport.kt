@@ -13,6 +13,7 @@ import io.ktor.client.plugins.websocket.*
 import io.ktor.client.request.*
 import io.ktor.websocket.close
 import kotlinx.coroutines.*
+import kotlin.time.Duration.Companion.seconds
 
 /**
  * Opens a websocket to [host] and [servicePath] and sends service calls over it.
@@ -49,7 +50,7 @@ open class ClientWebSocketServiceCallTransport(
     val client = HttpClient {
         install(HttpCookies)
         install(WebSockets) {
-            pingInterval = 20_000
+            pingInterval = 20.seconds
         }
     }
 
