@@ -21,18 +21,12 @@ class ServicesPluginContext(
     options: AdaptiveOptions
 ) : AbstractPluginContext(irContext, options) {
 
-    val serviceConsumerClass = ClassIds.SERVICE_CONSUMER.classSymbol()
-
     val serviceImplClass = ClassIds.SERVICE_IMPL.classSymbol()
     val serviceImplType = serviceImplClass.defaultType
     val serviceImplConstructor = serviceImplClass.constructors.first()
-    val serviceImplNewInstance = serviceImplClass.functionByName { Strings.NEW_INSTANCE }
-    val serviceImplFragment = serviceImplClass.property { Strings.FRAGMENT }
 
     val getService = CallableIds.GET_SERVICE.firstFunctionSymbol()
-
-    val serviceContextClass = ClassIds.SERVICE_CONTEXT.classSymbol()
-    val serviceContextType = serviceContextClass.defaultType
+    val getLogger = CallableIds.GET_LOGGER.firstFunctionSymbol()
 
     val wireFormatCache = WireFormatCache(this)
 

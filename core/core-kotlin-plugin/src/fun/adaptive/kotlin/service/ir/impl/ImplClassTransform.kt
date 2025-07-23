@@ -14,19 +14,16 @@ import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.builders.*
-import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.IrBranch
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
-import org.jetbrains.kotlin.ir.expressions.impl.IrDelegatingConstructorCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrElseBranchImpl
 import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
 import org.jetbrains.kotlin.ir.types.classFqName
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.types.makeNullable
 import org.jetbrains.kotlin.ir.util.*
 
 class ImplClassTransform(
@@ -35,7 +32,6 @@ class ImplClassTransform(
 
     lateinit var transformedClass: IrClass
 
-    lateinit var constructor: IrConstructor
     lateinit var serviceContextGetter: IrSimpleFunctionSymbol
 
     val implementedServiceFunctions = mutableListOf<ServiceFunctionEntry>()
@@ -51,8 +47,6 @@ class ImplClassTransform(
         transformedClass = declaration
         serviceContextGetter = checkNotNull(declaration.getPropertyGetter(Strings.SERVICE_CONTEXT_PROPERTY))
 
-        transformConstructor()
-
         NewInstance(pluginContext, this).build()
 
         super.visitClassNew(declaration)
@@ -65,7 +59,7 @@ class ImplClassTransform(
     override fun visitPropertyNew(declaration: IrProperty): IrStatement =
         when (declaration.name) {
             Names.SERVICE_NAME -> transformServiceName(declaration)
-            Names.SERVICE_CONTEXT_PROPERTY -> transformServiceContext(declaration)
+            Names.LOGGER ->transformLogger(declaration)
             else -> declaration
         }
 
@@ -87,35 +81,6 @@ class ImplClassTransform(
     private fun IrSimpleFunctionSymbol.isServiceFunction(): Boolean {
         val parentClass = owner.parentClassOrNull ?: return false
         return parentClass.hasAnnotation(FqNames.SERVICE_API)
-    }
-
-    fun transformConstructor() {
-        val constructors = transformedClass.constructors.toList()
-        require(constructors.size == 1) { "Service implementations must have only one constructor: ${transformedClass.kotlinFqName}" }
-
-        val newPrimary = constructor(transformedClass) // this adds an empty body
-        newPrimary.addValueParameter("serviceContext".name, pluginContext.serviceContextType.makeNullable())
-        constructor = newPrimary
-
-        // replace the body of the old primary constructor - which must have no parameters -
-        // with a body that calls the new primary with a null context
-
-        val oldPrimary = constructors.first()
-        require(oldPrimary.regularParameterCount == 0) { "Service implementation constructor must not have any parameters. ${transformedClass.kotlinFqName}" }
-
-        oldPrimary.isPrimary = false
-
-        oldPrimary.body = irFactory.createBlockBody(oldPrimary.startOffset, oldPrimary.endOffset).apply {
-            statements += IrDelegatingConstructorCallImpl(
-                SYNTHETIC_OFFSET,
-                SYNTHETIC_OFFSET,
-                transformedClass.defaultType,
-                newPrimary.symbol,
-                typeArgumentsCount = 0
-            ).also {
-                it.arguments[0] = irNull()
-            }
-        }
     }
 
     fun generateDispatch() {
@@ -201,18 +166,25 @@ class ImplClassTransform(
         transformProperty(
             pluginContext,
             declaration,
-            backingField = false
+            backingField = true
         ) { irConst(serviceNames.first()) }
 
         return declaration
     }
 
-    fun transformServiceContext(declaration: IrProperty): IrStatement {
+    fun transformLogger(declaration: IrProperty): IrStatement {
+
         transformProperty(
             pluginContext,
             declaration,
             backingField = true
-        ) { irGet(constructor.firstRegularParameter) }
+        ) {
+            irCall(
+                this@ImplClassTransform.pluginContext.getLogger,
+                null,
+                irConst(transformedClass.name.identifier)
+            )
+        }
 
         return declaration
     }

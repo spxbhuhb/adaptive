@@ -45,12 +45,12 @@ object Names {
 
     val SERVICE_NAME = Strings.SERVICE_NAME.name()
     val CONSUMER = Strings.CONSUMER.name()
-    val SERVICE_CONTEXT_PROPERTY = Strings.SERVICE_CONTEXT_PROPERTY.name()
+    val SERVICE_CONTEXT_OR_NULL = "serviceContextOrNull".name()
     val SERVICE_CALL_TRANSPORT_PROPERTY = Strings.SERVICE_CALL_TRANSPORT_PROPERTY.name()
     val FRAGMENT = Strings.FRAGMENT.name()
     val NEW_INSTANCE = Strings.NEW_INSTANCE.name()
     val DISPATCH = Strings.DISPATCH.name()
-
+    val LOGGER = "logger".name()
     val SERVICE_CONTEXT_PARAMETER = "serviceContext".name()
     val FUN_NAME = "funName".name()
     val PAYLOAD = "payload".name()
@@ -63,6 +63,7 @@ object FqNames : NamesBase(Strings.SERVICES_PACKAGE) {
     val SERVICE_API = defaultPackage.child(Strings.SERVICE_API.name())
     val SERVICE_PROVIDER = defaultPackage.child(Strings.SERVICE_PROVIDER.name())
     val WIREFORMAT_PACKAGE = "fun.adaptive.wireformat".fqName()
+    val LOG_PACKAGE = "fun.adaptive.log".fqName()
 }
 
 object ClassIds : NamesBase(Strings.SERVICES_PACKAGE) {
@@ -73,8 +74,10 @@ object ClassIds : NamesBase(Strings.SERVICES_PACKAGE) {
     val BACKEND_FRAGMENT = "BackendFragment".classId { FqNames.BACKEND_PACKAGE }
     val KOTLIN_BYTEARRAY = "ByteArray".classId { "kotlin".fqName() }
     val WIREFORMAT_DECODER = "WireFormatDecoder".classId { FqNames.WIREFORMAT_PACKAGE }
+    val ADAPTIVE_LOGGER = "AdaptiveLogger".classId { FqNames.LOG_PACKAGE }
 }
 
 object CallableIds : NamesBase(Strings.SERVICES_API_PACKAGE) {
     val GET_SERVICE = Strings.GET_SERVICE.callableId()
+    val GET_LOGGER = "getLogger".callableId { FqNames.LOG_PACKAGE }
 }

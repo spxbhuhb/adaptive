@@ -13,14 +13,9 @@ import `fun`.adaptive.utility.manualOrPlugin
 abstract class BackendFragmentImpl {
 
     /**
-     * Fragment of the adaptive backend if the implementation belongs to one. Replaced
-     * by the plugin with a field initialized to `null`. Set by the backend builder
-     * functions such as `store`, `service` and `worker`.
+     * Set by the backend builder functions such as `store`, `service` and `worker`.
      */
-    open var fragment: BackendFragment?
-        get() = manualOrPlugin("fragment")
-        set(value) = manualOrPlugin("fragment", value)
-
+    open var fragment: BackendFragment? = null
     /**
      * Adapter of the adaptive backend if the fragment is part of one.
      */

@@ -2,6 +2,8 @@ package `fun`.adaptive.kotlin.manual
 
 import `fun`.adaptive.backend.BackendFragment
 import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.log.AdaptiveLogger
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.ServiceConsumer
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.ServiceProvider
@@ -20,7 +22,7 @@ interface TestService1 {
 
         override var serviceName: String = "fun.adaptive.service.TestService1"
 
-        override var serviceCallTransport: ServiceCallTransport = TestServiceTransport().also { it.serviceImpl = TestService1Impl(it.context()) }
+        override var serviceCallTransport: ServiceCallTransport = TestServiceTransport().also { it.serviceImpl = TestService1Impl() }
 
         override suspend fun testFun(arg1: Int, arg2: String): String {
             return wireFormatDecoder(
@@ -40,23 +42,26 @@ interface TestService1 {
 }
 
 val testServiceConsumer: TestService1 = getService<TestService1>(
-    transport = TestServiceTransport().also { it.serviceImpl = TestService1Impl(it.context()) },
+    transport = TestServiceTransport().also { it.serviceImpl = TestService1Impl() },
     consumer = TestService1.Consumer()
 )
 
 @ServiceProvider
-class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
+class TestService1Impl : TestService1, ServiceImpl<TestService1Impl>() {
+
+    override suspend fun testFun(arg1: Int, arg2: String): String {
+        return "i:$arg1 s:$arg2 $serviceContext"
+    }
+
+    override var serviceName = "fun.adaptive.service.TestService1"
 
     override var fragment: BackendFragment? = null
 
     override fun newInstance(serviceContext: ServiceContext): TestService1Impl {
-        val tmp0 = TestService1Impl(serviceContext)
+        val tmp0 = TestService1Impl()
+        tmp0.serviceContextOrNull = serviceContext
         tmp0.fragment = fragment
         return tmp0
-    }
-
-    override suspend fun testFun(arg1: Int, arg2: String): String {
-        return "i:$arg1 s:$arg2 $serviceContext"
     }
 
     override suspend fun dispatch(funName: String, payload: WireFormatDecoder<*>): ByteArray {
@@ -74,13 +79,7 @@ class TestService1Impl : TestService1, ServiceImpl<TestService1Impl> {
         }.pack()
     }
 
-    override var serviceContext: ServiceContext
-
-    override var serviceName = "fun.adaptive.service.TestService1"
-
-    constructor(serviceContext: ServiceContext?) {
-        this.serviceContext = serviceContext!!
-    }
+    override var logger: AdaptiveLogger = getLogger(name = "TestService1Impl")
 
 }
 
@@ -88,7 +87,6 @@ fun box(): String {
     var response: String
     runBlocking{
         response = testServiceConsumer.testFun(arg1 = 1, arg2 = "hello")
-        println("  22222  response=$response")
     }
     return when {
         response.startsWith(prefix = "i:1 s:hello ServiceContext(") -> "OK"

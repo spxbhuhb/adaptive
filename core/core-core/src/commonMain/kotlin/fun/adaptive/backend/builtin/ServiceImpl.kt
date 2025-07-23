@@ -19,7 +19,7 @@ abstract class ServiceImpl<T : ServiceImpl<T>> : BackendFragmentImpl(), ServiceB
      *  The transport from [serviceContext].
      */
     override var serviceCallTransport: ServiceCallTransport
-        get() = requireNotNull(serviceContext.transport)
+        get() = serviceContext.transport
         set(value) {
             manualOrPlugin("serviceCallTransport", value)
         }
@@ -28,7 +28,9 @@ abstract class ServiceImpl<T : ServiceImpl<T>> : BackendFragmentImpl(), ServiceB
      * Context of a service call. Set by `dispatch` when the call goes through it.
      */
     open val serviceContext: ServiceContext
-        get() = manualOrPlugin("serviceContext")
+        get() = checkNotNull(serviceContextOrNull) { "serviceContext is not set" }
+
+    open var serviceContextOrNull : ServiceContext? = null
 
     /**
      * The internal version of this service implementation. The context is [ServiceContext] with

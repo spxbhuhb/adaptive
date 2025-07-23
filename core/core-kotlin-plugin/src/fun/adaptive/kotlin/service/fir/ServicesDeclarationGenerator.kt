@@ -4,7 +4,6 @@
 
 package `fun`.adaptive.kotlin.service.fir
 
-import `fun`.adaptive.kotlin.adat.AdatPluginKey
 import `fun`.adaptive.kotlin.common.isFromPlugin
 import `fun`.adaptive.kotlin.service.*
 import org.jetbrains.kotlin.descriptors.ClassKind
@@ -62,10 +61,6 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CALL_TRANSPORT) !!.constructType(emptyArray(), true)
     }
 
-    val serviceContextNullableType by lazy {
-        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CONTEXT) !!.constructType(emptyArray(), true)
-    }
-
     val serviceContextType by lazy {
         session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.SERVICE_CONTEXT) !!.constructType(emptyArray(), false)
     }
@@ -75,12 +70,17 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     }
 
     val byteArrayType by lazy {
-        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.KOTLIN_BYTEARRAY) !!.constructType(emptyArray(), true)
+        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.KOTLIN_BYTEARRAY) !!.constructType(emptyArray(), false)
     }
 
     val wireFormatDecoderType by lazy {
         session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.WIREFORMAT_DECODER) !!.constructType(arrayOf(ConeStarProjection), false)
     }
+
+    val adaptiveLoggerType by lazy {
+        session.symbolProvider.getClassLikeSymbolByClassId(ClassIds.ADAPTIVE_LOGGER) !!.constructType(emptyArray(), false)
+    }
+
 
     @OptIn(SymbolInternals::class)
     override fun getNestedClassifiersNames(classSymbol: FirClassSymbol<*>, context: NestedClassGenerationContext): Set<Name> {
@@ -112,10 +112,9 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
     // provides uses transport from context, so we don't have to override it
     private val providerCallableNames = setOf(
         Names.SERVICE_NAME,
-        Names.SERVICE_CONTEXT_PROPERTY,
-        Names.FRAGMENT,
         Names.NEW_INSTANCE,
-        Names.DISPATCH
+        Names.DISPATCH,
+        Names.LOGGER
     )
 
     @OptIn(DirectDeclarationsAccess::class)
@@ -194,27 +193,13 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
             }
 
             // provider
-            Names.FRAGMENT -> {
+            Names.LOGGER -> {
                 listOf(
                     createMemberProperty(
                         context !!.owner,
                         ServicesPluginKey,
-                        Names.FRAGMENT,
-                        backendFragmentType,
-                        isVal = false,
-                        hasBackingField = true
-                    ).symbol
-                )
-            }
-
-            // provider
-            Names.SERVICE_CONTEXT_PROPERTY -> {
-                listOf(
-                    createMemberProperty(
-                        context !!.owner,
-                        ServicesPluginKey,
-                        Names.SERVICE_CONTEXT_PROPERTY,
-                        serviceContextNullableType,
+                        Names.LOGGER,
+                        adaptiveLoggerType,
                         isVal = false,
                         hasBackingField = true
                     ).symbol
@@ -234,13 +219,13 @@ class ServicesDeclarationGenerator(session: FirSession) : FirDeclarationGenerati
         if (context.isServiceProvider) {
             when (functionName) {
                 Names.NEW_INSTANCE -> {
-                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, context.owner.defaultType()) {
+                    createMemberFunction(context.owner, ServicesPluginKey, callableId.callableName, context.owner.defaultType()) {
                         valueParameter(Names.SERVICE_CONTEXT_PARAMETER, serviceContextType)
                     }.symbol
                 }
 
                 Names.DISPATCH -> {
-                    createMemberFunction(context.owner, AdatPluginKey, callableId.callableName, byteArrayType) {
+                    createMemberFunction(context.owner, ServicesPluginKey, callableId.callableName, byteArrayType) {
                         //funName: String, payload: WireFormatDecoder<*>
                         valueParameter(Names.FUN_NAME, session.builtinTypes.stringType.coneType)
                         valueParameter(Names.PAYLOAD, wireFormatDecoderType)

@@ -6,6 +6,7 @@ package `fun`.adaptive.kotlin.common
 
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
+import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
 import org.jetbrains.kotlin.ir.builders.declarations.buildField
 import org.jetbrains.kotlin.ir.builders.irBlockBody
@@ -43,6 +44,7 @@ class PropertyTransform(
         if (!fromPlugin && !property.isFakeOverride) return
 
         property.isFakeOverride = false
+        property.modality = Modality.OPEN
         if (!fromPlugin) {
             property.origin = IrDeclarationOrigin.DEFINED
         }

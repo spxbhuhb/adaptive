@@ -17,7 +17,7 @@ import org.jetbrains.kotlin.ir.builders.irTemporary
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.defaultType
-import org.jetbrains.kotlin.ir.util.functions
+import org.jetbrains.kotlin.ir.util.primaryConstructor
 
 class NewInstance(
    val pluginContext: ServicesPluginContext,
@@ -34,19 +34,25 @@ class NewInstance(
                 IrConstructorCallImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     transformedClass.defaultType,
-                    implClassTransform.constructor.symbol,
+                    transformedClass.primaryConstructor!!.symbol,
                     typeArgumentsCount = 0,
                     constructorTypeArgumentsCount = 0
-                ).also {
-                    it.arguments[0] = irGet(function.firstRegularParameter)
-                }
+                )
             )
 
-            val property = transformedClass.property(Names.FRAGMENT)
+            val contextProperty = transformedClass.property(Names.SERVICE_CONTEXT_OR_NULL)
 
             + implClassTransform.irSetValue(
-                property,
-                implClassTransform.irGetValue(property, irGet(function.dispatchReceiverParameter !!)),
+                contextProperty,
+                irGet(function.firstRegularParameter),
+                irGet(instance)
+            )
+
+            val fragmentProperty = transformedClass.property(Names.FRAGMENT)
+
+            + implClassTransform.irSetValue(
+                fragmentProperty,
+                implClassTransform.irGetValue(fragmentProperty, irGet(function.dispatchReceiverParameter !!)),
                 irGet(instance)
             )
 
