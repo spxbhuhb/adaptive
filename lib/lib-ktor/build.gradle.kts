@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 /*
@@ -39,6 +42,11 @@ kotlin {
         binaries.library()
     }
 
+    wasmJs {
+        browser()
+        binaries.library()
+    }
+
     if (libs.versions.ios.support.get() != "none") {
         listOf(
             iosX64(),
@@ -65,6 +73,10 @@ kotlin {
         }
 
         jsMain.dependencies {
+            implementation(libs.ktor.client.core)
+        }
+
+        wasmJsMain.dependencies {
             implementation(libs.ktor.client.core)
         }
 

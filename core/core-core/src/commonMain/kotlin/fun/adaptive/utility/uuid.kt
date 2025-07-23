@@ -3,10 +3,10 @@
  */
 package `fun`.adaptive.utility
 
-import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.Instant
 import kotlin.experimental.ExperimentalObjCName
 import kotlin.native.ObjCName
+import kotlin.time.Clock.System.now
+import kotlin.time.Instant
 
 const val versionMask = 0xffff0fff.toInt()
 const val version = 0x00004000

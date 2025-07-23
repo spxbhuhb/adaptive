@@ -1,5 +1,8 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import org.gradle.kotlin.dsl.adaptive
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
@@ -41,6 +44,11 @@ kotlin {
     }
 
     js(IR) {
+        browser()
+        binaries.executable()
+    }
+
+    wasmJs {
         browser()
         binaries.executable()
     }

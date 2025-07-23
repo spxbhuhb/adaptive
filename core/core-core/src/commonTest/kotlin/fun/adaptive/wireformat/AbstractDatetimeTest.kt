@@ -5,11 +5,15 @@
 package `fun`.adaptive.wireformat
 
 import `fun`.adaptive.wireformat.builtin.*
-import kotlinx.datetime.*
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.Instant
 
 abstract class AbstractDatetimeTest<ST>(
     wireFormatProvider: WireFormatProvider

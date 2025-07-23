@@ -10,6 +10,7 @@ import kotlinx.datetime.LocalTime
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.time.Clock.System.now
 import kotlin.time.Duration.Companion.seconds
 
 class PolymorphicTest {
@@ -81,7 +82,7 @@ class PolymorphicTest {
     fun duration() = test { 1.seconds }
 
     @Test
-    fun instant() = test { Clock.System.now() }
+    fun instant() = test { now() }
 
     @Test
     fun localDateTime() = test { LocalDateTime(2023, 7, 27, 15, 35, 5, 11) }

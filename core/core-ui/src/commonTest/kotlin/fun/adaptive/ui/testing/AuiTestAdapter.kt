@@ -18,7 +18,6 @@ import `fun`.adaptive.ui.fragment.structural.AuiSelect
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.platform.media.MediaMetrics
-import `fun`.adaptive.ui.testing.platform.NavSupport
 import `fun`.adaptive.utility.alsoIfInstance
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers

@@ -2,8 +2,11 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -31,6 +34,10 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
 }
 
 kotlin {
+    compilerOptions {
+        optIn.add("kotlin.time.ExperimentalTime")
+    }
+
     jvmToolchain(11)
 
     jvm {
@@ -40,6 +47,15 @@ kotlin {
 
     js(IR) {
         browser()
+        binaries.library()
+    }
+
+    wasmJs {
+        browser {
+            testTask {
+                enabled = false
+            }
+        }
         binaries.library()
     }
 
@@ -76,6 +92,10 @@ kotlin {
         sourceSets["jvmTest"].dependencies {
             api(libs.kotlin.test.junit)
             implementation(libs.kctfork)
+        }
+
+        wasmJsMain.dependencies {
+            implementation(libs.kotlinx.browser)
         }
     }
 }

@@ -1,7 +1,10 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import `fun`.adaptive.gradle.js.CompressJsResourcesTask
 import org.gradle.kotlin.dsl.register
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 import org.jetbrains.kotlin.gradle.targets.jvm.KotlinJvmTarget
 import java.io.ByteArrayOutputStream
 import java.nio.file.Files
@@ -58,6 +61,11 @@ kotlin {
     js(IR) {
         browser()
         binaries.executable()
+    }
+
+    wasmJs {
+        browser()
+        binaries.library()
     }
 
     sourceSets {

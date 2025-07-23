@@ -1,8 +1,15 @@
 package `fun`.adaptive.resource.language
 
-import kotlinx.datetime.*
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.number
+import kotlinx.datetime.toLocalDateTime
 import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
+@OptIn(ExperimentalTime::class)
 fun Instant.localized() =
     toLocalDateTime(TimeZone.currentSystemDefault()).toString().replace("T", " ").substringBefore('.')
 
@@ -49,6 +56,6 @@ fun String.parseLocalizedHourAndMinuteOrNull(): LocalTime? {
 }
 
 fun LocalDateTime.localized() =
-    "$year.${monthNumber.toString().padStart(2, '0')}.${dayOfMonth.toString().padStart(2, '0')}" +
+    "$year.${month.number.toString().padStart(2, '0')}.${day.toString().padStart(2, '0')}" +
         " " +
         "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"

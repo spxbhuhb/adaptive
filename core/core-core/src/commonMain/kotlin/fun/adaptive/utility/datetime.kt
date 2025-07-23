@@ -1,7 +1,7 @@
 package `fun`.adaptive.utility
 
 import kotlinx.datetime.*
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 import kotlin.time.Duration
 
 fun instant() = now()
