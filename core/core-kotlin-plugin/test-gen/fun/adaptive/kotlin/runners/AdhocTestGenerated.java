@@ -15,7 +15,13 @@ import java.util.regex.Pattern;
 @SuppressWarnings("all")
 @TestMetadata("testData/adhoc")
 @TestDataPath("$PROJECT_ROOT")
-public class AdhocTestGenerated extends AbstractAdhocTest {
+public class AdhocTestGenerated extends AbstractJvmBoxTest {
+  @Test
+  @TestMetadata("adhoc.kt")
+  public void testAdhoc() {
+    runTest("testData/adhoc/adhoc.kt");
+  }
+
   @Test
   public void testAllFilesPresentInAdhoc() {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/adhoc"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);

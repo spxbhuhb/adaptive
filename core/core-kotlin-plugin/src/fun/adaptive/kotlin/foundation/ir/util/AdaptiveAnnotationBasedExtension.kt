@@ -10,6 +10,7 @@ import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
+import org.jetbrains.kotlin.ir.expressions.IrTypeOperatorCall
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.util.getArrayElementType
 import org.jetbrains.kotlin.ir.types.isArray
@@ -56,10 +57,10 @@ interface AdaptiveAnnotationBasedExtension {
         get() = symbol.owner.hasAnnotation(pluginContext.adaptiveClass) || symbol.owner.hasAnnotation(pluginContext.adaptiveExpectClass)
 
     val IrCall.isArgumentAdaptiveCall: Boolean
-        get() = symbol.owner.name == Names.KOTLIN_INVOKE && dispatchReceiver?.let {
-            // expect annotation on a parameter is meaningless, so we don't have to check it here
-            it is IrGetValue && it.symbol.owner.hasAnnotation(pluginContext.adaptiveClass)
-        } == true
+        get() {
+            if (symbol.owner.name != Names.KOTLIN_INVOKE) return false
+            return argumentCallGetValue?.symbol?.owner?.hasAnnotation(pluginContext.adaptiveClass) == true
+        }
 
     fun IrType.isAccessSelector(parameter: IrValueParameter?, previousType: IrType?): Boolean {
         if (parameter == null) return false

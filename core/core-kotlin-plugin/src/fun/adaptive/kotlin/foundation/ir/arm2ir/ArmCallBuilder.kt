@@ -7,21 +7,22 @@ package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 import `fun`.adaptive.kotlin.common.firstRegularParameter
 import `fun`.adaptive.kotlin.common.regularParameterCount
 import `fun`.adaptive.kotlin.common.secondRegularParameter
-import `fun`.adaptive.kotlin.foundation.Indices
 import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmCall
+import `fun`.adaptive.kotlin.foundation.ir.util.argumentCallGetValue
 import org.jetbrains.kotlin.ir.builders.declarations.addValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.declarations.IrVariable
 import org.jetbrains.kotlin.ir.declarations.impl.IrValueParameterImpl
 import org.jetbrains.kotlin.ir.expressions.IrExpression
-import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.impl.IrBlockImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 import org.jetbrains.kotlin.ir.symbols.UnsafeDuringIrConstructionAPI
 import org.jetbrains.kotlin.ir.types.defaultType
-import org.jetbrains.kotlin.ir.util.*
+import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
+import org.jetbrains.kotlin.ir.util.getPropertyGetter
+import org.jetbrains.kotlin.ir.util.isSubtypeOfClass
 
 @OptIn(UnsafeDuringIrConstructionAPI::class)
 class ArmCallBuilder(
@@ -125,7 +126,8 @@ class ArmCallBuilder(
     }
 
     fun argumentIndex() : Int {
-        val valueParameter = (armCall.irCall.dispatchReceiver as IrGetValue).symbol.owner as IrValueParameterImpl
+        val get = checkNotNull(armCall.irCall.argumentCallGetValue) { "cannot find argument for call"}
+        val valueParameter = get.symbol.owner as IrValueParameterImpl
         return armClass.stateVariables.indexOfFirst { it.name == valueParameter.name.asString() }
     }
 

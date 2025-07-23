@@ -7,6 +7,8 @@ import `fun`.adaptive.kotlin.foundation.Strings
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.name
+import org.jetbrains.kotlin.ir.expressions.IrCall
+import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.expressions.IrTypeOperator
 import org.jetbrains.kotlin.ir.expressions.IrTypeOperatorCall
 import org.jetbrains.kotlin.ir.util.file
@@ -35,3 +37,15 @@ fun CallableId.adaptiveClassFqName(): FqName {
 }
 
 fun String.capitalizeFirstChar() = replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+
+val IrCall.argumentCallGetValue : IrGetValue?
+    get() {
+        val receiver = dispatchReceiver ?: return null
+        val get : IrGetValue?
+        when (receiver) {
+            is IrTypeOperatorCall -> get = receiver.argument as? IrGetValue
+            is IrGetValue -> get = receiver
+            else -> get = null
+        }
+        return get
+    }

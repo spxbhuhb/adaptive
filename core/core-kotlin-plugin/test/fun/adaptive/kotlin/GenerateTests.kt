@@ -4,9 +4,6 @@
 
 package `fun`.adaptive.kotlin
 
-import `fun`.adaptive.kotlin.runners.AbstractAdhocTest
-import `fun`.adaptive.kotlin.runners.AbstractBoxTest
-import `fun`.adaptive.kotlin.runners.AbstractDiagnosticTest
 import `fun`.adaptive.kotlin.runners.AbstractJvmBoxTest
 import org.jetbrains.kotlin.generators.generateTestGroupSuiteWithJUnit5
 
@@ -14,15 +11,11 @@ fun main() {
     generateTestGroupSuiteWithJUnit5 {
         testGroup(testDataRoot = "testData", testsRoot = "test-gen") {
 
-            testClass<AbstractDiagnosticTest> {
-                model("diagnostics")
-            }
-
             testClass<AbstractJvmBoxTest> {
                 model("box")
             }
 
-            testClass<AbstractAdhocTest> {
+            testClass<AbstractJvmBoxTest> {
                 model("adhoc")
             }
 

@@ -67,7 +67,7 @@ kotlin {
 
                 implementation(libs.adaptive.site.lib.cookbook)
 
-                implementation(libs.kotlinx.coroutines.debug)
+                //implementation(libs.kotlinx.coroutines.debug)
             }
         }
 

@@ -3,11 +3,7 @@
  */
 package `fun`.adaptive.kotlin.foundation.ir.ir2arm
 
-import `fun`.adaptive.kotlin.common.AbstractIrBuilder
-import `fun`.adaptive.kotlin.common.firstRegularArgument
-import `fun`.adaptive.kotlin.common.nthRegularArgument
-import `fun`.adaptive.kotlin.common.removeCoercionToUnit
-import `fun`.adaptive.kotlin.common.secondRegularArgument
+import `fun`.adaptive.kotlin.common.*
 import `fun`.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
 import `fun`.adaptive.kotlin.foundation.FqNames
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
@@ -213,7 +209,17 @@ class IrFunction2ArmClass(
 
         // TODO think for loop check details
         val block = body.statements[1].removeCoercionToUnit()
-        check((block is IrBlock && block.origin == null) || block is IrCall) { "not a block in loop: ${statement.dumpKotlinLike()}\n${statement.dump()}" }
+        check((block is IrBlock && (block.origin == null || block.origin == IrStatementOrigin.WHEN)) || block is IrCall) {
+            """
+            |not a block in loop
+            |    ==== BLOCK ====
+            |${block.dump()}
+            |    ==== STATEMENT ====
+            |${statement.dump()}
+            |    ==== STATEMENT KOTLIN-LIKE ====
+            |${statement.dumpKotlinLike()}
+            """.trimMargin()
+        }
 
         val iterator = transformDeclaration(irIterator)
 
@@ -263,7 +269,20 @@ class IrFunction2ArmClass(
             irCall.isHydratedCall -> transformHydratedCall(irCall)
             irCall.isDirectAdaptiveCall -> transformDirectCall(irCall)
             irCall.isArgumentAdaptiveCall -> transformArgumentCall(irCall)
-            else -> throw IllegalStateException("non-adaptive call in rendering: ${irCall.dumpKotlinLike()}")
+            else -> throw IllegalStateException(
+                """
+                |non-adaptive call in rendering:
+                |    ==== SYMBOL ====
+                |${irCall.symbol}
+                |    ==== DISPATCH RECEIVER ====
+                |${(irCall.dispatchReceiver as? IrGetValue)?.symbol?.owner?.dump()}
+                |    ==== KOTLIN-LIKE ====
+                |${irCall.dumpKotlinLike()}
+                |    ==== IR ====
+                |${irCall.dump()}
+                |    ==== END ====
+                """.trimMargin()
+            )
         }
 
     /**
@@ -545,7 +564,7 @@ class IrFunction2ArmClass(
 
             ArmExternalStateVariable(
                 armClass,
-                indexInState++ + 1, // +1 for instructions
+                indexInState ++ + 1, // +1 for instructions
                 stateVariableIndex ++,
                 parameter.name.identifier,
                 parameter.type,
