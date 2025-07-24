@@ -18,6 +18,35 @@ While this may change in the future, we do not currently guarantee API stability
 
 | Adaptive                         | Kotlin         | Coroutines | Datetime | Ktor     |
 |----------------------------------|----------------|------------|----------|----------|
-| `0.25.724+2.2.0-SNAPSHOT`        | `2.2.0`        | `1.10.2`   | `0.4.0`  | `3.2.2`  |
+| `0.25.724+2.2.0-SNAPSHOT`        | `2.2.0`        | `1.10.2`   | `0.7.1`  | `3.2.2`  |
 | `0.25.719+2.2.20-Beta1-SNAPSHOT` | `2.2.20-Beta1` | `1.10.2`   | `0.4.0`  | `3.2.2`  |
 | `0.25.718`                       | `2.1.20`       | `1.8.1`    | `0.4.0`  | `2.3.11` |
+
+## Using snapshot
+
+Add the snapshot repository to `settings.gradle.kts` (both to `pluginManagement` and `dependencyResolutionManagement`):
+
+```kotlin
+rootProject.name = "app-driver"
+
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+        mavenCentral()
+        google()
+        maven("https://central.sonatype.com/repository/maven-snapshots/")
+    }
+}
+
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven("https://central.sonatype.com/repository/maven-snapshots/")
+    }
+    versionCatalogs {
+        create("libs") {
+            from(files("../../gradle/libs.versions.toml"))
+        }
+    }
+}
+```
