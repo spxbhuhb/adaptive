@@ -15,7 +15,7 @@ import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
-import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspaceMain
+import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspaceLarge
 import `fun`.adaptive.ui.mpw.fragments.multiPaneWorkspaceSideBarIcons
 import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
@@ -51,7 +51,7 @@ fun mpwAllPanesExample(): AdaptiveFragment {
             localContext(workspace) {
                 multiPaneWorkspaceSideBarIcons(left = true, workspace)
 
-                multiPaneWorkspaceMain(workspace)
+                multiPaneWorkspaceLarge(workspace)
 
                 multiPaneWorkspaceSideBarIcons(left = false, workspace)
             }

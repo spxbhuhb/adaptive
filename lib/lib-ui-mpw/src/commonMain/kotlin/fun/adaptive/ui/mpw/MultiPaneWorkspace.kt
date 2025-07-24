@@ -92,6 +92,14 @@ open class MultiPaneWorkspace(
 
     var lastActiveContentPane: PaneViewBackend<*>? = null
 
+    /**
+     * When the small workspace is shown, the focused tool is that tool pane that
+     * has been active last. When there is a focused tool, `mpSmallTool` displays
+     * that tool on menu touch and when the tool is displayed, the menu icon
+     * is replaced with a "<" (back) icon.
+     */
+    val focusedTool = observableOf<PaneId?> { null }
+
     val focusedPane = observableOf<PaneId?> { null }
 
     val isFullScreen = observableOf { false }

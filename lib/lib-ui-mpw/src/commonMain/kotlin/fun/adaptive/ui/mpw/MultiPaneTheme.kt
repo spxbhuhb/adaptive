@@ -3,6 +3,8 @@ package `fun`.adaptive.ui.mpw
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.api.fill
+import `fun`.adaptive.graphics.svg.api.svgHeight
+import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
@@ -150,5 +152,23 @@ class MultiPaneTheme(
         paddingHorizontal { 24.dp },
         paddingVertical { 16.dp },
         gap { 16.dp }
+    )
+
+    // --------------------------------------------------------------------------------
+    // Small
+    // --------------------------------------------------------------------------------
+
+    val smallHeaderHeight = 48.dp
+    val smallToolItemHeight = 48.dp
+
+    val smallToolIcon = instructionsOf(
+        size(28.dp),
+        svgWidth(28.dp),
+        svgHeight(28.dp)
+    )
+
+    val smallToolTitle = instructionsOf(
+        paddingLeft { 8.dp },
+        alignSelf.startCenter
     )
 }
