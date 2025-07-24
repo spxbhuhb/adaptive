@@ -4,6 +4,7 @@ import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.builtin.StringWireFormat
 
+@ServiceProvider
 class TestService1(
     override val serviceContext: ServiceContext
 ) : TestApi1, ServiceImpl<TestService1>() {

@@ -51,7 +51,6 @@ object Names : NamesBase(Strings.RUNTIME_PACKAGE) {
 object FqNames : NamesBase(Strings.RUNTIME_PACKAGE) {
     val ADAT_ANNOTATION = FqName("fun.adaptive.adat.Adat")
     val ADAT_DESCRIPTOR_NAME = "AdatDescriptorName".fqName { Strings.DESCRIPTOR_PACKAGE }
-    val ADAT_COMPANION_RESOLVE = "AdatCompanionResolve".fqName { Strings.RUNTIME_PACKAGE }
 }
 
 object ClassIds : NamesBase(Strings.RUNTIME_PACKAGE) {
@@ -76,7 +75,5 @@ object CallableIds : NamesBase(Strings.RUNTIME_PACKAGE) {
     val api = "fun.adaptive.adat.api".fqName()
 
     val properties = "properties".callableId { api }
-
-    val adatCompanionOf = "adatCompanionOf".callableId { api }
 
 }

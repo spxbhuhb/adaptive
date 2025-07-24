@@ -9,6 +9,7 @@ import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.secureRandom
 import `fun`.adaptive.utility.use
@@ -20,6 +21,7 @@ import kotlinx.coroutines.delay
 import kotlinx.datetime.Clock.System.now
 import kotlin.math.abs
 
+@ServiceProvider
 class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
 
     val valueWorker by workerImpl<AvValueWorker>()

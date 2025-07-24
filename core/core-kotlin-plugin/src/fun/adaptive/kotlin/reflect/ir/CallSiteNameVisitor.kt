@@ -4,6 +4,7 @@
 package `fun`.adaptive.kotlin.reflect.ir
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
+import `fun`.adaptive.kotlin.common.regularParameterOrNull
 import `fun`.adaptive.kotlin.reflect.FqNames
 import `fun`.adaptive.kotlin.reflect.Names
 import `fun`.adaptive.kotlin.reflect.Strings
@@ -25,18 +26,17 @@ class CallSiteNameVisitor(
             return super.visitCall(expression)
         }
 
-        val valueParameters = func.valueParameters
-        val callSiteName = valueParameters.firstOrNull { it.name == Names.CALL_SITE_NAME_PARAMETER }
+        val callSiteName = func.regularParameterOrNull(Names.CALL_SITE_NAME_PARAMETER)
 
         check(callSiteName != null) { "missing 'callSiteName' parameter in ${func.fqNameWhenAvailable ?: "<anonymous>"}" }
         check(callSiteName.type.isString()) { "'callSiteName' is not a String in ${func.fqNameWhenAvailable ?: "<anonymous>"}" }
 
-        if (expression.getValueArgument(callSiteName.index) != null) {
+        if (expression.arguments[callSiteName] != null) {
             return super.visitCall(expression)
         }
 
         if (currentScope == null) {
-            expression.putValueArgument(callSiteName.index, irConst(Strings.UNKNOWN))
+            expression.arguments[callSiteName] = irConst(Strings.UNKNOWN)
             return super.visitCall(expression)
         }
 
@@ -50,11 +50,7 @@ class CallSiteNameVisitor(
             break
         }
 
-
-        expression.putValueArgument(
-            callSiteName.index,
-            irConst(name ?: Strings.UNKNOWN)
-        )
+        expression.arguments[callSiteName] = irConst(name ?: Strings.UNKNOWN)
 
         return super.visitCall(expression)
     }

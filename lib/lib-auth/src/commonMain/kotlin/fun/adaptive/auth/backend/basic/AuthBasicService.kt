@@ -16,7 +16,9 @@ import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import `fun`.adaptive.value.store.AvComputeContext
 import `fun`.adaptive.value.util.serviceSubscribe
+import `fun`.adaptive.service.ServiceProvider
 
+@ServiceProvider
 class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
 
     val authWorker by workerImpl<AuthWorker>()

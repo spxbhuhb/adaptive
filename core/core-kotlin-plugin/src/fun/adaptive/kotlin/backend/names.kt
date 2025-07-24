@@ -4,6 +4,7 @@
 package `fun`.adaptive.kotlin.backend
 
 import `fun`.adaptive.kotlin.common.NamesBase
+import `fun`.adaptive.kotlin.service.FqNames
 
 object Strings {
     const val BACKEND_PACKAGE = "fun.adaptive.backend"
@@ -21,7 +22,16 @@ object Names : NamesBase(Strings.BACKEND_PACKAGE) {
     val LOGGER_PROPERTY = Strings.LOGGER_PROPERTY.name()
 }
 
+object FqNames : NamesBase(Strings.BACKEND_PACKAGE) {
+    val LOG_PACKAGE = "fun.adaptive.log".fqName()
+}
+
 object ClassIds : NamesBase(Strings.BACKEND_PACKAGE) {
+    val WORKER_IMPL = "WorkerImpl".classId { Strings.BACKEND_BUILTIN_PACKAGE.fqName() }
     val BACKEND_FRAGMENT_IMPL = Strings.BACKEND_FRAGMENT_IMPL.classId { Strings.BACKEND_BUILTIN_PACKAGE.fqName() }
     val BACKEND_FRAGMENT = Strings.BACKEND_FRAGMENT.classId()
+}
+
+object CallableIds : NamesBase(`fun`.adaptive.kotlin.service.Strings.SERVICES_API_PACKAGE) {
+    val GET_LOGGER = "getLogger".callableId { FqNames.LOG_PACKAGE }
 }

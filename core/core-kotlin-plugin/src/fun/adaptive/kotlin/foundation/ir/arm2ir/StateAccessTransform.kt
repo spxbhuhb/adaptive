@@ -7,7 +7,6 @@ import `fun`.adaptive.kotlin.common.AbstractIrBuilder
 import `fun`.adaptive.kotlin.common.property
 import `fun`.adaptive.kotlin.common.propertyGetter
 import `fun`.adaptive.kotlin.foundation.ClassIds
-import `fun`.adaptive.kotlin.foundation.Indices
 import `fun`.adaptive.kotlin.foundation.Names
 import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClosure
@@ -68,13 +67,8 @@ class StateAccessTransform(
                 getVariableFunction,
                 0
             ).also {
-
-                it.dispatchReceiver = irGetFragment()
-
-                it.putValueArgument(
-                    Indices.GET_CLOSURE_VARIABLE_INDEX,
-                    irBuilder.irConst(stateVariable.indexInClosure)
-                )
+                it.arguments[0] = irGetFragment()
+                it.arguments[1] = irBuilder.irConst(stateVariable.indexInClosure)
             }
         )
 
@@ -100,17 +94,9 @@ class StateAccessTransform(
             typeArgumentsCount = 0
         ).also {
 
-            it.dispatchReceiver = irGet(newParent !!.dispatchReceiverParameter !!)
-
-            it.putValueArgument(
-                Indices.SET_STATE_VARIABLE_INDEX,
-                irBuilder.irConst(stateVariable.indexInState)
-            )
-
-            it.putValueArgument(
-                Indices.SET_STATE_VARIABLE_VALUE,
-                expression.value.transform(this, null)
-            )
+            it.arguments[0] = irGet(newParent !!.dispatchReceiverParameter !!)
+            it.arguments[1] = irBuilder.irConst(stateVariable.indexInState)
+            it.arguments[2] = expression.value.transform(this, null)
         }
     }
 
@@ -125,19 +111,19 @@ class StateAccessTransform(
     fun transformHelper(expression: IrCall) =
         when (expression.symbol.owner.name.identifier) {
             Strings.HELPER_ADAPTER -> getPropertyValue(Names.ADAPTER)
-            Strings.HELPER_FRAGMENT -> irGet(newParent?.dispatchReceiverParameter!!)
+            Strings.HELPER_FRAGMENT -> irGet(newParent?.dispatchReceiverParameter !!)
             Strings.HELPER_INSTRUCTIONS -> getInstructions()
             else -> throw IllegalStateException("unknown helper function: ${expression.symbol}")
         }
 
 
     fun getPropertyValue(name: Name) =
-        irBuilder.irGetValue(irBuilder.irClass.property(name), irGet(newParent?.dispatchReceiverParameter!!))
+        irBuilder.irGetValue(irBuilder.irClass.property(name), irGet(newParent?.dispatchReceiverParameter !!))
 
-    fun getInstructions() : IrExpression {
+    fun getInstructions(): IrExpression {
         return irCall(
             irBuilder.irClass.propertyGetter { Strings.INSTRUCTIONS },
-            irGet(newParent?.dispatchReceiverParameter!!)
+            irGet(newParent?.dispatchReceiverParameter !!)
         )
     }
 

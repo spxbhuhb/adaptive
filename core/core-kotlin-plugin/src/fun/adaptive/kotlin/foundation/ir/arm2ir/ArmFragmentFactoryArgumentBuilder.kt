@@ -35,23 +35,15 @@ class ArmFragmentFactoryArgumentBuilder(
                 typeArgumentsCount = 0,
                 constructorTypeArgumentsCount = 0
             ).apply {
-                putValueArgument(
-                    0,
-                    irGet(patchFun.dispatchReceiverParameter !!)
-                )
-                putValueArgument(
-                    1,
-                    irConst(argument.fragmentIndex)
-                )
-                putValueArgument(
-                    2,
+                arguments[0] = irGet(patchFun.dispatchReceiverParameter !!)
+                arguments[1] = irConst(argument.fragmentIndex)
+                arguments[2] =
                     if (argument.irExpression is IrFunctionExpression) {
                         irNull()
                     } else {
                         // covers function reference based calls such as direct references and property getters
                         argument.irExpression.transformCreateStateAccess(closure, patchFun) { irGet(fragment) }
                     }
-                )
             }
         )
 

@@ -6,6 +6,7 @@ import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.expressions.impl.IrConstructorCallImpl
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.constructors
@@ -18,7 +19,9 @@ fun AdatIrBuilder.copy(
     val primary = adatClass.constructors.first { it.isPrimary }
     val properties = adatClass.properties
 
-    for (valueParameter in copyFunction.valueParameters) {
+    for (valueParameter in copyFunction.parameters) {
+        if (valueParameter.kind != IrParameterKind.Regular) continue
+
         valueParameter.defaultValue = irFactory.createExpressionBody(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irGetField(
@@ -37,8 +40,10 @@ fun AdatIrBuilder.copy(
                 typeArgumentsCount = 0,
                 constructorTypeArgumentsCount = 0
             ).also {
-                for (index in 0 until copyFunction.valueParameters.size) {
-                    it.putValueArgument(index, irGet(copyFunction.valueParameters[index]))
+                var index = 0
+                for (parameter in copyFunction.parameters) {
+                    if (parameter.kind != IrParameterKind.Regular) continue
+                    it.arguments[index++] = irGet(parameter)
                 }
             }
         )

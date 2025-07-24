@@ -30,16 +30,14 @@ fun AdatIrBuilder.adatWireFormat(
             typeArgumentsCount = 1,
             constructorTypeArgumentsCount = 0
         ).also {
-            it.putTypeArgument(0, adatClassType)
+            it.typeArguments[0] = adatClassType
 
-            it.putValueArgument(0, irGet(companionClass.thisReceiver !!))
-            it.putValueArgument(
-                1,
+            it.arguments[0] = irGet(companionClass.thisReceiver !!)
+            it.arguments[1] =
                 irCall(
                     companionClass.propertyGetter { Strings.ADAT_METADATA },
                     irGet(companionClass.thisReceiver !!)
                 )
-            )
         }
     )
 }

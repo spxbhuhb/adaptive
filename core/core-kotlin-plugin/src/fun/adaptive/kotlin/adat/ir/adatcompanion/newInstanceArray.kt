@@ -5,6 +5,8 @@ package `fun`.adaptive.kotlin.adat.ir.adatcompanion
 
 import `fun`.adaptive.kotlin.adat.AdatPluginKey
 import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
+import `fun`.adaptive.kotlin.common.firstRegularParameter
+import `fun`.adaptive.kotlin.common.regularParameterCount
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
@@ -25,10 +27,10 @@ fun AdatIrBuilder.newInstanceArray(
             IrConstructorCallImpl(
                 SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                 newInstanceFunction.returnType,
-                companionClass.parentAsClass.constructors.first { it.valueParameters.size == 1 && it.origin == AdatPluginKey.origin }.symbol,
+                companionClass.parentAsClass.constructors.first { it.regularParameterCount == 1 && it.origin == AdatPluginKey.origin }.symbol,
                 0, 0
             ).also {
-                it.putValueArgument(0, irGet(newInstanceFunction.valueParameters[0]))
+                it.arguments[0] = irGet(newInstanceFunction.firstRegularParameter)
             }
         )
     }

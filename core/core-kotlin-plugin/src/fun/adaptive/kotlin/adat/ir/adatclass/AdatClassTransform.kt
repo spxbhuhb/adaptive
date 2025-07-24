@@ -13,13 +13,13 @@ import org.jetbrains.kotlin.ir.declarations.IrConstructor
 import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.util.isFakeOverride
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
+import org.jetbrains.kotlin.ir.visitors.IrVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
 
 class AdatClassTransform(
     override val pluginContext: AdatPluginContext,
     private val adatClass : IrClass
-) : IrElementVisitorVoid, AdatIrBuilder {
+) : IrVisitorVoid(), AdatIrBuilder {
 
     val metadata = MetadataVisitor(pluginContext, adatClass).also { adatClass.acceptVoid(it) }
 

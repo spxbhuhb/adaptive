@@ -15,14 +15,12 @@ interface TestService {
 
 val testServiceConsumer = getService<TestService>(TestServiceTransport(TestServiceImpl()))
 
+@ServiceProvider
 class TestServiceImpl : TestService, ServiceImpl<TestServiceImpl>() {
-
-    override var serviceCallTransport: ServiceCallTransport
-        get() = serviceContext.transport
-        set(v) { TODO() }
 
     override suspend fun testValue(arg1: Unit): Unit = arg1
     override suspend fun testValueNull(arg1: Unit?): Unit? = arg1
+
 }
 
 fun box(): String {

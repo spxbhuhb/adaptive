@@ -5,6 +5,7 @@ package `fun`.adaptive.kotlin.adat.ir.adatclass
 
 import `fun`.adaptive.kotlin.adat.Names
 import `fun`.adaptive.kotlin.adat.ir.AdatIrBuilder
+import `fun`.adaptive.kotlin.common.firstRegularParameter
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
 import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
@@ -21,7 +22,7 @@ fun AdatIrBuilder.equals(
             irCall(
                 adatClass.getSimpleFunction(Names.ADAT_EQUALS.identifier) !!,
                 irGet(equalsFunction.dispatchReceiverParameter !!),
-                irGet(equalsFunction.valueParameters.first())
+                irGet(equalsFunction.firstRegularParameter)
             )
         )
     }

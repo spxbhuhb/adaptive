@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
+import `fun`.adaptive.kotlin.common.firstRegularParameter
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClosure
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmStateVariableBindingArgument
 import `fun`.adaptive.kotlin.foundation.ir.util.adatCompanionOrNull
@@ -27,7 +28,7 @@ class ArmStateVariableBindingArgumentBuilder(
             dispatchReceiver = irGet(patchFun.dispatchReceiverParameter !!),
             args = arrayOf(
                 irConst(argument.indexInState), // indexInThis
-                irGet(patchFun.valueParameters.first()), // descendant
+                irGet(patchFun.firstRegularParameter), // descendant
                 irConst(argument.argumentIndex), // indexInTarget
                 genPath(argument), // path
                 irConst(Signature.typeSignature(argument.boundType, pluginContext.adatClass)), // boundType

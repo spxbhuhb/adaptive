@@ -1,10 +1,12 @@
 package `fun`.adaptive.value.blob.server
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.blob.AvBlobUploadKey
 import `fun`.adaptive.value.blob.api.AvBlobApi
 
+@ServiceProvider
 class AvBlobService : ServiceImpl<AvBlobService>(), AvBlobApi {
 
     val blobWorker by workerImpl<AvBlobWorker>()

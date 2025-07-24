@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
+import `fun`.adaptive.kotlin.common.firstRegularParameter
 import `fun`.adaptive.kotlin.foundation.Indices
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmBranch
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClosure
@@ -64,7 +65,7 @@ class ArmSelectBuilder(
     private fun irConditionBranchNoSubject(patchFun: IrSimpleFunction, branch: ArmBranch) =
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            branch.condition.irExpression.transformCreateStateAccess(armSelect.closure, patchFun) { irGet(patchFun.valueParameters.first()) },
+            branch.condition.irExpression.transformCreateStateAccess(armSelect.closure, patchFun) { irGet(patchFun.firstRegularParameter) },
             irConst(branch.index)
         )
 
@@ -75,7 +76,7 @@ class ArmSelectBuilder(
         return DeclarationIrBuilder(irContext, patchFun.symbol).irComposite(subject, resultType = subject.type) {
 
             val subjectVariable = irTemporary(
-                subject.transformCreateStateAccess(armSelect.closure, patchFun) { irGet(patchFun.valueParameters.first()) },
+                subject.transformCreateStateAccess(armSelect.closure, patchFun) { irGet(patchFun.firstRegularParameter) },
             )
 
             val transformClosure =
@@ -104,7 +105,7 @@ class ArmSelectBuilder(
     private fun irConditionBranchWithSubject(patchFun: IrSimpleFunction, branch: ArmBranch, transformClosure: ArmClosure) =
         IrBranchImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            branch.condition.irExpression.transformCreateStateAccess(transformClosure, patchFun) { irGet(patchFun.valueParameters.first()) },
+            branch.condition.irExpression.transformCreateStateAccess(transformClosure, patchFun) { irGet(patchFun.firstRegularParameter) },
             irConst(branch.index)
         )
 

@@ -21,11 +21,8 @@ interface TestService1 {
 
 val testServiceConsumer = getService<TestService1>(TestServiceTransport(TestService1Impl()))
 
+@ServiceProvider
 class TestService1Impl : TestService1, ServiceImpl<TestService1Impl>() {
-
-    override var serviceCallTransport: ServiceCallTransport
-        get() = serviceContext.transport
-        set(v) { TODO() }
 
     override suspend fun testFun() : A<Any> = A(12)
 

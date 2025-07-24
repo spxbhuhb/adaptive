@@ -3,6 +3,7 @@
  */
 package `fun`.adaptive.kotlin.foundation.ir.ir2arm.instruction
 
+import `fun`.adaptive.kotlin.common.firstRegularArgument
 import `fun`.adaptive.kotlin.foundation.Names
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClass
@@ -129,7 +130,7 @@ class OuterInstructionLowering(
             check(owner.isOperator) { "invalid outer instruction chain (not an operator): ${expression.dumpKotlinLike()}" }
             check(owner.name == Names.RANGE_TO) { "invalid outer instruction chain (not rangeTo): ${expression.dumpKotlinLike()}" }
 
-            val value = current.getValueArgument(0) !!
+            val value = current.firstRegularArgument !!
             val type = value.type
 
             check(type.isInstruction(pluginContext)) { "invalid outer instruction chain (range end is not an instruction): ${expression.dumpKotlinLike()}" }

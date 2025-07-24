@@ -9,6 +9,7 @@ import `fun`.adaptive.auth.context.ensureHas
 import `fun`.adaptive.auth.context.ensureLoggedIn
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.value.AvSubscribeCondition
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvSubscriptionId
@@ -17,6 +18,7 @@ import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import `fun`.adaptive.value.util.serviceSubscribe
 
+@ServiceProvider
 class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
 
     val valueWorker by workerImpl<AvValueWorker>()

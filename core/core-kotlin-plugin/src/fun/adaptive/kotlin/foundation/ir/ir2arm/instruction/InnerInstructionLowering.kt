@@ -8,16 +8,17 @@ import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClass
 import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import `fun`.adaptive.kotlin.foundation.ir.util.HigherOrderProcessing
 import org.jetbrains.kotlin.ir.IrElement
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.util.isSubtypeOfClass
 import org.jetbrains.kotlin.ir.util.isFunction
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
+import org.jetbrains.kotlin.ir.visitors.IrVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
 
 class InnerInstructionLowering(
     override val pluginContext: FoundationPluginContext,
     val armClass: ArmClass
-) : IrElementVisitorVoid, AdaptiveAnnotationBasedExtension {
+) : IrVisitorVoid(), AdaptiveAnnotationBasedExtension {
 
     override fun visitElement(element: IrElement) {
         element.acceptChildrenVoid(this)
@@ -28,13 +29,13 @@ class InnerInstructionLowering(
 
         if (! expression.isDirectAdaptiveCall) return
 
-        val valueParameters = expression.symbol.owner.valueParameters
+        val valueParameters = expression.symbol.owner.parameters
 
         @HigherOrderProcessing
-        val adaptiveParameter = valueParameters.lastOrNull { it.isAdaptive && it.type.isFunction() } ?: return
+        val adaptiveParameter = valueParameters.lastOrNull { it.kind == IrParameterKind.Regular && it.isAdaptive && it.type.isFunction() } ?: return
 
         val store = armClass.instructions.getOrPut(expression) { mutableListOf() }
-        store += extractInnerInstructions(expression.getValueArgument(adaptiveParameter.index))
+        store += extractInnerInstructions(expression.arguments[adaptiveParameter])
     }
 
     private fun extractInnerInstructions(irExpression: IrExpression?): List<IrExpression> {

@@ -4,25 +4,26 @@
 
 package `fun`.adaptive.kotlin.common
 
-import org.jetbrains.kotlin.backend.common.ir.addDispatchReceiver
 import org.jetbrains.kotlin.backend.common.lower.DeclarationIrBuilder
-import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
-import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.InternalSymbolFinderAPI
 import org.jetbrains.kotlin.ir.UNDEFINED_OFFSET
-import org.jetbrains.kotlin.ir.builders.*
-import org.jetbrains.kotlin.ir.builders.declarations.*
+import org.jetbrains.kotlin.ir.builders.IrBlockBodyBuilder
+import org.jetbrains.kotlin.ir.builders.declarations.buildReceiverParameter
+import org.jetbrains.kotlin.ir.builders.irBlockBody
+import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.*
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.*
-import org.jetbrains.kotlin.ir.symbols.*
+import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
+import org.jetbrains.kotlin.ir.symbols.IrFunctionSymbol
+import org.jetbrains.kotlin.ir.symbols.IrSimpleFunctionSymbol
+import org.jetbrains.kotlin.ir.symbols.IrValueSymbol
 import org.jetbrains.kotlin.ir.symbols.impl.IrValueParameterSymbolImpl
 import org.jetbrains.kotlin.ir.types.*
 import org.jetbrains.kotlin.ir.types.impl.IrSimpleTypeImpl
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.defaultType
 import org.jetbrains.kotlin.ir.util.getPrimitiveArrayElementType
-import org.jetbrains.kotlin.ir.util.parentAsClass
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.name.SpecialNames
 import org.jetbrains.kotlin.util.OperatorNameConventions
@@ -48,10 +49,10 @@ interface AbstractIrBuilder {
         irFactory.createValueParameter(
             SYNTHETIC_OFFSET,
             SYNTHETIC_OFFSET,
-            IrDeclarationOrigin.INSTANCE_RECEIVER,
-            symbol = IrValueParameterSymbolImpl(),
+            origin = IrDeclarationOrigin.INSTANCE_RECEIVER,
+            kind = IrParameterKind.DispatchReceiver,
             name = SpecialNames.THIS,
-            index = UNDEFINED_PARAMETER_INDEX,
+            symbol = IrValueParameterSymbolImpl(),
             type = IrSimpleTypeImpl(symbol, false, emptyList(), emptyList()),
             varargElementType = null,
             isCrossinline = false,
@@ -67,76 +68,6 @@ interface AbstractIrBuilder {
     // Properties
     // --------------------------------------------------------------------------------------------------------
 
-    fun IrClass.addIrProperty(
-        inName: Name,
-        inType: IrType,
-        inIsVar: Boolean,
-        inInitializer: IrExpression? = null,
-        overridden: List<IrPropertySymbol>? = null
-    ): IrProperty {
-        val irClass = this
-
-        val irField = irFactory.buildField {
-            name = inName
-            type = inType
-            origin = IrDeclarationOrigin.PROPERTY_BACKING_FIELD
-            visibility = DescriptorVisibilities.PRIVATE
-        }.apply {
-            parent = irClass
-            initializer = inInitializer?.let { irFactory.createExpressionBody(it) }
-        }
-
-        val irProperty = irClass.addProperty {
-            name = inName
-            isVar = inIsVar
-        }.apply {
-            parent = irClass
-            backingField = irField
-            overridden?.let { overriddenSymbols = it }
-            addDefaultGetter(irClass, irBuiltIns)
-        }
-
-        if (inIsVar) {
-            irProperty.addDefaultSetter(irField)
-        }
-
-        return irProperty
-    }
-
-    fun IrProperty.addDefaultSetter(irField: IrField) {
-
-        setter = irFactory.buildFun {
-
-            origin = IrDeclarationOrigin.DEFAULT_PROPERTY_ACCESSOR
-            name = Name.identifier("set-" + irField.name.identifier)
-            visibility = DescriptorVisibilities.PUBLIC
-            modality = Modality.FINAL
-            returnType = irBuiltIns.unitType
-
-        }.also {
-
-            it.parent = parent
-            it.correspondingPropertySymbol = symbol
-
-            val receiver = it.addDispatchReceiver {
-                type = parentAsClass.defaultType
-            }
-
-            val value = it.addValueParameter {
-                name = Name.identifier("set-?")
-                type = irField.type
-            }
-
-            it.body = DeclarationIrBuilder(irContext, this.symbol).irBlockBody {
-                + irSetField(
-                    receiver = irGet(receiver),
-                    field = irField,
-                    value = irGet(value)
-                )
-            }
-        }
-    }
-
     fun transformGetter(irClass: IrClass, getter: IrSimpleFunction, field: IrField?, value: (AbstractIrBuilder.() -> IrExpression)? = null) {
 
         getter.isFakeOverride = false
@@ -147,9 +78,7 @@ interface AbstractIrBuilder {
             IrDeclarationOrigin.DEFINED
         }
 
-        getter.addDispatchReceiver {
-            type = irClass.defaultType
-        }
+        getter.replaceDispatchReceiver(irClass.defaultType)
 
         val returnValue =
             if (field != null) {
@@ -174,16 +103,6 @@ interface AbstractIrBuilder {
         }
     }
 
-    fun IrProperty.irSetField(value: IrExpression, receiver: IrExpression): IrSetFieldImpl {
-        return IrSetFieldImpl(
-            SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-            backingField !!.symbol,
-            receiver,
-            value,
-            irBuiltIns.unitType
-        )
-    }
-
     fun irGetValue(irProperty: IrProperty, receiver: IrExpression?): IrCall =
         IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
@@ -192,7 +111,7 @@ interface AbstractIrBuilder {
             typeArgumentsCount = 0,
             origin = IrStatementOrigin.GET_PROPERTY
         ).apply {
-            dispatchReceiver = receiver
+            arguments[0] = receiver
         }
 
     fun irSetValue(irProperty: IrProperty, value: IrExpression, receiver: IrExpression?): IrCall =
@@ -202,21 +121,28 @@ interface AbstractIrBuilder {
             irProperty.setter !!.symbol,
             typeArgumentsCount = 0
         ).apply {
-            dispatchReceiver = receiver
-            putValueArgument(0, value)
+            arguments[0] = receiver
+            arguments[1] = value
         }
 
     // --------------------------------------------------------------------------------------------------------
     // Functions
     // --------------------------------------------------------------------------------------------------------
 
+    fun IrSimpleFunction.replaceDispatchReceiver(type : IrType) {
+        parameters = parameters.map {
+            if (it.kind != IrParameterKind.DispatchReceiver) {
+                it
+            } else {
+                buildReceiverParameter {
+                    this.type = type
+                }
+            }
+        }
+    }
+
     fun IrFunction.irBlockBody(builder: IrBlockBodyBuilder.() -> Unit) =
         DeclarationIrBuilder(pluginContext.irContext, symbol).irBlockBody(startOffset, endOffset, builder)
-
-    fun IrFunction.irReturnBody(builder: IrBlockBodyBuilder.() -> IrExpression) =
-        DeclarationIrBuilder(pluginContext.irContext, symbol).irBlockBody(startOffset, endOffset) {
-            + irReturn(builder())
-        }
 
     // --------------------------------------------------------------------------------------------------------
     // IR Basics
@@ -399,10 +325,11 @@ interface AbstractIrBuilder {
             symbol.owner.returnType,
             symbol as IrSimpleFunctionSymbol,
             symbol.owner.typeParameters.size
-        ).also {
-            if (dispatchReceiver != null) it.dispatchReceiver = dispatchReceiver
-            args.forEachIndexed { index, arg ->
-                it.putValueArgument(index, arg)
+        ).also { call ->
+            var index = 0
+            if (dispatchReceiver != null) call.arguments[index++] = dispatchReceiver
+            args.forEach { arg ->
+                call.arguments[index++] = arg
             }
         }
     }
@@ -437,28 +364,26 @@ interface AbstractIrBuilder {
             irBuiltIns.arrayOf,
             typeArgumentsCount = 1
         ).apply {
-            putTypeArgument(0, irBuiltIns.stringType)
-            putValueArgument(0,
-                IrVarargImpl(
-                    SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
-                    type,
-                    irBuiltIns.stringType
-                ).also {
-                    it.elements += elements
-                }
-            )
+            typeArguments[0] = irBuiltIns.stringType
+            arguments[0] = IrVarargImpl(
+                SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
+                type,
+                irBuiltIns.stringType
+            ).also {
+                it.elements += elements
+            }
         }
     }
 
     @OptIn(InternalSymbolFinderAPI::class)
-    fun irIntArrayOf(values : Iterable<Int>) : IrCall =
+    fun irIntArrayOf(values: Iterable<Int>): IrCall =
         IrCallImpl(
             SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
             irBuiltIns.intArray.defaultType,
             irContext.irBuiltIns.symbolFinder.findFunctions(Name.identifier("intArrayOf")).single(),
             typeArgumentsCount = 0
         ).apply {
-            putValueArgument(0,
+            arguments[0] =
                 IrVarargImpl(
                     SYNTHETIC_OFFSET, SYNTHETIC_OFFSET,
                     irBuiltIns.intArray.defaultType,
@@ -466,7 +391,6 @@ interface AbstractIrBuilder {
                 ).apply {
                     elements += values.map { irConst(it) }
                 }
-            )
         }
 
 }

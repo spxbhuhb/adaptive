@@ -7,6 +7,7 @@ import `fun`.adaptive.kotlin.AdaptiveOptions
 import `fun`.adaptive.kotlin.common.AbstractPluginContext
 import `fun`.adaptive.kotlin.common.functionByName
 import `fun`.adaptive.kotlin.common.property
+import `fun`.adaptive.kotlin.common.regularParameterCount
 import `fun`.adaptive.kotlin.foundation.CallableIds
 import `fun`.adaptive.kotlin.foundation.ClassIds
 import `fun`.adaptive.kotlin.foundation.Strings
@@ -58,7 +59,7 @@ class FoundationPluginContext(
     val emptyInstructions = CallableIds.EMPTY_INSTRUCTIONS.propertyGetterSymbol()
 
     val adaptiveAnonymousClass = ClassIds.ADAPTIVE_ANONYMOUS.classSymbol()
-    val anonymousConstructor = adaptiveAnonymousClass.constructors.first { it.owner.valueParameters.size == 4 }
+    val anonymousConstructor = adaptiveAnonymousClass.constructors.first { it.owner.regularParameterCount == 4 }
     val anonymousFactorySetterSymbol = adaptiveAnonymousClass.property { "factory" }.setter!!.symbol
 
     val boundFragmentFactoryClass = ClassIds.BOUND_FRAGMENT_FACTORY.classSymbol()
@@ -78,11 +79,11 @@ class FoundationPluginContext(
     val create = Strings.CREATE.fragmentFunction()
     val mount = Strings.MOUNT.fragmentFunction()
 
-    val haveToPatch = Strings.HAVE_TO_PATCH.fragmentFunction { it.owner.valueParameters.size == 2 }
+    val haveToPatch = Strings.HAVE_TO_PATCH.fragmentFunction { it.owner.regularParameterCount == 2 }
     val getCreateClosureDirtyMask = Strings.GET_CREATE_CLOSURE_DIRTY_MASK.fragmentFunction()
     val getCreateClosureVariable = Strings.GET_CREATE_CLOSURE_VARIABLE.fragmentFunction()
     val getThisClosureVariable = Strings.GET_THIS_CLOSURE_VARIABLE.fragmentFunction()
-    val setStateVariable = Strings.SET_STATE_VARIABLE.fragmentFunction { it.owner.valueParameters.size == 2 }
+    val setStateVariable = Strings.SET_STATE_VARIABLE.fragmentFunction { it.owner.regularParameterCount == 2 }
     val patchIfDirty = Strings.PATCH_IF_DIRTY.fragmentFunction()
     val localBinding = Strings.LOCAL_BINDING.fragmentFunction()
     val setBinding = Strings.SET_BINDING.fragmentFunction()

@@ -13,6 +13,7 @@ import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.lib.util.error.requirement
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
@@ -21,6 +22,7 @@ import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import `fun`.adaptive.value.store.AvComputeContext
 import kotlinx.datetime.Clock.System.now
 
+@ServiceProvider
 class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>() {
 
     val valueWorker by workerImpl<AvValueWorker>()

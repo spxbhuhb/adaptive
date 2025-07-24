@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
+import `fun`.adaptive.kotlin.common.firstRegularParameter
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmClosure
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmDetachExpression
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmValueArgument
@@ -80,7 +81,7 @@ open class ArmValueArgumentBuilder(
         lambda.body = DeclarationIrBuilder(irContext, lambda.symbol).irBlockBody {
             + irCall(
                 pluginContext.detachFun,
-                irGet(lambda.valueParameters.first()), // the handler
+                irGet(lambda.firstRegularParameter), // the handler
                 irGet(patchFun.dispatchReceiverParameter !!), // first parameter of the handler
                 irConst(detachExpression.armCall.index)
             )
@@ -105,7 +106,7 @@ open class ArmValueArgumentBuilder(
                 }
             }
 
-            putValueArgument(0, argument)
+            arguments[0] = argument
         }
 
 

@@ -12,7 +12,7 @@ import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrFunctionExpression
 import org.jetbrains.kotlin.ir.expressions.IrGetValue
 import org.jetbrains.kotlin.ir.util.hasEqualFqName
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
+import org.jetbrains.kotlin.ir.visitors.IrVisitorVoid
 
 /**
  * Collects state variable dependencies. These may be:
@@ -28,7 +28,7 @@ import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
 class DependencyVisitor(
     private val closure: ArmState,
     private val skipLambdas : Boolean
-) : IrElementVisitorVoid {
+) : IrVisitorVoid() {
 
     var dependencies = mutableListOf<ArmStateVariable>()
 

@@ -5,6 +5,7 @@ package `fun`.adaptive.kotlin.backend.ir
 
 import `fun`.adaptive.kotlin.common.transformProperty
 import `fun`.adaptive.kotlin.backend.Names
+import `fun`.adaptive.log.devInfo
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrClass
@@ -17,29 +18,25 @@ class BackendFragmentImplTransform(
 
     override fun visitClassNew(declaration: IrClass): IrStatement {
 
-        if (! declaration.defaultType.isSubtypeOfClass(pluginContext.backendFragmentImplClass)) return declaration
-        if (declaration.isInterface) return declaration
+        if (! declaration.defaultType.isSubtypeOfClass(pluginContext.workerImplClass)) return declaration
 
         return super.visitClassNew(declaration)
     }
 
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
         when (declaration.name) {
-
-            Names.FRAGMENT_PROPERTY -> {
-                transformProperty(
-                    pluginContext,
-                    declaration,
-                    backingField = true,
-                ) { irNull() }
-            }
-
             Names.LOGGER_PROPERTY -> {
                 transformProperty(
                     pluginContext,
                     declaration,
                     backingField = true,
-                ) { irNull() }
+                ) {
+                    irCall(
+                        this@BackendFragmentImplTransform.pluginContext.getLogger,
+                        null,
+                        irConst(declaration.parentClassOrNull?.name?.identifier ?: "Unknown")
+                    )
+                }
             }
         }
 

@@ -12,6 +12,7 @@ import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.ktor.ktor
 import `fun`.adaptive.reflect.CallSiteName
 import `fun`.adaptive.service.ServiceApi
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.service.api.getService
 import kotlinx.coroutines.runBlocking
 import org.junit.Test
@@ -23,6 +24,7 @@ interface DuplexApi {
     suspend fun process(value: String): String
 }
 
+@ServiceProvider
 class DuplexService : DuplexApi, ServiceImpl<DuplexService>() {
 
     override suspend fun process(value: String): String {

@@ -6,6 +6,7 @@ package `fun`.adaptive.kotlin.service.ir.consumer
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
 import `fun`.adaptive.kotlin.common.functionByName
 import `fun`.adaptive.kotlin.common.property
+import `fun`.adaptive.kotlin.common.regularParameterCount
 import `fun`.adaptive.kotlin.service.Names
 import `fun`.adaptive.kotlin.service.ServicesPluginKey
 import `fun`.adaptive.kotlin.service.Strings
@@ -19,6 +20,7 @@ import org.jetbrains.kotlin.ir.builders.irBlockBody
 import org.jetbrains.kotlin.ir.builders.irReturn
 import org.jetbrains.kotlin.ir.declarations.IrClass
 import org.jetbrains.kotlin.ir.declarations.IrDeclarationOrigin
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.expressions.IrStatementOrigin
@@ -103,19 +105,23 @@ class ConsumerClassTransform(
             dispatchReceiver = irGet(function.dispatchReceiverParameter !!)
         ).also { it.origin = IrStatementOrigin.GET_PROPERTY }
 
-        if (function.valueParameters.isEmpty()) return payload
+        if (function.regularParameterCount == 0) return payload
 
         payload = irCall(
             pluginContext.wireFormatCache.pluginContext.pseudoInstanceStart,
             dispatchReceiver = payload
         )
 
-        function.valueParameters.forEachIndexed { fieldNumber, valueParameter ->
+        var fieldNumber = 1
+
+        for (parameter in function.parameters) {
+            if (parameter.kind != IrParameterKind.Regular) continue
+
             payload = pluginContext.wireFormatCache.encode(
                 payload,
-                fieldNumber + 1,
-                valueParameter.name.identifier,
-                irGet(valueParameter)
+                fieldNumber++,
+                parameter.name.identifier,
+                irGet(parameter)
             )
         }
 

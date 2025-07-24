@@ -4,8 +4,10 @@ import `fun`.adaptive.auth.context.publicAccess
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.grove.doc.api.GroveDocApi
 import `fun`.adaptive.grove.doc.model.*
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.value.AvValueWorker
 
+@ServiceProvider
 class GroveDocService : ServiceImpl<GroveDocService>(), GroveDocApi {
 
     val values by workerImpl<AvValueWorker>()

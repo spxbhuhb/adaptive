@@ -26,7 +26,8 @@ class GetConsumerTransform(
 
     override fun visitCall(expression: IrCall): IrExpression {
         if (expression.symbol == pluginContext.getService) {
-            expression.putValueArgument(1, newInstance(checkNotNull(expression.getTypeArgument(0))))
+            // first (with index 0) is the transport
+            expression.arguments[1] = newInstance(checkNotNull(expression.typeArguments[0]))
         }
 
         return super.visitCall(expression)

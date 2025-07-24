@@ -4,13 +4,16 @@
 package `fun`.adaptive.kotlin.reflect.ir
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
+import `fun`.adaptive.kotlin.common.firstRegularArgument
 import `fun`.adaptive.kotlin.wireformat.Signature
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrExpression
 import org.jetbrains.kotlin.ir.types.IrType
 import org.jetbrains.kotlin.ir.types.classOrNull
 import org.jetbrains.kotlin.ir.util.defaultType
+import org.jetbrains.kotlin.ir.util.dumpKotlinLike
 import org.jetbrains.kotlin.ir.util.parentAsClass
 
 class TypeSignatureTransform(
@@ -22,13 +25,13 @@ class TypeSignatureTransform(
             return super.visitCall(expression)
         }
 
-        val receiver = expression.extensionReceiver
+        val receiver = expression.symbol.owner.parameters.firstOrNull { it.kind == IrParameterKind.ExtensionReceiver }
         var type : IrType
 
-        if (receiver != null) {
-            type = receiver.type
+        if (receiver == null) {
+            type = checkNotNull(expression.typeArguments[0]?.type) { "missing type argument in ${expression.symbol.owner.name} ${expression.dumpKotlinLike()}" }
         } else {
-            type = checkNotNull(expression.getTypeArgument(0))
+            type = checkNotNull(expression.arguments[receiver]?.type) { "missing receiver type in ${expression.symbol.owner.name} ${expression.dumpKotlinLike()}" }
         }
 
         type.classOrNull?.let {

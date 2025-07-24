@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
-import `fun`.adaptive.kotlin.foundation.Indices
+import `fun`.adaptive.kotlin.common.firstRegularParameter
 import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmEntryPoint
@@ -33,7 +33,7 @@ class ArmEntryPointBuilder(
             val adapter = irTemporary(
                 irImplicitAs(
                     pluginContext.adaptiveAdapterType,
-                    irGet(function.valueParameters.first())
+                    irGet(function.firstRegularParameter)
                 )
             )
 
@@ -43,9 +43,9 @@ class ArmEntryPointBuilder(
                 irClass.constructors.single().symbol,
                 0, 0
             ).also { call ->
-                call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_ADAPTER, irGet(adapter))
-                call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_PARENT, irNull())
-                call.putValueArgument(Indices.ADAPTIVE_FRAGMENT_INDEX, irConst(0))
+                call.arguments[0] = irGet(adapter)
+                call.arguments[1] = irNull()
+                call.arguments[2] = irConst(0)
             }
 
             val root = irTemporary(instance).also { it.parent = function }

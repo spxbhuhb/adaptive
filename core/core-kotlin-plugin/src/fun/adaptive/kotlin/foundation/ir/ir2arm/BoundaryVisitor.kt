@@ -11,7 +11,7 @@ import org.jetbrains.kotlin.ir.declarations.IrFunction
 import org.jetbrains.kotlin.ir.expressions.IrCall
 import org.jetbrains.kotlin.ir.expressions.IrReturn
 import org.jetbrains.kotlin.ir.util.statements
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
+import org.jetbrains.kotlin.ir.visitors.IrVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptVoid
 
 /**
@@ -21,7 +21,7 @@ import org.jetbrains.kotlin.ir.visitors.acceptVoid
  */
 class BoundaryVisitor(
     override val pluginContext: FoundationPluginContext
-) : IrElementVisitorVoid, AdaptiveAnnotationBasedExtension {
+) : IrVisitorVoid(), AdaptiveAnnotationBasedExtension {
 
     var found: Boolean = false
 

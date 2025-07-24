@@ -8,6 +8,7 @@ import `fun`.adaptive.kotlin.common.isSubclassOf
 import org.jetbrains.kotlin.descriptors.ClassKind
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.ir.declarations.IrFunction
+import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.symbols.IrClassSymbol
 import org.jetbrains.kotlin.ir.types.IrSimpleType
 import org.jetbrains.kotlin.ir.types.IrType
@@ -63,8 +64,12 @@ object Signature {
     fun functionSignature(function: IrFunction, adatClass: IrClassSymbol): String {
         val parts = mutableListOf<String>()
 
-        function.valueParameters.mapTo(parts) {
-            typeSignature(it.type, adatClass)
+        function.parameters.mapNotNullTo(parts) {
+            if (it.kind != IrParameterKind.Regular) {
+                null
+            } else {
+                typeSignature(it.type, adatClass)
+            }
         }
 
         return function.name.identifier + "(" + parts.joinToString("") + ")" + typeSignature(function.returnType, adatClass)

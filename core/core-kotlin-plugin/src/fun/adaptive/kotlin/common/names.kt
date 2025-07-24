@@ -180,7 +180,7 @@ interface Symbols {
     val irContext: IrPluginContext
 
     val CallableId.noArg
-        get() = irContext.referenceFunctions(this).first { it.owner.valueParameters.isEmpty() }
+        get() = irContext.referenceFunctions(this).first { it.owner.regularParameterCount == 0 }
 
     val ClassId.classSymbol
         get() = checkNotNull(irContext.referenceClass(this)) { "Missing class ${this.asString()}" }

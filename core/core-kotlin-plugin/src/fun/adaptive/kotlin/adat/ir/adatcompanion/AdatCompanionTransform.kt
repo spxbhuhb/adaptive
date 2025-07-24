@@ -20,14 +20,14 @@ import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.classId
 import org.jetbrains.kotlin.ir.util.isFakeOverride
 import org.jetbrains.kotlin.ir.util.parentAsClass
-import org.jetbrains.kotlin.ir.visitors.IrElementVisitorVoid
+import org.jetbrains.kotlin.ir.visitors.IrVisitorVoid
 import org.jetbrains.kotlin.ir.visitors.acceptChildrenVoid
 
 class AdatCompanionTransform(
     override val pluginContext: AdatPluginContext,
     val companionClass: IrClass,
     val properties: List<AdatPropertyMetadata>
-) : IrElementVisitorVoid, AdatIrBuilder {
+) : IrVisitorVoid(), AdatIrBuilder {
 
     fun transform() {
         irFactory.createAnonymousInitializer(

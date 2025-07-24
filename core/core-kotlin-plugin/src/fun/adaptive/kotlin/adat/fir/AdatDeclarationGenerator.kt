@@ -11,9 +11,12 @@ import `fun`.adaptive.kotlin.adat.Names
 import org.jetbrains.kotlin.descriptors.Modality
 import org.jetbrains.kotlin.fir.FirSession
 import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
+import org.jetbrains.kotlin.fir.declarations.DirectDeclarationsAccess
 import org.jetbrains.kotlin.fir.declarations.FirDeclarationOrigin
 import org.jetbrains.kotlin.fir.declarations.primaryConstructorIfAny
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
+import org.jetbrains.kotlin.fir.expressions.FirEmptyArgumentList
+import org.jetbrains.kotlin.fir.expressions.builder.buildDelegatedConstructorCall
 import org.jetbrains.kotlin.fir.expressions.impl.FirEmptyExpressionBlock
 import org.jetbrains.kotlin.fir.extensions.*
 import org.jetbrains.kotlin.fir.extensions.predicate.LookupPredicate
@@ -21,11 +24,14 @@ import org.jetbrains.kotlin.fir.plugin.createCompanionObject
 import org.jetbrains.kotlin.fir.plugin.createConstructor
 import org.jetbrains.kotlin.fir.plugin.createMemberFunction
 import org.jetbrains.kotlin.fir.plugin.createMemberProperty
+import org.jetbrains.kotlin.fir.references.builder.buildResolvedNamedReference
 import org.jetbrains.kotlin.fir.resolve.defaultType
 import org.jetbrains.kotlin.fir.resolve.getSuperTypes
 import org.jetbrains.kotlin.fir.symbols.SymbolInternals
 import org.jetbrains.kotlin.fir.symbols.impl.*
+import org.jetbrains.kotlin.fir.toFirResolvedTypeRef
 import org.jetbrains.kotlin.fir.types.classId
+import org.jetbrains.kotlin.fir.types.coneTypeSafe
 import org.jetbrains.kotlin.fir.types.constructClassLikeType
 import org.jetbrains.kotlin.name.CallableId
 import org.jetbrains.kotlin.name.Name
@@ -33,9 +39,10 @@ import org.jetbrains.kotlin.name.SpecialNames
 
 class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationExtension(session) {
 
+    val ADAT_PREDICATE = LookupPredicate.create { annotated(FqNames.ADAT_ANNOTATION) }
+
     val nullableAnyType = ClassIds.KOTLIN_ANY.constructClassLikeType(emptyArray(), true)
     val nullableAnyArrayType = ClassIds.KOTLIN_ARRAY.constructClassLikeType(arrayOf(nullableAnyType), false)
-    val ADAT_PREDICATE = LookupPredicate.create { annotated(FqNames.ADAT_ANNOTATION) }
     val descriptorSetType = ClassIds.KOTLIN_ARRAY.constructClassLikeType(arrayOf(ClassIds.ADAT_DESCRIPTOR_SET.defaultType(emptyList())), false)
 
     override fun FirDeclarationPredicateRegistrar.registerPredicates() {
@@ -65,6 +72,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         }
     }
 
+    @OptIn(SymbolInternals::class)
     private fun generateCompanionDeclaration(owner: FirRegularClassSymbol): FirRegularClassSymbol? {
         if (owner.companionObjectSymbol != null || owner.isCompanion) return null
 
@@ -96,6 +104,7 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
         SpecialNames.INIT
     )
 
+    @OptIn(DirectDeclarationsAccess::class)
     override fun getCallableNamesForClass(classSymbol: FirClassSymbol<*>, context: MemberGenerationContext): Set<Name> {
         val names = classSymbol.declarationSymbols.mapNotNull { if (it is FirNamedFunctionSymbol && ! it.name.isSpecial) it.name else null }
 
@@ -129,12 +138,26 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
             emptyList()
         }
 
+    @OptIn(DirectDeclarationsAccess::class)
     private fun generateClassConstructors(context: MemberGenerationContext): List<FirConstructorSymbol> {
         val result = mutableListOf<FirConstructorSymbol>()
 
         // FIXME duplicate array constructor
-        result += createConstructor(context.owner, AdatPluginKey, isPrimary = false, generateDelegatedNoArgConstructorCall = true) {
+        result += createConstructor(context.owner, AdatPluginKey, isPrimary = false) {
             valueParameter(Names.VALUES, nullableAnyArrayType)
+        }.also { constructor ->
+            constructor.replaceDelegatedConstructor(
+                buildDelegatedConstructorCall {
+                    constructedTypeRef = context.owner.defaultType().toFirResolvedTypeRef()
+                    val primary = context.owner.declarationSymbols.firstOrNull { it is FirConstructorSymbol && it.isPrimary } as? FirConstructorSymbol
+                    calleeReference = buildResolvedNamedReference {
+                        name = primary !!.name
+                        resolvedSymbol = primary
+                    }
+                    argumentList = FirEmptyArgumentList
+                    isThis = true
+                }
+            )
         }.symbol
 
         return result
@@ -269,13 +292,21 @@ class AdatDeclarationGenerator(session: FirSession) : FirDeclarationGenerationEx
                         for (parameter in context.owner.fir.primaryConstructorIfAny(session) !!.valueParameterSymbols) {
                             valueParameter(parameter.name, parameter.resolvedReturnType, hasDefaultValue = true)
                         }
-                    }.also{
+                    }.also { func ->
                         // The empty expression block here is to let the FIR analysis complete without an error.
                         // Without it the `hasDefaultValue = true` above will generate an STUB and that STUB
                         // causes an error later. I will replace the whole stuff in IR anyway, so it is not really
                         // important to have a proper value generated here (I hope).
-                        it.replaceValueParameters(
-                            it.valueParameters.map { it.replaceDefaultValue(FirEmptyExpressionBlock()); it }
+                        func.replaceValueParameters(
+                            func.valueParameters.map { param ->
+                                param.replaceDefaultValue(
+                                    FirEmptyExpressionBlock().also { block ->
+                                        block.replaceConeTypeOrNull(param.returnTypeRef.coneTypeSafe())
+                                    }
+                                )
+
+                                param
+                            }
                         )
                     }.symbol
                 )

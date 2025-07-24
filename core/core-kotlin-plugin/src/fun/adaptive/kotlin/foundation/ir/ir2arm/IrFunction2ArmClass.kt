@@ -4,7 +4,10 @@
 package `fun`.adaptive.kotlin.foundation.ir.ir2arm
 
 import `fun`.adaptive.kotlin.common.AbstractIrBuilder
+import `fun`.adaptive.kotlin.common.firstRegularArgument
+import `fun`.adaptive.kotlin.common.nthRegularArgument
 import `fun`.adaptive.kotlin.common.removeCoercionToUnit
+import `fun`.adaptive.kotlin.common.secondRegularArgument
 import `fun`.adaptive.kotlin.foundation.ADAPTIVE_STATE_VARIABLE_LIMIT
 import `fun`.adaptive.kotlin.foundation.FqNames
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
@@ -296,7 +299,7 @@ class IrFunction2ArmClass(
 
         // transform the model argument
 
-        val model = irCall.getValueArgument(0)
+        val model = irCall.firstRegularArgument
         checkNotNull(model) { "invalid model in hydration call (model is null): ${irCall.dumpKotlinLike()}" }
 
         val argument = transformValueArgument(armCall, model.type, null, model)
@@ -306,7 +309,7 @@ class IrFunction2ArmClass(
 
         // transform vararg (if present)
 
-        val vararg = irCall.getValueArgument(1)
+        val vararg = irCall.secondRegularArgument
         if (vararg == null) {
             return armCall.add()
         }
@@ -331,13 +334,12 @@ class IrFunction2ArmClass(
 
     fun transformDirectCall(irCall: IrCall): ArmRenderingStatement {
         val armCall = ArmCall(armClass, nextFragmentIndex, closure, true, irCall, irCall.isExpectCall)
-        val valueParameters = irCall.symbol.owner.valueParameters
 
         addInstructionsArgument(armCall)
 
-        for (argumentIndex in 0 until irCall.valueArgumentsCount) {
-            val parameter = valueParameters[argumentIndex]
-            val expression = irCall.getValueArgument(argumentIndex)
+        for (parameter in irCall.symbol.owner.parameters) {
+            check(parameter.kind == IrParameterKind.Regular) { "invalid parameter kind: ${parameter.kind} ${irCall.dumpKotlinLike()}" }
+            val expression = irCall.arguments[parameter]
             val argument = transformValueArgument(armCall, parameter.type, parameter, expression)
             if (argument != null) armCall.arguments += argument
         }
@@ -346,7 +348,7 @@ class IrFunction2ArmClass(
     }
 
     /**
-     * Transforms calls to functions passes as parameter. In the following example `block()` is the
+     * Transforms calls to functions passed as parameter. In the following example `block()` is the
      * argument call. In this case the IR contains a call to `kotlin.FunctionX.invoke` and
      * the parameter types are the type arguments of `invoke`.
      *
@@ -363,13 +365,13 @@ class IrFunction2ArmClass(
      */
     fun transformArgumentCall(irCall: IrCall): ArmRenderingStatement {
         val armCall = ArmCall(armClass, nextFragmentIndex, closure, false, irCall, false)
-        val arguments = (irCall.dispatchReceiver !!.type as IrSimpleTypeImpl).arguments
+        val typeArguments = (irCall.dispatchReceiver !!.type as IrSimpleTypeImpl).arguments
 
         addInstructionsArgument(armCall)
 
-        for (argumentIndex in 0 until arguments.size - 1) {  // skip the return type
-            val parameter = (arguments[argumentIndex] as IrSimpleTypeImpl)
-            val expression = irCall.getValueArgument(argumentIndex) ?: continue
+        for (argumentIndex in 0 until typeArguments.size - 1) {  // skip the return type
+            val parameter = (typeArguments[argumentIndex] as IrSimpleTypeImpl)
+            val expression = irCall.nthRegularArgument(argumentIndex) ?: continue
             val argument = transformValueArgument(armCall, parameter.type, null, expression)
 
             if (argument != null) armCall.arguments += argument
@@ -534,13 +536,16 @@ class IrFunction2ArmClass(
     private fun innerState(function: IrSimpleFunction): List<ArmStateVariable> {
 
         var stateVariableIndex = closure.size
+        var indexInState = 0
 
         return listOf(
             ArmImplicitStateVariable(armClass, 0, stateVariableIndex ++, irNull()) // instructions
-        ) + function.valueParameters.mapIndexed { indexInState, parameter ->
+        ) + function.parameters.mapNotNull { parameter ->
+            if (parameter.kind != IrParameterKind.Regular) return@mapNotNull null
+
             ArmExternalStateVariable(
                 armClass,
-                indexInState + 1, // +1 for instructions
+                indexInState++ + 1, // +1 for instructions
                 stateVariableIndex ++,
                 parameter.name.identifier,
                 parameter.type,
@@ -697,28 +702,27 @@ class IrFunction2ArmClass(
 
     fun transformDetachExpression(expression: IrExpression, result: MutableList<ArmDetachExpression>) {
         when (expression) {
-            is IrCall -> transformDetach(expression.symbol.owner.valueParameters, expression, result)
-            is IrConstructorCall -> transformDetach(expression.symbol.owner.valueParameters, expression, result)
+            is IrCall -> transformDetach(expression.symbol.owner.parameters, expression, result)
+            is IrConstructorCall -> transformDetach(expression.symbol.owner.parameters, expression, result)
         }
     }
 
     fun transformDetach(valueParameters: List<IrValueParameter>, accessExpression: IrMemberAccessExpression<*>, result: MutableList<ArmDetachExpression>) {
         valueParameters.forEachIndexed { index, parameter ->
             if (parameter.isDetach) {
-                result += transformDetach(accessExpression.getValueArgument(parameter.index))
+                result += transformDetach(accessExpression.arguments[parameter])
 
-                val nameIndex = index - 1
+                val nameIndex = parameter.indexInParameters - 1
 
                 if (nameIndex >= 0 && valueParameters[nameIndex].hasAnnotation(FqNames.DETACH_NAME)) {
                     val nameParam = valueParameters[nameIndex]
                     check(nameParam.type == stringType || nameParam.type == stringNType) { "@DetachName annotation on a non-String parameter" }
-                    val nameArg = accessExpression.getValueArgument(nameIndex)
+                    val nameArg = accessExpression.arguments[nameIndex]
                     if (nameArg != null) return@forEachIndexed
 
-                    accessExpression.putValueArgument(
-                        nameIndex,
+                    // FIXME I'm pretty sure I'm not sure if this is right
+                    accessExpression.arguments[nameIndex] =
                         IrConstImpl.string(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irBuiltIns.stringType, result.last().armCall.target.asString())
-                    )
                 }
             }
         }

@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.kotlin.foundation.ir.arm2ir
 
+import `fun`.adaptive.kotlin.common.firstRegularParameter
 import `fun`.adaptive.kotlin.foundation.ir.arm.ArmFunctionReference
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrVariable
@@ -21,7 +22,7 @@ class ArmFunctionReferenceBuilder(
         irNull() // function references are built in BoundFragmentFactory
 
     override fun genPatchDescendantBranch(patchFun: IrSimpleFunction, closureMask: IrVariable): IrBlock {
-        val fragmentParameter = patchFun.valueParameters.first()
+        val fragmentParameter = patchFun.firstRegularParameter
 
         return IrBlockImpl(SYNTHETIC_OFFSET, SYNTHETIC_OFFSET, pluginContext.irContext.irBuiltIns.unitType)
             .also { block ->

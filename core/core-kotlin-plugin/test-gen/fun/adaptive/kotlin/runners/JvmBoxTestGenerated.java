@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("all")
 @TestMetadata("testData/box")
 @TestDataPath("$PROJECT_ROOT")
-public class BoxTestGenerated extends AbstractBoxTest {
+public class JvmBoxTestGenerated extends AbstractJvmBoxTest {
   @Test
   public void testAllFilesPresentInBox() {
     KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);
@@ -65,24 +65,6 @@ public class BoxTestGenerated extends AbstractBoxTest {
     @TestMetadata("testData/box/adat/companion")
     @TestDataPath("$PROJECT_ROOT")
     public class Companion {
-      @Test
-      @TestMetadata("adatCompanionOf.kt")
-      public void testAdatCompanionOf() {
-        runTest("testData/box/adat/companion/adatCompanionOf.kt");
-      }
-
-      @Test
-      @TestMetadata("adatCompanionResolve.kt")
-      public void testAdatCompanionResolve() {
-        runTest("testData/box/adat/companion/adatCompanionResolve.kt");
-      }
-
-      @Test
-      @TestMetadata("adatCompanionResolveAbstract.kt")
-      public void testAdatCompanionResolveAbstract() {
-        runTest("testData/box/adat/companion/adatCompanionResolveAbstract.kt");
-      }
-
       @Test
       public void testAllFilesPresentInCompanion() {
         KtTestUtil.assertAllTestsPresentByMetadataWithExcluded(this.getClass(), new File("testData/box/adat/companion"), Pattern.compile("^(.+)\\.kt$"), null, TargetBackend.JVM_IR, true);

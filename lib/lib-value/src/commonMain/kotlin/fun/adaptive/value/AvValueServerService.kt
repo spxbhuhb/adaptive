@@ -1,9 +1,11 @@
 package `fun`.adaptive.value
 
 import `fun`.adaptive.backend.builtin.ServiceImpl
+import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.operation.AvValueOperation
 
+@ServiceProvider
 class AvValueServerService : ServiceImpl<AvValueServerService>(), AvValueApi {
 
     val worker by workerImpl<AvValueWorker>()

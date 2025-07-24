@@ -19,12 +19,12 @@ class StateSizeTransform(
 
     override fun visitDelegatingConstructorCall(expression: IrDelegatingConstructorCall): IrExpression {
 
-        for (index in 0 until expression.valueArgumentsCount) {
-            val argument = expression.getValueArgument(index) ?: continue
+        for (parameter in expression.symbol.owner.parameters) {
+            val argument = expression.arguments[parameter] ?: continue
             if (argument !is IrCall) continue
             if (argument.symbol.owner.kotlinFqName != FqNames.STATE_SIZE) continue
 
-            expression.putValueArgument(index, irConst(stateSize))
+            expression.arguments[parameter] = irConst(stateSize)
         }
 
         return expression
