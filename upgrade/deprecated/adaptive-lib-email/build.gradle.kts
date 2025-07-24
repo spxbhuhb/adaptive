@@ -44,12 +44,6 @@ kotlin {
         )
     }
 
-    sourceSets.all {
-        languageSettings {
-            languageVersion = "2.0"
-        }
-    }
-
     sourceSets {
         commonMain.dependencies {
             implementation(libs.adaptive.core.core)

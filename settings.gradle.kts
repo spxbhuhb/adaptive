@@ -3,6 +3,23 @@
  */
 rootProject.name = "adaptive"
 
+includeBuild("core/core-build") {
+    // This block is crucial for making the plugins from core-build available.
+    // By default, composite builds do not expose their plugins to the main build unless specified.
+    // The `dependencySubstitution` ensures that any request for the plugin ID
+    // provided by `core-build` is satisfied by this included build.
+    // This is especially important if you were to define a `plugins { id("...") version "..." }`
+    // block in your main settings.gradle.kts or root build.gradle.kts for your own plugins.
+    //
+    // For simple cases, `pluginManagement` + `includeBuild` is often enough without explicit
+    // `dependencySubstitution` for direct plugin application in subprojects.
+    // However, it's good practice for clarity or if you're substituting other plugins.
+    //
+    // For direct plugin application, the `includeBuild` call itself is
+    // sufficient to make the plugins visible. No explicit substitution is required here unless
+    // you are trying to *override* a plugin from a repository.
+}
+
 includeBuild("core/core-core")
 includeBuild("core/core-gradle-plugin")
 includeBuild("core/core-kotlin-plugin")

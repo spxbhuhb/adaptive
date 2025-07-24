@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.gradle
 
+import `fun`.adaptive.gradle.project.configureKmp
 import `fun`.adaptive.gradle.resources.configureAdaptiveResources
 import org.gradle.api.Project
 import org.gradle.api.provider.Provider
@@ -39,6 +40,13 @@ class AdaptiveGradlePlugin : KotlinCompilerPluginSupportPlugin {
 
         val adaptiveExtension = extensions.create(GRADLE_EXTENSION_NAME, AdaptiveGradleExtension::class.java)
         project.configureAdaptiveResources(adaptiveExtension.resources)
+
+        afterEvaluate {
+            if (adaptiveExtension.pluginDebug) {
+                logger.lifecycle("Adaptive Gradle plugin $PLUGIN_VERSION is running in debug mode")
+            }
+            configureKmp()
+        }
     }
 
     override fun isApplicable(kotlinCompilation: KotlinCompilation<*>): Boolean =

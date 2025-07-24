@@ -36,11 +36,6 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
 val mainClassName = "MainKt"
 
 kotlin {
-    sourceSets.all {
-        languageSettings {
-            languageVersion = "2.0"
-        }
-    }
 
     jvmToolchain(11)
 
@@ -129,10 +124,17 @@ tasks.withType<Jar> {
     duplicatesStrategy = DuplicatesStrategy.WARN
 }
 
+interface InjectedExecOps {
+    @get:Inject val execOps: ExecOperations
+}
+
 tasks.getByName("build") {
+    val injected = project.objects.newInstance<InjectedExecOps>()
+
     doFirst {
         val out = ByteArrayOutputStream()
-        exec {
+
+        injected.execOps.exec {
             commandLine("git", "rev-parse", "--short", "HEAD")
             standardOutput = out
         }

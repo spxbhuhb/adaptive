@@ -2,6 +2,7 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.internal.gradle.setupPublishing
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -9,14 +10,12 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform)
     signing
     alias(libs.plugins.gradleMavenPublish)
+    id("fun.adaptive.internal.gradle")
 }
 
 group = "fun.adaptive"
+description = "Adaptive Core Library"
 version = libs.versions.adaptive.get()
-
-val baseName = "core-core"
-val pomName = "Adaptive Core"
-val scmPath = "spxbhuhb/adaptive"
 
 repositories {
     mavenCentral()
@@ -30,6 +29,10 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
 }
 
 kotlin {
+    compilerOptions {
+        optIn.add("kotlin.time.ExperimentalTime")
+    }
+
     jvmToolchain(11)
 
     jvm {
@@ -79,43 +82,4 @@ kotlin {
     }
 }
 
-signing {
-    useGpgCmd()
-    sign(publishing.publications)
-}
-
-mavenPublishing {
-
-    publishToMavenCentral()
-
-    signAllPublications()
-
-    coordinates("fun.adaptive", baseName, version.toString())
-
-    pom {
-        description.set(project.name)
-        name.set(pomName)
-        url.set("https://adaptive.fun")
-        scm {
-            url.set("https://github.com/$scmPath")
-            connection.set("scm:git:git://github.com/$scmPath.git")
-            developerConnection.set("scm:git:ssh://git@github.com/$scmPath.git")
-        }
-        licenses {
-            license {
-                name.set("Apache 2.0")
-                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                distribution.set("repo")
-            }
-        }
-        developers {
-            developer {
-                id.set("toth-istvan-zoltan")
-                name.set("Tóth István Zoltán")
-                url.set("https://github.com/toth-istvan-zoltan")
-                organization.set("Simplexion Kft.")
-                organizationUrl.set("https://www.simplexion.hu")
-            }
-        }
-    }
-}
+setupPublishing()

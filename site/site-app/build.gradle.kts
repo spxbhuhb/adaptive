@@ -40,11 +40,6 @@ rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlu
 val mainClassName = "MainKt"
 
 kotlin {
-    sourceSets.all {
-        languageSettings {
-            languageVersion = "2.0"
-        }
-    }
 
     jvmToolchain(11)
 
