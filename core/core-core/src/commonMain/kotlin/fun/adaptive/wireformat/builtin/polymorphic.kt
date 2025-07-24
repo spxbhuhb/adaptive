@@ -7,11 +7,11 @@ import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatEncoder
 import `fun`.adaptive.wireformat.WireFormatKind
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlin.time.Duration
+import kotlin.time.Instant
 
 object PolymorphicWireFormat : WireFormat<Any> {
 

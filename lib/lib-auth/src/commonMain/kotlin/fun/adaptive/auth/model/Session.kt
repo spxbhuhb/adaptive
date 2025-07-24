@@ -12,8 +12,8 @@ import `fun`.adaptive.utility.CleanupHandler
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.AvValueId
-import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.Instant
+import kotlin.time.Clock.System.now
+import kotlin.time.Instant
 
 @Adat
 class Session(

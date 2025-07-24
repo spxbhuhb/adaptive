@@ -3,7 +3,7 @@ package `fun`.adaptive.lib.util.log
 import `fun`.adaptive.log.AdaptiveLogger
 import `fun`.adaptive.log.LogLevel
 import `fun`.adaptive.utility.exitProcessCommon
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 
 class CollectingLogger(
     val name : String? = null,

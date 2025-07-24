@@ -3,13 +3,14 @@ package `fun`.adaptive.adat.polymorphic
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.toJson
 import `fun`.adaptive.wireformat.toProto
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlin.test.Test
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
+import kotlin.time.Clock.System.now
 import kotlin.time.Duration.Companion.seconds
 
 class PolymorphicTest {

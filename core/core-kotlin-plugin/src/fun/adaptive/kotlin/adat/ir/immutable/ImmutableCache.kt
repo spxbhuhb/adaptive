@@ -83,10 +83,10 @@ class ImmutableCache(
         "kotlin.collections.MutableMap" to false,
         "kotlin.collections.MutableSet" to false,
 
-        "kotlinx.datetime.Instant" to true,
         "kotlinx.datetime.LocalDateTime" to true,
         "kotlinx.datetime.LocalDate" to true,
         "kotlinx.datetime.LocalTime" to true,
+        "kotlin.time.Instant" to true,
         "kotlin.time.Duration" to true
     )
 

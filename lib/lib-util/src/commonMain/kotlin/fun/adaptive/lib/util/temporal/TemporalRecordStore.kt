@@ -9,11 +9,11 @@ import `fun`.adaptive.utility.UUID.Companion.monotonicUuid7
 import `fun`.adaptive.persistence.append
 import `fun`.adaptive.persistence.read
 import `fun`.adaptive.persistence.resolve
-import kotlinx.datetime.Instant
 import kotlinx.io.buffered
 import kotlinx.io.files.Path
 import kotlinx.io.files.SystemFileSystem
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Instant
 
 class TemporalRecordStore(
     val storeUuid: UUID<TemporalRecordStore>,

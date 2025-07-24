@@ -1,7 +1,7 @@
 package `fun`.adaptive.auth.model
 
 import `fun`.adaptive.adat.Adat
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 @Adat
 class Credential(

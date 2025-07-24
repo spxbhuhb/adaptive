@@ -4,19 +4,7 @@
 
 package `fun`.adaptive.sandbox.recipe.demo.goodmorning
 
-import `fun`.adaptive.cookbook.generated.resources.and
-import `fun`.adaptive.cookbook.generated.resources.app_name
-import `fun`.adaptive.cookbook.generated.resources.background
-import `fun`.adaptive.cookbook.generated.resources.by_joining
-import `fun`.adaptive.cookbook.generated.resources.logo
-import `fun`.adaptive.cookbook.generated.resources.policy
-import `fun`.adaptive.cookbook.generated.resources.privacy_policy
-import `fun`.adaptive.cookbook.generated.resources.sleepiness
-import `fun`.adaptive.cookbook.generated.resources.snooze
-import `fun`.adaptive.cookbook.generated.resources.terms
-import `fun`.adaptive.cookbook.generated.resources.terms_of_service
-import `fun`.adaptive.cookbook.generated.resources.what_an_odd_second
-import `fun`.adaptive.cookbook.generated.resources.you_are_sleepy
+import `fun`.adaptive.cookbook.generated.resources.*
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
@@ -27,49 +15,20 @@ import `fun`.adaptive.foundation.producer.poll
 import `fun`.adaptive.resource.file.Files
 import `fun`.adaptive.resource.image.Images
 import `fun`.adaptive.resource.string.Strings
-import `fun`.adaptive.ui.api.backgroundColor
-import `fun`.adaptive.ui.api.border
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.colTemplate
-import `fun`.adaptive.ui.api.color
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.cornerRadius
-import `fun`.adaptive.ui.api.externalLink
-import `fun`.adaptive.ui.api.fontSize
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.grid
-import `fun`.adaptive.ui.api.gridCol
-import `fun`.adaptive.ui.api.image
-import `fun`.adaptive.ui.api.leftToRightGradient
-import `fun`.adaptive.ui.api.letterSpacing
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.noSelect
-import `fun`.adaptive.ui.api.noTextWrap
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.paddingBottom
-import `fun`.adaptive.ui.api.paddingHorizontal
-import `fun`.adaptive.ui.api.paddingRight
-import `fun`.adaptive.ui.api.paddingTop
-import `fun`.adaptive.ui.api.paddingVertical
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.rowTemplate
-import `fun`.adaptive.ui.api.size
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.textColor
-import `fun`.adaptive.ui.api.verticalScroll
-import `fun`.adaptive.ui.instruction.*
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.layout.AlignItems
 import `fun`.adaptive.ui.instruction.layout.Height
 import `fun`.adaptive.ui.instruction.layout.Padding
+import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.instruction.text.FontWeight
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock.System.now
 import kotlin.time.Duration.Companion.milliseconds
+import kotlin.time.Instant
 
 
 @Adaptive
@@ -97,7 +56,7 @@ val Int.twoDigits
 val Int.threeDigits
     get() = toString().padStart(3, '0')
 
-fun nowLocal() = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+fun nowLocal() = now().toLocalDateTime(TimeZone.currentSystemDefault())
 
 val black = color(0x000000u)
 val white = color(0xffffffu)

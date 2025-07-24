@@ -1,7 +1,7 @@
 package `fun`.adaptive.lib.util.log
 
 import `fun`.adaptive.log.LogLevel
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 class CollectedLogItem(
     val logger: String? = null,

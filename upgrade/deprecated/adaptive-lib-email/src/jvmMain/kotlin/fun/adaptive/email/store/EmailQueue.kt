@@ -7,7 +7,7 @@ import `fun`.adaptive.exposed.ExposedAdatTable
 import `fun`.adaptive.exposed.asCommon
 import `fun`.adaptive.exposed.uuidEq
 import `fun`.adaptive.utility.UUID
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 

@@ -1,8 +1,8 @@
 package `fun`.adaptive.utility
 
-import kotlinx.datetime.Instant
 import java.time.ZonedDateTime
 import java.util.Calendar
+import kotlin.time.Instant
 
 fun Calendar.toKotlinInstant(): Instant {
     val zonedDateTime = ZonedDateTime.ofInstant(toInstant(), this.timeZone.toZoneId())

@@ -3,8 +3,8 @@ package `fun`.adaptive.utility
 import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
-import kotlinx.datetime.Clock.System.now
 import kotlin.coroutines.coroutineContext
+import kotlin.time.Clock.System.now
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.milliseconds
 import kotlin.time.Duration.Companion.seconds

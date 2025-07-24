@@ -9,7 +9,7 @@ import `fun`.adaptive.utility.*
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.persistence.FilePersistence
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals

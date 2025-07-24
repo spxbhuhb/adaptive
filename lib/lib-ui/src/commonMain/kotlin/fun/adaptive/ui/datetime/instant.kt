@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.language.localized
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.theme.emptyInst
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 @Adaptive
 fun instant(timestamp: Instant?, vararg instructions: AdaptiveInstruction): AdaptiveFragment {

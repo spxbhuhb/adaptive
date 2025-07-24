@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.generated.resources.saveSuccess
 import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.utility.firstInstance
 import `fun`.adaptive.value.AvValueId
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 
 class AccountSelfViewBackend(fragment: AdaptiveFragment) {
 

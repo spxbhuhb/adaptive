@@ -54,6 +54,7 @@ object WireFormatRegistry : Registry<WireFormat<*>>() {
         set("kotlin.collections.Map", MapWireFormat(n, n))
 
         set("kotlin.time.Duration", DurationWireFormat)
+        set("kotlin.time.Instant", InstantWireFormat)
         set("kotlinx.datetime.Instant", InstantWireFormat)
         set("kotlinx.datetime.LocalDate", LocalDateWireFormat)
         set("kotlinx.datetime.LocalDateTime", LocalDateTimeWireFormat)

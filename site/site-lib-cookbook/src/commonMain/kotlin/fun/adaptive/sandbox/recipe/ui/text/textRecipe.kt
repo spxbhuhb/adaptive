@@ -21,7 +21,7 @@ import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.textColors
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 import kotlin.time.Duration.Companion.seconds
 
 @Adaptive

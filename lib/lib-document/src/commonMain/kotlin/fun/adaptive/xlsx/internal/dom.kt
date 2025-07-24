@@ -9,7 +9,7 @@ import `fun`.adaptive.xlsx.internal.model.*
 import `fun`.adaptive.xlsx.model.XlsxCell
 import `fun`.adaptive.xlsx.model.XlsxDocument
 import `fun`.adaptive.xlsx.model.XlsxSheet
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 

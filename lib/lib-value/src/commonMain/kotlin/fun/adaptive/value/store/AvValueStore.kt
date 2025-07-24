@@ -15,8 +15,8 @@ import `fun`.adaptive.wireformat.json.JsonWireFormatEncoder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.withTimeout
-import kotlinx.datetime.Clock.System.now
 import kotlin.reflect.KClass
+import kotlin.time.Clock.System.now
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.measureTime

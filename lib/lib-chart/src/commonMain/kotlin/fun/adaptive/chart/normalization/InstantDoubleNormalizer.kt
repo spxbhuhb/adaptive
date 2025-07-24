@@ -1,7 +1,7 @@
 package `fun`.adaptive.chart.normalization
 
 import `fun`.adaptive.chart.model.ChartDataRange
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 class InstantDoubleNormalizer(
     range: ChartDataRange<Instant, Double>,

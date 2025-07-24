@@ -19,8 +19,8 @@ import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.instruction.decoration.Color
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.borders
-import kotlinx.datetime.Clock.System.now
 import kotlin.math.PI
+import kotlin.time.Clock.System.now
 import kotlin.time.Duration.Companion.milliseconds
 
 /**

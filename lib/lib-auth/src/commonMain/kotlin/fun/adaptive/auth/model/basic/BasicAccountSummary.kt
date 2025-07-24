@@ -8,7 +8,7 @@ import `fun`.adaptive.auth.model.PrincipalSpec
 import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValue
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 @Adat
 class BasicAccountSummary(

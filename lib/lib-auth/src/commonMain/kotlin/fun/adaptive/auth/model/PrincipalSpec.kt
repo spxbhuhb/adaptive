@@ -6,7 +6,7 @@ package `fun`.adaptive.auth.model
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.value.AvValueId
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 
 @Adat
 data class PrincipalSpec(

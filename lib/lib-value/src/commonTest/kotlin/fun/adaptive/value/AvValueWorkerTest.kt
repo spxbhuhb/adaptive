@@ -8,7 +8,7 @@ import `fun`.adaptive.value.operation.AvoAddOrUpdate
 import `fun`.adaptive.value.operation.AvoMarkerRemove
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals

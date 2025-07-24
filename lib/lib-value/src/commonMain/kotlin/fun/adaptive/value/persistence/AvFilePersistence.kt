@@ -40,7 +40,7 @@ class FilePersistence(
 
     val store = object : UuidFileStore<MutableMap<AvValueId, AvValue<*>>>(root, levels) {
 
-        override fun loadPath(path: Path, map: MutableMap<AvValueId, AvValue<*>>) {
+        override fun loadPath(path: Path, context: MutableMap<AvValueId, AvValue<*>>) {
             if (! path.name.endsWith(".json")) return
 
             try {
@@ -49,7 +49,7 @@ class FilePersistence(
                 val value = PolymorphicWireFormat.wireFormatDecode(decoder.root, decoder)
                 check(value is AvValue<*>) { "Value is not an AvValue" }
 
-                map[value.uuid] = value
+                context[value.uuid] = value
 
             } catch (ex: Exception) {
                 throw RuntimeException("error while loading value from $path", ex)

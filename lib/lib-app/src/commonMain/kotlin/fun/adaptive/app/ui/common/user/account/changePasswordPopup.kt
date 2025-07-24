@@ -24,7 +24,7 @@ import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.value.AvValueId
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 
 @Adat
 class PasswordChange(

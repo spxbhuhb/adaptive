@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.generated.resources.settings
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.theme.iconColors
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 import kotlin.time.Duration.Companion.seconds
 
 @Adaptive

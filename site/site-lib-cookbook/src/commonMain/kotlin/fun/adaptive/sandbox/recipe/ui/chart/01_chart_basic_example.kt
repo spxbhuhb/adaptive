@@ -20,9 +20,9 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.dp
-import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.Instant
+import kotlin.time.Clock.System.now
 import kotlin.time.Duration.Companion.minutes
+import kotlin.time.Instant
 
 /**
  * # Basic chart

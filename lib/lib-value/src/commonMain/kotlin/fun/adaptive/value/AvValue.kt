@@ -3,9 +3,9 @@ package `fun`.adaptive.value
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.utility.UUID.Companion.uuid7
 import `fun`.adaptive.value.acl.AvAclAgent
-import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.Instant
 import kotlin.reflect.KClass
+import kotlin.time.Clock.System.now
+import kotlin.time.Instant
 
 /**
  * One value in a value store, uniquely identified by its [uuid].

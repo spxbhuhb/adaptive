@@ -20,7 +20,7 @@ import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import `fun`.adaptive.value.store.AvComputeContext
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 
 @ServiceProvider
 class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>() {

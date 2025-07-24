@@ -2,7 +2,7 @@ package `fun`.adaptive.value
 
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.waitForReal
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull

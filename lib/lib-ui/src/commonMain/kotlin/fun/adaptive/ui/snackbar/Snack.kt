@@ -1,10 +1,9 @@
 package `fun`.adaptive.ui.snackbar
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.log.LogLevel
 import `fun`.adaptive.utility.UUID
-import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.Instant
+import kotlin.time.Clock.System.now
+import kotlin.time.Instant
 
 @Adat
 class Snack(

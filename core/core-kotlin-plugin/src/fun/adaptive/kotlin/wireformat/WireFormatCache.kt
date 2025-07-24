@@ -74,7 +74,9 @@ class WireFormatCache(
         PolymorphicWireFormat(pluginContext),
 
         ClassWireFormat(pluginContext, Strings.DURATION_WIREFORMAT, "kotlin.time.Duration"),
+        ClassWireFormat(pluginContext, Strings.INSTANT_WIREFORMAT, "kotlin.time.Instant"),
         ClassWireFormat(pluginContext, Strings.INSTANT_WIREFORMAT, "kotlinx.datetime.Instant"),
+
         ClassWireFormat(pluginContext, Strings.LOCALDATETIME_WIREFORMAT, "kotlinx.datetime.LocalDateTime"),
         ClassWireFormat(pluginContext, Strings.LOCALDATE_WIREFORMAT, "kotlinx.datetime.LocalDate"),
         ClassWireFormat(pluginContext, Strings.LOCALTIME_WIREFORMAT, "kotlinx.datetime.LocalTime")

@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.generated.resources.saveFail
 import `fun`.adaptive.ui.generated.resources.saveSuccess
 import `fun`.adaptive.ui.snackbar.failNotification
 import `fun`.adaptive.ui.snackbar.successNotification
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 
 class AccountManagerViewBackend(
     fragment: AdaptiveFragment

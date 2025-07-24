@@ -18,8 +18,8 @@ import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import kotlinx.coroutines.delay
-import kotlinx.datetime.Clock.System.now
 import kotlin.math.abs
+import kotlin.time.Clock.System.now
 
 @ServiceProvider
 class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {

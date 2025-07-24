@@ -5,7 +5,7 @@ import `fun`.adaptive.chart.model.ChartMarker
 import `fun`.adaptive.chart.model.ChartRenderContext
 import `fun`.adaptive.ui.fragment.layout.RawSize
 import `fun`.adaptive.utility.p02
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime

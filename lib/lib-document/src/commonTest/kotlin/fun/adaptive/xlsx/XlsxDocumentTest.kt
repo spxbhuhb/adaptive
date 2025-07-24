@@ -8,7 +8,7 @@ import `fun`.adaptive.persistence.resolve
 import `fun`.adaptive.xlsx.conf.XlsxConfiguration
 import `fun`.adaptive.xlsx.model.XlsxDocument
 import kotlinx.coroutines.test.runTest
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlin.random.Random
 import kotlin.test.Test

@@ -1,8 +1,17 @@
 package `fun`.adaptive.utility
 
-import kotlinx.datetime.*
-import kotlinx.datetime.Clock.System.now
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toInstant
+import kotlinx.datetime.toLocalDateTime
+import kotlin.time.Clock.System.now
 import kotlin.time.Duration
+import kotlin.time.Instant
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 
 fun instant() = now()
 
@@ -61,7 +70,7 @@ val LocalDate.twoMonthsBefore: LocalDate
     get() = minus(2, DateTimeUnit.MONTH)
 
 val LocalDate.firstDayOfMonth: LocalDate
-    get() = minus(dayOfMonth - 1, DateTimeUnit.DAY)
+    get() = minus(day - 1, DateTimeUnit.DAY)
 
 val LocalDate.lastDayOfMonth: LocalDate
     get() = plus(1, DateTimeUnit.MONTH).firstDayOfMonth.minus(1, DateTimeUnit.DAY)

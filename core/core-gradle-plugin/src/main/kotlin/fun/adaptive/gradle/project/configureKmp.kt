@@ -1,15 +1,7 @@
 package `fun`.adaptive.gradle.project
 
 import org.gradle.api.Project
-import org.gradle.api.publish.PublishingExtension
-import org.gradle.api.publish.maven.MavenPom
-import org.gradle.api.publish.maven.MavenPublication
-import org.gradle.api.publish.maven.tasks.AbstractPublishToMaven
-import org.gradle.plugins.signing.Sign
-import org.gradle.plugins.signing.SigningExtension
 import org.jetbrains.kotlin.gradle.dsl.KotlinMultiplatformExtension
-import kotlin.jvm.java
-import kotlin.text.set
 
 fun Project.configureKmp() {
     plugins.withId("org.jetbrains.kotlin.multiplatform") {
@@ -25,12 +17,6 @@ fun Project.configureKmp() {
                             optIn.add("kotlin.time.ExperimentalTime")
                         }
                     }
-                }
-            }
-
-            kotlinMppExtension.sourceSets.configureEach { sourceSet ->
-                sourceSet.languageSettings {
-                    languageVersion = "2.0"
                 }
             }
         }

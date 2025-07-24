@@ -11,9 +11,10 @@ import `fun`.adaptive.xlsx.fillRow
 import `fun`.adaptive.xlsx.model.XlsxDocument
 import `fun`.adaptive.xlsx.save
 import kotlinx.coroutines.launch
-import kotlinx.datetime.Clock
+import kotlin.time.Clock
 import kotlinx.datetime.LocalDate
 import kotlin.random.Random
+import kotlin.time.Clock.System.now
 
 /**
  * # XLSX build and download
@@ -58,7 +59,7 @@ private fun buildAndInitDownload(
     summary.columns["B"].width = 22.5
 
     summary["A1"].value = "Mission start"
-    summary["B1"].value = Clock.System.now()
+    summary["B1"].value = now()
 
     summary["A2"].value = "Population to examine"
     summary["B2"].value = Random.nextDouble(9_000.0, 20_000.0)

@@ -7,12 +7,13 @@ package `fun`.adaptive.wireformat.builtin
 import `fun`.adaptive.wireformat.WireFormat
 import `fun`.adaptive.wireformat.WireFormatDecoder
 import `fun`.adaptive.wireformat.WireFormatEncoder
-import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.number
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.nanoseconds
+import kotlin.time.Instant
 
 
 object DurationWireFormat : WireFormat<Duration> {
@@ -39,7 +40,7 @@ object DurationWireFormat : WireFormat<Duration> {
 object InstantWireFormat : WireFormat<Instant> {
 
     override val wireFormatName: String
-        get() = "kotlinx.datetime.Instant"
+        get() = "kotlin.time.Instant"
 
     override fun <ST> wireFormatDecode(source: ST, decoder: WireFormatDecoder<ST>?): Instant {
         if (decoder == null) return Instant.DISTANT_PAST
@@ -70,8 +71,8 @@ object LocalDateWireFormat : WireFormat<LocalDate> {
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: LocalDate) =
         encoder
             .int(1, "year", value.year)
-            .int(2, "monthNumber", value.monthNumber)
-            .int(3, "dayOfMonth", value.dayOfMonth)
+            .int(2, "monthNumber", value.month.number)
+            .int(3, "dayOfMonth", value.day)
 
 }
 
@@ -83,8 +84,8 @@ object LocalDateTimeWireFormat : WireFormat<LocalDateTime> {
     override fun wireFormatEncode(encoder: WireFormatEncoder, value: LocalDateTime) =
         encoder
             .int(1, "year", value.year)
-            .int(2, "monthNumber", value.monthNumber)
-            .int(3, "dayOfMonth", value.dayOfMonth)
+            .int(2, "monthNumber", value.month.number)
+            .int(3, "dayOfMonth", value.day)
             .int(4, "hour", value.hour)
             .int(5, "minute", value.minute)
             .int(6, "second", value.second)

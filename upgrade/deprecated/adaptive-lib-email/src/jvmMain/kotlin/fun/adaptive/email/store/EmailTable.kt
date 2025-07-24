@@ -6,7 +6,7 @@ import `fun`.adaptive.exposed.AdatEntityTable
 import `fun`.adaptive.exposed.ExposedAdatTable
 import `fun`.adaptive.exposed.uuidEq
 import `fun`.adaptive.utility.UUID
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 import org.jetbrains.exposed.sql.kotlin.datetime.timestamp
 import org.jetbrains.exposed.sql.update
 

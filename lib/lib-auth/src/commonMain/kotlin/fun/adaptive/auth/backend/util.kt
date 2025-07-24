@@ -7,7 +7,7 @@ import `fun`.adaptive.auth.util.BCrypt
 import `fun`.adaptive.backend.builtin.BackendFragmentImpl
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.value.AvValueId
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 
 fun BackendFragmentImpl.getPrincipalService(roleId: AvValueId) =
     safeAdapter.firstImpl<AuthPrincipalService>().newInstance(Session.contextFor(roleId = roleId))

@@ -9,8 +9,8 @@ import `fun`.adaptive.persistence.resolve
 import `fun`.adaptive.persistence.write
 import `fun`.adaptive.utility.*
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
-import kotlinx.datetime.Clock.System.now
-import kotlinx.datetime.Instant
+import kotlin.time.Clock.System.now
+import kotlin.time.Instant
 import kotlinx.io.files.Path
 
 // This recipe demonstrates how to create an appendable file of protobuf records.

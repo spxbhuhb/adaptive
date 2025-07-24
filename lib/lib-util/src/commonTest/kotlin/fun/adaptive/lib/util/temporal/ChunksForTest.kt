@@ -3,7 +3,7 @@ package `fun`.adaptive.lib.util.temporal
 import `fun`.adaptive.lib.util.temporal.model.TemporalChunk
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexEntry
 import `fun`.adaptive.utility.UUID
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlin.js.JsName
 import kotlin.test.Test
 import kotlin.test.assertEquals

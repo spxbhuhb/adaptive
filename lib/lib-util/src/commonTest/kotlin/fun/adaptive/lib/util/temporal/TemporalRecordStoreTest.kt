@@ -9,7 +9,7 @@ import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.dump
 import `fun`.adaptive.wireformat.protobuf.ProtoWireFormatDecoder
 import `fun`.adaptive.wireformat.protobuf.dumpProto
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.io.files.Path
 import kotlin.test.Test
 import kotlin.test.assertEquals

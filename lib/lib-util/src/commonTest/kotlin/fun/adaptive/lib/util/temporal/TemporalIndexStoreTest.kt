@@ -10,7 +10,7 @@ import `fun`.adaptive.lib.util.temporal.model.TemporalIndexEntry
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexHeader
 import `fun`.adaptive.lib.util.utilCommon
 import `fun`.adaptive.utility.*
-import kotlinx.datetime.Clock.System.now
+import kotlin.time.Clock.System.now
 import kotlin.js.JsName
 import kotlin.test.*
 

@@ -11,7 +11,7 @@ import `fun`.adaptive.value.AvMarker
 import `fun`.adaptive.value.AvStatus
 import `fun`.adaptive.value.AvValue
 import kotlinx.coroutines.channels.Channel
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.io.files.Path
 
 class

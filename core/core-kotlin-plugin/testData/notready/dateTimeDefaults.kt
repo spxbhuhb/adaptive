@@ -4,7 +4,7 @@ package `fun`.adaptive.adat
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.utility.instant
 import `fun`.adaptive.utility.isBetween
-import kotlinx.datetime.Instant
+import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime

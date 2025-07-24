@@ -3,8 +3,8 @@ package `fun`.adaptive.lib.util.temporal
 import `fun`.adaptive.lib.util.temporal.model.TemporalChunk
 import `fun`.adaptive.lib.util.temporal.model.TemporalIndexEntry
 import `fun`.adaptive.utility.UUID
-import kotlinx.datetime.Instant
 import kotlin.time.Duration.Companion.days
+import kotlin.time.Instant
 
 
 fun chunksFor(start: Instant, end: Instant, lastTimeStamp: Instant?, entries: List<TemporalIndexEntry>): List<UUID<TemporalChunk>> {

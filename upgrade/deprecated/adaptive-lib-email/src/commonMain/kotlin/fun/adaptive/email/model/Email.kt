@@ -3,8 +3,8 @@ package `fun`.adaptive.email.model
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.AdatEntity
 import `fun`.adaptive.utility.UUID
-import kotlinx.datetime.Clock
-import kotlinx.datetime.Instant
+import kotlin.time.Clock
+import kotlin.time.Instant
 
 @Adat
 class Email(
