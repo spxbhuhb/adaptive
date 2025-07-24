@@ -1,3 +1,4 @@
+import `fun`.adaptive.internal.gradle.skipYarnLock
 import org.gradle.kotlin.dsl.adaptive
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 
@@ -7,6 +8,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 plugins {
     alias(libs.plugins.kotlinMultiplatform)
     alias(libs.plugins.adaptive)
+    id("fun.adaptive.internal.gradle")
 }
 
 adaptive {
@@ -18,11 +20,7 @@ adaptive {
     }
 }
 
-// this is ugly but I don't use JS dependencies anyway, 
-// https://youtrack.jetbrains.com/issue/KT-50848/Kotlin-JS-inner-build-routines-are-using-vulnerable-NPM-dependencies-and-now-that-we-have-kotlin-js-store-github-audit-this
-rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
-    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().lockFileName = "skip-yarn-lock"
-}
+skipYarnLock()
 
 kotlin {
 

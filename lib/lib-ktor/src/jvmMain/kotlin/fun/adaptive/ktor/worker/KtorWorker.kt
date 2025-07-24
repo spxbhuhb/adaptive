@@ -18,8 +18,8 @@ import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.http.content.*
 import io.ktor.server.netty.*
-import io.ktor.server.plugins.forwardedheaders.XForwardedHeaders
-import io.ktor.server.plugins.origin
+import io.ktor.server.plugins.*
+import io.ktor.server.plugins.forwardedheaders.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
@@ -27,8 +27,8 @@ import io.ktor.utils.io.*
 import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.ensureActive
 import java.io.File
-import java.time.Duration
 import java.util.concurrent.TimeUnit
+import kotlin.time.Duration.Companion.seconds
 
 class KtorWorker(
     port: Int = 8080
@@ -55,7 +55,7 @@ class KtorWorker(
 
     override fun mount() {
         embeddedServer(Netty, port = port, module = { module() }).also {
-            applicationEngine = it
+            applicationEngine = it.engine
             it.start(wait = false) // FIXME think about Ktor server wait parameter
         }
     }
@@ -71,8 +71,8 @@ class KtorWorker(
     fun Application.module() {
 
         install(WebSockets) {
-            pingPeriod = Duration.ofSeconds(15)
-            timeout = Duration.ofSeconds(20)
+            pingPeriod = 15.seconds
+            timeout = 20.seconds
             maxFrameSize = Long.MAX_VALUE
             masking = false
         }
@@ -208,7 +208,7 @@ class KtorWorker(
                     }
                 }
                 logger.info { "DOWNLOAD-SUCCESS ${session.uuid} $file" }
-            } catch (ex : Exception) {
+            } catch (ex: Exception) {
                 logger.info("DOWNLOAD-FAIL ${session.uuid} $file", ex)
             } finally {
                 file.delete()

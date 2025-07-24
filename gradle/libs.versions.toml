@@ -2,7 +2,7 @@
 
 ios-support = "none"
 
-adaptive = "0.25.719+2.2.0-SNAPSHOT"
+adaptive = "0.25.724+2.2.0-SNAPSHOT"
 agp = "8.2.0"
 android-compileSdk = "34"
 android-minSdk = "26"
@@ -14,7 +14,7 @@ androidx-core-ktx = "1.13.0"
 androidx-espresso-core = "3.5.1"
 androidx-test-junit = "1.1.5"
 brotli4j = "1.16.0"
-coroutines = "1.8.1"
+coroutines = "1.10.2"
 datetime = "0.4.0"
 gradle-download-plugin = "5.5.0"
 gradle-maven-publish = "0.34.0"
@@ -25,7 +25,7 @@ kctfork = "0.8.0"
 kotlin = "2.2.0"
 kotlin-wrappers = "1.0.0-pre.760"
 kotlinx-io = "0.5.3"
-ktor = "2.3.11"
+ktor = "3.2.2"
 logback = "1.5.6"
 plugin-publish = "1.1.0"
 plugin-android = "7.3.0"
@@ -92,7 +92,7 @@ kotlin-wrappers-web = { module = "org.jetbrains.kotlin-wrappers:kotlin-web", ver
 
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines" }
-kotlinx-coroutines-debug = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-debug", version.ref = "coroutines" }
+kotlinx-coroutines-debug = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-debug", version = "1.4.0" }
 
 kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
 

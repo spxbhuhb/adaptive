@@ -1,3 +1,5 @@
+import `fun`.adaptive.internal.gradle.setupPublishing
+
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
@@ -9,6 +11,7 @@ plugins {
     alias(libs.plugins.gradleMavenPublish)
     alias(libs.plugins.download)
     alias(libs.plugins.shadow)
+    id("fun.adaptive.internal.gradle")
 }
 
 kotlin {
@@ -23,9 +26,7 @@ repositories {
 
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
-
-val baseName = "core-gradle-plugin"
-val scmPath = "spxbhuhb/adaptive"
+description = "Adaptive Gradle Plugin"
 val pomName = "Adaptive Gradle Plugin"
 val pluginDescription = "Kotlin Multiplatform Gradle plugin for the Adaptive library."
 
@@ -122,46 +123,4 @@ tasks.register("updateVersion") {
 
 tasks["checkKotlinGradlePluginConfigurationErrors"].dependsOn("updateVersion")
 
-// ====  Publishing  ========================================================
-
-signing {
-    useGpgCmd()
-    sign(publishing.publications)
-}
-
-mavenPublishing {
-
-    publishToMavenCentral()
-
-    signAllPublications()
-
-    coordinates("fun.adaptive", baseName, version.toString())
-
-    pom {
-        url.set("https://github.com/$scmPath")
-        name.set(pomName)
-        description.set(pluginDescription)
-        scm {
-            url.set("https://github.com/$scmPath")
-            connection.set("scm:git:git://github.com/$scmPath.git")
-            developerConnection.set("scm:git:ssh://git@github.com/$scmPath.git")
-        }
-        licenses {
-            license {
-                name.set("Apache 2.0")
-                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                distribution.set("repo")
-            }
-        }
-        developers {
-            developer {
-                id.set("toth-istvan-zoltan")
-                name.set("Tóth István Zoltán")
-                url.set("https://github.com/toth-istvan-zoltan")
-                organization.set("Simplexion Kft.")
-                organizationUrl.set("https://www.simplexion.hu")
-            }
-        }
-    }
-
-}
+setupPublishing()

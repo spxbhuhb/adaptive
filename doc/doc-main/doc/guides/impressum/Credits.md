@@ -31,11 +31,14 @@
 * [Rails](https://github.com/rails/rails)
   * contributing guidelines
 * [irregular-plurals](https://github.com/sindresorhus) (by Sindre Sorhus, MIT license)
+* [Kilua](https://kilua.dev) (by Robert Jaros, MIT license)
+  * Gradle config, JS and WASM utilities
 
 **Inspiration**
 
 * [Svelte](https://svelte.dev) (the whole idea)
-* [KVision](https://kvision.io) (some service related ideas)
+* [KVision](https://kvision.io) (by Robert Jaros)
+  * some service-related ideas
 * [Tailwindcss](https://tailwindcss.com) (style concept)
 
 **Images, colors, icons, fonts**

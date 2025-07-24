@@ -23,7 +23,9 @@ dependencyResolutionManagement {
     }
 }
 
+includeBuild("../../core/core-build")
 includeBuild("../../core/core-core")
 includeBuild("../../core/core-ui")
+
 includeBuild("../../lib/lib-graphics")
 includeBuild("../../lib/lib-ui")

@@ -23,6 +23,8 @@ dependencyResolutionManagement {
     }
 }
 
+includeBuild("../../core/core-build")
 includeBuild("../../core/core-core")
+
 includeBuild("../../lib/lib-util")
 includeBuild("../../lib/lib-value")

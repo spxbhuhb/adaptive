@@ -23,8 +23,10 @@ dependencyResolutionManagement {
     }
 }
 
+includeBuild("../../core/core-build")
 includeBuild("../../core/core-core")
 includeBuild("../../core/core-ui")
+
 includeBuild("../../grove/grove-runtime")
 includeBuild("../../lib/lib-ui")
 includeBuild("../../lib/lib-value")

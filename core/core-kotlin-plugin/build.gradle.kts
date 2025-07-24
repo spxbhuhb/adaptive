@@ -1,6 +1,7 @@
 /*
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
+import `fun`.adaptive.internal.gradle.setupPublishing
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -8,13 +9,12 @@ plugins {
     java
     signing
     alias(libs.plugins.gradleMavenPublish)
+    id("fun.adaptive.internal.gradle")
 }
 
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
-
-val baseName = "core-kotlin-plugin"
-val scmPath = "spxbhuhb/adaptive"
+description = "Adaptive Kotlin Compiler Plugin"
 
 repositories {
     mavenCentral()
@@ -114,3 +114,5 @@ fun Test.setLibraryProperty(propName: String, jarName: String) {
 tasks.register("jvmTest") {
     dependsOn(tasks["test"])
 }
+
+setupPublishing()

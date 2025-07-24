@@ -15,6 +15,7 @@ val publishTasks = listOf(
 )
 
 val noPublishBuilds = listOf(
+    "core-build",
     "doc-example",
     "doc-main",
     "grove-app",

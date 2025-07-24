@@ -23,4 +23,5 @@ dependencyResolutionManagement {
     }
 }
 
+includeBuild("../../core/core-build")
 includeBuild("../../core/core-core")

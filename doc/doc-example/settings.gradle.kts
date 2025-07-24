@@ -18,8 +18,10 @@ dependencyResolutionManagement {
     }
 }
 
+includeBuild("../../core/core-build")
 includeBuild("../../core/core-core")
 includeBuild("../../core/core-ui")
+
 includeBuild("../../lib/lib-app")
 includeBuild("../../lib/lib-ktor")
 includeBuild("../../lib/lib-auth")

@@ -1,3 +1,5 @@
+import `fun`.adaptive.internal.gradle.setupPublishing
+import `fun`.adaptive.internal.gradle.skipYarnLock
 import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
@@ -9,20 +11,14 @@ plugins {
     alias(libs.plugins.adaptive)
     signing
     alias(libs.plugins.gradleMavenPublish)
+    id("fun.adaptive.internal.gradle")
 }
 
 group = "fun.adaptive"
 version = libs.versions.adaptive.get()
+description = "Adaptive Lib Ktor"
 
-val baseName = "lib-ktor"
-val pomName = "Adaptive Lib Ktor"
-val scmPath = "spxbhuhb/adaptive"
-
-// this is ugly but I don't use JS dependencies anyway, 
-// https://youtrack.jetbrains.com/issue/KT-50848/Kotlin-JS-inner-build-routines-are-using-vulnerable-NPM-dependencies-and-now-that-we-have-kotlin-js-store-github-audit-this
-rootProject.plugins.withType<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnPlugin> {
-    rootProject.the<org.jetbrains.kotlin.gradle.targets.js.yarn.YarnRootExtension>().lockFileName = "skip-yarn-lock"
-}
+skipYarnLock()
 
 kotlin {
 
@@ -74,44 +70,4 @@ kotlin {
     }
 }
 
-
-signing {
-    useGpgCmd()
-    sign(publishing.publications)
-}
-
-mavenPublishing {
-
-    publishToMavenCentral()
-
-    signAllPublications()
-
-    coordinates("fun.adaptive", baseName, version.toString())
-
-    pom {
-        description.set(project.name)
-        name.set(pomName)
-        url.set("https://adaptive.fun")
-        scm {
-            url.set("https://github.com/$scmPath")
-            connection.set("scm:git:git://github.com/$scmPath.git")
-            developerConnection.set("scm:git:ssh://git@github.com/$scmPath.git")
-        }
-        licenses {
-            license {
-                name.set("Apache 2.0")
-                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-                distribution.set("repo")
-            }
-        }
-        developers {
-            developer {
-                id.set("toth-istvan-zoltan")
-                name.set("Tóth István Zoltán")
-                url.set("https://github.com/toth-istvan-zoltan")
-                organization.set("Simplexion Kft.")
-                organizationUrl.set("https://www.simplexion.hu")
-            }
-        }
-    }
-}
+setupPublishing()
