@@ -25,6 +25,8 @@ import `fun`.adaptive.utility.localTime
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
+import kotlin.time.Duration
+import kotlin.time.Duration.Companion.minutes
 
 /**
  * # Basic form
@@ -62,6 +64,7 @@ fun formBasicExample(): AdaptiveFragment {
                 dateEditor { template.date }
                 timeEditor { template.time }
                 dateTimeEditor { template.dateTime }
+                durationEditor { template.duration }
                 timeRangeEditor { template.timeRange }
 
                 colorEditor { template.color }
@@ -101,6 +104,7 @@ class FormData(
     val date : LocalDate = localDate(),
     val time : LocalTime = localTime(),
     val dateTime : LocalDateTime = localDateTime(),
+    val duration : Duration = 12.minutes,
     val timeRange : TimeRange = TimeRange(),
     val color : Color = color(0xff0000),
     val enum: ExampleEnum = ExampleEnum.V1,

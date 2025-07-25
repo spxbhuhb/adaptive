@@ -8,15 +8,7 @@ import `fun`.adaptive.sandbox.recipe.document.document.documentResourceExample
 import `fun`.adaptive.sandbox.recipe.document.markdown.*
 import `fun`.adaptive.sandbox.recipe.document.xlsx.xlsxDownloadExample
 import `fun`.adaptive.sandbox.recipe.ui.badge.*
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasBasicAnimationExample
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasLineExample
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasMeterExample
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathArcExample
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathCubicCurveExample
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathLineToExample
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPathQuadraticCurveExample
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasPositionExample
-import `fun`.adaptive.sandbox.recipe.ui.canvas.canvasTextPositionExample
+import `fun`.adaptive.sandbox.recipe.ui.canvas.*
 import `fun`.adaptive.sandbox.recipe.ui.chart.chartBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.checkbox.checkboxRecipe
 import `fun`.adaptive.sandbox.recipe.ui.codefence.codeFenceRecipe
@@ -26,11 +18,8 @@ import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorBasic
 import `fun`.adaptive.sandbox.recipe.ui.editor.double_.doubleEditorConfigExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.enum_.enumEditorDropdownExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.enum_.enumEditorListExample
-import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorMappingExample
-import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefManualExample
-import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefMultiExample
-import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefNameExample
-import `fun`.adaptive.sandbox.recipe.ui.editor.select.selectEditorRefPathExample
+import `fun`.adaptive.sandbox.recipe.ui.editor.select.*
+import `fun`.adaptive.sandbox.recipe.ui.editor.duration.durationEditorBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.editor.status.statusEditorSingleExample
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
@@ -44,6 +33,8 @@ import `fun`.adaptive.sandbox.recipe.ui.input.color.colorInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.date.dateInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.datetime.dateTimeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.double_.*
+import `fun`.adaptive.sandbox.recipe.ui.input.duration.durationInputBasic
+import `fun`.adaptive.sandbox.recipe.ui.input.duration.durationInputNullable
 import `fun`.adaptive.sandbox.recipe.ui.input.integer.*
 import `fun`.adaptive.sandbox.recipe.ui.input.select.*
 import `fun`.adaptive.sandbox.recipe.ui.input.status.statusInputSingleExample
@@ -197,7 +188,6 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("markdownCompleteExample", ::markdownCompleteExample)
         add("markdownCompleteHintExample", ::markdownCompleteHintExample)
 
-
         // this is used by markdownActualizeExample
         add("cookbook-actualized-example", ::actualizedFromMarkdownExample)
 
@@ -254,6 +244,16 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
 
         add("doubleEditorBasic", ::doubleEditorBasic)
         add("doubleEditorConfigExample", ::doubleEditorConfigExample)
+
+        // ----------------------------------------------------------------------------
+        // Duration
+        // ----------------------------------------------------------------------------
+
+        add("durationInputBasic", ::durationInputBasic)
+        add("durationInputNullable", ::durationInputNullable)
+
+        add("durationEditorBasicExample", ::durationEditorBasicExample)
+
 
         // ----------------------------------------------------------------------------
         // Editable list

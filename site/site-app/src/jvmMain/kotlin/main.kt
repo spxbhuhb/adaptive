@@ -5,7 +5,6 @@
 import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
 import `fun`.adaptive.app.app.AppMainModuleServer
 import `fun`.adaptive.auth.app.NoAuthServerModule
-import `fun`.adaptive.backend.setting.dsl.inline
 import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.grove.doc.app.GroveDocModuleServer

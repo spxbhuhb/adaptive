@@ -19,6 +19,7 @@ class MultiSelectInputViewBackend<ITEM_TYPE, OPTION_TYPE>(
     }
 
     override fun updateInputValue(oldValue: Set<ITEM_TYPE>?) {
+        if (oldValue == selectedValues) return
         inputValue = selectedValues
     }
 

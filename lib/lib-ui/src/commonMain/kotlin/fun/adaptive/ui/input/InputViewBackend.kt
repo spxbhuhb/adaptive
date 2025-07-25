@@ -110,10 +110,6 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
             else -> if (focus || isPopupOpen) labelTheme.focused else labelTheme.enabled
         }
 
-    init {
-        addListener { onChange?.invoke(it.inputValue) }
-    }
-
     override fun <PT> notify(property: KProperty<*>, oldValue: PT, newValue: PT) {
 
         if (property.name == ::inputValue.name) {
@@ -124,6 +120,7 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
             if (! valid && ! isInLocalValidationError) isInLocalValidationError = true
             if (valid && isInLocalValidationError) isInLocalValidationError = false
 
+            onChange?.invoke(inputValue)
             formBackend?.onInputValueChange(this)
         }
 

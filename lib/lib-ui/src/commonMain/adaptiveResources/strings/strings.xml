@@ -73,4 +73,13 @@
     <string name="saturdayOneLetter">Sz</string>
     <string name="sundayOneLetter">V</string>
 
+    <string name="millisecond">ezredmásodperc</string>
+    <string name="second">másodperc</string>
+    <string name="minute">perc</string>
+    <string name="hour">óra</string>
+    <string name="day">nap</string>
+    <string name="week">hét</string>
+    <string name="month">hónap</string>
+    <string name="year">év</string>
+
 </resources>

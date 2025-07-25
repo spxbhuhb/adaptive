@@ -46,7 +46,10 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
     var withSurfaceContainer: Boolean = false
     var withDropdown: Boolean = false
 
-    var items by observable(listOf<SelectItem>(), ::notify)
+    // Changing `option` regenerates items. `items` does not have to be observable as
+    // it changes only when `options` changes, so the notification from `options` is enough.
+    var items = listOf<SelectItem>()
+        private set
 
     val selectedItems = mutableSetOf<SelectItem>()
     val selectedValues = mutableSetOf<ITEM_TYPE>()
@@ -168,6 +171,8 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
     }
 
     override fun <PT> notify(property: KProperty<*>, oldValue: PT, newValue: PT) {
+        if (oldValue == newValue) return
+
         if (property.name == ::options.name) {
             selectedItems.clear()
             items = options.map {
@@ -177,9 +182,11 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
                 }
             }
         }
+
         if (property.name == ::isPopupOpen.name) {
             if (oldValue == false && newValue == true) scrollAlignment = Alignment.Center
         }
+
         super.notify(property, oldValue, newValue)
     }
 

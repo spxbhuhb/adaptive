@@ -69,6 +69,7 @@ markers: grove-doc-toc
     - [Date input](guide://)
     - [DateTime input](guide://)
     - [Double](guide://)
+    - [Duration](guide://)
     - [Enum](guide://)
     - [Int input](guide://)
     - [Select input](guide://)

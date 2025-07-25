@@ -19,6 +19,7 @@ class SingleSelectInputViewBackend<INPUT_VALUE_TYPE,ITEM_TYPE,OPTION_TYPE>(
     }
 
     override fun updateInputValue(oldValue: INPUT_VALUE_TYPE?) {
-        inputValue = inputToItemMapping.itemToValue(this, selectedValues.firstOrNull())
+        val newValue = inputToItemMapping.itemToValue(this, selectedValues.firstOrNull())
+        if (oldValue != newValue) { inputValue = newValue }
     }
 }
