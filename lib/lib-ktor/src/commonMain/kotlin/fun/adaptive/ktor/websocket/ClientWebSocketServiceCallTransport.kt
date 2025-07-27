@@ -58,7 +58,6 @@ open class ClientWebSocketServiceCallTransport(
         if (started) return this
         started = true
 
-        client.get(clientIdUrl) // initialize the client id cookie
         scope.launch { run() }
 
         return this
@@ -76,6 +75,8 @@ open class ClientWebSocketServiceCallTransport(
             try {
                 counter ++
                 transportLog.fine { "connecting (attempt # $counter)" }
+
+                client.get(clientIdUrl) // initialize the client id cookie
 
                 client.webSocket(serviceUrl) {
 

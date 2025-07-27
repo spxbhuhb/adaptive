@@ -7,6 +7,7 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.api.localContext
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.AbstractServerApplication
 import `fun`.adaptive.runtime.AbstractWorkspace
@@ -22,6 +23,8 @@ class JvmServerApplication(
     init {
         this.modules += modules
     }
+
+    val logger = getLogger(this::class.simpleName!!)
 
     override val frontendWorkspace = NoFrontendWorkspace()
     override val backendWorkspace = BackendWorkspace(this)
@@ -53,7 +56,13 @@ class JvmServerApplication(
             // at this point all backend components are created and mounted
             // so it is safe to use the database
 
-            Runtime.getRuntime().addShutdownHook(Thread { backend.stop() })
+            Runtime.getRuntime().addShutdownHook(Thread {
+                logger.info { "shutdown request received, stopping application" }
+                backend.stop()
+                logger.info { "application has been stopped" }
+            })
+
+            logger.info { "the application is running" }
 
             while (backend.isRunning) {
                 Thread.sleep(1000)
