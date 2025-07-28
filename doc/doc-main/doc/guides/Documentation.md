@@ -35,6 +35,7 @@ markers: grove-doc-toc
 
 - [Writing a UI fragment](guide://)
 - [Resources](guide://)
+  - [Resource tips](guide://)
   - [Fonts](guide://) 
 - [Layout](guide://)
   - [Scrolling](guide://)

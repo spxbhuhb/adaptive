@@ -4,11 +4,7 @@
 
 package `fun`.adaptive.backend.builtin
 
-import kotlinx.coroutines.CancellationException
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.ensureActive
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 
 abstract class WorkerImpl<T : WorkerImpl<T>> : BackendFragmentImpl() {
 
@@ -24,7 +20,7 @@ abstract class WorkerImpl<T : WorkerImpl<T>> : BackendFragmentImpl() {
     /**
      * Launches a function in the scope of this worker.
      */
-    open fun launch(function: suspend CoroutineScope.() -> Unit) {
+    open fun launch(function: suspend CoroutineScope.() -> Unit): Job =
         scope.launch {
             try {
                 function(this)
@@ -34,7 +30,7 @@ abstract class WorkerImpl<T : WorkerImpl<T>> : BackendFragmentImpl() {
                 logger.error(ex)
             }
         }
-    }
+
 }
 
 
