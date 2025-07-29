@@ -197,6 +197,7 @@ open class AvValueStore(
             }
         }
 
+        commitSet.removedValues += operation.valueId
         persistence.removeValue(valueId = operation.valueId)
         operation.success()
     }

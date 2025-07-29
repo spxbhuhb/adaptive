@@ -6,10 +6,12 @@ import `fun`.adaptive.value.AvValueId
 
 class AvCommitSet(
     val subscriptions: MutableSet<AvSubscription> = mutableSetOf(),
-    val values: MutableMap<AvValueId, AvValue<*>> = mutableMapOf()
+    val values: MutableMap<AvValueId, AvValue<*>> = mutableMapOf(),
+    val removedValues: MutableSet<AvValueId> = mutableSetOf()
 ) {
     fun clear() {
         subscriptions.clear()
         values.clear()
+        removedValues.clear()
     }
 }
