@@ -2,16 +2,15 @@ package `fun`.adaptive.ui.input
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.adapter
-import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.fillStrategy
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.testing.LayoutTraceContext
+import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.generated.resources.help
+import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.theme.textSmall
+import `fun`.adaptive.utility.debug
 
 @Adaptive
 fun <T> decoratedInput(
@@ -63,7 +62,19 @@ private fun <T> withLabel(
         InputViewBackend.LabelPosition.Top -> {
             column(instructions()) {
                 fillStrategy.constrain
-                text(config.text, config.instruction)
+                row {
+                    gap { 8.dp }
+
+                    text(config.text, config.instruction)
+
+                    if (viewBackend.help != null) {
+                        icon(Graphics.help, theme = viewBackend.labelTheme.infoIconTheme)
+                        primaryPopup {
+                            viewBackend.labelTheme.infoPopup
+                            text(viewBackend.help) .. textSmall
+                        }
+                    }
+                }
                 _KT_74337_content(viewBackend)
             }
         }

@@ -13,6 +13,7 @@ abstract class InputViewBackendBuilder<VT, BT : InputViewBackend<VT,BT>>(
     var secret: Boolean = false
     var labelAlignment: PopupAlign? = null
     var label: String? = null
+    var help: String? = null
     var placeholder: String? = null
     var onChange: ((VT?) -> Unit)? = null
     var validateFun: ((VT?) -> Boolean)? = null
@@ -26,6 +27,7 @@ abstract class InputViewBackendBuilder<VT, BT : InputViewBackend<VT,BT>>(
         disabled?.let { backend.isInputDisabled = it }
         invalid?.let { backend.isInConstraintError = it }
         labelAlignment?.let { backend.labelAlignment = it }
+        help?.let { backend.help = it }
         placeholder?.let { backend.placeholder = it }
         onChange?.let { backend.onChange = it }
         validateFun?.let { backend.validateFun = it }

@@ -73,6 +73,8 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
     var label by observable(label, ::notify)
     open var labelAlignment by observable(PopupAlign.aboveStart, ::notify)
 
+    var help by observable<String?>(null, ::notify)
+
     var placeholder by observable("", ::notify)
 
     var isNullable: Boolean = false
