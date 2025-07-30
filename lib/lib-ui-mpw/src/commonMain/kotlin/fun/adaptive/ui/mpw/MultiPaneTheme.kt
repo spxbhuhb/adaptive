@@ -149,6 +149,8 @@ class MultiPaneTheme(
     val contentPaneContainer = instructionsOf(
         paddingHorizontal { 24.dp },
         paddingVertical { 16.dp },
-        gap { 16.dp }
+        gap { 16.dp },
+        maxSize,
+        fillStrategy.constrain
     )
 }
