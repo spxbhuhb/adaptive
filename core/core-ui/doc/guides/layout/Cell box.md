@@ -11,9 +11,19 @@ Cell box is a special responsive layout intended to be used by lists.
 The layout calculates the best arrangement of cells based on the available space
 and the definitions.
 
-[CellDef](example://)
+```kotlin
+class CellDef(
+    val group: CellGroupDef?,  // Optional grouping
+    val size: GridTrack,       // Defines width behavior
+    val minSize: DPixel        // Minimum size constraint
+)
 
-[CellGroupDef](example://)
+class CellGroup(
+    val label: String,         // e.g. "V1", "V2"
+    val priority: Int          // Used for responsive layout collapse
+)
+
+```
 
 ## Full layout
 
