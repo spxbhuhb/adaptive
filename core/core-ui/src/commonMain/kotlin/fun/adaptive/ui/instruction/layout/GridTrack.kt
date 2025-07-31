@@ -4,12 +4,13 @@
 
 package `fun`.adaptive.ui.instruction.layout
 
+import `fun`.adaptive.adat.AdatClass
 import `fun`.adaptive.ui.DensityIndependentAdapter
 
 /**
  * IMPORTANT Tracks must be immutable (or [GridRepeat] won't work).
  */
-interface GridTrack {
+interface GridTrack : AdatClass {
 
     val isFix: Boolean
         get() = false
