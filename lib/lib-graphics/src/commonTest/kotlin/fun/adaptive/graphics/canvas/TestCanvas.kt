@@ -16,8 +16,14 @@ class TestCanvas : ActualCanvas {
 
     val trace = mutableListOf<String>()
 
-    override val width: Double = Double.NaN
-    override val height: Double = Double.NaN
+    override var width: Double = Double.NaN
+    override var height: Double = Double.NaN
+    override var shouldRedraw: Boolean = false
+
+    override fun setSize(width: Double, height: Double) {
+       this.width = width
+        this.height = height
+    }
 
     override fun save(id: Long) {
 
