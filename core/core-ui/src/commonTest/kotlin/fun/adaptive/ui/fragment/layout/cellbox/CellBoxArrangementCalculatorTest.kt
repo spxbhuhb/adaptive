@@ -118,7 +118,8 @@ class CellBoxArrangementCalculatorTest {
         
         // Verify the arrangement
         assertTrue(arrangement.isVertical, "Arrangement should be vertical")
-        assertEquals(2, arrangement.groups.size, "Should have 2 groups")
+        assertEquals(1, arrangement.groups.size, "Should have 1 group")
+        assertEquals(2, arrangement.groups.first().cells.size, "Should have 2 cells")
         assertEquals(60.0, arrangement.totalWidth, "Total width should be the max cell width (60.0)")
     }
     
@@ -330,7 +331,7 @@ class CellBoxArrangementCalculatorTest {
         // Verify the arrangement
         assertTrue(arrangement.isVertical, "Arrangement should be vertical")
         assertEquals(5, arrangement.groups.sumOf { it.cells.size }, "Total number of cells should be 5")
-        assertEquals(5, arrangement.groups.size, "Should have 5 groups")
+        assertEquals(1, arrangement.groups.size, "Should have 1 group")
 
         // as all cells are fixed size, the maximum size should be the total size of the arrangement
         assertEquals(50.0, arrangement.totalWidth, "Total width should be 50.0")

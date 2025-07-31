@@ -1,9 +1,10 @@
 package `fun`.adaptive.ui.fragment.layout.cell
 
 import `fun`.adaptive.ui.DensityIndependentAdapter
-import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.Fraction
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.fr
 import kotlin.math.max
 
 /**
@@ -60,17 +61,17 @@ class CellBoxArrangementCalculator(
         }
 
         // return with a vertical list if no other options left
+        val allVertical = CellBoxGroup(
+            cells = cells.toMutableList(),
+            minSize = cells.minOf { it.minSize.value }.dp,
+            maxSize = if (cells.any { it.maxSize.isFraction }) 1.fr else cells.maxOf { it.maxSize.value }.dp,
+            definition = null
+        )
+
         return CellBoxArrangement(
-            cells.map { cell ->
-                CellBoxGroup(
-                    cells = mutableListOf(cell),
-                    minSize = cell.minSize,
-                    maxSize = cell.maxSize,
-                    definition = cell.group
-                )
-            },
+            listOf(allVertical),
             isVertical = true,
-            if (cells.any { it.maxSize.isFraction }) availableWidth else cells.maxOf { it.maxSize.value }
+            if (allVertical.maxSize.isFraction) availableWidth else allVertical.maxSize.toRawValue(adapter)
         )
     }
 
