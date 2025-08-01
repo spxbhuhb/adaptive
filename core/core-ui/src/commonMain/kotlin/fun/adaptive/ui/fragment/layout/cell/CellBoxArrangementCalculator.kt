@@ -15,6 +15,8 @@ class CellBoxArrangementCalculator(
     private val adapter: DensityIndependentAdapter
 ) {
 
+    // FIXME clean up cell box arrangement dp versus px conversions
+
     /**
      * Finds the best arrangement of cells based on available width.
      * Returns a CellBoxArrangement that describes how to lay out the cells.

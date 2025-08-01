@@ -1,0 +1,18 @@
+/*
+ * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
+ */
+package `fun`.adaptive.ui.fragment.layout.cell
+
+import `fun`.adaptive.foundation.AdaptiveActual
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.ui.AuiBrowserAdapter
+import `fun`.adaptive.ui.aui
+import org.w3c.dom.HTMLDivElement
+import org.w3c.dom.HTMLElement
+
+@AdaptiveActual(aui)
+class AuiCellBox(
+    adapter: AuiBrowserAdapter,
+    parent: AdaptiveFragment,
+    declarationIndex: Int
+) : AbstractCellBox<HTMLElement, HTMLDivElement>(adapter, parent, declarationIndex)

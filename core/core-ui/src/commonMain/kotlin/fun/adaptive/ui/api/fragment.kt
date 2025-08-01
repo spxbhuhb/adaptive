@@ -8,6 +8,8 @@ import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
+import `fun`.adaptive.ui.fragment.layout.cell.CellBoxArrangement
+import `fun`.adaptive.ui.fragment.layout.cell.CellDef
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphViewBackend
 import `fun`.adaptive.ui.fragment.structural.PopupSourceViewBackend
 
@@ -60,6 +62,17 @@ fun rootBox(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> U
 fun row(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
+
+@AdaptiveExpect(aui)
+fun cellBox(
+    cells : List<CellDef>? = null,
+    arrangement: CellBoxArrangement? = null,
+    vararg instructions: AdaptiveInstruction,
+    @Adaptive content: () -> Unit
+): AdaptiveFragment {
+    manualImplementation(arrangement, cells, instructions, content)
+}
+
 
 @AdaptiveExpect(aui)
 fun column(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {

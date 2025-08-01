@@ -23,6 +23,7 @@ import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringSto
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.fragment.layout.cell.CellDef
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.input.text.textInputBackend
@@ -80,6 +81,8 @@ fun sandboxMain() {
                     fontWeight = 300
                 }
 
+               // adapter.traceWithContext = true
+
                 row {
                     column {
                         for (i in 0 .. 100) {
@@ -90,18 +93,17 @@ fun sandboxMain() {
                         }
                     }
 
-                    row {
-                        width { 300.dp} .. padding { 16.dp }
-
-                        //localContext(FragmentTraceContext()) {
-                            textInput(textInputBackend {
-                                label = "label"
-                                help = "Help for the input."
-                            })
-                        //}
+                    localContext(FragmentTraceContext()) {
+                        cellBox(
+                            cells = listOf(
+                                CellDef(null, 100.dp),
+                                CellDef(null, 100.dp)
+                            )
+                        ) {
+                            text("Hello")
+                            text("World!")
+                        } .. width { 300.dp }
                     }
-
-                    //tableBasicExample()
                 }
             }
         } catch (ex: Exception) {
