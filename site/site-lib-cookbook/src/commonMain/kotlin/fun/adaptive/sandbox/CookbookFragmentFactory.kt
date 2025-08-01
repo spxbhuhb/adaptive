@@ -24,6 +24,9 @@ import `fun`.adaptive.sandbox.recipe.ui.editor.status.statusEditorSingleExample
 import `fun`.adaptive.sandbox.recipe.ui.event.eventRecipe
 import `fun`.adaptive.sandbox.recipe.ui.filter.quickFilterRecipe
 import `fun`.adaptive.sandbox.recipe.ui.form.formBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.handle.handleBasicExample
+import `fun`.adaptive.sandbox.recipe.ui.handle.handleBoxedExample
+import `fun`.adaptive.sandbox.recipe.ui.handle.handleHorizonalOnlyExample
 import `fun`.adaptive.sandbox.recipe.ui.icon.*
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeBasicInput
 import `fun`.adaptive.sandbox.recipe.ui.input.badge.badgeInputInitializedNoLabel
@@ -166,6 +169,14 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         // ----------------------------------------------------------------------------
 
         add("formBasicExample", ::formBasicExample)
+
+        // ----------------------------------------------------------------------------
+        // Handle
+        // ----------------------------------------------------------------------------
+
+        add("handleBasicExample", ::handleBasicExample)
+        add("handleBoxedExample", ::handleBoxedExample)
+        add("handleHorizonalOnlyExample", ::handleHorizonalOnlyExample)
 
         // ----------------------------------------------------------------------------
         // Icon

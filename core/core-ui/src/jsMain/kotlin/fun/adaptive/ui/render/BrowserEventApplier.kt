@@ -34,6 +34,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
             is OnDoubleClick -> "dblclick" to Always
             is OnPrimaryDown -> "pointerdown" to Primary
             is OnPointerMove -> "pointermove" to Always
+            is OnPointerEnter -> "pointerenter" to Always
             is OnPointerLeave -> "pointerleave" to Always
             is OnPrimaryUp -> "pointerup" to Primary
             is OnDrop -> "drop" to Always

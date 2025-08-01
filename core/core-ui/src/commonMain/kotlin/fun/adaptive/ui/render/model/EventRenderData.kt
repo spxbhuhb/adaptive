@@ -26,6 +26,9 @@ class EventRenderData(
     var onPointerLeave: OnPointerLeave? = null
     var onPointerLeaveListener: Any? = null
 
+    var onPointerEnter: OnPointerEnter? = null
+    var onPointerEnterListener: Any? = null
+
     var onPrimaryDown: OnPrimaryDown? = null
     var onPrimaryDownListener: Any? = null
 
@@ -55,6 +58,7 @@ class EventRenderData(
         if (other.additionalEvents != this.additionalEvents) return false
         if (other.onDoubleClick != this.onDoubleClick) return false
         if (other.onPointerMove != this.onPointerMove) return false
+        if (other.onPointerEnter != this.onPointerEnter) return false
         if (other.onPointerLeave != this.onPointerLeave) return false
         if (other.onPrimaryDown != this.onPrimaryDown) return false
         if (other.onPrimaryUp != this.onPrimaryUp) return false
@@ -72,6 +76,7 @@ class EventRenderData(
             additionalEvents = true
             onDoubleClickListener = previous.onDoubleClickListener
             onPointerMoveListener = previous.onPointerMoveListener
+            onPointerEnterListener = previous.onPointerEnterListener
             onPointerLeaveListener = previous.onPointerLeaveListener
             onPrimaryDownListener = previous.onPrimaryDownListener
             onPrimaryUpListener = previous.onPrimaryUpListener

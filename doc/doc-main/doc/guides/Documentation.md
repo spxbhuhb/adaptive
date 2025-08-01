@@ -86,6 +86,7 @@ markers: grove-doc-toc
     - [Sheet](guide://)
     - [Tree](guide://)
   - [Other](guide://)
+    - [Handle](guide://) 
     - [Paragraph](guide://)
 - [UI Producers](guide://)
   - [Focus](guide://) 

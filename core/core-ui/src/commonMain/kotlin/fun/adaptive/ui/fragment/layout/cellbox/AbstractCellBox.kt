@@ -17,8 +17,6 @@ import kotlin.math.max
 
 /**
  * A layout that positions items according to a [CellBoxArrangement].
- *
- * Similar to AbstractBox but uses CellBoxArrangement to determine the position of items.
  */
 abstract class AbstractCellBox<RT, CRT : RT>(
     adapter: AbstractAuiAdapter<RT, CRT>,
@@ -56,7 +54,6 @@ abstract class AbstractCellBox<RT, CRT : RT>(
         // ---- get a pre-calculated arrangement or create a new one
 
         val arrangement = getOrBuildArrangement(itemProposal, gapWidth)
-        println(arrangement)
 
         // ---- calculate layout of all items ---------------------------------------
 

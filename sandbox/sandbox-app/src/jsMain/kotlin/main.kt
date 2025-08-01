@@ -26,6 +26,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.layout.SizeStrategy
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.snackbar.infoNotification
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
@@ -109,7 +110,7 @@ fun sandboxMain() {
                     box {
                         size(200.dp) .. borders.outline .. margin { 16.dp }
 
-                        handle(position, { top, left -> position = position.plus(top, left, sizing); println("dragged by $top, $left") }) {
+                        handle(position, { newPosition -> position = newPosition.coerce(sizing) }) {
                             box {
                                 size(20.dp) .. backgrounds.angry
                             }

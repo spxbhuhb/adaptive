@@ -42,24 +42,24 @@ class Position(
 
     fun plus(top : DPixel, left : DPixel) = Position(this.top + top, this.left + left)
 
-    fun plus(top : DPixel, left : DPixel, strategy: SizeStrategy) : Position {
+    fun coerce(strategy: SizeStrategy) : Position {
 
-        var topVal = this.top.value + top.value
-        
+        var leftVal = this.left.value
+
         if (strategy.minWidth != null) {
-            topVal = max(topVal, strategy.minWidth.value)
+            leftVal = max(leftVal, strategy.minWidth.value)
         }
         if (strategy.maxWidth != null) {
-            topVal = min(topVal, strategy.maxWidth.value)
+            leftVal = min(leftVal, strategy.maxWidth.value)
         }
 
-        var leftVal = this.left.value + left.value
+        var topVal = this.top.value
 
         if (strategy.minHeight != null) {
-            leftVal = max(leftVal, strategy.minHeight.value)
+            topVal = max(topVal, strategy.minHeight.value)
         }
         if (strategy.maxHeight != null) {
-            leftVal = min(leftVal, strategy.maxHeight.value)
+            topVal = min(topVal, strategy.maxHeight.value)
         }
 
         return Position(DPixel(topVal), DPixel(leftVal))
