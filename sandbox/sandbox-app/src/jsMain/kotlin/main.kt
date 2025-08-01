@@ -4,9 +4,6 @@
 
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.FragmentTraceContext
-import `fun`.adaptive.foundation.adapter
-import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.instruction.nop
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
@@ -20,13 +17,11 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
-import `fun`.adaptive.ui.fragment.layout.cell.CellDef
 import `fun`.adaptive.ui.input.button.submitButton
-import `fun`.adaptive.ui.input.text.textInput
-import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.backgrounds
@@ -81,7 +76,7 @@ fun sandboxMain() {
                     fontWeight = 300
                 }
 
-               // adapter.traceWithContext = true
+                // adapter.traceWithContext = true
 
                 row {
                     column {
@@ -93,17 +88,18 @@ fun sandboxMain() {
                         }
                     }
 
-                    localContext(FragmentTraceContext()) {
-                        cellBox(
-                            cells = listOf(
-                                CellDef(null, 100.dp),
-                                CellDef(null, 100.dp)
-                            )
-                        ) {
-                            text("Hello")
-                            text("World!")
-                        } .. width { 300.dp }
-                    }
+//                    localContext(FragmentTraceContext()) {
+//                        cellBox(
+//                            cells = listOf(
+//                                CellDef(null, 100.dp),
+//                                CellDef(null, 100.dp)
+//                            )
+//                        ) {
+//                            text("Hello") .. backgrounds.infoSurface .. maxWidth
+//                            text("World!") .. backgrounds.warningSurface .. maxWidth
+//                        } .. width { 300.dp } .. backgrounds.friendlyOpaque .. gap { 16.dp }
+//                    }
+                    containerPlayground()
                 }
             }
         } catch (ex: Exception) {

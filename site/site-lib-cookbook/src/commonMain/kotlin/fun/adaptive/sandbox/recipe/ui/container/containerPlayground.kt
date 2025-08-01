@@ -23,6 +23,7 @@ import `fun`.adaptive.ui.form.AdatFormViewBackend
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend.Companion.splitPaneBackend
+import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
 import `fun`.adaptive.ui.input.select.item.selectInputOptionCheckbox
 import `fun`.adaptive.ui.instruction.decoration.Border
 import `fun`.adaptive.ui.instruction.decoration.Color
@@ -34,6 +35,7 @@ import `fun`.adaptive.ui.splitpane.SplitPaneTheme
 import `fun`.adaptive.ui.splitpane.verticalSplitDivider
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
+import `fun`.adaptive.ui.theme.textColors
 
 @Adaptive
 fun containerPlayground(): AdaptiveFragment {
@@ -51,6 +53,7 @@ fun containerPlayground(): AdaptiveFragment {
 
 val containers = listOf(
     "aui:box",
+    "aui:cellbox",
     "aui:column",
     "aui:row",
     "aui:grid",
@@ -138,15 +141,31 @@ fun containerPlaygroundResult(config: PlaygroundConfig) {
     box {
         width { 400.dp } .. height { 400.dp } .. borders.outline
 
-        if (config.container == "splitPane") {
-            splitPane(
-                splitConfig,
-                { box { maxSize .. backgrounds.surface; text("pane1") } },
-                { verticalSplitDivider(SplitPaneTheme.outline) },
-                { box { maxSize .. backgrounds.surface; text("pane2") } }
-            ) .. config.toInstructions()
-        } else {
-            actualize(config.container, null, config.toInstructions(), BoundFragmentFactory(self, - 1, ::fakeContent))
+        when (config.container) {
+            "splitPane" -> {
+                splitPane(
+                    splitConfig,
+                    { box { maxSize .. backgrounds.surface; text("pane1") } },
+                    { verticalSplitDivider(SplitPaneTheme.outline) },
+                    { box { maxSize .. backgrounds.surface; text("pane2") } }
+                ) .. config.toInstructions()
+            }
+
+            "aui:cellbox" -> {
+                cellBox(
+                    cells = listOf(
+                        CellDef(null, 100.dp),
+                        CellDef(null, 100.dp)
+                    )
+                ) {
+                    text("Hello") .. backgrounds.infoSurface .. textColors.onInfoSurface .. maxWidth
+                    text("World!") .. backgrounds.warningSurface .. textColors.onWarningSurface .. maxWidth
+                } .. config.toInstructions()
+            }
+
+            else -> {
+                actualize(config.container, null, config.toInstructions(), BoundFragmentFactory(self, - 1, ::fakeContent))
+            }
         }
     }
 }

@@ -8,8 +8,8 @@ import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.aui
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
-import `fun`.adaptive.ui.fragment.layout.cell.CellBoxArrangement
-import `fun`.adaptive.ui.fragment.layout.cell.CellDef
+import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangement
+import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
 import `fun`.adaptive.ui.fragment.paragraph.model.ParagraphViewBackend
 import `fun`.adaptive.ui.fragment.structural.PopupSourceViewBackend
 

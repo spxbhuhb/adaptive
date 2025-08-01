@@ -7,7 +7,7 @@ package `fun`.adaptive.ui
 import `fun`.adaptive.foundation.fragment.FoundationFragmentFactory
 import `fun`.adaptive.ui.fragment.*
 import `fun`.adaptive.ui.fragment.layout.*
-import `fun`.adaptive.ui.fragment.layout.cell.AuiCellBox
+import `fun`.adaptive.ui.fragment.layout.cellbox.AuiCellBox
 import `fun`.adaptive.ui.fragment.paragraph.AuiParagraph
 import `fun`.adaptive.ui.fragment.structural.AuiHoverPopup
 import `fun`.adaptive.ui.fragment.structural.AuiPrimaryPopup

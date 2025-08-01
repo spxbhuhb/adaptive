@@ -1,10 +1,5 @@
 package `fun`.adaptive.ui.fragment.layout.cellbox
 
-import `fun`.adaptive.ui.fragment.layout.cell.CellBoxArrangement
-import `fun`.adaptive.ui.fragment.layout.cell.CellBoxArrangementCalculator
-import `fun`.adaptive.ui.fragment.layout.cell.CellBoxGroup
-import `fun`.adaptive.ui.fragment.layout.cell.CellDef
-import `fun`.adaptive.ui.fragment.layout.cell.CellGroupDef
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.testing.AuiTestAdapter
@@ -334,6 +329,7 @@ class CellBoxArrangementCalculatorTest {
         assertEquals(1, arrangement.groups.size, "Should have 1 group")
 
         // as all cells are fixed size, the maximum size should be the total size of the arrangement
+        assertEquals(50.0, arrangement.groups.first().calculatedWidth, "Group width should be 50.0")
         assertEquals(50.0, arrangement.totalWidth, "Total width should be 50.0")
     }
 }

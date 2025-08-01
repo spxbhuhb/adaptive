@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.fragment.layout.cell
+package `fun`.adaptive.ui.fragment.layout.cellbox
 
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.GridTrack
@@ -7,7 +7,7 @@ import `fun`.adaptive.ui.instruction.layout.GridTrack
 /**
  * Represents a group of cells in the layout.
  */
-class CellBoxGroup(
+data class CellBoxGroup(
     val cells: MutableList<CellDef>,
     val minSize: DPixel,
     val maxSize: GridTrack,

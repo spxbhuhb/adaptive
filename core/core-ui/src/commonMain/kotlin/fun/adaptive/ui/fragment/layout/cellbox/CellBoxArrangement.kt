@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.fragment.layout.cell
+package `fun`.adaptive.ui.fragment.layout.cellbox
 
 
 /**

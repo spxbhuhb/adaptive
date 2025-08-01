@@ -1,4 +1,4 @@
-package `fun`.adaptive.ui.fragment.layout.cell
+package `fun`.adaptive.ui.fragment.layout.cellbox
 
 import `fun`.adaptive.ui.DensityIndependentAdapter
 import `fun`.adaptive.ui.instruction.DPixel
@@ -62,18 +62,22 @@ class CellBoxArrangementCalculator(
 
         }
 
+        val allVerticalSize = if (cells.any { it.maxSize.isFraction }) 1.fr else cells.maxOf { it.maxSize.value }.dp
+        val allVerticalWidth = if (allVerticalSize.isFraction) availableWidth else allVerticalSize.toRawValue(adapter)
+
         // return with a vertical list if no other options left
         val allVertical = CellBoxGroup(
             cells = cells.toMutableList(),
             minSize = cells.minOf { it.minSize.value }.dp,
-            maxSize = if (cells.any { it.maxSize.isFraction }) 1.fr else cells.maxOf { it.maxSize.value }.dp,
-            definition = null
+            maxSize = allVerticalSize,
+            definition = null,
+            calculatedWidth = allVerticalWidth
         )
 
         return CellBoxArrangement(
             listOf(allVertical),
             isVertical = true,
-            if (allVertical.maxSize.isFraction) availableWidth else allVertical.maxSize.toRawValue(adapter)
+            allVerticalWidth
         )
     }
 

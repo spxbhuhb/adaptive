@@ -2,10 +2,9 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-package `fun`.adaptive.ui.fragment.layout.cell
+package `fun`.adaptive.ui.fragment.layout.cellbox
 
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 import `fun`.adaptive.ui.fragment.layout.AbstractContainer
@@ -14,7 +13,6 @@ import `fun`.adaptive.ui.fragment.layout.alignOnAxis
 import `fun`.adaptive.ui.fragment.layout.computeFinal
 import `fun`.adaptive.ui.fragment.layout.horizontalAlignment
 import `fun`.adaptive.ui.fragment.layout.verticalAlignment
-import `fun`.adaptive.utility.safeCall
 import kotlin.math.max
 
 /**
@@ -56,7 +54,9 @@ abstract class AbstractCellBox<RT, CRT : RT>(
         val itemProposal = proposal.toItemProposal(uiAdapter, renderData)
 
         // ---- get a pre-calculated arrangement or create a new one
+
         val arrangement = getOrBuildArrangement(itemProposal, gapWidth)
+        println(arrangement)
 
         // ---- calculate layout of all items ---------------------------------------
 
@@ -139,6 +139,8 @@ abstract class AbstractCellBox<RT, CRT : RT>(
         // For a single item update, we'll recompute the entire layout
         // A more optimized approach would be to only update the position of the changed item
         // while maintaining the existing arrangement
+
+        // FIXME updateItemLayout of AbstractCellBox is AI generated
 
         val data = this.renderData
         val innerWidth = data.innerWidth ?: 0.0
