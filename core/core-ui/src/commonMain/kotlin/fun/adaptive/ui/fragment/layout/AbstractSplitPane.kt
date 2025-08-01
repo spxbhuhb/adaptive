@@ -14,7 +14,7 @@ import `fun`.adaptive.foundation.throwChildrenAway
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.event.OnMove
+import `fun`.adaptive.ui.instruction.event.OnPointerMove
 import `fun`.adaptive.ui.instruction.layout.Orientation
 import `fun`.adaptive.ui.instruction.layout.Position
 import `fun`.adaptive.ui.instruction.layout.SplitMethod
@@ -81,8 +81,8 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
     // moves out of the divider a bit (which does happen).
 
     val splitPaneInstructions = instructionsOf(
-        onMove { handleMove(it.x, it.y) },
-        onLeave { handleMoveEnd() },
+        onPointerMove { handleMove(it.x, it.y) },
+        onPointerLeave { handleMoveEnd() },
         onPrimaryUp { handleMoveEnd() }
     )
 
@@ -173,7 +173,7 @@ abstract class AbstractSplitPane<RT, CRT : RT>(
         haveToPatch(closureMask, (1 shl d1) or (1 shl CONFIGURATION))
 
     override fun genPatchInternal(): Boolean {
-        if (! wrap && instructions.firstInstanceOfOrNull<OnMove>() == null) {
+        if (! wrap && instructions.firstInstanceOfOrNull<OnPointerMove>() == null) {
             setStateVariable(0, instructions + splitPaneInstructions)
         }
         return super.genPatchInternal()

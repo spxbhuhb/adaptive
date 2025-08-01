@@ -12,6 +12,8 @@ import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.render.layout
+import kotlin.math.max
+import kotlin.math.min
 
 @Adat
 class Position(
@@ -37,6 +39,31 @@ class Position(
     }
 
     operator fun plus(value : Double) = Position(top + value, left + value)
+
+    fun plus(top : DPixel, left : DPixel) = Position(this.top + top, this.left + left)
+
+    fun plus(top : DPixel, left : DPixel, strategy: SizeStrategy) : Position {
+
+        var topVal = this.top.value + top.value
+        
+        if (strategy.minWidth != null) {
+            topVal = max(topVal, strategy.minWidth.value)
+        }
+        if (strategy.maxWidth != null) {
+            topVal = min(topVal, strategy.maxWidth.value)
+        }
+
+        var leftVal = this.left.value + left.value
+
+        if (strategy.minHeight != null) {
+            leftVal = max(leftVal, strategy.minHeight.value)
+        }
+        if (strategy.maxHeight != null) {
+            leftVal = min(leftVal, strategy.maxHeight.value)
+        }
+
+        return Position(DPixel(topVal), DPixel(leftVal))
+    }
 
     companion object {
         val NaP = Position(DPixel.NaP, DPixel.NaP)

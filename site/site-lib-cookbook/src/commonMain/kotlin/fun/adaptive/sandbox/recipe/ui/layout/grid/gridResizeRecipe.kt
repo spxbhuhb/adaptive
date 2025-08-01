@@ -21,7 +21,7 @@ import `fun`.adaptive.ui.api.maxHeight
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.maxWidth
 import `fun`.adaptive.ui.api.noSelect
-import `fun`.adaptive.ui.api.onMove
+import `fun`.adaptive.ui.api.onPointerMove
 import `fun`.adaptive.ui.api.onPrimaryDown
 import `fun`.adaptive.ui.api.onPrimaryUp
 import `fun`.adaptive.ui.api.row
@@ -44,8 +44,8 @@ fun gridResizeRecipe() {
             lastPosition = event.position
         }
 
-        onMove { event ->
-            if (lastPosition == null) return@onMove
+        onPointerMove { event ->
+            if (lastPosition == null) return@onPointerMove
             val newPosition = event.position
 
             val deltaTop = lastPosition?.top?.let { newPosition.top - it } ?: 0.0.dp

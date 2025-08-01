@@ -32,10 +32,10 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
         val (eventName, condition) = when (eventHandler) {
             is OnClick -> "click" to Always
             is OnDoubleClick -> "dblclick" to Always
-            is OnPrimaryDown -> "mousedown" to Primary
-            is OnMove -> "mousemove" to Always
-            is OnLeave -> "mouseleave" to Always
-            is OnPrimaryUp -> "mouseup" to Primary
+            is OnPrimaryDown -> "pointerdown" to Primary
+            is OnPointerMove -> "pointermove" to Always
+            is OnPointerLeave -> "pointerleave" to Always
+            is OnPrimaryUp -> "pointerup" to Primary
             is OnDrop -> "drop" to Always
             is OnKeyDown -> "keydown" to Always
             else -> throw UnsupportedOperationException("unsupported event handler: $eventHandler")
@@ -48,6 +48,8 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
             val target = event.target
             val x: Double
             val y: Double
+            val clientX : Double
+            val clientY : Double
             val transferData: TransferData?
 
             if (event is MouseEvent) {
@@ -56,9 +58,13 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
                 val margin = renderData.layout?.margin ?: RawSurrounding.ZERO
                 x = event.clientX - boundingRect.x + margin.start
                 y = event.clientY - boundingRect.y + margin.top
+                clientX = event.clientX.toDouble()
+                clientY = event.clientY.toDouble()
             } else {
                 x = Double.NaN
                 y = Double.NaN
+                clientX = Double.NaN
+                clientY = Double.NaN
             }
 
             if (event is DragEvent && event.type == "drop") {
@@ -80,7 +86,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
                 null
             }
 
-            val doFeedback = eventHandler.execute(UIEvent(fragment, event, x, y, transferData, keyInfo, modifiers(event), { event.preventDefault() }, { event.stopPropagation() }))
+            val doFeedback = eventHandler.execute(UIEvent(fragment, event, x, y, clientX, clientY, transferData, keyInfo, modifiers(event), { event.preventDefault() }, { event.stopPropagation() }))
 
 //            event.preventDefault()
 

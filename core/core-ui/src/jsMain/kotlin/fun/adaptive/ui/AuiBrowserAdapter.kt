@@ -14,6 +14,7 @@ import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.fragment.layout.RawSurrounding
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.SPixel
+import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.instruction.layout.Alignment
 import `fun`.adaptive.ui.platform.ResizeObserver
 import `fun`.adaptive.ui.platform.applyCustomScrollBar
@@ -27,6 +28,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
+import org.w3c.dom.pointerevents.PointerEvent
 
 class AuiBrowserAdapter(
     override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
@@ -275,6 +277,22 @@ class AuiBrowserAdapter(
 
             layoutContainer.receiver.scrollTo(targetLeft, targetTop)
         }
+    }
+
+    // ------------------------------------------------------------------------------
+    // Pointer capture support
+    // ------------------------------------------------------------------------------
+
+    override fun acquirePointerCapture(event: UIEvent) {
+        val element = (event.fragment.receiver as? HTMLElement) ?: return
+        val nativeEvent = event.nativeEvent as? PointerEvent ?: return
+        element.setPointerCapture(nativeEvent.pointerId)
+    }
+
+    override fun releasePointerCapture(event: UIEvent) {
+        val element = (event.fragment.receiver as? HTMLElement) ?: return
+        val nativeEvent = event.nativeEvent as? PointerEvent ?: return
+        element.releasePointerCapture(nativeEvent.pointerId)
     }
 
     // ------------------------------------------------------------------------------

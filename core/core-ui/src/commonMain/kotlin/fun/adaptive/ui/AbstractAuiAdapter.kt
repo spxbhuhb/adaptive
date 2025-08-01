@@ -19,6 +19,7 @@ import `fun`.adaptive.ui.fragment.structural.AuiLoop
 import `fun`.adaptive.ui.fragment.structural.AuiSelect
 import `fun`.adaptive.ui.instruction.SPixel
 import `fun`.adaptive.ui.instruction.decoration.Color
+import `fun`.adaptive.ui.instruction.event.UIEvent
 import `fun`.adaptive.ui.instruction.layout.Alignment
 import `fun`.adaptive.ui.platform.media.MediaMetrics
 import `fun`.adaptive.ui.platform.media.MediaMetricsProducer
@@ -287,7 +288,6 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
     // Hit detection
     // ------------------------------------------------------------------------------
 
-
     /**
      * Finds all descendant fragments of [start] at the given position.
      *
@@ -344,4 +344,15 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
         }
     }
 
+    // ------------------------------------------------------------------------------
+    // Pointer capture support
+    // ------------------------------------------------------------------------------
+
+    open fun acquirePointerCapture(event : UIEvent) {
+        throw UnsupportedOperationException("acquirePointerCapture($event)")
+    }
+
+    open fun releasePointerCapture(event: UIEvent) {
+        throw UnsupportedOperationException("releasePointerCapture($event)")
+    }
 }

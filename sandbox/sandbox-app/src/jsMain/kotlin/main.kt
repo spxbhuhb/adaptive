@@ -17,14 +17,17 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
-import `fun`.adaptive.sandbox.recipe.ui.container.containerPlayground
 import `fun`.adaptive.ui.LibFragmentFactory
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.handle.handle
 import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.layout.Position
+import `fun`.adaptive.ui.instruction.layout.SizeStrategy
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -78,6 +81,9 @@ fun sandboxMain() {
 
                 // adapter.traceWithContext = true
 
+                var position = Position(0.dp, 0.dp)
+                val sizing = SizeStrategy(null, null, 0.dp, 100.dp, 0.dp, 100.dp)
+
                 row {
                     column {
                         for (i in 0 .. 100) {
@@ -99,7 +105,16 @@ fun sandboxMain() {
 //                            text("World!") .. backgrounds.warningSurface .. maxWidth
 //                        } .. width { 300.dp } .. backgrounds.friendlyOpaque .. gap { 16.dp }
 //                    }
-                    containerPlayground()
+
+                    box {
+                        size(200.dp) .. borders.outline .. margin { 16.dp }
+
+                        handle(position, { top, left -> position = position.plus(top, left, sizing); println("dragged by $top, $left") }) {
+                            box {
+                                size(20.dp) .. backgrounds.angry
+                            }
+                        }
+                    }
                 }
             }
         } catch (ex: Exception) {

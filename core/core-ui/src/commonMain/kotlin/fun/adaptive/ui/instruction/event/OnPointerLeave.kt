@@ -8,13 +8,13 @@ import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.ui.render.event
 
 @Adat
-class OnLeave(
+class OnPointerLeave(
     override val handler: (event: UIEvent) -> Unit
 ) : UIEventHandler {
     override fun applyTo(subject: Any) {
         event(subject) {
             it.additionalEvents = true
-            it.onLeave = this
+            it.onPointerLeave = this
         }
     }
 }

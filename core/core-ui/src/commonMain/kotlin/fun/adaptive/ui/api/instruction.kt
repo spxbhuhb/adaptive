@@ -73,8 +73,8 @@ fun onClick(
 
 fun onDoubleClick(handler: UiEventHandler) = OnDoubleClick(handler)
 
-fun onMove(handler: UiEventHandler) = OnMove(handler)
-fun onLeave(handler: UiEventHandler) = OnLeave(handler)
+fun onPointerMove(handler: UiEventHandler) = OnPointerMove(handler)
+fun onPointerLeave(handler: UiEventHandler) = OnPointerLeave(handler)
 
 fun onPrimaryDown(handler: UiEventHandler) = OnPrimaryDown(handler)
 fun onPrimaryUp(handler: UiEventHandler) = OnPrimaryUp(handler)

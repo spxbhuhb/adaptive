@@ -35,7 +35,7 @@ fun controlLayer(controller: SheetViewBackend) {
                 controller.onTransformStart(it.position, EventModifier.SHIFT in it)
             }
 
-            onMove {
+            onPointerMove {
                 controller.onTransformChange(it.position)
             }
 

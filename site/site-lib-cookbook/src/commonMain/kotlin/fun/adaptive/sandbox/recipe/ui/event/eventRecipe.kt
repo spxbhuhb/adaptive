@@ -12,7 +12,7 @@ import `fun`.adaptive.ui.api.maxHeight
 import `fun`.adaptive.ui.api.maxSize
 import `fun`.adaptive.ui.api.onClick
 import `fun`.adaptive.ui.api.onDoubleClick
-import `fun`.adaptive.ui.api.onMove
+import `fun`.adaptive.ui.api.onPointerMove
 import `fun`.adaptive.ui.api.rowTemplate
 import `fun`.adaptive.ui.api.size
 import `fun`.adaptive.ui.api.text
@@ -35,7 +35,7 @@ fun eventRecipe(): AdaptiveFragment {
 
             onClick { nonMoveMessages += "${localTime()} - Click" }
             onDoubleClick { nonMoveMessages += "${localTime()} - Double click" }
-            onMove { moveMessages += "${localTime()} - Move + ${it.x}, ${it.y}" }
+            onPointerMove { moveMessages += "${localTime()} - Move + ${it.x}, ${it.y}" }
 
             text("Click, double click, move")
         }
