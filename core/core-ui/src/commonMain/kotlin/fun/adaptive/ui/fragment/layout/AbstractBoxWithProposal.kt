@@ -28,9 +28,9 @@ abstract class AbstractBoxWithProposal<RT, CRT : RT>(
     }
 
     override fun genPatchDescendant(fragment: AdaptiveFragment) {
-        if (content.functionReference == null) {
-            content.declaringFragment.genPatchDescendant(fragment)
-        }
+        // this is patching the anonymous fragment
+        check(fragment.declarationIndex == -1) { "fragment declaration index is not -1" }
+        fragment.setStateVariable(1, contentProposal)
     }
 
     override fun computeLayout(
@@ -42,18 +42,18 @@ abstract class AbstractBoxWithProposal<RT, CRT : RT>(
             if (! isMounted) return@addLayoutTask
 
             if (children.isNotEmpty() && lastContent !== content) {
-                lastContent = content
                 throwChildrenAway()
             }
 
             val child = children.firstOrNull()
+
             contentProposal = SizingProposal(0.0, renderData.innerWidth !!, 0.0, renderData.innerHeight !!)
+            lastContent = content
 
             if (child == null) {
                 // FIXME I think this anonymous fragment is superfluous
-                AdaptiveAnonymous(this, declarationIndex, 2, content).also {
+                AdaptiveAnonymous(this, -1, 2, content).also {
                     children += it
-                    it.setStateVariable(1, contentProposal)
                     it.create()
                     it.mount() // adds layout updates
                 }
@@ -69,11 +69,10 @@ abstract class AbstractBoxWithProposal<RT, CRT : RT>(
     }
 
     override fun updateLayout(updateId: Long, item: AbstractAuiFragment<*>?) {
-        if (item == null) {
-            super.updateLayout(updateId, item)
-        } else {
-            updateItemLayout(updateId, item)
+        for (layoutItem in layoutItems) {
+            updateItemLayout(updateId, layoutItem)
         }
+        placeStructural()
     }
 
     private fun updateItemLayout(updateId: Long, item: AbstractAuiFragment<*>) {

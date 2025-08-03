@@ -52,7 +52,7 @@ abstract class AbstractContainer<RT, CRT : RT>(
 
         // FIXME I think this anonymous fragment is superfluous
         // if you change this you have to change AbstractBoxWithSizes as well
-        return AdaptiveAnonymous(this, declarationIndex, 1, content).apply { create() }
+        return AdaptiveAnonymous(this, 0, 1, content).apply { create() }
     }
 
     /**
