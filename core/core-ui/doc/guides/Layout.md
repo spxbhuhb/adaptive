@@ -61,9 +61,28 @@ box {
 }
 ```
 
-## Layout process overview
+## Layout process
 
-Layout calculations start with a [sizing proposal](def://), an instance of [SizingProposal](class://).
+The layout process is quite complex as it has to handle many situations while offering
+good performance.
+
+The actual layout process is decoupled from fragment [patching](def://).
+
+1. When a fragment recognizes that the layout should be updated, it calls [scheduleUpdate](function://AbstractAuiFragment).
+2. [scheduleUpdate](function://AbstractAuiFragment) adds the fragment to the [updateBatch](property://AbstractAuiAdapter) of the adapter.
+3. When all fragments have been patched, the fragment that initiated [patching](def://) calls [closePatchBatch](function://AuiAdapter).
+4. [closePatchBatch](function://AuiAdapter) calls [updateLayout](function://AbstractAuiFragment) for each fragment in [updateBatch](property://AbstractAuiAdapter)
+
+[updateLayout](function://AbstractAuiFragment)
+
+1. checks if the fragment is able to update the layout by itself
+   1. if so, calls [computeLayout](function://AbstractAuiFragment) and [placeLayout](function://AbstractAuiFragment)
+   2. if not, calls [updateLayout](function://AbstractAuiFragment) of the [ui container fragment](def://)
+   
+[ui container fragments](def://) typically call [computeLayout](function://AbstractAuiFragment) and [placeLayout](function://AbstractAuiFragment)
+of the fragments they contain.
+
+[computeLayout](function://AbstractAuiFragment) gets a [sizing proposal](def://), an instance of [SizingProposal](class://).
 
 This proposal contains:
 
@@ -72,11 +91,9 @@ This proposal contains:
 - [minHeight](property://SizingProposal)
 - [maxHeight](property://SizingProposal)
 
-The proposal is passed to the [computeLayout](function://AbstractAuiFragment) function, which then calculates
-the layout of the fragment.
 
-[computeLayout](function://AbstractAuiFragment) saves the results of the calculations into the [render data](def://)
-of the [ui fragment](def://), which is an instance of [AuiRenderData](class://).
+[computeLayout](function://AbstractAuiFragment) then calculates the layout and saves the results of the calculations into
+the [render data](def://) of the [ui fragment](def://), which is an instance of [AuiRenderData](class://).
 
 The final result of the calculation is represented by four fields of [AuiRenderData](class://):
 
@@ -86,6 +103,22 @@ The final result of the calculation is represented by four fields of [AuiRenderD
 - [finalHeight](property://AuiRenderData)
 
 Once calculated, the [UI rendering](def://) process applies this data to the [actual UI](def://).
+
+### Special cases
+
+#### boxWithProposal
+
+The [boxWithProposal](fragment://) is a special case from the layout point of view because it cannot create 
+the child fragments until the proposed sizes are known.
+
+Also, when the proposed dimensions change, it has to patch the children, which is problematic as it is in
+the middle of the layout update.
+
+The fragment resolves this conflict by postponing creation and patching of the children until after the
+layout update is done, using [addLayoutTask](function://AbstractAuiFragment).
+
+At the time these tasks are called, all layout updates are applied. Most cases the task generates another
+layout update round, but that cannot be avoided. (Browsers also do double layout when you call `getBoundingClientRect`).
 
 ## See also
 

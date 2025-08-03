@@ -19,6 +19,7 @@ object AuiFragmentFactory : FoundationFragmentFactory() {
     init {
         add("aui:afterpatchbatch") { p, i, s -> AuiAfterPatchBatch(p.adapter as AuiBrowserAdapter, p, i) }
         add("aui:box") { p, i, s -> AuiBox(p.adapter as AuiBrowserAdapter, p, i) }
+        add("aui:boxwithproposal") { p, i, s -> AuiBoxWithProposal(p.adapter as AuiBrowserAdapter, p, i)}
         add("aui:cellbox") { p, i, s -> AuiCellBox(p.adapter as AuiBrowserAdapter, p, i) }
         add("aui:column") { p, i, s -> AuiColumn(p.adapter as AuiBrowserAdapter, p, i) }
         add("aui:contextpopup") { p, i, s -> AuiContextPopup(p.adapter as AuiBrowserAdapter, p, i) }

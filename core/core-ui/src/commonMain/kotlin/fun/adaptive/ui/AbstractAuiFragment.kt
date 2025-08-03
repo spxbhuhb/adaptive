@@ -5,6 +5,7 @@
 package `fun`.adaptive.ui
 
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.FragmentTask
 import `fun`.adaptive.foundation.api.firstContextOrNull
 import `fun`.adaptive.ui.fragment.layout.RawPosition
 import `fun`.adaptive.ui.fragment.layout.SizingProposal
@@ -170,8 +171,8 @@ abstract class AbstractAuiFragment<RT>(
     }
 
     override fun scheduleUpdate() {
-        // When the fragment is not mounted it will be added to the layout or to the root fragment list.
-        // Both cases put the actual container or this fragment (in case of root fragment) onto the update batch.
+        // When the fragment is not mounted it will be added to a layout or to the root fragment list.
+        // Both cases put the actual container or this fragment (in the case of root fragment) onto the update batch.
 
         if (! isMounted) return
 
@@ -355,5 +356,13 @@ abstract class AbstractAuiFragment<RT>(
         if (firstContextOrNull<LayoutTraceContext>() != null) {
             println("[ ${name ?: this}-RESULT ]  parent: ${renderData.layoutFragment}  proposal: ${renderData.sizingProposal}")
         }
+    }
+
+    fun addAfterPatchBatchTask(taskFun: (fragment: AdaptiveFragment) -> Unit) {
+        uiAdapter.addAfterPatchBatchTask(FragmentTask(this, taskFun))
+    }
+
+    fun addLayoutTask(taskFun: (fragment: AdaptiveFragment) -> Unit) {
+        uiAdapter.addLayoutTask(FragmentTask(this, taskFun))
     }
 }

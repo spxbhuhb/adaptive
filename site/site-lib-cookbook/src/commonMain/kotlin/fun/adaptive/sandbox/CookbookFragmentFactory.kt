@@ -47,6 +47,7 @@ import `fun`.adaptive.sandbox.recipe.ui.input.text.textInputSimpleExample
 import `fun`.adaptive.sandbox.recipe.ui.input.time.timeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.input.timerange.timeRangeInputExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.box.boxRecipe
+import `fun`.adaptive.sandbox.recipe.ui.layout.boxwithproposal.boxWithProposalBasicExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.grid.gridRecipe
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneProportionalExample
 import `fun`.adaptive.sandbox.recipe.ui.layout.splitpane.splitPaneWrapperExample
@@ -114,6 +115,12 @@ object CookbookFragmentFactory : FoundationFragmentFactory() {
         add("badgeBasicInput", ::badgeBasicInput)
         add("badgeInputInitializedNoLabel", ::badgeInputInitializedNoLabel)
         add("badgeInputInitializedUnremovable", ::badgeInputInitializedUnremovable)
+
+        // ----------------------------------------------------------------------------
+        // Box with proposal
+        // ----------------------------------------------------------------------------
+
+        add("boxWithProposalBasicExample", ::boxWithProposalBasicExample)
 
         // ----------------------------------------------------------------------------
         // Canvas

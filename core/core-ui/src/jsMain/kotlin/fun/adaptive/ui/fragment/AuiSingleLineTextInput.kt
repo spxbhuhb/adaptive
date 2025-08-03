@@ -72,7 +72,7 @@ open class AuiSingleLineTextInput(
         val hasBeenMounted = hasBeenMounted
         super.mount()
         if (! hasBeenMounted && instructions.firstInstanceOfOrNull<FocusFirst>() != null) {
-            uiAdapter.addAfterPatchBatchTask(FragmentTask(this, { receiver.focus() }))
+            addAfterPatchBatchTask { receiver.focus() }
         }
     }
 

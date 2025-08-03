@@ -58,13 +58,10 @@ class AdaptiveAnonymous private constructor(
         }
     }
 
-    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? =
-        if (reference) {
-            lastIndex = declarationIndex
-            factory.functionReference !!(this, declarationIndex)?.also { it.create() }
-        } else {
-            factory.declaringFragment.genBuild(this, factory.declarationIndex, flags)
-        }
+    override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment? {
+        lastIndex = declarationIndex
+        return factory.build(this, declarationIndex, flags)
+    }
 
     override fun genPatchInternal(): Boolean {
         if (reference) {

@@ -54,8 +54,6 @@ import kotlinx.coroutines.cancel
  *
  * @property  actualBatchOwner  Used by layout fragments to group remove operations, so they can remove
  *                              a whole actual subtree at once.
- *
- * @property  afterClosePatchBatch   When not null, the adapter calls this function after closing a patch batch.
  */
 abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
 
@@ -92,8 +90,6 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
     val updateBatch = mutableListOf<AbstractAuiFragment<RT>>()
 
     val emptyRenderData = AuiRenderData(this)
-
-    var afterClosePatchBatch: ((adapter: AbstractAuiAdapter<RT, CRT>) -> Unit)? = null
 
     var defaultTextRenderData = TextRenderData().apply {
         color = Color(0u)
@@ -138,10 +134,38 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
      */
     abstract fun removeActual(itemReceiver: RT)
 
-    val afterPatchBatchTasks = mutableListOf<FragmentTask>()
+    /**
+     * Tasks to be executed after any of these:
+     *
+     * - a patch batch is closed ([closePatchBatch])
+     * - a root fragment is added ([addActualRoot])
+     * - resize (adapter specific)
+     *
+     * This is used by `boxWithProposal` to schedule a second layout round.
+     *
+     * The difference between [afterPatchBatchTasks] and [layoutTasks] is that
+     * [afterPatchBatchTasks] are not executed on root fragment adding and resize.
+     */
+    private var layoutTasks : MutableList<FragmentTask>? = null
+
+    private var afterPatchBatchTasks : MutableList<FragmentTask>? = null
+
+    fun addLayoutTask(task: FragmentTask) {
+        val safeTasks = layoutTasks
+        if (safeTasks == null) {
+            layoutTasks = mutableListOf(task)
+        } else {
+            safeTasks += task
+        }
+    }
 
     fun addAfterPatchBatchTask(task: FragmentTask) {
-        afterPatchBatchTasks += task
+        val safeTasks = afterPatchBatchTasks
+        if (safeTasks == null) {
+            afterPatchBatchTasks = mutableListOf(task)
+        } else {
+            safeTasks += task
+        }
     }
 
     override fun closePatchBatch() {
@@ -153,10 +177,21 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
         }
 
         updateBatch.clear()
-        afterClosePatchBatch?.invoke(this)
 
-        afterPatchBatchTasks.forEach { it.execute() }
-        afterPatchBatchTasks.clear()
+        executeAfterPatchBatchTasks()
+        executeLayoutTasks()
+    }
+
+    fun executeAfterPatchBatchTasks() {
+        val tasks = afterPatchBatchTasks ?: return
+        afterPatchBatchTasks = null
+        tasks.forEach { it.execute() }
+    }
+
+    fun executeLayoutTasks() {
+        val tasks = layoutTasks ?: return
+        layoutTasks = null
+        tasks.forEach { it.execute() }
     }
 
     /**

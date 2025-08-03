@@ -51,6 +51,7 @@ abstract class AbstractContainer<RT, CRT : RT>(
         if (declarationIndex != 0) invalidIndex(declarationIndex)
 
         // FIXME I think this anonymous fragment is superfluous
+        // if you change this you have to change AbstractBoxWithSizes as well
         return AdaptiveAnonymous(this, declarationIndex, 1, content).apply { create() }
     }
 

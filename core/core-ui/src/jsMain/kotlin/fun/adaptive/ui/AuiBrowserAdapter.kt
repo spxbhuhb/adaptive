@@ -26,6 +26,7 @@ import kotlinx.browser.document
 import kotlinx.browser.window
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import org.w3c.dom.DOMRect
 import org.w3c.dom.HTMLDivElement
 import org.w3c.dom.HTMLElement
 import org.w3c.dom.pointerevents.PointerEvent
@@ -62,9 +63,9 @@ class AuiBrowserAdapter(
 
         fragment.alsoIfInstance<AbstractAuiFragment<HTMLElement>> {
             rootContainer.getBoundingClientRect().let { r ->
-                it.computeLayout(0.0, r.width, 0.0, r.height)
-                it.placeLayout(0.0, 0.0)
+                computeAndPlace(it, r)
                 rootContainer.appendChild(it.receiver)
+                executeLayoutTasks()
             }
         }
 
@@ -193,23 +194,20 @@ class AuiBrowserAdapter(
             updateMediaMetrics()
 
             rootContainer.getBoundingClientRect().let { r ->
-
-                val root = rootFragment as? AbstractAuiFragment<*>
-                if (root != null) {
-                    root.computeLayout(0.0, r.width, 0.0, r.height)
-                    root.placeLayout(root.renderData.finalTop, root.renderData.finalTop)
-                }
-
-                for (fragment in otherRootFragments) {
-                    if (fragment is AbstractAuiFragment<*>) {
-                        fragment.computeLayout(0.0, r.width, 0.0, r.height)
-                        fragment.placeLayout(fragment.renderData.finalTop, fragment.renderData.finalTop)
-                    }
-                }
+                computeAndPlace(rootFragment, r)
+                otherRootFragments.forEach { f -> computeAndPlace(f, r) }
+                executeLayoutTasks()
             }
         }
     }.also {
         it.observe(rootContainer)
+    }
+
+    fun computeAndPlace(fragment : AdaptiveFragment, rect : DOMRect) {
+        if (fragment is AbstractAuiFragment<*>) {
+            fragment.computeLayout(0.0, rect.width, 0.0, rect.height)
+            fragment.placeLayout(fragment.renderData.finalTop, fragment.renderData.finalTop)
+        }
     }
 
     // ------------------------------------------------------------------------------

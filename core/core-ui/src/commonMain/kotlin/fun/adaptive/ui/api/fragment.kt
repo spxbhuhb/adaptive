@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.manualImplementation
 import `fun`.adaptive.resource.image.ImageResourceSet
 import `fun`.adaptive.ui.aui
+import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.layout.SplitPaneViewBackend
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangement
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
@@ -36,6 +37,14 @@ fun multiLineTextInput(
 
 @AdaptiveExpect(aui)
 fun box(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+    manualImplementation(instructions, content)
+}
+
+@AdaptiveExpect(aui)
+fun boxWithProposal(
+    vararg instructions: AdaptiveInstruction,
+    @Adaptive content: (sizingProposal : SizingProposal) -> Unit
+): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 

@@ -24,9 +24,8 @@ abstract class WorkerImpl<T : WorkerImpl<T>> : BackendFragmentImpl() {
         scope.launch {
             try {
                 function(this)
-            } catch (_: CancellationException) {
-                scope.ensureActive()
             } catch (ex: Exception) {
+                scope.ensureActive()
                 logger.error(ex)
             }
         }

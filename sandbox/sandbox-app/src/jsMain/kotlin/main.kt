@@ -107,12 +107,20 @@ fun sandboxMain() {
 //                        } .. width { 300.dp } .. backgrounds.friendlyOpaque .. gap { 16.dp }
 //                    }
 
-                    box {
-                        size(200.dp) .. borders.outline .. margin { 16.dp }
+//                    boxWithProposal { proposal ->
+//                        text(proposal)
+//                    }
+                    column {
+                        width { 300.dp } .. height { 100.dp } .. borders.outline
 
-                        handle(position, { newPosition -> position = newPosition.coerce(sizing) }) {
-                            box {
-                                size(20.dp) .. backgrounds.angry
+                        boxWithProposal { proposal ->
+                            text(proposal)
+                            column {
+                                maxSize
+                                text("proposed minimum width: ${proposal.minWidth}")
+                                text("proposed maximum width: ${proposal.maxWidth}")
+                                text("proposed minimum height: ${proposal.minHeight}")
+                                text("proposed maximum height: ${proposal.maxHeight}")
                             }
                         }
                     }

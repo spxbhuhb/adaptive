@@ -4,7 +4,7 @@ import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import kotlin.math.max
 
-class SizingProposal(
+data class SizingProposal(
     val minWidth: Double,
     val maxWidth: Double,
     val minHeight: Double,
@@ -60,9 +60,4 @@ class SizingProposal(
             max(proposedMinHeight, proposedMaxHeight)
         )
     }
-
-    override fun toString(): String {
-        return "$minWidth, $maxWidth, $minHeight, $maxHeight"
-    }
-
 }

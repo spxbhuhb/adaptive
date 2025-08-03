@@ -55,6 +55,7 @@ markers: grove-doc-toc
     - [Text](guide://)
   - [Layout](guide://)
     - [Box](guide://)
+    - [Box with proposal](guide://)
     - [Column](guide://)
     - [Flow box](guide://)
     - [Grid](guide://)
