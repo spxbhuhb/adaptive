@@ -19,6 +19,8 @@ import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.table.TableViewBackendBuilder.Companion.tableBackend
+import `fun`.adaptive.ui.table.table
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
@@ -72,16 +74,41 @@ fun main() {
 
             column {
                 padding { 16.dp }
-                boxWithProposal { proposal ->
-                    table(proposal)
-                }
+                tableTest()
             }
         }
     }
 }
 
+class T(
+    val i1 : Int,
+    val i2 : Int
+)
+
 @Adaptive
-fun table(proposal: SizingProposal) {
+fun tableTest() {
+
+    val backend = tableBackend {
+
+        items = listOf(T(12,23))
+
+        intCell {
+            label = "I1"
+            get = { it.i1 }
+        }
+
+        intCell {
+            label = "I2"
+            get = { it.i2 }
+        }
+
+    }
+
+    table(backend)
+}
+
+@Adaptive
+fun table2(proposal: SizingProposal) {
 
     val arrangement = CellBoxArrangementCalculator(adapter() as AbstractAuiAdapter<*, *>).findBestArrangement(
         cells = listOf(

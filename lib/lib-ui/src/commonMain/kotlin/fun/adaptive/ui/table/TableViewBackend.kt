@@ -3,6 +3,8 @@ package `fun`.adaptive.ui.table
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.ui.instruction.DPixel
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.layout.Gap
 import `fun`.adaptive.ui.menu.MenuItemBase
 import `fun`.adaptive.ui.table.renderer.tableItemToString
 
@@ -13,7 +15,7 @@ import `fun`.adaptive.ui.table.renderer.tableItemToString
  */
 class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
 
-    val cells: MutableList<TableCellDef<ITEM, Any>> = mutableListOf()
+    val cells: MutableList<TableCellDef<ITEM, *>> = mutableListOf()
 
     val tableTheme = TableTheme.default
 
@@ -23,30 +25,6 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
 
     var viewportItems: List<TableItem<ITEM>>? = null
 
-    fun <CELL_DATA : Any> cell(
-        label: String,
-        width: DPixel,
-        getFun: (ITEM) -> CELL_DATA,
-        menu: List<MenuItemBase<Any>>? = null,
-        buildFun: TableCellDef<ITEM, CELL_DATA>.() -> Unit = {}
-    ) {
-        cells += TableCellDef(
-            table = this,
-            label = label,
-            width = width,
-            instructions = emptyInstructions,
-            getFun = getFun
-        ).also { cell ->
-            if (menu != null) cell.rowMenu = menu
-        }.apply(buildFun) as TableCellDef<ITEM, Any>
-    }
+    var gap : Gap = Gap(0.dp, 0.dp)
 
-    fun intCell(buildFun : TableCellDef<ITEM,Int>.() -> Unit) {
-
-    }
-
-    companion object {
-        fun <ITEM> tableViewBackend(buildFun: TableViewBackend<ITEM>.() -> Unit): TableViewBackend<ITEM> =
-            TableViewBackend<ITEM>().apply(buildFun)
-    }
 }

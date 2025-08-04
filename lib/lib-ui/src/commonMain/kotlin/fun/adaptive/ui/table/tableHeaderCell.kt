@@ -19,7 +19,7 @@ fun <ITEM> tableHeaderCell(
     val observed = observe { cellDef }
 
     row {
-        theme.headerCell .. width { observed.width }
+        //theme.headerCell .. width { observed.width }
 
         text(observed.label) .. theme.headerCellText .. maxWidth
 

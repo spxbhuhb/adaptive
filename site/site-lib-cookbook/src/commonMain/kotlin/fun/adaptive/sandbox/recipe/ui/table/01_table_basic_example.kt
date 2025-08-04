@@ -12,7 +12,6 @@ import `fun`.adaptive.ui.generated.resources.south
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.table.TableItem
-import `fun`.adaptive.ui.table.TableViewBackend.Companion.tableViewBackend
 import `fun`.adaptive.ui.table.table
 
 /**
@@ -21,34 +20,34 @@ import `fun`.adaptive.ui.table.table
 @Adaptive
 fun tableBasicExample(): AdaptiveFragment {
 
-    val backend = tableViewBackend<TableItemData> {
-
-        cell(
-            label = "Cell 1",
-            width = 200.dp,
-            getFun = { it.int1 },
-            menu = listOf(
-                MenuItem(Graphics.south, "Sort descending", "Sort descending"),
-                MenuItem(Graphics.north, "Sort ascending", "Sort ascending")
-            )
-        )
-
-        cell(
-            "Cell 2",
-            200.dp,
-            getFun = { it.int2 }
-        )
-
-        viewportItems = mutableListOf(
-            TableItem(TableItemData()),
-        )
-
-    }
-
-    adapter().traceWithContext = true
-    localContext(FragmentTraceContext()) {
-        table(backend)
-    }
+//    val backend = tableViewBackend<TableItemData> {
+//
+//        cell(
+//            label = "Cell 1",
+//            width = 200.dp,
+//            getFun = { it.int1 },
+//            menu = listOf(
+//                MenuItem(Graphics.south, "Sort descending", "Sort descending"),
+//                MenuItem(Graphics.north, "Sort ascending", "Sort ascending")
+//            )
+//        )
+//
+//        cell(
+//            "Cell 2",
+//            200.dp,
+//            getFun = { it.int2 }
+//        )
+//
+//        viewportItems = mutableListOf(
+//            TableItem(TableItemData()),
+//        )
+//
+//    }
+//
+//    adapter().traceWithContext = true
+//    localContext(FragmentTraceContext()) {
+//        table(backend)
+//    }
 
     return fragment()
 }
