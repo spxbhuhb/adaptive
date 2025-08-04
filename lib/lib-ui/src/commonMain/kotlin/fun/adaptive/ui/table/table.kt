@@ -86,7 +86,7 @@ fun <ITEM, CELL_DATA> tableCell(
 ): AdaptiveFragment {
     adapter().traceWithContext = true
     localContext(FragmentTraceContext()) {
-        cellDef.contentFun(cellDef, item.data)
+        //cellDef.contentFun(cellDef, item.data)
     }
     return fragment()
 }
