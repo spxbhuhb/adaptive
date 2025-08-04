@@ -16,11 +16,11 @@ import `fun`.adaptive.ui.wrap.wrapFromTop
 @Adaptive
 fun basicModal(
     title: String,
-    _fixme_buttons: @Adaptive ((close: UiClose?, theme: PopupTheme, save: UiSave?) -> Unit)? = null,
+    buttons: @Adaptive ((close: UiClose?, theme: PopupTheme, save: UiSave?) -> Unit)? = null,
     close: UiClose? = null,
     save: UiSave? = null,
     theme: PopupTheme = PopupTheme.Companion.default,
-    _fixme_content: @Adaptive () -> Unit
+    content: @Adaptive () -> Unit
 ): AdaptiveFragment {
 
     column(instructions()) {
@@ -30,14 +30,14 @@ fun basicModal(
             wrapFromBottom(
                 theme.modalButtonsHeight,
                 {
-                    if (_fixme_buttons == null) {
+                    if (buttons == null) {
                         modalCancelOk(close, theme, save)
                     } else {
-                        _fixme_buttons(close, theme, save)
+                        buttons(close, theme, save)
                     }
                 }
             ) {
-                _fixme_content()
+                content()
             }
         }
     }

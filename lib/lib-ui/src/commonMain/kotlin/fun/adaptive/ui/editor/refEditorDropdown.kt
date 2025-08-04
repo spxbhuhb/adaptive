@@ -27,8 +27,8 @@ fun <OPTION_TYPE> refEditorDropdown(
     options: List<OPTION_TYPE>,
     optionToItemMapping: SelectOptionMapping<ITEM_TYPE, OPTION_TYPE>,
     inputToItemMapping: SelectInputMapping<VALUE_TYPE, ITEM_TYPE>,
-    _fixme_itemFun: @Adaptive (AbstractSelectInputViewBackend<VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
-    _fixme_valueFun: @Adaptive (AbstractSelectInputViewBackend<VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
+    itemFun: @Adaptive (AbstractSelectInputViewBackend<VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
+    valueFun: @Adaptive (AbstractSelectInputViewBackend<VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<VALUE_TYPE>? = null,
     @Suppress("unused")
     @PropertySelector
@@ -48,8 +48,8 @@ fun <OPTION_TYPE> refEditorDropdown(
                 it.withSurfaceContainer = true
             }
         }.also { if (it.options !== options) it.options = options },
-        _fixme_itemFun,
-        _fixme_valueFun,
+        itemFun,
+        valueFun,
     ) .. instructions()
 
     return fragment()

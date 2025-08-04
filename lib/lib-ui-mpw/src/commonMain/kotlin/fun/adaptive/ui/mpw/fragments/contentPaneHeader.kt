@@ -15,7 +15,7 @@ fun contentPaneHeader(
     title: String,
     uuid: UUID<*>? = null,
     value: AvValue<*>? = null,
-    _fixme_adaptive_content: @Adaptive () -> Unit
+    content: @Adaptive () -> Unit
 ) : AdaptiveFragment {
     row {
         maxWidth .. spaceBetween
@@ -32,7 +32,7 @@ fun contentPaneHeader(
 
         row {
             gap { 16.dp } .. paddingTop { 4.dp }
-            _fixme_adaptive_content()
+            content()
         }
     }
 

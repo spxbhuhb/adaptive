@@ -18,7 +18,7 @@ fun editorModal(
     hide: UiClose? = null,
     save: UiSave? = null,
     theme : PopupTheme =  PopupTheme.Companion.default,
-    _fixme_content : @Adaptive () -> Unit
+    content : @Adaptive () -> Unit
 ) {
 
     column {
@@ -26,7 +26,7 @@ fun editorModal(
 
         wrapFromTop(theme.modalTitleHeight, { modalPopupTitle(title, hide, theme) }) {
             wrapFromBottom(theme.modalButtonsHeight, { modalCancelOk(hide, save = save, okLabel = Strings.save) }) {
-                _fixme_content()
+                content()
             }
         }
     }

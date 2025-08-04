@@ -12,11 +12,11 @@ import `fun`.adaptive.ui.instruction.dp
 @Adaptive
 fun hardCodedExample(
     markdown : String,
-    _fixme_adaptive_content: @Adaptive () -> Unit
+    content: @Adaptive () -> Unit
 ) {
     row {
         fillStrategy.constrain .. gap { 16.dp } .. maxWidth
-        _fixme_adaptive_content()
+        content()
         markdown(markdown)
     }
 }

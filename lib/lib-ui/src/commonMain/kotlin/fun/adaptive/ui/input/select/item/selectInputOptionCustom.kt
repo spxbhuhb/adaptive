@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.support.scroll.scrollIntoView
 @Adaptive
 fun <OT> selectInputOptionCustom(
     item: AbstractSelectInputViewBackend<*,*,OT>.SelectItem,
-    _fixme_renderFun : @Adaptive (OT) -> Unit
+    renderFun : @Adaptive (OT) -> Unit
 ) {
     val hover = hover()
     val observed = observe { item }
@@ -23,7 +23,7 @@ fun <OT> selectInputOptionCustom(
         observed.optionContainerInstructions(hover)
         onClick { observed.toggle() }
 
-        _fixme_renderFun(item.option)
+        renderFun(item.option)
     }
 
     if (observed.isSelected) {

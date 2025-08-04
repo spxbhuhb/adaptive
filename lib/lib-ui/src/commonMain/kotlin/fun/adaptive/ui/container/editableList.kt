@@ -23,7 +23,7 @@ import `fun`.adaptive.ui.theme.colors
 @Adaptive
 fun <T> editableList(
     items: List<T>,
-    _fixme_itemRenderFun: @Adaptive (T) -> Unit,
+    itemRenderFun: @Adaptive (T) -> Unit,
 ): AdaptiveFragment {
 
     val backend = selectInputBackend {
@@ -42,7 +42,7 @@ fun <T> editableList(
 
         column {
             maxSize .. verticalScroll .. padding { 8.dp } .. backgrounds.surface .. cornerBottomRadius(4.dp)
-            selectInputList(backend, { selectInputOptionCustom(it, _fixme_itemRenderFun) })
+            selectInputList(backend, { selectInputOptionCustom(it, itemRenderFun) })
         }
     }
 

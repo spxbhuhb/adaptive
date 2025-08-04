@@ -11,11 +11,11 @@ import `fun`.adaptive.ui.api.contextPopup
 @Adaptive
 fun <T> withContextMenu(
     viewBackend: MenuViewBackend<T>,
-    _fixme_content: @Adaptive () -> Unit
+    content: @Adaptive () -> Unit
 ): AdaptiveFragment {
 
     box {
-        _fixme_content()
+        content()
         contextPopup(viewBackend) {
             column(viewBackend.theme.container, instructions()) {
                 for (item in viewBackend.items) {

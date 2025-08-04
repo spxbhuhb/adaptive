@@ -16,15 +16,15 @@ import `fun`.adaptive.utility.debug
 fun <T> decoratedInput(
     focused: Boolean,
     viewBackend: InputViewBackend<T, *>,
-    _KT_74337_content: @Adaptive (InputViewBackend<T, *>) -> Unit
+    content: @Adaptive (InputViewBackend<T, *>) -> Unit
 ): AdaptiveFragment {
 
     if (viewBackend.label?.isNotEmpty() == true) {
-        withLabel(focused, viewBackend) { _KT_74337_content(viewBackend) } .. instructions()
+        withLabel(focused, viewBackend) { content(viewBackend) } .. instructions()
     } else {
         column {
             instructions()
-            _KT_74337_content(viewBackend)
+            content(viewBackend)
         }
     }
 
@@ -35,7 +35,7 @@ fun <T> decoratedInput(
 private fun <T> withLabel(
     focused: Boolean,
     viewBackend: InputViewBackend<T, *>,
-    _KT_74337_content: @Adaptive (InputViewBackend<T, *>) -> Unit
+    content: @Adaptive (InputViewBackend<T, *>) -> Unit
 ): AdaptiveFragment {
 
     val config = viewBackend.labelConfiguration(focused)
@@ -45,14 +45,14 @@ private fun <T> withLabel(
             row(instructions()) {
                 fillStrategy.constrain
                 text(config.text, config.instruction)
-                _KT_74337_content(viewBackend)
+                content(viewBackend)
             }
         }
 
         InputViewBackend.LabelPosition.Right -> {
             row(instructions()) {
                 fillStrategy.constrainReverse
-                _KT_74337_content(viewBackend)
+                content(viewBackend)
                 text(config.text, config.instruction) .. viewBackend.labelTheme.rightLabel
             }
         }
@@ -73,14 +73,14 @@ private fun <T> withLabel(
                         }
                     }
                 }
-                _KT_74337_content(viewBackend)
+                content(viewBackend)
             }
         }
 
         InputViewBackend.LabelPosition.Bottom -> {
             column(instructions()) {
                 fillStrategy.constrainReverse
-                _KT_74337_content(viewBackend)
+                content(viewBackend)
                 text(config.text, config.instruction)
             }
         }

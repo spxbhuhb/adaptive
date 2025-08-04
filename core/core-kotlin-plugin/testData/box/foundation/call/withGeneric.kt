@@ -11,9 +11,9 @@ import `fun`.adaptive.foundation.testing.*
 //fun <T> loading(
 //    data: T?,
 //    @Adaptive
-//    _fixme_content: (T) -> Unit
+//    content: (T) -> Unit
 //) {
-//    _fixme_content(data)
+//    content(data)
 //}
 
 fun box() : String {

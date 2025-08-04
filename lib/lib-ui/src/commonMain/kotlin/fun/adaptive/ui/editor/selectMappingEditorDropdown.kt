@@ -17,8 +17,8 @@ import `fun`.adaptive.ui.input.select.selectInputDropdown
 fun <VT, OT> selectMappingEditorDropdown(
     options : List<OT>,
     mapping : SelectOptionMapping<VT,OT>,
-    _fixme_itemFun : @Adaptive (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
-    _fixme_valueFun : @Adaptive (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
+    itemFun : @Adaptive (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
+    valueFun : @Adaptive (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<VT>? = null,
     @Suppress("unused")
     @PropertySelector
@@ -38,8 +38,8 @@ fun <VT, OT> selectMappingEditorDropdown(
                 it.withSurfaceContainer = true
             }
         }.also { if (it.options !== options) it.options = options },
-        _fixme_itemFun,
-        _fixme_valueFun
+        itemFun,
+        valueFun
     ) .. instructions()
 
     return fragment()

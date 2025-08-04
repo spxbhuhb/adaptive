@@ -11,11 +11,11 @@ import `fun`.adaptive.ui.api.primaryPopup
 @Adaptive
 fun <T> withPrimaryMenu(
     viewBackend: MenuViewBackend<T>,
-    _fixme_content: @Adaptive () -> Unit
+    content: @Adaptive () -> Unit
 ): AdaptiveFragment {
 
     box {
-        _fixme_content()
+        content()
         primaryPopup(viewBackend) {
             column(viewBackend.theme.container, instructions()) {
                 for (item in viewBackend.items) {

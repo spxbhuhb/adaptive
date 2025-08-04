@@ -23,7 +23,7 @@ typealias TabHandleFun = (model: TabContainer, tab: TabPane, activeTab: TabPane?
 @Adaptive
 fun tabContainer(
     model: TabContainer,
-    _fixme_adaptive_content: @Adaptive TabHandleFun, // handle render function
+    content: @Adaptive TabHandleFun, // handle render function
     theme: TabTheme = TabTheme.DEFAULT
 ): AdaptiveFragment {
 
@@ -32,7 +32,7 @@ fun tabContainer(
     grid(instructions()) {
         theme.outerContainer
 
-        header(model, theme, activeTab, _fixme_adaptive_content)
+        header(model, theme, activeTab, content)
 
         if (activeTab != null) {
             localContext(activeTab.model) {
@@ -102,7 +102,7 @@ private fun header(
     model: TabContainer,
     theme: TabTheme,
     activeTab: TabPane?,
-    _fixme_adaptive_content: @Adaptive TabHandleFun
+    content: @Adaptive TabHandleFun
 ) {
 
     val hasMenu = model.menu.isNotEmpty()
@@ -117,7 +117,7 @@ private fun header(
             for (tab in model.tabs) {
                 box {
                     onClick { model.switchFun(model, tab) }
-                    _fixme_adaptive_content(model, tab, activeTab, theme)
+                    content(model, tab, activeTab, theme)
                 }
             }
         }

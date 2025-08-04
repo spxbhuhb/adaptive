@@ -56,7 +56,7 @@ interface MultiPageModalBackend<MENU_ITEM_DATA> {
 @Adaptive
 fun <MENU_ITEM_DATA> multiPageModal(
     viewBackend: MultiPageModalBackend<MENU_ITEM_DATA>? = null,
-    _fixme_adaptive_content: @Adaptive (MultiPageModalBackend<MENU_ITEM_DATA>) -> Unit
+    content: @Adaptive (MultiPageModalBackend<MENU_ITEM_DATA>) -> Unit
 ): AdaptiveFragment {
 
     val modalBackend = viewBackend ?: fragment().firstContext()
@@ -96,7 +96,7 @@ fun <MENU_ITEM_DATA> multiPageModal(
                             text(modalBackend.noPageMessage) .. alignSelf.center .. textColors.onSurfaceMedium .. textMedium
                         } else {
                             localContext(viewBackend) {
-                                _fixme_adaptive_content(modalBackend)
+                                content(modalBackend)
                             }
                         }
                     }

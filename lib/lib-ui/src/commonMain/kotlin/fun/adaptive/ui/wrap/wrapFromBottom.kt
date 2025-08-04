@@ -15,8 +15,8 @@ import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 @Adaptive
 fun wrapFromBottom(
     wrapperWidth : DPixel,
-    _KT_74337_wrapper: @Adaptive () -> Unit,
-    _KT_74337_wrapped: @Adaptive () -> Unit
+    wrapper: @Adaptive () -> Unit,
+    wrapped: @Adaptive () -> Unit
 ): AdaptiveFragment {
 
     splitPane(
@@ -28,9 +28,9 @@ fun wrapFromBottom(
             dividerOverlaySize = 0.dp,
             dividerEffectiveSize = 0.dp
         ),
-        _KT_74337_wrapped,
+        wrapped,
         { },
-        _KT_74337_wrapper,
+        wrapper,
     ) .. instructions()
 
     return fragment()

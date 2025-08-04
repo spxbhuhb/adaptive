@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.input.select.multiSelectInputList
 @Adaptive
 fun <T> multiSelectEditorList(
     options : List<T>,
-    _fixme_itemFun : @Adaptive (AbstractSelectInputViewBackend<Set<T>,T,T>.SelectItem) -> Unit,
+    itemFun : @Adaptive (AbstractSelectInputViewBackend<Set<T>,T,T>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<Set<T>>? = null,
     @Suppress("unused")
     @PropertySelector
@@ -38,7 +38,7 @@ fun <T> multiSelectEditorList(
         }.also {
             it.options = options
         },
-        _fixme_itemFun,
+        itemFun,
     ) .. instructions()
 
     return fragment()

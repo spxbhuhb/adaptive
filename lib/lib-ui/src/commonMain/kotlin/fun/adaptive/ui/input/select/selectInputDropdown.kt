@@ -19,8 +19,8 @@ import `fun`.adaptive.ui.instruction.layout.SizeStrategy
 @Adaptive
 fun <INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE> selectInputDropdown(
     viewBackend: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>,
-    _fixme_option: @Adaptive (option: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
-    _fixme_value: @Adaptive (option: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit
+    option: @Adaptive (option: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
+    value: @Adaptive (option: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit
 ): AdaptiveFragment {
 
     val focus = focus()
@@ -39,7 +39,7 @@ fun <INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE> selectInputDropdown(
 
                 box {
                     if (observed.selectedItems.isNotEmpty()) {
-                        _fixme_value(observed.selectedItems.first())
+                        value(observed.selectedItems.first())
                     } else {
                         text(Strings.noValueSelected) .. theme.noValue
                     }
@@ -59,7 +59,7 @@ fun <INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE> selectInputDropdown(
                         onKeyDown { event -> observed.onListKeydown(event, hide) }
 
                         for (item in observed.items) {
-                            _fixme_option(item)
+                            option(item)
                         }
                     }
                 }

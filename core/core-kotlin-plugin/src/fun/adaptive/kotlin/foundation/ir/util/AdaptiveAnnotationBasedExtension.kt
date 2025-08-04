@@ -26,13 +26,9 @@ interface AdaptiveAnnotationBasedExtension {
         get() = symbol.owner.hasAnnotation(pluginContext.adaptiveClass)
 
     val IrValueParameter?.isAdaptive: Boolean
-        // FIXME remove hard-coded _fixme_adaptive_content and other annotation-issue hacks
-        // KT-74337 Local Delegated properties don't preserve their annotations and don't show up in reflection
         get() {
             if (this == null) return false
             if (this.name.isSpecial) return false
-            if (this.name.identifier.startsWith("_fixme_")) return true
-            if (this.name.identifier.startsWith("_KT_74337_")) return true
             return this.type.hasAnnotation(pluginContext.adaptiveClass)
         }
 

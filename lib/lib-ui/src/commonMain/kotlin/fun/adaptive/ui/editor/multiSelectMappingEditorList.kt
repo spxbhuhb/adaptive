@@ -18,7 +18,7 @@ import `fun`.adaptive.ui.input.select.multiSelectInputList
 fun <VT, OT> multiSelectMappingEditorList(
     options: List<OT>,
     mapping: SelectOptionMapping<VT, OT>,
-    _fixme_itemFun: @Adaptive (AbstractSelectInputViewBackend<Set<VT>, VT, OT>.SelectItem) -> Unit,
+    itemFun: @Adaptive (AbstractSelectInputViewBackend<Set<VT>, VT, OT>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<Set<VT>>? = null,
     @Suppress("unused")
     @PropertySelector
@@ -40,7 +40,7 @@ fun <VT, OT> multiSelectMappingEditorList(
         }.also {
             it.options = options
         },
-        _fixme_itemFun,
+        itemFun,
     ) .. instructions()
 
     return fragment()

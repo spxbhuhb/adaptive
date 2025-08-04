@@ -14,16 +14,16 @@ fun basicContentPane(
     title: String,
     uuid: UUID<*>? = null,
     value: AvValue<*>? = null,
-    _fixme_adaptive_actions: @Adaptive () -> Unit,
-    _fixme_adaptive_content: @Adaptive () -> Unit
+    actions: @Adaptive () -> Unit,
+    content: @Adaptive () -> Unit
 ) : AdaptiveFragment {
 
     column {
         MultiPaneTheme.DEFAULT.contentPaneContainer .. instructions()
 
-        contentPaneHeader(title, uuid, value, _fixme_adaptive_actions)
+        contentPaneHeader(title, uuid, value, actions)
 
-        _fixme_adaptive_content()
+        content()
     }
 
     return fragment()

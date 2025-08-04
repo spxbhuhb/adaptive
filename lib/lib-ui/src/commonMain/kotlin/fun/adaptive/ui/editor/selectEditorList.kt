@@ -16,7 +16,7 @@ import `fun`.adaptive.ui.input.select.selectInputList
 @Adaptive
 fun <T> selectEditorList(
     options : List<T>,
-    _fixme_itemFun : @Adaptive (AbstractSelectInputViewBackend<T,T,T>.SelectItem) -> Unit,
+    itemFun : @Adaptive (AbstractSelectInputViewBackend<T,T,T>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<T>? = null,
     @Suppress("unused")
     @PropertySelector
@@ -36,7 +36,7 @@ fun <T> selectEditorList(
                 it.withSurfaceContainer = true
             }
         }.also { if (it.options !== options) it.options = options },
-        _fixme_itemFun,
+        itemFun,
     ) .. instructions()
 
     return fragment()

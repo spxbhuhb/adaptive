@@ -4,7 +4,7 @@ package `fun`.adaptive.app.sidebar.ui
 //@Adaptive
 //fun defaultAppLayout(
 //    appData: BasicAppData,
-//    @Adaptive _fixme_adaptive_content: () -> Unit
+//    @Adaptive content: () -> Unit
 //) {
 //
 //    val metrics = mediaMetrics()
@@ -34,7 +34,7 @@ package `fun`.adaptive.app.sidebar.ui
 //            }
 //        }
 //
-//        _fixme_adaptive_content()
+//        content()
 //    }
 //
 //    box {

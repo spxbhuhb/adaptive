@@ -16,8 +16,8 @@ import `fun`.adaptive.ui.input.select.selectInputDropdown
 @Adaptive
 fun <T> selectEditorDropdown(
     options: List<T>,
-    _fixme_itemFun: @Adaptive (AbstractSelectInputViewBackend<T, T, T>.SelectItem) -> Unit,
-    _fixme_valueFun: @Adaptive (AbstractSelectInputViewBackend<T, T, T>.SelectItem) -> Unit,
+    itemFun: @Adaptive (AbstractSelectInputViewBackend<T, T, T>.SelectItem) -> Unit,
+    valueFun: @Adaptive (AbstractSelectInputViewBackend<T, T, T>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<T>? = null,
     @Suppress("unused")
     @PropertySelector
@@ -37,8 +37,8 @@ fun <T> selectEditorDropdown(
                 it.withSurfaceContainer = true
             }
         }.also { if (it.options !== options) it.options = options },
-        _fixme_itemFun,
-        _fixme_valueFun,
+        itemFun,
+        valueFun,
     ) .. instructions()
 
     return fragment()

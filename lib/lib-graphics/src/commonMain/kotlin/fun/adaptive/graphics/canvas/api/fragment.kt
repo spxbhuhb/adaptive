@@ -76,7 +76,7 @@ fun path(commands: List<PathCommand>, init: PathCommand? = null, vararg instruct
 @AdaptiveExpect(canvas)
 fun transform(
     vararg instructions: AdaptiveInstruction,
-    _KT_74337_content: @Adaptive () -> Unit
+    content: @Adaptive () -> Unit
 ): AdaptiveFragment {
-    manualImplementation(instructions, _KT_74337_content)
+    manualImplementation(instructions, content)
 }

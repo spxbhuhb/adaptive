@@ -13,7 +13,7 @@ import `fun`.adaptive.ui.theme.colors
 fun examplePaneOld(
     title: String,
     explanation: String? = null,
-    _fixme_adaptive_content: @Adaptive () -> Unit
+    content: @Adaptive () -> Unit
 ) {
     column {
         width { 600.dp } .. borders.outline .. cornerRadius { 4.dp }
@@ -37,7 +37,7 @@ fun examplePaneOld(
         column {
             maxWidth .. padding { 24.dp } .. backgrounds.surfaceVariant .. cornerRadius { 4.dp }
 
-            _fixme_adaptive_content()
+            content()
 
         }
     }

@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.input.select.selectInputList
 fun <VT, OT> selectMappingEditorList(
     options : List<OT>,
     mapping : SelectOptionMapping<VT,OT>,
-    _fixme_itemFun : @Adaptive (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
+    itemFun : @Adaptive (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<VT>? = null,
     @Suppress("unused")
     @PropertySelector
@@ -37,7 +37,7 @@ fun <VT, OT> selectMappingEditorList(
                 it.withSurfaceContainer = true
             }
         }.also { if (it.options !== options) it.options = options },
-        _fixme_itemFun,
+        itemFun,
     ) .. instructions()
 
     return fragment()

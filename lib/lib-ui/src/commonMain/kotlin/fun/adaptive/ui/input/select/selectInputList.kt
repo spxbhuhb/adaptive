@@ -14,7 +14,7 @@ import `fun`.adaptive.ui.input.decoratedInput
 @Adaptive
 fun <IT, OT> selectInputList(
     viewBackend: AbstractSelectInputViewBackend<IT, IT, OT>,
-    _fixme_option: @Adaptive (option: AbstractSelectInputViewBackend<IT, IT, OT>.SelectItem) -> Unit
+    option: @Adaptive (option: AbstractSelectInputViewBackend<IT, IT, OT>.SelectItem) -> Unit
 ): AdaptiveFragment {
 
     val focus = focus()
@@ -29,7 +29,7 @@ fun <IT, OT> selectInputList(
             onKeyDown { event -> observed.onListKeydown(event) }
 
             for (item in observed.items) {
-                _fixme_option(item)
+                option(item)
             }
         }
     }

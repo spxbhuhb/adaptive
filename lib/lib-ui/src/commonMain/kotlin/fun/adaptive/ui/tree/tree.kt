@@ -22,7 +22,7 @@ typealias TreeContextMenuBuilder<IT, CT> = ((hide: () -> Unit, backend: TreeView
 @Adaptive
 fun <IT, CT> tree(
     viewBackend: TreeViewBackend<IT, CT>,
-    _KT_74337_contextMenuBuilder: @Adaptive TreeContextMenuBuilder<IT, CT>? = null
+    contextMenuBuilder: @Adaptive TreeContextMenuBuilder<IT, CT>? = null
 ): AdaptiveFragment {
 
     val observed = observe { viewBackend }
@@ -31,7 +31,7 @@ fun <IT, CT> tree(
         onKeyDown { observed.onKeyDown(it) }
 
         for (item in observed.topItems) {
-            node(observed, item, 0.dp, _KT_74337_contextMenuBuilder)
+            node(observed, item, 0.dp, contextMenuBuilder)
         }
     }
 
@@ -43,21 +43,21 @@ private fun <IT, CT> node(
     viewBackend: TreeViewBackend<IT, CT>,
     item: TreeItem<IT>,
     offset: DPixel,
-    _KT_74337_contextMenuBuilder: @Adaptive TreeContextMenuBuilder<IT, CT>?
+    contextMenuBuilder: @Adaptive TreeContextMenuBuilder<IT, CT>?
 ) {
     val observed = observe { item }
 
     column {
 
         localContext(observed) {
-            label(viewBackend, item, offset, _KT_74337_contextMenuBuilder)
+            label(viewBackend, item, offset, contextMenuBuilder)
         }
 
         if (observed.open) {
             column {
                 for (child in observed.children) {
                     column {
-                        node(viewBackend, child, offset + viewBackend.theme.indent, _KT_74337_contextMenuBuilder)
+                        node(viewBackend, child, offset + viewBackend.theme.indent, contextMenuBuilder)
                     }
                 }
             }
@@ -70,7 +70,7 @@ private fun <IT, CT> label(
     viewBackend: TreeViewBackend<IT, CT>,
     item: TreeItem<IT>,
     offset: DPixel,
-    _KT_74337_contextMenuBuilder: @Adaptive TreeContextMenuBuilder<IT, CT>?
+    contextMenuBuilder: @Adaptive TreeContextMenuBuilder<IT, CT>?
 ) {
     val observed = observe { item }
     val theme = viewBackend.theme
@@ -113,10 +113,10 @@ private fun <IT, CT> label(
             handle(viewBackend, observed, foreground)
         }
 
-        if (_KT_74337_contextMenuBuilder != null) {
+        if (contextMenuBuilder != null) {
             contextPopup { hide ->
                 popupAlign.belowCenter
-                _KT_74337_contextMenuBuilder(hide, viewBackend, observed)
+                contextMenuBuilder(hide, viewBackend, observed)
             }
         }
     }
