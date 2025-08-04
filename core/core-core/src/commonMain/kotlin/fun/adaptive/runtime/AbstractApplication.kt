@@ -7,7 +7,7 @@ import `fun`.adaptive.utility.firstInstanceOrNull
 
 abstract class AbstractApplication<FW : AbstractWorkspace, BW : AbstractWorkspace> {
 
-    abstract val version : String
+    abstract val about : AppAboutData
 
     val modules = mutableSetOf<AppModule<FW,BW>>()
 

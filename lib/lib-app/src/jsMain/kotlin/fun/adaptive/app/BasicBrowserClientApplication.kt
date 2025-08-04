@@ -3,12 +3,13 @@ package `fun`.adaptive.app
 import `fun`.adaptive.app.builder.ApplicationBuilder
 import `fun`.adaptive.app.app.AppMainModuleBasic
 import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.runtime.AppAboutData
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.runtime.FrontendWorkspace
 
 open class BasicBrowserClientApplication(
-    override val version: String,
+    override val about: AppAboutData,
     vararg modules: AppModule<FrontendWorkspace, BackendWorkspace>
 ) : BrowserApplication<FrontendWorkspace>() {
 
@@ -29,7 +30,7 @@ open class BasicBrowserClientApplication(
     companion object {
 
         fun basicBrowserClient(
-            version: String = "0.0.1",
+            about: AppAboutData = AppAboutData(),
             start: Boolean = true,
             buildFun: ApplicationBuilder<FrontendWorkspace, BackendWorkspace>.() -> Unit
         ) {
@@ -38,7 +39,7 @@ open class BasicBrowserClientApplication(
             builder.buildFun()
 
             if (start) {
-                BasicBrowserClientApplication(version, *builder.modules.toTypedArray())
+                BasicBrowserClientApplication(about, *builder.modules.toTypedArray())
                     .also {
                         it.wireFormatProvider = builder.wireFormatProvider
                     }

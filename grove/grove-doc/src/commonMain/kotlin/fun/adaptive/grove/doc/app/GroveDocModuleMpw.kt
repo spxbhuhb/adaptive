@@ -74,7 +74,7 @@ class GroveDocModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : Grove
 
         val docToolPaneDef = PaneDef(
             UUID("add25359-772e-45d8-bdf1-2f53ea9e1634"),
-            Strings.documentation + " - v" + application.version,
+            Strings.documentation + " - v" + application.about.version,
             Graphics.documentation,
             PanePosition.LeftTop,
             DOC_TOOL
