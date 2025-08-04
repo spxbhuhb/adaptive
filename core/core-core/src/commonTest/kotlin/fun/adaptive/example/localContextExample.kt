@@ -20,7 +20,7 @@ fun localContextProvider() {
 
 @Adaptive
 fun contextUnaware(
-    @Adaptive content : () -> Unit
+    content : @Adaptive () -> Unit
 ) {
     content()
 }
