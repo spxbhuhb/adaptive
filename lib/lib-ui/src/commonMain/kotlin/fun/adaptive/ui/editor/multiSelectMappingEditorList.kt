@@ -15,16 +15,15 @@ import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
 import `fun`.adaptive.ui.input.select.multiSelectInputList
 
 @Adaptive
-fun <VT,OT> multiSelectMappingEditorList(
-    options : List<OT>,
-    mapping : SelectOptionMapping<VT,OT>,
-    @Adaptive
-    _fixme_itemFun : (AbstractSelectInputViewBackend<Set<VT>,VT,OT>.SelectItem) -> Unit,
+fun <VT, OT> multiSelectMappingEditorList(
+    options: List<OT>,
+    mapping: SelectOptionMapping<VT, OT>,
+    _fixme_itemFun: @Adaptive (AbstractSelectInputViewBackend<Set<VT>, VT, OT>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<Set<VT>>? = null,
     @Suppress("unused")
     @PropertySelector
     selector: () -> Set<VT>?
-) : AdaptiveFragment {
+): AdaptiveFragment {
 
     multiSelectInputList(
         fragment().viewBackendFor(binding) { value, label, isSecret ->

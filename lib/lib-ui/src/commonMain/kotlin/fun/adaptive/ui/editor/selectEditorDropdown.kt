@@ -15,16 +15,14 @@ import `fun`.adaptive.ui.input.select.selectInputDropdown
 
 @Adaptive
 fun <T> selectEditorDropdown(
-    options : List<T>,
-    @Adaptive
-    _fixme_itemFun : (AbstractSelectInputViewBackend<T,T,T>.SelectItem) -> Unit,
-    @Adaptive
-    _fixme_valueFun : (AbstractSelectInputViewBackend<T,T,T>.SelectItem) -> Unit,
+    options: List<T>,
+    _fixme_itemFun: @Adaptive (AbstractSelectInputViewBackend<T, T, T>.SelectItem) -> Unit,
+    _fixme_valueFun: @Adaptive (AbstractSelectInputViewBackend<T, T, T>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<T>? = null,
     @Suppress("unused")
     @PropertySelector
     selector: () -> T?
-) : AdaptiveFragment {
+): AdaptiveFragment {
 
     selectInputDropdown(
         fragment().viewBackendFor(binding) { value, label, isSecret ->

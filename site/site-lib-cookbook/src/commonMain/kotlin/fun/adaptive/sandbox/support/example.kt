@@ -12,8 +12,7 @@ import `fun`.adaptive.ui.instruction.dp
 @Adaptive
 fun example(
     text: String,
-    @Adaptive
-    _fixme_adaptive_content: () -> Unit
+    _fixme_adaptive_content: @Adaptive () -> Unit
 ) {
     row {
         column {

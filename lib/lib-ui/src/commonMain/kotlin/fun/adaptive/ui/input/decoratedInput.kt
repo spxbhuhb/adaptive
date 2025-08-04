@@ -16,8 +16,7 @@ import `fun`.adaptive.utility.debug
 fun <T> decoratedInput(
     focused: Boolean,
     viewBackend: InputViewBackend<T, *>,
-    @Adaptive
-    _KT_74337_content: (InputViewBackend<T, *>) -> Unit
+    _KT_74337_content: @Adaptive (InputViewBackend<T, *>) -> Unit
 ): AdaptiveFragment {
 
     if (viewBackend.label?.isNotEmpty() == true) {
@@ -36,8 +35,7 @@ fun <T> decoratedInput(
 private fun <T> withLabel(
     focused: Boolean,
     viewBackend: InputViewBackend<T, *>,
-    @Adaptive
-    _KT_74337_content: (InputViewBackend<T, *>) -> Unit
+    _KT_74337_content: @Adaptive (InputViewBackend<T, *>) -> Unit
 ): AdaptiveFragment {
 
     val config = viewBackend.labelConfiguration(focused)

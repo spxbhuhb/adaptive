@@ -32,7 +32,7 @@ import kotlin.time.Instant
 
 
 @Adaptive
-fun mobileExample(@Adaptive body: () -> Unit) {
+fun mobileExample(body: @Adaptive () -> Unit) {
     val borderWidth = 1 + 1
     val width = 375 + borderWidth // 375 // pixel: 393
     val height = 812 + borderWidth // 812 // pixel: 808 - 24 - 24 = 760

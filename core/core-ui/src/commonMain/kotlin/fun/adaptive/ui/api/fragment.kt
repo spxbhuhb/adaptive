@@ -36,20 +36,20 @@ fun multiLineTextInput(
 }
 
 @AdaptiveExpect(aui)
-fun box(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun box(vararg instructions: AdaptiveInstruction, content: @Adaptive () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
 @AdaptiveExpect(aui)
 fun boxWithProposal(
     vararg instructions: AdaptiveInstruction,
-    @Adaptive content: (sizingProposal : SizingProposal) -> Unit
+    content: @Adaptive (sizingProposal : SizingProposal) -> Unit
 ): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
 @AdaptiveExpect(aui)
-fun flowBox(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun flowBox(vararg instructions: AdaptiveInstruction, content: @Adaptive () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
@@ -63,12 +63,12 @@ fun rectangle(vararg instructions: AdaptiveInstruction): AdaptiveFragment {
  * at position (0,0) and sized to fill the all the viewport.
  */
 @AdaptiveExpect(aui)
-fun rootBox(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun rootBox(vararg instructions: AdaptiveInstruction, content: @Adaptive () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
 @AdaptiveExpect(aui)
-fun row(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun row(vararg instructions: AdaptiveInstruction, content: @Adaptive () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
@@ -77,19 +77,19 @@ fun cellBox(
     cells : List<CellDef>? = null,
     arrangement: CellBoxArrangement? = null,
     vararg instructions: AdaptiveInstruction,
-    @Adaptive content: () -> Unit
+    content: @Adaptive () -> Unit
 ): AdaptiveFragment {
     manualImplementation(arrangement, cells, instructions, content)
 }
 
 
 @AdaptiveExpect(aui)
-fun column(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun column(vararg instructions: AdaptiveInstruction, content: @Adaptive () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
 @AdaptiveExpect(aui)
-fun grid(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun grid(vararg instructions: AdaptiveInstruction, content: @Adaptive () -> Unit): AdaptiveFragment {
     manualImplementation(instructions, content)
 }
 
@@ -109,36 +109,36 @@ fun flowText(content: Any?, vararg instructions: AdaptiveInstruction): AdaptiveF
 }
 
 @AdaptiveExpect(aui)
-fun draggable(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun draggable(vararg instructions: AdaptiveInstruction, content: @Adaptive () -> Unit): AdaptiveFragment {
     manualImplementation(content, instructions)
 }
 
 @AdaptiveExpect(aui)
-fun dropTarget(vararg instructions: AdaptiveInstruction, @Adaptive content: () -> Unit): AdaptiveFragment {
+fun dropTarget(vararg instructions: AdaptiveInstruction, content: @Adaptive () -> Unit): AdaptiveFragment {
     manualImplementation(content, instructions)
 }
 
 @AdaptiveExpect(aui)
-fun hoverPopup(vararg instructions: AdaptiveInstruction, @Adaptive content: (hide: () -> Unit) -> Unit): AdaptiveFragment {
+fun hoverPopup(vararg instructions: AdaptiveInstruction, content: @Adaptive (hide: () -> Unit) -> Unit): AdaptiveFragment {
     manualImplementation(content, instructions)
 }
 
 @AdaptiveExpect(aui)
-fun primaryPopup(sourceViewBackend: PopupSourceViewBackend? = null, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide: () -> Unit) -> Unit): AdaptiveFragment {
+fun primaryPopup(sourceViewBackend: PopupSourceViewBackend? = null, vararg instructions: AdaptiveInstruction, content: @Adaptive (hide: () -> Unit) -> Unit): AdaptiveFragment {
     manualImplementation(sourceViewBackend, content, instructions)
 }
 
 @AdaptiveExpect(aui)
-fun contextPopup(sourceViewBackend: PopupSourceViewBackend? = null, vararg instructions: AdaptiveInstruction, @Adaptive content: (hide: () -> Unit) -> Unit): AdaptiveFragment {
+fun contextPopup(sourceViewBackend: PopupSourceViewBackend? = null, vararg instructions: AdaptiveInstruction, content: @Adaptive (hide: () -> Unit) -> Unit): AdaptiveFragment {
     manualImplementation(sourceViewBackend, content, instructions)
 }
 
 @AdaptiveExpect(aui)
 fun splitPane(
     viewBackend: SplitPaneViewBackend,
-    @Adaptive pane1: () -> Unit,
-    @Adaptive divider: () -> Unit,
-    @Adaptive pane2: () -> Unit,
+    pane1: @Adaptive () -> Unit,
+    divider: @Adaptive () -> Unit,
+    pane2: @Adaptive () -> Unit,
     onChange: ((Double) -> Unit)? = null,
     vararg instructions: AdaptiveInstruction
 ): AdaptiveFragment {

@@ -17,8 +17,7 @@ import `fun`.adaptive.ui.input.select.selectInputList
 fun <VT, OT> selectMappingEditorList(
     options : List<OT>,
     mapping : SelectOptionMapping<VT,OT>,
-    @Adaptive
-    _fixme_itemFun : (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
+    _fixme_itemFun : @Adaptive (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<VT>? = null,
     @Suppress("unused")
     @PropertySelector

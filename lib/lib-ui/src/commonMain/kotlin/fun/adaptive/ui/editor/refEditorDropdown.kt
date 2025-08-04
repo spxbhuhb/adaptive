@@ -25,12 +25,10 @@ private typealias VALUE_TYPE = Map<AvRefLabel, AvValueId>
 fun <OPTION_TYPE> refEditorDropdown(
     refLabel: AvRefLabel,
     options: List<OPTION_TYPE>,
-    optionToItemMapping : SelectOptionMapping<ITEM_TYPE,OPTION_TYPE>,
+    optionToItemMapping: SelectOptionMapping<ITEM_TYPE, OPTION_TYPE>,
     inputToItemMapping: SelectInputMapping<VALUE_TYPE, ITEM_TYPE>,
-    @Adaptive
-    _fixme_itemFun: (AbstractSelectInputViewBackend<VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
-    @Adaptive
-    _fixme_valueFun: (AbstractSelectInputViewBackend<VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
+    _fixme_itemFun: @Adaptive (AbstractSelectInputViewBackend<VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
+    _fixme_valueFun: @Adaptive (AbstractSelectInputViewBackend<VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<VALUE_TYPE>? = null,
     @Suppress("unused")
     @PropertySelector

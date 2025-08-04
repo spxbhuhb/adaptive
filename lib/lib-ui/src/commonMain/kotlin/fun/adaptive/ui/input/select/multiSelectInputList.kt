@@ -14,8 +14,7 @@ import `fun`.adaptive.ui.input.decoratedInput
 @Adaptive
 fun <IT,OT> multiSelectInputList(
     viewBackend: MultiSelectInputViewBackend<IT,OT>,
-    @Adaptive
-    _fixme_option: (option: AbstractSelectInputViewBackend<Set<IT>,IT,OT>.SelectItem) -> Unit
+    _fixme_option: @Adaptive (option: AbstractSelectInputViewBackend<Set<IT>,IT,OT>.SelectItem) -> Unit
 ) : AdaptiveFragment {
     val focus = focus()
     val observed = observe { viewBackend }

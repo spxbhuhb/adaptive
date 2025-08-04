@@ -17,7 +17,7 @@ import `fun`.adaptive.ui.snackbar.infoNotification
 fun handle(
     position: Position,
     moveFun: (toPosition : Position) -> Unit,
-    @Adaptive buildFun: () -> Unit
+    buildFun: @Adaptive () -> Unit
 ) {
     var active = false
     var startPosition = Position.NaP

@@ -15,8 +15,7 @@ fun contentPaneHeader(
     title: String,
     uuid: UUID<*>? = null,
     value: AvValue<*>? = null,
-    @Adaptive
-    _fixme_adaptive_content: () -> Unit
+    _fixme_adaptive_content: @Adaptive () -> Unit
 ) : AdaptiveFragment {
     row {
         maxWidth .. spaceBetween

@@ -14,10 +14,8 @@ fun basicContentPane(
     title: String,
     uuid: UUID<*>? = null,
     value: AvValue<*>? = null,
-    @Adaptive
-    _fixme_adaptive_actions: () -> Unit,
-    @Adaptive
-    _fixme_adaptive_content: () -> Unit
+    _fixme_adaptive_actions: @Adaptive () -> Unit,
+    _fixme_adaptive_content: @Adaptive () -> Unit
 ) : AdaptiveFragment {
 
     column {

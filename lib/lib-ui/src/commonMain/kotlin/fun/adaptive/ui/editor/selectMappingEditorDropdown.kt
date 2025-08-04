@@ -17,10 +17,8 @@ import `fun`.adaptive.ui.input.select.selectInputDropdown
 fun <VT, OT> selectMappingEditorDropdown(
     options : List<OT>,
     mapping : SelectOptionMapping<VT,OT>,
-    @Adaptive
-    _fixme_itemFun : (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
-    @Adaptive
-    _fixme_valueFun : (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
+    _fixme_itemFun : @Adaptive (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
+    _fixme_valueFun : @Adaptive (AbstractSelectInputViewBackend<VT,VT,OT>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<VT>? = null,
     @Suppress("unused")
     @PropertySelector

@@ -15,8 +15,8 @@ import `fun`.adaptive.ui.instruction.layout.SplitVisibility
 @Adaptive
 fun wrapFromLeft(
     wrapperWidth : DPixel,
-    @Adaptive _KT_74337_wrapper: () -> Unit,
-    @Adaptive _KT_74337_wrapped: () -> Unit
+    _KT_74337_wrapper: @Adaptive () -> Unit,
+    _KT_74337_wrapped: @Adaptive () -> Unit
 ): AdaptiveFragment {
 
     splitPane(

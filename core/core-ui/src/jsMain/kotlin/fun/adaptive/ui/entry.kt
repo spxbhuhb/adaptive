@@ -17,7 +17,7 @@ fun browser(
     backend: BackendAdapter,
     rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
     trace : Trace? = null,
-    @Adaptive block: (adapter: AbstractAuiAdapter<*, *>) -> Unit
+    block: @Adaptive (adapter: AbstractAuiAdapter<*, *>) -> Unit
 ) : AuiBrowserAdapter {
 
     return AuiBrowserAdapter(rootContainer, backend).also {

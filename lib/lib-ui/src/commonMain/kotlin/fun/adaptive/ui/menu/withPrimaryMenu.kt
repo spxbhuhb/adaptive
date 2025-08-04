@@ -11,8 +11,7 @@ import `fun`.adaptive.ui.api.primaryPopup
 @Adaptive
 fun <T> withPrimaryMenu(
     viewBackend: MenuViewBackend<T>,
-    @Adaptive
-    _fixme_content: () -> Unit
+    _fixme_content: @Adaptive () -> Unit
 ): AdaptiveFragment {
 
     box {

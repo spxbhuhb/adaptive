@@ -12,8 +12,7 @@ import `fun`.adaptive.ui.instruction.dp
 @Adaptive
 fun hardCodedExample(
     markdown : String,
-    @Adaptive
-    _fixme_adaptive_content: () -> Unit
+    _fixme_adaptive_content: @Adaptive () -> Unit
 ) {
     row {
         fillStrategy.constrain .. gap { 16.dp } .. maxWidth

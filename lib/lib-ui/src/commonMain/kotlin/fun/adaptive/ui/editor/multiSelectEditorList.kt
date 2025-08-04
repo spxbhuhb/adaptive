@@ -16,8 +16,7 @@ import `fun`.adaptive.ui.input.select.multiSelectInputList
 @Adaptive
 fun <T> multiSelectEditorList(
     options : List<T>,
-    @Adaptive
-    _fixme_itemFun : (AbstractSelectInputViewBackend<Set<T>,T,T>.SelectItem) -> Unit,
+    _fixme_itemFun : @Adaptive (AbstractSelectInputViewBackend<Set<T>,T,T>.SelectItem) -> Unit,
     binding: AdaptiveStateVariableBinding<Set<T>>? = null,
     @Suppress("unused")
     @PropertySelector

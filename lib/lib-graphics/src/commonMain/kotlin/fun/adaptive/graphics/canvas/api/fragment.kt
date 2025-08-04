@@ -16,7 +16,7 @@ import kotlin.math.PI
 @AdaptiveExpect(canvas)
 fun canvas(
     vararg instructions: AdaptiveInstruction,
-    @Adaptive content: (size : RawSize) -> Unit
+    content: @Adaptive (size : RawSize) -> Unit
 ) {
     manualImplementation(instructions, content)
 }
@@ -76,7 +76,7 @@ fun path(commands: List<PathCommand>, init: PathCommand? = null, vararg instruct
 @AdaptiveExpect(canvas)
 fun transform(
     vararg instructions: AdaptiveInstruction,
-    @Adaptive _KT_74337_content: () -> Unit
+    _KT_74337_content: @Adaptive () -> Unit
 ): AdaptiveFragment {
     manualImplementation(instructions, _KT_74337_content)
 }

@@ -13,8 +13,7 @@ import `fun`.adaptive.ui.wrap.wrapFromTop
 fun configureForm(
     form: FormViewBackend,
     theme: ConfigureTheme = ConfigureTheme.default,
-    @Adaptive
-    _fixme_content: () -> Unit
+    _fixme_content: @Adaptive () -> Unit
 ) : AdaptiveFragment {
     column(instructions()) {
         theme.formContainer

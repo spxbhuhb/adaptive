@@ -12,8 +12,7 @@ import `fun`.adaptive.ui.theme.colors
 @Adaptive
 fun <T> loading(
     data: T?,
-    @Adaptive
-    _fixme_content: (T) -> Unit
+    _fixme_content: @Adaptive (T) -> Unit
 ) {
     val borderColor = colors.outline.opaque(0.5)
     val wireColor = colors.outline.opaque(0.5)

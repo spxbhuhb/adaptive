@@ -31,7 +31,7 @@ fun android(
         transport = LocalServiceCallTransport()
     ),
     trace: Trace? = null,
-    @Adaptive block: (adapter: AdaptiveAdapter) -> Unit
+    block: @Adaptive (adapter: AdaptiveAdapter) -> Unit
 ): AuiAdapter =
     AuiAdapter(
         context, rootView, backend

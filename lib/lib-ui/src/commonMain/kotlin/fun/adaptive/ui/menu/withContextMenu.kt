@@ -11,8 +11,7 @@ import `fun`.adaptive.ui.api.contextPopup
 @Adaptive
 fun <T> withContextMenu(
     viewBackend: MenuViewBackend<T>,
-    @Adaptive
-    _fixme_content: () -> Unit
+    _fixme_content: @Adaptive () -> Unit
 ): AdaptiveFragment {
 
     box {

@@ -15,8 +15,7 @@ fun withLabel(
     label: String,
     inputContext: InputContext = InputContext(),
     theme: LabelTheme = LabelTheme.DEFAULT,
-    @Adaptive
-    _KT_74337_content : (InputContext) -> Unit
+    _KT_74337_content : @Adaptive (InputContext) -> Unit
 ): AdaptiveFragment {
     val observed = observe { inputContext }
     val focus = focus()

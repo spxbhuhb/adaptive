@@ -22,8 +22,7 @@ typealias TreeContextMenuBuilder<IT, CT> = ((hide: () -> Unit, backend: TreeView
 @Adaptive
 fun <IT, CT> tree(
     viewBackend: TreeViewBackend<IT, CT>,
-    @Adaptive
-    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<IT, CT>? = null
+    _KT_74337_contextMenuBuilder: @Adaptive TreeContextMenuBuilder<IT, CT>? = null
 ): AdaptiveFragment {
 
     val observed = observe { viewBackend }
@@ -44,8 +43,7 @@ private fun <IT, CT> node(
     viewBackend: TreeViewBackend<IT, CT>,
     item: TreeItem<IT>,
     offset: DPixel,
-    @Adaptive
-    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<IT, CT>?
+    _KT_74337_contextMenuBuilder: @Adaptive TreeContextMenuBuilder<IT, CT>?
 ) {
     val observed = observe { item }
 
@@ -72,8 +70,7 @@ private fun <IT, CT> label(
     viewBackend: TreeViewBackend<IT, CT>,
     item: TreeItem<IT>,
     offset: DPixel,
-    @Adaptive
-    _KT_74337_contextMenuBuilder: TreeContextMenuBuilder<IT, CT>?
+    _KT_74337_contextMenuBuilder: @Adaptive TreeContextMenuBuilder<IT, CT>?
 ) {
     val observed = observe { item }
     val theme = viewBackend.theme

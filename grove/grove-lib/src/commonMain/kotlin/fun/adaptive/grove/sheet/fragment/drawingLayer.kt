@@ -7,6 +7,6 @@ import `fun`.adaptive.grove.grove
 import `fun`.adaptive.grove.sheet.SheetViewBackend
 
 @AdaptiveExpect(grove)
-fun drawingLayer(controller: SheetViewBackend, @Adaptive content : () -> Unit) {
+fun drawingLayer(controller: SheetViewBackend, content: @Adaptive () -> Unit) {
     manualImplementation(controller, content)
 }

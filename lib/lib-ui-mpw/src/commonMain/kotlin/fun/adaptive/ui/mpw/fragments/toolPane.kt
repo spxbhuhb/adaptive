@@ -13,8 +13,7 @@ import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 fun toolPane(
     viewBackend: PaneViewBackend<*>,
     theme: MultiPaneTheme = DEFAULT,
-    @Adaptive
-    _fixme_adaptive_content: () -> Unit
+    _fixme_adaptive_content: @Adaptive () -> Unit
 ) {
     val hover = hover()
 

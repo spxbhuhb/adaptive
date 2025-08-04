@@ -18,8 +18,7 @@ fun editorModal(
     hide: UiClose? = null,
     save: UiSave? = null,
     theme : PopupTheme =  PopupTheme.Companion.default,
-    @Adaptive
-    _fixme_content : () -> Unit
+    _fixme_content : @Adaptive () -> Unit
 ) {
 
     column {

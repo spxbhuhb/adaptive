@@ -56,7 +56,7 @@ interface MultiPageModalBackend<MENU_ITEM_DATA> {
 @Adaptive
 fun <MENU_ITEM_DATA> multiPageModal(
     viewBackend: MultiPageModalBackend<MENU_ITEM_DATA>? = null,
-    @Adaptive _fixme_adaptive_content: (MultiPageModalBackend<MENU_ITEM_DATA>) -> Unit
+    _fixme_adaptive_content: @Adaptive (MultiPageModalBackend<MENU_ITEM_DATA>) -> Unit
 ): AdaptiveFragment {
 
     val modalBackend = viewBackend ?: fragment().firstContext()

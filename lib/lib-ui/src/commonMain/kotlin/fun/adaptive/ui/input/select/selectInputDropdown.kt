@@ -19,10 +19,8 @@ import `fun`.adaptive.ui.instruction.layout.SizeStrategy
 @Adaptive
 fun <INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE> selectInputDropdown(
     viewBackend: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>,
-    @Adaptive
-    _fixme_option: (option: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
-    @Adaptive
-    _fixme_value: (option: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit
+    _fixme_option: @Adaptive (option: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit,
+    _fixme_value: @Adaptive (option: AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE>.SelectItem) -> Unit
 ): AdaptiveFragment {
 
     val focus = focus()

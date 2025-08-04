@@ -23,8 +23,7 @@ typealias TabHandleFun = (model: TabContainer, tab: TabPane, activeTab: TabPane?
 @Adaptive
 fun tabContainer(
     model: TabContainer,
-    @Adaptive
-    _fixme_adaptive_content: TabHandleFun, // handle render function
+    _fixme_adaptive_content: @Adaptive TabHandleFun, // handle render function
     theme: TabTheme = TabTheme.DEFAULT
 ): AdaptiveFragment {
 
@@ -103,8 +102,7 @@ private fun header(
     model: TabContainer,
     theme: TabTheme,
     activeTab: TabPane?,
-    @Adaptive
-    _fixme_adaptive_content: TabHandleFun
+    _fixme_adaptive_content: @Adaptive TabHandleFun
 ) {
 
     val hasMenu = model.menu.isNotEmpty()

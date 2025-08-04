@@ -22,10 +22,9 @@ import `fun`.adaptive.ui.theme.colors
 
 @Adaptive
 fun <T> editableList(
-    items : List<T>,
-    @Adaptive
-    _fixme_itemRenderFun : (T) -> Unit,
-) : AdaptiveFragment {
+    items: List<T>,
+    _fixme_itemRenderFun: @Adaptive (T) -> Unit,
+): AdaptiveFragment {
 
     val backend = selectInputBackend {
         options = items
