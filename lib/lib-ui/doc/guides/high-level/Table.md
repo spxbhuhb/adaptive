@@ -11,7 +11,7 @@ fun stuff() {
         intColumn { it.i1 }
     }
 
-    table(tableBackend)
+    table(backend)
 }
 
 @Adaptive

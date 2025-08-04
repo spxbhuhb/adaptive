@@ -3,20 +3,23 @@
  */
 
 import `fun`.adaptive.backend.backend
-import `fun`.adaptive.foundation.FragmentTraceContext
-import `fun`.adaptive.foundation.api.localContext
-import `fun`.adaptive.foundation.instruction.name
+import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
+import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.LibFragmentFactory
-import `fun`.adaptive.ui.api.boxWithProposal
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.text
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.browser
+import `fun`.adaptive.ui.fragment.layout.SizingProposal
+import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangementCalculator
+import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
+import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
-import `fun`.adaptive.ui.testing.LayoutTraceContext
+import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -52,7 +55,7 @@ fun main() {
                 fontWeight = 300
             }
 
-             adapter.traceWithContext = true
+            adapter.traceWithContext = true
 
 //                var position = Position(0.dp, 0.dp)
 //                val sizing = SizeStrategy(null, null, 0.dp, 100.dp, 0.dp, 100.dp)
@@ -67,38 +70,39 @@ fun main() {
 //                    }
 //                }
 
-//                    localContext(FragmentTraceContext()) {
-//                        cellBox(
-//                            cells = listOf(
-//                                CellDef(null, 100.dp),
-//                                CellDef(null, 100.dp)
-//                            )
-//                        ) {
-//                            text("Hello") .. backgrounds.infoSurface .. maxWidth
-//                            text("World!") .. backgrounds.warningSurface .. maxWidth
-//                        } .. width { 300.dp } .. backgrounds.friendlyOpaque .. gap { 16.dp }
-//                    }
-
-//                    boxWithProposal { proposal ->
-//                        text(proposal)
-//                    }
-            localContext(FragmentTraceContext()) {
-                localContext(LayoutTraceContext) {
-                    column {
-                        boxWithProposal { proposal ->
-                            column {
-                                name("inner")
-                                text(proposal)
-                                text(proposal.minWidth)
-                            }
-                        }
-                    }
+            column {
+                padding { 16.dp }
+                boxWithProposal { proposal ->
+                    table(proposal)
                 }
             }
         }
     }
 }
-//}
+
+@Adaptive
+fun table(proposal: SizingProposal) {
+
+    val arrangement = CellBoxArrangementCalculator(adapter() as AbstractAuiAdapter<*, *>).findBestArrangement(
+        cells = listOf(
+            CellDef(null, 500.dp),
+            CellDef(null, 500.dp, 1.fr)
+        ),
+        proposal.maxWidth,
+        16.0
+    )
+
+    column {
+        width { proposal.maxWidth.dp } .. height { proposal.maxHeight.dp } .. verticalScroll
+
+        for (i in 1 .. 100) {
+            cellBox(arrangement = arrangement) {
+                text("Hello") .. backgrounds.infoSurface .. maxWidth
+                text("World!") .. backgrounds.warningSurface .. maxWidth
+            } .. backgrounds.friendlyOpaque .. gap { 16.dp }
+        }
+    }
+}
 
 
 //@Adaptive

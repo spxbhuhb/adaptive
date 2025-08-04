@@ -41,6 +41,10 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
         }.apply(buildFun) as TableCellDef<ITEM, Any>
     }
 
+    fun intCell(buildFun : TableCellDef<ITEM,Int>.() -> Unit) {
+
+    }
+
     companion object {
         fun <ITEM> tableViewBackend(buildFun: TableViewBackend<ITEM>.() -> Unit): TableViewBackend<ITEM> =
             TableViewBackend<ITEM>().apply(buildFun)
