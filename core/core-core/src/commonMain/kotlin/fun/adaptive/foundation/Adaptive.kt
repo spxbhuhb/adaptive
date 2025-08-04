@@ -3,4 +3,10 @@
  */
 package `fun`.adaptive.foundation
 
+@Retention(value = AnnotationRetention.BINARY)
+@Target(allowedTargets = [
+    AnnotationTarget.FUNCTION,
+    AnnotationTarget.TYPE,
+    AnnotationTarget.TYPE_PARAMETER
+])
 annotation class Adaptive

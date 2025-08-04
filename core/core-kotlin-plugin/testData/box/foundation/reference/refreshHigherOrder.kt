@@ -7,8 +7,8 @@ import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.testing.*
 
 class A(
-    @Adaptive
-    val fr : (i : Int) -> Unit = ::b
+
+    val fr : @Adaptive (i : Int) -> Unit = ::b
 ) {
     override fun toString(): String {
         return "A"
@@ -16,14 +16,14 @@ class A(
 }
 
 @Adaptive
-fun a(@Adaptive p : (Int) -> Unit) {
+fun a(p : @Adaptive (Int) -> Unit) {
     inner {
         p(12)
     }
 }
 
 @Adaptive
-fun inner(@Adaptive ip : () -> Unit) {
+fun inner(ip : @Adaptive () -> Unit) {
     ip()
 }
 

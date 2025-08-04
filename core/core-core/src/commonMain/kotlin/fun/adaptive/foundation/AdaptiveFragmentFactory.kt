@@ -23,7 +23,7 @@ open class AdaptiveFragmentFactory : Registry<NamedFragmentFactory>() {
     }
 
     @PluginReference("addNonTransformed")
-    fun add(key : FragmentKey, @Adaptive f : KFunction<AdaptiveFragment>) {
+    fun add(key : FragmentKey, f : @Adaptive KFunction<AdaptiveFragment>) {
         replacedByPlugin("should be replaced with the transformed version", key, f)
     }
 

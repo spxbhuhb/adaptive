@@ -16,7 +16,7 @@ fun inHigherOrder(i: Int) {
 }
 
 @Adaptive
-fun inner(@Adaptive builder: () -> Unit) {
+fun inner(builder: @Adaptive () -> Unit) {
     builder()
 }
 

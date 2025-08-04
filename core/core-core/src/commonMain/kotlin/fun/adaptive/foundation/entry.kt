@@ -9,7 +9,7 @@ package `fun`.adaptive.foundation
  * **IMPORTANT** variables declared outside the block are **NOT** reactive
  */
 @AdaptiveEntry
-fun <AT : AdaptiveAdapter> adaptive(adapter: AT, @Adaptive block: (adapter : AdaptiveAdapter) -> Unit) : AT {
+fun <AT : AdaptiveAdapter> adaptive(adapter: AT, block: @Adaptive (adapter : AdaptiveAdapter) -> Unit) : AT {
     block(adapter)
     adapter.mounted()
     return adapter

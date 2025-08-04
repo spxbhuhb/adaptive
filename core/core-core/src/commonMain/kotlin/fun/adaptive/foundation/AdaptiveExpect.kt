@@ -4,6 +4,5 @@
 
 package `fun`.adaptive.foundation
 
-@Adaptive
 @Target(AnnotationTarget.FUNCTION)
 annotation class AdaptiveExpect(val namespace : String)

@@ -17,14 +17,14 @@ fun higherOrderTest(i : Int) {
 }
 
 @Adaptive
-fun higherFun(higherI: Int, @Adaptive lowerFun: (lowerFunI: Int) -> Unit) {
+fun higherFun(higherI: Int, lowerFun: @Adaptive (lowerFunI: Int) -> Unit) {
     higherFunInner(higherI * 2) { lowerFunInnerI ->
         lowerFun(higherI + lowerFunInnerI)
     }
 }
 
 @Adaptive
-fun higherFunInner(innerI: Int, @Adaptive lowerFunInner: (lowerFunInnerI: Int) -> Unit) {
+fun higherFunInner(innerI: Int, lowerFunInner: @Adaptive (lowerFunInnerI: Int) -> Unit) {
     lowerFunInner(innerI + 1)
 }
 

@@ -12,7 +12,7 @@ fun tf(vararg instructions: AdaptiveInstruction): AdaptiveFragment {
 
 fun dialog(
     adapter: AdaptiveAdapter,
-    @Adaptive _fixme_content: (hide: () -> Unit) -> Unit
+    _fixme_content: @Adaptive (hide: () -> Unit) -> Unit
 ) {
 
 }

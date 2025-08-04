@@ -8,7 +8,7 @@ import `fun`.adaptive.foundation.adaptive
 import `fun`.adaptive.foundation.testing.*
 
 @Adaptive
-fun a(@Adaptive p : (Int) -> Unit) {
+fun a(p : @Adaptive (Int) -> Unit) {
     p(12)
 }
 

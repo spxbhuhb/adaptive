@@ -23,7 +23,7 @@ fun backend(
     wait: Boolean = false,
     dispatcher: CoroutineDispatcher = Dispatchers.Default,
     scope: CoroutineScope = CoroutineScope(dispatcher),
-    @Adaptive block: (adapter: BackendAdapter) -> Unit
+    block: @Adaptive (adapter: BackendAdapter) -> Unit
 ): BackendAdapter =
     BackendAdapter(wait, transport, dispatcher, scope).also {
         block(it)

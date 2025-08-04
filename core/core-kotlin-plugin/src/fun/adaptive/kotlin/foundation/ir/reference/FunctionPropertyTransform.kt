@@ -13,8 +13,6 @@ import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
 import org.jetbrains.kotlin.ir.IrStatement
-import org.jetbrains.kotlin.ir.declarations.IrClass
-import org.jetbrains.kotlin.ir.declarations.IrParameterKind
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
@@ -24,20 +22,17 @@ import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionReferenceImplWithShape
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.getAnnotationArgumentValue
 import org.jetbrains.kotlin.ir.util.hasAnnotation
-import org.jetbrains.kotlin.ir.util.primaryConstructor
 
 /**
  * Transforms function type properties which `@Adaptive` annotation to match
  * general adaptive function signature.
  *
  * ```kotlin
- * @Adaptive
- * val a : () -> Unit = ::b
+ * val a : @Adaptive () -> Unit = ::b
  *
  * // is transformed into
  *
- * @Adaptive
- * val a : (AdaptiveFragment, Int) -> Unit = ::b
+ * val a : @Adaptive (AdaptiveFragment, Int) -> Unit = ::b
  * ```
  */
 class FunctionPropertyTransform(
@@ -93,13 +88,9 @@ class FunctionPropertyTransform(
      */
     override fun visitPropertyNew(declaration: IrProperty): IrStatement {
         val backingField = declaration.backingField ?: return declaration
-        val initializer = backingField.initializer ?: return declaration
-        val expression = initializer.expression as? IrGetValue
 
-        if (expression?.origin == IrStatementOrigin.INITIALIZE_PROPERTY_FROM_PARAMETER) {
-            if (! isFromAdaptiveParameter(declaration)) return super.visitPropertyNew(declaration)
-        } else {
-            if (! declaration.hasAnnotation(ClassIds.ADAPTIVE)) return super.visitPropertyNew(declaration)
+        if ( ! backingField.type.hasAnnotation(ClassIds.ADAPTIVE)) {
+            return super.visitPropertyNew(declaration)
         }
 
         val getter = declaration.getter
@@ -118,20 +109,6 @@ class FunctionPropertyTransform(
         }
 
         return super.visitPropertyNew(declaration)
-    }
-
-    private fun isFromAdaptiveParameter(property: IrProperty): Boolean {
-        val parent = property.parent
-        val name = property.name
-
-        val isAdaptive = when (parent) {
-            is IrSimpleFunction -> parent.parameters
-            is IrClass -> parent.primaryConstructor?.parameters
-            else -> null
-        }
-            ?.first { it.kind == IrParameterKind.Regular && it.symbol.owner.name == name }?.hasAnnotation(ClassIds.ADAPTIVE)
-
-        return isAdaptive == true
     }
 
     override fun visitFunctionReference(expression: IrFunctionReference): IrExpression {

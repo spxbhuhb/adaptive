@@ -10,7 +10,7 @@ import `fun`.adaptive.foundation.fragment.*
 import `fun`.adaptive.foundation.testing.*
 
 @Adaptive
-fun testFragment(vararg instructions: AdaptiveInstruction, @Adaptive block: () -> Unit): AdaptiveFragment {
+fun testFragment(vararg instructions: AdaptiveInstruction, block: @Adaptive () -> Unit): AdaptiveFragment {
     block()
     return fragment()
 }

@@ -10,7 +10,7 @@ import `fun`.adaptive.foundation.fragment.*
 import `fun`.adaptive.foundation.testing.*
 
 @Adaptive
-fun ho(@Adaptive inner : () -> Unit) : AdaptiveFragment {
+fun ho(inner : @Adaptive () -> Unit) : AdaptiveFragment {
     inner()
     return fragment()
 }

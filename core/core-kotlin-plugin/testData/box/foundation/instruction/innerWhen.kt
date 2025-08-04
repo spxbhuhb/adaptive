@@ -10,7 +10,7 @@ import `fun`.adaptive.foundation.fragment.*
 import `fun`.adaptive.foundation.testing.*
 
 @Adaptive
-fun ho(vararg instructions: AdaptiveInstruction, @Adaptive block: () -> Unit) {
+fun ho(vararg instructions: AdaptiveInstruction, block: @Adaptive () -> Unit) {
     block()
 }
 

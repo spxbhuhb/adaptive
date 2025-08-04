@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.testing.*
 
 @Adaptive
-fun a(@Adaptive p : (Int) -> Unit) {
+fun a(p : @Adaptive (Int) -> Unit) {
     p(12)
 }
 
@@ -16,8 +16,7 @@ fun b(i : Int) {
     T1(i)
 }
 
-@Adaptive
-val br : (i : Int) -> Unit = ::b
+val br : @Adaptive (i : Int) -> Unit = ::b
 
 fun box() : String {
 

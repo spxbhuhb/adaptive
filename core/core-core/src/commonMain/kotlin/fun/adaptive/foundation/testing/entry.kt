@@ -24,7 +24,7 @@ fun test(
         scope = CoroutineScope(Dispatchers.Default)
     ),
     printTrace: Boolean = false,
-    @Adaptive block: (adapter: AdaptiveAdapter) -> Unit
+    block: @Adaptive (adapter: AdaptiveAdapter) -> Unit
 ): AdaptiveTestAdapter =
     AdaptiveTestAdapter(printTrace, backendAdapter).also {
         block(it)

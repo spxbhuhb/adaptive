@@ -16,7 +16,7 @@ object oInst : AdaptiveInstruction
 fun fName() = instructionsOf(Name("8"), Name("9"))
 
 @Adaptive
-fun ho(vararg instructions: AdaptiveInstruction, @Adaptive block: () -> Unit) {
+fun ho(vararg instructions: AdaptiveInstruction, block: @Adaptive () -> Unit) {
     block()
 }
 

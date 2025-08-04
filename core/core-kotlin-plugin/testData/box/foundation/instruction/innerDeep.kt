@@ -10,13 +10,13 @@ import `fun`.adaptive.foundation.fragment.*
 import `fun`.adaptive.foundation.testing.*
 
 @Adaptive
-fun outer(vararg instructions: AdaptiveInstruction, @Adaptive block: () -> Unit) {
+fun outer(vararg instructions: AdaptiveInstruction, block: @Adaptive () -> Unit) {
     block()
 }
 
 
 @Adaptive
-fun ho2(vararg instructions: AdaptiveInstruction, @Adaptive block: () -> Unit) {
+fun ho2(vararg instructions: AdaptiveInstruction, block: @Adaptive () -> Unit) {
     block()
 }
 

@@ -21,7 +21,7 @@ fun login() {
 }
 
 @Adaptive
-fun row(@Adaptive block: () -> Unit) {
+fun row(block: @Adaptive () -> Unit) {
     block()
 }
 

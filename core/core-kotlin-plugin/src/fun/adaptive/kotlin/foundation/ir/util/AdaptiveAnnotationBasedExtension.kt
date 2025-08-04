@@ -33,7 +33,7 @@ interface AdaptiveAnnotationBasedExtension {
             if (this.name.isSpecial) return false
             if (this.name.identifier.startsWith("_fixme_")) return true
             if (this.name.identifier.startsWith("_KT_74337_")) return true
-            return this.hasAnnotation(pluginContext.adaptiveClass)
+            return this.type.hasAnnotation(pluginContext.adaptiveClass)
         }
 
     val IrValueParameter?.isInstructions: Boolean
@@ -58,7 +58,7 @@ interface AdaptiveAnnotationBasedExtension {
     val IrCall.isArgumentAdaptiveCall: Boolean
         get() = symbol.owner.name == Names.KOTLIN_INVOKE && dispatchReceiver?.let {
             // expect annotation on a parameter is meaningless, so we don't have to check it here
-            it is IrGetValue && it.symbol.owner.hasAnnotation(pluginContext.adaptiveClass)
+            it is IrGetValue && it.symbol.owner.type.hasAnnotation(pluginContext.adaptiveClass)
         } == true
 
     fun IrType.isAccessSelector(parameter: IrValueParameter?, previousType: IrType?): Boolean {

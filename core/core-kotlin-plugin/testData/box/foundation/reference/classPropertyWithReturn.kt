@@ -8,8 +8,7 @@ import `fun`.adaptive.foundation.instruction.*
 import `fun`.adaptive.foundation.testing.*
 
 class A(
-    @Adaptive
-    val br : (i : Int) -> AdaptiveFragment
+    val br : @Adaptive (i : Int) -> AdaptiveFragment
 ) {
     override fun toString(): String {
         return "A"
@@ -17,7 +16,7 @@ class A(
 }
 
 @Adaptive
-fun a(@Adaptive p : (Int) -> AdaptiveFragment) {
+fun a(p : @Adaptive (Int) -> AdaptiveFragment) {
     p(12) .. name("hello")
 }
 
