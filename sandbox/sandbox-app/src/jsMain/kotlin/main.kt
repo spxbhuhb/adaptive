@@ -5,6 +5,7 @@
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
@@ -22,10 +23,12 @@ import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.table.TableViewBackendBuilder.Companion.tableBackend
 import `fun`.adaptive.ui.table.table
 import `fun`.adaptive.ui.theme.backgrounds
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 fun main() {
 
@@ -43,21 +46,20 @@ fun main() {
 //        val collectedLogData = CollectedLogData()
 //        defaultLoggerFactory = LoggerFactory { CollectingLogger(it, collectedLogData) }
 
-        browser(
-            CanvasFragmentFactory,
-            SvgFragmentFactory,
-            LibFragmentFactory,
-            CookbookFragmentFactory,
-            backend = localBackend
-        ) { adapter ->
+        try {
+            browser(
+                CanvasFragmentFactory,
+                SvgFragmentFactory,
+                LibFragmentFactory,
+                CookbookFragmentFactory,
+                backend = localBackend
+            ) { adapter ->
 //
-            with(adapter.defaultTextRenderData) {
-                fontName = "Open Sans"
-                fontSize = 16.sp
-                fontWeight = 300
-            }
-
-            adapter.traceWithContext = true
+                with(adapter.defaultTextRenderData) {
+                    fontName = "Open Sans"
+                    fontSize = 16.sp
+                    fontWeight = 300
+                }
 
 //                var position = Position(0.dp, 0.dp)
 //                val sizing = SizeStrategy(null, null, 0.dp, 100.dp, 0.dp, 100.dp)
@@ -72,10 +74,13 @@ fun main() {
 //                    }
 //                }
 
-            column {
-                padding { 16.dp }
-                tableTest()
+                column {
+                    padding { 16.dp }
+                    tableTest()
+                }
             }
+        } catch (e: Throwable) {
+            e.printStackTrace()
         }
     }
 }
@@ -95,11 +100,15 @@ fun tableTest() {
         intCell {
             label = "I1"
             get = { it.i1 }
+            minWidth = 300.dp
+            instructions = instructionsOf(backgrounds.friendlyOpaque, alignSelf.end)
         }
 
         intCell {
             label = "I2"
             get = { it.i2 }
+            minWidth = 300.dp
+            instructions = instructionsOf(maxWidth, borders.outline)
         }
 
     }

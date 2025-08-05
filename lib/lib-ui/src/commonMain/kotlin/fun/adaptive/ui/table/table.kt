@@ -67,9 +67,6 @@ fun <ITEM> tableItem(
     item: TableItem<ITEM>
 ): AdaptiveFragment {
 
-    println(arrangement)
-    println(backend.cells)
-
     cellBox(arrangement = arrangement) {
         for (cell in backend.cells) {
             @Suppress("UNCHECKED_CAST")

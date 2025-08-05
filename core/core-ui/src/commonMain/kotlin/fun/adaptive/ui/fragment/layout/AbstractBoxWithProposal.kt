@@ -8,6 +8,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment.AdaptiveAnonymous
 import `fun`.adaptive.foundation.internal.BoundFragmentFactory
 import `fun`.adaptive.foundation.throwChildrenAway
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.AbstractAuiFragment
 
@@ -39,31 +40,35 @@ abstract class AbstractBoxWithProposal<RT, CRT : RT>(
         computeFinal(proposal, proposal.containerWidth, proposal.containerHeight)
 
         addLayoutTask {
-            if (! isMounted) return@addLayoutTask
+            try {
+                if (! isMounted) return@addLayoutTask
 
-            if (children.isNotEmpty() && lastContent !== content) {
-                throwChildrenAway()
-            }
-
-            val child = children.firstOrNull()
-
-            contentProposal = SizingProposal(0.0, renderData.innerWidth !!, 0.0, renderData.innerHeight !!)
-            lastContent = content
-
-            if (child == null) {
-                // FIXME I think this anonymous fragment is superfluous
-                AdaptiveAnonymous(this, -1, 2, content).also {
-                    children += it
-                    it.create()
-                    it.mount() // adds layout updates
+                if (children.isNotEmpty() && lastContent !== content) {
+                    throwChildrenAway()
                 }
-                // TODO think about calling closePatchBach from boxWithProposal, I think it's fine
-                adapter.closePatchBatch()
-            } else {
-                child.setStateVariable(1, contentProposal) // changes dirty mask if the proposal is different
-                if (child.dirtyMask != 0) {
-                    child.patchInternalBatch() // adds layout updates
+
+                val child = children.firstOrNull()
+
+                contentProposal = SizingProposal(0.0, renderData.innerWidth !!, 0.0, renderData.innerHeight !!)
+                lastContent = content
+
+                if (child == null) {
+                    // FIXME I think this anonymous fragment is superfluous
+                    AdaptiveAnonymous(this, - 1, 2, content).also {
+                        children += it
+                        it.create()
+                        it.mount() // adds layout updates
+                    }
+                    // TODO think about calling closePatchBach from boxWithProposal, I think it's fine
+                    adapter.closePatchBatch()
+                } else {
+                    child.setStateVariable(1, contentProposal) // changes dirty mask if the proposal is different
+                    if (child.dirtyMask != 0) {
+                        child.patchInternalBatch() // adds layout updates
+                    }
                 }
+            } catch (e: Exception) {
+                getLogger("$this@AbstractBoxWithProposal").error("computeLayout exception", e)
             }
         }
     }
