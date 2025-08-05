@@ -48,7 +48,7 @@ fun <ITEM> tableContent(
         .findBestArrangement(
             cells = backend.cells.map { CellDef(null, it.minWidth, it.width) },
             proposal.maxWidth,
-            backend.gap.width!!.value
+            backend.gap.width !!.value
         )
 
     column {
@@ -63,7 +63,7 @@ fun <ITEM> tableContent(
 @Adaptive
 fun <ITEM> tableItem(
     backend: TableViewBackend<ITEM>,
-    arrangement : CellBoxArrangement,
+    arrangement: CellBoxArrangement,
     item: TableItem<ITEM>
 ): AdaptiveFragment {
 
@@ -72,9 +72,10 @@ fun <ITEM> tableItem(
 
     cellBox(arrangement = arrangement) {
         for (cell in backend.cells) {
-            tableCell(cell, item)
+            @Suppress("UNCHECKED_CAST")
+            tableCell(cell as TableCellDef<ITEM,Any>, item, cell.contentFun)
         }
-    } .. backgrounds.friendlyOpaque .. gap { 16.dp }
+    }
 
     return fragment()
 }
@@ -82,11 +83,9 @@ fun <ITEM> tableItem(
 @Adaptive
 fun <ITEM, CELL_DATA> tableCell(
     cellDef: TableCellDef<ITEM, CELL_DATA>,
-    item: TableItem<ITEM>
+    item: TableItem<ITEM>,
+    content: @Adaptive (TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any
 ): AdaptiveFragment {
-    adapter().traceWithContext = true
-    localContext(FragmentTraceContext()) {
-        cellDef.contentFun(cellDef, item.data)
-    }
+    content(cellDef, item.data)
     return fragment()
 }
