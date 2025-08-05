@@ -9,6 +9,8 @@ import `fun`.adaptive.value.model.AvTreeDef
 import `fun`.adaptive.value.operation.AvoAdd
 import `fun`.adaptive.value.operation.AvoAddOrUpdate
 import `fun`.adaptive.value.operation.AvoRemove
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.reflect.KClass
 
 class AvComputeContext(
@@ -609,6 +611,51 @@ class AvComputeContext(
         newList[index] = newList[index + 1]
         newList[index + 1] = childId
 
+        this += original.copy(spec = AvRefListSpec(newList))
+    }
+
+    /**
+     * Moves a child value to the position after another value.
+     *
+     * @param treeDef The tree definition containing reference labels and markers
+     * @param childId The ID of the child to move up
+     * @param afterId The ID of the value after which the child should be moved
+     */
+    fun moveTreeNodeAfter(
+        treeDef: AvTreeDef,
+        childId: AvValueId,
+        afterId: AvValueId?
+    ) {
+        val child = get<Any>(childId)
+        val parent = ref<Any>(child, treeDef.parentRefLabel)
+        val original = ref<AvRefListSpec>(parent, treeDef.childListRefLabel)
+
+        val originalList = original.spec.refs.toMutableList()
+        val childIndex = originalList.indexOf(childId)
+
+        // if there is no afterId, move to the top
+        if (afterId == null) {
+            if (childIndex == 0) return
+            this += original.copy(spec = 
+                AvRefListSpec(
+                    mutableListOf(childId) + 
+                        originalList.subList(0, childIndex) +
+                        originalList.subList(childIndex + 1, originalList.size)
+                )
+            )
+            return
+        }
+
+        val afterIndex = originalList.indexOf(afterId)
+        if (childIndex == -1 || afterIndex == -1) return
+
+        val newList = originalList.toMutableList()
+
+        if (childIndex == afterIndex + 1) return
+        newList.removeAt(childIndex)
+        val insertIndex = if (childIndex < afterIndex) afterIndex else afterIndex + 1
+        newList.add(insertIndex, childId)
+        
         this += original.copy(spec = AvRefListSpec(newList))
     }
 

@@ -320,4 +320,104 @@ class TreeTest {
         val nonExistentChildren = worker.execute { getTreeChildIds(treeDef, uuid4()) }
         assertTrue(nonExistentChildren.isEmpty())
     }
+    
+    @Test
+    fun testMoveTreeNodeAfter() = standaloneTest { worker ->
+        val treeDef = AvTreeDef("node", "childList", "parentRef", "childListRef", "rootList")
+
+        // Create parent node
+        val parentNode = AvValue(spec = "parent")
+
+        // Create child nodes
+        val childNode1 = AvValue(spec = "child1")
+        val childNode2 = AvValue(spec = "child2")
+        val childNode3 = AvValue(spec = "child3")
+        val childNode4 = AvValue(spec = "child4")
+
+        worker.execute {
+            // Add nodes to the store
+            addValue(parentNode)
+            addValue(childNode1)
+            addValue(childNode2)
+            addValue(childNode3)
+            addValue(childNode4)
+
+            // Add parent as root node
+            linkTreeNode(treeDef, null, parentNode.uuid)
+
+            // Add children to parent in order
+            linkTreeNode(treeDef, parentNode.uuid, childNode1.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode2.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode3.uuid)
+            linkTreeNode(treeDef, parentNode.uuid, childNode4.uuid)
+        }
+
+        // Test case 1: Move to top (afterId = null)
+        worker.execute {
+            moveTreeNodeAfter(treeDef, childNode3.uuid, null)
+        }
+
+        // Verify the order after moving to top
+        var childList = worker.execute { 
+            val childListRef = ref<AvRefListSpec>(parentNode.uuid, treeDef.childListRefLabel)
+            childListRef.spec.refs
+        }
+        
+        assertEquals(4, childList.size)
+        assertEquals(childNode3.uuid, childList[0])
+        assertEquals(childNode1.uuid, childList[1])
+        assertEquals(childNode2.uuid, childList[2])
+        assertEquals(childNode4.uuid, childList[3])
+
+        // Test case 2: Move after a specific node
+        worker.execute {
+            moveTreeNodeAfter(treeDef, childNode4.uuid, childNode1.uuid)
+        }
+
+        // Verify the order after moving after childNode1
+        childList = worker.execute { 
+            val childListRef = ref<AvRefListSpec>(parentNode.uuid, treeDef.childListRefLabel)
+            childListRef.spec.refs
+        }
+        
+        assertEquals(4, childList.size)
+        assertEquals(childNode3.uuid, childList[0])
+        assertEquals(childNode1.uuid, childList[1])
+        assertEquals(childNode4.uuid, childList[2])
+        assertEquals(childNode2.uuid, childList[3])
+
+        // Test case 3: No-op when already in correct position
+        worker.execute {
+            moveTreeNodeAfter(treeDef, childNode4.uuid, childNode1.uuid)
+        }
+
+        // Verify the order remains the same
+        childList = worker.execute { 
+            val childListRef = ref<AvRefListSpec>(parentNode.uuid, treeDef.childListRefLabel)
+            childListRef.spec.refs
+        }
+        
+        assertEquals(4, childList.size)
+        assertEquals(childNode3.uuid, childList[0])
+        assertEquals(childNode1.uuid, childList[1])
+        assertEquals(childNode4.uuid, childList[2])
+        assertEquals(childNode2.uuid, childList[3])
+
+        // Test case 4: Move when source index is before target index
+        worker.execute {
+            moveTreeNodeAfter(treeDef, childNode3.uuid, childNode4.uuid)
+        }
+
+        // Verify the order after moving childNode3 after childNode4
+        childList = worker.execute { 
+            val childListRef = ref<AvRefListSpec>(parentNode.uuid, treeDef.childListRefLabel)
+            childListRef.spec.refs
+        }
+        
+        assertEquals(4, childList.size)
+        assertEquals(childNode1.uuid, childList[0])
+        assertEquals(childNode4.uuid, childList[1])
+        assertEquals(childNode3.uuid, childList[2])
+        assertEquals(childNode2.uuid, childList[3])
+    }
 }
