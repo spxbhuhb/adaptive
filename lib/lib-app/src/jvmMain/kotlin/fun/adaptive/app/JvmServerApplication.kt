@@ -11,12 +11,13 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.AbstractServerApplication
 import `fun`.adaptive.runtime.AbstractWorkspace
+import `fun`.adaptive.runtime.AppAboutData
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.runtime.NoFrontendWorkspace
 import kotlinx.coroutines.runBlocking
 
 class JvmServerApplication(
-    override val version: String,
+    override val about: AppAboutData,
     vararg modules: AppModule<AbstractWorkspace, BackendWorkspace>
 ) : AbstractServerApplication<AbstractWorkspace, BackendWorkspace>() {
 
@@ -73,7 +74,7 @@ class JvmServerApplication(
     companion object {
 
         fun jvmServer(
-            version : String = "0.0.1",
+            about: AppAboutData = AppAboutData(),
             start: Boolean = true,
             buildFun: ApplicationBuilder<AbstractWorkspace, BackendWorkspace>.() -> Unit
         ) {
@@ -82,7 +83,7 @@ class JvmServerApplication(
             builder.buildFun()
 
             if (start) {
-                JvmServerApplication(version, *builder.modules.toTypedArray()).main()
+                JvmServerApplication(about, *builder.modules.toTypedArray()).main()
             }
         }
 

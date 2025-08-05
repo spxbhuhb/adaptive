@@ -9,6 +9,7 @@ import `fun`.adaptive.auth.app.NoAuthClientModule
 import `fun`.adaptive.chart.app.ChartModule
 import `fun`.adaptive.grove.GroveRuntimeModule
 import `fun`.adaptive.grove.doc.app.GroveDocModuleMpw
+import `fun`.adaptive.runtime.AppAboutData
 import `fun`.adaptive.sandbox.app.CookbookModuleClient
 import `fun`.adaptive.site.app.SiteModuleMpw
 import `fun`.adaptive.site.appVersion
@@ -18,7 +19,7 @@ import `fun`.adaptive.value.app.ValueClientModule
 
 
 fun main() {
-    wsBrowserClient(appVersion) {
+    wsBrowserClient(AppAboutData(appVersion)) {
         module { LibUiClientModule() }
         module { MultiPaneClientModule() }
         module { GroveRuntimeModule() }

@@ -48,7 +48,7 @@ fun <ITEM> tableContent(
         .findBestArrangement(
             cells = backend.cells.map { CellDef(null, it.minWidth, it.width) },
             proposal.maxWidth,
-            backend.gap.width !!.value
+            backend.gap.width!!.value
         )
 
     column {
@@ -63,7 +63,7 @@ fun <ITEM> tableContent(
 @Adaptive
 fun <ITEM> tableItem(
     backend: TableViewBackend<ITEM>,
-    arrangement: CellBoxArrangement,
+    arrangement : CellBoxArrangement,
     item: TableItem<ITEM>
 ): AdaptiveFragment {
 

@@ -4,6 +4,7 @@ import `fun`.adaptive.app.builder.ApplicationBuilder
 import `fun`.adaptive.app.ui.mpw.mpwAppMainModule
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.runtime.AppAboutData
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
@@ -11,7 +12,7 @@ import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.utility.Url
 
 open class MpwBrowserClientApplication(
-    override val version: String,
+    override val about: AppAboutData,
     vararg modules: AppModule<MultiPaneWorkspace, BackendWorkspace>
 ) : BrowserApplication<MultiPaneWorkspace>() {
 
@@ -52,7 +53,7 @@ open class MpwBrowserClientApplication(
 
     companion object {
         fun wsBrowserClient(
-            version : String = "0.0.1",
+            about : AppAboutData = AppAboutData(),
             start: Boolean = true,
             buildFun: ApplicationBuilder<MultiPaneWorkspace, BackendWorkspace>.() -> Unit
         ) {
@@ -61,7 +62,7 @@ open class MpwBrowserClientApplication(
             builder.buildFun()
 
             if (start) {
-                MpwBrowserClientApplication(version, *builder.modules.toTypedArray()).main()
+                MpwBrowserClientApplication(about, *builder.modules.toTypedArray()).main()
             }
         }
     }

@@ -23,7 +23,8 @@ class TestClientApplication(
     builder: TestClientBuilder
 ) : AbstractClientApplication<AbstractWorkspace, BackendWorkspace>() {
 
-    override val version: String = "0.0.1"
+    override val about = AppAboutData()
+
     override lateinit var transport: ServiceCallTransport
     override lateinit var backend: BackendAdapter
     override lateinit var frontend: AdaptiveAdapter

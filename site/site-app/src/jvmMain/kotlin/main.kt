@@ -11,6 +11,7 @@ import `fun`.adaptive.grove.doc.app.GroveDocModuleServer
 import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.lib.util.app.UtilModule
 import `fun`.adaptive.persistence.ensure
+import `fun`.adaptive.runtime.AppAboutData
 import `fun`.adaptive.sandbox.app.CookbookModule
 import `fun`.adaptive.site.app.SiteModuleServer
 import `fun`.adaptive.site.appVersion
@@ -24,7 +25,7 @@ fun main() {
         propertyFile(optional = false) { "./etc/site.properties" }
     }
 
-    jvmServer(appVersion) {
+    jvmServer(AppAboutData(appVersion)) {
         module { UtilModule() }
         module { ValueServerModule(FilePersistence(Path("./var/values").ensure())) }
         module { NoAuthServerModule() }

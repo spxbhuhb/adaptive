@@ -10,7 +10,7 @@ class TableViewBackendBuilder<ITEM_TYPE> {
 
     fun intCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Int>.() -> Unit) {
         cells += TableCellDefBuilder<ITEM_TYPE, Int>().also {
-            it.content = ::tableItemToString
+            //it.content = ::tableItemToString
             buildFun(it)
         }
     }
