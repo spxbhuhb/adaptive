@@ -47,7 +47,7 @@ fun <ITEM> tableContent(
     val arrangement = CellBoxArrangementCalculator(adapter() as AbstractAuiAdapter<*, *>)
         .findBestArrangement(
             cells = backend.cells.map { CellDef(null, it.minWidth, it.width) },
-            proposal.maxWidth,
+            proposal.maxWidth - backend.tableTheme.arrangementWidthAdjustment,
             backend.gap.width!!.value
         )
 
@@ -68,6 +68,8 @@ fun <ITEM> tableItem(
 ): AdaptiveFragment {
 
     cellBox(arrangement = arrangement) {
+        backend.tableTheme.itemContainer
+
         for (cell in backend.cells) {
             @Suppress("UNCHECKED_CAST")
             tableCell(cell as TableCellDef<ITEM,Any>, item, cell.contentFun)

@@ -1,6 +1,9 @@
 package `fun`.adaptive.ui.table
 
-import `fun`.adaptive.ui.table.renderer.tableItemToString
+import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.ui.table.renderer.tableCellDouble
+import `fun`.adaptive.ui.table.renderer.tableCellIcon
+import `fun`.adaptive.ui.table.renderer.tableCellToString
 
 class TableViewBackendBuilder<ITEM_TYPE> {
 
@@ -8,9 +11,30 @@ class TableViewBackendBuilder<ITEM_TYPE> {
 
     var items : List<ITEM_TYPE> = emptyList()
 
+    fun stringCell(buildFun: TableCellDefBuilder<ITEM_TYPE, String?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, String?>().also {
+            it.content = ::tableCellToString
+            buildFun(it)
+        }
+    }
+
     fun intCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Int>.() -> Unit) {
         cells += TableCellDefBuilder<ITEM_TYPE, Int>().also {
-            it.content = ::tableItemToString
+            it.content = ::tableCellToString
+            buildFun(it)
+        }
+    }
+
+    fun doubleCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Double?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, Double?>().also {
+            it.content = ::tableCellDouble
+            buildFun(it)
+        }
+    }
+
+    fun iconCell(buildFun: TableCellDefBuilder<ITEM_TYPE, GraphicsResourceSet?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, GraphicsResourceSet?>().also {
+            it.content = ::tableCellIcon
             buildFun(it)
         }
     }

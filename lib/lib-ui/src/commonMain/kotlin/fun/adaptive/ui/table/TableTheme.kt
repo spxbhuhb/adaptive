@@ -9,9 +9,10 @@ import `fun`.adaptive.ui.generated.resources.unfold_more
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.AbstractTheme
+import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 
-class TableTheme(
+open class TableTheme(
     headerHeight: DPixel = 28.dp
 ) : AbstractTheme() {
 
@@ -19,7 +20,7 @@ class TableTheme(
         var default = TableTheme()
     }
 
-    val headerCell = instructionsOf(
+    var headerCell = instructionsOf(
         height { headerHeight },
         paddingLeft { 4.dp },
         alignItems.center,
@@ -27,31 +28,42 @@ class TableTheme(
         fillStrategy.constrainReverse
     )
 
-    val headerCellText = instructionsOf(
+    var headerCellText = instructionsOf(
         noSelect,
         normalFont
     )
 
-    val headerActionContainer = instructionsOf(
+    var headerActionContainer = instructionsOf(
         height { headerHeight },
         alignItems.center
     )
 
-    fun sortIcon(cellDef: TableCellDef<*,*>, hover: Boolean) =
+    open fun sortIcon(cellDef: TableCellDef<*,*>, hover: Boolean) =
         when (cellDef.sorting) {
             Sorting.Ascending -> Graphics.north
             Sorting.Descending -> Graphics.north
             else -> if (hover && cellDef.sortable) Graphics.unfold_more else Graphics.empty
         }
 
-    val resizeHandle = instructionsOf(
+    var resizeHandle = instructionsOf(
         maxHeight,
         width { 10.dp },
         margin { 2.dp }
     )
 
-    val resizeHandleHover = resizeHandle + instructionsOf(
+    var resizeHandleHover = resizeHandle + instructionsOf(
         border(colors.outline, 0.dp, 1.dp, 0.dp, 1.dp),
         cursor.colResize
+    )
+
+    /**
+     * Subtracted from the available width to calculate cell arrangement. It should be
+     * in line with the surrounding from [itemContainer]. Technically, it would be
+     * possible to calculate this, but I think it isn't worth the effort.
+     */
+    var arrangementWidthAdjustment = 2.0 + 16.0 // border, padding
+
+    var itemContainer = instructionsOf(
+        borders.outline .. cornerRadius { 4.dp } .. paddingVertical { 4.dp } .. paddingHorizontal { 8.dp }
     )
 }

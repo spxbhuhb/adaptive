@@ -2,12 +2,16 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
+import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
+import `fun`.adaptive.graphics.svg.api.svgHeight
+import `fun`.adaptive.graphics.svg.api.svgWidth
+import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.ui.AbstractAuiAdapter
@@ -17,6 +21,7 @@ import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangementCalculator
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
+import `fun`.adaptive.ui.generated.resources.account_box
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
@@ -25,6 +30,7 @@ import `fun`.adaptive.ui.table.table
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
+import `fun`.adaptive.utility.UUID.Companion.uuid4
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -86,8 +92,9 @@ fun main() {
 }
 
 class T(
-    val i1 : Int,
-    val i2 : Int
+    val friendlyId : String?,
+    val name : String?,
+    val currentL1 : Double?
 )
 
 @Adaptive
@@ -95,20 +102,50 @@ fun tableTest() {
 
     val backend = tableBackend {
 
-        items = listOf(T(12,23))
+        items = listOf(
+            T("RHT-0001", "Hűtő", 1.0),
+        )
 
-        intCell {
-            label = "I1"
-            get = { it.i1 }
-            minWidth = 300.dp
-            instructions = instructionsOf(backgrounds.friendlyOpaque, alignSelf.end)
+//        val currents = cellGroup("Currents")
+
+        iconCell {
+            label = "Icon"
+            get = { Graphics.account_box }
+            width = 32.dp
+            instructions = instructionsOf(svgWidth(24.dp), svgHeight(24.dp))
         }
 
-        intCell {
-            label = "I2"
-            get = { it.i2 }
+        stringCell {
+            label = "# ID"
+            get = { it.friendlyId }
+            minWidth = 120.dp
+            width = 120.dp
+            //instructions = instructionsOf(backgrounds.friendlyOpaque, alignSelf.end)
+        }
+
+        stringCell {
+            label = "Name"
+            get = { it.name }
             minWidth = 300.dp
-            instructions = instructionsOf(maxWidth, borders.outline)
+            //instructions = instructionsOf(maxWidth)
+        }
+
+        doubleCell {
+            label = "L1"
+            get = { it.currentL1 }
+            minWidth = 100.dp
+        }
+
+        doubleCell {
+            label = "L2"
+            get = { it.currentL1 }
+            minWidth = 100.dp
+        }
+
+        doubleCell {
+            label = "L3"
+            get = { it.currentL1 }
+            minWidth = 100.dp
         }
 
     }

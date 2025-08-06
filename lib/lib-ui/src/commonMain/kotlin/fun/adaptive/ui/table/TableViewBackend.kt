@@ -1,12 +1,8 @@
 package `fun`.adaptive.ui.table
 
-import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.general.SelfObservable
-import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Gap
-import `fun`.adaptive.ui.menu.MenuItemBase
-import `fun`.adaptive.ui.table.renderer.tableItemToString
 
 /**
  * @property    allItems         All the items this table has, including invisible (filtered out).

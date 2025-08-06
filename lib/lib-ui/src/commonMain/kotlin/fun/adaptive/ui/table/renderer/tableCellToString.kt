@@ -7,7 +7,7 @@ import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.table.TableCellDef
 
 @Adaptive
-fun <ITEM,CELL_DATA> tableItemToString(cellDef: TableCellDef<ITEM,CELL_DATA>, item: ITEM) : AdaptiveFragment {
-    text(cellDef.getFun(item).toString()) .. cellDef.instructions
+fun <ITEM,CELL_DATA> tableCellToString(cellDef: TableCellDef<ITEM,CELL_DATA>, item: ITEM) : AdaptiveFragment {
+    text(cellDef.getFun(item)?.toString() ?: "") .. cellDef.instructions
     return fragment()
 }
