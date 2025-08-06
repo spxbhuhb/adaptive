@@ -741,6 +741,12 @@ public class JvmBoxTestGenerated extends AbstractJvmBoxTest {
       }
 
       @Test
+      @TestMetadata("classPropertyWithTypes.kt")
+      public void testClassPropertyWithTypes() {
+        runTest("testData/box/foundation/reference/classPropertyWithTypes.kt");
+      }
+
+      @Test
       @TestMetadata("factoryAddAndActualize.kt")
       public void testFactoryAddAndActualize() {
         runTest("testData/box/foundation/reference/factoryAddAndActualize.kt");

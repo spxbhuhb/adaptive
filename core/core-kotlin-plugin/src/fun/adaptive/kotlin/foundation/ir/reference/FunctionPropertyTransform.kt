@@ -12,13 +12,19 @@ import `fun`.adaptive.kotlin.foundation.Strings
 import `fun`.adaptive.kotlin.foundation.ir.FoundationPluginContext
 import `fun`.adaptive.kotlin.foundation.ir.util.AdaptiveAnnotationBasedExtension
 import org.jetbrains.kotlin.backend.common.IrElementTransformerVoidWithContext
+import org.jetbrains.kotlin.backend.jvm.codegen.anyTypeArgument
 import org.jetbrains.kotlin.ir.IrStatement
 import org.jetbrains.kotlin.ir.declarations.IrProperty
 import org.jetbrains.kotlin.ir.declarations.IrSimpleFunction
+import org.jetbrains.kotlin.ir.declarations.IrTypeParameter
 import org.jetbrains.kotlin.ir.declarations.IrValueParameter
 import org.jetbrains.kotlin.ir.expressions.*
 import org.jetbrains.kotlin.ir.expressions.impl.IrCallImpl
 import org.jetbrains.kotlin.ir.expressions.impl.IrFunctionReferenceImplWithShape
+import org.jetbrains.kotlin.ir.symbols.IrTypeParameterSymbol
+import org.jetbrains.kotlin.ir.types.IrSimpleType
+import org.jetbrains.kotlin.ir.types.typeOrFail
+import org.jetbrains.kotlin.ir.types.typeWith
 import org.jetbrains.kotlin.ir.util.SYNTHETIC_OFFSET
 import org.jetbrains.kotlin.ir.util.getAnnotationArgumentValue
 import org.jetbrains.kotlin.ir.util.hasAnnotation
@@ -123,12 +129,16 @@ class FunctionPropertyTransform(
             expression.endOffset,
             pluginContext.kFunctionAdaptiveReferenceType,
             expression.symbol,
-            typeArgumentsCount = 0,
+            typeArgumentsCount = expression.typeArguments.size,
             valueArgumentsCount = 2,
             contextParameterCount = 0,
             hasDispatchReceiver = false,
             hasExtensionReceiver = false
-        )
+        ).also {
+            repeat(expression.typeArguments.size) { index ->
+                it.typeArguments[index] = expression.typeArguments[index]
+            }
+        }
     }
 
     class GetterReturnTypeTransform(
