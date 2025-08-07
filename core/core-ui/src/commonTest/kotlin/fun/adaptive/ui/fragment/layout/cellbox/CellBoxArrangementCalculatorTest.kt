@@ -334,7 +334,7 @@ class CellBoxArrangementCalculatorTest {
     }
 
     @Test
-    fun `adhoc`() {
+    fun adhoc() {
         val calculator = CellBoxArrangementCalculator(AuiTestAdapter())
 
         // Create cells with mixed fixed and fractional widths
@@ -347,10 +347,10 @@ class CellBoxArrangementCalculatorTest {
             CellDef(null, 100.dp, 1.fr),
         )
 
-        val arrangement = calculator.findBestArrangement(cells, 1000.0, 0.0)
+        val arrangement = calculator.findBestArrangement(cells, 1020.0, 0.0)
 
         // Verify the arrangement
         assertFalse(arrangement.isVertical, "Arrangement should be horizontal")
-        assertEquals(6, arrangement.groups.size, "Should have 3 groups")
+        assertEquals(6, arrangement.groups.size, "Should have 6 groups")
     }
 }

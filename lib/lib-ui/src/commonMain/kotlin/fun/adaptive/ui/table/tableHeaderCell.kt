@@ -11,22 +11,24 @@ import `fun`.adaptive.ui.menu.itemActionsMenu
 
 @Adaptive
 fun <ITEM> tableHeaderCell(
-    cellDef: TableCellDef<ITEM,*>
-) : AdaptiveFragment {
+    cellDef: TableCellDef<ITEM, *>
+): AdaptiveFragment {
 
     val hover = hover()
     val theme = cellDef.table.tableTheme
     val observed = observe { cellDef }
 
     row {
-        //theme.headerCell .. width { observed.width }
+        theme.headerCell .. maxWidth .. fillStrategy.constrainReverse
 
         text(observed.label) .. theme.headerCellText .. maxWidth
 
         row {
             theme.headerActionContainer
 
-            actionIcon(theme.sortIcon(observed, hover), theme = denseIconTheme)
+            if (observed.sortable) {
+                actionIcon(theme.sortIcon(observed, hover), theme = denseIconTheme)
+            }
 
             if (observed.rowMenu.isNotEmpty()) {
                 itemActionsMenu(observed.rowMenu, iconTheme = denseIconTheme) {
@@ -34,10 +36,13 @@ fun <ITEM> tableHeaderCell(
                 }
             }
 
-            box {
-                if (hover) theme.resizeHandleHover else theme.resizeHandle
+            if (observed.resizable) {
+                box {
+                    if (hover) theme.resizeHandleHover else theme.resizeHandle
+                }
             }
         }
+
     }
 
     return fragment()

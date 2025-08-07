@@ -15,8 +15,6 @@ class CellBoxArrangementCalculator(
     private val adapter: DensityIndependentAdapter
 ) {
 
-    // FIXME clean up cell box arrangement dp versus px conversions
-
     /**
      * Finds the best arrangement of cells based on available width.
      * Returns a CellBoxArrangement that describes how to lay out the cells.
@@ -36,15 +34,18 @@ class CellBoxArrangementCalculator(
                 cells = mutableListOf(cell),
                 minSize = cell.minSize,
                 maxSize = cell.maxSize,
-                definition = cell.group
+                definition = cell.group,
+                rawMinSize = cell.minSize.toRawValue(adapter)
             )
         }
 
-        // If the full layout fits into the available width, use the full layout
+        // using 0.001 to account for floating point errors
+        val availableWidthComparable = availableWidth + 0.001
 
+        // If the full layout fits into the available width, use the full layout
         val fullLayoutWidth = calculateCellWidths(groups, availableWidth, cellGap)
 
-        if (fullLayoutWidth <= availableWidth) {
+        if (fullLayoutWidth <= availableWidthComparable) {
             return CellBoxArrangement(groups, false, fullLayoutWidth)
         }
 
@@ -56,22 +57,26 @@ class CellBoxArrangementCalculator(
 
             val layoutWidth = calculateCellWidths(groups, availableWidth, cellGap)
 
-            if (layoutWidth <= availableWidth) {
+            // using 0.001 to account for floating point errors
+
+            if (layoutWidth <= availableWidthComparable) {
                 return CellBoxArrangement(groups, false, layoutWidth)
             }
-
         }
 
-        val allVerticalSize = if (cells.any { it.maxSize.isFraction }) 1.fr else cells.maxOf { it.maxSize.value }.dp
-        val allVerticalWidth = if (allVerticalSize.isFraction) availableWidth else allVerticalSize.toRawValue(adapter)
+        val allVerticalMinSize = cells.maxOf { it.minSize.value }.dp
+        val allVerticalMaxSize = if (cells.any { it.maxSize.isFraction }) 1.fr else cells.maxOf { it.maxSize.value }.dp
+        val allVerticalWidth = if (allVerticalMaxSize.isFraction) availableWidth else allVerticalMaxSize.toRawValue(adapter)
+        val allVerticalRawMinSize = allVerticalMinSize.toRawValue(adapter)
 
         // return with a vertical list if no other options left
         val allVertical = CellBoxGroup(
             cells = cells.toMutableList(),
-            minSize = cells.maxOf { it.minSize.value }.dp,
-            maxSize = allVerticalSize,
+            minSize = allVerticalMinSize,
+            maxSize = allVerticalMaxSize,
             definition = null,
-            calculatedWidth = allVerticalWidth
+            rawMinSize = allVerticalRawMinSize,
+            calculatedWidth = max(allVerticalRawMinSize, allVerticalWidth)
         )
 
         return CellBoxArrangement(
@@ -149,8 +154,6 @@ class CellBoxArrangementCalculator(
         }
     }
 
-
-    // TODO try merge calculateCellWidths with grid distribute
     /**
      * Calculates the widths for cells with fractional tracks.
      * Similar to the distribute function in AbstractGrid.
@@ -159,6 +162,8 @@ class CellBoxArrangementCalculator(
         // Calculate total space used by fixed tracks and gaps
         var usedSpace = (cells.size - 1) * cellGap
         var fractionSum = 0.0
+
+        val fractionCells = mutableListOf<CellBoxGroup>()
 
         // First pass: calculate widths for fixed tracks and sum up fractions
         for (cell in cells) {
@@ -169,20 +174,55 @@ class CellBoxArrangementCalculator(
                 usedSpace += cell.calculatedWidth
             } else if (maxSize.isFraction) {
                 fractionSum += maxSize.value
+                fractionCells += cell
             }
         }
 
-        // Calculate space available for fractional tracks
-        val availableForFractions = (availableWidth - usedSpace).coerceAtLeast(0.0)
+        var availableForFractions = (availableWidth - usedSpace).coerceAtLeast(0.0)
 
-        // Calculate width per fraction unit
-        val fractionUnit = if (fractionSum > 0) availableForFractions / fractionSum else 0.0
+        while (fractionCells.isNotEmpty()) {
 
-        // Second pass: calculate widths for fractional tracks
-        for (cell in cells) {
-            if (cell.maxSize.isFraction) {
-                cell.calculatedWidth = max(cell.minSize.toRawValue(adapter), cell.maxSize.value * fractionUnit)
+            val fractionUnit = if (fractionSum > 0) availableForFractions / fractionSum else 0.0
+
+            // For fractional cells where the minimum size is larger than the available space,
+            // set the minimum size to the specified value. Remove these cells from consideration.
+
+            val before = fractionCells.size
+
+            // Using while to avoid a concurrent modification exception
+            var index = 0
+            var end = fractionCells.size
+
+            while (index < end) {
+                val cell = fractionCells[index]
+                val size = cell.maxSize.value * fractionUnit
+
+                if (size < cell.rawMinSize) {
+                    cell.calculatedWidth = cell.rawMinSize
+                    availableForFractions -= cell.rawMinSize
+                    fractionSum -= cell.maxSize.value
+                    fractionCells.removeAt(index)
+                    end--
+                } else {
+                    index++
+                }
             }
+
+            // At this point we have fractional cells that were fine with the old fractionUnit.
+            // However, as the available space for fractions may have decreased, we might need
+            // to recalculate the fractionUnit to fit the remaining space.
+
+            // When the size of fractional cells is reduced, we have to recalculate.
+            if (before != fractionCells.size) continue
+
+            // There were no cells that hit the minimum size requirement. We can safely use the
+            // fractionUnit to fit the remaining space.
+
+            for (cell in fractionCells) {
+                cell.calculatedWidth = cell.maxSize.value * fractionUnit
+            }
+
+            break
         }
 
         return cells.sumOf { it.calculatedWidth } + (cells.size - 1) * cellGap

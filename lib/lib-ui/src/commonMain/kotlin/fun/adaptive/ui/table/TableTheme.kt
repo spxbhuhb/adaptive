@@ -20,6 +20,21 @@ open class TableTheme(
         var default = TableTheme()
     }
 
+    /**
+     * Subtracted from the available width to calculate cell arrangement. It should be
+     * in line with the surrounding from [itemContainer]. Technically, it would be
+     * possible to calculate this, but I think it isn't worth the effort.
+     */
+    var arrangementWidthAdjustment = 2.0 + 16.0 // border, padding
+
+    // ---------------------------------------------------------------------------------------
+    // Header
+    // ---------------------------------------------------------------------------------------
+
+    var headerContainer = instructionsOf(
+        paddingVertical { 4.dp } .. paddingHorizontal { 8.dp }
+    )
+
     var headerCell = instructionsOf(
         height { headerHeight },
         paddingLeft { 4.dp },
@@ -56,15 +71,14 @@ open class TableTheme(
         cursor.colResize
     )
 
-    /**
-     * Subtracted from the available width to calculate cell arrangement. It should be
-     * in line with the surrounding from [itemContainer]. Technically, it would be
-     * possible to calculate this, but I think it isn't worth the effort.
-     */
-    var arrangementWidthAdjustment = 2.0 + 16.0 // border, padding
+    // ---------------------------------------------------------------------------------------
+    // Content
+    // ---------------------------------------------------------------------------------------
 
-    var headerContainer = instructionsOf(
-        paddingVertical { 4.dp } .. paddingHorizontal { 8.dp }
+    var contentContainer = instructionsOf(
+        maxHeight,
+        verticalScroll,
+        gap { 8.dp }
     )
 
     var itemContainer = instructionsOf(

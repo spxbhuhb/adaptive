@@ -35,6 +35,8 @@ class TableViewBackendBuilder<ITEM_TYPE> {
     fun iconCell(buildFun: TableCellDefBuilder<ITEM_TYPE, GraphicsResourceSet?>.() -> Unit) {
         cells += TableCellDefBuilder<ITEM_TYPE, GraphicsResourceSet?>().also {
             it.content = ::tableCellIcon
+            it.resizable = false
+            it.sortable = false
             buildFun(it)
         }
     }

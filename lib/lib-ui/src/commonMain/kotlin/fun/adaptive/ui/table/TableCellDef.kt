@@ -24,6 +24,7 @@ class TableCellDef<ITEM, CELL_DATA>(
 
     var visible by observable(true, ::notify)
     var sortable by observable(true, ::notify)
+    var resizable by observable(true, ::notify)
 
     var rowMenu by observable(emptyList<MenuItemBase<Any>>(), ::notify)
 

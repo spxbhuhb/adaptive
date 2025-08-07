@@ -92,9 +92,9 @@ fun main() {
 }
 
 class T(
-    val friendlyId : String?,
-    val name : String?,
-    val currentL1 : Double?
+    val friendlyId: String?,
+    val name: String?,
+    val currentL1: Double?
 )
 
 @Adaptive
@@ -102,9 +102,8 @@ fun tableTest() {
 
     val backend = tableBackend {
 
-        items = listOf(
-            T("RHT-0001", "Hűtő", 1.0),
-        )
+        items = mutableListOf()
+        repeat(100) { items += T("RHT-$it", "Hűtő", it.toDouble()) }
 
 //        val currents = cellGroup("Currents")
 

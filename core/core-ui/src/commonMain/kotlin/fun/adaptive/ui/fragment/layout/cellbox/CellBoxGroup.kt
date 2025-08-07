@@ -12,5 +12,6 @@ data class CellBoxGroup(
     val minSize: DPixel,
     val maxSize: GridTrack,
     val definition: CellGroupDef? = null,
+    var rawMinSize: Double = 0.0,
     var calculatedWidth: Double = 0.0,
 )

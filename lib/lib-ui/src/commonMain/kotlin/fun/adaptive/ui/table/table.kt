@@ -9,8 +9,8 @@ import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.api.boxWithProposal
 import `fun`.adaptive.ui.api.cellBox
 import `fun`.adaptive.ui.api.column
+import `fun`.adaptive.ui.api.fillStrategy
 import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangement
@@ -45,7 +45,11 @@ fun <ITEM> tableInner(
         )
 
     column {
+        width { proposal.maxWidth.dp } .. height { proposal.maxHeight.dp } .. fillStrategy.constrain
+
         cellBox(arrangement = arrangement) {
+            width { proposal.maxWidth.dp }
+
             backend.tableTheme.headerContainer
             for (cell in backend.cells) {
                 @Suppress("UNCHECKED_CAST")
@@ -54,7 +58,7 @@ fun <ITEM> tableInner(
         }
 
         column {
-            width { proposal.maxWidth.dp } .. height { proposal.maxHeight.dp } .. verticalScroll
+            backend.tableTheme.contentContainer .. width { proposal.maxWidth.dp }
 
             for (item in backend.viewportItems ?: emptyList()) {
                 tableItem(backend, arrangement, item)

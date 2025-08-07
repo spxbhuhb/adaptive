@@ -15,6 +15,7 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
 
     var visible = true
     var sortable = true
+    var resizable = true
 
     var rowMenu = emptyList<MenuItemBase<Any>>()
 
@@ -31,6 +32,7 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
             cell.visible = visible
             cell.sortable = sortable
             cell.rowMenu = rowMenu
+            cell.resizable = resizable
 
             return cell
         }
