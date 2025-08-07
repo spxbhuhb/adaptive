@@ -57,7 +57,7 @@ class CellBoxArrangementCalculator(
             val layoutWidth = calculateCellWidths(groups, availableWidth, cellGap)
 
             if (layoutWidth <= availableWidth) {
-                return CellBoxArrangement(groups, false, fullLayoutWidth)
+                return CellBoxArrangement(groups, false, layoutWidth)
             }
 
         }
@@ -68,7 +68,7 @@ class CellBoxArrangementCalculator(
         // return with a vertical list if no other options left
         val allVertical = CellBoxGroup(
             cells = cells.toMutableList(),
-            minSize = cells.minOf { it.minSize.value }.dp,
+            minSize = cells.maxOf { it.minSize.value }.dp,
             maxSize = allVerticalSize,
             definition = null,
             calculatedWidth = allVerticalWidth
@@ -181,7 +181,7 @@ class CellBoxArrangementCalculator(
         // Second pass: calculate widths for fractional tracks
         for (cell in cells) {
             if (cell.maxSize.isFraction) {
-                cell.calculatedWidth = max(cell.minSize.value, cell.maxSize.value * fractionUnit)
+                cell.calculatedWidth = max(cell.minSize.toRawValue(adapter), cell.maxSize.value * fractionUnit)
             }
         }
 

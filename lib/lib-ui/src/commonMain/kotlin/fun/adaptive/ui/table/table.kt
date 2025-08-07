@@ -2,19 +2,14 @@ package `fun`.adaptive.ui.table
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.FragmentTraceContext
 import `fun`.adaptive.foundation.adapter
-import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.api.boxWithProposal
 import `fun`.adaptive.ui.api.cellBox
 import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.maxWidth
-import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.fragment.layout.SizingProposal
@@ -22,8 +17,6 @@ import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangement
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangementCalculator
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.theme.backgrounds
 
 @Adaptive
 fun <ITEM> table(
@@ -33,14 +26,14 @@ fun <ITEM> table(
     val observed = observe { backend }
 
     boxWithProposal { proposal ->
-        tableContent(observed, proposal)
+        tableInner(observed, proposal)
     }
 
     return fragment()
 }
 
 @Adaptive
-fun <ITEM> tableContent(
+fun <ITEM> tableInner(
     backend: TableViewBackend<ITEM>,
     proposal: SizingProposal
 ) {
@@ -52,10 +45,20 @@ fun <ITEM> tableContent(
         )
 
     column {
-        width { proposal.maxWidth.dp } .. height { proposal.maxHeight.dp } .. verticalScroll
+        cellBox(arrangement = arrangement) {
+            backend.tableTheme.headerContainer
+            for (cell in backend.cells) {
+                @Suppress("UNCHECKED_CAST")
+                tableHeaderCell(cell as TableCellDef<ITEM, Any>)
+            }
+        }
 
-        for (item in backend.viewportItems ?: emptyList()) {
-            tableItem(backend, arrangement, item)
+        column {
+            width { proposal.maxWidth.dp } .. height { proposal.maxHeight.dp } .. verticalScroll
+
+            for (item in backend.viewportItems ?: emptyList()) {
+                tableItem(backend, arrangement, item)
+            }
         }
     }
 }

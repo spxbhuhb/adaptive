@@ -332,4 +332,25 @@ class CellBoxArrangementCalculatorTest {
         assertEquals(50.0, arrangement.groups.first().calculatedWidth, "Group width should be 50.0")
         assertEquals(50.0, arrangement.totalWidth, "Total width should be 50.0")
     }
+
+    @Test
+    fun `adhoc`() {
+        val calculator = CellBoxArrangementCalculator(AuiTestAdapter())
+
+        // Create cells with mixed fixed and fractional widths
+        val cells = listOf(
+            CellDef(null, 32.dp, 32.dp),
+            CellDef(null, 120.dp, 1.fr),
+            CellDef(null, 300.dp, 1.fr),
+            CellDef(null, 100.dp, 1.fr),
+            CellDef(null, 100.dp, 1.fr),
+            CellDef(null, 100.dp, 1.fr),
+        )
+
+        val arrangement = calculator.findBestArrangement(cells, 1000.0, 0.0)
+
+        // Verify the arrangement
+        assertFalse(arrangement.isVertical, "Arrangement should be horizontal")
+        assertEquals(6, arrangement.groups.size, "Should have 3 groups")
+    }
 }

@@ -63,6 +63,10 @@ open class TableTheme(
      */
     var arrangementWidthAdjustment = 2.0 + 16.0 // border, padding
 
+    var headerContainer = instructionsOf(
+        paddingVertical { 4.dp } .. paddingHorizontal { 8.dp }
+    )
+
     var itemContainer = instructionsOf(
         borders.outline .. cornerRadius { 4.dp } .. paddingVertical { 4.dp } .. paddingHorizontal { 8.dp }
     )

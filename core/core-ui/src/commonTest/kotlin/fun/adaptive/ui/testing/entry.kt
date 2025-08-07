@@ -31,7 +31,7 @@ fun uiTest(
     height: Int,
     vararg imports: AdaptiveFragmentFactory,
     trace: Trace? = null,
-    @Adaptive block: (adapter: AuiTestAdapter) -> Unit
+    block: @Adaptive (adapter: AuiTestAdapter) -> Unit
 ): AuiTestAdapter {
 
     return AuiTestAdapter(
@@ -51,7 +51,7 @@ fun uiTest(
 fun snapshotTest(
     width: Int = 400,
     height: Int = 400,
-    @Adaptive block: (adapter: AuiTestAdapter) -> Unit
+    block: @Adaptive (adapter: AuiTestAdapter) -> Unit
 ) =
     AuiTestAdapter(
         TestReceiver(RawFrame(0.0, 0.0, width.toDouble(), height.toDouble()))
