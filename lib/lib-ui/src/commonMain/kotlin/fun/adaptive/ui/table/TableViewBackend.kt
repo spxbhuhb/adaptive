@@ -3,6 +3,7 @@ package `fun`.adaptive.ui.table
 import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Gap
+import kotlin.properties.Delegates.observable
 
 /**
  * @property    allItems         All the items this table has, including invisible (filtered out).
@@ -22,6 +23,15 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
     var viewportItems: List<TableItem<ITEM>>? = null
 
     var gap : Gap = Gap(0.dp, 0.dp)
+    
+    /**
+     * Current filter text used to filter table items.
+     * When this value changes, the table items are filtered automatically.
+     */
+    var filterText: String by observable("") { _, _, _ ->
+        updateItems()
+        notifyListeners()
+    }
 
     /**
      * Incremented each time the table is sorted. Used to determine the sort order of each cell.
@@ -80,9 +90,23 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
      * Updates the filtered and viewport items after sorting or filtering.
      */
     private fun updateItems() {
-        // For now, just set filteredItems and viewportItems to allItems
-        // In a real implementation, this would apply filters and pagination
-        filteredItems = allItems
-        viewportItems = allItems
+        val items = allItems ?: return
+        
+        // Apply filter if filterText is not empty
+        filteredItems = if (filterText.isNotEmpty()) {
+            items.filter { item ->
+                // Check if any cell value contains the filter text
+                cells.any { cell ->
+                    val value = cell.getFun(item.data)
+                    value.toString().contains(filterText, ignoreCase = true)
+                }
+            }
+        } else {
+            items
+        }
+        
+        // For now, just set viewportItems to filteredItems
+        // In a real implementation, this would apply pagination
+        viewportItems = filteredItems
     }
 }
