@@ -27,7 +27,11 @@ fun <ITEM> tableHeaderCell(
             theme.headerActionContainer
 
             if (observed.sortable) {
-                actionIcon(theme.sortIcon(observed, hover), theme = denseIconTheme)
+                actionIcon(
+                    icon = theme.sortIcon(observed, hover), 
+                    theme = denseIconTheme,
+                    actionHandler = { observed.table.sort(observed) }
+                )
             }
 
             if (observed.rowMenu.isNotEmpty()) {

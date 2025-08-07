@@ -32,6 +32,29 @@ class TableCellDef<ITEM, CELL_DATA>(
     var contentFun by observable(contentFun, ::notify)
 
     var sorting by observable(Sorting.None, ::notify)
+    var compareFunction : (ITEM, ITEM) -> Int = ::defaultCompareFunction
 
+    var sortOrder = 0
 
+    fun defaultCompareFunction(item1 : ITEM, item2 : ITEM) : Int {
+        val value1 = getFun(item1)
+        val value2 = getFun(item2)
+
+        var result = 0
+
+        // Compare the values if they're comparable
+        if (value1 is Comparable<*> && value2 is Comparable<*>) {
+            try {
+                @Suppress("UNCHECKED_CAST")
+                result = (value1 as? Comparable<Any>)?.compareTo(value2) ?: 0
+                if (sorting == Sorting.Descending) {
+                    result = -result
+                }
+            } catch (e: ClassCastException) {
+                // If values can't be compared, continue to the next cell
+            }
+        }
+
+        return result
+    }
 }

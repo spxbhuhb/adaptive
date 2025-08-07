@@ -64,10 +64,15 @@ class CellBoxArrangementCalculator(
             }
         }
 
+        return allVertical(cells, availableWidth)
+    }
+
+    fun allVertical(cells : List<CellDef>, availableWidth: Double): CellBoxArrangement {
         val allVerticalMinSize = cells.maxOf { it.minSize.value }.dp
         val allVerticalMaxSize = if (cells.any { it.maxSize.isFraction }) 1.fr else cells.maxOf { it.maxSize.value }.dp
         val allVerticalWidth = if (allVerticalMaxSize.isFraction) availableWidth else allVerticalMaxSize.toRawValue(adapter)
         val allVerticalRawMinSize = allVerticalMinSize.toRawValue(adapter)
+        val allVerticalCalculatedWidth = max(allVerticalRawMinSize, allVerticalWidth)
 
         // return with a vertical list if no other options left
         val allVertical = CellBoxGroup(
@@ -76,13 +81,13 @@ class CellBoxArrangementCalculator(
             maxSize = allVerticalMaxSize,
             definition = null,
             rawMinSize = allVerticalRawMinSize,
-            calculatedWidth = max(allVerticalRawMinSize, allVerticalWidth)
+            calculatedWidth = allVerticalCalculatedWidth
         )
 
         return CellBoxArrangement(
             listOf(allVertical),
             isVertical = true,
-            allVerticalWidth
+            allVerticalCalculatedWidth
         )
     }
 
@@ -140,14 +145,16 @@ class CellBoxArrangementCalculator(
             }
         }
 
+        val minSizeDp = minSize.dp
         CellBoxGroup(
             cells,
-            DPixel(minSize),
+            minSizeDp,
             if (maxFraction > 0.0) {
                 Fraction(maxFraction)
             } else {
                 DPixel(maxFix)
             },
+            rawMinSize = minSizeDp.toRawValue(adapter),
             definition = cellBoxGroup.definition
         ).also {
             return it
@@ -182,7 +189,7 @@ class CellBoxArrangementCalculator(
 
         while (fractionCells.isNotEmpty()) {
 
-            val fractionUnit = if (fractionSum > 0) availableForFractions / fractionSum else 0.0
+            val fractionUnit = if (fractionSum > 0) availableForFractions.coerceAtLeast(0.0) / fractionSum else 0.0
 
             // For fractional cells where the minimum size is larger than the available space,
             // set the minimum size to the specified value. Remove these cells from consideration.

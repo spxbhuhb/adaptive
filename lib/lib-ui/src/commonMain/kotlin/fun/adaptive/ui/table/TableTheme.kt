@@ -5,6 +5,7 @@ import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.generated.resources.north
+import `fun`.adaptive.ui.generated.resources.south
 import `fun`.adaptive.ui.generated.resources.unfold_more
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
@@ -56,7 +57,7 @@ open class TableTheme(
     open fun sortIcon(cellDef: TableCellDef<*,*>, hover: Boolean) =
         when (cellDef.sorting) {
             Sorting.Ascending -> Graphics.north
-            Sorting.Descending -> Graphics.north
+            Sorting.Descending -> Graphics.south
             else -> if (hover && cellDef.sortable) Graphics.unfold_more else Graphics.empty
         }
 
