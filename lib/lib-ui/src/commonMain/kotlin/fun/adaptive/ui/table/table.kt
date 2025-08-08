@@ -17,8 +17,6 @@ import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangement
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangementCalculator
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
-import `fun`.adaptive.ui.input.text.textInput
-import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.dp
 
 @Adaptive
@@ -47,19 +45,8 @@ fun <ITEM> tableInner(
             backend.gap.width!!.value
         )
 
-    val filterBackend = textInputBackend(backend.filterText) {
-        placeholder = "Filter table..."
-        onChange = { value -> backend.filterText = value ?: "" }
-    }
-
     column {
         width { proposal.maxWidth.dp } .. height { proposal.maxHeight.dp } .. fillStrategy.constrain
-
-        row {
-            backend.tableTheme.filterContainer
-
-            textInput(filterBackend) .. backend.tableTheme.filterInput
-        }
 
         cellBox(arrangement = arrangement) {
             width { proposal.maxWidth.dp }

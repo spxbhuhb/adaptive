@@ -4,6 +4,7 @@ import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Gap
 import kotlin.properties.Delegates.observable
+import kotlin.reflect.KProperty
 
 /**
  * @property    allItems         All the items this table has, including invisible (filtered out).
@@ -27,16 +28,48 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
     /**
      * Current filter text used to filter table items.
      * When this value changes, the table items are filtered automatically.
+     * Kept for backward compatibility and as a default text-based filtering input.
      */
-    var filterText: String by observable("") { _, _, _ ->
-        updateItems()
-        notifyListeners()
-    }
+    var filterText: String by observable("", ::updateAndNotify)
+
+    /**
+     * Optional custom filtering data provided by the user.
+     * This can be any type and is passed to [filterFun] when filtering.
+     */
+    var filterData: Any? by observable(null, ::updateAndNotify)
+
+    /**
+     * Optional custom filtering function. When set, this function will be used
+     * to decide if an ITEM should be included.
+     *
+     * Parameters:
+     *  - item: the raw data item
+     *  - cells: the table cells (can be used to access getters or metadata)
+     *  - filterData: the arbitrary filtering data set in [filterData]
+     *
+     * Return true to keep the item, false to filter it out.
+     */
+    var filterFun: ((item: ITEM, cells: List<TableCellDef<ITEM, *>>, filterData: Any?) -> Boolean)? = null
 
     /**
      * Incremented each time the table is sorted. Used to determine the sort order of each cell.
      */
     var sortOrder = 0
+
+    /**
+     * Updates the filtered and viewport items after the table items have changed (set, sort, filter, etc.)
+     */
+    fun updateAndNotify(property: KProperty<*>, oldValue: Any?, newValue: Any?) {
+        updateAndNotify()
+    }
+
+    /**
+     * Updates the filtered and viewport items after the table items have changed (set, sort, filter, etc.)
+     */
+    fun updateAndNotify() {
+        updateItems()
+        notifyListeners()
+    }
 
     /**
      * Sorts the table items based on the specified cell.
@@ -78,33 +111,34 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
                 result
             }
         }
-        
-        // Update the filtered and viewport items
-        updateItems()
-        
-        // Notify observers that the table has changed
-        notifyListeners()
+
+        updateAndNotify()
     }
-    
+
+
     /**
      * Updates the filtered and viewport items after sorting or filtering.
      */
     private fun updateItems() {
         val items = allItems ?: return
-        
-        // Apply filter if filterText is not empty
-        filteredItems = if (filterText.isNotEmpty()) {
-            items.filter { item ->
-                // Check if any cell value contains the filter text
+
+        // Determine how to filter: combine custom filter and filterText with logical AND
+        val customFilter = filterFun
+        filteredItems = items.filter { item ->
+            // Apply custom predicate if available
+            val customPass = customFilter?.invoke(item.data, cells, filterData) ?: true
+
+            // Apply text-based predicate if filterText is not empty
+            val textPass = if (filterText.isNotEmpty()) {
                 cells.any { cell ->
                     val value = cell.getFun(item.data)
-                    value.toString().contains(filterText, ignoreCase = true)
+                    value?.toString()?.contains(filterText, ignoreCase = true) == true
                 }
-            }
-        } else {
-            items
+            } else true
+
+            customPass && textPass
         }
-        
+
         // For now, just set viewportItems to filteredItems
         // In a real implementation, this would apply pagination
         viewportItems = filteredItems
