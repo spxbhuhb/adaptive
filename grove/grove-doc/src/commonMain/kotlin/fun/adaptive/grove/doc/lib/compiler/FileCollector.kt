@@ -2,6 +2,9 @@ package `fun`.adaptive.grove.doc.lib.compiler
 
 import `fun`.adaptive.persistence.isDirectory
 import `fun`.adaptive.persistence.list
+import `fun`.adaptive.persistence.readString
+import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.exists
 import kotlinx.io.files.Path
 import kotlin.collections.iterator
 
@@ -45,11 +48,13 @@ internal class FileCollector(
                 collectFiles(path)
                 inDefinitions = false
             }
+
             "guides" -> {
                 inGuides = true
                 collectFiles(path)
                 inGuides = false
             }
+
             else -> collectFiles(path)
         }
     }
@@ -61,6 +66,7 @@ internal class FileCollector(
                 inGuides -> putFile(guides, name, path)
                 //else -> uncategorized.add(path)
             }
+
             name.endsWith(".kt") -> {
                 putFile(ktFiles, name, path, normalize = false)
 
@@ -170,5 +176,27 @@ internal class FileCollector(
     fun lookupDef(name: String): Path? =
         definitions[name]?.firstOrNull()
 
+    /**
+     * Reads settings.gradle.kts and collects included builds.
+     */
+    fun collectSubprojectsFromSettings(
+        settingsPath : Path = compilation.inPath.resolve("settings.gradle.kts")
+    ): List<Subproject> {
+        if (! settingsPath.exists()) return emptyList()
+
+        val content = settingsPath.readString()
+        val regex = Regex("includeBuild\\(([^)]+)\\)")
+
+        val results = mutableListOf<Subproject>()
+
+        for (match in regex.findAll(content)) {
+            val rel = match.groups[1]?.value?.trim()?.trim('\'', '"') ?: continue
+            val name = rel.trimEnd('/', '\\').substringAfterLast('/').substringAfterLast('\\')
+            val resolved = compilation.inPath.resolve(rel)
+            results += Subproject(name = name, relativePath = rel, path = resolved)
+        }
+
+        return results.distinctBy { it.name to it.relativePath }
+    }
 }
 

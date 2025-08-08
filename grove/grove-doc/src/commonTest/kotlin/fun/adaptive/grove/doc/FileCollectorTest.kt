@@ -5,6 +5,7 @@ import `fun`.adaptive.grove.doc.lib.compiler.GroveDocCompilation
 import `fun`.adaptive.persistence.clearedTestPath
 import `fun`.adaptive.persistence.ensure
 import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.persistence.write
 import `fun`.adaptive.value.embedded.EmbeddedValueServer.Companion.embeddedValueServer
 import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.io.files.Path
@@ -113,5 +114,41 @@ class FileCollectorTest {
     fun `test lookup with invalid scheme`() = fileCollectorTest(clearedTestPath()) { compilation, collector ->
         val result = collector.lookupCode("invalid", "name", "scope")
         assertNull(result)
+    }
+
+    @Test
+    @JsName("testCollectSubprojectsFromSettings_basic")
+    fun `test collectSubprojectsFromSettings basic`() = fileCollectorTest(clearedTestPath()) { compilation, collector ->
+        val settings = """
+            includeBuild("core/core-core")
+            includeBuild('lib/lib-auth')
+            includeBuild("grove/grove-doc")
+            includeBuild("grove/grove-doc") // duplicate
+        """.trimIndent()
+        compilation.inPath.resolve("settings.gradle.kts").write(settings, overwrite = true)
+
+        val subs = collector.collectSubprojectsFromSettings()
+        assertEquals(3, subs.size)
+
+        val names = subs.map { it.name }.toSet()
+        assertTrue(names.contains("core-core"))
+        assertTrue(names.contains("lib-auth"))
+        assertTrue(names.contains("grove-doc"))
+
+        val byName = subs.associateBy { it.name }
+        assertEquals("core/core-core", byName["core-core"]?.relativePath)
+        assertEquals("lib/lib-auth", byName["lib-auth"]?.relativePath)
+        assertEquals("grove/grove-doc", byName["grove-doc"]?.relativePath)
+
+        assertEquals(compilation.inPath.resolve("core/core-core").toString(), byName["core-core"]?.path?.toString())
+        assertEquals(compilation.inPath.resolve("lib/lib-auth").toString(), byName["lib-auth"]?.path?.toString())
+        assertEquals(compilation.inPath.resolve("grove/grove-doc").toString(), byName["grove-doc"]?.path?.toString())
+    }
+
+    @Test
+    @JsName("testCollectSubprojectsFromSettings_missingFile")
+    fun `test collectSubprojectsFromSettings missing file`() = fileCollectorTest(clearedTestPath()) { _, collector ->
+        val subs = collector.collectSubprojectsFromSettings()
+        assertTrue(subs.isEmpty())
     }
 }

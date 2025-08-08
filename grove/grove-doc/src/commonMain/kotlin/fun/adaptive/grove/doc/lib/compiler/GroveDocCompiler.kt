@@ -116,22 +116,14 @@ GroveDocCompiler(
 
     fun collectAndAddSubprojects() {
         val knownSubProjects = values.get<GroveDocSpec>(groveDocDomain.subProject)
+        val discovered = compilation.fileCollector.collectSubprojectsFromSettings()
 
-        for (paths in compilation.fileCollector.definitions.values) {
-            for (path in paths) {
-                if (isSubprojectDefinition(path.readString())) {
-
-                    val name = path.name.substringBeforeLast('.')
-                    val relativePath = path.relative()
-
-                    val existing = knownSubProjects.firstOrNull { it.name == name }
-
-                    if (existing != null) {
-                        registerSubProject(existing)
-                    } else {
-                        addSubProject(name, relativePath)
-                    }
-                }
+        for (subproject in discovered) {
+            val existing = knownSubProjects.firstOrNull { it.name == subproject.name }
+            if (existing != null) {
+                registerSubProject(existing)
+            } else {
+                addSubProject(subproject.name, subproject.relativePath)
             }
         }
     }
@@ -189,10 +181,6 @@ GroveDocCompiler(
         }
     }
 
-    fun isSubprojectDefinition(def: String) =
-    // FIXME hackish finding of a subproject
-        // maybe add a header to the markdown files with tags?
-        def.contains("[subproject](def://)")
 
     // --------------------------------------------------------------------------------
     // Markdown files
