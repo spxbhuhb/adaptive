@@ -4,6 +4,8 @@ import `fun`.adaptive.grove.doc.lib.compiler.GroveDocCompilation
 import `fun`.adaptive.grove.doc.lib.compiler.GroveDocCompiler
 import `fun`.adaptive.log.LogLevel
 import `fun`.adaptive.persistence.*
+import `fun`.adaptive.value.embedded.EmbeddedValueServer.Companion.embeddedValueServer
+import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.io.files.Path
 import kotlin.js.JsName
 import kotlin.test.Test
@@ -18,10 +20,12 @@ class GroveDocCompilerTest {
         val humanReadable = testPath.resolve("out/human-readable").ensure()
         val training = testPath.resolve("out/training/separated").ensure()
 
+        val valueServer = embeddedValueServer(FilePersistence(testPath.resolve("out/values").ensure())) { }
+
         val compilation = GroveDocCompilation(
             inPath = inPath,
             mdOutPath = testPath.resolve("out"),
-            values = testPath.resolve("out/values")
+            values = valueServer.serverWorker
         )
 
         val compiler = GroveDocCompiler(compilation)
@@ -116,7 +120,7 @@ class GroveDocCompilerTest {
         assertTrue(processedTrainingContent.contains("# Test Header"))
         assertTrue(processedTrainingContent.contains("[Some Doc](guide://)"))
         assertTrue(processedHumanContent.contains("# Test Header"))
-        assertTrue(processedHumanContent.contains("[Some Doc](guide-some%20doc.md)"))
+        assertTrue(processedHumanContent.contains("[Some Doc](guide://some%20doc)"))
     }
 
     @Test
@@ -129,7 +133,8 @@ class GroveDocCompilerTest {
         file1.write("Content 1")
         file2.write("Content 2")
 
-        compiler.collect()
+        compiler.fileCollector.collectFiles(compilation.inPath)
+        compiler.fileCollector.reportCollisions()
 
         assertTrue(compiler.compilation.notifications.any {
             it.level == LogLevel.Warning && it.message.contains("collision")
@@ -190,7 +195,7 @@ class GroveDocCompilerTest {
 
         // Verify the extracted components
         assertEquals("Example Name", example.name)
-        assertEquals("- First explanation point\n- Second explanation point", example.explanation)
+        assertEquals("\n- First explanation point\n- Second explanation point", example.explanation)
         assertEquals("exampleFunction", example.fragmentKey)
 
         val expectedCode = """
@@ -275,7 +280,8 @@ class GroveDocCompilerTest {
         """.trimIndent())
 
         // Run the compiler's collect method
-        compiler.collect()
+        compiler.fileCollector.collectFiles(compilation.inPath)
+        compiler.fileCollector.reportCollisions()
 
         // Verify that the examples are collected properly in the examples map
         val examples = compilation.fileCollector.examples
@@ -289,14 +295,10 @@ class GroveDocCompilerTest {
         assertEquals(2, examples[group2]?.size, "The '${group2}' group should have 2 examples")
 
         // Check that the examples in each group are the correct files
-        assertTrue(examples[group1]?.any { it.toString().endsWith("01_${group1}_basic_example.kt") } == true,
-            "The '${group1}' group should contain the basic example")
-        assertTrue(examples[group1]?.any { it.toString().endsWith("02_${group1}_advanced_example.kt") } == true,
-            "The '${group1}' group should contain the advanced example")
+        assertEquals(examples[group1]?.any { it.toString().endsWith("01_${group1}_basic_example.kt") }, true, "The '${group1}' group should contain the basic example")
+        assertEquals(examples[group1]?.any { it.toString().endsWith("02_${group1}_advanced_example.kt") }, true, "The '${group1}' group should contain the advanced example")
 
-        assertTrue(examples[group2]?.any { it.toString().endsWith("01_${group2}_simple_example.kt") } == true,
-            "The '${group2}' group should contain the simple example")
-        assertTrue(examples[group2]?.any { it.toString().endsWith("02_${group2}_complex_example.kt") } == true,
-            "The '${group2}' group should contain the complex example")
+        assertEquals(examples[group2]?.any { it.toString().endsWith("01_${group2}_simple_example.kt") }, true, "The '${group2}' group should contain the simple example")
+        assertEquals(examples[group2]?.any { it.toString().endsWith("02_${group2}_complex_example.kt") }, true, "The '${group2}' group should contain the complex example")
     }
 }

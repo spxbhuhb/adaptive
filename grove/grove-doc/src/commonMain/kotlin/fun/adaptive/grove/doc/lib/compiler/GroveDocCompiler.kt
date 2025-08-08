@@ -19,7 +19,7 @@ GroveDocCompiler(
     val compilation: GroveDocCompilation
 ) {
 
-    private val fileCollector
+    internal val fileCollector
         get() = compilation.fileCollector
 
     val values
@@ -207,8 +207,18 @@ GroveDocCompiler(
     )
 
     fun processMarkdownGroup(group: String, collection: MutableMap<String, MutableList<Path>>) {
-        for ((_, paths) in collection) {
-            paths.forEach { processMarkdown(group, it) }
+
+        val allPaths = collection.values.flatten()
+
+        val bySubproject: Map<String, List<Path>> = allPaths.groupBy { path ->
+            val matched = subprojects.firstOrNull { sp ->
+                path.toString().contains("/${sp.name}/")
+            }
+            matched?.name ?: ""
+        }
+
+        for ((_, paths) in bySubproject.toList().sortedBy { it.first }) {
+            paths.sortedBy { p -> p.toString() }.forEach { path -> processMarkdown(group, path) }
         }
     }
 
@@ -234,20 +244,29 @@ GroveDocCompiler(
             humanReadable
         }
 
+        upsertMarkdownTreeValue(group, path, contentAndHeader, withoutTitle)
+    }
+
+    private fun upsertMarkdownTreeValue(
+        group: String,
+        path: Path,
+        contentAndHeader: ContentAndHeader,
+        contentWithoutTitle: String,
+    ) {
         for (subproject in subprojects) {
+
             if (! path.toString().contains("/${subproject.name}/")) continue
 
-            val groupValue = docTreeNodes["${subproject.name}/${group}s"] ?: break // FIXME really hackish categorization of docs
+            val groupValue = docTreeNodes["${subproject.name}/${group}s"] ?: return // keep old behavior (break)
             val relativePath = path.relative()
 
             values.executeOutOfBand {
-
                 val existing = get<GroveDocSpec>(group).firstOrNull { it.spec.repoPath == relativePath }
 
                 val spec = GroveDocSpec(
                     repoPath = relativePath,
                     lastUpdate = contentAndHeader.lastUpdate,
-                    content = withoutTitle
+                    content = contentWithoutTitle
                 )
 
                 if (existing != null) {

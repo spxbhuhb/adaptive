@@ -2,6 +2,22 @@
 
 This document describes the documentation system of Adaptive and the documentation guidelines to follow.
 
+## Understanding markdown links
+
+Documentation of Adaptive uses special schemas in Markdown links. These are smart references 
+that are resolved by the documentation compiler and/or by the application during runtime
+(in case of `actualize://`).
+
+- `def://` references to a Markdown file in one of the `doc/definitions` directories
+- `guide://` references to a Markdown file in one of the `doc/guides` directories`
+- `internals://` references to a Markdown file in one of the `doc/internals` directories
+- `class://` references to a Kotlin class, turns into a link to the source code on GitHub
+- `function://` references to a Kotlin function, turns into a link to the source code on GitHub
+- `property://` references to a Kotlin property, turns into a link to the source code on GitHub
+- `example://` references to a Kotlin file, the source code will be included as a code fence
+- `fragment://` references to a Kotlin function with the `@Adaptive` or `@AdaptiveExpect` annotation
+- `actualize://` means to include an actual, running code when the Markdown is rendered, see also [Example Code](#example-code)
+
 ## Guidelines
 
 ### Directory structure
@@ -24,10 +40,28 @@ This was a design decision for multiple reasons:
 - I want to force myself to call things what they are,
 - I hate when an import is ambiguous.
 
+### Metadata
+
+Put metadata into the Markdown files by adding a YAML header:
+
+```text
+---
+status: planning
+markers: marker1, marker2
+---
+```
+
+Statuses:
+
+- planning
+- todo
+- review
+- outdated
+
 ### Example code
 
 1. **DO NOT** put Kotlin code examples into Markdown (except this document).
-2. Put example code into `commonTest` of the given module when possible.
+2. Put example code into `commonTest` of the given module when possible (except the cookbook).
 3. Put example code into [doc-example](def://) if you cannot put it into a given module.
 4. Put each example into a separate file, **DO NOT** put more than one example into a file.
 5. Follow the pattern: `<order>_<group>_<name>_example.kt` where
@@ -67,10 +101,6 @@ The documentation system:
   - replaces the link with:
     - the name and explanation are lifted out into Markdown
     - the example code is put into a code fence
-
-### Todos
-
-When you do not have time to finish up all the documentation use `[explanation about what to write](todo://)`
 
 ### Shorthands
 

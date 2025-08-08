@@ -5,6 +5,8 @@ import `fun`.adaptive.grove.doc.lib.compiler.GroveDocCompilation
 import `fun`.adaptive.persistence.clearedTestPath
 import `fun`.adaptive.persistence.ensure
 import `fun`.adaptive.persistence.resolve
+import `fun`.adaptive.value.embedded.EmbeddedValueServer.Companion.embeddedValueServer
+import `fun`.adaptive.value.persistence.FilePersistence
 import kotlinx.io.files.Path
 import kotlin.test.*
 import kotlin.js.JsName
@@ -12,10 +14,12 @@ import kotlin.js.JsName
 class FileCollectorTest {
 
     internal fun fileCollectorTest(testPath: Path, testFun: (GroveDocCompilation, FileCollector) -> Unit) {
+        val valueServer = embeddedValueServer(FilePersistence(testPath.resolve("out/values").ensure())) { }
+
         val compilation = GroveDocCompilation(
             testPath.resolve("in").ensure(),
             testPath.resolve("out").ensure(),
-            testPath.resolve("out/values").ensure()
+            valueServer.serverWorker
         )
         val collector = FileCollector(compilation)
 
