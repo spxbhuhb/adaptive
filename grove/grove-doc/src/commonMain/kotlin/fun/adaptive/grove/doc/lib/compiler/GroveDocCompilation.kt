@@ -9,6 +9,7 @@ import `fun`.adaptive.persistence.delete
 import `fun`.adaptive.persistence.ensure
 import `fun`.adaptive.persistence.resolve
 import `fun`.adaptive.persistence.write
+import `fun`.adaptive.persistence.list
 import `fun`.adaptive.value.AvValueWorker
 import kotlinx.io.files.Path
 
@@ -27,9 +28,6 @@ class GroveDocCompilation(
 
     val outPathTrainingSeparated: Path = mdOutPath.resolve("separated").ensure()
     val outPathTrainingMerged: Path = mdOutPath.resolve("merged").ensure()
-
-    val outPathTrainingDef: Path = outPathTrainingMerged.resolve("def.md").also { it.delete(mustExists = false) }
-    val outPathTrainingGuide: Path = outPathTrainingMerged.resolve("guide.md").also { it.delete(mustExists = false) }
 
     var notifications = mutableListOf<GroveDocNotification>()
 
@@ -55,14 +53,26 @@ class GroveDocCompilation(
         outPathHumanReadable.resolve(type + "-" + path.name).write(content, overwrite = true)
     }
 
-    fun outputTraining(type: String, path: Path, content: String) {
+    /**
+     * Outputs training content in two modes:
+     *  - separated: one file per source with XML comments
+     *  - merged: one file per subproject that combines definitions and guides without XML comments
+     */
+    fun outputTraining(subprojects : List<Subproject>, type: String, path: Path, content: String) {
+
+        // ---- separated output ----
+
         val contentWithHeader = "<!-- name: ${path.name} -->\n<!-- type: $type -->\n\n$content\n\n".encodeToByteArray()
         outPathTrainingSeparated.resolve(type + "-" + path.name).write(contentWithHeader, overwrite = true)
 
-        when (type) {
-            "definition" -> outPathTrainingDef.append(contentWithHeader)
-            "guide" -> outPathTrainingGuide.append(contentWithHeader)
-        }
+        // ---- merged output ----
+
+        val abs = path.absolute().toString().replace('\\', '/')
+        val subproject = subprojects.firstOrNull { abs.startsWith(it.absolutePath) } ?: return
+
+        val out = outPathTrainingMerged.resolve("${subproject.name}.md")
+
+        out.append((content + "\n\n").encodeToByteArray())
     }
 
 }

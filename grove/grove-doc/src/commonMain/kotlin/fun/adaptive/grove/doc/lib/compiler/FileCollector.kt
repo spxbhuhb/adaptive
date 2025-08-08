@@ -1,5 +1,6 @@
 package `fun`.adaptive.grove.doc.lib.compiler
 
+import `fun`.adaptive.persistence.absolute
 import `fun`.adaptive.persistence.isDirectory
 import `fun`.adaptive.persistence.list
 import `fun`.adaptive.persistence.readString
@@ -193,7 +194,7 @@ internal class FileCollector(
             val rel = match.groups[1]?.value?.trim()?.trim('\'', '"') ?: continue
             val name = rel.trimEnd('/', '\\').substringAfterLast('/').substringAfterLast('\\')
             val resolved = compilation.inPath.resolve(rel)
-            results += Subproject(name = name, relativePath = rel, path = resolved)
+            results += Subproject(name = name, absolutePath = resolved.absolute().toString(), relativePath = rel, path = resolved)
         }
 
         return results.distinctBy { it.name to it.relativePath }

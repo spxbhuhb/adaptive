@@ -2,7 +2,6 @@
  * Copyright © 2020-2024, Simplexion, Hungary and contributors. Use of this source code is governed by the Apache 2.0 license.
  */
 
-import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
@@ -28,13 +27,10 @@ import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.table.TableViewBackendBuilder.Companion.tableBackend
 import `fun`.adaptive.ui.table.table
 import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.utility.UUID.Companion.uuid4
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.math.min
 
 fun main() {
 
@@ -82,7 +78,7 @@ fun main() {
 
                 column {
                     padding { 16.dp }
-                    tableTest()
+                    //tableTest()
                 }
             }
         } catch (e: Throwable) {

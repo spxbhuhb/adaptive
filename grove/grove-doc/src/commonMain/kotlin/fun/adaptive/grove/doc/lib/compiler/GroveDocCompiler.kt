@@ -3,6 +3,7 @@ package `fun`.adaptive.grove.doc.lib.compiler
 import `fun`.adaptive.grove.doc.model.*
 import `fun`.adaptive.markdown.compiler.MarkdownCompiler
 import `fun`.adaptive.markdown.model.MarkdownHeader
+import `fun`.adaptive.markdown.model.MarkdownInline
 import `fun`.adaptive.markdown.transform.MarkdownToMarkdownVisitor.Companion.toMarkdown
 import `fun`.adaptive.persistence.absolute
 import `fun`.adaptive.persistence.readString
@@ -16,7 +17,7 @@ import kotlinx.io.files.Path
 
 class
 GroveDocCompiler(
-    val compilation: GroveDocCompilation
+    val compilation : GroveDocCompilation
 ) {
 
     internal val fileCollector
@@ -28,7 +29,8 @@ GroveDocCompiler(
     val notifications
         get() = compilation.notifications
 
-    val subprojects = mutableListOf<AvValue<GroveDocSpec>>()
+    val subprojects = mutableListOf<Subproject>()
+    val subprojectValues = mutableListOf<AvValue<GroveDocSpec>>()
     val docTreeNodes = mutableMapOf<String, GroveDocValue>()
 
     // --------------------------------------------------------------------------------
@@ -41,6 +43,7 @@ GroveDocCompiler(
     fun compile() {
         fileCollector.collectFiles(compilation.inPath)
         fileCollector.reportCollisions()
+        subprojects += fileCollector.collectSubprojectsFromSettings()
 
         collectAndAddSubprojects()
 
@@ -61,7 +64,7 @@ GroveDocCompiler(
      *
      * Close the channel to stop.
      */
-    suspend fun continuousCompile(channel: Channel<GroveDocFileEvent>) {
+    suspend fun continuousCompile(channel : Channel<GroveDocFileEvent>) {
 
         compile()
 
@@ -89,11 +92,13 @@ GroveDocCompiler(
                     fileCollector.putFile(collection, path.name, path)
                     processMarkdown(group, path)
                 }
+
                 GroveDocFileEventType.Modify -> {
                     // FIXME handle file rename
                     compilation.logger.info { "Updating file: $path" }
                     processMarkdown(group, path)
                 }
+
                 GroveDocFileEventType.Delete -> {
                     // FIXME should delete the output files as well
                     compilation.logger.info { "Removing file: $path" }
@@ -116,9 +121,7 @@ GroveDocCompiler(
 
     fun collectAndAddSubprojects() {
         val knownSubProjects = values.get<GroveDocSpec>(groveDocDomain.subProject)
-        val discovered = compilation.fileCollector.collectSubprojectsFromSettings()
-
-        for (subproject in discovered) {
+        for (subproject in subprojects) {
             val existing = knownSubProjects.firstOrNull { it.name == subproject.name }
             if (existing != null) {
                 registerSubProject(existing)
@@ -128,9 +131,9 @@ GroveDocCompiler(
         }
     }
 
-    private fun registerSubProject(existing: AvValue<GroveDocSpec>) {
+    private fun registerSubProject(existing : AvValue<GroveDocSpec>) {
         values.executeOutOfBand {
-            subprojects += existing
+            subprojectValues += existing
             getTreeChildren<GroveDocSpec>(groveDocDomain.treeDef, existing.uuid).forEach {
                 docTreeNodes[it.friendlyId !!] = it
             }
@@ -138,8 +141,8 @@ GroveDocCompiler(
     }
 
     fun addSubProject(
-        name: String,
-        relativePath: String
+        name : String,
+        relativePath : String
     ) {
         val subProjectId = uuid4<AvValue<*>>()
         val groups = listOf("definitions", "guides", "internals")
@@ -159,7 +162,7 @@ GroveDocCompiler(
                     )
                 )
             }.also {
-                subprojects += it
+                subprojectValues += it
             }
 
             groups.forEach { group ->
@@ -187,18 +190,18 @@ GroveDocCompiler(
     // --------------------------------------------------------------------------------
 
     class ContentAndHeader(
-        val content: String,
-        val lastUpdate: Instant?,
-        val status: Set<AvStatus>?,
-        val markers: Set<AvMarker>
+        val content : String,
+        val lastUpdate : Instant?,
+        val status : Set<AvStatus>?,
+        val markers : Set<AvMarker>
     )
 
-    fun processMarkdownGroup(group: String, collection: MutableMap<String, MutableList<Path>>) {
+    fun processMarkdownGroup(group : String, collection : MutableMap<String, MutableList<Path>>) {
 
         val allPaths = collection.values.flatten()
 
-        val bySubproject: Map<String, List<Path>> = allPaths.groupBy { path ->
-            val matched = subprojects.firstOrNull { sp ->
+        val bySubproject : Map<String, List<Path>> = allPaths.groupBy { path ->
+            val matched = subprojectValues.firstOrNull { sp ->
                 path.toString().contains("/${sp.name}/")
             }
             matched?.name ?: ""
@@ -209,15 +212,22 @@ GroveDocCompiler(
         }
     }
 
-    fun processMarkdown(group: String, path: Path) {
+    fun processMarkdown(group : String, path : Path) {
         val contentAndHeader = readAndProcessHeader(path)
 
         val inAst = MarkdownCompiler.ast(contentAndHeader.content)
 
         val trainingTransform = MarkdownResolveTransform(compilation, path, training = true)
-        val trainingOutAst = inAst.map { it.transform(trainingTransform, null) }
+        val trainingOutAst = inAst
+            .map { it.transform(trainingTransform, null) }
+            .takeWhile { element ->
+                ! (
+                    element is MarkdownHeader &&
+                        element.children.firstOrNull()?.let { it is MarkdownInline && it.text.contains("see also", ignoreCase = true) } == true
+                    )
+            }
 
-        compilation.outputTraining(group, path, trainingOutAst.toMarkdown())
+        compilation.outputTraining(subprojects, group, path, trainingOutAst.toMarkdown())
 
         val humanReadableTransform = MarkdownResolveTransform(compilation, path, training = false)
         val humanReadableOutAst = inAst.map { it.transform(humanReadableTransform, null) }
@@ -235,12 +245,12 @@ GroveDocCompiler(
     }
 
     private fun upsertMarkdownTreeValue(
-        group: String,
-        path: Path,
-        contentAndHeader: ContentAndHeader,
-        contentWithoutTitle: String,
+        group : String,
+        path : Path,
+        contentAndHeader : ContentAndHeader,
+        contentWithoutTitle : String,
     ) {
-        for (subproject in subprojects) {
+        for (subproject in subprojectValues) {
 
             if (! path.toString().contains("/${subproject.name}/")) continue
 
@@ -284,7 +294,7 @@ GroveDocCompiler(
     val statusRegex = """\n\s*status: (.*)\s*\n""".toRegex()
     val markerRegex = """\n\s*markers: (.*)\s*\n""".toRegex()
 
-    fun readAndProcessHeader(path: Path): ContentAndHeader {
+    fun readAndProcessHeader(path : Path) : ContentAndHeader {
         val content = path.readString()
 
         if (! content.startsWith("---")) {
@@ -301,7 +311,7 @@ GroveDocCompiler(
 
         val lastChange = try {
             lastChangeRegex.find(headerText)?.groupValues[1]?.let { Instant.parse(it) }
-        } catch (e: Exception) {
+        } catch (e : Exception) {
             compilation.warn("Failed to parse lastChange date in ${path.absolute()}", listOf(path))
             null
         }
@@ -317,13 +327,13 @@ GroveDocCompiler(
     // Examples
     // --------------------------------------------------------------------------------
 
-    fun processExamples(out: MutableMap<String, List<GroveDocExample>>) {
+    fun processExamples(out : MutableMap<String, List<GroveDocExample>>) {
         for ((name, items) in compilation.fileCollector.examples) {
             out[name] = items.map { processExample(it) }.sortedBy { it.repoPath } // this sorting is not perfect, but well...
         }
     }
 
-    fun processExample(path: Path): GroveDocExample {
+    fun processExample(path : Path) : GroveDocExample {
         val fullCode = path.readString()
 
         // Extract documentation comment
@@ -379,7 +389,7 @@ GroveDocCompiler(
         )
     }
 
-    fun addExampleGroupValues(exampleMap: Map<String, List<GroveDocExample>>) {
+    fun addExampleGroupValues(exampleMap : Map<String, List<GroveDocExample>>) {
         for ((name, examples) in exampleMap) {
             compilation.values.executeOutOfBand {
                 addValue {
