@@ -4,19 +4,20 @@ This document describes the documentation system of Adaptive and the documentati
 
 ## Understanding markdown links
 
-Documentation of Adaptive uses special schemas in Markdown links. These are smart references 
+Documentation of Adaptive uses special schemes in Markdown links. These are smart references 
 that are resolved by the documentation compiler and/or by the application during runtime
 (in case of `actualize://`).
 
-- `def://` references to a Markdown file in one of the `doc/definitions` directories
-- `guide://` references to a Markdown file in one of the `doc/guides` directories`
-- `internals://` references to a Markdown file in one of the `doc/internals` directories
-- `class://` references to a Kotlin class, turns into a link to the source code on GitHub
-- `function://` references to a Kotlin function, turns into a link to the source code on GitHub
-- `property://` references to a Kotlin property, turns into a link to the source code on GitHub
-- `example://` references to a Kotlin file, the source code will be included as a code fence
-- `fragment://` references to a Kotlin function with the `@Adaptive` or `@AdaptiveExpect` annotation
-- `actualize://` means to include an actual, running code when the Markdown is rendered, see also [Example Code](#example-code)
+- `def://` references a Markdown file in one of the `doc/definitions` directories
+- `guide://` references a Markdown file in one of the `doc/guides` directories
+- `internals://` references a Markdown file in one of the `doc/internals` directories
+- `image://` references an image asset (see [Images](#images))
+- `class://` references a Kotlin class and turns into a link to the source code on GitHub
+- `function://` references a Kotlin function and turns into a link to the source code on GitHub
+- `property://` references a Kotlin property and turns into a link to the source code on GitHub
+- `example://` references a Kotlin file or function; the source code will be included as a code fence
+- `fragment://` references a Kotlin function annotated with `@Adaptive` or `@AdaptiveExpect`
+- `actualize://` includes dynamically rendered, runnable examples at runtime (see [Example code](#example-code))
 
 ## Guidelines
 
@@ -31,8 +32,9 @@ that are resolved by the documentation compiler and/or by the application during
 2. `guides`
 3. `internals`
 
-All non-class file names related to documentation **SHALL** be unique through the whole repository in 
-respect of the document type.
+Within each document type (definitions, guides, internals), file names must be globally unique across 
+the repository. If images are stored alongside guides, image file names must also be unique
+within the namespace.
 
 This was a design decision for multiple reasons:
 
@@ -42,7 +44,7 @@ This was a design decision for multiple reasons:
 
 ### Metadata
 
-Put metadata into the Markdown files by adding a YAML header:
+Put metadata into the Markdown files by adding header:
 
 ```text
 ---
@@ -53,10 +55,10 @@ markers: marker1, marker2
 
 Statuses:
 
-- planning
-- todo
-- review
-- outdated
+- planning — outline exists; content is being drafted
+- todo — not yet documented
+- review — ready for peer review/edits
+- outdated — content is no longer in-line with the code
 
 ### Example code
 
@@ -112,7 +114,7 @@ Shorthands are Markdown links in the following format:
 [name](type://scope)
 ```
 
-Code shorthand is a shorthand that references to a class, function or property.
+Code shorthand references a class, function, or property.
 
 Examples of code shorthands:
 
@@ -123,7 +125,7 @@ Examples of code shorthands:
 [spec](property://AvValue)
 ```
 
-Non-code shorthand is a shorthand that references to a Markdown file or an image.
+Non-code shorthand references a Markdown file or an image.
 
 Examples of non-code shorthands:
 
@@ -193,7 +195,7 @@ To reference a section in a guide, use the scoped format:
 
 ### Classes, properties and functions
 
-When referencing a class, a property or a function, use these formats:
+When referencing a class, property, or a function, use these formats:
 
 ```markdown
 [FileName](class://)
@@ -202,7 +204,7 @@ When referencing a class, a property or a function, use these formats:
 ```
 
 To reference classes that do not have a unique name, pass the fully qualified
-file name in the scope:
+package in the scope:
 
 ```markdown
 [FileName](class://my.example.util)
@@ -221,12 +223,16 @@ To include inline example code, use one of these formats:
 
 The example code will be included as a code fence.
 
+Rule of thumb: use `example://` when you need a static code fence in the generated Markdown;
+use `actualize://` when you want interactive example panes in the app (these are expanded 
+to code fences for AI exports).
+
 ## Compilation
 
 The documentation has to be compiled to resolve the links.
 
 * The `grove-doc` project contains the documentation compiler.
-* The`compileAdaptiveDocumentation` Gradle task compiles all the documentation.
+* The `compileAdaptiveDocumentation` Gradle task compiles all the documentation.
 * Output directories: 
   * `build/adaptive/doc`
   * `site/site-app/var/values`

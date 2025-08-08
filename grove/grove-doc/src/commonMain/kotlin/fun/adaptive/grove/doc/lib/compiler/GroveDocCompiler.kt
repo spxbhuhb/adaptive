@@ -49,7 +49,6 @@ GroveDocCompiler(
 
         processMarkdownGroup("definition", fileCollector.definitions)
         processMarkdownGroup("guide", fileCollector.guides)
-        processMarkdownGroup("qa", fileCollector.qa)
 
         for (path in fileCollector.uncategorized) {
             processMarkdown("uncategorized", path)

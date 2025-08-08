@@ -29,7 +29,6 @@ class GroveDocCompilation(
     val outPathTrainingMerged: Path = mdOutPath.resolve("merged").ensure()
 
     val outPathTrainingDef: Path = outPathTrainingMerged.resolve("def.md").also { it.delete(mustExists = false) }
-    val outPathTrainingQa: Path = outPathTrainingMerged.resolve("qa.md").also { it.delete(mustExists = false) }
     val outPathTrainingGuide: Path = outPathTrainingMerged.resolve("guide.md").also { it.delete(mustExists = false) }
 
     var notifications = mutableListOf<GroveDocNotification>()
@@ -63,7 +62,6 @@ class GroveDocCompilation(
         when (type) {
             "definition" -> outPathTrainingDef.append(contentWithHeader)
             "guide" -> outPathTrainingGuide.append(contentWithHeader)
-            "qa" -> outPathTrainingQa.append(contentWithHeader)
         }
     }
 
