@@ -44,6 +44,8 @@ kotlin {
                 implementation(libs.adaptive.core.core)
                 implementation(libs.adaptive.core.ui)
 
+                implementation(libs.adaptive.doc.example)
+
                 implementation(libs.adaptive.lib.app)
                 implementation(libs.adaptive.lib.ktor)
                 implementation(libs.adaptive.lib.chart)
@@ -57,8 +59,6 @@ kotlin {
 
                 implementation(libs.adaptive.grove.lib)
                 implementation(libs.adaptive.grove.runtime)
-
-                implementation(libs.adaptive.site.lib.cookbook)
 
                 implementation(libs.kotlinx.coroutines.debug)
             }

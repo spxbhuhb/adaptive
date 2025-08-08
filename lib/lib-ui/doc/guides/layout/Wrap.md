@@ -1,6 +1,6 @@
 # Wrap
 
-[Wrapper example](actualize:///cookbook/example/split-pane-wrapper)
+[Wrapper example](actualize:///example/example/split-pane-wrapper)
 
 ## Details
 

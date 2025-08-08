@@ -119,9 +119,9 @@ class UrlTest {
     @Test
     @JsName("parseActualize")
     fun `parse actualize`() {
-        val url = Url.parse("actualize:///cookbook/example/select-input-text")
+        val url = Url.parse("actualize:///stuff/example/select-input-text")
         assertEquals("actualize", url.scheme)
-        assertEquals(listOf("", "cookbook", "example", "select-input-text"), url.segments)
+        assertEquals(listOf("", "stuff", "example", "select-input-text"), url.segments)
         assertTrue(url.parameters.isEmpty())
         assertEquals("", url.tag)
         assertEquals("", url.custom)

@@ -10,19 +10,18 @@ adaptive
   adaptive
     Tasks
        aaa
-          cookbook-js
-          cookbook-jvm
           grove-js
           grove-jvm
           plugin-generate-tests
           plugin-test
           sandbox-js
           sandbox-jvm
-          
+          site-js
+          site-jvm
 ```
 
-For applications (cookbook, grove, sandbox) use `jvm` to start the server side, then `js`
-to start the client in a browser.
+For applications (grove, sandbox, site) use `jvm` to start the server side, then `js`
+to start the client in a browser. (Sandbox doesn't require a running server.)
 
 The `plugin` tasks are used during the Kotlin compiler plugin development (generate tests
 and run the test).
@@ -31,13 +30,13 @@ You can also start these from the command line (I haven't tested this too much, 
 so I guess it works somewhat):
 
 ```shell
-./gradlew cookbook-jvm
+./gradlew site-jvm
 ```
 
 And in a separate terminal (as these do not exit until you manually stop them):
 
 ```shell
-./gradlew cookbook-js
+./gradlew site-js
 ```
 
 ## Running core unit tests
@@ -131,8 +130,7 @@ processResources(
 ### Best practices
 
 1. I typically work in the sandbox module with a minimal implementation.
-2. When the sandbox version works I move it to the cookbook.
-3. When the cookbook version works I add the change to wherever I want it.
+2. When the sandbox version works, I move it to [doc-example](def://).
 
 ### Debugging and tracing
 

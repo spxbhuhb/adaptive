@@ -9,4 +9,4 @@
 
 ## Playground
 
-[Container playground](actualize:///cookbook/container/playground)
+[Container playground](actualize:///example/container/playground)

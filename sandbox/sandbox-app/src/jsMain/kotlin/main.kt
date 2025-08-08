@@ -3,6 +3,7 @@
  */
 
 import `fun`.adaptive.backend.backend
+import `fun`.adaptive.doc.app.ExampleFragmentFactory
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.instruction.instructionsOf
@@ -11,7 +12,6 @@ import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.sandbox.CookbookFragmentFactory
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.LibFragmentFactory
@@ -39,7 +39,7 @@ fun main() {
         uiCommon()
 
         commonMainStringsStringStore0.load()
-        `fun`.adaptive.cookbook.generated.resources.commonMainStringsStringStore0.load()
+        `fun`.adaptive.doc.example.generated.resources.commonMainStringsStringStore0.load()
 
         val localBackend = backend {
 //            worker { SnackbarManager() }
@@ -53,7 +53,7 @@ fun main() {
                 CanvasFragmentFactory,
                 SvgFragmentFactory,
                 LibFragmentFactory,
-                CookbookFragmentFactory,
+                ExampleFragmentFactory,
                 backend = localBackend
             ) { adapter ->
 //
@@ -78,7 +78,7 @@ fun main() {
 
                 column {
                     padding { 16.dp }
-                    //tableTest()
+                    tableTest()
                 }
             }
         } catch (e: Throwable) {

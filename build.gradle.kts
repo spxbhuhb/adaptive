@@ -23,8 +23,7 @@ val noPublishBuilds = listOf(
     "sandbox-app",
     "sandbox-app-echo",
     "sandbox-app-mpw",
-    "site-app",
-    "site-lib-cookbook"
+    "site-app"
 )
 
 fun registerTask(name: String) {

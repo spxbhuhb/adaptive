@@ -38,6 +38,8 @@ subethamail = "3.1.7"
 adaptive-core-core = { module = "fun.adaptive:core-core", version.ref = "adaptive" }
 adaptive-core-ui = { module = "fun.adaptive:core-ui", version.ref = "adaptive" }
 
+adaptive-doc-example = { module = "fun.adaptive:doc-example", version.ref = "adaptive" }
+
 adaptive-grove-doc = { module = "fun.adaptive:grove-doc", version.ref = "adaptive" }
 adaptive-grove-lib = { module = "fun.adaptive:grove-lib", version.ref = "adaptive" }
 adaptive-grove-runtime = { module = "fun.adaptive:grove-runtime", version.ref = "adaptive" }
@@ -53,8 +55,6 @@ adaptive-lib-ui = { module = "fun.adaptive:lib-ui", version.ref = "adaptive" }
 adaptive-lib-ui-mpw = { module = "fun.adaptive:lib-ui-mpw", version.ref = "adaptive" }
 adaptive-lib-util = { module = "fun.adaptive:lib-util", version.ref = "adaptive" }
 adaptive-lib-value = { module = "fun.adaptive:lib-value", version.ref = "adaptive" }
-
-adaptive-site-lib-cookbook = { module = "fun.adaptive:site-lib-cookbook", version.ref = "adaptive" }
 
 android-material = { group = "com.google.android.material", name = "material", version.ref = "android-material" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }

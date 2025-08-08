@@ -63,7 +63,7 @@ Statuses:
 ### Example code
 
 1. **DO NOT** put Kotlin code examples into Markdown (except this document).
-2. Put example code into `commonTest` of the given module when possible (except the cookbook).
+2. Put example code into `commonTest` of the given module when possible (except in `doc-example`).
 3. Put example code into [doc-example](def://) if you cannot put it into a given module.
 4. Put each example into a separate file, **DO NOT** put more than one example into a file.
 5. Follow the pattern: `<order>_<group>_<name>_example.kt` where

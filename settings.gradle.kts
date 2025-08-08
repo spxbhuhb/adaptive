@@ -52,4 +52,3 @@ includeBuild("sandbox/sandbox-app-echo")
 includeBuild("sandbox/sandbox-app-mpw")
 
 includeBuild("site/site-app")
-includeBuild("site/site-lib-cookbook")

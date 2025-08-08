@@ -36,8 +36,7 @@ sandbox
   └── sandbox-app-echo
   
 site
-  ├── site-app
-  └── site-lib-cookbook
+  └── site-app
 ```
 
 ## Core
@@ -95,5 +94,3 @@ the documentation compiler.
 ## Site
 
 [site-app](def://?inline)
-
-[site-lib-cookbook](def://?inline)

@@ -7,12 +7,12 @@ import `fun`.adaptive.app.app.AppMainModuleServer
 import `fun`.adaptive.auth.app.NoAuthServerModule
 import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
+import `fun`.adaptive.doc.app.DocExampleModule
 import `fun`.adaptive.grove.doc.app.GroveDocModuleServer
 import `fun`.adaptive.ktor.KtorJvmServerModule
 import `fun`.adaptive.lib.util.app.UtilModule
 import `fun`.adaptive.persistence.ensure
 import `fun`.adaptive.runtime.AppAboutData
-import `fun`.adaptive.sandbox.app.CookbookModule
 import `fun`.adaptive.site.app.SiteModuleServer
 import `fun`.adaptive.site.appVersion
 import `fun`.adaptive.value.app.ValueServerModule
@@ -31,7 +31,7 @@ fun main() {
         module { NoAuthServerModule() }
         module { KtorJvmServerModule() }
         module { GroveDocModuleServer() }
-        module { CookbookModule() }
+        module { DocExampleModule() }
         module { SiteModuleServer() }
         module { AppMainModuleServer() }
     }

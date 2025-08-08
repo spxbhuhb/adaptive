@@ -2,7 +2,7 @@
 
 Split an area horizontally or vertically.
 
-[Split pane example](actualize://cookbook/example/split-pane-proportional)
+[Split pane example](actualize://example/example/split-pane-proportional)
 
 ## Details
 

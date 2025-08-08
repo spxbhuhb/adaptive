@@ -22,6 +22,8 @@ includeBuild("../../core/core-build")
 includeBuild("../../core/core-core")
 includeBuild("../../core/core-ui")
 
+includeBuild("../../doc/doc-example")
+
 includeBuild("../../grove/grove-lib")
 includeBuild("../../grove/grove-runtime")
 
@@ -35,5 +37,3 @@ includeBuild("../../lib/lib-ui")
 includeBuild("../../lib/lib-ui-mpw")
 includeBuild("../../lib/lib-util")
 includeBuild("../../lib/lib-value")
-
-includeBuild("../../site/site-lib-cookbook")

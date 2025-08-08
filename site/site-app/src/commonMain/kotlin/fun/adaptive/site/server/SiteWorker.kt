@@ -1,8 +1,8 @@
 package `fun`.adaptive.site.server
 
 import `fun`.adaptive.backend.builtin.WorkerImpl
-import `fun`.adaptive.sandbox.support.ExampleValueSpec
-import `fun`.adaptive.sandbox.support.exampleDomain
+import `fun`.adaptive.doc.support.ExampleValueSpec
+import `fun`.adaptive.doc.support.exampleDomain
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueWorker
 

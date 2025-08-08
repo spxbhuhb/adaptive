@@ -7,4 +7,4 @@ automatic updates, tree editing functions such as adding, removing and re-orderi
 
 ## Playground
 
-[Tree playground](actualize://cookbook/tree/playground)
+[Tree playground](actualize://example/tree/playground)

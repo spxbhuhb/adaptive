@@ -16,7 +16,7 @@ a list of options or something like a choice-group, etc.
  
 ## Playground
 
-[Select input playground](actualize://cookbook/input/select/playground)
+[Select input playground](actualize://example/input/select/playground)
 
 ## Details
 
@@ -127,5 +127,3 @@ multiSelectEditorList(options, ::selectInputItemCheckbox) { template.selectedOpt
 
 multiSelectMappingEditorList(options, { it.uuid }, ::selectInputItemCheckbox) { template.selectedOption }
 ```
-
-You can check the recipe in the cookbook for more detailed examples.

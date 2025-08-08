@@ -4,7 +4,7 @@
 
 ## Playground
 
-[Button playground](actualize://cookbook/input/button/playground)
+[Button playground](actualize://example/input/button/playground)
 
 ## Details
 

@@ -41,6 +41,8 @@ kotlin {
                 implementation(libs.adaptive.core.core)
                 implementation(libs.adaptive.core.ui)
 
+                implementation(libs.adaptive.doc.example)
+
                 implementation(libs.adaptive.grove.runtime)
                 implementation(libs.adaptive.grove.lib)
 
@@ -53,8 +55,6 @@ kotlin {
                 implementation(libs.adaptive.lib.ui.mpw)
                 implementation(libs.adaptive.lib.util)
                 implementation(libs.adaptive.lib.value)
-
-                implementation(libs.adaptive.site.lib.cookbook)
             }
         }
 

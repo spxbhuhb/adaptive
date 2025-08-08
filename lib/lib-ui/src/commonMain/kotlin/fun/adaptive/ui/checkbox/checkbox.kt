@@ -11,6 +11,7 @@ import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.generated.resources.check
 import `fun`.adaptive.ui.icon.icon
 
+@Deprecated("Use booleanInput instead")
 @Adaptive
 fun checkbox(
     value: Boolean,

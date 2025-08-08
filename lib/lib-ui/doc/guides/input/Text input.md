@@ -4,4 +4,4 @@
 
 ## Playground
 
-[Text input playground](actualize://cookbook/input/text/playground)
+[Text input playground](actualize://example/input/text/playground)
