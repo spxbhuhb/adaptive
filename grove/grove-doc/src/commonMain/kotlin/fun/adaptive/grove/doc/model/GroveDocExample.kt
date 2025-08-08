@@ -9,5 +9,6 @@ class GroveDocExample(
     val repoPath : String,
     val fragmentKey : String,
     val fullCode : String,
-    val exampleCode : String
+    val exampleCode : String,
+    val imports : List<String>
 )

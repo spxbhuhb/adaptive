@@ -217,7 +217,7 @@ GroveDocCompiler(
 
         val inAst = MarkdownCompiler.ast(contentAndHeader.content)
 
-        val trainingTransform = MarkdownResolveTransform(compilation, path, training = true)
+        val trainingTransform = MarkdownResolveTransform(compilation, path, target = MarkdownTarget.Training)
         val trainingOutAst = inAst
             .map { it.transform(trainingTransform, null) }
             .takeWhile { element ->
@@ -227,13 +227,24 @@ GroveDocCompiler(
                     )
             }
 
-        compilation.outputTraining(subprojects, group, path, trainingOutAst.toMarkdown())
+        if (compilation.produceTrainingSeparated || compilation.produceTrainingMerged) {
+            compilation.outputTraining(subprojects, group, path, trainingOutAst.toMarkdown())
+        }
 
-        val humanReadableTransform = MarkdownResolveTransform(compilation, path, training = false)
+        val humanReadableTransform = MarkdownResolveTransform(compilation, path, target = MarkdownTarget.HumanReadable)
         val humanReadableOutAst = inAst.map { it.transform(humanReadableTransform, null) }
 
         val humanReadable = humanReadableOutAst.toMarkdown()
-        compilation.outputHumanReadable(group, path, humanReadable)
+        if (compilation.produceHumanReadable) {
+            compilation.outputHumanReadable(group, path, humanReadable)
+        }
+
+        val plainTransform = MarkdownResolveTransform(compilation, path, target = MarkdownTarget.Plain)
+        val plainOutAst = inAst.map { it.transform(plainTransform, null) }
+        val plain = plainOutAst.toMarkdown()
+        if (compilation.producePlain) {
+            compilation.outputPlain(group, path, plain)
+        }
 
         val withoutTitle = if (humanReadableOutAst.firstOrNull() is MarkdownHeader) {
             humanReadableOutAst.subList(1, humanReadableOutAst.size).toMarkdown()
@@ -379,6 +390,10 @@ GroveDocCompiler(
             }
         }
 
+        val imports = fullCode.lines()
+            .map { it.trim() }
+            .filter { it.startsWith("import ") }
+
         return GroveDocExample(
             name = name,
             explanation = explanation,
@@ -386,6 +401,7 @@ GroveDocCompiler(
             fragmentKey = fragmentKey,
             fullCode = fullCode,
             exampleCode = exampleCode,
+            imports = imports
         )
     }
 

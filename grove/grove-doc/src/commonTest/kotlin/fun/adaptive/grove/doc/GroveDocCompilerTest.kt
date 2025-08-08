@@ -18,7 +18,9 @@ class GroveDocCompilerTest {
         val inPath = testPath.resolve("in").ensure()
         val guidePath = inPath.resolve("guides").ensure()
         val humanReadable = testPath.resolve("out/human-readable").ensure()
-        val training = testPath.resolve("out/training/separated").ensure()
+        val training = testPath.resolve("out/separated").ensure()
+        val plain = testPath.resolve("out/plain").ensure()
+        val merged = testPath.resolve("out/merged").ensure()
 
         val valueServer = embeddedValueServer(FilePersistence(testPath.resolve("out/values").ensure())) { }
 
@@ -40,7 +42,10 @@ class GroveDocCompilerTest {
     fun `test compilation with empty directory`() = compilerTest(clearedTestPath()) {
         assertTrue(compilation.notifications.isEmpty())
         assertTrue(training.isEmpty())
+        assertTrue(plain.isEmpty())
+        // human-readable and merged are disabled by default; their dirs may exist but should remain empty
         assertTrue(humanReadable.isEmpty())
+        assertTrue(merged.isEmpty())
     }
 
     @Test
@@ -52,7 +57,7 @@ class GroveDocCompilerTest {
         compiler.compile()
 
         // the compilation reformats the MD file
-        val expectedHumanReadable = """
+        val expectedPlain = """
             # Test Header
 
             Test content
@@ -69,11 +74,11 @@ class GroveDocCompilerTest {
 
         """.trimIndent()
 
-        val outMdPath = humanReadable.resolve("guide-test.md")
+        val outPlainPath = plain.resolve("guide-test.md")
         val trainingPath = compilation.outPathTrainingSeparated.resolve("guide-test.md")
-        assertTrue(outMdPath.exists())
+        assertTrue(outPlainPath.exists())
         assertTrue(trainingPath.exists())
-        assertEquals(expectedHumanReadable, outMdPath.readString())
+        assertEquals(expectedPlain, outPlainPath.readString())
         assertEquals(expectedTraining, trainingPath.readString())
     }
 
@@ -90,8 +95,8 @@ class GroveDocCompilerTest {
 
         assertTrue(compilation.outPathTrainingSeparated.resolve("guide-test1.md").exists())
         assertTrue(compilation.outPathTrainingSeparated.resolve("guide-test2.md").exists())
-        assertTrue(humanReadable.resolve("guide-test1.md").exists())
-        assertTrue(humanReadable.resolve("guide-test2.md").exists())
+        assertTrue(plain.resolve("guide-test1.md").exists())
+        assertTrue(plain.resolve("guide-test2.md").exists())
     }
 
     @Test
@@ -111,16 +116,19 @@ class GroveDocCompilerTest {
         compiler.compile()
 
         val trainingPath = compilation.outPathTrainingSeparated.resolve("guide-test.md")
-        val humanReadablePath = humanReadable.resolve("guide-test.md")
+        val plainPath = compilation.outPathPlain.resolve("guide-test.md")
         assertTrue(trainingPath.exists())
-        assertTrue(humanReadablePath.exists())
+        assertTrue(plainPath.exists())
 
         val processedTrainingContent = trainingPath.readString()
-        val processedHumanContent = humanReadablePath.readString()
+        val processedPlainContent = plainPath.readString()
         assertTrue(processedTrainingContent.contains("# Test Header"))
         assertTrue(processedTrainingContent.contains("[Some Doc](guide://)"))
-        assertTrue(processedHumanContent.contains("# Test Header"))
-        assertTrue(processedHumanContent.contains("[Some Doc](guide://some%20doc)"))
+        assertTrue(processedPlainContent.contains("# Test Header"))
+        // [DEBUG_LOG] print plain content for inspection
+        println("[DEBUG_LOG] PLAIN OUT: \n" + processedPlainContent)
+        // In plain mode the link should become a relative link to the plain output file in the same directory
+        assertTrue(processedPlainContent.contains("[Some Doc](guide-some%20doc.md)"))
     }
 
     @Test
@@ -210,6 +218,9 @@ class GroveDocCompilerTest {
         assertEquals(expectedCode, example.exampleCode)
         assertEquals(exampleContent, example.fullCode)
         assertTrue(example.repoPath.endsWith("testExample.kt"))
+
+        // Imports should be collected as well
+        assertEquals(listOf("import some.package.Class1", "import some.package.Class2"), example.imports)
     }
     @Test
     @JsName("testExampleFilesCollection")
@@ -300,5 +311,77 @@ class GroveDocCompilerTest {
 
         assertEquals(examples[group2]?.any { it.toString().endsWith("01_${group2}_simple_example.kt") }, true, "The '${group2}' group should contain the simple example")
         assertEquals(examples[group2]?.any { it.toString().endsWith("02_${group2}_complex_example.kt") }, true, "The '${group2}' group should contain the complex example")
+        }
+
+    @Test
+    @JsName("testPlainExampleGroupIncludesImports")
+    fun `test plain example-group includes imports`() = compilerTest(clearedTestPath()) {
+        // Create an example file with imports following the naming convention
+        val group = "sample"
+        val exampleKt = inPath.resolve("01_${group}_withImports_example.kt")
+        val exampleContent = """
+            package test.example
+
+            import some.package.A
+            import some.other.B
+
+            /**
+             * # With imports
+             *
+             * - Shows that imports are included in Plain output
+             */
+            @Annotation
+            fun withImportsExample() {
+                println(A::class)
+                println(B::class)
+            }
+        """.trimIndent()
+        exampleKt.write(exampleContent)
+
+        // Guide referencing the example group via actualize
+        val guide = guidePath.resolve("eg.md")
+        guide.write("[examples](actualize://example-group?name=$group)")
+
+        compiler.compile()
+
+        val plainOut = plain.resolve("guide-eg.md").readString()
+        val trainingOut = compilation.outPathTrainingSeparated.resolve("guide-eg.md").readString()
+
+        assertTrue(plainOut.contains("import some.package.A"), "Plain should include imports for example-group")
+        assertTrue(plainOut.contains("import some.other.B"))
+        assertTrue(trainingOut.contains("import some.package.A"), "Training should include imports in example-group")
+    }
+
+    @Test
+    @JsName("testPlainScopedExampleLinkIncludesImports")
+    fun `test plain scoped example link includes imports`() = compilerTest(clearedTestPath()) {
+        // Create a Kotlin file with imports and a function
+        val file = inPath.resolve("01_demo_basic_example.kt")
+        val content = """
+            package test.example
+
+            import x.y.Z
+
+            /**
+             * # Demo
+             */
+            @Annotation
+            fun basicExample() {
+                println(Z::class)
+            }
+        """.trimIndent()
+        file.write(content)
+
+        // Guide referencing the specific function via example:// with scope
+        val guide = guidePath.resolve("ex.md")
+        guide.write("[basicExample](example://01_demo_basic_example)")
+
+        compiler.compile()
+
+        val plainOut = plain.resolve("guide-ex.md").readString()
+        val trainingOut = compilation.outPathTrainingSeparated.resolve("guide-ex.md").readString()
+
+        assertTrue(plainOut.contains("import x.y.Z"))
+        assertTrue(trainingOut.contains("import x.y.Z"))
     }
 }
