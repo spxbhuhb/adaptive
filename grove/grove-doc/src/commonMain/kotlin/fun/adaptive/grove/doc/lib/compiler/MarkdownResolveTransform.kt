@@ -11,25 +11,14 @@ import `fun`.adaptive.utility.encodeToUrl
 import kotlinx.io.files.Path
 
 /**
- * Transforms inline links according to the target.
+ * Transforms links according to the target.
  *
- * AI training data set target transforms:
- *
- * - "def", "definition" and "guide" links as-is,
- * - "class", "property", "function" links as-is,
- * - "example" and "dirTree" links into code fences.
- * - "actualize" with "example-group" turns into Markdown of function docs and code fence
- *
- * Human-readable Markdown target transforms:
- *
- * - "def", "definition" and "guide" links as-is
- * - "class", "property", "function", "interface" links into GitHub links,
- * - "example" and "dirTree" links into code fences.
+ * See `Doc targets.md` for details.
  */
 class MarkdownResolveTransform(
-    val compilation: GroveDocCompilation,
-    val mdPath: Path,
-    val target: MarkdownTarget = MarkdownTarget.Training
+    val compilation : GroveDocCompilation,
+    val mdPath : Path,
+    val target : DocTarget
 ) : MarkdownTransformerVoid() {
 
     // --------------------------------------------------------------------------------
@@ -39,7 +28,7 @@ class MarkdownResolveTransform(
     @Suppress("RegExpRedundantEscape") // it is NOT redundant
     val inlineLinkRegex = "\\[([^\\[]+)\\]\\(([^)]+)\\)".toRegex()
 
-    fun parseLink(text: String): Link? {
+    fun parseLink(text : String) : Link? {
         val match = inlineLinkRegex.matchEntire(text) ?: return null
 
         val name = match.groupValues[1]
@@ -52,7 +41,7 @@ class MarkdownResolveTransform(
     // Expand inline links into code fences
     // --------------------------------------------------------------------------------
 
-    override fun visitParagraph(paragraph: MarkdownParagraph): MarkdownElement {
+    override fun visitParagraph(paragraph : MarkdownParagraph) : MarkdownElement {
         if (paragraph.children.size != 1) return super.visitParagraph(paragraph)
 
         val child = paragraph.children.first()
@@ -75,7 +64,7 @@ class MarkdownResolveTransform(
             }
 
             "actualize" -> {
-                if ((target == MarkdownTarget.Training || target == MarkdownTarget.Plain) && link.scope == "example-group") {
+                if ((target == DocTarget.JunieLocal || target == DocTarget.AIConsumer) && link.scope == "example-group") {
                     inlineExampleGroup(link)
                 } else {
                     super.visitParagraph(paragraph)
@@ -87,11 +76,11 @@ class MarkdownResolveTransform(
             .also { return it }
     }
 
-    fun replaceExample(link: Link): MarkdownElement {
+    fun replaceExample(link : Link) : MarkdownElement {
         val path = link.lookupCode(compilation)
         val content = path?.readString()
 
-        var fenceContent: String? = null
+        var fenceContent : String? = null
 
         if (content == null && link !in compilation.reportedLinks) {
             compilation.warn("Missing code: $link in $mdPath")
@@ -115,7 +104,7 @@ class MarkdownResolveTransform(
         )
     }
 
-    fun extractExample(source: String, functionName: String): String? {
+    fun extractExample(source : String, functionName : String) : String? {
         // Match one of the three supported formats
         val regex = Regex(
             """(?://@example|@Adaptive)\s*(suspend\s+)?fun\s+$functionName\s*\([^)]*\)\s*(\{|=\s*runTest\s*\{)""",
@@ -149,7 +138,7 @@ class MarkdownResolveTransform(
         return source.substring(startIndex, endIndex).trim()
     }
 
-    fun inlineDef(link: Link): MarkdownElement {
+    fun inlineDef(link : Link) : MarkdownElement {
         val path = link.lookupDef(compilation)
         if (path == null) {
             compilation.warn("Missing definition: $link in $mdPath")
@@ -167,7 +156,7 @@ class MarkdownResolveTransform(
         )
     }
 
-    fun inlineExampleGroup(link: Link): MarkdownElement {
+    fun inlineExampleGroup(link : Link) : MarkdownElement {
         val groupName = link.arguments["name"]
 
         if (groupName == null) {
@@ -196,7 +185,7 @@ class MarkdownResolveTransform(
         )
     }
 
-    fun replaceDir(link: Link): MarkdownElement {
+    fun replaceDir(link : Link) : MarkdownElement {
         val path = link.scope?.let { compilation.inPath.resolve(it) }
 
         if (path == null && link !in compilation.reportedLinks) {
@@ -211,11 +200,11 @@ class MarkdownResolveTransform(
     }
 
     fun dirToText(
-        path: Path,
-        prefix: String = "",
-        builder: StringBuilder = StringBuilder(),
-        excludeNames: Set<String> = setOf("build", "kotlin-js-store", ".kotlin", ".gradle")
-    ): String {
+        path : Path,
+        prefix : String = "",
+        builder : StringBuilder = StringBuilder(),
+        excludeNames : Set<String> = setOf("build", "kotlin-js-store", ".kotlin", ".gradle")
+    ) : String {
         if (! path.exists()) return "Directory does not exist"
 
         if (prefix.isEmpty()) {
@@ -245,7 +234,7 @@ class MarkdownResolveTransform(
     // Resolve inline links
     // --------------------------------------------------------------------------------
 
-    override fun visitInline(inline: MarkdownInline): MarkdownInline {
+    override fun visitInline(inline : MarkdownInline) : MarkdownInline {
         if (! inline.inlineLink) return inline
         val link = parseLink(inline.text) ?: return inline
 
@@ -257,83 +246,95 @@ class MarkdownResolveTransform(
         )
     }
 
-    fun resolve(link: Link): String {
-        when (target) {
-            MarkdownTarget.Training -> return link.original
-            MarkdownTarget.HumanReadable -> {
+    fun resolve(link : Link) : String {
+        return when (target) {
+            DocTarget.Site -> {
                 when (link.scheme) {
-                    "def", groveDocDomain.definition -> return "${groveDocDomain.definition}://" + (resolveDef(link.name)?.removeSuffix(".md") ?: link.name)
-                    "guide" -> return "${groveDocDomain.guide}://" + (resolveGuide(link.name)?.removeSuffix(".md") ?: link.name)
-                    "api", "class", "property", "function" -> return resolveClass(link)
-                    else -> return link.original
+                    "api", "class", "property", "function", "fragment" -> resolveGithub(link)
+                    "def", groveDocDomain.definition, "guide", "internals" -> resolveSiteShorthand(link)
+                    "image", "https", "actualize" -> link.original
+                    else -> link.original // keep-as is for def/guide/internals/image/https/actualize
                 }
             }
-            MarkdownTarget.Plain -> {
+
+            DocTarget.JunieLocal -> {
                 when (link.scheme) {
-                    "def", groveDocDomain.definition -> return resolvePlainOutName("definition", link.name) ?: link.original
-                    "guide" -> return resolvePlainOutName("guide", link.name) ?: link.original
-                    "api", "class", "property", "function" -> return resolveClass(link)
-                    else -> return link.original
+                    "def", groveDocDomain.definition -> resolveOutRelativeName("definitions", link.name) ?: link.original
+                    "guide" -> resolveOutRelativeName("guides", link.name) ?: link.original
+                    "internals" -> resolveOutRelativeName("internals", link.name) ?: link.original
+                    "api", "class", "property", "function", "fragment" -> resolveFilePath(link)
+                    "actualize" -> if (link.scope == "example-group") link.original else resolveFilePath(link)
+                    else -> link.original
+                }
+            }
+
+            DocTarget.AIConsumer -> {
+                when (link.scheme) {
+                    "def", groveDocDomain.definition -> resolveOutRelativeName("definitions", link.name) ?: link.original
+                    "guide" -> resolveOutRelativeName("guides", link.name) ?: link.original
+                    "internals" -> resolveOutRelativeName("internals", link.name) ?: link.original
+                    "api", "class", "property", "function", "fragment" -> resolveGithub(link)
+                    "actualize" -> if (link.scope == "example-group") link.original else resolveGithub(link)
+                    else -> link.original
                 }
             }
         }
     }
 
-    fun resolveClass(link: Link): String {
+    private fun resolveGithub(link : Link) : String {
         val path = link.lookupCode(compilation) ?: return link.name
         val absolutePath = path.absolute().toString().replace('\\', '/')
         val relativePath = absolutePath.removePrefix(compilation.inPathAbsolute)
-        return compilation.baseUrl + relativePath
+        // Encode each segment for a valid GitHub URL
+        val encoded = relativePath
+            .trimStart('/')
+            .split('/')
+            .joinToString("/") { it.encodeToUrl(noPlus = true) }
+        return compilation.baseUrl.trimEnd('/') + "/" + encoded
     }
 
-    fun resolveDef(name: String): String? =
-        pathNameOrNull(name, compilation.fileCollector.definitions)
+    private fun resolveFilePath(link : Link) : String {
+        val path = link.lookupCode(compilation) ?: return link.name
+        val absolutePath = path.absolute().toString().replace('\\', '/')
+        val relativePath = absolutePath.removePrefix(compilation.inPathAbsolute)
+        return if (relativePath.startsWith("/")) relativePath else "/$relativePath"
+    }
 
-    fun resolveGuide(name: String): String? =
-        pathNameOrNull(name, compilation.fileCollector.guides)
+    private fun resolveSiteShorthand(link : Link) : String {
+        val path = when (link.scheme) {
+            "def", "definition" -> findPathsByName(link.name, compilation.fileCollector.definitions)
+            "guide" -> findPathsByName(link.name, compilation.fileCollector.guides)
+            "internals" -> findPathsByName(link.name, compilation.fileCollector.internals)
+            else -> null
+        } ?: return link.original
+        val base = path.name.substringBeforeLast('.').encodeToUrl(noPlus = true)
+        return "${link.scheme}://${base}"
+    }
 
-    fun resolveDefPath(name: String): String? =
-        pathFullOrNull(name, compilation.fileCollector.definitions)
-
-    fun resolveGuidePath(name: String): String? =
-        pathFullOrNull(name, compilation.fileCollector.guides)
-
-    fun resolvePlainOutName(type: String, name: String): String? {
+    fun resolveOutRelativeName(type : String, name : String) : String? {
         val path = when (type) {
-            "definition" -> findPathsByName(name, compilation.fileCollector.definitions)?.firstOrNull()
-            "guide" -> findPathsByName(name, compilation.fileCollector.guides)?.firstOrNull()
+            "definitions" -> findPathsByName(name, compilation.fileCollector.definitions)
+            "guides" -> findPathsByName(name, compilation.fileCollector.guides)
+            "internals" -> findPathsByName(name, compilation.fileCollector.internals)
             else -> null
         } ?: return null
         val base = path.name
-        // Out file names in plain target are formatted as: "$type-<original-file-name>"
-        return "$type-" + base.encodeToUrl(noPlus = true)
+        return "../$type/" + base.encodeToUrl(noPlus = true)
     }
 
-    fun pathNameOrNull(name: String, collection: Map<String, List<Path>>): String? {
-        val paths = findPathsByName(name, collection)
-        if (paths != null) {
-            return paths.first().name.encodeToUrl(noPlus = true)
-        }
-        return null
-    }
-
-    fun pathFullOrNull(name: String, collection: Map<String, List<Path>>): String? {
-        val paths = findPathsByName(name, collection) ?: return null
-        val p = paths.first()
-        val abs = p.absolute().toString().replace('\\', '/')
-        val rel = abs.removePrefix(compilation.inPathAbsolute).trimStart('/')
-        // URL-encode spaces and special chars
-        return rel.split('/')
-            .joinToString("/") { it.encodeToUrl(noPlus = true) }
-    }
-
-    fun findPathsByName(name: String, collection: Map<String, List<Path>>): List<Path>? {
+    fun findPathsByName(name : String, collection : Map<String, List<Path>>) : Path? {
         val normalizedName = compilation.normalizedName(name)
-        return collection[normalizedName] ?: collection[PluralHandler.lastWordToSingular(normalizedName)]
-            ?: run {
-                compilation.warn("No resolution for $name, in $mdPath")
-                null
-            }
+        val paths = collection[normalizedName] ?: collection[PluralHandler.lastWordToSingular(normalizedName)]
+
+        if (paths != null && paths.size != 1) {
+            compilation.warn("Multiple resolutions for $name, in $mdPath", paths)
+        }
+
+        if (paths == null) {
+            compilation.warn("No resolution for $name, in $mdPath")
+        }
+
+        return paths?.firstOrNull()
     }
 
 }

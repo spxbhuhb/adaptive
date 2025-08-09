@@ -23,10 +23,12 @@ internal class FileCollector(
 
     val definitions = mutableMapOf<String, MutableList<Path>>()
     val guides = mutableMapOf<String, MutableList<Path>>()
+    val internals = mutableMapOf<String, MutableList<Path>>()
     val uncategorized = mutableListOf<Path>()
 
     var inDefinitions = false
     var inGuides = false
+    var inInternals = false
 
     fun collectFiles(root: Path) {
         for (path in root.list()) {
@@ -55,6 +57,11 @@ internal class FileCollector(
                 collectFiles(path)
                 inGuides = false
             }
+            "internals" -> {
+                inInternals = true
+                collectFiles(path)
+                inInternals = false
+            }
 
             else -> collectFiles(path)
         }
@@ -65,6 +72,7 @@ internal class FileCollector(
             name.endsWith(".md") -> when {
                 inDefinitions -> putFile(definitions, name, path)
                 inGuides -> putFile(guides, name, path)
+                inInternals -> putFile(internals, name, path)
                 //else -> uncategorized.add(path)
             }
 
@@ -131,7 +139,7 @@ internal class FileCollector(
                 }
             }
 
-            "function", "property" -> {
+            "function", "property", "fragment" -> { 
 
                 if (scope == null) {
                     val files = ktFiles[name]

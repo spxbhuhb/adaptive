@@ -52,6 +52,7 @@ GroveDocCompiler(
 
         processMarkdownGroup("definition", fileCollector.definitions)
         processMarkdownGroup("guide", fileCollector.guides)
+        processMarkdownGroup("internals", fileCollector.internals)
 
         for (path in fileCollector.uncategorized) {
             processMarkdown("uncategorized", path)
@@ -77,12 +78,14 @@ GroveDocCompiler(
             val group = when {
                 fileEvent.path.contains("/definitions/") -> groveDocDomain.definition
                 fileEvent.path.contains("/guides/") -> groveDocDomain.guide
+                fileEvent.path.contains("/internals/") -> "internals"
                 else -> continue
             }
 
             val collection = when (group) {
                 groveDocDomain.definition -> fileCollector.definitions
                 groveDocDomain.guide -> fileCollector.guides
+                "internals" -> fileCollector.internals
                 else -> continue
             }
 
@@ -215,44 +218,39 @@ GroveDocCompiler(
     fun processMarkdown(group : String, path : Path) {
         val contentAndHeader = readAndProcessHeader(path)
 
-        val inAst = MarkdownCompiler.ast(contentAndHeader.content)
+        // Junie-Local output
+        run {
+            val transform = MarkdownResolveTransform(compilation, path, target = DocTarget.JunieLocal)
+            val inAst = MarkdownCompiler.ast(contentAndHeader.content)
+            val outAst = inAst.map { it.transform(transform, null) }
+            val out = outAst.toMarkdown()
+            compilation.outputDoc(DocTarget.JunieLocal, group, path, out)
+        }
 
-        val trainingTransform = MarkdownResolveTransform(compilation, path, target = MarkdownTarget.Training)
-        val trainingOutAst = inAst
-            .map { it.transform(trainingTransform, null) }
-            .takeWhile { element ->
-                ! (
-                    element is MarkdownHeader &&
-                        element.children.firstOrNull()?.let { it is MarkdownInline && it.text.contains("see also", ignoreCase = true) } == true
-                    )
+        // AI-Consumer output
+        run {
+            val transform = MarkdownResolveTransform(compilation, path, target = DocTarget.AIConsumer)
+            val inAst = MarkdownCompiler.ast(contentAndHeader.content)
+            val outAst = inAst.map { it.transform(transform, null) }
+            val out = outAst.toMarkdown()
+            compilation.outputDoc(DocTarget.AIConsumer, group, path, out)
+        }
+
+        // Site value store content
+        run {
+            val siteTransform = MarkdownResolveTransform(compilation, path, target = DocTarget.Site)
+            val inAst = MarkdownCompiler.ast(contentAndHeader.content)
+            val siteAst = inAst.map { it.transform(siteTransform, null) }
+            val siteMarkdown = siteAst.toMarkdown()
+
+            val withoutTitle = if (siteAst.firstOrNull() is MarkdownHeader) {
+                siteAst.subList(1, siteAst.size).toMarkdown()
+            } else {
+                siteMarkdown
             }
 
-        if (compilation.produceTrainingSeparated || compilation.produceTrainingMerged) {
-            compilation.outputTraining(subprojects, group, path, trainingOutAst.toMarkdown())
+            upsertMarkdownTreeValue(group, path, contentAndHeader, withoutTitle)
         }
-
-        val humanReadableTransform = MarkdownResolveTransform(compilation, path, target = MarkdownTarget.HumanReadable)
-        val humanReadableOutAst = inAst.map { it.transform(humanReadableTransform, null) }
-
-        val humanReadable = humanReadableOutAst.toMarkdown()
-        if (compilation.produceHumanReadable) {
-            compilation.outputHumanReadable(group, path, humanReadable)
-        }
-
-        val plainTransform = MarkdownResolveTransform(compilation, path, target = MarkdownTarget.Plain)
-        val plainOutAst = inAst.map { it.transform(plainTransform, null) }
-        val plain = plainOutAst.toMarkdown()
-        if (compilation.producePlain) {
-            compilation.outputPlain(group, path, plain)
-        }
-
-        val withoutTitle = if (humanReadableOutAst.firstOrNull() is MarkdownHeader) {
-            humanReadableOutAst.subList(1, humanReadableOutAst.size).toMarkdown()
-        } else {
-            humanReadable
-        }
-
-        upsertMarkdownTreeValue(group, path, contentAndHeader, withoutTitle)
     }
 
     private fun upsertMarkdownTreeValue(
@@ -265,7 +263,8 @@ GroveDocCompiler(
 
             if (! path.toString().contains("/${subproject.name}/")) continue
 
-            val groupValue = docTreeNodes["${subproject.name}/${group}s"] ?: return // keep old behavior (break)
+            val groupKey = if (group.endsWith("s")) group else group + "s"
+            val groupValue = docTreeNodes["${subproject.name}/$groupKey"] ?: return // keep old behavior (break)
             val relativePath = path.relative()
 
             values.executeOutOfBand {

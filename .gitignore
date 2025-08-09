@@ -91,3 +91,4 @@ Thumbs.db
 /.run/
 **/.kotlin
 **/local.properties
+/doc/junie-local/

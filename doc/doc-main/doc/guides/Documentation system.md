@@ -233,6 +233,3 @@ The documentation has to be compiled to resolve the links.
 
 * The `grove-doc` project contains the documentation compiler.
 * The `compileAdaptiveDocumentation` Gradle task compiles all the documentation.
-* Output directories: 
-  * `build/adaptive/doc`
-  * `site/site-app/var/values`

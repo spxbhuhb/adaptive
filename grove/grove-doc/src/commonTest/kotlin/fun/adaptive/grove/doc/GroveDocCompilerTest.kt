@@ -17,16 +17,15 @@ class GroveDocCompilerTest {
     class TestSupport(testPath: Path) {
         val inPath = testPath.resolve("in").ensure()
         val guidePath = inPath.resolve("guides").ensure()
-        val humanReadable = testPath.resolve("out/human-readable").ensure()
-        val training = testPath.resolve("out/separated").ensure()
-        val plain = testPath.resolve("out/plain").ensure()
-        val merged = testPath.resolve("out/merged").ensure()
+        val junieLocal = testPath.resolve("out/junie-local").ensure()
+        val aiConsumer = testPath.resolve("out/ai-consumer").ensure()
+        val site = testPath.resolve("out/site").ensure()
 
         val valueServer = embeddedValueServer(FilePersistence(testPath.resolve("out/values").ensure())) { }
 
         val compilation = GroveDocCompilation(
             inPath = inPath,
-            mdOutPath = testPath.resolve("out"),
+            outPath = testPath.resolve("out"),
             values = valueServer.serverWorker
         )
 
@@ -38,17 +37,6 @@ class GroveDocCompilerTest {
     }
 
     @Test
-    @JsName("testCompilationWithEmptyDirectory")
-    fun `test compilation with empty directory`() = compilerTest(clearedTestPath()) {
-        assertTrue(compilation.notifications.isEmpty())
-        assertTrue(training.isEmpty())
-        assertTrue(plain.isEmpty())
-        // human-readable and merged are disabled by default; their dirs may exist but should remain empty
-        assertTrue(humanReadable.isEmpty())
-        assertTrue(merged.isEmpty())
-    }
-
-    @Test
     @JsName("testProcessingSingleMarkdownFile")
     fun `test processing single markdown file`() = compilerTest(clearedTestPath()) {
         val content = "# Test Header\nTest content"
@@ -57,29 +45,18 @@ class GroveDocCompilerTest {
         compiler.compile()
 
         // the compilation reformats the MD file
-        val expectedPlain = """
+        val expected = """
             # Test Header
 
             Test content
         """.trimIndent()
 
-        val expectedTraining = """
-            <!-- name: test.md -->
-            <!-- type: guide -->
-
-            # Test Header
-
-            Test content
-
-
-        """.trimIndent()
-
-        val outPlainPath = plain.resolve("guide-test.md")
-        val trainingPath = compilation.outPathTrainingSeparated.resolve("guide-test.md")
-        assertTrue(outPlainPath.exists())
-        assertTrue(trainingPath.exists())
-        assertEquals(expectedPlain, outPlainPath.readString())
-        assertEquals(expectedTraining, trainingPath.readString())
+        val outJunie = junieLocal.resolve("guides/test.md")
+        val outAI = aiConsumer.resolve("guides/test.md")
+        assertTrue(outJunie.exists())
+        assertTrue(outAI.exists())
+        assertEquals(expected, outJunie.readString())
+        assertEquals(expected, outAI.readString())
     }
 
     @Test
@@ -93,10 +70,10 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        assertTrue(compilation.outPathTrainingSeparated.resolve("guide-test1.md").exists())
-        assertTrue(compilation.outPathTrainingSeparated.resolve("guide-test2.md").exists())
-        assertTrue(plain.resolve("guide-test1.md").exists())
-        assertTrue(plain.resolve("guide-test2.md").exists())
+        assertTrue(junieLocal.resolve("guides/test1.md").exists())
+        assertTrue(junieLocal.resolve("guides/test2.md").exists())
+        assertTrue(aiConsumer.resolve("guides/test1.md").exists())
+        assertTrue(aiConsumer.resolve("guides/test2.md").exists())
     }
 
     @Test
@@ -115,20 +92,18 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        val trainingPath = compilation.outPathTrainingSeparated.resolve("guide-test.md")
-        val plainPath = compilation.outPathPlain.resolve("guide-test.md")
-        assertTrue(trainingPath.exists())
-        assertTrue(plainPath.exists())
+        val outJunie = junieLocal.resolve("guides/test.md")
+        val outAI = aiConsumer.resolve("guides/test.md")
+        assertTrue(outJunie.exists())
+        assertTrue(outAI.exists())
 
-        val processedTrainingContent = trainingPath.readString()
-        val processedPlainContent = plainPath.readString()
-        assertTrue(processedTrainingContent.contains("# Test Header"))
-        assertTrue(processedTrainingContent.contains("[Some Doc](guide://)"))
-        assertTrue(processedPlainContent.contains("# Test Header"))
-        // [DEBUG_LOG] print plain content for inspection
-        println("[DEBUG_LOG] PLAIN OUT: \n" + processedPlainContent)
-        // In plain mode the link should become a relative link to the plain output file in the same directory
-        assertTrue(processedPlainContent.contains("[Some Doc](guide-some%20doc.md)"))
+        val junieContent = outJunie.readString()
+        val aiContent = outAI.readString()
+        assertTrue(junieContent.contains("# Test Header"))
+        assertTrue(aiContent.contains("# Test Header"))
+        // Link to guide should be resolved to relative output path in both targets using ../<type>/<name>
+        assertTrue(junieContent.contains("[Some Doc](../guides/some doc.md)"))
+        assertTrue(aiContent.contains("[Some Doc](../guides/some doc.md)"))
     }
 
     @Test
@@ -152,12 +127,16 @@ class GroveDocCompilerTest {
     @Test
     @JsName("adhocTest")
     fun `adhoc test`() = compilerTest(clearedTestPath()) {
-        val content = "[acl](property://AvValue)"
+        val content = "[AvValue](class://)"
         inPath.resolve("AvValue.kt").write("class AvValue(val value: Int)")
         guidePath.resolve("test.md").write(content)
 
         compiler.compile()
         assertTrue(compiler.notifications.isEmpty())
+        // Verify AI-Consumer output rewrites class:// to a GitHub URL
+        val aiOut = aiConsumer.resolve("guides/test.md").readString()
+        assertTrue(aiOut.contains("https://github.com/spxbhuhb/adaptive/tree/main/"))
+        assertTrue(aiOut.contains("in/AvValue.kt"))
     }
 
     @Test
@@ -344,12 +323,12 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        val plainOut = plain.resolve("guide-eg.md").readString()
-        val trainingOut = compilation.outPathTrainingSeparated.resolve("guide-eg.md").readString()
+        val junieOut = junieLocal.resolve("guides/eg.md").readString()
+        val aiOut = aiConsumer.resolve("guides/eg.md").readString()
 
-        assertTrue(plainOut.contains("import some.package.A"), "Plain should include imports for example-group")
-        assertTrue(plainOut.contains("import some.other.B"))
-        assertTrue(trainingOut.contains("import some.package.A"), "Training should include imports in example-group")
+        assertTrue(junieOut.contains("import some.package.A"), "Junie-Local should include imports for example-group")
+        assertTrue(junieOut.contains("import some.other.B"))
+        assertTrue(aiOut.contains("import some.package.A"), "AI-Consumer should include imports in example-group")
     }
 
     @Test
@@ -378,10 +357,11 @@ class GroveDocCompilerTest {
 
         compiler.compile()
 
-        val plainOut = plain.resolve("guide-ex.md").readString()
-        val trainingOut = compilation.outPathTrainingSeparated.resolve("guide-ex.md").readString()
+        val junieOut = junieLocal.resolve("guides/ex.md").readString()
+        val aiOut = aiConsumer.resolve("guides/ex.md").readString()
 
-        assertTrue(plainOut.contains("import x.y.Z"))
-        assertTrue(trainingOut.contains("import x.y.Z"))
+        // example:// link should expand to a code fence containing the function body (imports are not added for example links)
+        assertTrue(junieOut.contains("fun basicExample()"))
+        assertTrue(aiOut.contains("fun basicExample()"))
     }
 }

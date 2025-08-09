@@ -9,27 +9,19 @@ import kotlinx.io.files.Path
 
 class GroveDocCompilation(
     val inPath: Path,
-    val mdOutPath: Path,
+    val outPath: Path,
     val values : AvValueWorker,
-    val baseUrl: String = "https://github.com/spxbhuhb/adaptive/tree/main",
-    // Output toggles (defaults based on recommendation: Plain + Separated ON; Human-readable + Merged OFF)
-    val producePlain: Boolean = true,
-    val produceTrainingSeparated: Boolean = true,
-    val produceHumanReadable: Boolean = false,
-    val produceTrainingMerged: Boolean = false
+    val baseUrl: String = "https://github.com/spxbhuhb/adaptive/tree/main"
 ) {
 
     val logger = getLogger("GroveDocCompiler")
 
     val inPathAbsolute: String = inPath.absolute().toString().replace('\\', '/')
 
-    val outPathHumanReadable: Path = mdOutPath.resolve("human-readable").also { if (produceHumanReadable) it.ensure() }
-
-    val outPathTrainingSeparated: Path = mdOutPath.resolve("separated").also { if (produceTrainingSeparated) it.ensure() }
-    val outPathTrainingMerged: Path = mdOutPath.resolve("merged").also { if (produceTrainingMerged) it.ensure() }
-
-    // Plain Markdown (GitHub-friendly) output directory
-    val outPathPlain: Path = mdOutPath.resolve("plain").also { if (producePlain) it.ensure() }
+    // Target output directories
+    val outPathJunieLocal: Path = outPath.resolve("junie-local").also { it.ensure() }
+    val outPathAIConsumer: Path = outPath.resolve("ai-consumer").also { it.ensure() }
+    val outPathSite: Path = outPath.resolve("site").also { it.ensure() }
 
     var notifications = mutableListOf<GroveDocNotification>()
 
@@ -51,37 +43,20 @@ class GroveDocCompilation(
             .trimEnd('?')
             .lowercase()
 
-    fun outputHumanReadable(type: String, path: Path, content: String) {
-        if (!produceHumanReadable) return
-        outPathHumanReadable.resolve(type + "-" + path.name).write(content, overwrite = true)
-    }
-
-    fun outputPlain(type: String, path: Path, content: String) {
-        if (!producePlain) return
-        outPathPlain.resolve(type + "-" + path.name).write(content, overwrite = true)
-    }
-
-    /**
-     * Outputs training content in two modes:
-     *  - separated: one file per source with XML comments
-     *  - merged: one file per subproject that combines definitions and guides without XML comments
-     */
-    fun outputTraining(subprojects : List<Subproject>, type: String, path: Path, content: String) {
-
-        // ---- separated output ----
-        if (produceTrainingSeparated) {
-            val contentWithHeader = "<!-- name: ${path.name} -->\n<!-- type: $type -->\n\n$content\n\n".encodeToByteArray()
-            outPathTrainingSeparated.resolve(type + "-" + path.name).write(contentWithHeader, overwrite = true)
+    fun outputDoc(target: DocTarget, group: String, path: Path, content: String) {
+        val dir = when (target) {
+            DocTarget.JunieLocal -> outPathJunieLocal
+            DocTarget.AIConsumer -> outPathAIConsumer
+            DocTarget.Site -> outPathSite // Site stores content in value store; we still ensure dir exists but do not write files here.
         }
-
-        // ---- merged output ----
-        if (produceTrainingMerged) {
-            val abs = path.absolute().toString().replace('\\', '/')
-            val subproject = subprojects.firstOrNull { abs.startsWith(it.absolutePath) } ?: return
-
-            val out = outPathTrainingMerged.resolve("${subproject.name}.md")
-
-            out.append((content + "\n\n").encodeToByteArray())
+        if (target == DocTarget.Site) return
+        val subdir = when (group) {
+            "definition" -> "definitions"
+            "guide" -> "guides"
+            "internals" -> "internals"
+            else -> group
         }
+        dir.resolve(subdir).ensure()
+        dir.resolve(subdir).resolve(path.name).write(content, overwrite = true)
     }
 }

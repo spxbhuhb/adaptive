@@ -4,8 +4,7 @@ This repository has extensive docs and many examples. These guidelines are optim
 
 ## Safe operations and constraints
 
-- Do NOT start a Gradle build under any circumstances. The project is large and builds are slow; it is not practical for ad-hoc validation.
-- Prefer skipping a test run (or marking a test as skipped) to running iterative cycles.
+- Do NOT start a Gradle build under any circumstances. The project is large, builds are slow; it is not practical for ad-hoc validation.
 - Use repository-aware tools to explore code and docs:
   - To find files/symbols/text: search_project
   - To see a file’s structure (imports, symbols): get_file_structure
@@ -15,27 +14,27 @@ This repository has extensive docs and many examples. These guidelines are optim
 
 ## Where to look first (5-minute map)
 
-- Start here: /build/adaptive/doc/plain/guide-Documentation.md
+- Start here: /doc/junie-local/guides/Documentation.md
   - Foundation: Adapters, Fragments, Instructions, Producers, Local context
   - UI: Writing a UI fragment, Resources, Layout, Styles and themes, UI Fragments, Inputs and editors, Events
   - Data: Adat, Value, WireFormat
   - Application: Module definition, Built-in lib-app features, Navigation, Server/Services
   - Documents: Document/Markdown/Xlsx
 - Common quick links:
-  - Writing a UI fragment: /build/adaptive/doc/plain/guide-Writing a UI fragment.md
-  - Resources: /build/adaptive/doc/plain/guide-Resources.md
-  - Navigation: /build/adaptive/doc/plain/guide-Navigation.md
-  - Date input (example of input patterns): /build/adaptive/doc/plain/guide-Date input.md
-  - Document/Markdown/Xlsx: /build/adaptive/doc/plain/guide-Document, Markdown and Xlsx.md
-- For topic-specific docs, list files with the guide- prefix under /build/adaptive/doc/plain.
+  - Writing a UI fragment: /doc/junie-local/guides/Writing a UI fragment.md
+  - Resources: /doc/junie-local/guides/Resources.md
+  - Navigation: /doc/junie-local/guides/Navigation.md
+  - Date input (example of input patterns): /doc/junie-local/guides/Date input.md
+  - Document/Markdown/Xlsx: /doc/junie-local/guides/Document, Markdown and Xlsx.md
+- For topic-specific docs, list files under /doc/junie-local/guides
 
 ## Fragments and Instructions (quick checklist)
 
 Functions annotated with @Adaptive define fragments.
 
 - Read first:
-  - Foundation: /core/core-core/doc/guides/foundation/Foundation.md
-  - Instruction rules: /core/core-core/doc/guides/foundation/Instruction.md
+  - Foundation: /doc/junie-local/guides/Foundation.md
+  - Instruction rules: /doc/junie-local/guides/Instruction.md
 - Boundary: Keep state definition and rendering clearly separated as described in the Foundation and Instruction guides.
 - Where instructions can appear:
   1) Immediately after the opening { of an Adaptive lambda
@@ -46,13 +45,6 @@ Functions annotated with @Adaptive define fragments.
 - Common pitfalls to avoid:
   - Mixing state mutations with render calls in the same step when Instruction guide says to keep them separate.
   - Passing instructions to functions that don’t accept them as parameters.
-
-## Examples and naming
-
-- Examples live under: /doc/doc-example/src/commonMain/kotlin/fun/adaptive/doc
-  - Playground examples: /doc/doc-example/src/commonMain/kotlin/fun/adaptive/doc/playground
-  - The project increasingly uses numbered, topic-prefixed names for readable ordering, e.g. 01_quickFilter_basic_example.kt
-- Grove documentation compiler and examples live under: /grove/grove-doc
 
 ## Working method (for AI assistants)
 
@@ -103,4 +95,4 @@ val image = findQualifiedImage(preferred = "xhdpi") ?: findQualifiedImage()
 - Application: Module definition, Built-in lib-app features, Navigation (basic, MPW), Server/Services (+ Service context, transport), Workers
 - Documents: Document, Markdown, Xlsx
 
-Refer to /build/adaptive/doc/plain/guide-Documentation.md for the full index.
+Refer to /doc/junie-local/guides/Documentation.md for the full index.

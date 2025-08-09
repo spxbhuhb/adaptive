@@ -60,11 +60,11 @@ class ReferenceToolViewBackend(
     }
 
     fun findByUrl(url: String): AvValue<GroveDocSpec>? {
-        val name = url.decodeFromUrl()
+        val name = url.decodeFromUrl().lowercase()
 
         val value = when {
             name.startsWith(groveDocDomain.guide) -> findGuideByName(name.removePrefix(groveDocDomain.guide + "://"))
-            name.startsWith(groveDocDomain.definition) -> findDefinitionByName(name.removePrefix(groveDocDomain.definition + "://"))
+            name.startsWith("def") -> findDefinitionByName(name.removePrefix(groveDocDomain.definition + "://").removePrefix("def://"))
             else -> findGuideByName(name) ?: findDefinitionByName(name)
         }
 
@@ -72,10 +72,10 @@ class ReferenceToolViewBackend(
     }
 
     fun findGuideByName(name: String): AvValue<GroveDocSpec>? =
-        tree.treeSubscriber.find { it.name == name && groveDocDomain.guide in it.markers }
+        tree.treeSubscriber.find { it.name?.lowercase() == name && groveDocDomain.guide in it.markers }
 
     fun findDefinitionByName(name: String): AvValue<GroveDocSpec>? =
-        tree.treeSubscriber.find { it.name == name && groveDocDomain.definition in it.markers }
+        tree.treeSubscriber.find { it.name?.lowercase() == name && groveDocDomain.definition in it.markers }
 
     fun filterByNamePart(name: String) =
         tree.treeSubscriber.filter { name in it.nameLike.lowercase() && groveDocDomain.guide in it.markers }
