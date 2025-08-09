@@ -15,6 +15,7 @@ import `fun`.adaptive.doc.example.booleanInput.booleanInputBasicExample
 import `fun`.adaptive.doc.example.booleanInput.booleanInputLabelAlignmentExample
 import `fun`.adaptive.doc.example.booleanInput.booleanInputNullableExample
 import `fun`.adaptive.doc.example.booleanInput.booleanInputThemeSmallExample
+import `fun`.adaptive.doc.example.booleanEditor.booleanEditorBasicExample
 import `fun`.adaptive.doc.example.button.buttonBasicExample
 import `fun`.adaptive.doc.example.button.buttonDangerExample
 import `fun`.adaptive.doc.example.button.buttonDisabledExample
@@ -246,6 +247,12 @@ object ExampleFragmentFactory : FoundationFragmentFactory() {
 
         add("doubleEditorBasic", ::doubleEditorBasic)
         add("doubleEditorConfigExample", ::doubleEditorConfigExample)
+
+        // ----------------------------------------------------------------------------
+        // Boolean Editor
+        // ----------------------------------------------------------------------------
+
+        add("booleanEditorBasicExample", ::booleanEditorBasicExample)
 
         // ----------------------------------------------------------------------------
         // Duration

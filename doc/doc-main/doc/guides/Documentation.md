@@ -67,6 +67,7 @@ markers: grove-doc-toc
     - [Wrap](guide://)
   - [Inputs and editors](guide://)
     - [Badge input](guide://)
+    - [Boolean](guide://)
     - [Color input](guide://)
     - [Date input](guide://)
     - [DateTime input](guide://)
