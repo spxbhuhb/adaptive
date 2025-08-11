@@ -94,6 +94,37 @@ This implementation consists of:
   - `BasicSignIn`
   - `BasicSignUp`
 
+## Creating roles during application bootstrap
+
+[AutoCreateRoleExample](example://)
+
+## Authorization checks
+
+[ServiceEnsureExample](example://)
+
+## Checking for roles in the UI
+
+These are available only if you use the `lib-app` module.
+
+The roles known to the application are available in the [knownRoles](property://ClientApplication) property. 
+This is loaded with the `AuthRoleService` during client application bootstrap.
+
+> [!IMPORTANT]
+> 
+> [knownRoles](property://ClientApplication) contains **ALL ROLES, NOT JUST THE USER'S**
+> 
+
+Once the user is logged in, there is an actual session in [genericSessionOrNull;](property://AbstractClientApplication)
+the functions below use this to check for roles.
+
+From fragments:
+
+[roleBasedFragmentExample](example://)
+
+From non-fragment code:
+
+[nonAdaptiveClientRoleCheck](example://)
+
 ## Internals
 
 As authentication and authorization data is very sensitive, the `lib-auth` uses its own value store,

@@ -16,7 +16,6 @@ import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.runtime.FrontendWorkspace
 import `fun`.adaptive.service.api.getService
-import `fun`.adaptive.service.transport.LocalServiceCallTransport
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.ui.browser
 import `fun`.adaptive.ui.navigation.NavState
@@ -65,7 +64,7 @@ abstract class BrowserApplication<WT : FrontendWorkspace> : ClientApplication<WT
 
             genericSessionOrNull = getService<AuthSessionApi>(transport).getSession()
             if (genericSessionOrNull != null) {
-                knownRoles = getService<AuthRoleApi>(transport).all()
+                allApplicationRoles = getService<AuthRoleApi>(transport).all()
             }
 
             backend = backend(transport) { adapter ->

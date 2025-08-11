@@ -19,4 +19,15 @@ class AuthWorkerTest {
         assertNotNull(soPrincipal)
     }
 
+    @Test
+    fun getOrCreateRoleTest() = authTest {
+        val role = authWorker.getOrCreateRole("test", RoleSpec())
+        assertEquals("test", role.name)
+
+        val role2 = authWorker.getOrCreateRole("test", RoleSpec())
+        assertEquals(role.uuid, role2.uuid)
+
+        val role3 = valueWorker.get<RoleSpec>(AuthMarkers.ROLE).first { it.name == "test" }
+        assertEquals(role.uuid, role3.uuid)
+    }
 }

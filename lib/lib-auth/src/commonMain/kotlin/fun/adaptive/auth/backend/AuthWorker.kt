@@ -12,13 +12,14 @@ import `fun`.adaptive.auth.model.RoleSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.backend.builtin.WorkerImpl
 import `fun`.adaptive.backend.query.firstImplOrNull
+import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 import `fun`.adaptive.value.AvValueWorker
 
 class AuthWorker : WorkerImpl<AuthWorker>() {
 
-    lateinit var securityOfficer: AvValueId
+    lateinit var securityOfficer : AvValueId
 
     val valueWorker by workerImpl<AvValueWorker>()
 
@@ -75,5 +76,28 @@ class AuthWorker : WorkerImpl<AuthWorker>() {
             )
         }
     }
+
+    /**
+     * Get the role with the given name or create it if it does not exist.
+     */
+    fun getOrCreateRole(
+        name : String,
+        spec : RoleSpec,
+        uuid : AvValueId = uuid4()
+    ) : AvValue<RoleSpec> =
+
+        valueWorker.executeOutOfBand {
+
+            val role = valueWorker.get<RoleSpec>(AuthMarkers.ROLE).firstOrNull { it.name == name }
+
+            role ?: addValue {
+                AvValue(
+                    uuid = uuid,
+                    name = name,
+                    markersOrNull = setOf(AuthMarkers.ROLE),
+                    spec = spec
+                )
+            }
+        }
 
 }

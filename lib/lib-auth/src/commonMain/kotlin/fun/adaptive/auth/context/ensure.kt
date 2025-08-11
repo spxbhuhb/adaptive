@@ -27,7 +27,7 @@ fun ServiceImpl<*>.ensureInternal() {
  *
  * @throws   AccessDenied  The call is not internal and the principal does not have the given role.
  */
-fun ServiceImpl<*>.ensureHasOrInternal(roleId: AuthRoleId) {
+fun ServiceImpl<*>.ensureHasOrInternal(roleId : AuthRoleId) {
     if (serviceContext.isInternal()) return
     ensureHas(roleId)
 }
@@ -46,7 +46,7 @@ fun ServiceImpl<*>.ensureLoggedIn() {
  *
  * @throws   AccessDenied  At least one of the roles is not in the context.
  */
-fun ServiceImpl<*>.ensureHas(roleId: AuthRoleId) {
+fun ServiceImpl<*>.ensureHas(roleId : AuthRoleId) {
     if (! serviceContext.has(roleId)) throw AccessDenied()
 }
 
@@ -55,7 +55,7 @@ fun ServiceImpl<*>.ensureHas(roleId: AuthRoleId) {
  *
  * @throws   AccessDenied  At least one of the roles is not in the context.
  */
-fun ServiceImpl<*>.ensureAll(vararg roles: AuthRole) {
+fun ServiceImpl<*>.ensureAll(vararg roles : AuthRole) {
     if (! serviceContext.hasAll(*roles)) throw AccessDenied()
 }
 
@@ -64,7 +64,7 @@ fun ServiceImpl<*>.ensureAll(vararg roles: AuthRole) {
  *
  * @throws   AccessDenied  At least one of the roles is not in the context.
  */
-fun ServiceImpl<*>.ensureAll(vararg roleIds: AuthRoleId) {
+fun ServiceImpl<*>.ensureAll(vararg roleIds : AuthRoleId) {
     if (! serviceContext.hasAll(*roleIds)) throw AccessDenied()
 }
 
@@ -73,7 +73,7 @@ fun ServiceImpl<*>.ensureAll(vararg roleIds: AuthRoleId) {
  *
  * @throws   AccessDenied  None of the roles are in the context.
  */
-fun ServiceImpl<*>.ensureOneOf(vararg roles: AuthRole) {
+fun ServiceImpl<*>.ensureOneOf(vararg roles : AuthRole) {
     if (! serviceContext.hasOneOf(*roles)) throw AccessDenied()
 }
 
@@ -82,7 +82,7 @@ fun ServiceImpl<*>.ensureOneOf(vararg roles: AuthRole) {
  *
  * @throws   AccessDenied  None of the roles are in the context.
  */
-fun ServiceImpl<*>.ensureOneOf(vararg roleIds: AuthRoleId) {
+fun ServiceImpl<*>.ensureOneOf(vararg roleIds : AuthRoleId) {
     if (! serviceContext.hasOneOf(*roleIds)) throw AccessDenied()
 }
 
@@ -91,7 +91,7 @@ fun ServiceImpl<*>.ensureOneOf(vararg roleIds: AuthRoleId) {
  *
  * @throws   AccessDenied  [result] is false
  */
-fun ensurePrincipal(result: Boolean) {
+fun ensureTrue(result : Boolean) {
     if (! result) throw AccessDenied()
 }
 
@@ -100,22 +100,22 @@ fun ensurePrincipal(result: Boolean) {
  *
  * @throws  AccessDenied  If [block] returns with false.
  */
-fun ensuredBy(block: () -> Boolean) {
+fun ensuredBy(block : () -> Boolean) {
     if (! block()) throw AccessDenied()
 }
 
 /**
  * Ensure that the service context runs in the name of the principal specified.
  */
-fun ServiceImpl<*>.ensurePrincipal(principalId: AuthPrincipalId) {
-    ensurePrincipal(serviceContext.ofPrincipal(principalId))
+fun ServiceImpl<*>.ensurePrincipal(principalId : AuthPrincipalId) {
+    ensureTrue(serviceContext.ofPrincipal(principalId))
 }
 
 /**
  * Ensure that the service context runs in the name of the principal specified **OR**
  * it has **AT LEASE ONE** of the specified roles.
  */
-fun ServiceImpl<*>.ensurePrincipalOrHas(principalId: AuthPrincipalId?, roleId: AuthRoleId) {
+fun ServiceImpl<*>.ensurePrincipalOrHas(principalId : AuthPrincipalId?, roleId : AuthRoleId) {
     if (principalId != null && serviceContext.ofPrincipal(principalId)) return
     ensureHas(roleId)
 }
@@ -124,7 +124,7 @@ fun ServiceImpl<*>.ensurePrincipalOrHas(principalId: AuthPrincipalId?, roleId: A
  * Ensure that the service context runs in the name of the principal specified **OR**
  * it has **AT LEASE ONE** of the specified roles.
  */
-fun ServiceImpl<*>.ensurePrincipalOrOneOf(principalId: AuthPrincipalId, roleIds: Array<AuthRoleId>) {
+fun ServiceImpl<*>.ensurePrincipalOrOneOf(principalId : AuthPrincipalId, roleIds : Array<AuthRoleId>) {
     if (serviceContext.ofPrincipal(principalId)) return
     ensureOneOf(*roleIds)
 }
@@ -132,7 +132,7 @@ fun ServiceImpl<*>.ensurePrincipalOrOneOf(principalId: AuthPrincipalId, roleIds:
 /**
  * Marks the following code as secure by some logic.
  */
-fun ensuredByLogic(@Suppress("UNUSED_PARAMETER") explanation: String) {
+fun ensuredByLogic(@Suppress("UNUSED_PARAMETER") explanation : String) {
     // nothing to do here, this is just a marker
 }
 
@@ -144,10 +144,10 @@ fun publicAccess() {
 }
 
 /**
- * Ensure that this code fails with NotImplementedError.
+ * Ensure that this code fails with `NotImplementedError`.
  *
- * @throws  AccessDenied
+ * @throws  NotImplementedError
  */
-fun ensureFailNotImplemented(message: () -> String) {
+fun ensureFailNotImplemented(message : () -> String) {
     throw NotImplementedError(message())
 }

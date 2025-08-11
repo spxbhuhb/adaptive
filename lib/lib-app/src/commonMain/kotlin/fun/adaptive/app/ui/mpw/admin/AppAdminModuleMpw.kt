@@ -31,7 +31,7 @@ class AppAdminModuleMpw<FW : MultiPaneWorkspace, BW : BackendWorkspace> : AuthBa
 
     override fun contextInit() {
         val app = application as ClientApplication
-        securityOfficer = app.knownRoles.firstOrNull { AuthMarkers.SECURITY_OFFICER in it.markers }?.uuid
+        securityOfficer = app.allApplicationRoles.firstOrNull { AuthMarkers.SECURITY_OFFICER in it.markers }?.uuid
     }
 
     override fun frontendWorkspaceInit(workspace: FW, session: Any?) = with(workspace) {
