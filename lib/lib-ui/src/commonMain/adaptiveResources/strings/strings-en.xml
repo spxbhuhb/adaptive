@@ -80,4 +80,21 @@
     <string name="week">week</string>
     <string name="month">month</string>
     <string name="year">year</string>
+    
+    <string name="justNow">just now</string>
+    <string name="secondAgo">second ago</string>
+    <string name="secondsAgo">seconds ago</string>
+    <string name="minuteAgo">minute ago</string>
+    <string name="minutesAgo">minutes ago</string>
+    <string name="hourAgo">hour ago</string>
+    <string name="hoursAgo">hours ago</string>
+    <string name="dayAgo">day ago</string>
+    <string name="daysAgo">days ago</string>
+    <string name="weekAgo">week ago</string>
+    <string name="weeksAgo">weeks ago</string>
+    <string name="monthAgo">month ago</string>
+    <string name="monthsAgo">months ago</string>
+    <string name="yearAgo">year ago</string>
+    <string name="yearsAgo">years ago</string>
+
 </resources>

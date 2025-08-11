@@ -14,18 +14,13 @@ import `fun`.adaptive.ui.filter.QuickFilterModel
 import `fun`.adaptive.ui.filter.quickFilter
 import `fun`.adaptive.ui.instruction.dp
 
+/**
+ * # Quick filter - basic
+ *
+ * Quick filter is a horizontal list of options the user can chose from.
+ */
 @Adaptive
-fun quickFilterRecipe() : AdaptiveFragment {
-    column {
-        maxSize .. verticalScroll .. gap { 16.dp }
-
-        simpleQuickFilter()
-    }
-
-    return fragment()
-}
-@Adaptive
-fun simpleQuickFilter() {
+fun quickFilterBasicExample() : AdaptiveFragment {
 
     val store = storeFor<QuickFilterModel<ExampleEnum>> {
         QuickFilterModel(
@@ -38,4 +33,6 @@ fun simpleQuickFilter() {
     var model = observe { store }
 
     quickFilter(model) { store.value = model.copy(selected = it) }
+
+    return fragment()
 }

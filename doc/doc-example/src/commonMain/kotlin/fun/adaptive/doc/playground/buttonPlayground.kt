@@ -1,4 +1,4 @@
-package `fun`.adaptive.doc.example.button
+package `fun`.adaptive.doc.playground
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.doc.example.generated.resources.lock

@@ -82,4 +82,19 @@
     <string name="month">hónap</string>
     <string name="year">év</string>
 
+    <string name="justNow">épp most</string>
+    <string name="secondAgo">másodperce</string>
+    <string name="secondsAgo">másodperce</string>
+    <string name="minuteAgo">perce</string>
+    <string name="minutesAgo">perce</string>
+    <string name="hourAgo">órája</string>
+    <string name="hoursAgo">órája</string>
+    <string name="dayAgo">napja</string>
+    <string name="daysAgo">napja</string>
+    <string name="weekAgo">hete</string>
+    <string name="weeksAgo">hete</string>
+    <string name="monthAgo">hónapja</string>
+    <string name="monthsAgo">hónapja</string>
+    <string name="yearAgo">éve</string>
+    <string name="yearsAgo">éve</string>
 </resources>

@@ -31,7 +31,7 @@ import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.math.min
+import kotlin.time.Clock.System.now
 
 fun main() {
 
@@ -97,6 +97,8 @@ class T(
 @Adaptive
 fun tableTest() {
 
+    val now = now()
+
     val backend = tableBackend {
 
         items = mutableListOf()
@@ -147,6 +149,12 @@ fun tableTest() {
         statusCell {
             label = "Status"
             get = { setOf("online") }
+            minWidth = 100.dp
+        }
+
+        timeAgoCell {
+            label = "Last change"
+            get = { now }
             minWidth = 100.dp
         }
 

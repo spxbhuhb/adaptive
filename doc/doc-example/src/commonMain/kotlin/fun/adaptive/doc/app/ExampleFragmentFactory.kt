@@ -19,7 +19,7 @@ import `fun`.adaptive.doc.example.booleanEditor.booleanEditorBasicExample
 import `fun`.adaptive.doc.example.button.buttonBasicExample
 import `fun`.adaptive.doc.example.button.buttonDangerExample
 import `fun`.adaptive.doc.example.button.buttonDisabledExample
-import `fun`.adaptive.doc.example.button.buttonPlayground
+import `fun`.adaptive.doc.playground.buttonPlayground
 import `fun`.adaptive.doc.example.button.buttonSubmitExample
 import `fun`.adaptive.doc.example.canvas.canvasBasicAnimationExample
 import `fun`.adaptive.doc.example.canvas.canvasLineExample
@@ -34,7 +34,7 @@ import `fun`.adaptive.doc.example.chart.chartBasicExample
 import `fun`.adaptive.doc.example.codefence.codeFenceScrollingExample
 import `fun`.adaptive.doc.example.codefence.codeFenceSmallExample
 import `fun`.adaptive.doc.example.colorInput.colorInputExample
-import `fun`.adaptive.doc.example.container.containerPlayground
+import `fun`.adaptive.doc.playground.containerPlayground
 import `fun`.adaptive.doc.example.dateInput.dateInputExample
 import `fun`.adaptive.doc.example.dateTimeInput.dateTimeInputExample
 import `fun`.adaptive.doc.example.document.documentInlineExample

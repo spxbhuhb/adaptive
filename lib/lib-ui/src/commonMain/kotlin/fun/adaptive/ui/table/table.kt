@@ -2,7 +2,9 @@ package `fun`.adaptive.ui.table
 
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.FragmentTraceContext
 import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.AbstractAuiAdapter
@@ -11,23 +13,21 @@ import `fun`.adaptive.ui.api.cellBox
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.fillStrategy
 import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangement
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangementCalculator
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
 import `fun`.adaptive.ui.instruction.dp
+import `fun`.adaptive.ui.loading.loading
 
 @Adaptive
 fun <ITEM> table(
     backend: TableViewBackend<ITEM>
 ): AdaptiveFragment {
 
-    val observed = observe { backend }
-
     boxWithProposal { proposal ->
-        tableInner(observed, proposal)
+        tableInner(backend, proposal)
     }
 
     return fragment()
@@ -38,11 +38,13 @@ fun <ITEM> tableInner(
     backend: TableViewBackend<ITEM>,
     proposal: SizingProposal
 ) {
+    val observed = observe { backend }
+
     val arrangement = CellBoxArrangementCalculator(adapter() as AbstractAuiAdapter<*, *>)
         .findBestArrangement(
-            cells = backend.cells.map { CellDef(null, it.minWidth, it.width) },
-            proposal.maxWidth - backend.tableTheme.arrangementWidthAdjustment,
-            backend.gap.width!!.value
+            cells = observed.cells.map { CellDef(null, it.minWidth, it.width) },
+            proposal.maxWidth - observed.tableTheme.arrangementWidthAdjustment,
+            observed.gap.width!!.value
         )
 
     column {
@@ -51,19 +53,31 @@ fun <ITEM> tableInner(
         cellBox(arrangement = arrangement) {
             width { proposal.maxWidth.dp }
 
-            backend.tableTheme.headerContainer
-            for (cell in backend.cells) {
+            observed.tableTheme.headerContainer
+            for (cell in observed.cells) {
                 @Suppress("UNCHECKED_CAST")
                 tableHeaderCell(cell as TableCellDef<ITEM, Any>)
             }
         }
 
-        column {
-            backend.tableTheme.contentContainer .. width { proposal.maxWidth.dp }
+        loading(observed.viewportItems) { viewportItems ->
+            tableItems(observed, arrangement, viewportItems, proposal)
+        }
+    }
+}
 
-            for (item in backend.viewportItems ?: emptyList()) {
-                tableItem(backend, arrangement, item)
-            }
+@Adaptive
+fun <ITEM> tableItems(
+    backend : TableViewBackend<ITEM>,
+    arrangement : CellBoxArrangement,
+    items : List<TableItem<ITEM>>,
+    proposal : SizingProposal
+) {
+    column {
+        backend.tableTheme.contentContainer .. width { proposal.maxWidth.dp }
+
+        for (item in items) {
+            tableItem(backend, arrangement, item)
         }
     }
 }

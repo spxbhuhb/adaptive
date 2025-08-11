@@ -2,10 +2,12 @@ package `fun`.adaptive.ui.table
 
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.table.renderer.tableCellDouble
+import `fun`.adaptive.ui.table.renderer.tableCellTimeAgo
 import `fun`.adaptive.ui.table.renderer.tableCellIcon
 import `fun`.adaptive.ui.table.renderer.tableCellStatus
 import `fun`.adaptive.ui.table.renderer.tableCellToString
 import `fun`.adaptive.value.AvStatus
+import kotlin.time.Instant
 
 class TableViewBackendBuilder<ITEM_TYPE> {
 
@@ -48,6 +50,21 @@ class TableViewBackendBuilder<ITEM_TYPE> {
             it.content = ::tableCellStatus
             it.resizable = false
             it.sortable = false
+            buildFun(it)
+        }
+    }
+
+    fun timeAgoCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Instant?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, Instant?>().also {
+            it.content = ::tableCellTimeAgo
+            it.resizable = false
+            it.sortable = false
+            buildFun(it)
+        }
+    }
+
+    fun <T> customCell(buildFun: TableCellDefBuilder<ITEM_TYPE, T?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, T?>().also {
             buildFun(it)
         }
     }

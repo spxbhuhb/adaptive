@@ -1,4 +1,4 @@
-package `fun`.adaptive.doc.example.container
+package `fun`.adaptive.doc.playground
 
 import `fun`.adaptive.adat.Adat
 import `fun`.adaptive.adat.store.copyOf
@@ -133,7 +133,7 @@ fun containerPlaygroundForm(
 }
 
 @Adaptive
-fun containerPlaygroundResult(config: `fun`.adaptive.doc.example.container.PlaygroundConfig) {
+fun containerPlaygroundResult(config: PlaygroundConfig) {
 
     val self = fragment()
     val splitConfig = copyOf { config.splitPane }

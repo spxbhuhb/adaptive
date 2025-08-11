@@ -143,4 +143,8 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
         // In a real implementation, this would apply pagination
         viewportItems = filteredItems
     }
+
+    override fun toString() : String {
+        return "TableViewBackend(viewportItems=$viewportItems)"
+    }
 }
