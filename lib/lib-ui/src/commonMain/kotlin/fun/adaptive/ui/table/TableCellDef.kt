@@ -31,6 +31,9 @@ class TableCellDef<ITEM, CELL_DATA>(
     var instructions by observable(instructions, ::notify)
     var contentFun by observable(contentFun, ::notify)
 
+    // TODO move decimals to double cell somehow (not trivial as function references can't have a type)
+    var decimals : Int = 2
+
     var sorting by observable(Sorting.None, ::notify)
     var compareFunction : (ITEM, ITEM) -> Int = ::defaultCompareFunction
 

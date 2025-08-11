@@ -17,6 +17,8 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
     var sortable = true
     var resizable = true
 
+    var decimals : Int = 2
+
     var rowMenu = emptyList<MenuItemBase<Any>>()
 
     var instructions = emptyInstructions
@@ -31,6 +33,7 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
         ).also { cell ->
             cell.visible = visible
             cell.sortable = sortable
+            cell.decimals = decimals
             cell.rowMenu = rowMenu
             cell.resizable = resizable
 

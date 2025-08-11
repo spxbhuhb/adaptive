@@ -98,4 +98,10 @@ open class TableTheme(
     var itemContainer = instructionsOf(
         borders.outline .. cornerRadius { 4.dp } .. paddingVertical { 4.dp } .. paddingHorizontal { 8.dp }
     )
+
+    var statusCellContainer = instructionsOf(
+        maxWidth,
+        horizontalScroll,
+        gap { 8.dp }
+    )
 }

@@ -31,6 +31,7 @@ import `fun`.adaptive.ui.uiCommon
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.math.min
 
 fun main() {
 
@@ -140,6 +141,12 @@ fun tableTest() {
         doubleCell {
             label = "L3"
             get = { it.currentL1 }
+            minWidth = 100.dp
+        }
+
+        statusCell {
+            label = "Status"
+            get = { setOf("online") }
             minWidth = 100.dp
         }
 

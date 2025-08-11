@@ -5,9 +5,10 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.table.TableCellDef
+import `fun`.adaptive.utility.format
 
 @Adaptive
 fun <ITEM> tableCellDouble(cellDef: TableCellDef<ITEM, Double?>, item: ITEM) : AdaptiveFragment {
-    text(cellDef.getFun(item) ?: "") .. cellDef.instructions
+    text(cellDef.getFun(item)?.format(cellDef.decimals) ?: "") .. cellDef.instructions
     return fragment()
 }

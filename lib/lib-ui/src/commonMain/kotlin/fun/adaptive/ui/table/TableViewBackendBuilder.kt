@@ -3,7 +3,9 @@ package `fun`.adaptive.ui.table
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.table.renderer.tableCellDouble
 import `fun`.adaptive.ui.table.renderer.tableCellIcon
+import `fun`.adaptive.ui.table.renderer.tableCellStatus
 import `fun`.adaptive.ui.table.renderer.tableCellToString
+import `fun`.adaptive.value.AvStatus
 
 class TableViewBackendBuilder<ITEM_TYPE> {
 
@@ -35,6 +37,15 @@ class TableViewBackendBuilder<ITEM_TYPE> {
     fun iconCell(buildFun: TableCellDefBuilder<ITEM_TYPE, GraphicsResourceSet?>.() -> Unit) {
         cells += TableCellDefBuilder<ITEM_TYPE, GraphicsResourceSet?>().also {
             it.content = ::tableCellIcon
+            it.resizable = false
+            it.sortable = false
+            buildFun(it)
+        }
+    }
+
+    fun statusCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Set<AvStatus>?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, Set<AvStatus>?>().also {
+            it.content = ::tableCellStatus
             it.resizable = false
             it.sortable = false
             buildFun(it)
