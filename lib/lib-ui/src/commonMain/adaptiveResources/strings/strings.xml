@@ -6,6 +6,7 @@
 
     <string name="account">Fiók</string>
     <string name="actions">Műveletek</string>
+    <string name="moreActions">További műveletek</string>
     <string name="add">Hozzáadás</string>
     <string name="cancel">Mégse</string>
     <string name="collapseAll">Összes bezárása</string>

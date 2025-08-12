@@ -6,13 +6,24 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResource
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.ui.api.box
+import `fun`.adaptive.ui.api.row
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.icon.icon
+import `fun`.adaptive.ui.icon.noContainerIconTheme
+import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.table.TableCellDef
 
 @Adaptive
 fun <ITEM> tableCellIcon(cellDef: TableCellDef<ITEM, GraphicsResourceSet?>, item: ITEM) : AdaptiveFragment {
-    icon(cellDef.getFun(item) ?: Graphics.empty) .. cellDef.instructions
+    box {
+        cellDef.table.tableTheme.iconCellContainer
+
+        icon(
+            cellDef.getFun(item) ?: Graphics.empty,
+            theme = noContainerIconTheme
+        )
+    }
     return fragment()
 }

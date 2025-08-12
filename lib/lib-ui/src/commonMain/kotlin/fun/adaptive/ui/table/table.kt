@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.FragmentTraceContext
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.api.boxWithProposal
@@ -26,7 +27,7 @@ fun <ITEM> table(
     backend: TableViewBackend<ITEM>
 ): AdaptiveFragment {
 
-    boxWithProposal { proposal ->
+    boxWithProposal(instructions()) { proposal ->
         tableInner(backend, proposal)
     }
 

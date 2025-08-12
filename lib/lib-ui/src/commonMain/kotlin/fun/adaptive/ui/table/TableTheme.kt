@@ -3,6 +3,8 @@ package `fun`.adaptive.ui.table
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.gap
+import `fun`.adaptive.ui.api.paddingTop
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.generated.resources.north
 import `fun`.adaptive.ui.generated.resources.south
@@ -14,7 +16,7 @@ import `fun`.adaptive.ui.theme.borders
 import `fun`.adaptive.ui.theme.colors
 
 open class TableTheme(
-    headerHeight: DPixel = 28.dp
+    headerHeight : DPixel = 28.dp
 ) : AbstractTheme() {
 
     companion object {
@@ -33,12 +35,12 @@ open class TableTheme(
     // ---------------------------------------------------------------------------------------
 
     var headerContainer = instructionsOf(
-        paddingVertical { 4.dp } .. paddingHorizontal { 8.dp }
+        paddingVertical { 4.dp } .. paddingHorizontal { 8.dp },
+        gap { 16.dp } // FIXME cellbox gap vs. table gap
     )
 
     var headerCell = instructionsOf(
         height { headerHeight },
-        paddingLeft { 4.dp },
         alignItems.center,
         spaceBetween,
         fillStrategy.constrainReverse
@@ -54,7 +56,7 @@ open class TableTheme(
         alignItems.center
     )
 
-    open fun sortIcon(cellDef: TableCellDef<*,*>, hover: Boolean) =
+    open fun sortIcon(cellDef : TableCellDef<*, *>, hover : Boolean) =
         when (cellDef.sorting) {
             Sorting.Ascending -> Graphics.north
             Sorting.Descending -> Graphics.south
@@ -96,12 +98,32 @@ open class TableTheme(
     )
 
     var itemContainer = instructionsOf(
-        borders.outline .. cornerRadius { 4.dp } .. paddingVertical { 4.dp } .. paddingHorizontal { 8.dp }
+        borders.outline .. cornerRadius { 4.dp } .. paddingVertical { 4.dp } .. paddingHorizontal { 8.dp },
+        gap { 16.dp } // FIXME cellbox gap vs. table gap
     )
 
-    var statusCellContainer = instructionsOf(
+    var cellContainer = instructionsOf(
+        height { 28.dp },
+        paddingTop { 3.dp }, // FIXME paddingTop because of text baseline
+        alignItems.startCenter,
+        alignSelf.startCenter // FIXME alignSelf because of text alignment confusion
+    )
+
+    var iconCellContainer = cellContainer + instructionsOf(
+        paddingTop { 0.dp } // FIXME assuming 24.dp icon size
+    )
+
+    var statusCellContainer = cellContainer + instructionsOf(
+        paddingTop { 0.dp },
         maxWidth,
         horizontalScroll,
         gap { 8.dp }
+    )
+
+
+    var actionsCellContainer = cellContainer + instructionsOf(
+        paddingTop { 0.dp },
+        maxWidth,
+        horizontalScroll
     )
 }

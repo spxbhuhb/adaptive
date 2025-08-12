@@ -57,6 +57,14 @@ val smallCloseIconTheme = IconTheme(
     cornerRadius = (8.5).dp
 )
 
+val noContainerIconTheme = IconTheme(
+    colors.onSurfaceVariant,
+    iconSize = 24.dp,
+    containerSize = 24.dp,
+    margin = 0.dp,
+    cornerRadius = 0.dp
+)
+
 class IconTheme(
     val color: Color,
     val iconSize: DPixel = 24.dp,

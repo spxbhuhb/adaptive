@@ -13,7 +13,7 @@ internal class FileCollector(
     val compilation : GroveDocCompilation
 ) {
 
-    val excluded = listOf("build", "deprecated")
+    val excluded = listOf("build", "deprecated", "junie-local")
 
     // file name -> paths to with the given file name (directories may differ)
     val ktFiles = mutableMapOf<String, MutableList<Path>>()

@@ -5,6 +5,7 @@
 <resources>
     <string name="account">Account</string>
     <string name="actions">Actions</string>
+    <string name="moreActions">More actions</string>
     <string name="add">Add</string>
     <string name="cancel">Cancel</string>
     <string name="collapseAll">Collapse All</string>

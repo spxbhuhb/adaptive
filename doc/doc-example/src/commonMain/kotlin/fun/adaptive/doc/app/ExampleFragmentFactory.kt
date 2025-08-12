@@ -58,6 +58,7 @@ import `fun`.adaptive.doc.example.handle.handleBasicExample
 import `fun`.adaptive.doc.example.handle.handleBoxedExample
 import `fun`.adaptive.doc.example.handle.handleHorizonalOnlyExample
 import `fun`.adaptive.doc.example.icon.iconActionExample
+import `fun`.adaptive.doc.example.icon.iconActionRowExample
 import `fun`.adaptive.doc.example.icon.iconDefaultExample
 import `fun`.adaptive.doc.example.icon.iconDenseExample
 import `fun`.adaptive.doc.example.icon.iconPrimaryExample
@@ -108,6 +109,7 @@ import `fun`.adaptive.doc.example.selectInput.selectInputPlayground
 import `fun`.adaptive.doc.example.selectInput.selectInputTextExample
 import `fun`.adaptive.doc.example.statusEditor.statusEditorSingleExample
 import `fun`.adaptive.doc.example.statusInput.statusInputSingleExample
+import `fun`.adaptive.doc.example.table.tableBasicExample
 import `fun`.adaptive.doc.example.textInput.textInputAreaExample
 import `fun`.adaptive.doc.example.textInput.textInputPlayground
 import `fun`.adaptive.doc.example.textInput.textInputSimpleExample
@@ -290,6 +292,7 @@ object ExampleFragmentFactory : FoundationFragmentFactory() {
 
         add("iconDefaultExample", ::iconDefaultExample)
         add("iconActionExample", ::iconActionExample)
+        add("iconActionRowExample", ::iconActionRowExample)
         add("iconPrimaryExample", ::iconPrimaryExample)
         add("iconTableExample", ::iconTableExample)
         add("iconDenseExample", ::iconDenseExample)
@@ -421,6 +424,12 @@ object ExampleFragmentFactory : FoundationFragmentFactory() {
         // ----------------------------------------------------------------------------
 
         add("timeRangeInputExample", ::timeRangeInputExample)
+
+        // ----------------------------------------------------------------------------
+        // Table
+        // ----------------------------------------------------------------------------
+
+        add("tableBasicExample", ::tableBasicExample)
 
         // ----------------------------------------------------------------------------
         // Tree

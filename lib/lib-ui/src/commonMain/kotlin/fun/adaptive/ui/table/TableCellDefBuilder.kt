@@ -29,7 +29,13 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
 
     fun toTableCellDef(tableBackend : TableViewBackend<ITEM>) : TableCellDef<ITEM, CELL_DATA> {
         TableCellDef(
-           tableBackend, label, width, minWidth, instructions, get!!, content!!
+           tableBackend, label, width, minWidth,
+            if (instructions === emptyInstructions) {
+                tableBackend.tableTheme.cellContainer
+            } else {
+                instructions
+            },
+            get!!, content!!
         ).also { cell ->
             cell.visible = visible
             cell.sortable = sortable

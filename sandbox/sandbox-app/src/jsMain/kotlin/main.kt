@@ -4,6 +4,7 @@
 
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.doc.app.ExampleFragmentFactory
+import `fun`.adaptive.doc.example.generated.resources.edit
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
 import `fun`.adaptive.foundation.instruction.instructionsOf
@@ -21,9 +22,14 @@ import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangementCalculator
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
 import `fun`.adaptive.ui.generated.resources.account_box
+import `fun`.adaptive.ui.generated.resources.north
+import `fun`.adaptive.ui.generated.resources.south
+import `fun`.adaptive.ui.icon.ActionIconRowBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
+import `fun`.adaptive.ui.menu.MenuItem
+import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.ui.table.TableViewBackendBuilder.Companion.tableBackend
 import `fun`.adaptive.ui.table.table
 import `fun`.adaptive.ui.theme.backgrounds
@@ -125,23 +131,22 @@ fun tableTest() {
             label = "Name"
             get = { it.name }
             minWidth = 300.dp
-            //instructions = instructionsOf(maxWidth)
         }
 
         doubleCell {
-            label = "L1"
+            label = "Current L1"
             get = { it.currentL1 }
             minWidth = 100.dp
         }
 
         doubleCell {
-            label = "L2"
+            label = "Current L2"
             get = { it.currentL1 }
             minWidth = 100.dp
         }
 
         doubleCell {
-            label = "L3"
+            label = "Current L3"
             get = { it.currentL1 }
             minWidth = 100.dp
         }
@@ -158,6 +163,24 @@ fun tableTest() {
             minWidth = 100.dp
         }
 
+        actionsCell {
+            label = "Actions"
+            minWidth = 100.dp
+            width = 100.dp
+            get = {
+                ActionIconRowBackend(
+                    priorityActions = listOf(
+                        MenuItem(Graphics.edit, label = "Edit", data = it),
+                    ),
+                    otherActions = listOf(
+                        MenuItem(Graphics.north, label = "Move up", data = it),
+                        MenuItem(Graphics.south, label = "Move down", data = it),
+                    )
+                ) { item ->
+                    successNotification("Selected: ${item.label} for ${item.data}")
+                }
+            }
+        }
     }
 
     table(backend)
