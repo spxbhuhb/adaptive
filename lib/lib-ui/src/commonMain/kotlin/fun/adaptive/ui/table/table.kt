@@ -1,20 +1,9 @@
 package `fun`.adaptive.ui.table
 
-import `fun`.adaptive.foundation.Adaptive
-import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.FragmentTraceContext
-import `fun`.adaptive.foundation.adapter
-import `fun`.adaptive.foundation.api.localContext
-import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.foundation.instructions
+import `fun`.adaptive.foundation.*
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.AbstractAuiAdapter
-import `fun`.adaptive.ui.api.boxWithProposal
-import `fun`.adaptive.ui.api.cellBox
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.fillStrategy
-import `fun`.adaptive.ui.api.height
-import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangement
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangementCalculator
@@ -40,10 +29,11 @@ fun <ITEM> tableInner(
     proposal: SizingProposal
 ) {
     val observed = observe { backend }
+    val activeCells = observed.cells.mapNotNull { it.takeIfRole(fragment()) { it } }
 
     val arrangement = CellBoxArrangementCalculator(adapter() as AbstractAuiAdapter<*, *>)
         .findBestArrangement(
-            cells = observed.cells.map { CellDef(null, it.minWidth, it.width) },
+            cells = activeCells.map { CellDef(null, it.minWidth, it.width) },
             proposal.maxWidth - observed.tableTheme.arrangementWidthAdjustment,
             observed.gap.width!!.value
         )
@@ -55,7 +45,7 @@ fun <ITEM> tableInner(
             width { proposal.maxWidth.dp }
 
             observed.tableTheme.headerContainer
-            for (cell in observed.cells) {
+            for (cell in activeCells) {
                 @Suppress("UNCHECKED_CAST")
                 tableHeaderCell(cell as TableCellDef<ITEM, Any>)
             }

@@ -1,11 +1,15 @@
 package `fun`.adaptive.ui.table
 
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.general.SelfObservable
+import `fun`.adaptive.runtime.application
+import `fun`.adaptive.runtime.hasRole
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.GridTrack
 import `fun`.adaptive.ui.menu.MenuItemBase
+import `fun`.adaptive.utility.UUID
 import kotlin.properties.Delegates.observable
 
 class TableCellDef<ITEM, CELL_DATA>(
@@ -43,6 +47,8 @@ class TableCellDef<ITEM, CELL_DATA>(
 
     var supportsTextFilter = true
 
+    var roleUuid : UUID<*>? = null
+
     fun defaultCompareFunction(item1 : ITEM, item2 : ITEM) : Int {
         val value1 = getFun(item1)
         val value2 = getFun(item2)
@@ -72,5 +78,9 @@ class TableCellDef<ITEM, CELL_DATA>(
 
         if (matchFun != null) return matchFun.invoke(cellData, filterText)
         return cellData.toString().contains(filterText, ignoreCase = true)
+    }
+
+    fun <T> takeIfRole(fragment : AdaptiveFragment, block : () -> T) : T? {
+        return if (roleUuid == null || fragment.hasRole(roleUuid !!)) block() else null
     }
 }

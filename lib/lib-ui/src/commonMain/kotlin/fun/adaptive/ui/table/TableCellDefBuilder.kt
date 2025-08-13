@@ -6,6 +6,7 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.layout.GridTrack
 import `fun`.adaptive.ui.menu.MenuItemBase
+import `fun`.adaptive.utility.UUID
 
 class TableCellDefBuilder<ITEM, CELL_DATA> {
 
@@ -30,6 +31,8 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
 
     var content: @Adaptive ((TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any)? = null
 
+    var roleUuid : UUID<*>? = null
+
     fun toTableCellDef(tableBackend : TableViewBackend<ITEM>) : TableCellDef<ITEM, CELL_DATA> {
         TableCellDef(
            tableBackend, label, width, minWidth,
@@ -46,6 +49,7 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
             cell.unit = unit
             cell.rowMenu = rowMenu
             cell.resizable = resizable
+            cell.roleUuid = roleUuid
             cell.supportsTextFilter = supportsTextFilter
 
             return cell

@@ -3,7 +3,9 @@ package `fun`.adaptive.runtime
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.wireformat.WireFormatRegistry
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -60,4 +62,18 @@ abstract class AbstractClientApplication<FW : AbstractWorkspace, BW : BackendWor
         modules.forEach { it.frontendWorkspaceInit(workspace, genericSessionOrNull) }
     }
 
+    open fun hasRole(roleName : String) : Boolean = false
+
+    open fun hasRole(roleUuid : UUID<*>) : Boolean = false
+
+    fun withRole(roleUuid: UUID<*>?, block : () -> Unit) {
+        if (roleUuid == null) {
+            getLogger("application").warning("using withRole with null role")
+            return
+        }
+
+        if (hasRole(roleUuid)) {
+            block()
+        }
+    }
 }

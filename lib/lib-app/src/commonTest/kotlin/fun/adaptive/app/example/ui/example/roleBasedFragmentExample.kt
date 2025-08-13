@@ -4,6 +4,7 @@ import `fun`.adaptive.app.ui.util.hasRole
 import `fun`.adaptive.auth.model.AuthRoleId
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.runtime.hasRole
 import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 

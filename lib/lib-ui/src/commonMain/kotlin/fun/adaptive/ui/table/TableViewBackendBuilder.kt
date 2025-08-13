@@ -26,6 +26,8 @@ class TableViewBackendBuilder<ITEM_TYPE>(
 
     val gap : Gap = Gap(16.dp, 16.dp)
 
+    var numericWidth = 140.dp
+
     fun stringCell(buildFun: TableCellDefBuilder<ITEM_TYPE, String?>.() -> Unit) {
         cells += TableCellDefBuilder<ITEM_TYPE, String?>().also {
             it.content = ::tableCellToString
@@ -36,8 +38,8 @@ class TableViewBackendBuilder<ITEM_TYPE>(
     fun intCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Int?>.() -> Unit) {
         cells += TableCellDefBuilder<ITEM_TYPE, Int?>().also {
             it.content = ::tableCellInt
-            it.width = 140.dp
-            it.minWidth = 140.dp
+            it.width = numericWidth
+            it.minWidth = numericWidth
             it.instructions = theme.cellContainer + instructionsOf(alignSelf.endCenter)
             buildFun(it)
         }
@@ -46,8 +48,8 @@ class TableViewBackendBuilder<ITEM_TYPE>(
     fun doubleCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Double?>.() -> Unit) {
         cells += TableCellDefBuilder<ITEM_TYPE, Double?>().also {
             it.content = ::tableCellDouble
-            it.width = 140.dp
-            it.minWidth = 140.dp
+            it.width = numericWidth
+            it.minWidth = numericWidth
             it.instructions = theme.cellContainer + instructionsOf(alignSelf.endCenter)
             buildFun(it)
         }

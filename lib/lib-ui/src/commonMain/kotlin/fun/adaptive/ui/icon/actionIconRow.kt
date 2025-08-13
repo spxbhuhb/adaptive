@@ -29,8 +29,8 @@ fun <T> actionIconRow(
     if (backend.isNotEmpty()) {
 
         row(instructions()) {
-            for (action in backend.priorityActions.map { it as MenuItem<T> }) {
-                if (!action.inactive) {
+            for (action in backend.priorityActions.mapNotNull { it as? MenuItem<T> }) {
+                if (action.isVisible(fragment())) {
                     actionIcon(
                         icon = action.icon ?: Graphics.error,
                         tooltip = action.label,
@@ -40,7 +40,7 @@ fun <T> actionIconRow(
                 }
             }
 
-            if (backend.otherActions.isNotEmpty()) {
+            if (backend.otherActions.any { it.isVisible(fragment()) }) {
                 withPrimaryMenu(backend.menuBackend) {
                     actionIcon(Graphics.more_vert, Strings.moreActions, theme = denseIconTheme)
                 }

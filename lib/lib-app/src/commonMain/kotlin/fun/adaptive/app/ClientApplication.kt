@@ -1,12 +1,14 @@
 package `fun`.adaptive.app
 
 import `fun`.adaptive.auth.model.AuthRole
+import `fun`.adaptive.auth.model.Session
 import `fun`.adaptive.foundation.value.observableOf
 import `fun`.adaptive.runtime.AbstractClientApplication
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.runtime.FrontendWorkspace
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.navigation.NavState
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.Url
 
 abstract class ClientApplication<WT : FrontendWorkspace, BW : BackendWorkspace> : AbstractClientApplication<WT, BW>() {
@@ -32,4 +34,12 @@ abstract class ClientApplication<WT : FrontendWorkspace, BW : BackendWorkspace> 
 
     }
 
+    override fun hasRole(roleName : String) : Boolean =
+        allApplicationRoles.firstOrNull { it.name == roleName }?.let {
+            val session = genericSessionOrNull as Session
+            return it.uuid in session.roles
+        } ?: false
+
+    override fun hasRole(roleUuid : UUID<*>) : Boolean =
+        (genericSessionOrNull as Session).roles.contains(roleUuid)
 }

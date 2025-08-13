@@ -1,7 +1,6 @@
 package `fun`.adaptive.app.ui.mpw.admin
 
 import `fun`.adaptive.app.ClientApplication
-import `fun`.adaptive.app.ui.util.withRole
 import `fun`.adaptive.auth.app.AuthBasicClientModule
 import `fun`.adaptive.auth.model.AuthMarkers
 import `fun`.adaptive.foundation.AdaptiveAdapter
@@ -9,6 +8,7 @@ import `fun`.adaptive.lib_app.generated.resources.administration
 import `fun`.adaptive.lib_app.generated.resources.local_police
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.runtime.AbstractClientApplication
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.backends.UnitPaneViewBackend
@@ -23,7 +23,7 @@ class AppAdminModuleMpw<FW : MultiPaneWorkspace, BW : BackendWorkspace> : AuthBa
     val ADMIN_TOOL_KEY: String = "app:mpw:admin:tool"
 
     val plugins = mutableListOf<SingularPaneItem>()
-    var securityOfficer: AvValueId? = null
+    var securityOfficer: UUID<*>? = null
 
     override fun frontendAdapterInit(adapter: AdaptiveAdapter) = with(adapter.fragmentFactory) {
         add(ADMIN_TOOL_KEY, ::adminTool)
@@ -35,7 +35,7 @@ class AppAdminModuleMpw<FW : MultiPaneWorkspace, BW : BackendWorkspace> : AuthBa
     }
 
     override fun frontendWorkspaceInit(workspace: FW, session: Any?) = with(workspace) {
-        application.withRole(securityOfficer) {
+        (application as? AbstractClientApplication)!!.withRole(securityOfficer) {
 
             val appAdminToolPane = PaneDef(
                 UUID(),

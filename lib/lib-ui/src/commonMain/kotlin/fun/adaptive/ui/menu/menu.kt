@@ -25,7 +25,9 @@ fun <T> menu(
 
     column(viewBackend.theme.container, instructions()) {
         for (item in viewBackend.items) {
-            node(item, viewBackend)
+            if (item.isVisible(fragment())) {
+                node(item, viewBackend)
+            }
         }
     }
 
