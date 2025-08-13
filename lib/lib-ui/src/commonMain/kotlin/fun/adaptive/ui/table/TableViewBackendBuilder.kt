@@ -1,10 +1,11 @@
 package `fun`.adaptive.ui.table
 
+import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.icon.ActionIconRowBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Gap
-import `fun`.adaptive.ui.menu.MenuItemBase
 import `fun`.adaptive.ui.table.renderer.tableCellActions
 import `fun`.adaptive.ui.table.renderer.tableCellDouble
 import `fun`.adaptive.ui.table.renderer.tableCellTimeAgo
@@ -15,7 +16,9 @@ import `fun`.adaptive.ui.table.renderer.tableCellToString
 import `fun`.adaptive.value.AvStatus
 import kotlin.time.Instant
 
-class TableViewBackendBuilder<ITEM_TYPE> {
+class TableViewBackendBuilder<ITEM_TYPE>(
+    val theme : TableTheme = TableTheme.default
+) {
 
     val cells = mutableListOf<TableCellDefBuilder<ITEM_TYPE, *>>()
 
@@ -33,6 +36,9 @@ class TableViewBackendBuilder<ITEM_TYPE> {
     fun intCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Int?>.() -> Unit) {
         cells += TableCellDefBuilder<ITEM_TYPE, Int?>().also {
             it.content = ::tableCellInt
+            it.width = 140.dp
+            it.minWidth = 140.dp
+            it.instructions = theme.cellContainer + instructionsOf(alignSelf.endCenter)
             buildFun(it)
         }
     }
@@ -40,6 +46,9 @@ class TableViewBackendBuilder<ITEM_TYPE> {
     fun doubleCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Double?>.() -> Unit) {
         cells += TableCellDefBuilder<ITEM_TYPE, Double?>().also {
             it.content = ::tableCellDouble
+            it.width = 140.dp
+            it.minWidth = 140.dp
+            it.instructions = theme.cellContainer + instructionsOf(alignSelf.endCenter)
             buildFun(it)
         }
     }
@@ -58,6 +67,7 @@ class TableViewBackendBuilder<ITEM_TYPE> {
             it.content = ::tableCellStatus
             it.resizable = false
             it.sortable = false
+            it.matchFun = { data, filterText -> data?.any { s -> filterText in s } == true }
             buildFun(it)
         }
     }
@@ -67,15 +77,17 @@ class TableViewBackendBuilder<ITEM_TYPE> {
             it.content = ::tableCellTimeAgo
             it.resizable = false
             it.sortable = false
+            it.supportsTextFilter = false
             buildFun(it)
         }
     }
 
-    fun actionsCell(buildFun: TableCellDefBuilder<ITEM_TYPE, ActionIconRowBackend<Any>?>.() -> Unit) {
-        cells += TableCellDefBuilder<ITEM_TYPE, ActionIconRowBackend<Any>?>().also {
+    fun <T> actionsCell(buildFun: TableCellDefBuilder<ITEM_TYPE, ActionIconRowBackend<T>?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, ActionIconRowBackend<T>?>().also {
             it.content = ::tableCellActions
             it.sortable = false
             it.resizable = false
+            it.supportsTextFilter = false
             buildFun(it)
         }
     }
@@ -94,6 +106,7 @@ class TableViewBackendBuilder<ITEM_TYPE> {
             table.allItems = items.map { TableItem(it) }.toMutableList()
             table.viewportItems = table.allItems
             table.gap = gap
+            table.tableTheme = theme
             return table
         }
     }

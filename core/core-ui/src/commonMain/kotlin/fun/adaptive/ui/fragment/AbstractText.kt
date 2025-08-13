@@ -23,6 +23,10 @@ abstract class AbstractText<RT>(
             return
         }
 
+        if (haveToPatch(dirtyMask, 1) || styleChange) {
+            alignText()
+        }
+
         if (contentChange) {
             setReceiverContent(safeContent)
 
@@ -44,4 +48,8 @@ abstract class AbstractText<RT>(
     abstract fun setReceiverContent(content: String)
 
     abstract fun getReceiverContent(): String?
+
+    open fun alignText() {
+
+    }
 }

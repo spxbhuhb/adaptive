@@ -16,14 +16,17 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
     var visible = true
     var sortable = true
     var resizable = true
+    var supportsTextFilter = true
 
     var decimals : Int = 2
+    var unit : String? = null
 
     var rowMenu = emptyList<MenuItemBase<Any>>()
 
     var instructions = emptyInstructions
 
     var get: ((ITEM) -> CELL_DATA)? = null
+    var matchFun : ((CELL_DATA, filterText : String) -> Boolean)? = null
 
     var content: @Adaptive ((TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any)? = null
 
@@ -35,13 +38,15 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
             } else {
                 instructions
             },
-            get!!, content!!
+            get!!, matchFun, content!!
         ).also { cell ->
             cell.visible = visible
             cell.sortable = sortable
             cell.decimals = decimals
+            cell.unit = unit
             cell.rowMenu = rowMenu
             cell.resizable = resizable
+            cell.supportsTextFilter = supportsTextFilter
 
             return cell
         }

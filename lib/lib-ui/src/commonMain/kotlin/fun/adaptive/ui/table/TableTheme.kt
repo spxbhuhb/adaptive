@@ -2,10 +2,15 @@ package `fun`.adaptive.ui.table
 
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.api.gap
 import `fun`.adaptive.ui.api.paddingTop
+import `fun`.adaptive.ui.generated.resources.arrow_drop_down
+import `fun`.adaptive.ui.generated.resources.arrow_drop_up
 import `fun`.adaptive.ui.generated.resources.empty
+import `fun`.adaptive.ui.generated.resources.filterPlaceholder
+import `fun`.adaptive.ui.generated.resources.keyboard_arrow_down
 import `fun`.adaptive.ui.generated.resources.north
 import `fun`.adaptive.ui.generated.resources.south
 import `fun`.adaptive.ui.generated.resources.unfold_more
@@ -41,6 +46,10 @@ open class TableTheme(
 
     var headerCell = instructionsOf(
         height { headerHeight },
+        paddingLeft { 8.dp },
+        paddingRight { 4.dp },
+        paddingVertical { 12.dp },
+        cornerRadius { 6.dp },
         alignItems.center,
         spaceBetween,
         fillStrategy.constrainReverse
@@ -53,13 +62,13 @@ open class TableTheme(
 
     var headerActionContainer = instructionsOf(
         height { headerHeight },
-        alignItems.center
+        alignItems.endCenter
     )
 
     open fun sortIcon(cellDef : TableCellDef<*, *>, hover : Boolean) =
         when (cellDef.sorting) {
-            Sorting.Ascending -> Graphics.north
-            Sorting.Descending -> Graphics.south
+            Sorting.Ascending -> Graphics.arrow_drop_up
+            Sorting.Descending -> Graphics.arrow_drop_down
             else -> if (hover && cellDef.sortable) Graphics.unfold_more else Graphics.empty
         }
 
@@ -104,6 +113,7 @@ open class TableTheme(
 
     var cellContainer = instructionsOf(
         height { 28.dp },
+        paddingLeft { 8.dp },
         paddingTop { 3.dp }, // FIXME paddingTop because of text baseline
         alignItems.startCenter,
         alignSelf.startCenter // FIXME alignSelf because of text alignment confusion
@@ -120,10 +130,19 @@ open class TableTheme(
         gap { 8.dp }
     )
 
-
     var actionsCellContainer = cellContainer + instructionsOf(
         paddingTop { 0.dp },
         maxWidth,
         horizontalScroll
+    )
+
+    // ---------------------------------------------------------------------------------------
+    // Filter
+    // ---------------------------------------------------------------------------------------
+
+    var filterText = instructionsOf(
+        width { 200.dp },
+        focusFirst,
+        inputPlaceholder { Strings.filterPlaceholder }
     )
 }

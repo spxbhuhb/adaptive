@@ -12,7 +12,7 @@ import kotlin.math.round
 /**
  * Convert an int into a byte array (4 bytes).
  */
-fun Int.toByteArray(): ByteArray = ByteArray(4).also { this.encodeInto(it) }
+fun Int.toByteArray() : ByteArray = ByteArray(4).also { this.encodeInto(it) }
 
 val Int.p02
     get() = this.toString().padStart(2, '0')
@@ -24,7 +24,7 @@ val Int.p04
  * Convert an int to bytes and write those bytes into [target] starting
  * from [offset].
  */
-fun Int.encodeInto(target: ByteArray, offset: Int = 0) {
+fun Int.encodeInto(target : ByteArray, offset : Int = 0) {
     for (i in 3 downTo 0) {
         target[offset + i] = (this shr (8 * (3 - i))).toByte()
     }
@@ -33,13 +33,13 @@ fun Int.encodeInto(target: ByteArray, offset: Int = 0) {
 /**
  * Convert a long into a byte array (8 bytes).
  */
-fun Long.toByteArray(): ByteArray = ByteArray(8).also { this.encodeInto(it) }
+fun Long.toByteArray() : ByteArray = ByteArray(8).also { this.encodeInto(it) }
 
 /**
  * Convert a long to bytes and write those bytes into [target] starting
  * from [offset].
  */
-fun Long.encodeInto(target: ByteArray, offset: Int = 0) {
+fun Long.encodeInto(target : ByteArray, offset : Int = 0) {
     for (i in 7 downTo 0) {
         target[offset + i] = (this shr (8 * (7 - i))).toByte()
     }
@@ -48,8 +48,8 @@ fun Long.encodeInto(target: ByteArray, offset: Int = 0) {
 /**
  * Read a long from the byte array.
  */
-fun ByteArray.toLong(offset: Int = 0): Long {
-    var value: Long = 0L
+fun ByteArray.toLong(offset : Int = 0) : Long {
+    var value : Long = 0L
     for (i in 0 until 8) {
         value = (value shl 8) or (this[offset + i].toLong() and 0xFF)
     }
@@ -60,20 +60,21 @@ const val maxDecimals = 9
 val shifts = Array(maxDecimals) { idx -> 10.0.pow(idx) }
 
 fun format(
-    double: Double,
-    decimals: Int = 1,
-    decimalSeparator: String = ".",
-    thousandSeparator: String? = null,
-    hideZeroDecimals: Boolean = false,
+    double : Double,
+    decimals : Int = 1,
+    decimalSeparator : String = ".",
+    thousandSeparator : String? = null,
+    hideZeroDecimals : Boolean = false,
 ) = double.format(decimals, decimalSeparator, thousandSeparator, hideZeroDecimals)
 
 @JvmName("formatDouble")
 fun Double.format(
-    decimals: Int = 1,
-    decimalSeparator: String = ".",
-    thousandSeparator: String? = null,
-    hideZeroDecimals: Boolean = false,
-): String {
+    decimals : Int = 1,
+    decimalSeparator : String = ".",
+    thousandSeparator : String? = null,
+    hideZeroDecimals : Boolean = false,
+    unit : String? = null
+) : String {
     check(decimals <= maxDecimals) { "decimals must to be less than $maxDecimals" }
 
     return when {
@@ -89,27 +90,36 @@ fun Double.format(
 
         else -> {
             val shifted = abs(round(this * shifts[decimals]))
-            if (shifted > Int.MAX_VALUE) return this.toString()
+            if (shifted > Int.MAX_VALUE) {
+                this.toString()
+            } else {
 
-            val s = shifted.toInt().toString().padStart(decimals + 1, '0')
-            val cutAt = s.length - decimals
+                val s = shifted.toInt().toString().padStart(decimals + 1, '0')
+                val cutAt = s.length - decimals
 
-            val sign = if (this < 0.0) "-" else ""
+                val sign = if (this < 0.0) "-" else ""
 
-            val integralString = s.substring(0, cutAt)
-                .let { if (thousandSeparator != null) it.withSeparators(thousandSeparator) else it }
+                val integralString = s.substring(0, cutAt)
+                    .let { if (thousandSeparator != null) it.withSeparators(thousandSeparator) else it }
 
-            val decimalString = s.substring(cutAt).let {
-                if (hideZeroDecimals && it.toLong() == 0L) "" else decimalSeparator +
-                    (if (hideZeroDecimals) it.trimEnd('0') else it)
+                val decimalString = s.substring(cutAt).let {
+                    if (hideZeroDecimals && it.toLong() == 0L) "" else decimalSeparator +
+                        (if (hideZeroDecimals) it.trimEnd('0') else it)
+                }
+
+                sign + integralString + decimalString
             }
-
-            return sign + integralString + decimalString
+        }
+    }.let {
+        if (unit != null) {
+            "$it $unit"
+        } else {
+            it
         }
     }
 }
 
-fun String.withSeparators(separator: String) =
+fun String.withSeparators(separator : String) =
     reversed()
         .chunked(3)
         .joinToString(separator)

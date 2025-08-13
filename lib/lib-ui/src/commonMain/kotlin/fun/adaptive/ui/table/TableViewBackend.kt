@@ -1,6 +1,7 @@
 package `fun`.adaptive.ui.table
 
 import `fun`.adaptive.general.SelfObservable
+import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Gap
 import kotlin.properties.Delegates.observable
@@ -15,7 +16,7 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
 
     val cells: MutableList<TableCellDef<ITEM, *>> = mutableListOf()
 
-    val tableTheme = TableTheme.default
+    var tableTheme = TableTheme.default
 
     var allItems: MutableList<TableItem<ITEM>>? = null
 
@@ -55,6 +56,13 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
      * Incremented each time the table is sorted. Used to determine the sort order of each cell.
      */
     var sortOrder = 0
+
+    /**
+     * Backend to use for text-based filtering.
+     */
+    val filterTextBackend = textInputBackend("") {
+        onChange = { filterText = it ?: "" }
+    }
 
     /**
      * Updates the filtered and viewport items after the table items have changed (set, sort, filter, etc.)
@@ -131,8 +139,8 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
             // Apply text-based predicate if filterText is not empty
             val textPass = if (filterText.isNotEmpty()) {
                 cells.any { cell ->
-                    val value = cell.getFun(item.data)
-                    value?.toString()?.contains(filterText, ignoreCase = true) == true
+                    if (!cell.supportsTextFilter) return@any false
+                    cell.matches(item.data, filterText)
                 }
             } else true
 

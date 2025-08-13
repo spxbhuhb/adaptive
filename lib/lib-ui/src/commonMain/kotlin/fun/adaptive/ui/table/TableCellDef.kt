@@ -9,13 +9,14 @@ import `fun`.adaptive.ui.menu.MenuItemBase
 import kotlin.properties.Delegates.observable
 
 class TableCellDef<ITEM, CELL_DATA>(
-    val table: TableViewBackend<ITEM>,
-    label: String,
-    width: GridTrack,
-    minWidth: DPixel,
-    instructions: AdaptiveInstructionGroup,
-    val getFun: (ITEM) -> CELL_DATA,
-    contentFun: @Adaptive (TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any
+    val table : TableViewBackend<ITEM>,
+    label : String,
+    width : GridTrack,
+    minWidth : DPixel,
+    instructions : AdaptiveInstructionGroup,
+    val getFun : (ITEM) -> CELL_DATA,
+    val matchFun : ((CELL_DATA, filterText : String) -> Boolean)? = null,
+    contentFun : @Adaptive (TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any
 ) : SelfObservable<TableCellDef<ITEM, CELL_DATA>>() {
 
     var label by observable(label, ::notify)
@@ -31,13 +32,16 @@ class TableCellDef<ITEM, CELL_DATA>(
     var instructions by observable(instructions, ::notify)
     var contentFun by observable(contentFun, ::notify)
 
-    // TODO move decimals to double cell somehow (not trivial as function references can't have a type)
+    // TODO move decimals and unit to numeric cell somehow (not trivial as function references can't have a type)
     var decimals : Int = 2
+    var unit : String? = null
 
     var sorting by observable(Sorting.None, ::notify)
     var compareFunction : (ITEM, ITEM) -> Int = ::defaultCompareFunction
 
     var sortOrder = 0
+
+    var supportsTextFilter = true
 
     fun defaultCompareFunction(item1 : ITEM, item2 : ITEM) : Int {
         val value1 = getFun(item1)
@@ -51,13 +55,22 @@ class TableCellDef<ITEM, CELL_DATA>(
                 @Suppress("UNCHECKED_CAST")
                 result = (value1 as? Comparable<Any>)?.compareTo(value2) ?: 0
                 if (sorting == Sorting.Descending) {
-                    result = -result
+                    result = - result
                 }
-            } catch (e: ClassCastException) {
+            } catch (e : ClassCastException) {
                 // If values can't be compared, continue to the next cell
             }
         }
 
         return result
+    }
+
+    fun matches(item : ITEM, filterText : String) : Boolean {
+        if (! supportsTextFilter) return false
+
+        val cellData = getFun(item)
+
+        if (matchFun != null) return matchFun.invoke(cellData, filterText)
+        return cellData.toString().contains(filterText, ignoreCase = true)
     }
 }

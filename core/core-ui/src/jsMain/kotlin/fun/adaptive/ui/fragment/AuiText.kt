@@ -7,6 +7,7 @@ import `fun`.adaptive.foundation.AdaptiveActual
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.ui.AuiBrowserAdapter
 import `fun`.adaptive.ui.aui
+import `fun`.adaptive.ui.instruction.layout.Alignment
 import kotlinx.browser.document
 import org.w3c.dom.CanvasRenderingContext2D
 import org.w3c.dom.HTMLCanvasElement
@@ -67,6 +68,19 @@ open class AuiText(
 
     override fun getReceiverContent(): String? {
         return receiver.textContent
+    }
+
+    override fun alignText() {
+        val alignment = renderData.layout?.horizontalAlignment
+        if (alignment != null) {
+            receiver.style.textAlign = when (alignment) {
+                Alignment.Start -> "start"
+                Alignment.Center -> "center"
+                Alignment.End -> "end"
+            }
+        } else {
+            receiver.style.removeProperty("text-align")
+        }
     }
 
     companion object {

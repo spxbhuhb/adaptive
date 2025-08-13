@@ -8,7 +8,7 @@ import `fun`.adaptive.ui.icon.actionIconRow
 import `fun`.adaptive.ui.table.TableCellDef
 
 @Adaptive
-fun <ITEM> tableCellActions(cellDef: TableCellDef<ITEM, ActionIconRowBackend<Any>?>, item: ITEM) : AdaptiveFragment {
+fun <ITEM,T> tableCellActions(cellDef: TableCellDef<ITEM, ActionIconRowBackend<T>?>, item: ITEM) : AdaptiveFragment {
     actionIconRow(
         cellDef.getFun(item) ?: ActionIconRowBackend(emptyList(), emptyList()) { }
     ) .. cellDef.table.tableTheme.actionsCellContainer
