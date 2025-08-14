@@ -9,6 +9,7 @@ import `fun`.adaptive.general.Observable
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.runtime.AbstractClientApplication
 import `fun`.adaptive.runtime.BackendWorkspace
 import `fun`.adaptive.runtime.FrontendWorkspace
 import `fun`.adaptive.service.transport.ServiceCallTransport
@@ -38,10 +39,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlin.reflect.KClass
 
 open class MultiPaneWorkspace(
-    backend: BackendAdapter,
-    backendWorkspace: BackendWorkspace,
-    scope: CoroutineScope = backend.scope,
-    transport: ServiceCallTransport = backend.transport,
+    backend : BackendAdapter,
+    backendWorkspace : BackendWorkspace,
+    scope : CoroutineScope = backend.scope,
+    transport : ServiceCallTransport = backend.transport,
     val toolSizeDefault : DPixel = 300.dp,
 ) : FrontendWorkspace(backend, backendWorkspace, scope, transport) {
 
@@ -88,9 +89,9 @@ open class MultiPaneWorkspace(
         )
     }
 
-    var lastActiveContentPaneGroup: ContentPaneGroupViewBackend? = null
+    var lastActiveContentPaneGroup : ContentPaneGroupViewBackend? = null
 
-    var lastActiveContentPane: PaneViewBackend<*>? = null
+    var lastActiveContentPane : PaneViewBackend<*>? = null
 
     val focusedPane = observableOf<PaneId?> { null }
 
@@ -145,7 +146,7 @@ open class MultiPaneWorkspace(
     // Utility
     // ---------------------------------------------------------------------------------------------
 
-    fun topActions(left: Boolean) =
+    fun topActions(left : Boolean) =
         if (left) {
             sideBarActions {
                 (it.singularity == PaneSingularity.SINGULAR && it.position == PanePosition.Center)
@@ -155,35 +156,37 @@ open class MultiPaneWorkspace(
             sideBarActions { it.position == PanePosition.RightTop }
         }
 
-    fun middlePanes(left: Boolean) =
+    fun middlePanes(left : Boolean) =
         if (left) {
             sideBarActions { it.position == PanePosition.LeftMiddle }
         } else {
             sideBarActions { it.position == PanePosition.RightMiddle }
         }
 
-    fun bottomPanes(left: Boolean) =
+    fun bottomPanes(left : Boolean) =
         if (left) {
             sideBarActions { it.position == PanePosition.LeftBottom }
         } else {
             sideBarActions { it.position == PanePosition.RightBottom }
         }
 
-    fun sideBarActions(filterFun: (action: AbstractSideBarAction) -> Boolean) =
-        (toolPanes.map { it.paneDef }.filter(filterFun) + sideBarActions.filter(filterFun)).sortedBy { it.displayOrder }
+    fun sideBarActions(filterFun : (action : AbstractSideBarAction) -> Boolean) =
+        (toolPanes.map { it.paneDef }.filter(filterFun) + sideBarActions.filter(filterFun))
+            .filter { it.requiredRole?.let { role -> (application as AbstractClientApplication<*, *>).hasRole(role) } ?: true }
+            .sortedBy { it.displayOrder }
 
     // ---------------------------------------------------------------------------------------------
     // Pane switching
     // ---------------------------------------------------------------------------------------------
 
-    fun toggle(paneDef: PaneDef) {
+    fun toggle(paneDef : PaneDef) {
         toolPanes.firstOrNull { it.paneDef.uuid == paneDef.uuid }?.let { toggle(it) }
     }
 
     /**
      * Toggle the given pane (typically when the user clicks on the pane icon).
      */
-    fun toggle(pane: PaneViewBackend<*>) {
+    fun toggle(pane : PaneViewBackend<*>) {
         when (pane.paneDef.position) {
             PanePosition.LeftTop -> toggleStore(leftTop, pane)
             PanePosition.LeftMiddle -> toggleStore(leftMiddle, pane)
@@ -220,7 +223,7 @@ open class MultiPaneWorkspace(
         isFullScreen.value = false
     }
 
-    private fun toggleStore(store: Observable<PaneId?>, pane: PaneViewBackend<*>) {
+    private fun toggleStore(store : Observable<PaneId?>, pane : PaneViewBackend<*>) {
         if (store.value == pane.uuid) {
             store.value = null
         } else {
@@ -249,27 +252,27 @@ open class MultiPaneWorkspace(
         update(mainSplit, if (hasBottom) SplitVisibility.Both else SplitVisibility.First)
     }
 
-    fun visibility(first: UUID<*>?, second: UUID<*>?): SplitVisibility =
+    fun visibility(first : UUID<*>?, second : UUID<*>?) : SplitVisibility =
         if (first == null) {
             if (second != null) SplitVisibility.Second else SplitVisibility.None
         } else {
             if (second == null) SplitVisibility.First else SplitVisibility.Both
         }
 
-    fun update(split: Observable<SplitPaneViewBackend>, first: UUID<*>?, second: UUID<*>?) {
+    fun update(split : Observable<SplitPaneViewBackend>, first : UUID<*>?, second : UUID<*>?) {
         val new = visibility(first, second)
         val current = split.value.visibility
         if (current == new) return
         split.value = split.value.copy(visibility = new)
     }
 
-    fun update(split: Observable<SplitPaneViewBackend>, new: SplitVisibility) {
+    fun update(split : Observable<SplitPaneViewBackend>, new : SplitVisibility) {
         val current = split.value.visibility
         if (current == new) return
         split.value = split.value.copy(visibility = new)
     }
 
-    fun paneStore(paneDef: PaneDef?): Observable<PaneId?> =
+    fun paneStore(paneDef : PaneDef?) : Observable<PaneId?> =
         when (paneDef?.position) {
             PanePosition.LeftTop -> leftTop
             PanePosition.LeftMiddle -> leftMiddle
@@ -285,7 +288,7 @@ open class MultiPaneWorkspace(
     // Tool management
     // --------------------------------------------------------------------------------
 
-    inline fun addToolPane(paneBackend: () -> PaneViewBackend<*>) {
+    inline fun addToolPane(paneBackend : () -> PaneViewBackend<*>) {
         val backend = paneBackend()
         toolPanes += backend
         if (backend is MultiPaneUrlResolver) {
@@ -302,7 +305,7 @@ open class MultiPaneWorkspace(
      *
      * @return the tool backend or null if no such backend exists in the workspace
      */
-    fun <T : PaneViewBackend<T>> toolBackend(kClass: KClass<T>): T? {
+    fun <T : PaneViewBackend<T>> toolBackend(kClass : KClass<T>) : T? {
         for (pane in toolPanes) {
             @Suppress("UNCHECKED_CAST")
             if (kClass.isInstance(pane)) return pane as T
@@ -315,14 +318,14 @@ open class MultiPaneWorkspace(
     // --------------------------------------------------------------------------------
 
     class ContentPaneBuilder<T>(
-        val condition: (type : PaneContentType, item : PaneContentItem) -> T?,
-        val builder: (item: T) -> PaneViewBackend<*>?
+        val condition : (type : PaneContentType, item : PaneContentItem) -> T?,
+        val builder : (item : T) -> PaneViewBackend<*>?
     )
 
     fun <T> addContentPaneBuilder(
-        contentType: PaneContentType,
-        condition: (type : PaneContentType, item : PaneContentItem) -> T?,
-        builder: (item: T) -> PaneViewBackend<*>?
+        contentType : PaneContentType,
+        condition : (type : PaneContentType, item : PaneContentItem) -> T?,
+        builder : (item : T) -> PaneViewBackend<*>?
     ) {
         contentPaneBuilders.getOrPut(contentType) { mutableListOf() } +=
             ContentPaneBuilder(
@@ -332,8 +335,8 @@ open class MultiPaneWorkspace(
     }
 
     fun addSingularContentPane(
-        singularItem: SingularPaneItem,
-        builder: (item: SingularPaneItem) -> PaneViewBackend<*>?
+        singularItem : SingularPaneItem,
+        builder : (item : SingularPaneItem) -> PaneViewBackend<*>?
     ) {
         contentPaneBuilders.getOrPut(singularItem.type) { mutableListOf() } +=
             ContentPaneBuilder(
@@ -342,11 +345,11 @@ open class MultiPaneWorkspace(
             )
     }
 
-    fun addContent(item: SingularPaneItem, modifiers: Set<EventModifier> = emptySet()) {
+    fun addContent(item : SingularPaneItem, modifiers : Set<EventModifier> = emptySet()) {
         addContent(item.type, item, modifiers)
     }
 
-    fun addContent(type: PaneContentType, item: PaneContentItem, modifiers: Set<EventModifier> = emptySet()) {
+    fun addContent(type : PaneContentType, item : PaneContentItem, modifiers : Set<EventModifier> = emptySet()) {
 
         val accepted = accept(type, item, modifiers)
         if (accepted) {
@@ -384,7 +387,7 @@ open class MultiPaneWorkspace(
         }
     }
 
-    fun findBuilder(type: PaneContentType): ContentPaneBuilder<*>? {
+    fun findBuilder(type : PaneContentType) : ContentPaneBuilder<*>? {
         var builder = contentPaneBuilders[type]?.firstOrNull()
         if (builder != null) return builder
 
@@ -405,10 +408,10 @@ open class MultiPaneWorkspace(
     }
 
     fun accept(
-        type: PaneContentType,
-        item: PaneContentItem,
-        modifiers: Set<EventModifier>
-    ): Boolean {
+        type : PaneContentType,
+        item : PaneContentItem,
+        modifiers : Set<EventModifier>
+    ) : Boolean {
         lastActiveContentPane?.let {
             if (it.accepts(item, modifiers)) {
                 loadContentPane(type, item, modifiers, it, lastActiveContentPaneGroup !!)
@@ -428,11 +431,11 @@ open class MultiPaneWorkspace(
     }
 
     fun accept(
-        type: PaneContentType,
-        item: PaneContentItem,
-        modifiers: Set<EventModifier>,
-        group: ContentPaneGroupViewBackend
-    ): Boolean {
+        type : PaneContentType,
+        item : PaneContentItem,
+        modifiers : Set<EventModifier>,
+        group : ContentPaneGroupViewBackend
+    ) : Boolean {
 
         for (pane in group.panes) {
             if (pane.accepts(item, modifiers)) {
@@ -446,10 +449,10 @@ open class MultiPaneWorkspace(
 
     fun loadContentPane(
         type : PaneContentType,
-        item: PaneContentItem,
-        modifiers: Set<EventModifier>,
-        pane: PaneViewBackend<*>,
-        group: ContentPaneGroupViewBackend
+        item : PaneContentItem,
+        modifiers : Set<EventModifier>,
+        pane : PaneViewBackend<*>,
+        group : ContentPaneGroupViewBackend
     ) {
         pane.load(item, modifiers)
         group.load(pane)
@@ -457,10 +460,10 @@ open class MultiPaneWorkspace(
     }
 
     fun addGroupContentPane(
-        type: PaneContentType,
-        item: PaneContentItem,
-        modifiers: Set<EventModifier>,
-        pane: PaneViewBackend<*>
+        type : PaneContentType,
+        item : PaneContentItem,
+        modifiers : Set<EventModifier>,
+        pane : PaneViewBackend<*>
     ) {
 
         val safeGroup = lastActiveContentPaneGroup
@@ -483,7 +486,7 @@ open class MultiPaneWorkspace(
         return
     }
 
-    fun removePaneGroup(group: ContentPaneGroupViewBackend) {
+    fun removePaneGroup(group : ContentPaneGroupViewBackend) {
         ContentPaneGroupViewBackend(UUID(), this, UnitPaneViewBackend(this, noContentPane)).also {
             lastActiveContentPaneGroup = it
             contentPaneGroups.value = listOf(it)
@@ -496,11 +499,11 @@ open class MultiPaneWorkspace(
 
     private val itemTypes = mutableMapOf<PaneContentType, WsItemConfig>()
 
-    fun addItemConfig(type: PaneContentType, icon: GraphicsResourceSet, tooltip: String? = null) {
+    fun addItemConfig(type : PaneContentType, icon : GraphicsResourceSet, tooltip : String? = null) {
         itemTypes[type] = WsItemConfig(type, icon, tooltip)
     }
 
-    fun getItemConfig(type: PaneContentType) = itemTypes[type] ?: WsItemConfig.DEFAULT
+    fun getItemConfig(type : PaneContentType) = itemTypes[type] ?: WsItemConfig.DEFAULT
 
     // --------------------------------------------------------------------------------
     // URL and NavState
@@ -513,7 +516,7 @@ open class MultiPaneWorkspace(
     /**
      * Resolve a URL to a workspace item to load into a content pane.
      */
-    fun resolveUrl(url: Url): Pair<PaneContentType,Any>? {
+    fun resolveUrl(url : Url) : Pair<PaneContentType, Any>? {
         if (url.segments.isEmpty()) return null
 
         for (resolver in urlResolvers) {
@@ -524,7 +527,7 @@ open class MultiPaneWorkspace(
         return null
     }
 
-    fun loadUrl(url: Url) {
+    fun loadUrl(url : Url) {
         resolveUrl(url)?.let {
             addContent(it.first, it.second, emptySet())
         }
@@ -535,7 +538,7 @@ open class MultiPaneWorkspace(
      * into one.
      */
     fun updateUrl(
-        type: PaneContentType,
+        type : PaneContentType,
         item : PaneContentItem
     ) {
         for (resolver in urlResolvers) {
@@ -550,25 +553,25 @@ open class MultiPaneWorkspace(
     // --------------------------------------------------------------------------------
 
     class FeedbackStrings(
-        val success: String,
-        val fail: String
+        val success : String,
+        val fail : String
     )
 
     open fun execute(
-        success: String,
-        fail: String,
-        action: suspend () -> Unit
+        success : String,
+        fail : String,
+        action : suspend () -> Unit
     ) {
         execute(context = FeedbackStrings(success, fail), block = action)
     }
 
-    override fun onSuccess(context: Any?) {
+    override fun onSuccess(context : Any?) {
         successNotification(
             if (context is FeedbackStrings) context.success else Strings.saveSuccess
         )
     }
 
-    override fun onFail(context: Any?, ex: Exception) {
+    override fun onFail(context : Any?, ex : Exception) {
         failNotification(
             if (context is FeedbackStrings) context.fail else Strings.saveFail
         )

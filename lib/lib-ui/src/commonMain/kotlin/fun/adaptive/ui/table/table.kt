@@ -13,8 +13,8 @@ import `fun`.adaptive.ui.loading.loading
 
 @Adaptive
 fun <ITEM> table(
-    backend: TableViewBackend<ITEM>
-): AdaptiveFragment {
+    backend : TableViewBackend<ITEM>
+) : AdaptiveFragment {
 
     boxWithProposal(instructions()) { proposal ->
         tableInner(backend, proposal)
@@ -25,8 +25,8 @@ fun <ITEM> table(
 
 @Adaptive
 fun <ITEM> tableInner(
-    backend: TableViewBackend<ITEM>,
-    proposal: SizingProposal
+    backend : TableViewBackend<ITEM>,
+    proposal : SizingProposal
 ) {
     val observed = observe { backend }
     val activeCells = observed.cells.mapNotNull { it.takeIfRole(fragment()) { it } }
@@ -35,19 +35,21 @@ fun <ITEM> tableInner(
         .findBestArrangement(
             cells = activeCells.map { CellDef(null, it.minWidth, it.width) },
             proposal.maxWidth - observed.tableTheme.arrangementWidthAdjustment,
-            observed.gap.width!!.value
+            observed.gap.width !!.value
         )
 
     column {
         width { proposal.maxWidth.dp } .. height { proposal.maxHeight.dp } .. fillStrategy.constrain
 
-        cellBox(arrangement = arrangement) {
-            width { proposal.maxWidth.dp }
+        if (! arrangement.isVertical) {
+            cellBox(arrangement = arrangement) {
+                width { proposal.maxWidth.dp }
 
-            observed.tableTheme.headerContainer
-            for (cell in activeCells) {
-                @Suppress("UNCHECKED_CAST")
-                tableHeaderCell(cell as TableCellDef<ITEM, Any>)
+                observed.tableTheme.headerContainer
+                for (cell in activeCells) {
+                    @Suppress("UNCHECKED_CAST")
+                    tableHeaderCell(cell as TableCellDef<ITEM, Any>)
+                }
             }
         }
 
@@ -67,25 +69,59 @@ fun <ITEM> tableItems(
     column {
         backend.tableTheme.contentContainer .. width { proposal.maxWidth.dp }
 
-        for (item in items) {
-            tableItem(backend, arrangement, item)
+        if (arrangement.isVertical) {
+            for (item in items) {
+                verticalTableItem(backend, arrangement, item)
+            }
+        } else {
+            for (item in items) {
+                tableItem(backend, arrangement, item)
+            }
         }
     }
 }
 
 @Adaptive
 fun <ITEM> tableItem(
-    backend: TableViewBackend<ITEM>,
+    backend : TableViewBackend<ITEM>,
     arrangement : CellBoxArrangement,
-    item: TableItem<ITEM>
-): AdaptiveFragment {
+    item : TableItem<ITEM>
+) : AdaptiveFragment {
 
     cellBox(arrangement = arrangement) {
         backend.tableTheme.itemContainer
 
         for (cell in backend.cells) {
             @Suppress("UNCHECKED_CAST")
-            tableCell(cell as TableCellDef<ITEM,Any>, item, cell.contentFun)
+            tableCell(cell as TableCellDef<ITEM, Any>, item, cell.contentFun)
+        }
+    }
+
+    return fragment()
+}
+
+@Adaptive
+fun <ITEM> verticalTableItem(
+    backend : TableViewBackend<ITEM>,
+    arrangement : CellBoxArrangement,
+    item : TableItem<ITEM>
+) : AdaptiveFragment {
+
+    cellBox(arrangement = arrangement) {
+        backend.tableTheme.itemContainer
+
+        for (cell in backend.cells) {
+            row {
+                fillStrategy.constrain
+
+                box {
+                    width { 120.dp } .. alignItems.startCenter .. padding { 4.dp }
+                    text(cell.label) .. semiBoldFont
+                }
+
+                @Suppress("UNCHECKED_CAST")
+                tableCell(cell as TableCellDef<ITEM, Any>, item, cell.contentFun)
+            }
         }
     }
 
@@ -94,10 +130,10 @@ fun <ITEM> tableItem(
 
 @Adaptive
 fun <ITEM, CELL_DATA> tableCell(
-    cellDef: TableCellDef<ITEM, CELL_DATA>,
-    item: TableItem<ITEM>,
-    content: @Adaptive (TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any
-): AdaptiveFragment {
+    cellDef : TableCellDef<ITEM, CELL_DATA>,
+    item : TableItem<ITEM>,
+    content : @Adaptive (TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any
+) : AdaptiveFragment {
     content(cellDef, item.data)
     return fragment()
 }

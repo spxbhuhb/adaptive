@@ -1,5 +1,7 @@
 package `fun`.adaptive.app.ui.mpw.inspect
 
+import `fun`.adaptive.app.ClientApplication
+import `fun`.adaptive.auth.model.AuthMarkers
 import `fun`.adaptive.foundation.AdaptiveAdapter
 import `fun`.adaptive.foundation.FragmentKey
 import `fun`.adaptive.lib_app.generated.resources.devTools
@@ -25,6 +27,8 @@ class AppInspectModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : App
 
     override fun frontendWorkspaceInit(workspace: FW, session: Any?) = with(workspace) {
 
+        val app = application as ClientApplication
+
         addToolPane {
             UnitPaneViewBackend(
                 this,
@@ -34,6 +38,7 @@ class AppInspectModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : App
                     Graphics.pest_control,
                     PanePosition.RightBottom,
                     INSPECT_TOOL_KEY,
+                    requiredRole = app.allApplicationRoles.firstOrNull { AuthMarkers.SECURITY_OFFICER in it.markers }?.uuid
                 )
             )
         }

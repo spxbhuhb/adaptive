@@ -14,7 +14,8 @@ data class PaneDef(
     val fragmentKey: FragmentKey,
     override val tooltip: String? = null,
     override val singularity: PaneSingularity = PaneSingularity.GROUP,
-    override val displayOrder: Int = Int.MAX_VALUE
+    override val displayOrder: Int = Int.MAX_VALUE,
+    override val requiredRole : UUID<*>? = null
 ) : AbstractSideBarAction() {
 
     override val actionFun: (MultiPaneWorkspace) -> Unit = { it.toggle(this) }
