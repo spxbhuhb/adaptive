@@ -4,16 +4,7 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.api.gap
-import `fun`.adaptive.ui.api.paddingTop
-import `fun`.adaptive.ui.generated.resources.arrow_drop_down
-import `fun`.adaptive.ui.generated.resources.arrow_drop_up
-import `fun`.adaptive.ui.generated.resources.empty
-import `fun`.adaptive.ui.generated.resources.filterPlaceholder
-import `fun`.adaptive.ui.generated.resources.keyboard_arrow_down
-import `fun`.adaptive.ui.generated.resources.north
-import `fun`.adaptive.ui.generated.resources.south
-import `fun`.adaptive.ui.generated.resources.unfold_more
+import `fun`.adaptive.ui.generated.resources.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.AbstractTheme
@@ -40,24 +31,30 @@ open class TableTheme(
     // ---------------------------------------------------------------------------------------
 
     var headerContainer = instructionsOf(
-        paddingVertical { 4.dp } .. paddingHorizontal { 8.dp },
+        paddingVertical { 4.dp },
+        paddingHorizontal { 8.dp },
         gap { 16.dp } // FIXME cellbox gap vs. table gap
     )
 
     var headerCell = instructionsOf(
         height { headerHeight },
+        maxWidth,
         paddingLeft { 8.dp },
         paddingRight { 4.dp },
         paddingVertical { 12.dp },
         cornerRadius { 6.dp },
         alignItems.center,
-        spaceBetween,
         fillStrategy.constrainReverse
     )
 
     var headerCellText = instructionsOf(
         noSelect,
-        normalFont
+        normalFont,
+        maxWidth
+    )
+
+    var headerCellTextEndAligned = headerCellText + instructionsOf(
+        alignSelf.endCenter
     )
 
     var headerActionContainer = instructionsOf(
@@ -113,10 +110,16 @@ open class TableTheme(
 
     var cellContainer = instructionsOf(
         height { 28.dp },
+        maxWidth,
         paddingLeft { 8.dp },
         paddingTop { 3.dp }, // FIXME paddingTop because of text baseline
         alignItems.startCenter,
         alignSelf.startCenter // FIXME alignSelf because of text alignment confusion
+    )
+
+    var cellContainerEndAligned = cellContainer + instructionsOf(
+        alignSelf.endCenter,
+        paddingRight { 4.dp } // same as header cell paddingRight
     )
 
     var iconCellContainer = cellContainer + instructionsOf(

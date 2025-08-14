@@ -22,14 +22,13 @@ fun <ITEM> tableHeaderCell(
     val hover = hover()
     val theme = cellDef.table.tableTheme
     val observed = observe { cellDef }
-    val alignment = if (hover) nop else observed.instructions.toMutableList().lastOrNull { it is AlignSelf } ?: nop
     val highlight = if (hover) backgrounds.surfaceVariant else nop
 
     row {
-        theme.headerCell .. maxWidth .. fillStrategy.constrainReverse .. highlight
+        theme.headerCell .. highlight
         onClick { observed.table.sort(observed) }
 
-        text(observed.label) .. theme.headerCellText .. maxWidth .. alignment
+        text(observed.label) .. (cellDef.headerInstructions?.invoke() ?: theme.headerCellText)
 
         row {
             theme.headerActionContainer

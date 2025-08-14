@@ -10,6 +10,6 @@ import `fun`.adaptive.utility.format
 
 @Adaptive
 fun <ITEM> tableCellDouble(cellDef : TableCellDef<ITEM, Double?>, item : ITEM) : AdaptiveFragment {
-    text(cellDef.getFun(item)?.format(cellDef.decimals, unit = cellDef.unit)) .. cellDef.instructions .. maxWidth
+    text(cellDef.getFun(item)?.format(cellDef.decimals, unit = cellDef.unit)) .. cellDef.instructions(item) .. maxWidth
     return fragment()
 }

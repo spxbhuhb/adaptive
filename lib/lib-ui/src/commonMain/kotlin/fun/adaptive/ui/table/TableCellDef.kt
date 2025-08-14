@@ -17,7 +17,7 @@ class TableCellDef<ITEM, CELL_DATA>(
     label : String,
     width : GridTrack,
     minWidth : DPixel,
-    instructions : AdaptiveInstructionGroup,
+    instructions : (ITEM) -> AdaptiveInstructionGroup,
     val getFun : (ITEM) -> CELL_DATA,
     val matchFun : ((CELL_DATA, filterText : String) -> Boolean)? = null,
     contentFun : @Adaptive (TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any
@@ -33,6 +33,7 @@ class TableCellDef<ITEM, CELL_DATA>(
 
     var rowMenu by observable(emptyList<MenuItemBase<Any>>(), ::notify)
 
+    var headerInstructions by observable<(() -> AdaptiveInstructionGroup)?>(null, ::notify)
     var instructions by observable(instructions, ::notify)
     var contentFun by observable(contentFun, ::notify)
 

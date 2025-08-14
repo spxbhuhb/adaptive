@@ -1,6 +1,8 @@
 package `fun`.adaptive.ui.table
 
+import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
@@ -24,24 +26,21 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
 
     var rowMenu = emptyList<MenuItemBase<Any>>()
 
-    var instructions = emptyInstructions
+    var headerInstructions : (() -> AdaptiveInstructionGroup)? = null
+    var instructions : ((ITEM) -> AdaptiveInstructionGroup)? = null
 
-    var get: ((ITEM) -> CELL_DATA)? = null
+    var get : ((ITEM) -> CELL_DATA)? = null
     var matchFun : ((CELL_DATA, filterText : String) -> Boolean)? = null
 
-    var content: @Adaptive ((TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any)? = null
+    var content : @Adaptive ((TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any)? = null
 
     var roleUuid : UUID<*>? = null
 
     fun toTableCellDef(tableBackend : TableViewBackend<ITEM>) : TableCellDef<ITEM, CELL_DATA> {
         TableCellDef(
-           tableBackend, label, width, minWidth,
-            if (instructions === emptyInstructions) {
-                tableBackend.tableTheme.cellContainer
-            } else {
-                instructions
-            },
-            get!!, matchFun, content!!
+            tableBackend, label, width, minWidth,
+            instructions ?: { tableBackend.tableTheme.cellContainer },
+            get !!, matchFun, content !!
         ).also { cell ->
             cell.visible = visible
             cell.sortable = sortable
@@ -51,7 +50,7 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
             cell.resizable = resizable
             cell.roleUuid = roleUuid
             cell.supportsTextFilter = supportsTextFilter
-
+            cell.headerInstructions = headerInstructions
             return cell
         }
     }

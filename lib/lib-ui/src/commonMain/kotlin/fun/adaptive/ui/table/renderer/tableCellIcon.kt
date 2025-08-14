@@ -4,15 +4,11 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.resource.graphics.Graphics
-import `fun`.adaptive.resource.graphics.GraphicsResource
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.text
 import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.icon.noContainerIconTheme
-import `fun`.adaptive.ui.icon.tableIconTheme
 import `fun`.adaptive.ui.table.TableCellDef
 
 @Adaptive
@@ -23,7 +19,7 @@ fun <ITEM> tableCellIcon(cellDef: TableCellDef<ITEM, GraphicsResourceSet?>, item
         icon(
             cellDef.getFun(item) ?: Graphics.empty,
             theme = noContainerIconTheme
-        )
+        ) .. cellDef.instructions(item)
     }
     return fragment()
 }

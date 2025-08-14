@@ -116,7 +116,7 @@ fun tableTest() {
             label = "Icon"
             get = { Graphics.account_box }
             width = 32.dp
-            instructions = instructionsOf(svgWidth(24.dp), svgHeight(24.dp))
+            instructions = { instructionsOf(svgWidth(24.dp), svgHeight(24.dp)) }
         }
 
         stringCell {

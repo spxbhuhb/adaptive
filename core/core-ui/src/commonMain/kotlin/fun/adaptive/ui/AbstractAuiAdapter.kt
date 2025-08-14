@@ -25,6 +25,7 @@ import `fun`.adaptive.ui.platform.media.MediaMetrics
 import `fun`.adaptive.ui.platform.media.MediaMetricsProducer
 import `fun`.adaptive.ui.render.model.AuiRenderData
 import `fun`.adaptive.ui.render.model.TextRenderData
+import `fun`.adaptive.utility.ObservableInstant
 import `fun`.adaptive.utility.trimSignature
 import `fun`.adaptive.utility.vmNowMicro
 import kotlinx.coroutines.CoroutineDispatcher
@@ -390,4 +391,11 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
     open fun releasePointerCapture(event: UIEvent) {
         throw UnsupportedOperationException("releasePointerCapture($event)")
     }
+
+    // ------------------------------------------------------------------------------
+    // Tick support
+    // ------------------------------------------------------------------------------
+
+    val tick = ObservableInstant(scope)
+
 }

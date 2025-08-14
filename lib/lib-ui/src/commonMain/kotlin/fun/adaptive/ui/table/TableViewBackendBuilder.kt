@@ -40,7 +40,8 @@ class TableViewBackendBuilder<ITEM_TYPE>(
             it.content = ::tableCellInt
             it.width = numericWidth
             it.minWidth = numericWidth
-            it.instructions = theme.cellContainer + instructionsOf(alignSelf.endCenter)
+            it.headerInstructions = { theme.headerCellTextEndAligned }
+            it.instructions = { theme.cellContainerEndAligned }
             buildFun(it)
         }
     }
@@ -50,7 +51,8 @@ class TableViewBackendBuilder<ITEM_TYPE>(
             it.content = ::tableCellDouble
             it.width = numericWidth
             it.minWidth = numericWidth
-            it.instructions = theme.cellContainer + instructionsOf(alignSelf.endCenter)
+            it.headerInstructions = { theme.headerCellTextEndAligned }
+            it.instructions = { theme.cellContainerEndAligned }
             buildFun(it)
         }
     }
