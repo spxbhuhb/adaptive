@@ -61,4 +61,10 @@
     <!-- misc -->
     <string name="noTechnicalInfo">Nincs több információ</string>
 
+    <string name="login">Fióknév</string>
+    <string name="name">Név</string>
+    <string name="activated">Aktív</string>
+    <string name="locked">Zárolt</string>
+    <string name="lastLogin">Utolsó belépés</string>
+
 </resources>

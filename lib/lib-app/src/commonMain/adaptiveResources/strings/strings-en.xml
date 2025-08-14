@@ -39,7 +39,7 @@
 
     <string name="principalName">Account name</string>
     <string name="accountName">Account name</string>
-    <string name="email">e-mail</string>
+    <string name="email">E-mail</string>
     <string name="password">password</string>
 
     <string name="passwordChange">Change password</string>
@@ -60,5 +60,11 @@
 
     <!-- misc -->
     <string name="noTechnicalInfo">No more information</string>
+
+    <string name="login">Login</string>
+    <string name="name">Name</string>
+    <string name="activated">Activated</string>
+    <string name="locked">Locked</string>
+    <string name="lastLogin">Last login</string>
 
 </resources>

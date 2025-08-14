@@ -23,23 +23,26 @@ import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.label.inputLabel
 import `fun`.adaptive.ui.popup.modal.editorModal
+import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.AvValueId
 
 @Adaptive
 fun accountEditorAdmin(
-    account: AccountEditorData? = null,
-    hide: () -> Unit,
-    save: (AccountEditorData) -> Unit
+    accountAndBackend: Pair<AccountEditorData, AccountManagerViewBackend>,
+    hide: UiClose
 ) {
-    val form = adatFormBackend(account ?: AccountEditorData()) {
+    val account = accountAndBackend.first
+    val backend = accountAndBackend.second
+
+    val form = adatFormBackend(account) {
         expectEquals(it::password, it::confirmPassword, dualTouch = true)
     }
 
-    val title = if (account == null) Strings.addAccount else Strings.editAccount
+    val title = if (account.principalId == null) Strings.addAccount else Strings.editAccount
 
-    editorModal(title, hide, { save(form.inputValue); hide() }) {
+    editorModal(title, hide, { backend.save(form.inputValue); hide.uiClose() }) {
         row {
             localContext(form) {
                 editFields()

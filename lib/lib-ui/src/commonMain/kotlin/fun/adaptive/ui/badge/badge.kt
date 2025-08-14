@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
+import `fun`.adaptive.resource.resolve.resolveString
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.hover
 import `fun`.adaptive.ui.api.onClick
@@ -22,6 +23,7 @@ fun badge(
     removable : Boolean = false,
     theme: BadgeTheme = BadgeTheme.default,
     useSeverity: Boolean = false,
+    translate : Boolean = true,
     removeFun: ((name : String) -> Unit)? = null
 ) : AdaptiveFragment {
 
@@ -50,7 +52,7 @@ fun badge(
         }
         box {
             containerInst
-            text(name) .. effectiveTheme.text
+            text(if (translate) fragment().resolveString(name) else name) .. effectiveTheme.text
         }
         if (removable && removeFun != null) {
             removableIcon(effectiveTheme, name, removeFun)

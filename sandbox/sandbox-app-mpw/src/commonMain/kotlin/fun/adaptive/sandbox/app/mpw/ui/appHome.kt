@@ -1,9 +1,9 @@
 package `fun`.adaptive.sandbox.app.mpw.ui
 
+import `fun`.adaptive.doc.example.mpw.mpwToolPaneExampleWrapper
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
-import `fun`.adaptive.sandbox.recipe.ui.mpw.mpwToolPaneExampleWrapper
 import `fun`.adaptive.ui.api.column
 import `fun`.adaptive.ui.api.width
 import `fun`.adaptive.ui.instruction.dp
