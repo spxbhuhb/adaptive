@@ -33,7 +33,7 @@ open class TableTheme(
     var headerContainer = instructionsOf(
         paddingVertical { 4.dp },
         paddingHorizontal { 8.dp },
-        gap { 16.dp } // FIXME cellbox gap vs. table gap
+        gap(16.dp, 4.dp) // FIXME cellbox gap vs. table gap
     )
 
     var headerCell = instructionsOf(
@@ -105,7 +105,7 @@ open class TableTheme(
 
     var itemContainer = instructionsOf(
         borders.outline .. cornerRadius { 4.dp } .. paddingVertical { 4.dp } .. paddingHorizontal { 8.dp },
-        gap { 16.dp } // FIXME cellbox gap vs. table gap
+        gap(16.dp, 4.dp) // FIXME cellbox gap vs. table gap
     )
 
     var cellContainer = instructionsOf(
