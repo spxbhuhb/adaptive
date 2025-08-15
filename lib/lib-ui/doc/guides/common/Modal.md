@@ -25,6 +25,7 @@ These mostly provide styling and some commonly used logic such as cancel and sav
 Complete surrounding (header, buttons):
 
 * [basicModal](fragment://) - title, you supply content and buttons
+* [okModal](fragment://) - title, ok button, you supply content
 * [editorModal](fragment://) - title, cancel and save buttons, you add content
 * [multiPageModal](fragment://) - title, cancel and save buttons, you define pages and content for each page
 

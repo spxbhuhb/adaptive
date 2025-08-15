@@ -110,6 +110,8 @@ import `fun`.adaptive.doc.example.selectInput.selectInputTextExample
 import `fun`.adaptive.doc.example.statusEditor.statusEditorSingleExample
 import `fun`.adaptive.doc.example.statusInput.statusInputSingleExample
 import `fun`.adaptive.doc.example.table.tableBasicExample
+import `fun`.adaptive.doc.example.table.tableCellTypesExample
+import `fun`.adaptive.doc.example.table.tableCellGroupsExample
 import `fun`.adaptive.doc.example.textInput.textInputAreaExample
 import `fun`.adaptive.doc.example.textInput.textInputPlayground
 import `fun`.adaptive.doc.example.textInput.textInputSimpleExample
@@ -430,6 +432,8 @@ object ExampleFragmentFactory : FoundationFragmentFactory() {
         // ----------------------------------------------------------------------------
 
         add("tableBasicExample", ::tableBasicExample)
+        add("tableCellTypesExample", ::tableCellTypesExample)
+        add("tableCellGroupsExample", ::tableCellGroupsExample)
 
         // ----------------------------------------------------------------------------
         // Tree

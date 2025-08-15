@@ -79,13 +79,14 @@ internal class FileCollector(
             name.endsWith(".kt") -> {
                 putFile(ktFiles, name, path, normalize = false)
 
-                // example file name structure: <order>_<group>_<name>_example.kt
                 if (name.endsWith("_example.kt")) {
-                    val parts = name.split("_")
-                    if (parts.size != 4) {
-                        compilation.warn("Invalid example name: $name")
+                    val base = name.removeSuffix("_example.kt")
+                    val parts = name.split('_', limit = 3)
+                    if (parts.size < 3) {
+                        compilation.warn("Invalid example name (missing order or group): $name")
                     } else {
-                        val group = examples.getOrPut(parts[1]) { mutableListOf() }
+                        val groupKey = parts[1]
+                        val group = examples.getOrPut(groupKey) { mutableListOf() }
                         group += path
                     }
                 }
