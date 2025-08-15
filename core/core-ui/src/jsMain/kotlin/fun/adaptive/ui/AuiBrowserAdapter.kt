@@ -32,14 +32,14 @@ import org.w3c.dom.HTMLElement
 import org.w3c.dom.pointerevents.PointerEvent
 
 class AuiBrowserAdapter(
-    override val rootContainer: HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
-    override val backend: BackendAdapter,
-    override val transport: ServiceCallTransport = backend.transport
+    override val rootContainer : HTMLElement = requireNotNull(window.document.body) { "window.document.body is null or undefined" },
+    override val backend : BackendAdapter,
+    override val transport : ServiceCallTransport = backend.transport
 ) : AbstractAuiAdapter<HTMLElement, HTMLDivElement>() {
 
     override val fragmentFactory = AuiFragmentFactory
 
-    override val dispatcher: CoroutineDispatcher
+    override val dispatcher : CoroutineDispatcher
         get() = Dispatchers.Default
 
     /**
@@ -50,15 +50,15 @@ class AuiBrowserAdapter(
     val haveToHackScrollbar = ! GlobalRuntimeContext.platform.isMac
 
     // the order is important here, apply the style first, measure after
-    override val scrollBarSize: Double = getScrollbarWidth()
+    override val scrollBarSize : Double = getScrollbarWidth()
 
-    override fun makeContainerReceiver(fragment: AbstractContainer<HTMLElement, HTMLDivElement>): HTMLDivElement =
+    override fun makeContainerReceiver(fragment : AbstractContainer<HTMLElement, HTMLDivElement>) : HTMLDivElement =
         document.createElement("div") as HTMLDivElement
 
-    override fun makeStructuralReceiver(fragment: AbstractContainer<HTMLElement, HTMLDivElement>): HTMLDivElement =
+    override fun makeStructuralReceiver(fragment : AbstractContainer<HTMLElement, HTMLDivElement>) : HTMLDivElement =
         (document.createElement("div") as HTMLDivElement).also { it.style.display = "contents" }
 
-    override fun addActualRoot(fragment: AdaptiveFragment) {
+    override fun addActualRoot(fragment : AdaptiveFragment) {
         traceAddActual(fragment)
 
         fragment.alsoIfInstance<AbstractAuiFragment<HTMLElement>> {
@@ -72,7 +72,7 @@ class AuiBrowserAdapter(
         otherRootFragments += fragment
     }
 
-    override fun removeActualRoot(fragment: AdaptiveFragment) {
+    override fun removeActualRoot(fragment : AdaptiveFragment) {
         traceRemoveActual(fragment)
 
         fragment.alsoIfInstance<AbstractAuiFragment<HTMLElement>> {
@@ -82,21 +82,56 @@ class AuiBrowserAdapter(
         otherRootFragments -= fragment
     }
 
-    override fun addActual(containerReceiver: HTMLDivElement, itemReceiver: HTMLElement) {
-        containerReceiver.appendChild(itemReceiver)
+    // Adding and removing elements is quite expensive and may cause a browser
+    // layout / redraw, which in turn results in flickering. To avoid this,
+    // we postpone adding and removing to the live DOM until after the
+    // layouts are calculated and styles are applied.
+
+    class ActualOp(
+        val containerReceiver : HTMLElement?,
+        val itemReceiver : HTMLElement,
+        val add : Boolean
+    )
+
+    val actualOps = mutableListOf<ActualOp>()
+
+    override fun addActual(containerReceiver : HTMLDivElement, itemReceiver : HTMLElement) {
+        // When the container is not part of the live DOM, we can freely add children.
+        // Otherwise, we better postpone the operation until after the layouts are calculated.
+        if (! containerReceiver.isConnected) {
+            containerReceiver.appendChild(itemReceiver)
+        } else {
+            actualOps += ActualOp(containerReceiver, itemReceiver, true)
+        }
     }
 
-    override fun removeActual(itemReceiver: HTMLElement) {
-        itemReceiver.remove()
+    override fun removeActual(itemReceiver : HTMLElement) {
+        // When the item is not part of the live DOM, we can freely remove it.
+        // Otherwise, we better postpone the operation until after the layouts are calculated.
+        if (! itemReceiver.isConnected) {
+            itemReceiver.remove()
+        } else {
+            actualOps += ActualOp(null, itemReceiver, false)
+        }
     }
 
     override fun closePatchBatch() {
         window.requestAnimationFrame {
             super.closePatchBatch()
+
+            // Execute the DOM additions/removals in a batch.
+            actualOps.forEach {
+                if (it.add) {
+                    it.containerReceiver?.appendChild(it.itemReceiver)
+                } else {
+                    it.itemReceiver.remove()
+                }
+            }
+            actualOps.clear()
         }
     }
 
-    override fun applyLayoutToActual(fragment: AbstractAuiFragment<HTMLElement>) {
+    override fun applyLayoutToActual(fragment : AbstractAuiFragment<HTMLElement>) {
         val data = fragment.renderData
 
         if (fragment.isStructural) {
@@ -134,7 +169,7 @@ class AuiBrowserAdapter(
         }
     }
 
-    override fun applyLayoutIndependent(fragment: AbstractAuiFragment<HTMLElement>) {
+    override fun applyLayoutIndependent(fragment : AbstractAuiFragment<HTMLElement>) {
         val renderData = fragment.renderData
 
         if (renderData.tracePatterns.isNotEmpty()) {
@@ -152,26 +187,26 @@ class AuiBrowserAdapter(
         BrowserInputApplier.applyTo(fragment)
     }
 
-    inline operator fun <reified T : Any> T?.invoke(function: (it: T) -> Unit) {
+    inline operator fun <reified T : Any> T?.invoke(function : (it : T) -> Unit) {
         if (this != null) {
             function(this)
         }
     }
 
-    override fun openExternalLink(href: String) {
+    override fun openExternalLink(href : String) {
         window.open(href, "_blank")
     }
 
-    override fun toPx(dPixel: DPixel): Double =
+    override fun toPx(dPixel : DPixel) : Double =
         dPixel.value
 
-    override fun toDp(value: Double): DPixel =
+    override fun toDp(value : Double) : DPixel =
         DPixel(value)
 
     val Double.pxs
         inline get() = "${this}px"
 
-    override fun toPx(sPixel: SPixel): Double =
+    override fun toPx(sPixel : SPixel) : Double =
         sPixel.value
 
     // ------------------------------------------------------------------------------
@@ -214,7 +249,7 @@ class AuiBrowserAdapter(
     // Focus support
     // ------------------------------------------------------------------------------
 
-    override fun focus(fragment: AbstractAuiFragment<*>) {
+    override fun focus(fragment : AbstractAuiFragment<*>) {
         (fragment.receiver as? HTMLElement)?.focus()
     }
 
@@ -222,17 +257,17 @@ class AuiBrowserAdapter(
     // Scroll support
     // ------------------------------------------------------------------------------
 
-    override fun scrollPosition(fragment: AdaptiveFragment): RawPosition? {
+    override fun scrollPosition(fragment : AdaptiveFragment) : RawPosition? {
         val receiver = expectUiFragment<HTMLElement>(fragment)?.receiver ?: return null
         return RawPosition(receiver.scrollTop, receiver.scrollLeft)
     }
 
-    override fun scrollTo(fragment: AdaptiveFragment, position: RawPosition) {
+    override fun scrollTo(fragment : AdaptiveFragment, position : RawPosition) {
         val receiver = expectUiFragment<HTMLElement>(fragment)?.receiver ?: return
         receiver.scrollTo(position.top, position.left)
     }
 
-    override fun scrollIntoView(fragment: AdaptiveFragment, alignment: Alignment) {
+    override fun scrollIntoView(fragment : AdaptiveFragment, alignment : Alignment) {
         val fragment = expectUiFragment<HTMLElement>(fragment) ?: return
 
         val (layoutContainer, position) = scrollState(fragment)
@@ -281,13 +316,13 @@ class AuiBrowserAdapter(
     // Pointer capture support
     // ------------------------------------------------------------------------------
 
-    override fun acquirePointerCapture(event: UIEvent) {
+    override fun acquirePointerCapture(event : UIEvent) {
         val element = (event.fragment.receiver as? HTMLElement) ?: return
         val nativeEvent = event.nativeEvent as? PointerEvent ?: return
         element.setPointerCapture(nativeEvent.pointerId)
     }
 
-    override fun releasePointerCapture(event: UIEvent) {
+    override fun releasePointerCapture(event : UIEvent) {
         val element = (event.fragment.receiver as? HTMLElement) ?: return
         val nativeEvent = event.nativeEvent as? PointerEvent ?: return
         element.releasePointerCapture(nativeEvent.pointerId)
