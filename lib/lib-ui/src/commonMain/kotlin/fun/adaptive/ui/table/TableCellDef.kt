@@ -4,7 +4,6 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.general.SelfObservable
-import `fun`.adaptive.runtime.application
 import `fun`.adaptive.runtime.hasRole
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.GridTrack
@@ -48,7 +47,8 @@ class TableCellDef<ITEM, CELL_DATA>(
 
     var supportsTextFilter = true
 
-    var roleUuid : UUID<*>? = null
+    var role : UUID<*>? = null
+    var group : TableCellGroupDef? = null
 
     fun defaultCompareFunction(item1 : ITEM, item2 : ITEM) : Int {
         val value1 = getFun(item1)
@@ -82,6 +82,6 @@ class TableCellDef<ITEM, CELL_DATA>(
     }
 
     fun <T> takeIfRole(fragment : AdaptiveFragment, block : () -> T) : T? {
-        return if (roleUuid == null || fragment.hasRole(roleUuid !!)) block() else null
+        return if (role == null || fragment.hasRole(role !!)) block() else null
     }
 }

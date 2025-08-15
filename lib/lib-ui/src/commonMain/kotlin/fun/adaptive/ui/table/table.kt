@@ -8,6 +8,7 @@ import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangement
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangementCalculator
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
+import `fun`.adaptive.ui.fragment.layout.cellbox.CellGroupDef
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.loading.loading
 
@@ -30,13 +31,7 @@ fun <ITEM> tableInner(
 ) {
     val observed = observe { backend }
     val activeCells = observed.cells.mapNotNull { it.takeIfRole(fragment()) { it } }
-
-    val arrangement = CellBoxArrangementCalculator(adapter() as AbstractAuiAdapter<*, *>)
-        .findBestArrangement(
-            cells = activeCells.map { CellDef(null, it.minWidth, it.width) },
-            proposal.maxWidth - observed.tableTheme.arrangementWidthAdjustment,
-            observed.gap.width !!.value
-        )
+    val arrangement = calculate(adapter(), activeCells, proposal, observed)
 
     column {
         width { proposal.maxWidth.dp } .. height { proposal.maxHeight.dp } .. fillStrategy.constrain
@@ -54,14 +49,34 @@ fun <ITEM> tableInner(
         }
 
         loading(observed.viewportItems) { viewportItems ->
-            tableItems(observed, arrangement, viewportItems, proposal)
+            tableItems(observed, activeCells, arrangement, viewportItems, proposal)
         }
     }
 }
 
+private fun <ITEM> calculate(
+    adapter : AdaptiveAdapter,
+    activeCells : List<TableCellDef<ITEM, *>>,
+    proposal : SizingProposal,
+    observed : TableViewBackend<ITEM>
+) =
+    CellBoxArrangementCalculator(adapter as AbstractAuiAdapter<*, *>)
+        .findBestArrangement(
+            cells = activeCells.map {
+                CellDef(
+                    it.group?.let { g -> CellGroupDef(g.label, g.priority) },
+                    it.minWidth,
+                    it.width
+                )
+            },
+            proposal.maxWidth - observed.tableTheme.arrangementWidthAdjustment,
+            observed.gap.width !!.value
+        )
+
 @Adaptive
 fun <ITEM> tableItems(
     backend : TableViewBackend<ITEM>,
+    activeCells : List<TableCellDef<ITEM, *>>,
     arrangement : CellBoxArrangement,
     items : List<TableItem<ITEM>>,
     proposal : SizingProposal
@@ -71,11 +86,11 @@ fun <ITEM> tableItems(
 
         if (arrangement.isVertical) {
             for (item in items) {
-                verticalTableItem(backend, arrangement, item)
+                verticalTableItem(backend, activeCells, arrangement, item)
             }
         } else {
             for (item in items) {
-                tableItem(backend, arrangement, item)
+                tableItem(backend, activeCells, arrangement, item)
             }
         }
     }
@@ -84,6 +99,7 @@ fun <ITEM> tableItems(
 @Adaptive
 fun <ITEM> tableItem(
     backend : TableViewBackend<ITEM>,
+    activeCells : List<TableCellDef<ITEM, *>>,
     arrangement : CellBoxArrangement,
     item : TableItem<ITEM>
 ) : AdaptiveFragment {
@@ -91,7 +107,7 @@ fun <ITEM> tableItem(
     cellBox(arrangement = arrangement) {
         backend.tableTheme.itemContainer
 
-        for (cell in backend.cells) {
+        for (cell in activeCells) {
             @Suppress("UNCHECKED_CAST")
             tableCell(cell as TableCellDef<ITEM, Any>, item, cell.contentFun)
         }
@@ -103,6 +119,7 @@ fun <ITEM> tableItem(
 @Adaptive
 fun <ITEM> verticalTableItem(
     backend : TableViewBackend<ITEM>,
+    activeCells : List<TableCellDef<ITEM, *>>,
     arrangement : CellBoxArrangement,
     item : TableItem<ITEM>
 ) : AdaptiveFragment {
@@ -110,7 +127,7 @@ fun <ITEM> verticalTableItem(
     cellBox(arrangement = arrangement) {
         backend.tableTheme.itemContainer
 
-        for (cell in backend.cells) {
+        for (cell in activeCells) {
             row {
                 fillStrategy.constrain
 

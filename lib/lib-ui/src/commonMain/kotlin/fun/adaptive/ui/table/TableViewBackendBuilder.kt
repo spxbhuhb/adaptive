@@ -28,6 +28,12 @@ class TableViewBackendBuilder<ITEM_TYPE>(
 
     var numericWidth = 140.dp
 
+    var cellGroups : List<TableCellGroupDef> = emptyList()
+
+    fun cellGroup(label : String, priority : Int) : TableCellGroupDef {
+        return TableCellGroupDef(label, priority).also { cellGroups += it }
+    }
+
     fun stringCell(buildFun: TableCellDefBuilder<ITEM_TYPE, String?>.() -> Unit) {
         cells += TableCellDefBuilder<ITEM_TYPE, String?>().also {
             it.content = ::tableCellToString

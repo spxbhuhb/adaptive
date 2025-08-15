@@ -1,9 +1,7 @@
 package `fun`.adaptive.ui.table
 
-import `fun`.adaptive.backend.backend
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
-import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.layout.GridTrack
@@ -34,7 +32,8 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
 
     var content : @Adaptive ((TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any)? = null
 
-    var roleUuid : UUID<*>? = null
+    var role : UUID<*>? = null
+    var group : TableCellGroupDef? = null
 
     fun toTableCellDef(tableBackend : TableViewBackend<ITEM>) : TableCellDef<ITEM, CELL_DATA> {
         TableCellDef(
@@ -48,9 +47,10 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
             cell.unit = unit
             cell.rowMenu = rowMenu
             cell.resizable = resizable
-            cell.roleUuid = roleUuid
+            cell.role = role
             cell.supportsTextFilter = supportsTextFilter
             cell.headerInstructions = headerInstructions
+            cell.group = group
             return cell
         }
     }

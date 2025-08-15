@@ -34,6 +34,7 @@ import `fun`.adaptive.ui.table.TableViewBackendBuilder.Companion.tableBackend
 import `fun`.adaptive.ui.table.table
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.uiCommon
+import `fun`.adaptive.utility.UUID.Companion.uuid4
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -110,7 +111,7 @@ fun tableTest() {
         items = mutableListOf()
         repeat(100) { items += T("RHT-$it", "Hűtő", it.toDouble()) }
 
-//        val currents = cellGroup("Currents")
+        val currents = cellGroup("Currents", 1)
 
         iconCell {
             label = "Icon"
@@ -137,18 +138,21 @@ fun tableTest() {
             label = "Current L1"
             get = { it.currentL1 }
             minWidth = 100.dp
+            group = currents
         }
 
         doubleCell {
             label = "Current L2"
             get = { it.currentL1 }
             minWidth = 100.dp
+            group = currents
         }
 
         doubleCell {
             label = "Current L3"
             get = { it.currentL1 }
             minWidth = 100.dp
+            group = currents
         }
 
         statusCell {
