@@ -18,7 +18,7 @@ import org.w3c.dom.events.MouseEvent
 
 object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
 
-    override fun applyNoPointerEvents(fragment: AbstractAuiFragment<HTMLElement>, previous: PointerEvents?, current: PointerEvents?) {
+    override fun applyNoPointerEvents(fragment : AbstractAuiFragment<HTMLElement>, previous : PointerEvents?, current : PointerEvents?) {
         val style = fragment.receiver.style
         when (current?.enabled) {
             false -> style.setProperty("pointer-events", "none")
@@ -27,7 +27,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
         }
     }
 
-    override fun addEventListener(fragment: AbstractAuiFragment<HTMLElement>, eventHandler: UIEventHandler): Any {
+    override fun addEventListener(fragment : AbstractAuiFragment<HTMLElement>, eventHandler : UIEventHandler) : Any {
 
         val (eventName, condition) = when (eventHandler) {
             is OnClick -> "click" to Always
@@ -47,11 +47,11 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
             if (! this.condition.matches(event)) return@BrowserEventListener
 
             val target = event.target
-            val x: Double
-            val y: Double
+            val x : Double
+            val y : Double
             val clientX : Double
             val clientY : Double
-            val transferData: TransferData?
+            val transferData : TransferData?
 
             if (event is MouseEvent) {
                 val boundingRect = fragment.receiver.getBoundingClientRect()
@@ -87,7 +87,14 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
                 null
             }
 
-            val doFeedback = eventHandler.execute(UIEvent(fragment, event, x, y, clientX, clientY, transferData, keyInfo, modifiers(event), { event.preventDefault() }, { event.stopPropagation() }))
+            val doFeedback = eventHandler.execute(
+                UIEvent(
+                    fragment, event, x, y, clientX, clientY, transferData, keyInfo, modifiers(event),
+                    { event.preventDefault() },
+                    { event.stopPropagation() },
+                    { fragment.receiver.blur() }
+                )
+            )
 
 //            event.preventDefault()
 
@@ -101,7 +108,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
         return listener
     }
 
-    fun modifiers(event: Event): Set<EventModifier> {
+    fun modifiers(event : Event) : Set<EventModifier> {
         val modifiers = mutableSetOf<EventModifier>()
 
         when (event) {
@@ -124,7 +131,7 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
         return modifiers
     }
 
-    override fun removeListener(fragment: AbstractAuiFragment<HTMLElement>, eventListener: Any?) {
+    override fun removeListener(fragment : AbstractAuiFragment<HTMLElement>, eventListener : Any?) {
         if (eventListener != null) {
             eventListener as BrowserEventListener
             fragment.receiver.removeEventListener(eventListener.eventName, eventListener)
@@ -132,21 +139,21 @@ object BrowserEventApplier : EventRenderApplier<HTMLElement>() {
     }
 
     abstract class EventCondition {
-        abstract fun matches(event: Event): Boolean
+        abstract fun matches(event : Event) : Boolean
     }
 
     object Always : EventCondition() {
-        override fun matches(event: Event): Boolean = true
+        override fun matches(event : Event) : Boolean = true
     }
 
     object Primary : EventCondition() {
-        override fun matches(event: Event): Boolean {
+        override fun matches(event : Event) : Boolean {
             if (event !is MouseEvent) return false
             return (event.button.toInt() == 0)
         }
     }
 
-    fun feedback(fragment: AbstractAuiFragment<HTMLElement>, eventHandler: UIEventHandler) {
+    fun feedback(fragment : AbstractAuiFragment<HTMLElement>, eventHandler : UIEventHandler) {
         if (eventHandler.feedbackText == null && eventHandler.feedbackIcon == null) return
 
         val feedbackBase = if (fragment is AbstractContainer<*, *> && ! fragment.isStructural) {

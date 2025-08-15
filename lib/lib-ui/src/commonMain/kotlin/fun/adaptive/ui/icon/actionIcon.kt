@@ -16,6 +16,7 @@ fun actionIcon(
     theme: IconTheme = onSurfaceIconTheme,
     actionFeedbackText: String? = null,
     actionFeedbackIcon: GraphicsResourceSet? = null,
+    releaseFocus : Boolean = true,
     actionHandler: UiEventHandler? = null
 ): AdaptiveFragment {
     val focus = focus()
@@ -28,8 +29,8 @@ fun actionIcon(
     box(theme.actionIconContainer, background, border) {
         if (actionHandler != null) {
             instructions().addAll(
-                onClick(feedbackText = actionFeedbackText, feedbackIcon = actionFeedbackIcon) { e -> actionHandler(e) },
-                onEnter(feedbackText = actionFeedbackText, feedbackIcon = actionFeedbackIcon) { e -> actionHandler(e) }
+                onClick(feedbackText = actionFeedbackText, feedbackIcon = actionFeedbackIcon) { e -> actionHandler(e); if (releaseFocus) e.releaseFocus(); },
+                onEnter(feedbackText = actionFeedbackText, feedbackIcon = actionFeedbackIcon) { e -> actionHandler(e); if (releaseFocus) e.releaseFocus(); }
             )
         } else {
             instructions()
