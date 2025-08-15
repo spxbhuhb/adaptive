@@ -134,9 +134,6 @@ private fun tableDef(
     }
 
     actionsCell {
-        label = Strings.actions
-        minWidth = 120.dp
-        width = 120.dp
         get = { value -> ActionIconRowBackend(otherActions = actions(value)) { contextActionHandler(viewBackend, it) } }
     }
 

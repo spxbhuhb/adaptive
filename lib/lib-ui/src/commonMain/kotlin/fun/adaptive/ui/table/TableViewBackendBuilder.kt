@@ -98,6 +98,8 @@ class TableViewBackendBuilder<ITEM_TYPE>(
             it.sortable = false
             it.resizable = false
             it.supportsTextFilter = false
+            it.minWidth = 40.dp
+            it.width = 40.dp
             buildFun(it)
         }
     }

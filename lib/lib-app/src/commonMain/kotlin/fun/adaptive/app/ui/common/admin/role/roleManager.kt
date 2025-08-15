@@ -1,130 +1,104 @@
 package `fun`.adaptive.app.ui.common.admin.role
 
-import `fun`.adaptive.ui.mpw.fragments.contentPaneHeader
 import `fun`.adaptive.auth.model.RoleSpec
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.value.observe
-import `fun`.adaptive.lib_app.generated.resources.addRole
-import `fun`.adaptive.lib_app.generated.resources.edit
-import `fun`.adaptive.lib_app.generated.resources.roles
+import `fun`.adaptive.lib_app.generated.resources.*
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.checkbox.checkbox
-import `fun`.adaptive.ui.editor.textEditor
-import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.generated.resources.edit
-import `fun`.adaptive.ui.generated.resources.filterPlaceholder
-import `fun`.adaptive.ui.icon.actionIcon
-import `fun`.adaptive.ui.input.InputConfig.Companion.inputConfig
-import `fun`.adaptive.ui.input.InputContext
-import `fun`.adaptive.ui.input.button.button
+import `fun`.adaptive.ui.icon.ActionIconRowBackend
+import `fun`.adaptive.ui.input.button.submitButton
 import `fun`.adaptive.ui.instruction.dp
-import `fun`.adaptive.ui.instruction.fr
-import `fun`.adaptive.ui.loading.loading
+import `fun`.adaptive.ui.menu.MenuItem
+import `fun`.adaptive.ui.menu.MenuItemBase
 import `fun`.adaptive.ui.mpw.MultiPaneTheme
-import `fun`.adaptive.ui.theme.backgrounds
-import `fun`.adaptive.ui.theme.borders
+import `fun`.adaptive.ui.mpw.fragments.contentPaneHeader
+import `fun`.adaptive.ui.popup.modal.dialog
+import `fun`.adaptive.ui.table.TableItem
+import `fun`.adaptive.ui.table.TableViewBackendBuilder.Companion.tableBackend
+import `fun`.adaptive.ui.table.table
+import `fun`.adaptive.ui.table.tableFilterTextInput
 import `fun`.adaptive.value.AvValue
 
 @Adaptive
 fun roleManager(): AdaptiveFragment {
 
     val viewBackend = RoleManagerViewBackend(fragment())
-    val rolesOrNull = observe { viewBackend.roles }
+    val tableBackend = tableDef(viewBackend)
 
-    val filterBackend = observe { adatFormBackend(RoleFilter()) }
-    val filter = filterBackend.inputValue
-
+    val roles = observe { viewBackend.roles }.also { roleList ->
+        val items = (roleList ?: emptyList()).map { TableItem(it) }
+        tableBackend.allItems = items.toMutableList()
+        tableBackend.updateAndNotify()
+    }
 
     column {
         MultiPaneTheme.DEFAULT.contentPaneContainer
 
         contentPaneHeader(Strings.roles) {
             row {
-                gap { 16.dp }
-                textEditor { filter.text } .. width { 200.dp } .. inputConfig(label = "", placeholder = Strings.filterPlaceholder)
+                gap { 16.dp } .. alignItems.endCenter
 
                 row {
-                    button(Strings.addRole)
-                    primaryPopup { hide ->
-                        popupAlign.absoluteCenter(modal = true, 150.dp)
-                        roleEditor(hide = hide) { viewBackend.save(it, true) }
+                    submitButton(Strings.addRole) {
+                        // open editor for new role via dialog wrapper
+                        dialog(viewBackend.workspace, (null to viewBackend), ::roleEditorAdmin)
                     }
                 }
             }
         }
 
-        loading(rolesOrNull) { roles ->
-            items(roles.filter { filter.matches(it) }, filter.isEmpty())
+        column {
+            fillStrategy.constrain .. maxSize .. gap { 16.dp }
+            tableFilterTextInput(tableBackend)
+            table(tableBackend)
         }
     }
 
     return fragment()
 }
 
-@Adaptive
-private fun items(
-    items: List<AvValue<RoleSpec>>?,
-    emptyFilter: Boolean
-) {
-    column {
-        maxSize .. verticalScroll .. gap { 16.dp }
-        when {
-            items == null -> text("..betöltés...")
-            items.isEmpty() -> text(if (emptyFilter) "nincsenek fiókok felvéve" else "nincs a szűrésnek megfelelő fiók")
-            else -> for (item in items) {
-                item(item)
-            }
-        }
+private fun tableDef(
+    viewBackend: RoleManagerViewBackend
+) = tableBackend<AvValue<RoleSpec>> {
+
+    stringCell {
+        label = Strings.name
+        get = { it.nameLike }
+        minWidth = 160.dp
+    }
+
+    stringCell {
+        label = Strings.context
+        get = { it.spec.context }
+        minWidth = 160.dp
+    }
+
+    actionsCell {
+        get = { value -> ActionIconRowBackend(otherActions = actions(value)) { contextActionHandler(viewBackend, it) } }
     }
 }
 
-@Adaptive
-private fun item(item: AvValue<RoleSpec>) {
-    val hover = hover()
-    val popupState = InputContext()
+private fun actions(item: AvValue<RoleSpec>) = listOf<MenuItemBase<AvValue<RoleSpec>>>(
+    MenuItem(Graphics.edit, Strings.edit, item)
+)
 
-    val background =
-        when {
-            hover == true -> backgrounds.surfaceHover
-            else -> backgrounds.surface
+private fun contextActionHandler(
+    viewBackend: RoleManagerViewBackend,
+    menuItem: MenuItem<AvValue<RoleSpec>>
+) {
+    when (menuItem.label) {
+        Strings.edit -> {
+            dialog(
+                viewBackend.workspace,
+                (menuItem.data to viewBackend),
+                ::roleEditorAdmin
+            )
         }
-
-    grid {
-        maxWidth .. height { 36.dp } .. alignItems.startCenter .. borders.outline
-        paddingLeft { 32.dp } .. paddingRight { 16.dp } .. gap { 16.dp } .. noSelect
-
-        colTemplate(
-            1.fr,    // name
-            1.fr,    // context
-            80.dp,   // group
-            24.dp,   // edit
-        )
-
-        gap { 8.dp }
-        cornerRadius { 8.dp }
-        background
-
-        text(item.name) .. maxWidth
-        text(item.spec.context) .. maxWidth
-        checkbox(item.spec.group) { }
-
-        box {
-            if (hover || popupState.value.isPopupOpen) {
-                actionIcon(Graphics.edit, Strings.edit)
-                primaryPopup(popupState) { hide ->
-                    popupAlign.absoluteCenter(modal = true, 150.dp)
-                    roleEditor(item, hide) {
-                        fragment().firstContext<RoleManagerViewBackend>().save(it, false)
-                    }
-                }
-            }
-        }
-
     }
 }
 

@@ -12,15 +12,17 @@ import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.popup.modal.editorModal
+import `fun`.adaptive.ui.support.UiClose
 import `fun`.adaptive.ui.theme.colors
 import `fun`.adaptive.value.AvValue
 
 @Adaptive
-fun roleEditor(
-    role: AvValue<RoleSpec>? = null,
-    hide: () -> Unit,
-    save: (AvValue<RoleSpec>) -> Unit
+fun roleEditorAdmin(
+    roleAndBackend: Pair<AvValue<RoleSpec>?, RoleManagerViewBackend>,
+    hide: UiClose
 ) {
+    val role = roleAndBackend.first
+    val backend = roleAndBackend.second
 
     val template = AvValue(spec = RoleSpec())
     val title = if (role == null) Strings.addRole else Strings.editRole
@@ -28,7 +30,7 @@ fun roleEditor(
     @Independent
     val form = adatFormBackend(role ?: template)
 
-    editorModal(title, hide, { save(form.inputValue); hide() }) {
+    editorModal(title, hide, { backend.save(form.inputValue, role == null); hide.uiClose() }) {
         column {
             width { 400.dp } .. padding { 16.dp } .. gap { 8.dp } .. borderRight(colors.lightOutline)
 
@@ -38,5 +40,4 @@ fun roleEditor(
             }
         }
     }
-
 }

@@ -17,12 +17,14 @@ import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.editor.textEditor
 import `fun`.adaptive.ui.form.adatFormBackend
+import `fun`.adaptive.ui.generated.resources.invalidFields
 import `fun`.adaptive.ui.generated.resources.save
 import `fun`.adaptive.ui.generated.resources.saveSuccess
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.label.uuidLabel
 import `fun`.adaptive.ui.snackbar.successNotification
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.snackbar.warningNotification
 import `fun`.adaptive.value.AvValueId
 import kotlin.time.Clock.System.now
 
@@ -69,7 +71,11 @@ fun changePasswordPopup(
         }
 
         button(Strings.save) .. alignSelf.end .. onClick {
-            workspace.io {
+            if (!form.isValid()) {
+                warningNotification(Strings.invalidFields)
+                return@onClick
+            }
+            workspace.execute {
                 val service = getService<AuthPrincipalApi>(workspace.transport)
 
                 service.addCredential(
@@ -77,8 +83,6 @@ fun changePasswordPopup(
                     Credential(CredentialType.PASSWORD, form.inputValue.newPassword, now()),
                     Credential(CredentialType.PASSWORD, form.inputValue.currentPassword, now())
                 )
-
-                successNotification(Strings.saveSuccess)
             }
 
             hide()
