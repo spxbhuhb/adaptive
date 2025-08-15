@@ -35,11 +35,11 @@ abstract class ClientApplication<WT : FrontendWorkspace, BW : BackendWorkspace> 
     }
 
     override fun hasRole(roleName : String) : Boolean =
-        allApplicationRoles.firstOrNull { it.name == roleName }?.let {
-            val session = genericSessionOrNull as Session
-            return it.uuid in session.roles
+        allApplicationRoles.firstOrNull { it.name == roleName }?.let { role ->
+            val session = genericSessionOrNull as? Session
+            session?.roles?.contains(role.uuid) ?: false
         } ?: false
 
     override fun hasRole(roleUuid : UUID<*>) : Boolean =
-        (genericSessionOrNull as Session).roles.contains(roleUuid)
+        (genericSessionOrNull as? Session)?.roles?.contains(roleUuid) ?: false
 }
