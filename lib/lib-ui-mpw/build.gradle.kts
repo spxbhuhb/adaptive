@@ -20,7 +20,7 @@ adaptive {
     pluginDebug = false
     resources {
         publicAccessors = true
-        packageOfResources = "fun.adaptive.ui.generated.resources"
+        packageOfResources = "fun.adaptive.ui.mpw.generated.resources"
     }
 }
 

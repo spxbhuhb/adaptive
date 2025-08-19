@@ -1,7 +1,14 @@
 package `fun`.adaptive.ui.mpw.backends
 
 import `fun`.adaptive.foundation.value.observableOf
+import `fun`.adaptive.resource.string.Strings
+import `fun`.adaptive.ui.menu.MenuItem
+import `fun`.adaptive.ui.menu.MenuViewBackend
+import `fun`.adaptive.ui.menu.menu
+import `fun`.adaptive.ui.menu.menuBackend
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.generated.resources.closeAllTabs
+import `fun`.adaptive.ui.mpw.generated.resources.closeTab
 import `fun`.adaptive.ui.mpw.model.PaneAction
 import `fun`.adaptive.ui.tab.TabContainer
 import `fun`.adaptive.ui.tab.TabPane
@@ -55,7 +62,8 @@ class ContentPaneGroupViewBackend(
                     pane.icon ?: pane.paneDef.icon,
                     pane.tooltip ?: pane.paneDef.tooltip,
                     closeable = true,
-                    pane.getPaneActions().mapNotNull { wsAction ->
+                    menu = paneMenu(pane),
+                    actions =pane.getPaneActions().mapNotNull { wsAction ->
                         // TODO context menu actions for content panes
                         if (wsAction !is PaneAction) return@mapNotNull null
                         TabPaneAction(
@@ -70,6 +78,27 @@ class ContentPaneGroupViewBackend(
             switchFun = ::switchTab,
             closeFun = ::closeTab
         )
+
+    fun paneMenu(pane : PaneViewBackend<*>) : MenuViewBackend<*> {
+        return menuBackend(
+            listOf(
+                MenuItem(null, Strings.closeTab, pane.uuid),
+                MenuItem(null, Strings.closeAllTabs, pane.uuid)
+            )
+        ) { menuEvent ->
+            when (menuEvent.item.label) {
+                Strings.closeTab -> {
+                    val tab = tabContainer.value.tabs.firstOrNull { it.uuid == menuEvent.item.data }
+                    if (tab != null) {
+                        closeTab(tabContainer.value, tab)
+                    }
+                }
+                Strings.closeAllTabs -> {
+                    workspace.removePaneGroup(this)
+                }
+            }
+        }
+    }
 
     fun switchTab(model : TabContainer, pane : TabPane) {
         val newTabs = model.switchTab(pane)

@@ -112,6 +112,11 @@ import `fun`.adaptive.doc.example.statusInput.statusInputSingleExample
 import `fun`.adaptive.doc.example.table.tableBasicExample
 import `fun`.adaptive.doc.example.table.tableCellTypesExample
 import `fun`.adaptive.doc.example.table.tableCellGroupsExample
+import `fun`.adaptive.doc.example.tabContainer.tabNoTabsNoMenuExample
+import `fun`.adaptive.doc.example.tabContainer.tabNoTabsWithMenuExample
+import `fun`.adaptive.doc.example.tabContainer.tabOneTabNoIconNoActionsNoMenuExample
+import `fun`.adaptive.doc.example.tabContainer.tabTwoTabsNoIconNoActionsNoMenuExample
+import `fun`.adaptive.doc.example.tabContainer.tabTabsWithContextMenuExample
 import `fun`.adaptive.doc.example.textInput.textInputAreaExample
 import `fun`.adaptive.doc.example.textInput.textInputPlayground
 import `fun`.adaptive.doc.example.textInput.textInputSimpleExample
@@ -434,6 +439,16 @@ object ExampleFragmentFactory : FoundationFragmentFactory() {
         add("tableBasicExample", ::tableBasicExample)
         add("tableCellTypesExample", ::tableCellTypesExample)
         add("tableCellGroupsExample", ::tableCellGroupsExample)
+
+        // ----------------------------------------------------------------------------
+        // Tab
+        // ----------------------------------------------------------------------------
+
+        add("tabNoTabsNoMenuExample", ::tabNoTabsNoMenuExample)
+        add("tabNoTabsWithMenuExample", ::tabNoTabsWithMenuExample)
+        add("tabOneTabNoIconNoActionsNoMenuExample", ::tabOneTabNoIconNoActionsNoMenuExample)
+        add("tabTwoTabsNoIconNoActionsNoMenuExample", ::tabTwoTabsNoIconNoActionsNoMenuExample)
+        add("tabTabsWithContextMenuExample", ::tabTabsWithContextMenuExample)
 
         // ----------------------------------------------------------------------------
         // Tree

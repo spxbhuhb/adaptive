@@ -13,6 +13,7 @@ import `fun`.adaptive.grove.sheet.app.GroveSheetModuleClient
 import `fun`.adaptive.grove.ufd.app.GroveUdfModuleMpw
 import `fun`.adaptive.sandbox.app.mpw.app.AppProjectHomeModule
 import `fun`.adaptive.ui.LibUiClientModule
+import `fun`.adaptive.ui.mpw.app.MultiPaneClientModule
 import `fun`.adaptive.value.app.ValueClientModule
 
 fun main() {
@@ -27,6 +28,7 @@ fun main() {
         module { AppAuthModuleMpw() }
         module { AppProjectHomeModule() }
 
+        module { MultiPaneClientModule() }
         module { GroveSheetModuleClient() }
         module { GroveUdfModuleMpw() }
     }

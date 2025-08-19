@@ -6,6 +6,7 @@ import `fun`.adaptive.foundation.api.actualize
 import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.name
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
@@ -17,15 +18,16 @@ import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.icon.smallCloseIconTheme
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.layout.GridTrack
+import `fun`.adaptive.ui.menu.optContextMenu
 
-typealias TabHandleFun = (model: TabContainer, tab: TabPane, activeTab: TabPane?, theme: TabTheme) -> Unit
+typealias TabHandleFun = (model : TabContainer, tab : TabPane, activeTab : TabPane?, theme : TabTheme) -> Unit
 
 @Adaptive
 fun tabContainer(
-    model: TabContainer,
-    content: @Adaptive TabHandleFun, // handle render function
-    theme: TabTheme = TabTheme.DEFAULT
-): AdaptiveFragment {
+    model : TabContainer,
+    content : @Adaptive TabHandleFun, // handle render function
+    theme : TabTheme = TabTheme.DEFAULT
+) : AdaptiveFragment {
 
     val activeTab = model.tabs.firstOrNull { it.active }
 
@@ -46,10 +48,10 @@ fun tabContainer(
 
 @Adaptive
 fun tabHandle(
-    model: TabContainer,
-    tab: TabPane,
-    activeTab: TabPane?,
-    theme: TabTheme
+    model : TabContainer,
+    tab : TabPane,
+    activeTab : TabPane?,
+    theme : TabTheme
 ) {
     val hover = hover()
     val active = (tab == activeTab)
@@ -60,37 +62,39 @@ fun tabHandle(
         theme.tabHandleContainer
     }
 
-    row {
-        containerStyle
-
-        if (tab.icon != null) {
-            box {
-                theme.tabHandleIconContainer
-
-                icon(tab.icon) .. theme.tabHandleIcon
-            }
-        }
-
+    optContextMenu(tab.menu) {
         row {
-            text(tab.title) .. theme.tabHandleText
+            containerStyle
 
-            if (tab.tooltip != null) {
-                hoverPopup(theme.tabHandleToolTip) {
-                    text(tab.tooltip) .. theme.tabHandleToolTipText
+            if (tab.icon != null) {
+                box {
+                    theme.tabHandleIconContainer .. name("menu-icon")
+
+                    icon(tab.icon) .. theme.tabHandleIcon
                 }
             }
-        }
 
-        if (tab.closeable) {
-            box {
-                theme.tabHandleCloseContainer
+            row {
+                text(tab.title) .. theme.tabHandleText
 
-                if (active || hover) {
-                    actionIcon(Graphics.close, tooltip = model.closeToolTip, theme = smallCloseIconTheme) ..
-                        onClick {
-                            it.stopPropagation()
-                            model.closeFun(model, tab)
-                        }
+                if (tab.tooltip != null) {
+                    hoverPopup(theme.tabHandleToolTip) {
+                        text(tab.tooltip) .. theme.tabHandleToolTipText
+                    }
+                }
+            }
+
+            if (tab.closeable) {
+                box {
+                    theme.tabHandleCloseContainer .. name("close-icon")
+
+                    if (active || hover) {
+                        actionIcon(Graphics.close, tooltip = model.closeToolTip, theme = smallCloseIconTheme) ..
+                            onClick {
+                                it.stopPropagation()
+                                model.closeFun(model, tab)
+                            }
+                    }
                 }
             }
         }
@@ -99,10 +103,10 @@ fun tabHandle(
 
 @Adaptive
 private fun header(
-    model: TabContainer,
-    theme: TabTheme,
-    activeTab: TabPane?,
-    content: @Adaptive TabHandleFun
+    model : TabContainer,
+    theme : TabTheme,
+    activeTab : TabPane?,
+    content : @Adaptive TabHandleFun
 ) {
 
     val hasMenu = model.menu.isNotEmpty()
@@ -125,6 +129,7 @@ private fun header(
         if (actions.isNotEmpty()) {
             box { theme.separator }
             row {
+                name("tab-container-actions")
                 for (action in actions) {
                     actionIcon(action.icon, tooltip = action.tooltip, theme = denseIconTheme) .. onClick {
                         if (activeTab != null) action.action(activeTab)
@@ -143,15 +148,15 @@ private fun header(
 }
 
 @Adaptive
-private fun tabMenu(model: TabContainer) {
+private fun tabMenu(model : TabContainer) {
     box {
-        maxSize .. alignItems.center
+        maxSize .. alignItems.center .. name("tab-menu")
         actionIcon(Graphics.more_vert, tooltip = model.menuToolTip, theme = denseIconTheme)
         //menuPopup(model.contextMenu)
     }
 }
 
-private fun headerColTemplate(actionCount: Int, hasMenu: Boolean, theme: TabTheme): AdaptiveInstruction {
+private fun headerColTemplate(actionCount : Int, hasMenu : Boolean, theme : TabTheme) : AdaptiveInstruction {
 
     val tracks = mutableListOf<GridTrack>(1.fr)
 

@@ -64,6 +64,7 @@ markers: grove-doc-toc
     - [Root box](guide://)
     - [Row](guide://)
     - [Split pane](guide://)
+    - [Tab container](guide://)
     - [Wrap](guide://)
   - [Inputs and editors](guide://)
     - [Badge input](guide://)
