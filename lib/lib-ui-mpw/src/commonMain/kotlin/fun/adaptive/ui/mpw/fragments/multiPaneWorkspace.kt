@@ -17,6 +17,7 @@ import `fun`.adaptive.ui.splitpane.verticalSplitDivider
 import `fun`.adaptive.ui.mpw.AbstractSideBarAction
 import `fun`.adaptive.ui.mpw.MultiPaneTheme.Companion.DEFAULT
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
+import `fun`.adaptive.ui.mpw.SideBarAction
 import `fun`.adaptive.ui.mpw.backends.PaneViewBackend
 import `fun`.adaptive.ui.mpw.model.PaneDef
 import `fun`.adaptive.ui.mpw.model.PanePosition
@@ -29,14 +30,20 @@ fun multiPaneWorkspace(workspace: MultiPaneWorkspace) : AdaptiveFragment {
 
     val isFullScreen = observe { workspace.isFullScreen }
 
+    val hasRight = workspace.sideBarActions { it.position == PanePosition.RightBottom || it.position == PanePosition.RightMiddle || it.position == PanePosition.RightTop }.isNotEmpty()
+    val hasLeft = workspace.sideBarActions { it.position == PanePosition.LeftBottom || it.position == PanePosition.LeftMiddle || it.position == PanePosition.LeftTop }.isNotEmpty()
+
+    val leftWidth = if (hasLeft && !isFullScreen) DEFAULT.width else 0.dp
+    val rightWidth = if (hasRight && !isFullScreen) DEFAULT.width else 0.dp
+
     grid(instructions()) {
-        if (isFullScreen) colTemplate(0.dp, 1.fr, 0.dp) else  colTemplate(DEFAULT.width, 1.fr, DEFAULT.width)
+        colTemplate(leftWidth, 1.fr, rightWidth)
 
         tabIndex { -1 } .. focusFirst
         onKeyDown { workspace.onKeydown(it) }
 
         box {
-            if (! isFullScreen) {
+            if (! isFullScreen && hasLeft) {
                 multiPaneWorkspaceSideBarIcons(left = true, workspace)
             }
         }
@@ -44,7 +51,7 @@ fun multiPaneWorkspace(workspace: MultiPaneWorkspace) : AdaptiveFragment {
         multiPaneWorkspaceMain(workspace)
 
         box {
-            if (! isFullScreen) {
+            if (! isFullScreen && hasRight) {
                 multiPaneWorkspaceSideBarIcons(left = false, workspace)
             }
         }

@@ -39,8 +39,8 @@ fun <ITEM> tableInner(
         if (! arrangement.isVertical) {
             cellBox(arrangement = arrangement) {
                 width { proposal.maxWidth.dp }
-
                 observed.tableTheme.headerContainer
+
                 for (cell in activeCells) {
                     @Suppress("UNCHECKED_CAST")
                     tableHeaderCell(cell as TableCellDef<ITEM, Any>)

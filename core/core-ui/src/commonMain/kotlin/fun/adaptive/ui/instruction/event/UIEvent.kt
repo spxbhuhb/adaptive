@@ -33,7 +33,8 @@ class UIEvent(
     val keyInfo: KeyInfo? = null,
     val modifiers: Set<EventModifier> = emptySet(),
     val preventDefault: () -> Unit = { },
-    val stopPropagation: () -> Unit = { }
+    val stopPropagation: () -> Unit = { },
+    val releaseFocus: () -> Unit = { }
 ) {
     val position: Position
         get() = Position(
