@@ -6,5 +6,6 @@
 
     <string name="closeAllTabs">Összes nézet bezárása</string>
     <string name="closeTab">Nézet bezárása</string>
+    <string name="closeOtherTabs">Többi nézet bezárása</string>
 
 </resources>

@@ -4,10 +4,10 @@ import `fun`.adaptive.foundation.value.observableOf
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.menu.MenuViewBackend
-import `fun`.adaptive.ui.menu.menu
 import `fun`.adaptive.ui.menu.menuBackend
 import `fun`.adaptive.ui.mpw.MultiPaneWorkspace
 import `fun`.adaptive.ui.mpw.generated.resources.closeAllTabs
+import `fun`.adaptive.ui.mpw.generated.resources.closeOtherTabs
 import `fun`.adaptive.ui.mpw.generated.resources.closeTab
 import `fun`.adaptive.ui.mpw.model.PaneAction
 import `fun`.adaptive.ui.tab.TabContainer
@@ -83,6 +83,7 @@ class ContentPaneGroupViewBackend(
         return menuBackend(
             listOf(
                 MenuItem(null, Strings.closeTab, pane.uuid),
+                MenuItem(null, Strings.closeOtherTabs, pane.uuid),
                 MenuItem(null, Strings.closeAllTabs, pane.uuid)
             )
         ) { menuEvent ->
@@ -93,10 +94,17 @@ class ContentPaneGroupViewBackend(
                         closeTab(tabContainer.value, tab)
                     }
                 }
+                Strings.closeOtherTabs -> {
+                    val tab = tabContainer.value.tabs.firstOrNull { it.uuid == menuEvent.item.data }
+                    if (tab != null) {
+                        closeOtherTabs(tabContainer.value, tab)
+                    }
+                }
                 Strings.closeAllTabs -> {
                     workspace.removePaneGroup(this)
                 }
             }
+            menuEvent.closeMenu()
         }
     }
 
@@ -104,6 +112,18 @@ class ContentPaneGroupViewBackend(
         val newTabs = model.switchTab(pane)
         activePane = newTabs.tabs.first { it.active }.model as PaneViewBackend<*>
         tabContainer.value = newTabs
+    }
+
+    fun closeOtherTabs(model : TabContainer, pane : TabPane) {
+        panes.removeAll { it.uuid != pane.uuid }
+
+        if (panes.isEmpty()) {
+            workspace.removePaneGroup(this)
+        } else {
+            val newTabs = model.removeOtherTabs(pane)
+            activePane = newTabs.tabs.first { it.active }.model as PaneViewBackend<*>
+            tabContainer.value = newTabs
+        }
     }
 
     fun closeTab(model : TabContainer, pane : TabPane) {

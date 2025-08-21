@@ -4,7 +4,8 @@
 
 <resources>
 
-    <string name="closeAllTabs">Összes nézet bezárása</string>
-    <string name="closeTab">Nézet bezárása</string>
+    <string name="closeAllTabs">Close all tabs</string>
+    <string name="closeTab">Close tab</string>
+    <string name="closeOtherTabs">Close other tabs</string>
 
 </resources>

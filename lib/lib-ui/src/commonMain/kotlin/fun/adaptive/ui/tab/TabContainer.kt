@@ -68,4 +68,15 @@ class TabContainer(
         )
     }
 
+    fun removeOtherTabs(pane: TabPane): TabContainer {
+        return TabContainer(
+            tabs = listOf(pane.copy(active = true)),
+            closeToolTip = closeToolTip,
+            menuToolTip = menuToolTip,
+            menu = menu,
+            switchFun = switchFun,
+            closeFun = closeFun
+        )
+    }
+
 }
