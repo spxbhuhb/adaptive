@@ -40,7 +40,7 @@ class AppAdminModuleMpw<FW : MultiPaneWorkspace, BW : BackendWorkspace> : AuthBa
             PanePosition.RightMiddle,
             ADMIN_TOOL_KEY,
             displayOrder = Int.MAX_VALUE,
-            requiredRole = securityOfficer
+            requiredRoles = securityOfficer?.let { listOf(it) }
         )
 
         addToolPane {

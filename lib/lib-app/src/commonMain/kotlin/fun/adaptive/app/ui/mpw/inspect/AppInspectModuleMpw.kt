@@ -38,7 +38,7 @@ class AppInspectModuleMpw<FW : MultiPaneWorkspace, BW : AbstractWorkspace> : App
                     Graphics.pest_control,
                     PanePosition.RightBottom,
                     INSPECT_TOOL_KEY,
-                    requiredRole = app.allApplicationRoles.firstOrNull { AuthMarkers.SECURITY_OFFICER in it.markers }?.uuid
+                    requiredRoles = app.allApplicationRoles.firstOrNull { AuthMarkers.SECURITY_OFFICER in it.markers }?.let { listOf(it.uuid)}
                 )
             )
         }

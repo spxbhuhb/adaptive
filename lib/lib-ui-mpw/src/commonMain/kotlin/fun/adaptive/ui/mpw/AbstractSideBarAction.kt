@@ -13,7 +13,7 @@ abstract class AbstractSideBarAction {
     abstract val displayOrder: Int
     abstract val tooltip: String?
     abstract val actionFun: (workspace: MultiPaneWorkspace) -> Unit
-    abstract val requiredRole: UUID<*>?
+    abstract val requiredRoles: List<UUID<*>>?
 
     open val singularity: PaneSingularity
         get() = PaneSingularity.GROUP

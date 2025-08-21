@@ -10,6 +10,6 @@ class SideBarAction(
     override val position : PanePosition,
     override val displayOrder : Int,
     override val tooltip : String?,
-    override val requiredRole : UUID<*>? = null,
+    override val requiredRoles : List<UUID<*>>? = null,
     override val actionFun : (MultiPaneWorkspace) -> Unit
 ) : AbstractSideBarAction()

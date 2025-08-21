@@ -172,7 +172,7 @@ open class MultiPaneWorkspace(
 
     fun sideBarActions(filterFun : (action : AbstractSideBarAction) -> Boolean) =
         (toolPanes.map { it.paneDef }.filter(filterFun) + sideBarActions.filter(filterFun))
-            .filter { it.requiredRole?.let { role -> (application as AbstractClientApplication<*, *>).hasRole(role) } ?: true }
+            .filter { it.requiredRoles?.all { role -> (application as AbstractClientApplication<*, *>).hasRole(role) } ?: true }
             .sortedBy { it.displayOrder }
 
     // ---------------------------------------------------------------------------------------------
