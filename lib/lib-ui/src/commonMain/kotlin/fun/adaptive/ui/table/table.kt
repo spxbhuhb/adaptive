@@ -30,13 +30,13 @@ fun <ITEM> tableInner(
     proposal : SizingProposal
 ) {
     val observed = observe { backend }
-    val activeCells = observed.cells.mapNotNull { it.takeIfRole(fragment()) { it } }
+    val activeCells = observed.cells.mapNotNull { it.takeIfRole(fragment()) { it } }.filter { it.visible }
     val arrangement = calculate(adapter(), activeCells, proposal, observed)
 
     column {
         width { proposal.maxWidth.dp } .. height { proposal.maxHeight.dp } .. fillStrategy.constrain
 
-        if (! arrangement.isVertical) {
+        if (! arrangement.isVertical && observed.showHeaders) {
             cellBox(arrangement = arrangement) {
                 width { proposal.maxWidth.dp }
                 observed.tableTheme.headerContainer

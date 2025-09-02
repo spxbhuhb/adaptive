@@ -24,6 +24,8 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
 
     var viewportItems: List<TableItem<ITEM>>? = null
 
+    var showHeaders = true
+
     var gap : Gap = Gap(0.dp, 0.dp)
     
     /**

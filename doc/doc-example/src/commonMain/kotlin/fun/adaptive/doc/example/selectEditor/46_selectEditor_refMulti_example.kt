@@ -16,6 +16,8 @@ import `fun`.adaptive.value.AvValue
  * # Multiple value reference editors
  *
  * You can use multiple value reference editors in the same form with different labels.
+ *
+ * **IMPORTANT: You have to use `form.inputValue` as `template` for this to work.**
  */
 @Adaptive
 fun selectEditorRefMultiExample(): AdaptiveFragment {
@@ -24,8 +26,8 @@ fun selectEditorRefMultiExample(): AdaptiveFragment {
     val refLabel2 = "example-2"
     val refLabel3 = "example-3"
 
-    val template = AvValue("") // spec is just a string
-    val formBackend = adatFormBackend(template)
+    val formBackend = adatFormBackend(AvValue(""))
+    val template = formBackend.inputValue // spec is just a string
 
     localContext(formBackend) {
         column {
