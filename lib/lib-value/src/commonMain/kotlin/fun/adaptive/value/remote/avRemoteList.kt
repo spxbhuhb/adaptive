@@ -1,5 +1,6 @@
 package `fun`.adaptive.value.remote
 
+import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.producer.Producer
 import `fun`.adaptive.value.AvMarker
@@ -13,11 +14,11 @@ import kotlin.reflect.KClass
  */
 @Producer
 fun <SPEC : Any> avRemoteList(
-    marker: AvMarker,
-    specClass: KClass<SPEC>,
-    transform: ((Map<AvValueId, AvValue<SPEC>>) -> List<AvValue<SPEC>>)? = null,
-    binding: AdaptiveStateVariableBinding<List<AvValue<SPEC>>?>? = null
-): List<AvValue<SPEC>>? {
+    marker : AvMarker,
+    specClass : KClass<SPEC>,
+    transform : ((Map<AvValueId, AvValue<SPEC>>) -> List<AvValue<SPEC>>)? = null,
+    binding : AdaptiveStateVariableBinding<List<AvValue<SPEC>>?>? = null
+) : List<AvValue<SPEC>>? {
 
     checkNotNull(binding) { "binding is required for avRemoteList" }
 
@@ -32,3 +33,21 @@ fun <SPEC : Any> avRemoteList(
 
     return null
 }
+
+fun <SPEC : Any> avRemoteList(
+    backend : BackendAdapter,
+    marker : AvMarker,
+    specClass : KClass<SPEC>,
+    transform : ((Map<AvValueId, AvValue<SPEC>>) -> List<AvValue<SPEC>>)? = null,
+    listener : (List<AvValue<SPEC>>) -> Unit
+) =
+    AvRemoteListSubscriber(
+        backend,
+        specClass,
+        transform,
+        AvSubscribeCondition(marker = marker)
+    ).also {
+        it.addListener {
+            listener(it ?: emptyList())
+        }
+    }

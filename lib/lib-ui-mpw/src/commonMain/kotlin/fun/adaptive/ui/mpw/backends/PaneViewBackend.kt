@@ -1,7 +1,8 @@
 package `fun`.adaptive.ui.mpw.backends
 
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.LifecycleBound
 import `fun`.adaptive.general.SelfObservable
-import `fun`.adaptive.log.devNote
 import `fun`.adaptive.resource.GraphicsResourceKey
 import `fun`.adaptive.resource.StringResourceKey
 import `fun`.adaptive.resource.graphics.Graphics
@@ -19,7 +20,7 @@ import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.firstInstance
 
-abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>() {
+abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>(), LifecycleBound {
 
     val uuid: UUID<PaneViewBackend<*>> = uuid4()
 
@@ -79,4 +80,19 @@ abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>() 
     open fun getPaneActions(): List<AbstractPaneAction> =
         emptyList()
 
+    override fun patch(fragment : AdaptiveFragment, index : Int) {
+        // placeholder for lifecycle callback
+    }
+
+    override fun mount(fragment : AdaptiveFragment, index : Int) {
+        // placeholder for lifecycle callback
+    }
+
+    override fun unmount(fragment : AdaptiveFragment, index : Int) {
+        // placeholder for lifecycle callback
+    }
+
+    override fun dispose(fragment : AdaptiveFragment, index : Int) {
+        // placeholder for lifecycle callback
+    }
 }
