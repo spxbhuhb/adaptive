@@ -1,18 +1,10 @@
 package `fun`.adaptive.ui.table
 
-import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
-import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.icon.ActionIconRowBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.Gap
-import `fun`.adaptive.ui.table.renderer.tableCellActions
-import `fun`.adaptive.ui.table.renderer.tableCellDouble
-import `fun`.adaptive.ui.table.renderer.tableCellTimeAgo
-import `fun`.adaptive.ui.table.renderer.tableCellIcon
-import `fun`.adaptive.ui.table.renderer.tableCellInt
-import `fun`.adaptive.ui.table.renderer.tableCellStatus
-import `fun`.adaptive.ui.table.renderer.tableCellToString
+import `fun`.adaptive.ui.table.renderer.*
 import `fun`.adaptive.value.AvStatus
 import kotlin.time.Instant
 

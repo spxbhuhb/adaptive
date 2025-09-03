@@ -9,46 +9,53 @@ import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.layout.GridTrack
 import `fun`.adaptive.ui.menu.MenuItemBase
 import `fun`.adaptive.utility.UUID
-import kotlin.properties.Delegates.observable
 
-class TableCellDef<ITEM, CELL_DATA>(
+data class TableCellDef<ITEM, CELL_DATA>(
+
     val table : TableViewBackend<ITEM>,
-    label : String,
-    width : GridTrack,
-    minWidth : DPixel,
-    instructions : (ITEM) -> AdaptiveInstructionGroup,
+    val label : String,
+    val width : GridTrack,
+    val minWidth : DPixel,
+    val instructions : (ITEM) -> AdaptiveInstructionGroup,
     val getFun : (ITEM) -> CELL_DATA,
     val matchFun : ((CELL_DATA, filterText : String) -> Boolean)? = null,
-    contentFun : @Adaptive (TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any
-) : SelfObservable<TableCellDef<ITEM, CELL_DATA>>() {
+    val contentFun : @Adaptive (TableCellDef<ITEM, CELL_DATA>, ITEM) -> Any,
 
-    var label by observable(label, ::notify)
-    var width by observable(width, ::notify)
-    var minWidth by observable(minWidth, ::notify)
+    /**
+     * For linked columns (when some data the column depends on loads asynchronously),
+     * the revision is used to determine if the cell should be updated.
+     */
+    val revision : Int = 0,
 
-    var visible by observable(true, ::notify)
-    var sortable by observable(true, ::notify)
-    var resizable by observable(true, ::notify)
+    /**
+     * Set the key during the table construction to find the cell by key later.
+     * Useful for linked columns (when some data the column depends on loads asynchronously).
+     */
+    val key : String? = null,
+    val visible : Boolean = true,
+    val sortable : Boolean = true,
+    val resizable : Boolean = true,
 
-    var rowMenu by observable(emptyList<MenuItemBase<Any>>(), ::notify)
+    val rowMenu : List<MenuItemBase<Any>> = emptyList(),
 
-    var headerInstructions by observable<(() -> AdaptiveInstructionGroup)?>(null, ::notify)
-    var instructions by observable(instructions, ::notify)
-    var contentFun by observable(contentFun, ::notify)
+    val headerInstructions : (() -> AdaptiveInstructionGroup)? = null,
 
     // TODO move decimals and unit to numeric cell somehow (not trivial as function references can't have a type)
-    var decimals : Int = 2
-    var unit : String? = null
+    val decimals : Int = 2,
+    val unit : String? = null,
 
-    var sorting by observable(Sorting.None, ::notify)
-    var compareFunction : (ITEM, ITEM) -> Int = ::defaultCompareFunction
+    val sorting : Sorting = Sorting.None,
 
-    var sortOrder = 0
+    val sortOrder : Int = 0,
 
-    var supportsTextFilter = true
+    val supportsTextFilter : Boolean = true,
 
-    var role : UUID<*>? = null
-    var group : TableCellGroupDef? = null
+    val role : UUID<*>? = null,
+    val group : TableCellGroupDef? = null
+
+) : SelfObservable<TableCellDef<ITEM, CELL_DATA>>() {
+
+    val compareFunction : (ITEM, ITEM) -> Int = ::defaultCompareFunction
 
     fun defaultCompareFunction(item1 : ITEM, item2 : ITEM) : Int {
         val value1 = getFun(item1)
@@ -82,6 +89,6 @@ class TableCellDef<ITEM, CELL_DATA>(
     }
 
     fun <T> takeIfRole(fragment : AdaptiveFragment, block : () -> T) : T? {
-        return if (role == null || fragment.hasRole(role !!)) block() else null
+        return if (role == null || fragment.hasRole(role)) block() else null
     }
 }

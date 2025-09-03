@@ -14,7 +14,6 @@ fun AdaptiveFragment.hasRole(name: String) : Boolean {
 
 fun AdaptiveFragment.hasRole(uuid: UUID<*>?) : Boolean {
     if (uuid == null) {
-        getLogger("application").warning("using withRole with null role")
         return false
     }
 

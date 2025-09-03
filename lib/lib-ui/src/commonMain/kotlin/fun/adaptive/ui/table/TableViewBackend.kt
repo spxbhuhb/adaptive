@@ -14,32 +14,32 @@ import kotlin.reflect.KProperty
  */
 class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
 
-    val cells: MutableList<TableCellDef<ITEM, *>> = mutableListOf()
+    var cells : List<TableCellDef<ITEM, *>> = emptyList()
 
     var tableTheme = TableTheme.default
 
-    var allItems: MutableList<TableItem<ITEM>>? = null
+    var allItems : MutableList<TableItem<ITEM>>? = null
 
-    var filteredItems: List<TableItem<ITEM>>? = null
+    var filteredItems : List<TableItem<ITEM>>? = null
 
-    var viewportItems: List<TableItem<ITEM>>? = null
+    var viewportItems : List<TableItem<ITEM>>? = null
 
     var showHeaders = true
 
     var gap : Gap = Gap(0.dp, 0.dp)
-    
+
     /**
      * Current filter text used to filter table items.
      * When this value changes, the table items are filtered automatically.
      * Kept for backward compatibility and as a default text-based filtering input.
      */
-    var filterText: String by observable("", ::updateAndNotify)
+    var filterText : String by observable("", ::updateAndNotify)
 
     /**
      * Optional custom filtering data provided by the user.
      * This can be any type and is passed to [filterFun] when filtering.
      */
-    var filterData: Any? by observable(null, ::updateAndNotify)
+    var filterData : Any? by observable(null, ::updateAndNotify)
 
     /**
      * Optional custom filtering function. When set, this function will be used
@@ -52,7 +52,7 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
      *
      * Return true to keep the item, false to filter it out.
      */
-    var filterFun: ((item: ITEM, cells: List<TableCellDef<ITEM, *>>, filterData: Any?) -> Boolean)? = null
+    var filterFun : ((item : ITEM, cells : List<TableCellDef<ITEM, *>>, filterData : Any?) -> Boolean)? = null
 
     /**
      * Incremented each time the table is sorted. Used to determine the sort order of each cell.
@@ -69,7 +69,7 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
     /**
      * Updates the filtered and viewport items after the table items have changed (set, sort, filter, etc.)
      */
-    fun updateAndNotify(property: KProperty<*>, oldValue: Any?, newValue: Any?) {
+    fun updateAndNotify(property : KProperty<*>, oldValue : Any?, newValue : Any?) {
         updateAndNotify()
     }
 
@@ -83,36 +83,38 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
 
     /**
      * Sorts the table items based on the specified cell.
-     * 
+     *
      * Behavior:
      * 1. When a cell is sorted for the first time, it sorts in descending order.
      * 2. When a cell that's already sorted is clicked again, it reverses the sort order.
      * 3. When multiple cells are sorted, the results of previous sorts are preserved.
-     * 
+     *
      * @param cell The cell definition to sort by
      */
-    fun sort(cell: TableCellDef<ITEM, *>) {
-        if (!cell.sortable) return
-        
-        // Toggle sorting state for the cell
-        cell.sorting = when (cell.sorting) {
-            Sorting.None -> Sorting.Descending
-            Sorting.Descending -> Sorting.Ascending
-            Sorting.Ascending -> Sorting.Descending
-        }
+    fun sort(cell : TableCellDef<ITEM, *>) {
+        if (! cell.sortable) return
 
-        cell.sortOrder = sortOrder++
-        
+        val newCell = cell.copy(
+            sorting = when (cell.sorting) {
+                Sorting.None -> Sorting.Descending
+                Sorting.Descending -> Sorting.Ascending
+                Sorting.Ascending -> Sorting.Descending
+            },
+            sortOrder = sortOrder ++
+        )
+
+        cells = cells.map { if (it == cell) newCell else it }
+
         // Get the items to sort
         val items = allItems ?: return
-        
+
         // Sort the items based on all sorted cells
         val sortedCells = cells.filter { it.sorting != Sorting.None }.sortedByDescending { it.sortOrder }
 
         if (sortedCells.isNotEmpty()) {
             items.sortWith { item1, item2 ->
                 var result = 0
-                
+
                 for (sortedCell in sortedCells) {
                     result = sortedCell.compareFunction(item1.data, item2.data)
                     if (result != 0) break
@@ -124,7 +126,6 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
 
         updateAndNotify()
     }
-
 
     /**
      * Updates the filtered and viewport items after sorting or filtering.
@@ -141,7 +142,7 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
             // Apply text-based predicate if filterText is not empty
             val textPass = if (filterText.isNotEmpty()) {
                 cells.any { cell ->
-                    if (!cell.supportsTextFilter) return@any false
+                    if (! cell.supportsTextFilter) return@any false
                     cell.matches(item.data, filterText)
                 }
             } else true
@@ -157,4 +158,9 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
     override fun toString() : String {
         return "TableViewBackend(viewportItems=$viewportItems)"
     }
+
+    fun newRevision(key : String) {
+        cells = cells.map { if (it.key == key) it.copy(revision = it.revision + 1) else it }
+    }
+
 }

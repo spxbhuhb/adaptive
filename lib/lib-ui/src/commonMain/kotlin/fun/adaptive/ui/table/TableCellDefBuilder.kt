@@ -10,6 +10,8 @@ import `fun`.adaptive.utility.UUID
 
 class TableCellDefBuilder<ITEM, CELL_DATA> {
 
+    var key : String? = null
+
     var label = ""
     var width : GridTrack = 1.fr
     var minWidth = 100.dp
@@ -37,20 +39,26 @@ class TableCellDefBuilder<ITEM, CELL_DATA> {
 
     fun toTableCellDef(tableBackend : TableViewBackend<ITEM>) : TableCellDef<ITEM, CELL_DATA> {
         TableCellDef(
-            tableBackend, label, width, minWidth,
+            tableBackend,
+            label,
+            width,
+            minWidth,
             instructions ?: { tableBackend.tableTheme.cellContainer },
-            get !!, matchFun, content !!
+            get !!,
+            matchFun,
+            content !!,
+            key = key,
+            visible = visible,
+            sortable = sortable,
+            decimals = decimals,
+            unit = unit,
+            rowMenu = rowMenu,
+            resizable = resizable,
+            role = role,
+            supportsTextFilter = supportsTextFilter,
+            headerInstructions = headerInstructions,
+            group = group
         ).also { cell ->
-            cell.visible = visible
-            cell.sortable = sortable
-            cell.decimals = decimals
-            cell.unit = unit
-            cell.rowMenu = rowMenu
-            cell.resizable = resizable
-            cell.role = role
-            cell.supportsTextFilter = supportsTextFilter
-            cell.headerInstructions = headerInstructions
-            cell.group = group
             return cell
         }
     }
