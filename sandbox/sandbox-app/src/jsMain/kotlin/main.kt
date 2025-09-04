@@ -7,12 +7,15 @@ import `fun`.adaptive.doc.app.ExampleFragmentFactory
 import `fun`.adaptive.doc.example.generated.resources.edit
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.adapter
+import `fun`.adaptive.foundation.api.localContext
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.graphics.Graphics
+import `fun`.adaptive.runtime.FrontendWorkspace
+import `fun`.adaptive.runtime.NoBackendWorkspace
 import `fun`.adaptive.sandbox.app.generated.resources.commonMainStringsStringStore0
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.LibFragmentFactory
@@ -25,19 +28,22 @@ import `fun`.adaptive.ui.generated.resources.account_box
 import `fun`.adaptive.ui.generated.resources.north
 import `fun`.adaptive.ui.generated.resources.south
 import `fun`.adaptive.ui.icon.ActionIconRowBackend
+import `fun`.adaptive.ui.input.button.button
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.menu.MenuItem
+import `fun`.adaptive.ui.popup.modal.openConfirmModal
 import `fun`.adaptive.ui.snackbar.successNotification
+import `fun`.adaptive.ui.table.TableItem
 import `fun`.adaptive.ui.table.TableViewBackendBuilder.Companion.tableBackend
 import `fun`.adaptive.ui.table.table
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.uiCommon
-import `fun`.adaptive.utility.UUID.Companion.uuid4
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.collections.plus
 import kotlin.time.Clock.System.now
 
 fun main() {
@@ -56,6 +62,8 @@ fun main() {
 //        val collectedLogData = CollectedLogData()
 //        defaultLoggerFactory = LoggerFactory { CollectingLogger(it, collectedLogData) }
 
+        val workspace = FrontendWorkspace(localBackend, NoBackendWorkspace())
+
         try {
             browser(
                 CanvasFragmentFactory,
@@ -70,6 +78,8 @@ fun main() {
                     fontSize = 16.sp
                     fontWeight = 300
                 }
+
+                workspace.frontendOrNull = adapter
 
 //                var position = Position(0.dp, 0.dp)
 //                val sizing = SizeStrategy(null, null, 0.dp, 100.dp, 0.dp, 100.dp)
@@ -88,6 +98,14 @@ fun main() {
                     padding { 16.dp }
                     tableTest()
                 }
+
+//                localContext(workspace) {
+//                    button("Open modal") {
+//                        openConfirmModal(workspace, "Title", "Message") {
+//                            println("Confirmed!")
+//                        }
+//                    }
+//                }
             }
         } catch (e: Throwable) {
             e.printStackTrace()
@@ -100,6 +118,8 @@ class T(
     val name: String?,
     val currentL1: Double?
 )
+
+var rev = 0
 
 @Adaptive
 fun tableTest() {
@@ -132,6 +152,7 @@ fun tableTest() {
             label = "Name"
             get = { it.name }
             minWidth = 300.dp
+            key = "name"
         }
 
         doubleCell {
@@ -185,6 +206,13 @@ fun tableTest() {
                 }
             }
         }
+    }
+
+    button("Next rev") {
+        rev++
+        val items = mutableListOf<T>()
+        repeat(100) {  items += T("RHT-$it", "Hűtő - $rev", it.toDouble()) }
+        backend.setAllItems(items)
     }
 
     table(backend)

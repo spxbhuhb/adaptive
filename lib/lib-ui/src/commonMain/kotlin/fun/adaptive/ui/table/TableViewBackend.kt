@@ -18,7 +18,7 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
 
     var tableTheme = TableTheme.default
 
-    var allItems : MutableList<TableItem<ITEM>>? = null
+    internal var allItems : MutableList<TableItem<ITEM>>? = null
 
     var filteredItems : List<TableItem<ITEM>>? = null
 
@@ -66,6 +66,11 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
         onChange = { filterText = it ?: "" }
     }
 
+    fun setAllItems(items : List<ITEM>) {
+        allItems = items.map { TableItem(it) }.toMutableList()
+        sortAllItemsByActiveSorts()
+        updateAndNotify()
+    }
     /**
      * Updates the filtered and viewport items after the table items have changed (set, sort, filter, etc.)
      */
@@ -105,23 +110,32 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
 
         cells = cells.map { if (it == cell) newCell else it }
 
-        // Get the items to sort
+        // Perform sorting of all items based on current active sorts
+        sortAllItemsByActiveSorts()
+    }
+
+    /**
+     * Sorts allItems using all cells that currently have sorting enabled (sorting != None),
+     * honoring their sortOrder priority (most recent first) and direction.
+     * Does not modify cells; only sorts data and refreshes filtered/viewport lists.
+     */
+    fun sortAllItemsByActiveSorts() {
         val items = allItems ?: return
 
-        // Sort the items based on all sorted cells
+        // Collect active sorted cells in priority order (highest sortOrder first)
         val sortedCells = cells.filter { it.sorting != Sorting.None }.sortedByDescending { it.sortOrder }
+        if (sortedCells.isEmpty()) {
+            updateAndNotify()
+            return
+        }
 
-        if (sortedCells.isNotEmpty()) {
-            items.sortWith { item1, item2 ->
-                var result = 0
-
-                for (sortedCell in sortedCells) {
-                    result = sortedCell.compareFunction(item1.data, item2.data)
-                    if (result != 0) break
-                }
-
-                result
+        items.sortWith { item1, item2 ->
+            var result = 0
+            for (sortedCell in sortedCells) {
+                result = sortedCell.compareFunction(item1.data, item2.data)
+                if (result != 0) break
             }
+            result
         }
 
         updateAndNotify()
@@ -132,7 +146,7 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
      */
     private fun updateItems() {
         val items = allItems ?: return
-
+        
         // Determine how to filter: combine custom filter and filterText with logical AND
         val customFilter = filterFun
         filteredItems = items.filter { item ->

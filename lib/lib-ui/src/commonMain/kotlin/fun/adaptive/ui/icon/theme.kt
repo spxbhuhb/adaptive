@@ -58,7 +58,7 @@ val smallCloseIconTheme = IconTheme(
 )
 
 val noContainerIconTheme = IconTheme(
-    colors.onSurfaceVariant,
+    colors.onSurface,
     iconSize = 24.dp,
     containerSize = 24.dp,
     margin = 0.dp,

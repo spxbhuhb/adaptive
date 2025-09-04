@@ -30,10 +30,8 @@ fun roleManager(): AdaptiveFragment {
     val viewBackend = RoleManagerViewBackend(fragment())
     val tableBackend = tableDef(viewBackend)
 
-    val roles = observe { viewBackend.roles }.also { roleList ->
-        val items = (roleList ?: emptyList()).map { TableItem(it) }
-        tableBackend.allItems = items.toMutableList()
-        tableBackend.updateAndNotify()
+    val roles = observe { viewBackend.roles }.also {
+        tableBackend.setAllItems(it ?: emptyList())
     }
 
     column {

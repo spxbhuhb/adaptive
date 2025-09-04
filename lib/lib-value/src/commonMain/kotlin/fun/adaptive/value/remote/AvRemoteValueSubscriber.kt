@@ -32,6 +32,14 @@ open class AvRemoteValueSubscriber<SPEC : Any>(
     constructor(
         backend: BackendAdapter,
         specClass: KClass<SPEC>,
+        valueId: AvValueId
+    ) : this(
+        { service, id -> listOf(AvSubscribeCondition(valueId = valueId)).also { service.subscribe(it) } }, backend, specClass
+    )
+
+    constructor(
+        backend: BackendAdapter,
+        specClass: KClass<SPEC>,
         marker: AvMarker
     ) : this(
         { service, id -> listOf(AvSubscribeCondition(marker = marker)).also { service.subscribe(it) } }, backend, specClass

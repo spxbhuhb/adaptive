@@ -4,6 +4,7 @@ import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
+import `fun`.adaptive.ui.api.alignSelf
 import `fun`.adaptive.ui.generated.resources.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
@@ -55,6 +56,10 @@ open class TableTheme(
 
     var headerCellTextEndAligned = headerCellText + instructionsOf(
         alignSelf.endCenter
+    )
+
+    var headerCellTextCenterAligned = headerCellText + instructionsOf(
+        alignSelf.center
     )
 
     var headerActionContainer = instructionsOf(
@@ -124,6 +129,11 @@ open class TableTheme(
 
     var iconCellContainer = cellContainer + instructionsOf(
         paddingTop { 0.dp } // FIXME assuming 24.dp icon size
+    )
+
+    var iconCellContainerCentered = cellContainer + instructionsOf(
+        padding { 0.dp },
+        alignItems.center
     )
 
     var statusCellContainer = cellContainer + instructionsOf(

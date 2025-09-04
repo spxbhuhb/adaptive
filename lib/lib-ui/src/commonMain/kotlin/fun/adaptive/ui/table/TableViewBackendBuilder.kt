@@ -1,5 +1,6 @@
 package `fun`.adaptive.ui.table
 
+import `fun`.adaptive.foundation.instruction.emptyInstructions
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.icon.ActionIconRowBackend
 import `fun`.adaptive.ui.instruction.dp
@@ -26,16 +27,19 @@ class TableViewBackendBuilder<ITEM_TYPE>(
         return TableCellGroupDef(label, priority).also { cellGroups += it }
     }
 
-    fun stringCell(buildFun: TableCellDefBuilder<ITEM_TYPE, String?>.() -> Unit) {
-        cells += TableCellDefBuilder<ITEM_TYPE, String?>().also {
-            it.content = ::tableCellToString
+    fun booleanCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Boolean?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, Boolean?>().also {
+            it.content = ::tableCellBoolean
+            it.width = numericWidth
+            it.minWidth = numericWidth
+            it.headerInstructions = { theme.headerCellTextCenterAligned }
             buildFun(it)
         }
     }
 
-    fun intCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Int?>.() -> Unit) {
-        cells += TableCellDefBuilder<ITEM_TYPE, Int?>().also {
-            it.content = ::tableCellInt
+    fun doubleCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Double?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, Double?>().also {
+            it.content = ::tableCellDouble
             it.width = numericWidth
             it.minWidth = numericWidth
             it.headerInstructions = { theme.headerCellTextEndAligned }
@@ -44,9 +48,9 @@ class TableViewBackendBuilder<ITEM_TYPE>(
         }
     }
 
-    fun doubleCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Double?>.() -> Unit) {
-        cells += TableCellDefBuilder<ITEM_TYPE, Double?>().also {
-            it.content = ::tableCellDouble
+    fun intCell(buildFun: TableCellDefBuilder<ITEM_TYPE, Int?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, Int?>().also {
+            it.content = ::tableCellInt
             it.width = numericWidth
             it.minWidth = numericWidth
             it.headerInstructions = { theme.headerCellTextEndAligned }
@@ -70,6 +74,13 @@ class TableViewBackendBuilder<ITEM_TYPE>(
             it.resizable = false
             it.sortable = false
             it.matchFun = { data, filterText -> data?.any { s -> filterText in s } == true }
+            buildFun(it)
+        }
+    }
+
+    fun stringCell(buildFun: TableCellDefBuilder<ITEM_TYPE, String?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, String?>().also {
+            it.content = ::tableCellToString
             buildFun(it)
         }
     }
