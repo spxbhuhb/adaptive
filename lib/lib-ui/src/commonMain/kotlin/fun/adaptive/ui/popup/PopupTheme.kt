@@ -64,6 +64,15 @@ class PopupTheme {
         height { modalButtonsHeight }
     )
 
+    val modalButtonsConfirm = instructionsOf(
+        maxWidth,
+        spaceBetween,
+        alignItems.center,
+        borderTop(colors.lightOutline),
+        paddingHorizontal { 12.dp },
+        height { modalButtonsHeight }
+    )
+
     val feedbackContainer = instructionsOf(
         paddingVertical { 4.dp },
         paddingHorizontal { 12.dp },

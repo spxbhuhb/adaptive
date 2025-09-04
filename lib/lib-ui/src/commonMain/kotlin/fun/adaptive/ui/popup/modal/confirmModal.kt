@@ -4,14 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.NonAdaptive
 import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.runtime.FrontendWorkspace
-import `fun`.adaptive.ui.api.box
-import `fun`.adaptive.ui.api.column
-import `fun`.adaptive.ui.api.onClick
-import `fun`.adaptive.ui.api.padding
-import `fun`.adaptive.ui.api.row
-import `fun`.adaptive.ui.api.spaceBetween
-import `fun`.adaptive.ui.api.text
-import `fun`.adaptive.ui.api.width
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.cancel
 import `fun`.adaptive.ui.generated.resources.ok
 import `fun`.adaptive.ui.input.button.button
@@ -62,7 +55,7 @@ fun confirmModal(
                 theme.modalButtonsHeight,
                 {
                     row {
-                        theme.modalButtons .. spaceBetween
+                        theme.modalButtonsConfirm
 
                         button(viewBackend.cancelLabel) .. onClick { close.uiClose() }
                         submitButton(viewBackend.okLabel) .. onClick { viewBackend.save.uiSave(close); close.uiClose() }
