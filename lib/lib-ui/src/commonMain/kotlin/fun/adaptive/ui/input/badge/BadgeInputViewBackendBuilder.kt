@@ -14,6 +14,7 @@ class BadgeInputViewBackendBuilder(
             setup(backend)
             badgeInputTheme?.let { backend.badgeInputTheme = it }
             unremovable?.let { backend.unremovable = it }
+            backend.localValidate()
         }
 
 }

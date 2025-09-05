@@ -117,10 +117,7 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
         if (property.name == ::inputValue.name) {
             isTouched = true
 
-            val valid = validateFun?.invoke(inputValue) ?: true
-
-            if (! valid && ! isInLocalValidationError) isInLocalValidationError = true
-            if (valid && isInLocalValidationError) isInLocalValidationError = false
+            localValidate()
 
             onChange?.invoke(inputValue)
             formBackend?.onInputValueChange(this)
@@ -131,6 +128,13 @@ abstract class InputViewBackend<VT, BT : InputViewBackend<VT, BT>>(
         }
 
         super.notify(property, oldValue, newValue)
+    }
+
+    fun localValidate() {
+        val valid = validateFun?.invoke(inputValue) ?: true
+
+        if (! valid && ! isInLocalValidationError) isInLocalValidationError = true
+        if (valid && isInLocalValidationError) isInLocalValidationError = false
     }
 
     override fun equals(other: Any?): Boolean {

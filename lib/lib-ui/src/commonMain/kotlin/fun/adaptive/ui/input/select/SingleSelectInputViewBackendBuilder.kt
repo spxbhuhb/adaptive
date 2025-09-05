@@ -11,6 +11,7 @@ class SingleSelectInputViewBackendBuilder<VT, OT>(
     override fun toBackend() =
         SingleSelectInputViewBackend(inputValue, mapping, IdentityInputMapping(), label, secret).also {
             setup(it as AbstractSelectInputViewBackend<VT, VT, OT>)
+            it.localValidate()
         }
 
 }
