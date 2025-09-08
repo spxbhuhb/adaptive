@@ -16,6 +16,8 @@ open class FormViewBackend() {
 
     var application: AbstractApplication<*,*>? = null
 
+    var noLabels : Boolean = false
+
     val inputBackends = mutableListOf<InputViewBackend<*, *>>()
 
     /**
@@ -40,7 +42,7 @@ open class FormViewBackend() {
 
         newBackendFun(
             getValue(binding, propertyMetadata),
-            findLabel(binding.targetFragment, path.lastOrNull()),
+            if (noLabels) null else findLabel(binding.targetFragment, path.lastOrNull()),
             propertyMetadata.isSecret((propertyContainerInstance?.adatCompanion ?: companion).adatDescriptors)
         ).also { backend ->
 

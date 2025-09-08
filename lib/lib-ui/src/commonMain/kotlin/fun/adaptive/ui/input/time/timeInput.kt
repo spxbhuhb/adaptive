@@ -26,7 +26,7 @@ fun timeInput(
 
     decoratedInput(focus, observed) {
 
-        timeInputInner(observed)
+        timeInputInner(viewBackend)
 
         // TODO finish time picker
 //            if (! observed.isDisabled) {
@@ -48,12 +48,13 @@ fun timeInput(
 
 @Adaptive
 internal fun timeInputInner(
-    observed: TimeInputViewBackend,
+    viewBackend: TimeInputViewBackend,
 ) {
+    val observed = observe { viewBackend }
+
     val theme = observed.timeInputTheme
     val focus = focus()
 
-    @Independent
     val time = observed.inputValue ?: localTime()
 
     column(instructions()) {
