@@ -23,7 +23,8 @@ fun timeAgoString(instant : Instant, now : Instant) : String {
     val duration = now - instant
 
     return when {
-        duration.inWholeSeconds == 0L -> Strings.justNow
+        duration.inWholeSeconds < -1L -> Strings.clockDrift
+        duration.inWholeSeconds <= 0L -> Strings.justNow
         duration.inWholeSeconds < 60 -> "${duration.inWholeSeconds} ${if (duration.inWholeSeconds == 1L) Strings.secondAgo else Strings.secondsAgo}"
         duration.inWholeMinutes < 60 -> "${duration.inWholeMinutes} ${if (duration.inWholeMinutes == 1L) Strings.minuteAgo else Strings.minutesAgo}"
         duration.inWholeHours < 24 -> "${duration.inWholeHours} ${if (duration.inWholeHours == 1L) Strings.hourAgo else Strings.hoursAgo}"

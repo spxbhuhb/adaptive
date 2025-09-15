@@ -83,6 +83,7 @@
     <string name="month">hónap</string>
     <string name="year">év</string>
 
+    <string name="clockDrift">óraeltérés</string>
     <string name="justNow">épp most</string>
     <string name="secondAgo">másodperce</string>
     <string name="secondsAgo">másodperce</string>

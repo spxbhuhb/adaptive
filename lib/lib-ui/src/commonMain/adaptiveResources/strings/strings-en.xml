@@ -81,7 +81,8 @@
     <string name="week">week</string>
     <string name="month">month</string>
     <string name="year">year</string>
-    
+
+    <string name="clockDrift">clock drift</string>
     <string name="justNow">just now</string>
     <string name="secondAgo">second ago</string>
     <string name="secondsAgo">seconds ago</string>
