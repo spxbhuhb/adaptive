@@ -29,6 +29,7 @@ class AvUiTreeSubscriber<SPEC : Any>(
     }
 
     override fun updateTreeItemData(item: AvValue<SPEC>, treeItem: TreeItem<AvValue<SPEC>>) {
+        treeItem.data = item
         treeItem.title = item.nameLike // treeItem is observable
     }
 
