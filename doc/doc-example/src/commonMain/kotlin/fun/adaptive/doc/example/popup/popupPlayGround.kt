@@ -104,8 +104,8 @@ class PopupPlaygroundConfig(
     }
 }
 
-fun AdatFormViewBackend<`fun`.adaptive.doc.example.popup.PopupPlaygroundConfig>.setAlignment(alignment: PopupAlign) {
-    inputValue = inputValue.copy(alignment = alignment)
+fun AdatFormViewBackend<PopupPlaygroundConfig>.setAlignment(alignment: PopupAlign) {
+    setFormInputValue(inputValue.copy(alignment = alignment))
 }
 
 @Adaptive

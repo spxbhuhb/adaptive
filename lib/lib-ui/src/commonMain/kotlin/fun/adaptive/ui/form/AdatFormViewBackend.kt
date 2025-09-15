@@ -20,10 +20,21 @@ class AdatFormViewBackend<T : AdatClass>(
 ) : FormViewBackend(), Observable<AdatFormViewBackend<T>> {
 
     var inputValue: T = initialValue
-        set(value) {
-            field = value
-            notifyListeners()
+        private set
+
+    /**
+     * Sets the value of the form input, validates it, sets fields errors if needed,
+     * notifies all field listeners and notifies listener of this.
+     */
+    fun setFormInputValue(newValue: T) {
+        inputValue = newValue
+        validateAndSetErrors(newValue)
+        inputBackends.forEach {
+            @Suppress("UNCHECKED_CAST")
+            (it as InputViewBackend<Any?, Any?>).inputValue = newValue.getValue(it.path.toTypedArray())
         }
+        notifyListeners()
+    }
 
     override var value: AdatFormViewBackend<T>
         get() = this
@@ -61,6 +72,13 @@ class AdatFormViewBackend<T : AdatClass>(
     override fun onInputValueChange(inputBackend: InputViewBackend<*, *>) {
         val newValue = inputValue.deepCopy(AdatChange(inputBackend.path, inputBackend.inputValue))
 
+        validateAndSetErrors(newValue)
+
+        inputValue = newValue
+        notifyListeners()
+    }
+
+    fun validateAndSetErrors(newValue: T) {
         validate(newValue)
 
         for (backend in inputBackends) {
@@ -70,8 +88,6 @@ class AdatFormViewBackend<T : AdatClass>(
                 if (backend.isInConstraintError) backend.isInConstraintError = false
             }
         }
-
-        inputValue = newValue
     }
 
     fun validate(newValue: T) {
