@@ -1,7 +1,5 @@
 package `fun`.adaptive.ui.mpw.backends
 
-import `fun`.adaptive.foundation.AdaptiveFragment
-import `fun`.adaptive.foundation.LifecycleBound
 import `fun`.adaptive.general.SelfObservable
 import `fun`.adaptive.resource.GraphicsResourceKey
 import `fun`.adaptive.resource.StringResourceKey
@@ -20,7 +18,7 @@ import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.firstInstance
 
-abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>(), LifecycleBound {
+abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>() {
 
     val uuid: UUID<PaneViewBackend<*>> = uuid4()
 
@@ -80,19 +78,13 @@ abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>(),
     open fun getPaneActions(): List<AbstractPaneAction> =
         emptyList()
 
-    override fun patch(fragment : AdaptiveFragment, index : Int) {
-        // placeholder for lifecycle callback
-    }
+    /**
+     * Called when the workspace disposes of the pane. This is different from disposing the
+     * fragment. Fragment disposal may happen when the user switches to a different pane and
+     * the pane becomes invisible. However, this should not dispose the backend itself as it
+     * may have a loaded state that should be preserved.
+     */
+    open fun dispose() {
 
-    override fun mount(fragment : AdaptiveFragment, index : Int) {
-        // placeholder for lifecycle callback
-    }
-
-    override fun unmount(fragment : AdaptiveFragment, index : Int) {
-        // placeholder for lifecycle callback
-    }
-
-    override fun dispose(fragment : AdaptiveFragment, index : Int) {
-        // placeholder for lifecycle callback
     }
 }

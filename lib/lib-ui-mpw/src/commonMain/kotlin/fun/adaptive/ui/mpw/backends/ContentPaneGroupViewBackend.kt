@@ -101,6 +101,7 @@ class ContentPaneGroupViewBackend(
                     }
                 }
                 Strings.closeAllTabs -> {
+                    panes.forEach { it.dispose() }
                     workspace.removePaneGroup(this)
                 }
             }
@@ -115,6 +116,7 @@ class ContentPaneGroupViewBackend(
     }
 
     fun closeOtherTabs(model : TabContainer, pane : TabPane) {
+        panes.filter { it.uuid != pane.uuid }.forEach { it.dispose() } // disposes the backend => stops all background tasks
         panes.removeAll { it.uuid != pane.uuid }
 
         if (panes.isEmpty()) {
@@ -127,6 +129,7 @@ class ContentPaneGroupViewBackend(
     }
 
     fun closeTab(model : TabContainer, pane : TabPane) {
+        panes.first { it.uuid == pane.uuid }.dispose() // disposes the backend => stops all background tasks
         panes.removeAll { it.uuid == pane.uuid }
 
         if (panes.isEmpty()) {
