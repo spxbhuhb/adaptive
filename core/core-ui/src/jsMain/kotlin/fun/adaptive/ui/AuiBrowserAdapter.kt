@@ -110,6 +110,9 @@ class AuiBrowserAdapter(
         // Otherwise, we better postpone the operation until after the layouts are calculated.
         if (! itemReceiver.isConnected) {
             itemReceiver.remove()
+            // this is a case when we actually remove the item before the first layout pass closes
+            val index = actualOps.indexOfFirst { it.itemReceiver === itemReceiver }
+            if (index != - 1) actualOps.removeAt(index)
         } else {
             actualOps += ActualOp(null, itemReceiver, false)
         }
