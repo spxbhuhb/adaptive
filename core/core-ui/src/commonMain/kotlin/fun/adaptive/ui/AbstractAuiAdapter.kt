@@ -174,7 +174,9 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
         updateBatchId ++
 
         for (fragment in updateBatch) {
-            fragment.updateLayout(updateId, null)
+            if (fragment.isMounted) {
+                fragment.updateLayout(updateId, null)
+            }
         }
 
         updateBatch.clear()
