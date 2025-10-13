@@ -50,7 +50,8 @@ fun doubleInput(
             ) ..
                 observed.containerThemeInstructions(focus) ..
                 observed.inputTheme.singleLine ..
-                alignItems.end
+                alignItems.end ..
+                instructions()
 
             if (observed.unit != null) {
                 text(observed.unit) .. observed.inputTheme.endHint
