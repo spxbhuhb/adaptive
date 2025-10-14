@@ -1,6 +1,6 @@
 package `fun`.adaptive.ktor.app
 
-import `fun`.adaptive.auth.model.AccessDenied
+import `fun`.adaptive.service.auth.AccessDenied
 import `fun`.adaptive.ktor.api.webSocketTransport
 import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule

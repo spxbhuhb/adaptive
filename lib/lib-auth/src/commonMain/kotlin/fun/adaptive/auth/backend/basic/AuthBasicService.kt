@@ -17,6 +17,10 @@ import `fun`.adaptive.value.AvValue.Companion.asAvValue
 import `fun`.adaptive.value.store.AvComputeContext
 import `fun`.adaptive.value.util.serviceSubscribe
 import `fun`.adaptive.service.ServiceProvider
+import `fun`.adaptive.service.auth.ensureHas
+import `fun`.adaptive.service.auth.ensurePrincipalOrHas
+import `fun`.adaptive.service.auth.ensuredByLogic
+import `fun`.adaptive.service.auth.has
 
 @ServiceProvider
 class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {

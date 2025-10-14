@@ -5,8 +5,8 @@
 package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.api.AuthRoleApi
-import `fun`.adaptive.auth.context.ensureHas
-import `fun`.adaptive.auth.context.ensureLoggedIn
+import `fun`.adaptive.service.auth.ensureHas
+import `fun`.adaptive.service.auth.ensureLoggedIn
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.ServiceProvider

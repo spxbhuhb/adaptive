@@ -5,6 +5,7 @@ import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.reflect.typeSignature
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.utility.trimSignature
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.TimeoutCancellationException
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
  */
 class AvClientSubscription(
     uuid: AvSubscriptionId,
+    val roles : Set<UUID<*>>,
     conditions: List<AvSubscribeCondition>,
     transport: ServiceCallTransport,
     scope: CoroutineScope,
@@ -37,6 +39,11 @@ class AvClientSubscription(
         scope.launch {
             run()
         }
+    }
+
+    override fun add(value : AvValue<*>) {
+        if (value.acl != null && ! roles.contains(value.acl)) return
+        super.add(value)
     }
 
     suspend fun run() {

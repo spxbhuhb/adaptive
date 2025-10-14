@@ -41,6 +41,7 @@ class AvEmbeddedServerService : ServiceImpl<AvEmbeddedServerService>(), AvValueA
 
         val subscription = AvClientSubscription(
             subscriptionId ?: uuid4(),
+            serviceContext.sessionRoles,
             conditions,
             serviceContext.transport,
             safeAdapter.scope

@@ -23,7 +23,7 @@ class Session(
     val createdAt: Instant,
     val vmCreatedAt: Long,
     var lastActivity: Long, // TODO does the synchronization of ConcurrentHashMap enough for lastActivity?
-    val roles: Set<AuthRoleId>
+    override val roles: Set<AuthRoleId>
 ) : ServiceSession {
 
     override fun addSessionCleanup(cleanup: CleanupHandler<ServiceSession>) {

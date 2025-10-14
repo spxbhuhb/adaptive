@@ -1,6 +1,6 @@
 package `fun`.adaptive.grove.doc.server
 
-import `fun`.adaptive.auth.context.publicAccess
+import `fun`.adaptive.service.auth.publicAccess
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.grove.doc.api.GroveDocApi
 import `fun`.adaptive.grove.doc.model.*

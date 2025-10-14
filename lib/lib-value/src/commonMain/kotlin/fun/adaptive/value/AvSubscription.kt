@@ -16,7 +16,7 @@ abstract class AvSubscription(
 
     val transaction = mutableListOf<AvValueOperation>()
 
-    fun add(value: AvValue<*>) {
+    open fun add(value: AvValue<*>) {
         transaction.add(AvoAddOrUpdate(value))
     }
 

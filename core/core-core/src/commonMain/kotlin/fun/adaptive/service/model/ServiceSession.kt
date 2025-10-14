@@ -10,6 +10,8 @@ interface ServiceSession {
 
     val principalOrNull: UUID<*>?
 
+    val roles: Set<UUID<*>>
+
     fun addSessionCleanup(cleanup: CleanupHandler<ServiceSession>)
 
     fun removeSessionCleanup(cleanup: CleanupHandler<ServiceSession>)

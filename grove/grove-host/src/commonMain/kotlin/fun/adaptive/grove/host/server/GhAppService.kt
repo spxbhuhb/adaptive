@@ -1,6 +1,6 @@
 package `fun`.adaptive.grove.host.server
 
-import `fun`.adaptive.auth.context.ensureLoggedIn
+import `fun`.adaptive.service.auth.ensureLoggedIn
 import `fun`.adaptive.auth.model.AuthMarkers
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.grove.host.api.GhAppApi

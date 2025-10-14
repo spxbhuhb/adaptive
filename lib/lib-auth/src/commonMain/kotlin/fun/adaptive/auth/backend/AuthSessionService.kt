@@ -1,10 +1,10 @@
 package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.api.AuthSessionApi
-import `fun`.adaptive.auth.context.ensuredByLogic
+import `fun`.adaptive.service.auth.ensuredByLogic
 import `fun`.adaptive.auth.context.getPrincipalIdOrNull
 import `fun`.adaptive.auth.context.getSessionOrNull
-import `fun`.adaptive.auth.context.publicAccess
+import `fun`.adaptive.service.auth.publicAccess
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import `fun`.adaptive.auth.util.BCrypt

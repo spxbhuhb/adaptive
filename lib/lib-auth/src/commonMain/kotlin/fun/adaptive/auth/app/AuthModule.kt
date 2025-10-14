@@ -4,12 +4,12 @@ import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.runtime.AbstractWorkspace
 import `fun`.adaptive.runtime.AppModule
 import `fun`.adaptive.runtime.BackendWorkspace
+import `fun`.adaptive.service.auth.AccessDenied
 import `fun`.adaptive.wireformat.WireFormatRegistry
 
 abstract class AuthModule<FW : AbstractWorkspace, BW: BackendWorkspace> : AppModule<FW,BW>() {
 
     override fun wireFormatInit(registry: WireFormatRegistry) = with(registry) {
-        + AccessDenied
         + AuthHistoryEntry
         + AuthenticationFail
         + AuthenticationResult
