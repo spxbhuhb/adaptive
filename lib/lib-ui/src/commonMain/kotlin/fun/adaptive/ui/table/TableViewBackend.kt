@@ -66,6 +66,8 @@ class TableViewBackend<ITEM> : SelfObservable<TableViewBackend<ITEM>>() {
         onChange = { filterText = it ?: "" }
     }
 
+    var onDoubleClick : ((ITEM) -> Unit)? = null
+
     fun setAllItems(items : List<ITEM>) {
         allItems = items.map { TableItem(it) }.toMutableList()
         sortAllItemsByActiveSorts()

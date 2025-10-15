@@ -23,6 +23,8 @@ class TableViewBackendBuilder<ITEM_TYPE>(
 
     var cellGroups : List<TableCellGroupDef> = emptyList()
 
+    var onDoubleClick : ((ITEM_TYPE) -> Unit)? = null
+
     fun cellGroup(label : String, priority : Int) : TableCellGroupDef {
         return TableCellGroupDef(label, priority).also { cellGroups += it }
     }
@@ -114,6 +116,10 @@ class TableViewBackendBuilder<ITEM_TYPE>(
 //        }
 //    }
 
+    fun onDoubleClick(eh : (ITEM_TYPE) -> Unit) {
+        this.onDoubleClick = eh
+    }
+
     fun toBackend() : TableViewBackend<ITEM_TYPE> {
         TableViewBackend<ITEM_TYPE>().also { table ->
             table.cells += cells.map { cell -> cell.toTableCellDef(table) }
@@ -122,6 +128,7 @@ class TableViewBackendBuilder<ITEM_TYPE>(
             table.viewportItems = table.allItems
             table.gap = gap
             table.tableTheme = theme
+            table.onDoubleClick = onDoubleClick
             return table
         }
     }

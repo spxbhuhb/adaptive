@@ -1,6 +1,8 @@
 package `fun`.adaptive.ui.table
 
 import `fun`.adaptive.foundation.*
+import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
+import `fun`.adaptive.foundation.instruction.nop
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.ui.AbstractAuiAdapter
 import `fun`.adaptive.ui.api.*
@@ -11,6 +13,7 @@ import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellGroupDef
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.loading.loading
+import `fun`.adaptive.ui.theme.backgrounds
 
 @Adaptive
 fun <ITEM> table(
@@ -104,8 +107,12 @@ fun <ITEM> tableItem(
     item : TableItem<ITEM>
 ) : AdaptiveFragment {
 
+    val hover = hover()
+    val background : AdaptiveInstruction = if (hover) backgrounds.primaryHover else nop
+
     cellBox(arrangement = arrangement) {
-        backend.tableTheme.itemContainer
+        backend.tableTheme.itemContainer .. background
+        onDoubleClick { backend.onDoubleClick?.invoke(item.data) }
 
         for (cell in activeCells) {
             @Suppress("UNCHECKED_CAST")
