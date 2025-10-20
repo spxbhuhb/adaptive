@@ -3,28 +3,26 @@ package `fun`.adaptive.ui.value
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.general.AbstractObservable
+import `fun`.adaptive.runtime.FrontendWorkspace
 import `fun`.adaptive.service.api.getService
 import `fun`.adaptive.service.transport.ServiceCallTransport
 import `fun`.adaptive.utility.UUID
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue
 import `fun`.adaptive.value.operation.*
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 import kotlin.collections.plusAssign
 
 class AvNameCache(
-    adapter: BackendAdapter,
-    transport: ServiceCallTransport,
-    val scope: CoroutineScope,
-    itemMarker: AvMarker,
+    adapter : BackendAdapter,
+    transport : ServiceCallTransport,
+    val workspace : FrontendWorkspace,
+    itemMarker : AvMarker,
     val parentRefLabel : AvRefLabel
 ) : AbstractObservable<List<AvNameCacheEntry>>() {
 
 
-    override var value: List<AvNameCacheEntry> = emptyList()
+    override var value : List<AvNameCacheEntry> = emptyList()
         set(v) {
             field = v
             notifyListeners()
@@ -41,35 +39,31 @@ class AvNameCache(
         AvSubscribeCondition(marker = itemMarker, itemOnly = true)
     )
 
-    var remoteSubscriptionId: AvSubscriptionId? = null
-    val localSubscriptionId: AvSubscriptionId = UUID.Companion.uuid4()
+    var remoteSubscriptionId : AvSubscriptionId? = null
+    val localSubscriptionId : AvSubscriptionId = UUID.Companion.uuid4()
 
     val updates = Channel<AvValueOperation>(Channel.UNLIMITED)
 
     val size
         get() = itemMap.size
 
-    operator fun get(valueId: AvValueId) = itemMap[valueId]
+    operator fun get(valueId : AvValueId) = itemMap[valueId]
 
     fun start() {
         localWorker.subscribe(
             AvChannelSubscription(localSubscriptionId, conditions, updates)
         )
-        scope.launch {
-            supervisorScope {
-                remoteSubscriptionId = remoteService.subscribe(conditions)
-                run()
-            }
+        workspace.io {
+            remoteSubscriptionId = remoteService.subscribe(conditions)
+            run()
         }
     }
 
     fun stop() {
         localWorker.unsubscribe(localSubscriptionId)
-        scope.launch {
-            supervisorScope {
-                updates.close()
-                remoteService.unsubscribe(remoteSubscriptionId !!)
-            }
+        workspace.io {
+            updates.close()
+            remoteService.unsubscribe(remoteSubscriptionId !!)
         }
     }
 
@@ -90,11 +84,11 @@ class AvNameCache(
         }
     }
 
-    fun process(value: AvValue<*>) {
+    fun process(value : AvValue<*>) {
         itemMap[value.uuid] = value
     }
 
-    fun pathNames(value: AvValue<*>): List<String> {
+    fun pathNames(value : AvValue<*>) : List<String> {
         var parentId = value.refIdOrNull(parentRefLabel)
         val names = mutableListOf(value.name ?: "?")
 

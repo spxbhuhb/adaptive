@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 open class FrontendWorkspace(
     val backend: BackendAdapter,
     val backendWorkspace: BackendWorkspace,
-    val scope: CoroutineScope = backend.scope,
+    private val scope: CoroutineScope = backend.scope,
     val transport: ServiceCallTransport = backend.transport
 ) : AbstractWorkspace() {
 

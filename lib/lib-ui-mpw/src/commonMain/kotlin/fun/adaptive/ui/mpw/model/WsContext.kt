@@ -14,7 +14,7 @@ interface WsContext {
     operator fun get(item : NamedItem) = workspace.getItemConfig(item.type)
 
     fun io( ioFun : suspend () -> Unit) {
-        workspace.scope.launch { ioFun() }
+        workspace.io { ioFun() }
     }
 
 }

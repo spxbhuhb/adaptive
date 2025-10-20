@@ -3,6 +3,8 @@ package `fun`.adaptive.value.remote
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.foundation.unsupported
 import `fun`.adaptive.general.SelfObservable
+import `fun`.adaptive.log.getLogger
+import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.value.*
 import `fun`.adaptive.value.AvValue.Companion.checkSpec
 import `fun`.adaptive.value.model.AvRefLabels
@@ -29,13 +31,17 @@ abstract class AvRemoteTreeSubscriber<SPEC : Any, TREE_ITEM>(
     val specClass: KClass<SPEC>,
 ) : AvAbstractRemoteSubscriber<List<TREE_ITEM>>(subscribeFun, backend) {
 
+    companion object {
+        val logger = getLogger("AvRemoteTreeSubscriber")
+    }
+
     constructor(
         backend: BackendAdapter,
         parentRefLabel: AvMarker,
         specClass: KClass<SPEC>,
         vararg conditions: AvSubscribeCondition
     ) : this(
-        { service, id -> conditions.toList().also { service.subscribe(it) } }, backend, parentRefLabel, specClass
+        { service, id -> conditions.toList().also { safeSuspendCall(logger) { service.subscribe(it) } } }, backend, parentRefLabel, specClass
     )
 
     constructor(
