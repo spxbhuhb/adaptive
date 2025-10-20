@@ -35,6 +35,9 @@ open class ServiceContext(
     val sessionIdOrNull : ServiceSessionId?
         get() = sessionOrNull?.uuid
 
+    val sessionRoles : Set<UUID<*>>
+        get() = sessionOrNull?.roles ?: emptySet()
+
     private val lock = getLock()
 
     var disconnect = false

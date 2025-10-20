@@ -13,6 +13,7 @@ fun ServiceImpl<*>.serviceSubscribe(
 
     val subscription = AvClientSubscription(
         subscriptionId,
+        serviceContext.sessionRoles,
         conditions = conditions,
         transport = serviceContext.transport,
         scope = safeAdapter.scope
@@ -33,6 +34,7 @@ fun ServiceImpl<*>.serviceSubscribe(
 
     val subscription = AvClientSubscription(
         subscriptionId,
+        serviceContext.sessionRoles,
         conditions = conditions,
         transport = serviceContext.transport,
         scope = safeAdapter.scope
@@ -51,6 +53,7 @@ fun ServiceImpl<*>.serviceSubscribe(
 
     val subscription = AvClientSubscription(
         subscriptionId,
+        serviceContext.sessionRoles,
         conditions = conditions,
         transport = serviceContext.transport,
         scope = safeAdapter.scope

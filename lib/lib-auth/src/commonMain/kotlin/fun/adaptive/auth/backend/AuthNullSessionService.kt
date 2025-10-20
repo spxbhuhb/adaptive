@@ -1,7 +1,7 @@
 package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.api.AuthSessionApi
-import `fun`.adaptive.auth.context.publicAccess
+import `fun`.adaptive.service.auth.publicAccess
 import `fun`.adaptive.auth.model.AuthPrincipalId
 import `fun`.adaptive.auth.model.AuthRoleId
 import `fun`.adaptive.auth.model.Session

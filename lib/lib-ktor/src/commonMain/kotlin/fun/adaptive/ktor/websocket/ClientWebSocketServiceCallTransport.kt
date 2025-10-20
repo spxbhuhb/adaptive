@@ -2,9 +2,11 @@ package `fun`.adaptive.ktor.websocket
 
 import `fun`.adaptive.ktor.api.toHttp
 import `fun`.adaptive.ktor.api.toWs
+import `fun`.adaptive.log.getLogger
 import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.transport.DelayReconnectException
 import `fun`.adaptive.service.transport.ServiceCallTransport
+import `fun`.adaptive.utility.safeSuspendCall
 import `fun`.adaptive.utility.use
 import `fun`.adaptive.wireformat.WireFormatProvider
 import io.ktor.client.*
@@ -38,6 +40,8 @@ open class ClientWebSocketServiceCallTransport(
     wireFormatProvider
 ) {
 
+    val logger = getLogger("websocket.transport")
+
     var started : Boolean = false
 
     val clientIdUrl = host.toHttp(clientIdPath)
@@ -58,7 +62,7 @@ open class ClientWebSocketServiceCallTransport(
         if (started) return this
         started = true
 
-        scope.launch { run() }
+        scope.launch { safeSuspendCall(logger) { run() } }
 
         return this
     }

@@ -72,9 +72,6 @@ abstract class PaneViewBackend<VB : PaneViewBackend<VB>> : SelfObservable<VB>() 
     val transport
         get() = workspace.transport
 
-    val scope
-        get() = workspace.scope
-
     open fun getPaneActions(): List<AbstractPaneAction> =
         emptyList()
 

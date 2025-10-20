@@ -4,7 +4,7 @@
 
 package `fun`.adaptive.ktor
 
-import `fun`.adaptive.auth.model.AccessDenied
+import `fun`.adaptive.service.auth.AccessDenied
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.ktor.worker.KtorWorker
 import `fun`.adaptive.backend.builtin.worker

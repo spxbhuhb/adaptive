@@ -2,10 +2,10 @@ package `fun`.adaptive.auth.backend
 
 import `fun`.adaptive.auth.api.AuthPrincipalApi
 import `fun`.adaptive.auth.app.AuthModule
-import `fun`.adaptive.auth.context.ensureHas
-import `fun`.adaptive.auth.context.ensurePrincipalOrHas
-import `fun`.adaptive.auth.context.ofPrincipal
-import `fun`.adaptive.auth.context.publicAccess
+import `fun`.adaptive.service.auth.ensureHas
+import `fun`.adaptive.service.auth.ensurePrincipalOrHas
+import `fun`.adaptive.service.auth.ofPrincipal
+import `fun`.adaptive.service.auth.publicAccess
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD_RESET_KEY

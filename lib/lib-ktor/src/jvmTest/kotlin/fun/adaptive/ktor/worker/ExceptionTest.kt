@@ -5,7 +5,7 @@
 package `fun`.adaptive.ktor.worker
 
 import `fun`.adaptive.adat.Adat
-import `fun`.adaptive.auth.context.publicAccess
+import `fun`.adaptive.service.auth.publicAccess
 import `fun`.adaptive.backend.BackendAdapter
 import `fun`.adaptive.backend.backend
 import `fun`.adaptive.backend.builtin.ServiceImpl
