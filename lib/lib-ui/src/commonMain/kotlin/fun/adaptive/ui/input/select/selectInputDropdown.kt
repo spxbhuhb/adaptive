@@ -60,7 +60,10 @@ fun <INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE> selectInputDropdown(
                         onKeyDown { event -> observed.onListKeydown(event, hide) }
 
                         if (viewBackend.filterable) {
-                            textInput(viewBackend.filterBackend) .. focusFirst
+                            box {
+                                marginBottom { 8.dp }
+                                textInput(viewBackend.filterBackend) .. focusFirst
+                            }
                         }
 
                         for (item in observed.filteredItems) {

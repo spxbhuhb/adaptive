@@ -53,7 +53,7 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
         private set
 
     val filteredItems
-        get() = items.filter { o -> filter?.let { toText(o.option).contains(it, ignoreCase = true) } ?: true }
+        get() = items.filter { o -> filter?.let { toFilterText(o.option).contains(it, ignoreCase = true) } ?: true }
 
     val selectedItems = mutableSetOf<SelectItem>()
     val selectedValues = mutableSetOf<ITEM_TYPE>()
@@ -72,12 +72,20 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
      */
     var showHover by observable(true, ::notify)
 
+    /**
+     * When true, dropdowns show a filter field and filter options as the user types.
+     */
     var filterable by observable(false, ::notify)
 
     /**
      * Filter text used to filter items.
      */
     var filter : String? = null
+
+    /**
+     * Function to convert the option into a text for filtering.
+     */
+    var toFilterText by observable<(OPTION_TYPE) -> String>({ it.toString() }, ::notify)
 
     val filterBackend = textInputBackend {
         onChange = {

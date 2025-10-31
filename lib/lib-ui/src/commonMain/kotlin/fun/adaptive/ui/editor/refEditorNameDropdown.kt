@@ -21,6 +21,7 @@ import `fun`.adaptive.value.AvValueId
 fun <SPEC> refEditorNameDropdown(
     refLabel: AvRefLabel,
     options: List<AvValue<SPEC>>?,
+    filterable : Boolean = false,
     binding: AdaptiveStateVariableBinding<Map<AvRefLabel, AvValueId>?>? = null,
     @Suppress("unused")
     @PropertySelector
@@ -35,9 +36,11 @@ fun <SPEC> refEditorNameDropdown(
                 RefMapInputMapping(refLabel),
                 fragment().resolveStringOrNull(refLabel) ?: refLabel,
                 isSecret
-            ).also {
+            ).also { backend ->
                 // it.options = options ?: emptyList()
-                it.withSurfaceContainer = true
+                backend.withSurfaceContainer = true
+                backend.filterable = filterable
+                backend.toFilterText = { it.nameLike }
             }
         }.also { if (it.options !== options) it.options = options ?: emptyList() },
         { selectInputOptionText(it) { it.option.nameLike } },
