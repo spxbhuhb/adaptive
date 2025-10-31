@@ -97,6 +97,10 @@ data class ChartItem<XT : Comparable<XT>, YT : Comparable<YT>, AT>(
         var curPos = normalizer.normalizeX(config.start)
         val endPos = normalizer.normalizeX(config.end)
 
+        if (! normalizedInterval.isFinite() || normalizedInterval <= 0.0 || ! curPos.isFinite() || ! endPos.isFinite() || curPos >= endPos) {
+            return this
+        }
+
         while (curPos < endPos) {
             var nextIndex = index
             val nextPos = curPos + normalizedInterval
