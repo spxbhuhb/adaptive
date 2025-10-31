@@ -12,6 +12,7 @@ import `fun`.adaptive.ui.generated.resources.keyboard_arrow_down
 import `fun`.adaptive.ui.generated.resources.noValueSelected
 import `fun`.adaptive.ui.icon.icon
 import `fun`.adaptive.ui.input.decoratedInput
+import `fun`.adaptive.ui.input.text.textInput
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.layout.SizeBase
 import `fun`.adaptive.ui.instruction.layout.SizeStrategy
@@ -58,7 +59,11 @@ fun <INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE> selectInputDropdown(
                         onPointerMove { observed.onPointerMove() }
                         onKeyDown { event -> observed.onListKeydown(event, hide) }
 
-                        for (item in observed.items) {
+                        if (viewBackend.filterable) {
+                            textInput(viewBackend.filterBackend) .. focusFirst
+                        }
+
+                        for (item in observed.filteredItems) {
                             option(item)
                         }
                     }

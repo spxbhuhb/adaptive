@@ -6,8 +6,9 @@ import `fun`.adaptive.backend.backend
 import `fun`.adaptive.doc.app.ExampleFragmentFactory
 import `fun`.adaptive.doc.example.generated.resources.edit
 import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.adapter
-import `fun`.adaptive.foundation.api.localContext
+import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.canvas.CanvasFragmentFactory
 import `fun`.adaptive.graphics.svg.SvgFragmentFactory
@@ -25,25 +26,29 @@ import `fun`.adaptive.ui.fragment.layout.SizingProposal
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellBoxArrangementCalculator
 import `fun`.adaptive.ui.fragment.layout.cellbox.CellDef
 import `fun`.adaptive.ui.generated.resources.account_box
+import `fun`.adaptive.ui.generated.resources.menu_book
 import `fun`.adaptive.ui.generated.resources.north
 import `fun`.adaptive.ui.generated.resources.south
 import `fun`.adaptive.ui.icon.ActionIconRowBackend
 import `fun`.adaptive.ui.input.button.button
+import `fun`.adaptive.ui.input.select.item.selectInputOptionIconAndText
+import `fun`.adaptive.ui.input.select.item.selectInputValueIconAndText
+import `fun`.adaptive.ui.input.select.selectInputBackend
+import `fun`.adaptive.ui.input.select.selectInputDropdown
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.fr
 import `fun`.adaptive.ui.instruction.sp
 import `fun`.adaptive.ui.menu.MenuItem
-import `fun`.adaptive.ui.popup.modal.openConfirmModal
 import `fun`.adaptive.ui.snackbar.successNotification
-import `fun`.adaptive.ui.table.TableItem
 import `fun`.adaptive.ui.table.TableViewBackendBuilder.Companion.tableBackend
 import `fun`.adaptive.ui.table.table
 import `fun`.adaptive.ui.theme.backgrounds
 import `fun`.adaptive.ui.uiCommon
+import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.UUID.Companion.uuid7
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlin.collections.plus
 import kotlin.time.Clock.System.now
 
 fun main() {
@@ -96,7 +101,8 @@ fun main() {
 
                 column {
                     padding { 16.dp }
-                    tableTest()
+                    //tableTest()
+                    selectInputDropdownExample()
                 }
 
 //                localContext(workspace) {
@@ -111,6 +117,29 @@ fun main() {
             e.printStackTrace()
         }
     }
+}
+
+@Adaptive
+fun selectInputDropdownExample(): AdaptiveFragment {
+
+    val backend = selectInputBackend<Pair<UUID<Any>, String>> {
+        options = listOf(
+            uuid7<Any>() to "Option 1",
+            uuid7<Any>() to "Option 2",
+            uuid7<Any>() to "Option 3"
+        )
+        toText = { it.second }
+        toIcon = { Graphics.menu_book }
+        filterable = true
+    }
+
+    selectInputDropdown(
+        backend,
+        { selectInputOptionIconAndText(it) },
+        { selectInputValueIconAndText(it) }
+    ) .. width { 240.dp }
+
+    return fragment()
 }
 
 class T(

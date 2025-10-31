@@ -14,6 +14,7 @@ import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.input.InputViewBackend
 import `fun`.adaptive.ui.input.select.mapping.SelectInputMapping
 import `fun`.adaptive.ui.input.select.mapping.SelectOptionMapping
+import `fun`.adaptive.ui.input.text.textInputBackend
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.instruction.event.Keys
 import `fun`.adaptive.ui.instruction.event.UIEvent
@@ -51,6 +52,9 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
     var items = listOf<SelectItem>()
         private set
 
+    val filteredItems
+        get() = items.filter { o -> filter?.let { toText(o.option).contains(it, ignoreCase = true) } ?: true }
+
     val selectedItems = mutableSetOf<SelectItem>()
     val selectedValues = mutableSetOf<ITEM_TYPE>()
 
@@ -67,6 +71,20 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
      * When the mouse moves, the hover background should be shown.
      */
     var showHover by observable(true, ::notify)
+
+    var filterable by observable(false, ::notify)
+
+    /**
+     * Filter text used to filter items.
+     */
+    var filter : String? = null
+
+    val filterBackend = textInputBackend {
+        onChange = {
+            filter = it?.ifEmpty { null }
+            notifyListeners()
+        }
+    }
 
     fun toggle(item: SelectItem, closeAfter: Boolean = true) {
         if (isDisabled) return

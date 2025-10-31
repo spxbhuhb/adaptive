@@ -16,6 +16,8 @@ abstract class AbstractSelectInputViewBackendBuilder<SVT,IVT,OT>(
     var selectInputTheme: SelectInputTheme? = null
     var withSurfaceContainer: Boolean? = null
 
+    var filterable : Boolean? = null
+
     override fun setup(backend : AbstractSelectInputViewBackend<SVT,IVT,OT>) {
         super.setup(backend)
         options?.let { backend.options = it }
@@ -24,5 +26,6 @@ abstract class AbstractSelectInputViewBackendBuilder<SVT,IVT,OT>(
         toIcon?.let { backend.toIcon = it }
         selectInputTheme?.let { backend.selectInputTheme = it }
         withSurfaceContainer?.let { backend.withSurfaceContainer = it }
+        filterable?.let { backend.filterable = it }
     }
 }
