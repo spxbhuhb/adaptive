@@ -59,14 +59,14 @@ fun <INPUT_VALUE_TYPE, ITEM_TYPE, OPTION_TYPE> selectInputDropdown(
                         onPointerMove { observed.onPointerMove() }
                         onKeyDown { event -> observed.onListKeydown(event, hide) }
 
-                        if (viewBackend.filterable) {
+                        if (observed.filterable) {
                             box {
                                 marginBottom { 8.dp }
-                                textInput(viewBackend.filterBackend) .. focusFirst
+                                textInput(observed.filterBackend) .. focusFirst
                             }
                         }
 
-                        for (item in observed.filteredItems) {
+                        for (item in observed.items) {
                             option(item)
                         }
                     }

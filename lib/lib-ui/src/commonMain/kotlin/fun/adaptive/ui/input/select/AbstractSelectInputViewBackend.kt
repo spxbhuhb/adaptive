@@ -52,9 +52,6 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
     var items = listOf<SelectItem>()
         private set
 
-    val filteredItems
-        get() = items.filter { o -> filter?.let { toFilterText(o.option).contains(it, ignoreCase = true) } ?: true }
-
     val selectedItems = mutableSetOf<SelectItem>()
     val selectedValues = mutableSetOf<ITEM_TYPE>()
 
@@ -90,6 +87,7 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
     val filterBackend = textInputBackend {
         onChange = {
             filter = it?.ifEmpty { null }
+            mapToItems()
             notifyListeners()
         }
     }
@@ -201,12 +199,7 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
 
         if (property.name == ::options.name) {
             selectedItems.clear()
-            items = options.map {
-                val itemValue = optionToItemMapping.optionToValue(it)
-                SelectItem(it, itemValue, itemValue in selectedValues).also { item ->
-                    if (item.isSelected) selectedItems += item
-                }
-            }
+            mapToItems()
         }
 
         if (property.name == ::isPopupOpen.name) {
@@ -214,6 +207,20 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
         }
 
         super.notify(property, oldValue, newValue)
+    }
+
+    private fun mapToItems() {
+        items = options.mapNotNull {
+            val itemValue = optionToItemMapping.optionToValue(it)
+
+            if (filterable && !filter.isNullOrEmpty() && !toFilterText(it).contains(filter!!, ignoreCase = true)) {
+                return@mapNotNull null
+            }
+
+            SelectItem(it, itemValue, itemValue in selectedValues).also { item ->
+                if (item.isSelected) selectedItems += item
+            }
+        }
     }
 
     fun onListKeydown(event: UIEvent, close: () -> Unit = { }) {
@@ -224,6 +231,7 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
         when (event.keyInfo?.key) {
             Keys.ARROW_UP -> {
                 event.preventDefault()
+                event.stopPropagation()
 
                 if (items.isEmpty()) return
 
@@ -240,6 +248,7 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
 
             Keys.ARROW_DOWN -> {
                 event.preventDefault()
+                event.stopPropagation()
 
                 scrollAlignment = Alignment.End
                 showHover = false
@@ -249,10 +258,9 @@ abstract class AbstractSelectInputViewBackend<INPUT_VALUE_TYPE, ITEM_TYPE, OPTIO
                     return
                 }
 
-                if (index < items.lastIndex) {
-                    toggle(items[index + 1], closeAfter = false)
-                } else {
-                    toggle(items.first(), closeAfter = false)
+                when {
+                    index < items.lastIndex -> toggle(items[index + 1], closeAfter = false)
+                    items.isNotEmpty() -> toggle(items.first(), closeAfter = false)
                 }
             }
 

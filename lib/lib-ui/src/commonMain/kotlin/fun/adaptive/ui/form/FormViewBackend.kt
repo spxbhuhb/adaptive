@@ -50,6 +50,7 @@ open class FormViewBackend() {
             backend.isFormDisabled = isFormDisabled
             backend.formBackend = this
             backend.path = path
+            backend.selector = selector
 
             binding.targetFragment.instructions.forEach { instruction ->
                 instruction.applyTo(backend)
