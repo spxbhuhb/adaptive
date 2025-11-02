@@ -3,12 +3,15 @@
 
 > [!IMPORTANT]
 > 
-> I have decided to rewrite Adaptive in Rust and retire the Koltin implementation.
-> I think that this decision won't cause problems for anyone as I am the only user of 
-> this library.
+> I have decided to take a step forward and away from Kotlin. I started to work on
+> the next generation of platform-agnostic and **language-agnostic** UI, check
 > 
+> [Frel](https://github.com/frel-ui)
+>
+> for the progress. 
 
-The rewrite will take some time (probably a few months), and I will probably add new 
-functionality to this repo meanwhile as well as I use it in my own projects.
+The first viable version of Frel will take some time (probably a few months), and I 
+will probably add new functionality to this repo meanwhile as well as I use it in
+my own projects.
 
 That said, you are advised **NOT TO USE THIS LIBRARY** as support will be discontinued.
