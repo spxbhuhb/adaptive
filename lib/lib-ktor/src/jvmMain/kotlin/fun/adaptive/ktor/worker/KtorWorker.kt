@@ -131,8 +131,8 @@ class KtorWorker(
                 wireFormatProvider,
                 this,
                 sessionUuid,
-                provider?.getSession(sessionUuid),
-                fileTransport
+                fileTransport,
+                provider
             )
 
             transport.serviceImplFactory = safeAdapter
