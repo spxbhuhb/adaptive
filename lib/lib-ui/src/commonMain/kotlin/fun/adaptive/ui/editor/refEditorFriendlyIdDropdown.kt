@@ -1,0 +1,51 @@
+package `fun`.adaptive.ui.editor
+
+import `fun`.adaptive.foundation.Adaptive
+import `fun`.adaptive.foundation.AdaptiveFragment
+import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
+import `fun`.adaptive.foundation.binding.PropertySelector
+import `fun`.adaptive.foundation.fragment
+import `fun`.adaptive.foundation.instructions
+import `fun`.adaptive.resource.resolve.resolveStringOrNull
+import `fun`.adaptive.ui.form.FormViewBackend.Companion.viewBackendFor
+import `fun`.adaptive.ui.input.select.SingleSelectInputViewBackend
+import `fun`.adaptive.ui.input.select.item.selectInputOptionText
+import `fun`.adaptive.ui.input.select.item.selectInputValueText
+import `fun`.adaptive.ui.input.select.mapping.RefMapInputMapping
+import `fun`.adaptive.ui.input.select.selectInputDropdown
+import `fun`.adaptive.value.AvRefLabel
+import `fun`.adaptive.value.AvValue
+import `fun`.adaptive.value.AvValueId
+
+@Adaptive
+fun <SPEC> refEditorFriendlyIdDropdown(
+    refLabel: AvRefLabel,
+    options: List<AvValue<SPEC>>?,
+    filterable : Boolean = false,
+    binding: AdaptiveStateVariableBinding<Map<AvRefLabel, AvValueId>?>? = null,
+    @Suppress("unused")
+    @PropertySelector
+    selector: () -> Map<AvRefLabel, AvValueId>?,
+): AdaptiveFragment {
+
+    selectInputDropdown(
+        fragment().viewBackendFor(binding, refLabel) { value, label, isSecret ->
+            SingleSelectInputViewBackend<Map<AvRefLabel, AvValueId>, AvValueId, AvValue<SPEC>>(
+                value,
+                { it.uuid },
+                RefMapInputMapping(refLabel),
+                fragment().resolveStringOrNull(refLabel) ?: refLabel,
+                isSecret
+            ).also { backend ->
+                // it.options = options ?: emptyList()
+                backend.withSurfaceContainer = true
+                backend.filterable = filterable
+                backend.toFilterText = { it.friendlyId ?: "N/A" }
+            }
+        }.also { if (it.options !== options) it.options = options ?: emptyList() },
+        { selectInputOptionText(it) { it.option.friendlyId ?: "N/A" } },
+        { selectInputValueText(it) { it.option.friendlyId ?: "N/A" } }
+    ) .. instructions()
+
+    return fragment()
+}
