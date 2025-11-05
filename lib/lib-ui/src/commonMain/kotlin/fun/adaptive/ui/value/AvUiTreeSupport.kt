@@ -15,7 +15,8 @@ class AvUiTreeSupport<SPEC : Any>(
     specClass: KClass<SPEC>,
     treeDef: AvTreeDef,
     selectedFun: (backend: AvUiTreeSupport<SPEC>, TreeItem<AvValue<SPEC>>, Set<EventModifier>) -> Unit,
-    sortNodesFun: (List<TreeItem<AvValue<SPEC>>>) -> List<TreeItem<AvValue<SPEC>>> = { it }
+    sortNodesFun: (List<TreeItem<AvValue<SPEC>>>) -> List<TreeItem<AvValue<SPEC>>> = { it },
+    titleFun: (AvValue<SPEC>) -> String = { it.nameLike }
 ) : LifecycleBound {
 
     @Suppress("UNCHECKED_CAST")
@@ -33,7 +34,8 @@ class AvUiTreeSupport<SPEC : Any>(
         backend,
         specClass,
         treeDef,
-        sortNodesFun = sortNodesFun
+        sortNodesFun = sortNodesFun,
+        titleFun = titleFun
     )
 
     init {

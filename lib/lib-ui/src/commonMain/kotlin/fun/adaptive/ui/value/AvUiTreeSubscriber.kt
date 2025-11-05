@@ -11,7 +11,8 @@ class AvUiTreeSubscriber<SPEC : Any>(
     backend: BackendAdapter,
     specClass: KClass<SPEC>,
     treeDef: AvTreeDef,
-    val sortNodesFun : (List<TreeItem<AvValue<SPEC>>>) -> List<TreeItem<AvValue<SPEC>>> = { it }
+    val sortNodesFun : (List<TreeItem<AvValue<SPEC>>>) -> List<TreeItem<AvValue<SPEC>>> = { it },
+    val titleFun : (AvValue<SPEC>) -> String = { it.nameLike }
 ) : AvRemoteTreeSubscriber<SPEC, TreeItem<AvValue<SPEC>>>(
     backend, specClass, treeDef
 ) {
@@ -19,7 +20,7 @@ class AvUiTreeSubscriber<SPEC : Any>(
     override fun newTreeItem(item: AvValue<SPEC>, parentNode: Node<SPEC, TreeItem<AvValue<SPEC>>>?): TreeItem<AvValue<SPEC>> =
         TreeItem(
             iconForOrNull(item),
-            title = item.nameLike,
+            title = titleFun(item),
             data = item,
             parent = parentNode?.treeItem,
         )
@@ -30,7 +31,7 @@ class AvUiTreeSubscriber<SPEC : Any>(
 
     override fun updateTreeItemData(item: AvValue<SPEC>, treeItem: TreeItem<AvValue<SPEC>>) {
         treeItem.data = item
-        treeItem.title = item.nameLike // treeItem is observable
+        treeItem.title = titleFun(item) // treeItem is observable
     }
 
 
