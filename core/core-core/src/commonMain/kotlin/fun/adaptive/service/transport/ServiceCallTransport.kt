@@ -111,7 +111,7 @@ abstract class ServiceCallTransport(
 
         } catch (ex: ReturnException) {
 
-            transportLog.info("service call dispatch has thrown ReturnException (in ServiceCallTransport.serve): ${ex::class.simpleName} ${ex.message ?: ""}")
+            transportLog.fine("service call dispatch has thrown ReturnException (in ServiceCallTransport.serve): ${ex::class.simpleName} ${ex.message ?: ""}")
             ex.toEnvelope(request.callId)
 
         } catch (ex: Exception) {

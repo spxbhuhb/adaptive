@@ -10,6 +10,7 @@ import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD_RESET_KEY
 import `fun`.adaptive.auth.util.BCrypt
+import `fun`.adaptive.auth.util.info
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.backend.query.firstImpl
 import `fun`.adaptive.lib.util.error.requirement
@@ -34,8 +35,10 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     val policy
         get() = SecurityPolicy()
 
-    override suspend fun all(): List<AuthPrincipal> {
+    override suspend fun all() : List<AuthPrincipal> {
         ensureHas(securityOfficer)
+
+        info { "all()" }
 
         return valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).map {
             it.asAvValue<PrincipalSpec>()
@@ -43,9 +46,9 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     }
 
     override suspend fun addPrincipal(
-        name: String,
-        spec: PrincipalSpec,
-        activationKey: String?
+        name : String,
+        spec : PrincipalSpec,
+        activationKey : String?
     ) {
         ensureHas(securityOfficer)
 
@@ -53,12 +56,12 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     }
 
     internal suspend fun addPrincipal(
-        name: String,
-        spec: PrincipalSpec,
-        credentialType: String,
-        credentialSecret: String?,
-        account: AvValue<*>? = null
-    ): AvValueId {
+        name : String,
+        spec : PrincipalSpec,
+        credentialType : String,
+        credentialSecret : String?,
+        account : AvValue<*>? = null
+    ) : AvValueId {
 
         val credentialListId = uuid7<AvValue<*>>()
 
@@ -94,6 +97,8 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
             spec = credentials
         )
 
+        info { "addPrincipal($name, $spec, $credentialType, $account)" }
+
         valueWorker.execute {
             val uniqueName = valueWorker.queryByMarker(AuthMarkers.PRINCIPAL).none { it.name == name }
             requirement(AuthModule.ALREADY_EXISTS) { uniqueName }
@@ -110,18 +115,18 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     }
 
     override suspend fun addCredential(
-        principalId: AuthPrincipalId,
-        credential: Credential,
-        currentCredential: Credential?
+        principalId : AuthPrincipalId,
+        credential : Credential,
+        currentCredential : Credential?
     ) {
         ensurePrincipalOrHas(principalId, securityOfficer)
-
-        // history(credential.principal)
 
         if (serviceContext.ofPrincipal(principalId)) {
             requireNotNull(currentCredential)
             getSessionService().authenticate(principalId, currentCredential.value, true, currentCredential.type, policy)
         }
+
+        info { "addCredential($principalId)" }
 
         valueWorker.execute {
             updateCredentials(principalId) {
@@ -132,18 +137,18 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
         }
     }
 
-    override suspend fun getOrNull(principalId: AuthPrincipalId): AuthPrincipal? {
+    override suspend fun getOrNull(principalId : AuthPrincipalId) : AuthPrincipal? {
         ensurePrincipalOrHas(principalId, securityOfficer)
 
         return valueWorker.getOrNull<PrincipalSpec>(principalId)
     }
 
-    override suspend fun activate(principalId: AuthPrincipalId, credential: Credential, key: Credential) {
+    override suspend fun activate(principalId : AuthPrincipalId, credential : Credential, key : Credential) {
         publicAccess()
 
         getSessionService().authenticate(principalId, key.value, true, ACTIVATION_KEY, policy)
 
-        // history(credential.principal)
+        info { "activate($principalId)" }
 
         valueWorker.execute {
             updateCredentials(principalId) {
@@ -157,15 +162,15 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     }
 
     override suspend fun resetPassword(
-        principalId: AuthPrincipalId,
-        credential: Credential,
-        key: Credential
+        principalId : AuthPrincipalId,
+        credential : Credential,
+        key : Credential
     ) {
         publicAccess()
 
         getSessionService().authenticate(principalId, key.value, true, PASSWORD_RESET_KEY, policy)
 
-        // history(credential.principal)
+        info { "resetPassword($principalId)" }
 
         valueWorker.execute {
             updateCredentials(principalId) {
@@ -177,38 +182,38 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
     }
 
     override suspend fun setActivated(
-        principalId: AuthPrincipalId,
-        activated: Boolean
+        principalId : AuthPrincipalId,
+        activated : Boolean
     ) {
         ensureHas(securityOfficer)
 
-        // history(principalId)
+        info { "setActivated($principalId, $activated)" }
 
         updateSpec(principalId) { it.copy(activated = activated) }
     }
 
     override suspend fun setLocked(
-        principalId: AuthPrincipalId,
-        locked: Boolean
+        principalId : AuthPrincipalId,
+        locked : Boolean
     ) {
         ensureHas(securityOfficer)
 
-        //history(principalId)
+        info { "setLocked($principalId, $locked)" }
 
         updateSpec(principalId) { it.copy(locked = locked) }
     }
 
     fun AvComputeContext.updateCredentials(
-        principalId: AvValueId,
-        updateFun: (MutableSet<Credential>) -> Set<Credential>
+        principalId : AvValueId,
+        updateFun : (MutableSet<Credential>) -> Set<Credential>
     ) {
         val credentialList = ref<Set<Credential>>(principalId, AuthMarkers.CREDENTIAL_LIST)
         this += credentialList.copy(spec = updateFun(credentialList.spec.toMutableSet()))
     }
 
     private suspend fun updateSpec(
-        principalId: AvValueId,
-        updateFun: (PrincipalSpec) -> PrincipalSpec
+        principalId : AvValueId,
+        updateFun : (PrincipalSpec) -> PrincipalSpec
     ) {
         valueWorker.update<PrincipalSpec>(principalId) {
             it.copy(spec = updateFun(it.spec))

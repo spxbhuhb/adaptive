@@ -8,6 +8,7 @@ import `fun`.adaptive.auth.api.AuthRoleApi
 import `fun`.adaptive.service.auth.ensureHas
 import `fun`.adaptive.service.auth.ensureLoggedIn
 import `fun`.adaptive.auth.model.*
+import `fun`.adaptive.auth.util.info
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.value.AvSubscribeCondition
@@ -38,7 +39,7 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
     override suspend fun save(roleId: AvValueId?, name: String, spec: RoleSpec) {
         ensureHas(securityOfficer)
 
-        //history(role)
+        info { "save($roleId, $name, $spec)" }
 
         if (roleId == null) {
             add(name, spec)

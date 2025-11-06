@@ -4,23 +4,25 @@ import `fun`.adaptive.adat.ensureValid
 import `fun`.adaptive.auth.api.basic.AuthBasicApi
 import `fun`.adaptive.auth.app.AuthModule
 import `fun`.adaptive.auth.backend.*
-import `fun`.adaptive.auth.context.*
+import `fun`.adaptive.auth.context.getPrincipalId
+import `fun`.adaptive.auth.context.getPrincipalIdOrNull
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.PASSWORD
 import `fun`.adaptive.auth.model.basic.BasicAccountSpec
 import `fun`.adaptive.auth.model.basic.BasicAccountSummary
 import `fun`.adaptive.auth.model.basic.BasicSignUp
+import `fun`.adaptive.auth.util.info
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.lib.util.error.requirement
-import `fun`.adaptive.value.*
-import `fun`.adaptive.value.AvValue.Companion.asAvValue
-import `fun`.adaptive.value.store.AvComputeContext
-import `fun`.adaptive.value.util.serviceSubscribe
 import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.service.auth.ensureHas
 import `fun`.adaptive.service.auth.ensurePrincipalOrHas
 import `fun`.adaptive.service.auth.ensuredByLogic
 import `fun`.adaptive.service.auth.has
+import `fun`.adaptive.value.*
+import `fun`.adaptive.value.AvValue.Companion.asAvValue
+import `fun`.adaptive.value.store.AvComputeContext
+import `fun`.adaptive.value.util.serviceSubscribe
 
 @ServiceProvider
 class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
@@ -69,6 +71,8 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
         ensureHas(securityOfficer)
         ensureValid(signUp)
 
+        info { "signUp(${signUp.name},${signUp.email},${signUp.agreement})" }
+
         val accountValue = AvValue(
             name = signUp.name,
             friendlyId = signUp.name,
@@ -97,6 +101,8 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
         callCredential: Credential?
     ): AvValueId {
         ensurePrincipalOrHas(principalId, securityOfficer)
+
+        info { "save($principalId, $principalName, $principalSpec, $accountName, $accountSpec)" }
 
         if (principalId == null) {
             // in this case we have a security officer for sure as ensure got a null principal

@@ -8,6 +8,7 @@ import `fun`.adaptive.service.auth.publicAccess
 import `fun`.adaptive.auth.model.*
 import `fun`.adaptive.auth.model.CredentialType.ACTIVATION_KEY
 import `fun`.adaptive.auth.util.BCrypt
+import `fun`.adaptive.auth.util.info
 import `fun`.adaptive.backend.builtin.ServiceImpl
 import `fun`.adaptive.service.ServiceProvider
 import `fun`.adaptive.utility.getLock
@@ -71,6 +72,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
             serviceContext.disconnect = true
         }
 
+        info { "signIn(${principal.uuid})" }
         return session
     }
 
@@ -96,6 +98,8 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
         sessionWorker.addActiveSession(session)
         serviceContext.disconnect = true
 
+        info { "activateSession(${session.principalOrNull})" }
+
         return session
     }
 
@@ -112,7 +116,7 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
 
         if (serviceContext.getSessionOrNull() == null) return
 
-        // history(serviceContext.getPrincipalId())
+        info { "signOut(${serviceContext.getPrincipalIdOrNull()})" }
 
         sessionWorker.removeActiveSession(serviceContext.uuid)
 
@@ -164,15 +168,21 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
             }
 
             if (result != null) {
+                var locked = spec.locked
+
                 updateSpec(principalId) {
+                    locked = it.locked || (it.authFailCount > policy.maxFailedAuths)
                     it.copy(
                         authFailCount = it.authFailCount + 1,
                         lastAuthFail = now(),
-                        locked = it.locked || (it.authFailCount > policy.maxFailedAuths)
+                        locked = locked
                     )
                 }
 
-                // history(principal.id, result)
+                info { "authenticate(${principal.uuid}, $credentialType, $result)" }
+                if (locked != spec.locked) {
+                    info { "LOCKED principal ${principal.uuid} (too many auth fails)" }
+                }
 
                 throw AuthenticationFail(result)
             }
@@ -184,8 +194,6 @@ class AuthSessionService : AuthSessionApi, ServiceImpl<AuthSessionService>() {
                     authFailCount = 0,
                 )
             }
-
-            // history(principal.id, AuthenticationResult.Success)
 
         } finally {
             releaseState(principalId)
