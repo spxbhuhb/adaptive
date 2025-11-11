@@ -52,6 +52,7 @@ class AuthRoleService : AuthRoleApi, ServiceImpl<AuthRoleService>() {
 
         val roleValue = AvValue(
             name = name,
+            // roles do not have ACL set, so they can be read
             markersOrNull = setOf(AuthMarkers.ROLE),
             friendlyId = name,
             spec = spec

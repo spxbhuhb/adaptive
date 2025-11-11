@@ -36,6 +36,7 @@ class AuthWorker : WorkerImpl<AuthWorker>() {
             valueWorker.queueAdd(
                 AvValue(
                     name = AuthMarkers.SECURITY_OFFICER,
+                    // roles do not have ACL set, so they can be read
                     markersOrNull = setOf(AuthMarkers.ROLE, AuthMarkers.SECURITY_OFFICER),
                     spec = RoleSpec()
                 ).also {
@@ -62,6 +63,7 @@ class AuthWorker : WorkerImpl<AuthWorker>() {
             val account = safeAdapter.firstImplOrNull<AuthBasicService>()?.let {
                 AvValue(
                     name = "Security Officer",
+                    acl = securityOfficer,
                     markersOrNull = setOf(AuthMarkers.BASIC_ACCOUNT),
                     spec = BasicAccountSpec(email = "so@localhost")
                 )
@@ -93,6 +95,7 @@ class AuthWorker : WorkerImpl<AuthWorker>() {
             role ?: addValue {
                 AvValue(
                     uuid = uuid,
+                    // roles do not have ACL set, so they can be read
                     name = name,
                     markersOrNull = setOf(AuthMarkers.ROLE),
                     spec = spec

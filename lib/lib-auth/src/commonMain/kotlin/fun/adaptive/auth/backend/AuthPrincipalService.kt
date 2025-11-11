@@ -75,6 +75,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
 
         val principalValue = AvValue(
             name = name,
+            acl = securityOfficer,
             friendlyId = name,
             markersOrNull = setOf(AuthMarkers.PRINCIPAL),
             refsOrNull = refs,
@@ -93,6 +94,7 @@ class AuthPrincipalService : AuthPrincipalApi, ServiceImpl<AuthPrincipalService>
 
         val credentialListValue = AvValue(
             uuid = credentialListId,
+            acl = securityOfficer,
             markersOrNull = setOf(AuthMarkers.CREDENTIAL_LIST),
             spec = credentials
         )

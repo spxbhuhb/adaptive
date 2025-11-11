@@ -75,6 +75,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
 
         val accountValue = AvValue(
             name = signUp.name,
+            acl = securityOfficer,
             friendlyId = signUp.name,
             markersOrNull = setOf(AuthMarkers.BASIC_ACCOUNT),
             spec = BasicAccountSpec(
@@ -155,6 +156,7 @@ class AuthBasicService : ServiceImpl<AuthBasicService>(), AuthBasicApi {
 
         val account = AvValue(
             name = accountName,
+            acl = securityOfficer,
             friendlyId = accountName.split(" ").mapNotNull { it.firstOrNull()?.toString()?.uppercase() }.take(2).joinToString(""),
             markersOrNull = setOf(AuthMarkers.BASIC_ACCOUNT),
             spec = accountSpec
