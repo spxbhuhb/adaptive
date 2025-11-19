@@ -5,6 +5,7 @@
 import `fun`.adaptive.app.JvmServerApplication.Companion.jvmServer
 import `fun`.adaptive.app.app.AppMainModuleServer
 import `fun`.adaptive.auth.app.NoAuthServerModule
+import `fun`.adaptive.auth.backend.AuthSessionWorker
 import `fun`.adaptive.backend.setting.dsl.propertyFile
 import `fun`.adaptive.backend.setting.dsl.settings
 import `fun`.adaptive.doc.app.DocExampleModule
@@ -24,6 +25,8 @@ fun main() {
     settings {
         propertyFile(optional = false) { "./etc/site.properties" }
     }
+
+    AuthSessionWorker.autoLogin = true
 
     jvmServer(AppAboutData(appVersion)) {
         module { UtilModule() }

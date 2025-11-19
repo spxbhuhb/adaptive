@@ -25,7 +25,7 @@ open class AuiImage(
     override val receiver: HTMLImageElement =
         document.createElement("img") as HTMLImageElement
 
-    private val res: ImageResourceSet
+    var res: ImageResourceSet
         by stateVariable()
 
     private var loaded: Boolean

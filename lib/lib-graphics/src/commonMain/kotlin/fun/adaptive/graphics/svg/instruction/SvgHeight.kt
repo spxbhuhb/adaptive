@@ -6,6 +6,7 @@ package `fun`.adaptive.graphics.svg.instruction
 
 import `fun`.adaptive.graphics.canvas.instruction.CanvasInstruction
 import `fun`.adaptive.graphics.svg.render.SvgRootRenderData
+import `fun`.adaptive.ui.render.model.LayoutRenderData
 import `fun`.adaptive.utility.alsoIfInstance
 
 data class SvgHeight(
@@ -18,6 +19,8 @@ data class SvgHeight(
     override fun applyTo(subject: Any) {
         subject.alsoIfInstance<SvgRootRenderData> {
             it.height = this.height
+            // FIXME svg sizing hack (here to make pre-rendered SVGs work)
+            (it.layout ?: LayoutRenderData(it.adapter).also { lrd -> it.layout = lrd }).instructedHeight = this.height
         }
     }
 }

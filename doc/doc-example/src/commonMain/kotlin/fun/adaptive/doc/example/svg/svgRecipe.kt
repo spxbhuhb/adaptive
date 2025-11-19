@@ -4,13 +4,11 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.producer.poll
-import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.graphics.svg.api.svgHeight
+import `fun`.adaptive.graphics.svg.api.svgOrImage
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
-import `fun`.adaptive.ui.api.maxSize
-import `fun`.adaptive.ui.api.verticalScroll
 import `fun`.adaptive.ui.generated.resources.account_circle
 import `fun`.adaptive.ui.generated.resources.settings
 import `fun`.adaptive.ui.instruction.dp
@@ -25,10 +23,10 @@ fun svgRecipe(): AdaptiveFragment {
         gap { 16.dp } .. maxSize .. verticalScroll
         colTemplate(64.dp, 1.fr) .. rowTemplate(32.dp repeat 3)
 
-        svg(Graphics.account_circle) .. size(24.dp)
+        svgOrImage(Graphics.account_circle) .. size(24.dp)
         text(" - default")
 
-        svg(Graphics.account_circle) .. iconColors.onSurfaceFriendly .. size(24.dp)
+        svgOrImage(Graphics.account_circle) .. iconColors.onSurfaceFriendly .. size(24.dp)
         text(" - with color")
 
         colorChange()
@@ -47,7 +45,7 @@ private fun colorChange() {
     val random = poll(1.seconds) { now().epochSeconds.toInt() % 4 } ?: 0
     val colors = arrayOf(iconColors.onSurface, iconColors.onSurfaceVariant, iconColors.onSurfaceFriendly, iconColors.onSurfaceAngry)
 
-    svg(Graphics.account_circle) .. colors[random] .. size(24.dp)
+    svgOrImage(Graphics.account_circle) .. colors[random] .. size(24.dp)
 
     text(" - with changing color - $random")
 }
@@ -56,7 +54,7 @@ private fun colorChange() {
 private fun big() {
     column {
         gap { 16.dp }
-        svg(Graphics.account_circle) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
-        svg(Graphics.settings) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
+        svgOrImage(Graphics.account_circle) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
+        svgOrImage(Graphics.settings) .. svgHeight(128.dp) .. svgWidth(128.dp) .. size(128.dp, 128.dp)
     }
 }

@@ -30,7 +30,7 @@ class SvgSvg(
     override val patchDescendants: Boolean
         get() = true
     
-    val resource: GraphicsResourceSet
+    var resource: GraphicsResourceSet
         by stateVariable()
 
     override fun genBuild(parent: AdaptiveFragment, declarationIndex: Int, flags: Int): AdaptiveFragment {

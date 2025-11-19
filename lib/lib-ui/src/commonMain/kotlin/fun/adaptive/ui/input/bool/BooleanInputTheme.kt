@@ -41,6 +41,8 @@ class BooleanInputTheme(
         position(1.dp, 1.dp),
         svgHeight(contentSize - 2.0),
         svgWidth(contentSize - 2.0),
+        height(contentSize - 2.0), // these are here to make pre-rendered SVGs work
+        width(contentSize - 2.0),
         iconColors.onPrimary
     )
 

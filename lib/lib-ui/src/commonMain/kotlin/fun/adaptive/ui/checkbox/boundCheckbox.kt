@@ -6,7 +6,7 @@ import `fun`.adaptive.foundation.binding.AdaptiveStateVariableBinding
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.graphics.svg.api.svgOrImage
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.onClick
@@ -25,7 +25,7 @@ fun boundCheckbox(
 
         if (binding.value) {
             box(theme.active) {
-                svg(Graphics.check, theme.icon)
+                svgOrImage(Graphics.check, theme.icon)
             }
         } else {
             box(theme.inactive) {

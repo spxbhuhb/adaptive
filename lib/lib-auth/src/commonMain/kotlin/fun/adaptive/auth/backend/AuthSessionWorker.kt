@@ -4,6 +4,7 @@
 
 package `fun`.adaptive.auth.backend
 
+import `fun`.adaptive.auth.model.AuthPrincipal
 import `fun`.adaptive.auth.model.AuthPrincipalId
 import `fun`.adaptive.auth.model.SecurityPolicy
 import `fun`.adaptive.auth.model.Session
@@ -12,11 +13,14 @@ import `fun`.adaptive.service.ServiceContext
 import `fun`.adaptive.service.model.ServiceSession
 import `fun`.adaptive.service.transport.ServiceSessionProvider
 import `fun`.adaptive.utility.UUID
+import `fun`.adaptive.utility.UUID.Companion.uuid4
 import `fun`.adaptive.utility.getLock
 import `fun`.adaptive.utility.use
+import `fun`.adaptive.utility.vmNowMicro
 import `fun`.adaptive.utility.vmNowSecond
 import kotlinx.coroutines.delay
 import kotlin.coroutines.cancellation.CancellationException
+import kotlin.time.Clock
 
 class AuthSessionWorker : WorkerImpl<AuthSessionWorker>(), ServiceSessionProvider {
 
@@ -118,6 +122,20 @@ class AuthSessionWorker : WorkerImpl<AuthSessionWorker>(), ServiceSessionProvide
 
     override fun getSession(uuid: UUID<ServiceContext>): ServiceSession? =
         lock.use {
+            if (autoLogin) {
+                val vmNow = vmNowMicro()
+
+                return Session(
+                    uuid.cast(),
+                    UUID.nil(),
+                    "",
+                    Clock.System.now(),
+                    vmNow,
+                    vmNow,
+                    emptySet()
+                )
+            }
+
             val activeSession = activeSessions[uuid]
             if (activeSession != null) {
                 activeSession.lastActivity = vmNowSecond()
@@ -133,4 +151,7 @@ class AuthSessionWorker : WorkerImpl<AuthSessionWorker>(), ServiceSessionProvide
             return null
         }
 
+    companion object {
+        var autoLogin = false
+    }
 }

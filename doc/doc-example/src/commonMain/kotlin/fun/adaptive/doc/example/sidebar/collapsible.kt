@@ -7,11 +7,11 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.foundation.value.observe
+import `fun`.adaptive.foundation.value.storeFor
 import `fun`.adaptive.graphics.canvas.api.fill
-import `fun`.adaptive.graphics.svg.api.svg
 import `fun`.adaptive.graphics.svg.api.svgHeight
+import `fun`.adaptive.graphics.svg.api.svgOrImage
 import `fun`.adaptive.graphics.svg.api.svgWidth
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.*
@@ -77,7 +77,7 @@ private fun fullHeader(vararg instructions : AdaptiveInstruction) : AdaptiveFrag
 
         box {
             size(48.dp, 48.dp)
-            svg(Graphics.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. fill(colors.onSurface)
+            svgOrImage(Graphics.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. fill(colors.onSurface)
         }
 
         text("Adaptive") .. boldFont .. fontSize(28.sp) .. paddingTop { 8.dp }
@@ -108,7 +108,7 @@ fun thinHeader(vararg instructions : AdaptiveInstruction) : AdaptiveFragment {
 
         box {
             size(48.dp, 48.dp)
-            svg(Graphics.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. fill(colors.onSurface)
+            svgOrImage(Graphics.eco) .. svgHeight(48.dp) .. svgWidth(48.dp) .. fill(colors.onSurface)
         }
     }
     return fragment()

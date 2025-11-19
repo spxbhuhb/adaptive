@@ -9,6 +9,7 @@ import `fun`.adaptive.graphics.svg.fragment.SvgGroup
 import `fun`.adaptive.graphics.svg.fragment.SvgPath
 import `fun`.adaptive.graphics.svg.fragment.SvgRoot
 import `fun`.adaptive.graphics.svg.fragment.SvgSvg
+import `fun`.adaptive.graphics.svg.fragment.SvgSvgOrImage
 import `fun`.adaptive.ui.AuiBrowserAdapter
 
 object SvgFragmentFactory : FoundationFragmentFactory() {
@@ -17,5 +18,6 @@ object SvgFragmentFactory : FoundationFragmentFactory() {
         add("svg:group") { p, i, s -> SvgGroup(p.adapter as SvgAdapter, p, i) }
         add("svg:path") { p, i, s -> SvgPath(p.adapter as SvgAdapter, p, i) }
         add("svg:svg") { p, i, s -> SvgSvg(p.adapter as AuiBrowserAdapter, p, i) }
+        add("svg:svgorimage") { p, i, s -> SvgSvgOrImage(p.adapter as AuiBrowserAdapter, p, i) }
     }
 }

@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instruction.AdaptiveInstructionGroup
 import `fun`.adaptive.foundation.value.observe
-import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.graphics.svg.api.svgOrImage
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.layout.AlignSelf
@@ -47,7 +47,7 @@ fun button(
             }
 
             onKeyDown { observed.onKeydown(it) }
-            if (icon != null) svg(icon) .. observed.iconThemeInstructions(focus)
+            if (icon != null) svgOrImage(icon) .. observed.iconThemeInstructions(focus)
             text(label) .. observed.textThemeInstructions(focus)
         }
     }

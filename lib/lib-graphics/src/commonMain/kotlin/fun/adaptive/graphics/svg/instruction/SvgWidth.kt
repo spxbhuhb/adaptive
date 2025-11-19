@@ -4,9 +4,9 @@
 
 package `fun`.adaptive.graphics.svg.instruction
 
-import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.graphics.canvas.instruction.CanvasInstruction
 import `fun`.adaptive.graphics.svg.render.SvgRootRenderData
+import `fun`.adaptive.ui.render.model.LayoutRenderData
 import `fun`.adaptive.utility.alsoIfInstance
 
 data class SvgWidth(
@@ -19,6 +19,8 @@ data class SvgWidth(
     override fun applyTo(subject: Any) {
         subject.alsoIfInstance<SvgRootRenderData> {
             it.width = this.width
+            // FIXME svg sizing hack (here to make pre-rendered SVGs work)
+            (it.layout ?: LayoutRenderData(it.adapter).also { lrd -> it.layout = lrd }).instructedWidth = this.width
         }
     }
 }

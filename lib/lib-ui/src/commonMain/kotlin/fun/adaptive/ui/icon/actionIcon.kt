@@ -4,7 +4,7 @@ import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.graphics.svg.api.svgOrImage
 import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.support.UiEventHandler
@@ -36,7 +36,7 @@ fun actionIcon(
             instructions()
         }
 
-        svg(icon, theme.actionIcon, svgColors, alignSelf.center)
+        svgOrImage(icon, theme.actionIcon, svgColors, alignSelf.center)
 
         if (tooltip != null) {
             hoverPopup(theme.tooltip) {

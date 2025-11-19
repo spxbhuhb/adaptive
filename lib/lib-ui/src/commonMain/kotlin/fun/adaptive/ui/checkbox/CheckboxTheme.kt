@@ -3,12 +3,7 @@ package `fun`.adaptive.ui.checkbox
 import `fun`.adaptive.foundation.instruction.instructionsOf
 import `fun`.adaptive.graphics.svg.api.svgHeight
 import `fun`.adaptive.graphics.svg.api.svgWidth
-import `fun`.adaptive.ui.api.alignItems
-import `fun`.adaptive.ui.api.border
-import `fun`.adaptive.ui.api.cornerRadius
-import `fun`.adaptive.ui.api.noSelect
-import `fun`.adaptive.ui.api.position
-import `fun`.adaptive.ui.api.size
+import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.instruction.DPixel
 import `fun`.adaptive.ui.instruction.dp
 import `fun`.adaptive.ui.theme.backgrounds
@@ -44,6 +39,8 @@ class CheckboxTheme(
         position(1.dp, 1.dp),
         svgHeight(contentSize - 2.0),
         svgWidth(contentSize - 2.0),
+        height(contentSize - 2.0), // these are here to make pre-rendered SVGs work
+        width(contentSize - 2.0),
         iconColors.onPrimary
     )
 

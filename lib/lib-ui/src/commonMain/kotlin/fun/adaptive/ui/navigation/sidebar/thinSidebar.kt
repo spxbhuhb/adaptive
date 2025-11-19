@@ -7,7 +7,7 @@ import `fun`.adaptive.foundation.instruction.AdaptiveInstruction
 import `fun`.adaptive.foundation.instructions
 import `fun`.adaptive.foundation.value.observe
 import `fun`.adaptive.general.Observable
-import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.graphics.svg.api.svgOrImage
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.navigation.NavState
 import `fun`.adaptive.ui.navigation.sidebar.theme.ThinSidebarTheme
@@ -48,7 +48,7 @@ private fun thinSidebarItem(
         onClick { navState?.goto(item.state) }
 
         box(theme.iconContainer, icon) {
-            svg(item.icon) .. theme.icon .. icon
+            svgOrImage(item.icon) .. theme.icon .. icon
         }
 
         text(item.title) .. label

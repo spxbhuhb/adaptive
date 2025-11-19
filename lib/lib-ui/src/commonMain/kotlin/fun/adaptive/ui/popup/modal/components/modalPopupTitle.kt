@@ -5,7 +5,7 @@ import `fun`.adaptive.foundation.AdaptiveFragment
 import `fun`.adaptive.foundation.api.firstContext
 import `fun`.adaptive.foundation.fragment
 import `fun`.adaptive.foundation.instructions
-import `fun`.adaptive.graphics.svg.api.svg
+import `fun`.adaptive.graphics.svg.api.svgOrImage
 import `fun`.adaptive.resource.graphics.Graphics
 import `fun`.adaptive.ui.api.box
 import `fun`.adaptive.ui.api.onClick
@@ -23,7 +23,7 @@ fun modalPopupTitle(
 
     box(instructions()) {
         theme.modalTitleContainer
-        svg(Graphics.close) .. theme.modalTitleIcon .. onClick { close?.uiClose() ?: fragment().firstContext<UiClose>().uiClose() }
+        svgOrImage(Graphics.close) .. theme.modalTitleIcon .. onClick { close?.uiClose() ?: fragment().firstContext<UiClose>().uiClose() }
         text(title) .. theme.modalTitleText
     }
 

@@ -10,3 +10,8 @@ import `fun`.adaptive.resource.graphics.GraphicsResourceSet
 fun svg(resource: GraphicsResourceSet, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
     manualImplementation(resource, instructions)
 }
+
+@AdaptiveExpect(`fun`.adaptive.graphics.svg.svg)
+fun svgOrImage(resource: GraphicsResourceSet, vararg instructions: AdaptiveInstruction): AdaptiveFragment {
+    manualImplementation(resource, instructions)
+}
