@@ -1,6 +1,5 @@
 package `fun`.adaptive.app.example.ui.example
 
-import `fun`.adaptive.app.ui.util.hasRole
 import `fun`.adaptive.auth.model.AuthRoleId
 import `fun`.adaptive.foundation.Adaptive
 import `fun`.adaptive.foundation.fragment

@@ -15,6 +15,7 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
 class AuthTestSupport : AbstractTestSupport(
     workerClass = AuthSessionWorker::class
@@ -38,6 +39,7 @@ class AuthTestSupport : AbstractTestSupport(
     val authWorker
         get() = serverBackend.firstImpl<AuthWorker>()
 
+    @OptIn(ExperimentalTime::class)
     suspend fun addPrincipal(name: String, password: String?, spec: PrincipalSpec = PrincipalSpec()): AuthPrincipalId {
 
         val principalId = authWorker.getPrincipalService(authWorker.securityOfficer).addPrincipal(name, spec, PASSWORD, password)
