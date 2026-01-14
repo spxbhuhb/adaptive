@@ -399,5 +399,5 @@ abstract class AbstractAuiAdapter<RT, CRT : RT> : DensityIndependentAdapter() {
     // ------------------------------------------------------------------------------
 
     val tick = ObservableInstant(scope)
-
+    val tick10 = ObservableInstant(scope, intervalMicros = 10_000_000L)
 }

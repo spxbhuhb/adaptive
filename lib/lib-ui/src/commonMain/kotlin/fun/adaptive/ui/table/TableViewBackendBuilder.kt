@@ -91,7 +91,17 @@ class TableViewBackendBuilder<ITEM_TYPE>(
         cells += TableCellDefBuilder<ITEM_TYPE, Instant?>().also {
             it.content = ::tableCellTimeAgo
             it.resizable = false
-            it.sortable = false
+            it.sortable = true
+            it.supportsTextFilter = false
+            buildFun(it)
+        }
+    }
+
+    fun timeAgoCell10(buildFun: TableCellDefBuilder<ITEM_TYPE, Instant?>.() -> Unit) {
+        cells += TableCellDefBuilder<ITEM_TYPE, Instant?>().also {
+            it.content = ::tableCellTimeAgo10
+            it.resizable = false
+            it.sortable = true
             it.supportsTextFilter = false
             buildFun(it)
         }

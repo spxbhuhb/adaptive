@@ -13,7 +13,8 @@ import kotlin.time.Instant
 
 class ObservableInstant(
     val scope : CoroutineScope,
-    var now : Instant = now()
+    var now : Instant = now(),
+    val intervalMicros: Long = 1_000_000L // default 1s
 ) : SelfObservable<ObservableInstant>() {
 
     var job : Job? = null
@@ -34,13 +35,14 @@ class ObservableInstant(
     }
 
     suspend fun run() {
-        var next = vmNowMicro() + 1_000_000L // schedule next tick 1 s from now
+        var next = vmNowMicro() + intervalMicros
 
         while (currentCoroutineContext().isActive) {
             now = now()
             notifyListeners()
 
             val t = vmNowMicro()
+
             val remaining = next - t
 
             if (remaining > 0) {
@@ -48,14 +50,14 @@ class ObservableInstant(
                 val ms = (remaining + 999L) / 1000L
                 delay(ms)
             } else {
-                // we overran; skip missed seconds to keep phase steady
-                val missed = (-remaining) / 1_000_000L + 1
-                next += missed * 1_000_000L
+                // we overran; skip missed intervals to keep phase steady
+                val missed = (-remaining) / intervalMicros + 1
+                next += missed * intervalMicros
                 continue
             }
 
-            // advance exactly one second per loop (steady cadence)
-            next += 1_000_000L
+            // advance exactly one interval per loop (steady cadence)
+            next += intervalMicros
         }
     }
 }
