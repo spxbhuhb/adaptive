@@ -13,6 +13,7 @@ import `fun`.adaptive.resource.string.Strings
 import `fun`.adaptive.ui.api.*
 import `fun`.adaptive.ui.generated.resources.close
 import `fun`.adaptive.ui.generated.resources.edit
+import `fun`.adaptive.ui.generated.resources.empty
 import `fun`.adaptive.ui.generated.resources.notSet
 import `fun`.adaptive.ui.icon.ActionIconRowBackend
 import `fun`.adaptive.ui.input.button.submitButton
@@ -21,6 +22,7 @@ import `fun`.adaptive.ui.menu.MenuItem
 import `fun`.adaptive.ui.menu.MenuItemBase
 import `fun`.adaptive.ui.mpw.MultiPaneTheme
 import `fun`.adaptive.ui.mpw.fragments.contentPaneHeader
+import `fun`.adaptive.ui.popup.modal.confirmModal
 import `fun`.adaptive.ui.popup.modal.dialog
 import `fun`.adaptive.ui.table.TableViewBackendBuilder.Companion.tableBackend
 import `fun`.adaptive.ui.table.table
@@ -113,7 +115,8 @@ private fun tableDef(
 }
 
 private fun actions(item : BasicAccountSummary) = listOf<MenuItemBase<BasicAccountSummary>>(
-    MenuItem(Graphics.edit, Strings.edit, item)
+    MenuItem(Graphics.edit, Strings.edit, item),
+    MenuItem(Graphics.empty, Strings.unlock, item)
 )
 
 private fun contextActionHandler(
@@ -127,6 +130,9 @@ private fun contextActionHandler(
                 menuItem.data.toAccountEditorData() to viewBackend,
                 ::accountEditorAdmin
             )
+        }
+        Strings.unlock -> {
+            viewBackend.unlock(menuItem.data)
         }
     }
 }

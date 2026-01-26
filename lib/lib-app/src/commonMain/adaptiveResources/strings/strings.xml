@@ -67,4 +67,8 @@
     <string name="locked">Zárolt</string>
     <string name="lastLogin">Utolsó belépés</string>
 
+    <string name="unlock">Zárolás feloldása</string>
+    <string name="unlockConfirm">Biztosan feloldod a zárolást?</string>
+
+
 </resources>
